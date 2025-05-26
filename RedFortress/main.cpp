@@ -1,3 +1,8 @@
+//----------------------------------------------------------
+// Unicode文字セットを使用し、マルチバイト文字セットは使わない。
+// 64ビットモードを使用し、32ビットモードは使用しない。
+//----------------------------------------------------------
+
 #pragma comment( lib, "d3d9.lib" )
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment( lib, "d3dx9d.lib" )
@@ -12,19 +17,20 @@
 #include <cassert>
 #include <crtdbg.h>
 #include <vector>
+#include <atlbase.h>
 
 #define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = NULL; } }
 
-LPDIRECT3D9 g_pD3D = NULL;
-LPDIRECT3DDEVICE9 g_pd3dDevice = NULL;
-LPD3DXFONT g_pFont = NULL;
-LPD3DXMESH g_pMesh = NULL;
+CComPtr<IDirect3D9> g_pD3D = NULL;
+CComPtr<IDirect3DDevice9> g_pd3dDevice = NULL;
+CComPtr<ID3DXFont> g_pFont = NULL;
+CComPtr<ID3DXMesh> g_pMesh = NULL;
 std::vector<D3DMATERIAL9> g_pMaterials;
-std::vector<LPDIRECT3DTEXTURE9> g_pTextures;
+std::vector<CComPtr<IDirect3DTexture9>> g_pTextures;
 DWORD g_dwNumMaterials = 0;
-LPD3DXEFFECT g_pEffect = NULL;
+CComPtr<ID3DXEffect> g_pEffect = NULL;
 
-static void TextDraw(LPD3DXFONT pFont, TCHAR* text, int X, int Y);
+static void TextDraw(CComPtr<ID3DXFont> pFont, wchar_t* text, int X, int Y);
 static void InitD3D(HWND hWnd);
 static void Cleanup();
 static void Render();
@@ -48,7 +54,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     wc.hCursor = NULL;
     wc.hbrBackground = NULL;
     wc.lpszMenuName = NULL;
-    wc.lpszClassName = _T("Window1");
+    wc.lpszClassName = L"Window1";
     wc.hIconSm = NULL;
 
     ATOM atom = RegisterClassEx(&wc);
@@ -62,8 +68,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     rect.top = 0;
     rect.left = 0;
 
-    HWND hWnd = CreateWindow(_T("Window1"),
-                             _T("Hello DirectX9 World !!"),
+    HWND hWnd = CreateWindow(L"Window1",
+                             L"Hello DirectX9 World !!",
                              WS_OVERLAPPEDWINDOW,
                              CW_USEDEFAULT,
                              CW_USEDEFAULT,
@@ -92,11 +98,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     }
     while (msg.message != WM_QUIT);
 
-    UnregisterClass(_T("Window1"), wc.hInstance);
+    UnregisterClass(L"Window1", wc.hInstance);
     return 0;
 }
 
-void TextDraw(LPD3DXFONT pFont, TCHAR* text, int X, int Y)
+void TextDraw(CComPtr<ID3DXFont> pFont, wchar_t* text, int X, int Y)
 {
     RECT rect = { X, Y, 0, 0 };
 
@@ -163,14 +169,14 @@ void InitD3D(HWND hWnd)
                              OUT_TT_ONLY_PRECIS,
                              CLEARTYPE_NATURAL_QUALITY,
                              FF_DONTCARE,
-                             _T("ＭＳ ゴシック"),
+                             L"ＭＳ ゴシック",
                              &g_pFont);
 
     assert(hResult == S_OK);
 
     LPD3DXBUFFER pD3DXMtrlBuffer = NULL;
 
-    hResult = D3DXLoadMeshFromX(_T("cube.x"),
+    hResult = D3DXLoadMeshFromX(L"cube.x",
                                 D3DXMESH_SYSTEMMEM,
                                 g_pd3dDevice,
                                 NULL,
@@ -230,7 +236,7 @@ void InitD3D(HWND hWnd)
     assert(hResult == S_OK);
 
     hResult = D3DXCreateEffectFromFile(g_pd3dDevice,
-                                       _T("simple.fx"),
+                                       L"simple.fx",
                                        NULL,
                                        NULL,
                                        D3DXSHADER_DEBUG,
@@ -243,16 +249,7 @@ void InitD3D(HWND hWnd)
 
 void Cleanup()
 {
-    for (auto& texture : g_pTextures)
-    {
-        SAFE_RELEASE(texture);
-    }
-
-    SAFE_RELEASE(g_pMesh);
-    SAFE_RELEASE(g_pEffect);
-    SAFE_RELEASE(g_pFont);
-    SAFE_RELEASE(g_pd3dDevice);
-    SAFE_RELEASE(g_pD3D);
+    // Do nothing
 }
 
 void Render()
@@ -293,8 +290,8 @@ void Render()
     hResult = g_pd3dDevice->BeginScene();
     assert(hResult == S_OK);
 
-    TCHAR msg[100];
-    _tcscpy_s(msg, 100, _T("Xファイルの読み込みと表示"));
+    wchar_t msg[100];
+    wcscpy_s(msg, 100, L"Xファイルの読み込みと表示");
     TextDraw(g_pFont, msg, 0, 0);
 
     hResult = g_pEffect->SetTechnique("Technique1");
