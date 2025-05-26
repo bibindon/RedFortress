@@ -1,6 +1,10 @@
 float4x4 g_matWorldViewProj;
 float4 g_lightNormal = { 0.3f, 1.0f, 0.5f, 0.0f };
 
+float4 g_colDiffuse = { 0.0f, 0.0f, 0.0f, 0.0f };
+float4 g_colSpecular = { 0.0f, 0.0f, 0.0f, 0.0f };
+float4 g_colAmbient = { 0.0f, 0.0f, 0.0f, 0.0f };
+
 texture texture1;
 sampler textureSampler = sampler_state {
     Texture = (texture1);

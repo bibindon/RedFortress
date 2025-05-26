@@ -37,6 +37,7 @@ static void InitD3D(HWND hWnd);
 static void Cleanup();
 static void Render();
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+std::wstring stringToWstring(const std::string& str);
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance,
                     _In_opt_ HINSTANCE hPrevInstance,
@@ -203,38 +204,13 @@ void InitD3D(HWND hWnd)
         g_MaterialList[i].Ambient = g_MaterialList[i].Diffuse;
         g_textureList[i] = NULL;
         
-        //--------------------------------------------------------------
-        // Unicode文字セットでもマルチバイト文字セットでも
-        // "d3dxMaterials[i].pTextureFilename"はマルチバイト文字セットになる。
-        // 
-        // 一方で、D3DXCreateTextureFromFileはプロジェクト設定で
-        // Unicode文字セットかマルチバイト文字セットか変わる。
-        //--------------------------------------------------------------
-
-        std::string pTexPath(d3dxMaterials[i].pTextureFilename);
-
-        if (!pTexPath.empty())
+        // d3dxMaterials[i].pTextureFilenameは、プロジェクトの設定にかかわらずマルチバイト文字セットである。
+        // そのため、Unicode文字セットに変換する。
+        std::wstring pTexPathW = stringToWstring(d3dxMaterials[i].pTextureFilename);
+        if (!pTexPathW.empty())
         {
-            bool bUnicode = false;
-
-#ifdef UNICODE
-            bUnicode = true;
-#endif
-
-            if (!bUnicode)
-            {
-                hResult = D3DXCreateTextureFromFileA(g_pd3dDevice, pTexPath.c_str(), &g_textureList[i]);
-                assert(hResult == S_OK);
-            }
-            else
-            {
-                int len = MultiByteToWideChar(CP_ACP, 0, pTexPath.c_str(), -1, nullptr, 0);
-                std::wstring pTexPathW(len, 0);
-                MultiByteToWideChar(CP_ACP, 0, pTexPath.c_str(), -1, &pTexPathW[0], len);
-
-                hResult = D3DXCreateTextureFromFileW(g_pd3dDevice, pTexPathW.c_str(), &g_textureList[i]);
-                assert(hResult == S_OK);
-            }
+            hResult = D3DXCreateTextureFromFile(g_pd3dDevice, pTexPathW.c_str(), &g_textureList[i]);
+            assert(hResult == S_OK);
         }
     }
 
@@ -349,5 +325,30 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
 
     return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+std::wstring stringToWstring(const std::string& str)
+{
+    if (str.empty())
+    {
+        return std::wstring();
+    }
+
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
+    if (size_needed == 0)
+    {
+        return std::wstring();
+    }
+
+    std::wstring wstr(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wstr[0], size_needed);
+
+    // wstrの末尾に余計なヌル文字が入るので削除
+    if (!wstr.empty() && wstr.back() == L'\0')
+    {
+        wstr.pop_back();
+    }
+
+    return wstr;
 }
 
