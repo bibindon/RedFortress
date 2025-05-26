@@ -182,7 +182,7 @@ void InitD3D(HWND hWnd)
 
     LPD3DXBUFFER pD3DXMtrlBuffer = NULL;
 
-    hResult = D3DXLoadMeshFromX(L"cube.x",
+    hResult = D3DXLoadMeshFromX(L"sphere.blend.x",
                                 D3DXMESH_SYSTEMMEM,
                                 g_pd3dDevice,
                                 NULL,
@@ -249,7 +249,7 @@ void Render()
                                1.0f,
                                10000.0f);
 
-    D3DXVECTOR3 vec1(10 * sinf(f), 10, -10 * cosf(f));
+    D3DXVECTOR3 vec1(3 * sinf(f), 3, -3 * cosf(f));
     D3DXVECTOR3 vec2(0, 0, 0);
     D3DXVECTOR3 vec3(0, 1, 0);
     D3DXMatrixLookAtLH(&View, &vec1, &vec2, &vec3);

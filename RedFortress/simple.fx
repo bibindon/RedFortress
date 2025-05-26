@@ -1,22 +1,22 @@
 float4x4 g_matWorldViewProj;
 float4 g_lightNormal = { 0.3f, 1.0f, 0.5f, 0.0f };
 
-// �f�B�q���[�Y�F
-// ��{�F
-// �e�N�X�`���ŉB��Ă��܂��̂ňӖ����Ȃ��悤�Ɏv���邪�A
-// �e�N�X�`���̐F�ƃ~�b�N�X���ĕ\������̂Ŗ��Ӗ��ł͂Ȃ��B
+// ディヒューズ色
+// 基本色
+// テクスチャで隠れてしまうので意味がないように思えるが、
+// テクスチャの色とミックスして表示するので無意味ではない。
 float4 g_colDiffuse = { 0.5f, 0.5f, 0.5f, 0.5f };
 
-// �X�y�L�������̐F
-// ���ʔ��˂̐F
-// �ʏ�͔��ł��邪�A���⓺�̎��ɔ��ȊO���g����
+// スペキュラ光の色
+// 鏡面反射の色
+// 通常は白であるが、金や銅の時に白以外が使われる
 float4 g_colSpecular = { 1.0f, 1.0f, 1.0f, 0.0f };
 
-// �X�y�L�������̋���
+// スペキュラ光の強さ
 float g_specularIntensity = 0.5f;
 
-// �A���r�G���g�F
-// �����̐F
+// アンビエント色
+// 環境光の色
 float4 g_colAmbient = { 0.5f, 0.5f, 0.5f, 0.5f };
 
 texture texture1;
@@ -45,6 +45,7 @@ void VertexShader1(in  float4 inPosition  : POSITION,
     outDiffuse += g_colAmbient;
     outDiffuse.a = 1.0f;
 
+    // 0.0〜1.0 にクランプする
     outDiffuse = saturate(outDiffuse);
 
     outTexCood = inTexCood;
