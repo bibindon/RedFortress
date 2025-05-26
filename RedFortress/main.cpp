@@ -25,7 +25,7 @@ CComPtr<IDirect3D9> g_pD3D = NULL;
 CComPtr<IDirect3DDevice9> g_pd3dDevice = NULL;
 CComPtr<ID3DXFont> g_pFont = NULL;
 CComPtr<ID3DXMesh> g_pMesh = NULL;
-std::vector<D3DMATERIAL9> g_MaterialList;
+std::vector<D3DMATERIAL9> g_materialList;
 std::vector<CComPtr<IDirect3DTexture9>> g_textureList;
 DWORD g_dwNumMaterials = 0;
 CComPtr<ID3DXEffect> g_pEffect = NULL;
@@ -195,13 +195,13 @@ void InitD3D(HWND hWnd)
     assert(hResult == S_OK);
 
     D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
-    g_MaterialList.resize(g_dwNumMaterials);
+    g_materialList.resize(g_dwNumMaterials);
     g_textureList.resize(g_dwNumMaterials);
 
     for (DWORD i = 0; i < g_dwNumMaterials; i++)
     {
-        g_MaterialList[i] = d3dxMaterials[i].MatD3D;
-        g_MaterialList[i].Ambient = g_MaterialList[i].Diffuse;
+        g_materialList[i] = d3dxMaterials[i].MatD3D;
+        g_materialList[i].Ambient = g_materialList[i].Diffuse;
         g_textureList[i] = NULL;
         
         // d3dxMaterials[i].pTextureFilenameは、プロジェクトの設定にかかわらずマルチバイト文字セットである。
