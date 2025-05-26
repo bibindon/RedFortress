@@ -332,8 +332,12 @@ void Render()
         assert(hResult == S_OK);
 
         // g_materialList[i].Power is 0 ~ 1000
-        float specularIntensity = g_materialList[i].Power;
-        specularIntensity /= 1000.f;
+        float specularPower = g_materialList[i].Power;
+        hResult = g_pEffect->SetFloat("g_specularPower", specularPower);
+        assert(hResult == S_OK);
+
+        // 0.0 ~ 2.0
+        float specularIntensity = 1.7f;
         hResult = g_pEffect->SetFloat("g_specularIntensity", specularIntensity);
         assert(hResult == S_OK);
 

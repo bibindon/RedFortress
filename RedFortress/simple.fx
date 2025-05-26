@@ -16,7 +16,10 @@ float4 g_colDiffuse = { 0.5f, 0.5f, 0.5f, 0.5f };
 float4 g_colSpecular = { 1.0f, 1.0f, 1.0f, 0.0f };
 
 // スペキュラ光の強さ
-float g_specularIntensity = 0.9f;
+float g_specularPower = 100.f;
+
+// スペキュラ光の明るさ
+float g_specularIntensity = 1.f;
 
 // アンビエント色
 // 環境光の色
@@ -80,7 +83,7 @@ void PixelShader1(in float4 inScreenColor : COLOR0,
     float3 reflectDir = reflect(-g_lightNormal.xyz, normalize(inNormalW));
 
     // スペキュラ項（Phongモデル）
-    float specPower = 32.0f; // 固定値でもOK
+    float specPower = g_specularPower; // 固定値でもOK
     float spec = pow(saturate(dot(reflectDir, viewDir)), specPower);
 
     float3 specular = spec * g_colSpecular.rgb * g_specularIntensity;
