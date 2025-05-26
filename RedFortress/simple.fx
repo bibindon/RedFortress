@@ -16,7 +16,7 @@ float4 g_colDiffuse = { 0.5f, 0.5f, 0.5f, 0.5f };
 float4 g_colSpecular = { 1.0f, 1.0f, 1.0f, 0.0f };
 
 // スペキュラ光の強さ
-float g_specularIntensity = 0.5f;
+float g_specularIntensity = 0.9f;
 
 // アンビエント色
 // 環境光の色
@@ -35,38 +35,58 @@ sampler textureSampler = sampler_state {
     MaxAnisotropy = 8;
 };
 
-void VertexShader1(in  float4 inPosition  : POSITION,
-                   in  float4 inNormal    : NORMAL0,
-                   in  float4 inTexCood   : TEXCOORD0,
+float4x4 g_matWorld;
+float4x4 g_matView;
+float4 g_cameraPos = { 3.f, 3.f, 3.f, 1.f };
+
+void VertexShader1(in float4 inPosition : POSITION,
+                   in float4 inNormal : NORMAL0,
+                   in float4 inTexCood : TEXCOORD0,
 
                    out float4 outPosition : POSITION,
-                   out float4 outDiffuse  : COLOR0,
-                   out float4 outTexCood  : TEXCOORD0)
+                   out float4 outDiffuse : COLOR0,
+                   out float4 outTexCood : TEXCOORD0,
+                   out float3 outWorldPos : TEXCOORD1,
+                   out float3 outNormalW : TEXCOORD2)
 {
+    float4 worldPos = mul(inPosition, g_matWorld);
+    float3 normalW = normalize(mul(inNormal, (float3x3) g_matWorld));
+
     outPosition = mul(inPosition, g_matWorldViewProj);
-
-    float lightIntensity = dot(inNormal, g_lightNormal);
-    lightIntensity = max(0, lightIntensity);;
-
-    outDiffuse = g_colDiffuse * lightIntensity;
-
+    outDiffuse = g_colDiffuse * max(0, dot(normalW, g_lightNormal));
     outDiffuse += g_colAmbient;
     outDiffuse.a = 1.0f;
-
-    // 0.0〜1.0 にクランプする
     outDiffuse = saturate(outDiffuse);
-
     outTexCood = inTexCood;
+
+    outWorldPos = worldPos.xyz;
+    outNormalW = normalW;
 }
 
 void PixelShader1(in float4 inScreenColor : COLOR0,
-                  in float2 inTexCood     : TEXCOORD0,
+                  in float2 inTexCood : TEXCOORD0,
+                  in float3 inWorldPos : TEXCOORD1,
+                  in float3 inNormalW : TEXCOORD2,
 
-                  out float4 outColor     : COLOR)
+                  out float4 outColor : COLOR)
 {
-    float4 workColor = (float4)0;
-    workColor = tex2D(textureSampler, inTexCood);
-    outColor = inScreenColor * workColor;
+    float4 texColor = tex2D(textureSampler, inTexCood);
+    float4 baseColor = inScreenColor * texColor;
+
+    // カメラからピクセルへのベクトル
+    float3 viewDir = normalize(g_cameraPos.xyz - inWorldPos);
+
+    // 反射ベクトル
+    float3 reflectDir = reflect(-g_lightNormal.xyz, normalize(inNormalW));
+
+    // スペキュラ項（Phongモデル）
+    float specPower = 32.0f; // 固定値でもOK
+    float spec = pow(saturate(dot(reflectDir, viewDir)), specPower);
+
+    float3 specular = spec * g_colSpecular.rgb * g_specularIntensity;
+
+    outColor.rgb = baseColor.rgb + specular;
+    outColor.a = baseColor.a;
 }
 
 technique Technique1

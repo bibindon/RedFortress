@@ -274,6 +274,17 @@ void Render()
     hResult = g_pEffect->SetMatrix("g_matWorldViewProj", &mat);
     assert(hResult == S_OK);
 
+    D3DXMATRIX mat2;
+    D3DXMatrixIdentity(&mat2);
+    hResult = g_pEffect->SetMatrix("g_matWorld", &mat2);
+
+    hResult = g_pEffect->SetMatrix("g_matView", &View);
+    assert(hResult == S_OK);
+
+    D3DXVECTOR4 cameraPos(vec1.x, vec1.y, vec1.z, 1.0f);
+    hResult = g_pEffect->SetVector("g_cameraPos", &cameraPos);
+    assert(hResult == S_OK);
+
     hResult = g_pd3dDevice->Clear(0,
                                   NULL,
                                   D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
