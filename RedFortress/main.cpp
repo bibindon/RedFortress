@@ -213,7 +213,8 @@ void InitD3D(HWND hWnd)
         {
             hResult = D3DXCreateTextureFromFileEx(g_pd3dDevice,
                                                   pTexPathW.c_str(),
-                                                  D3DX_DEFAULT, D3DX_DEFAULT,
+                                                  D3DX_DEFAULT,
+                                                  D3DX_DEFAULT,
                                                   0, // 0 = ミップマップを自動生成
                                                   0,
                                                   D3DFMT_UNKNOWN,
