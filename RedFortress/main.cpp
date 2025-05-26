@@ -25,10 +25,12 @@ CComPtr<IDirect3D9> g_pD3D = NULL;
 CComPtr<IDirect3DDevice9> g_pd3dDevice = NULL;
 CComPtr<ID3DXFont> g_pFont = NULL;
 CComPtr<ID3DXMesh> g_pMesh = NULL;
-std::vector<D3DMATERIAL9> g_pMaterials;
-std::vector<CComPtr<IDirect3DTexture9>> g_pTextures;
+std::vector<D3DMATERIAL9> g_MaterialList;
+std::vector<CComPtr<IDirect3DTexture9>> g_textureList;
 DWORD g_dwNumMaterials = 0;
 CComPtr<ID3DXEffect> g_pEffect = NULL;
+
+bool g_bClose = false;
 
 static void TextDraw(CComPtr<ID3DXFont> pFont, wchar_t* text, int X, int Y);
 static void InitD3D(HWND hWnd);
@@ -36,12 +38,13 @@ static void Cleanup();
 static void Render();
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPTSTR lpCmdLine,
-                     _In_ int nCmdShow)
+int WINAPI wWinMain(_In_ HINSTANCE hInstance,
+                    _In_opt_ HINSTANCE hPrevInstance,
+                    _In_ LPTSTR lpCmdLine,
+                    _In_ int nCmdShow)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetBreakAlloc(237);
 
     WNDCLASSEX wc { };
     wc.cbSize = sizeof(WNDCLASSEX);
@@ -93,8 +96,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
 
-        Sleep(16);
-        Render();
+        if (!g_bClose)
+        {
+            Sleep(16);
+            Render();
+        }
     }
     while (msg.message != WM_QUIT);
 
@@ -188,14 +194,14 @@ void InitD3D(HWND hWnd)
     assert(hResult == S_OK);
 
     D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
-    g_pMaterials.resize(g_dwNumMaterials);
-    g_pTextures.resize(g_dwNumMaterials);
+    g_MaterialList.resize(g_dwNumMaterials);
+    g_textureList.resize(g_dwNumMaterials);
 
     for (DWORD i = 0; i < g_dwNumMaterials; i++)
     {
-        g_pMaterials[i] = d3dxMaterials[i].MatD3D;
-        g_pMaterials[i].Ambient = g_pMaterials[i].Diffuse;
-        g_pTextures[i] = NULL;
+        g_MaterialList[i] = d3dxMaterials[i].MatD3D;
+        g_MaterialList[i].Ambient = g_MaterialList[i].Diffuse;
+        g_textureList[i] = NULL;
         
         //--------------------------------------------------------------
         // Unicode文字セットでもマルチバイト文字セットでも
@@ -217,7 +223,7 @@ void InitD3D(HWND hWnd)
 
             if (!bUnicode)
             {
-                hResult = D3DXCreateTextureFromFileA(g_pd3dDevice, pTexPath.c_str(), &g_pTextures[i]);
+                hResult = D3DXCreateTextureFromFileA(g_pd3dDevice, pTexPath.c_str(), &g_textureList[i]);
                 assert(hResult == S_OK);
             }
             else
@@ -226,7 +232,7 @@ void InitD3D(HWND hWnd)
                 std::wstring pTexPathW(len, 0);
                 MultiByteToWideChar(CP_ACP, 0, pTexPath.c_str(), -1, &pTexPathW[0], len);
 
-                hResult = D3DXCreateTextureFromFileW(g_pd3dDevice, pTexPathW.c_str(), &g_pTextures[i]);
+                hResult = D3DXCreateTextureFromFileW(g_pd3dDevice, pTexPathW.c_str(), &g_textureList[i]);
                 assert(hResult == S_OK);
             }
         }
@@ -306,7 +312,7 @@ void Render()
 
     for (DWORD i = 0; i < g_dwNumMaterials; i++)
     {
-        hResult = g_pEffect->SetTexture("texture1", g_pTextures[i]);
+        hResult = g_pEffect->SetTexture("texture1", g_textureList[i]);
         assert(hResult == S_OK);
 
         hResult = g_pEffect->CommitChanges();
@@ -335,6 +341,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
     case WM_DESTROY:
     {
+        g_bClose = true;
         Cleanup();
         PostQuitMessage(0);
         return 0;
