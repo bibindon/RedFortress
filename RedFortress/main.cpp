@@ -137,8 +137,11 @@ void InitD3D(HWND hWnd)
     d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
     d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
     d3dpp.BackBufferCount = 1;
-    d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+
+    // TODO アンチエイリアスの設定をゲーム中で変えられるようにする
+    d3dpp.MultiSampleType = D3DMULTISAMPLE_8_SAMPLES;
     d3dpp.MultiSampleQuality = 0;
+
     d3dpp.EnableAutoDepthStencil = TRUE;
     d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
     d3dpp.hDeviceWindow = hWnd;
@@ -208,7 +211,18 @@ void InitD3D(HWND hWnd)
         std::wstring pTexPathW = stringToWstring(d3dxMaterials[i].pTextureFilename);
         if (!pTexPathW.empty())
         {
-            hResult = D3DXCreateTextureFromFile(g_pd3dDevice, pTexPathW.c_str(), &g_textureList[i]);
+            hResult = D3DXCreateTextureFromFileEx(g_pd3dDevice,
+                                                  pTexPathW.c_str(),
+                                                  D3DX_DEFAULT, D3DX_DEFAULT,
+                                                  0, // 0 = ミップマップを自動生成
+                                                  0,
+                                                  D3DFMT_UNKNOWN,
+                                                  D3DPOOL_MANAGED,
+                                                  D3DX_FILTER_TRIANGLE,
+                                                  D3DX_FILTER_TRIANGLE,
+                                                  0,
+                                                  NULL, NULL,
+                                                  &g_textureList[i] );
             assert(hResult == S_OK);
         }
     }
@@ -287,6 +301,40 @@ void Render()
 
     for (DWORD i = 0; i < g_dwNumMaterials; i++)
     {
+        float colWork[4] { };
+
+        colWork[0] = g_materialList[i].Diffuse.r;
+        colWork[1] = g_materialList[i].Diffuse.g;
+        colWork[2] = g_materialList[i].Diffuse.b;
+        colWork[3] = g_materialList[i].Diffuse.a;
+
+        hResult = g_pEffect->SetFloatArray("g_colDiffuse", colWork, 4);
+        assert(hResult == S_OK);
+
+        colWork[0] = g_materialList[i].Specular.r;
+        colWork[1] = g_materialList[i].Specular.g;
+        colWork[2] = g_materialList[i].Specular.b;
+        colWork[3] = g_materialList[i].Specular.a;
+
+        hResult = g_pEffect->SetFloatArray("g_colSpecular", colWork, 4);
+        assert(hResult == S_OK);
+
+        // g_materialList[i].Power is 0 ~ 1000
+        float specularIntensity = g_materialList[i].Power;
+        specularIntensity /= 1000.f;
+        hResult = g_pEffect->SetFloat("g_specularIntensity", specularIntensity);
+        assert(hResult == S_OK);
+
+        colWork[0] = g_materialList[i].Ambient.r;
+        colWork[1] = g_materialList[i].Ambient.g;
+        colWork[2] = g_materialList[i].Ambient.b;
+        colWork[3] = g_materialList[i].Ambient.a;
+
+        hResult = g_pEffect->SetFloatArray("g_colAmbient", colWork, 4);
+
+        hResult = g_pEffect->SetTexture("texture1", g_textureList[i]);
+        assert(hResult == S_OK);
+
         hResult = g_pEffect->SetTexture("texture1", g_textureList[i]);
         assert(hResult == S_OK);
 

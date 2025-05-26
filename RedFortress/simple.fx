@@ -20,11 +20,16 @@ float g_specularIntensity = 0.5f;
 float4 g_colAmbient = { 0.5f, 0.5f, 0.5f, 0.5f };
 
 texture texture1;
+
+// 異方性フィルタを設定
+// TODO ゲーム中に変えられるようにする
 sampler textureSampler = sampler_state {
     Texture = (texture1);
     MipFilter = LINEAR;
-    MinFilter = LINEAR;
-    MagFilter = LINEAR;
+    MinFilter = ANISOTROPIC;
+    MagFilter = ANISOTROPIC;
+
+    MaxAnisotropy = 8;
 };
 
 void VertexShader1(in  float4 inPosition  : POSITION,
