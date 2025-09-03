@@ -1,4 +1,4 @@
-﻿/.vs
+﻿.vs
 /RedFortress/Bootstrapper1/bin
 /RedFortress/Bootstrapper1/obj
 /RedFortress/Bootstrapper1/starman.msi
@@ -16,5 +16,6 @@
 /RedFortress/UnitTest2/Output/x64/Release/UnitTest2.exp
 /RedFortress/UnitTest2/Output/x64/Release/UnitTest2.lib
 /RedFortress/UnitTest2/Output/x64/Release/UnitTest2.pdb
-/RedFortress/UnitTest2/x64/Debug
-/RedFortress/UnitTest2/x64/Release
+/RedFortress/UnitTest2/x64
+/RedFortress/RedFortress/x64
+/RedFortress/x64/Debug
