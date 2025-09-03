@@ -274,23 +274,31 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         // TODO フルスクリーン対応
 
-        bool bFullScreen = false;
-
         D3DPRESENT_PARAMETERS d3dpp { };
 
-        if (bFullScreen)
+        if (m_eWindowStyle == eWindowStyle::WINDOW)
+        {
+            d3dpp.BackBufferWidth = 0;
+            d3dpp.BackBufferHeight = 0;
+            d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+            d3dpp.BackBufferCount = 0;
+        }
+        else if (m_eWindowStyle == eWindowStyle::FULLSCREEN)
         {
             d3dpp.BackBufferWidth = 1600;
             d3dpp.BackBufferHeight = 900;
             d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
             d3dpp.BackBufferCount = 1;
         }
-        else
+        else if (m_eWindowStyle == eWindowStyle::BORDERLESS)
         {
-            d3dpp.BackBufferWidth = 0;
-            d3dpp.BackBufferHeight = 0;
+            // TODO 解像度に合わせるべき？
+            d3dpp.BackBufferWidth = 1600;
+            d3dpp.BackBufferHeight = 900;
             d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
             d3dpp.BackBufferCount = 0;
+
+            SetWindowLongPtr(m_hWnd, GWL_STYLE, WS_POPUP);
         }
 
         // マルチサンプリングをオフにする
@@ -304,16 +312,22 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 
-        if (bFullScreen)
-        {
-            d3dpp.hDeviceWindow = m_hWnd;
-            d3dpp.Windowed = FALSE;
-        }
-        else
+        if (m_eWindowStyle == eWindowStyle::WINDOW)
         {
             d3dpp.hDeviceWindow = nullptr;
             d3dpp.Windowed = TRUE;
         }
+        else if (m_eWindowStyle == eWindowStyle::FULLSCREEN)
+        {
+            d3dpp.hDeviceWindow = m_hWnd;
+            d3dpp.Windowed = FALSE;
+        }
+        else if (m_eWindowStyle == eWindowStyle::BORDERLESS)
+        {
+            d3dpp.hDeviceWindow = nullptr;
+            d3dpp.Windowed = TRUE;
+        }
+
         d3dpp.EnableAutoDepthStencil = TRUE;
         d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
         d3dpp.Flags = 0;
