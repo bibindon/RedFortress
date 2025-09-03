@@ -1,0 +1,196 @@
+﻿ID,名称,詳細,画像のファイル名,重量(kg),体積(mL),種類,糖質,タンパク質,脂質,ビタミン,ミネラル,水分,デバフ（体のスタミナ）,デバフ（脳のスタミナ）,デバフ（肉体の修復度）,デバフ（頭痛）,デバフ（腹痛）,強化値,耐久値の初期値,weaponId,未強化時ID
+sumaho,Smartphone,"Broken. Holding the power button does
+nothing.
+Seawater usually destroys electronics.",res\\image\\sumaho.png,0.2,200,貴重品,,,,,,,,,,,,,,,sumaho
+homeKey,House Key,Key to Starman's house.,res\\image\\homekey.png,0.05,20,貴重品,,,,,,,,,,,,,,,homeKey
+sotetsu,Red Fruit,Deadly poison.,res\\image\\sotetsu_.png,0.05,50,食材,10,10,5,10,10,1,50,50,50,○,○,,,,sotetsu
+sotetsuDetox,Leached Red Fruit,Red fruit with toxins leached out.,res\\image\\sotetsu2.png,0.2,500,食材,100,100,50,10,10,-1,0,0,0,,,,,,sotetsuDetox
+coconut,Coconut,"Provides water, minerals, and sugar; the
+flesh supplies fat.
+Boiling the flesh yields oil.
+Without tools you can crack it by
+striking
+it on a sharp rock.",res\\image\\coconut.png,1,2000,食材,20,5,30,20,30,4,0,0,0,,,,,,coconut
+coconutRipe,Ripe Coconut,"No water left, but the flesh is edible.
+The husk can be spun into fiber, then
+rope
+or cloth—though no one knows how.
+The brown globe often seen in videos is
+a
+ripe coconut.",res\\image\\coconut2.png,0.7,1000,食材,10,5,50,5,10,1,0,0,0,,,,,,coconutRipe
+donguri1,Long Acorn,"Some acorns are edible, some are not.
+This slender acorn can be eaten raw.",res\\image\\donguri1.png,0.005,10,食材,8,8,8,2,2,0,0,0,0,,,,,,donguri1
+donguri2,Small Round Acorn,"Some acorns are edible, some are not.
+This small round acorn can be eaten raw.",res\\image\\donguri2.png,0.003,7,食材,5,5,5,1,1,0,0,0,0,,,,,,donguri2
+donguri3,Large Acorn,"Extremely bitter and seemingly inedible.
+Soak in water for seven days to make it
+edible.",res\\image\\donguri3.png,0.008,13,素材,10,10,10,1,1,-1,10,5,5,○,○,,,,donguri3
+donguriDetox,Leached Large Acorn,"Large acorn after leaching.
+Crunch it as is.",res\\image\\donguri4.png,0.5,300,食材,10,10,10,10,10,0,0,0,0,,,,,,donguriDetox
+flower,Hibiscus,A flower. Useless in survival.,res\\image\\flower.png,0.001,300,素材,,,,,,,,,,,,,,,flower
+kakan,Flower Garland,A ring woven from flowers.,res\\image\\kakan.png,0.5,2000,その他,,,,,,,,,,,,,,,kakan
+tsukushi,Field Horsetail,"(Starman) He vaguely recalls hearing as
+a
+child that horsetail shoots are edible.",res\\image\\tsukushi.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,tsukushi
+unknownPlant1,Unknown Grass 1,Wild herb.,res\\image\\unknownPlant.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,unknownPlant1
+unknownPlant2,Unknown Grass 2,Wild herb.,res\\image\\unknownPlant.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,unknownPlant2
+unknownPlant3,Unknown Grass 3,Wild herb.,res\\image\\unknownPlant.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,unknownPlant3
+unknownPlant4,Unknown Grass 4,Wild herb.,res\\image\\unknownPlant.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,unknownPlant4
+unknownPlant5,Unknown Grass 5,Wild herb.,res\\image\\unknownPlant.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,unknownPlant5
+unknownPlant6,Unknown Grass 6,Wild herb.,res\\image\\unknownPlant.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,unknownPlant6
+tanpopo,Dandelion,Starman (He once saw in a video that the roots are edible.) ,res\\image\\tanpopo.png,0.002,10,食材,10,10,10,10,10,1,0,0,0,,,,,,tanpopo
+nira,Leek—or Maybe Daffodil,"Leeks and daffodils look very similar.
+If it's a daffodil, you'll take damage. ",res\\image\\nira.png,0.02,100,食材,10,10,10,10,10,1,50,50,50,○,○,,,,nira
+kinoko,Mushroom,"Most mushrooms are poisonous and not very nutritious.
+You shouldn't eat them. ",res\\image\\kinoko.png,0.02,100,食材,10,10,10,10,10,1,50,50,50,○,○,,,,kinoko
+copper,Copper Ore,"Iron requires 1500°C to melt, but copper melts at 1000°C.
+With our current knowledge, there's nothing we can do. ",res\\image\\copper.png,2,1000,素材,,,,,,,,,,,,,,,copper
+raft_deprecated,Raft,"Breaks in five minutes.
+Can be upgraded up to +10, increasing durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,,,,raft_deprecated
+bui,Buoy,Attaching it to a raft increases its durability and load capacity. ,res\\image\\bui.png,1,2000,素材,,,,,,,,,,,,,,,bui
+cubeBody,Monster Body,"A monster's body—jelly‑like and smelling
+like sewage.",res\\image\\cubeBody.png,0.5,500,その他,,,,,,,,,,,,,,,cubeBody
+bag,Bag,"Bag woven from vine.
+No one had knitted before, so it was
+made
+by guesswork.
+Breaks after ten item moves or ten
+jumps.
+Upgradable to +5.",res\\image\\bag.png,0.7,1200,その他,,,,,,,,,,,,,10,,bag
+bag1,Bag,"Bag woven from vine.
+No one had knitted before, so it was
+made
+by guesswork.
+Breaks after ten item moves or ten
+jumps.
+Upgradable to +5.",res\\image\\bag.png,0.7,1200,その他,,,,,,,,,,,,1,50,,bag
+bag2,Bag,"Bag woven from vine.
+No one had knitted before, so it was
+made
+by guesswork.
+Breaks after ten item moves or ten
+jumps.
+Upgradable to +5.",res\\image\\bag.png,0.7,1200,その他,,,,,,,,,,,,2,100,,bag
+bag3,Bag,"Bag woven from vine.
+No one had knitted before, so it was
+made
+by guesswork.
+Breaks after ten item moves or ten
+jumps.
+Upgradable to +5.",res\\image\\bag.png,0.7,1200,その他,,,,,,,,,,,,3,150,,bag
+bag4,Bag,"Bag woven from vine.
+No one had knitted before, so it was
+made
+by guesswork.
+Breaks after ten item moves or ten
+jumps.
+Upgradable to +5.",res\\image\\bag.png,0.7,1200,その他,,,,,,,,,,,,4,200,,bag
+bag5,Bag,"Bag woven from vine.
+No one had knitted before, so it was
+made
+by guesswork.
+Breaks after ten item moves or ten
+jumps.
+Upgradable to +5.",res\\image\\bag.png,0.7,1200,その他,,,,,,,,,,,,5,250,,bag
+stoneForAxe,Well‑shaped Stone (Axe),"To craft an axe you need a well‑shaped
+stone.",res\\image\\stoneForAxe.png,1,500,素材,,,,,,,,,,,,,,,stoneForAxe
+stoneForSpear,Well‑shaped Stone (Spear),"To craft a spear you need a well‑shaped
+stone.",res\\image\\stoneForSpear.png,0.8,400,素材,,,,,,,,,,,,,,,stoneForSpear
+wordbress,Ward Breath,"Small vial of potion that lets you
+revive
+once after death.
+One use per vial.",res\\image\\wordbress.png,0.4,200,その他,,,,,,,,,,,,,,,wordbress
+sugegasa,Sedge Hat,"Conical sedge hat.
+Wearing it by day slows stamina loss; at
+night it slightly increases it.",res\\image\\sugegasa.png,0.2,2000,その他,,,,,,,,,,,,,,,sugegasa
+yakizakana,Grilled Fish,Grilled fish. Recently expensive.,res\\image\\yakizakana.png,0.2,200,食材,10,10,10,10,10,0,0,0,0,,,,,,yakizakana
+papaiya,Papaya,Fruit rarely contains poison.,res\\image\\papaiya.png,0.2,400,食材,10,10,10,10,10,1,0,0,0,,,,,,papaiya
+mango,Mango,Fruit rarely contains poison.,res\\image\\mango.png,0.2,400,食材,10,10,10,10,10,1,0,0,0,,,,,,mango
+banana,Banana,Fruit rarely contains poison.,res\\image\\banana.png,0.2,300,食材,10,10,10,10,10,1,0,0,0,,,,,,banana
+longstone,Long Stone,Usable for chopping wood—barely.,res\\image\\longstone.png,1,500,その他,,,,,,,,,,,,,,,longstone
+mu-rugai,Black Shell,Looks like a mussel.,res\\image\\mu-rugai.png,0.1,100,食材,10,10,10,10,10,0,0,0,0,,,,,,mu-rugai
+raft,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,,,,raft
+raft1,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,1,,,raft
+raft2,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,2,,,raft
+raft3,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,3,,,raft
+raft4,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,4,,,raft
+raft5,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,5,,,raft
+raft6,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,6,,,raft
+raft7,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,7,,,raft
+raft8,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,8,,,raft
+raft9,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,9,,,raft
+raft10,Raft,"Breaks after five minutes.
+Can be upgraded to +10, improving durability and load capacity. ",res\\image\\raft.png,100,500000,その他,,,,,,,,,,,,10,,,raft
+branch,Tree Branch,Tree branch.,res\\image\\stick2.png,0.3,500,素材,,,,,,,,,,,,,,,branch
+trunk,Thin Log,Thin tree trunk.,res\\image\\stick.png,1,2000,素材,,,,,,,,,,,,,,,trunk
+tsuta,Vine,Vine.,res\\image\\tsuta.png,0.2,500,素材,,,,,,,,,,,,,,,tsuta
+stone,Stone,,,0.5,500,武器,,,,,,,,,,,,,,w1,stone
+stick,Wooden Stick,,,1,2000,武器,,,,,,,,,,,,,,w2,stick
+stick1,Wooden Stick,,,1,2000,武器,,,,,,,,,,,,1,,w2,stick
+stick2,Wooden Stick,,,1,2000,武器,,,,,,,,,,,,2,,w2,stick
+stick3,Wooden Stick,,,1,2000,武器,,,,,,,,,,,,3,,w2,stick
+stick4,Wooden Stick,,,1,2000,武器,,,,,,,,,,,,4,,w2,stick
+stick5,Wooden Stick,,,1,2000,武器,,,,,,,,,,,,5,,w2,stick
+stoneSpear,Stone Spear,,,1,2000,武器,,,,,,,,,,,,,,w3,stoneSpear
+stoneSpear1,Stone Spear,,,1,2000,武器,,,,,,,,,,,,1,,w3,stoneSpear
+stoneSpear2,Stone Spear,,,1,2000,武器,,,,,,,,,,,,2,,w3,stoneSpear
+stoneSpear3,Stone Spear,,,1,2000,武器,,,,,,,,,,,,3,,w3,stoneSpear
+stoneSpear4,Stone Spear,,,1,2000,武器,,,,,,,,,,,,4,,w3,stoneSpear
+stoneSpear5,Stone Spear,,,1,2000,武器,,,,,,,,,,,,5,,w3,stoneSpear
+bow,Bow,,,1,3000,武器,,,,,,,,,,,,,,w4,bow
+bow1,Bow,,,1,3000,武器,,,,,,,,,,,,1,,w4,bow
+bow2,Bow,,,1,3000,武器,,,,,,,,,,,,2,,w4,bow
+bow3,Bow,,,1,3000,武器,,,,,,,,,,,,3,,w4,bow
+bow4,Bow,,,1,3000,武器,,,,,,,,,,,,4,,w4,bow
+bow5,Bow,,,1,3000,武器,,,,,,,,,,,,5,,w4,bow
+bow6,Bow,,,1,3000,武器,,,,,,,,,,,,6,,w4,bow
+bow7,Bow,,,1,3000,武器,,,,,,,,,,,,7,,w4,bow
+bow8,Bow,,,1,3000,武器,,,,,,,,,,,,8,,w4,bow
+bow9,Bow,,,1,3000,武器,,,,,,,,,,,,9,,w4,bow
+bow10,Bow,,,1,3000,武器,,,,,,,,,,,,10,,w4,bow
+ironPipe,Iron Pipe,,,1,2000,武器,,,,,,,,,,,,,,w5,ironPipe
+ironPipeEx,Stone‑Tipped Iron Pipe,,,2,3000,武器,,,,,,,,,,,,,,w6,ironPipeEx
+stoneAxe,Stone Axe,,,1.5,2000,武器,,,,,,,,,,,,,,w7,stoneAxe
+stoneAxe1,Stone Axe,,,1.5,2000,武器,,,,,,,,,,,,1,,w7,stoneAxe
+stoneAxe2,Stone Axe,,,1.5,2000,武器,,,,,,,,,,,,2,,w7,stoneAxe
+stoneAxe3,Stone Axe,,,1.5,2000,武器,,,,,,,,,,,,3,,w7,stoneAxe
+stoneAxe4,Stone Axe,,,1.5,2000,武器,,,,,,,,,,,,4,,w7,stoneAxe
+stoneAxe5,Stone Axe,,,1.5,2000,武器,,,,,,,,,,,,5,,w7,stoneAxe
+arrow,Arrow,,,0.2,500,武器,,,,,,,,,,,,,,w8,arrow
+arrow1,Arrow,,,0.2,500,武器,,,,,,,,,,,,1,,w8,arrow
+atlatl,Atlatl,,,0.4,500,武器,,,,,,,,,,,,,,w9,atlatl
+spearForAtlatl,Atlatl Dart,,,0.6,2000,武器,,,,,,,,,,,,,,w10,spearForAtlatl
+spearForAtlatl1,Atlatl Dart,,,0.6,2000,武器,,,,,,,,,,,,1,,w10,spearForAtlatl
+spearForAtlatl2,Atlatl Dart,,,0.6,2000,武器,,,,,,,,,,,,2,,w10,spearForAtlatl
+spearForAtlatl3,Atlatl Dart,,,0.6,2000,武器,,,,,,,,,,,,3,,w10,spearForAtlatl
+spearForAtlatl4,Atlatl Dart,,,0.6,2000,武器,,,,,,,,,,,,4,,w10,spearForAtlatl
+spearForAtlatl5,Atlatl Dart,,,0.6,2000,武器,,,,,,,,,,,,5,,w10,spearForAtlatl
+bagForDetox,Leaching Bag,"Vine bag for leaching cycad toxins.
+Knitted by feel; breaks after one use.
+Upgradable to +5.",res\\image\\bag2.png,0.7,1200,その他,,,,,,,,,,,,,,,bagForDetox
+bagForDetox1,Leaching Bag,"Vine bag for leaching cycad toxins.
+Knitted by feel; breaks after one use.
+Upgradable to +5.",res\\image\\bag2.png,0.7,1200,その他,,,,,,,,,,,,1,10,,bagForDetox
+bagForDetox2,Leaching Bag,"Vine bag for leaching cycad toxins.
+Knitted by feel; breaks after one use.
+Upgradable to +5.",res\\image\\bag2.png,0.7,1200,その他,,,,,,,,,,,,2,20,,bagForDetox
+bagForDetox3,Leaching Bag,"Vine bag for leaching cycad toxins.
+Knitted by feel; breaks after one use.
+Upgradable to +5.",res\\image\\bag2.png,0.7,1200,その他,,,,,,,,,,,,3,30,,bagForDetox
+bagForDetox4,Leaching Bag,"Vine bag for leaching cycad toxins.
+Knitted by feel; breaks after one use.
+Upgradable to +5.",res\\image\\bag2.png,0.7,1200,その他,,,,,,,,,,,,4,40,,bagForDetox
+bagForDetox5,Leaching Bag,"Vine bag for leaching cycad toxins.
+Knitted by feel; breaks after one use.
+Upgradable to +5.",res\\image\\bag2.png,0.7,1200,その他,,,,,,,,,,,,5,50,,bagForDetox
+torch,Torch,,,1,2000,武器,,,,,,,,,,,,,,w11,torch

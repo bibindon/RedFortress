@@ -1,0 +1,37 @@
+﻿ID,オプション1,オプション2,オプション3,,
+1,"ホシマンは袋に赤い実を詰めて持ち帰ってきた。
+４人はダイケイマンの部屋に集まっていた。ホシマンは赤い実とツタを床に置いた。",res\\image\\hoshiman00.png,,,
+2,"「赤い実を包丁でスライスして、
+　袋に入れて、川の水につける、という予定だったが・・・」",res\\image\\hoshiman00.png,,,
+3,「包丁も袋もない。石で叩けば実を潰せるから、包丁はなくてもいいだろう」,res\\image\\hoshiman00.png,,,
+4,ホシマンは床に置いたツタを指さした。,res\\image\\hoshiman00.png,,,
+5,「これで袋を作ってみよう」,res\\image\\hoshiman00.png,,,
+6,「えーそんなのわかんないよー」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+7,　サンカクマンは言った。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+8,"「私もやったことはない。
+　とりあえず実が流れて行かない袋状のものが作れればいいんだ。
+　とにかくやってみよう」",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+9,４人の中に編み物をやったことがある人はいなかった。,,,,
+10,"ダイケイマンはツタを縦に５本並べた。次に横から、上下上下上と交差させた。
+そして、もう一度横から、今度はした下上下上下と交差させた。
+これを繰り返すとザルっぽい見た目になった。",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+11,赤い実を潰して、ザルに入れ、ツタでぐるぐる巻きにすると袋っぽくなった。,,,,
+12,「これを川にさらすわけだが・・・魚が全滅しないかな」,res\\image\\hoshiman00.png,,,
+13,ホシマンはぼやいた。,res\\image\\hoshiman00.png,,,
+14,「ありえない話じゃないな」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+15,「弓矢とか作った時に先に塗ったりしてもいいかもね」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+16,袋を川に持っていき、岩でしっかりと固定した。,,,,
+17,「一週間後に食べてみよう」,res\\image\\hoshiman00.png,,,
+18,「うーこわい！」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+19,"「俺は暇だから、ザルとか作ってるよ。
+　毒抜きだけじゃなくて、魚を取るのに使えるかもしれない」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+20,ダイケイマンは言った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+21,「あぁ、頼む」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+22,「私は引き続き脱出先の島を探すことにする」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+23,「頑張ってね」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+24,「子供たちはココナッツとドングリを取ってきてくれるか？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+25,ダイケイマンが言った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+26,「オーケー」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+27,「家の近くだけにしてね」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+28,ホシマンたちは自分に割り当てられたタスクを行うことにした。,,,,
+29,【パッチテスト機能やクラフト機能、お手伝い機能を使ってみよう】,,,,

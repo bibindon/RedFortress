@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="target">
+      <UniqueIdentifier>{b9e372f1-2968-4063-94c7-0f3d248c4ad4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\starman\AnimationStrategy.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\AnimController.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\AnimMesh.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\AnimMeshAlloc.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\BGM.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Camera.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\CommandManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Common.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyBase.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyBigCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyDisk.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyEnchu.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyGhost.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyHanen.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyHankyuu.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemyOrangeCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemySmallCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\EnemySphere.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\GamePad.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\HudManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\KeyBoard.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Light.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\main.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\MainWindow.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Map.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\MenuManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Mesh.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\MeshClone.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\MeshNoShade.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Mouse.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\NpcManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Opening.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\PatchTestManager2.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Player.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\PopUp.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\PopUp2.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\QuestManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\SaveManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\SeqBattle.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\SeqEnding.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\SharedObj.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\SoundEffect.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Sprite.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\StackBackTrace.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\StoryManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Title.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\VoyageManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTest.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="VoyageTest.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CraftTest.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\CraftManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindowTest.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\starman\Rain.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\starman\AnimationStrategy.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\AnimController.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\AnimMesh.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\AnimMeshAlloc.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\BGM.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Camera.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\CommandManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Common.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyBase.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyBigCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyDisk.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyEnchu.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyGhost.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyHanen.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyHankyuu.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemyOrangeCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemySmallCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\EnemySphere.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\GamePad.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\HudManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\KeyBoard.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Light.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\MainWindow.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Map.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\MenuManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Mesh.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\MeshClone.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\MeshNoShade.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Mouse.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\NpcManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Opening.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\PatchTestManager2.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Player.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\PopUp.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\PopUp2.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\QuestManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\SaveManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\SeqBattle.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\SeqEnding.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\SharedObj.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\SoundEffect.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Sprite.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\StackBackTrace.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\StoryManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Title.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\VoyageManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\CraftManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\starman\Rain.h">
+      <Filter>target</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

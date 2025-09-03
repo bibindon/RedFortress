@@ -1,0 +1,627 @@
+﻿クエストID,開始タイプ,開始タイプオプション,開始イベント,完了タイプ,完了オプション１,完了オプション２,完了イベント
+Q1,"位置
+クエストが完了していないなら","-285.0:16.0:539.0:10.0
+Q1",,自動完了,,,<talk>res\\script\\origin\\talk2Sample.csv
+Q2,"クエストが完了していたら
+クエストが完了していないなら","Q1
+Q2",<hint>Hoshiman (Find some water),調べたら,-270.0:19.0:523.0:5.0,,<talk>res\\script\\origin\\talkFinishQuest1.csv
+Q3,"クエストが完了していたら
+クエストが完了していないなら","Q2
+Q3",<hint>Hoshiman (Find some water),自動完了,,,"<hide>res\\model\\water.x
+<sound>res\\sound\\drink.wav
+<water>"
+Q4,"クエストが完了していたら
+クエストが完了していないなら","Q1
+Q4",<hint>Hoshiman (Find some water),調べたら,-268.0:19.0:504.0:5.0,,"<hide>res\\model\\water.x
+<sound>res\\sound\\drink.wav
+<water>"
+Q5,"クエストが完了していたら
+クエストが完了していないなら","Q1
+Q5",<hint>Hoshiman (Find some water),調べたら,-248.0:24.0:544.0:5.0,,"<hide>res\\model\\water.x
+<sound>res\\sound\\drink.wav
+<water>"
+Q6,"クエストが完了していたら
+クエストが完了していないなら","Q1
+Q6",<hint>Hoshiman (Find some water),調べたら,-225.0:26.0:615.0:5.0,,"<hide>res\\model\\water.x
+<sound>res\\sound\\drink.wav
+<water>"
+Q7,"クエストが完了していたら
+クエストが完了していないなら","Q1
+Q7",<hint>Hoshiman (Find some water),調べたら,-230.0:26.0:590.0:5.0,,"<hide>res\\model\\water.x
+<sound>res\\sound\\drink.wav
+<water>"
+Q8,"クエストが完了していたら
+クエストが完了していないなら","Q1
+Q8",<hint>Hoshiman (Find some water),調べたら,-266.0:19.0:556.0:5.0,,"<hide>res\\model\\water.x
+<sound>res\\sound\\drink.wav
+<water>"
+Q9,"クエストが完了していたら
+クエストが完了していたら
+クエストが完了していたら
+クエストが完了していたら
+クエストが完了していたら
+クエストが完了していたら
+クエストが完了していないなら","Q3
+Q4
+Q5
+Q6
+Q7
+Q8
+Q9",<hint>Hoshiman (Find some water),自動完了,,,<talk>res\\script\\origin\\talkFinishQuest2.csv
+Q10,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,<talk>res\\script\\origin\\talkFinishQuest3.csv
+Q11,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,
+Q12,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,
+Q13,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,
+Q14,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,
+Q15,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,
+Q16,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,
+Q17,"クエストが完了していたら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら
+クエストが完了していないなら","Q9
+Q10
+Q11
+Q12
+Q13
+Q14
+Q15
+Q16
+Q17",<hint>Hoshiman (Look for something edible),位置が範囲外,-266.0:19.0:556.0:100,,
+Q18,"一つでもクエストが完了していたら
+クエストが完了していないなら","Q10:Q11:Q12:Q13:Q14:Q15:Q16:Q17
+Q18",<hint>Hoshiman (Look for something edible),自動完了,,,<talk>res\\script\\origin\\talkFinishQuest4.csv
+Q19,"クエストが完了していたら
+クエストが完了していないなら","Q18
+Q19",<hint>Hoshiman (Look for something edible),インベントリにXがY個あったら,Small Round Acorn:1,,
+Q20,"クエストが完了していたら
+クエストが完了していないなら","Q18
+Q20",<hint>Hoshiman (Look for something edible),インベントリにXがY個あったら,Large Acorn:1,,
+Q21,"クエストが完了していたら
+クエストが完了していないなら","Q18
+Q21",<hint>Hoshiman (Look for something edible),インベントリにXがY個あったら,Long Acorn:1,,
+Q22,"一つでもクエストが完了していたら
+クエストが完了していないなら","Q19:Q20:Q21
+Q22",<hint>Hoshiman (Look for something edible),自動完了,,,<talk>res\\script\\origin\\talkFinishQuest5.csv
+Q23,"クエストが完了していたら
+クエストが完了していないなら","Q22
+Q23",<hint>Hoshiman (Look for something edible),自動完了,,,<story>res\\script\\origin\\storyDream.csv
+Q24,"クエストが完了していたら
+クエストが完了していないなら","Q23
+Q24",,自動完了,,,<talk>res\\script\\origin\\talkFinishQuest6.csv
+Q25,"クエストが完了していたら
+クエストが完了していないなら","Q24
+Q25",<hint>Hoshiman (Follow the path through the forest),調べたら,-218:75:207:120,,"<npc><sankakuman><pos>-206:106.5:195
+<npc><sankakuman><rot>1.57
+<npc><shikakuman><pos>-205:106.5:195
+<npc><sankakuman><talkEnable>y
+<npc><sankakuman><talkScript>res\\script\\origin\\talkFinishQuest8.csv
+<talk>res\\script\\origin\\talkFinishQuest7.csv"
+Q26,"クエストが完了していたら
+クエストが完了していないなら","Q25
+Q26",<hint>Hoshiman (I think I saw someone on that rock),"人と話したら
+NPCのXが生存
+NPCのXが生存","sankakuman
+sankakuman
+shikakuman",,
+Q27,"クエストが完了していたら
+クエストが完了していないなら","Q26
+Q27",<hint>Hoshiman (Is there anything man‑made around?),位置,14:500:-594:40,,<talk>res\\script\\origin\\talkFinishQuest9-2.csv
+Q28,"クエストが完了していたら
+クエストが完了していないなら","Q27
+Q28",,"調べたら
+NPCのXが生存","24:492:-569:2
+daikeiman",,"<talk>res\\script\\origin\\talkFinishQuest9-3.csv
+<showMap>3"
+Q29,"クエストが完了していたら
+クエストが完了していないなら","Q28
+Q29",,"位置
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman",,"<npc><daikeiman><pos>20:491.7:-563
+<npc><daikeiman><talkEnable>y
+<npc><daikeiman><talkScript>res\\script\\origin\\talkFinishQuest9-5.csv
+<talk>res\\script\\origin\\talkFinishQuest9-4.csv"
+Q30,"クエストが完了していたら
+クエストが完了していないなら","Q29
+Q30",<hint>Hoshiman (The palm trees should be toward the sea),調べたら,-1365:12:-581:10,,"<talk>res\\script\\origin\\talkFinishQuest10.csv
+<showMap>7"
+Q31,"クエストが完了していたら
+クエストが完了していないなら","Q30
+Q31",<hint>Hoshiman (Bring the coconuts to him),"位置
+インベントリにXがY個あったら
+NPCのXが生存","10.6:491.5:-564:3
+Coconut:2
+daikeiman",,"<talk>res\\script\\origin\\talkFinishQuest11.csv
+<npc><sankakuman><pos>2:0:0
+<npc><shikakuman><pos>4:0:0
+<item>Bag:1:999
+<itemDel>Coconut
+<itemDel>Coconut"
+Q32,"クエストが完了していたら
+クエストが完了していないなら","Q31
+Q32",<hint>Hoshiman (Bring the coconuts to him),"倉庫AにXがY個あったら
+NPCのXが生存","1:Coconut:4
+daikeiman",,"<npc><daikeiman><talkEnable>y
+<npc><daikeiman><talkScript>res\\script\\origin\\talkFinishQuest13.csv"
+Q33,"クエストが完了していたら
+クエストが完了していないなら","Q32
+Q33",,"人と話したら
+NPCのXが生存","daikeiman
+daikeiman",,<npc><daikeiman><showMenu>y
+Q34,"クエストが完了していたら
+クエストが完了していないなら","Q33
+Q34",<hint>Hoshiman (Go call the kids),調べたら,-206:106:198:120,,"<npc><daikeiman><pos>0:0:0
+<talk>res\\script\\origin\\talkFinishQuest14.csv"
+Q35,"クエストが完了していたら
+クエストが完了していないなら","Q34
+Q35",<hint>Hoshiman (The kids should be near the big rock),"調べたら
+NPCのXが生存
+NPCのXが生存","'-206:106:198:10
+sankakuman
+shikakuman",,"<talk>res\\script\\origin\\talkFinishQuest15.csv
+<npc><sankakuman><showMenu>y
+<npc><shikakuman><showMenu>y"
+Q36,"クエストが完了していたら
+クエストが完了していないなら","Q35
+Q36",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存","11:492:-559:20
+sankakuman
+shikakuman",,"
+<talk>res\\script\\origin\\talkFinishQuest16.csv
+<npc><daikeiman><talkEnable>y
+<npc><daikeiman><talkScript>res\\script\\origin\\talkFinishQuest13-2.csv"
+Q37,"クエストが完了していたら
+クエストが完了していないなら","Q36
+Q37",<hint>Hoshiman (The palm trees should be toward the sea),"位置
+NPCのXが生存
+NPCのXが生存","'-1365:12:-581:20
+sankakuman
+shikakuman",,"
+<talk>res\\script\\origin\\talkFinishQuest17.csv
+<npc><vim><pos>-1425.1:51.2:-595.9
+<npc><vim><rot>1.57"
+Q38,"クエストが完了していたら
+クエストが完了していないなら","Q37
+Q38",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,"<talk>res\\script\\origin\\talkFinishQuest18.csv
+<move>20:492:-569
+<npc><vim><pos>673.4:772.7:-1898.7"
+Q39,"クエストが完了していたら
+クエストが完了していないなら","Q38
+Q39",,自動完了,,,<talk>res\\script\\origin\\talkFinishQuest19.csv
+Q40,"クエストが完了していたら
+クエストが完了していないなら","Q39
+Q40",<hint>Hoshiman (Let's try going a bit farther),位置が範囲外,11:492:-559:300,,"<talk>res\\script\\origin\\talkFinishQuest20.csv
+<rynenContract>
+<drinkWordBress>
+<item>Monster Body:-1:-1
+<npc><xeoff><showMenu>y"
+Q41,"クエストが完了していたら
+クエストが完了していないなら","Q40
+Q41",<hint>Hoshiman (Return to the ruin),位置,11:492:-559:100,,"<talk>res\\script\\origin\\talkFinishQuest21.csv
+<item>Torch:-1:999
+<equip>Torch"
+Q42,"クエストが完了していたら
+クエストが完了していないなら","Q41
+Q42",<hint>Hoshiman (Return to the ruin),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest22.csv
+Q43,"クエストが完了していたら
+クエストが完了していないなら","Q42
+Q43",,"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","24:492:-569:2
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest23.csv
+Q44,"クエストが完了していたら
+クエストが完了していないなら","Q43
+Q44",,"調べたら
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","20:492:-563:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest24.csv
+Q45,"クエストが完了していたら
+クエストが完了していないなら","Q44
+Q45",<hint>Hoshiman (Let's go to where the palm trees were),"位置
+NPCのXが生存
+NPCのXが生存","'-1365:12:-581:100
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest25.csv
+Q46,"クエストが完了していたら
+クエストが完了していないなら","Q45
+Q46",<hint>Hoshiman (Try going counter‑clockwise),位置,-2050:30:-1563:50,,"<talk>res\\script\\origin\\talkFinishQuest26.csv
+<sotetsu>"
+Q47,"クエストが完了していたら
+クエストが完了していないなら","Q46
+Q47",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest27.csv
+Q48,"クエストが完了していたら
+クエストが完了していないなら","Q47
+Q48","<hint>Hoshiman (Gather red berries first, then head to the ruin)","位置
+インベントリにXがY個あったら
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+Red Berry:10
+daikeiman
+sankakuman
+shikakuman",,"<talk>res\\script\\origin\\talkFinishQuest28.csv
+<showGuide>36
+<showGuide>37
+<showGuide>38
+<showGuide>39
+<showGuide>40
+<showGuide>41
+<showGuide>42
+<showGuide>50
+<showGuide>51
+<showGuide>52
+<showGuide>53
+<showGuide>54
+<showGuide>55
+<showGuide>56
+<showGuide>57
+<showGuide>58"
+Q49,"クエストが完了していたら
+クエストが完了していないなら","Q48
+Q49",<hint>Hoshiman (Have them make several detox bags),"インベントリに強化値XのYがZ個あったら
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","2:Detox Bag:1
+daikeiman
+sankakuman
+shikakuman",,"<talk>res\\script\\origin\\talkFinishQuest29.csv
+<item>Stone Spear:1:999"
+Q50,"クエストが完了していたら
+クエストが完了していないなら","Q49
+Q50",<hint>Hoshiman (I can see a building near the river),位置,15.8:492.8:-1221.2:30,,"<talk>res\\script\\origin\\talkFinishQuest30.csv
+<showMap>4
+<npc><webnin><showMenu>y"
+Q51,"クエストが完了していたら
+クエストが完了していないなら","Q50
+Q51",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest31.csv
+Q52,"クエストが完了していたら
+クエストが完了していないなら","Q51
+Q52",<hint>Hoshiman (Let's go to the shrine),位置,15.8:492.8:-1221.2:30,,<talk>res\\script\\origin\\talkFinishQuest31-2.csv
+Q53,"クエストが完了していたら
+クエストが完了していないなら","Q52
+Q53",<hint>Hoshiman (Take a look inside the cave),位置,509:19.5:-1264:30,,<talk>res\\script\\origin\\talkFinishQuest31-3.csv
+Q54,"クエストが完了していたら
+クエストが完了していないなら","Q53
+Q54",<hint>Hoshiman (Check the red thing near the water),調べたら,509:19.5:-1264:3,,"<talk>res\\script\\origin\\talkFinishQuest31-4.csv
+<showMap>5
+<showMap>6
+<showMap>8
+<showMap>9
+<showMap>10
+<showMap>15
+<showMap>16
+<showMap>17
+<showMap>18"
+Q55,"クエストが完了していたら
+クエストが完了していないなら","Q54
+Q55",<hint>Hoshiman (Head back to the ruin for now),位置,10.6:491.5:-564:100,,<talk>res\\script\\origin\\talkFinishQuest32.csv
+Q56,"クエストが完了していたら
+クエストが完了していないなら","Q55
+Q56",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest33.csv
+Q57,"クエストが完了していたら
+クエストが完了していないなら","Q56
+Q57",<hint>Hoshiman (Head to the cave marked on the map),位置,115.6:590.5:-1484.2:30,,<talk>res\\script\\origin\\talkFinishQuest34.csv
+Q58,"クエストが完了していたら
+クエストが完了していないなら","Q57
+Q58",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest35.csv
+Q59,"クエストが完了していたら
+クエストが完了していないなら","Q58
+Q59",,自動完了,,,<talk>res\\script\\origin\\talkFinishQuest36.csv
+Q60,"クエストが完了していたら
+クエストが完了していないなら","Q59
+Q60",,自動完了,,,"<talk>res\\script\\origin\\talkFinishQuest37.csv
+<npc><vsco><pos>1:2:3"
+Q61,"クエストが完了していたら
+クエストが完了していないなら","Q60
+Q61",<hint>Hoshiman (Head to the 'See Poroporo' spot on the map),位置,629:773.9:-1861.8:20.0,,"<talk>res\\script\\origin\\talkFinishQuest38.csv
+<npc><vim><showMenu>y"
+Q62,"クエストが完了していたら
+クエストが完了していないなら","Q61
+Q62",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,"<talk>res\\script\\origin\\talkFinishQuest39.csv
+<npc><vsco><showMenu>y"
+Q63,"クエストが完了していたら
+クエストが完了していないなら","Q62
+Q63",,自動完了,,,<talk>res\\script\\origin\\talkFinishQuest40.csv
+Q64,"クエストが完了していたら
+クエストが完了していないなら","Q63
+Q64",<hint>Hoshiman (Head to the lighthouse marked on the map),位置,-1321:632:-1529:20,,"<talk>res\\script\\origin\\talkFinishQuest41.csv
+<npc><gain><showMenu>y"
+Q65,"クエストが完了していたら
+クエストが完了していないなら","Q64
+Q65",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest42.csv
+Q66,"クエストが完了していたら
+クエストが完了していないなら","Q65
+Q66",<hint>Hoshiman (Head to the old port marked on the map),位置,1814.3:28.6:-899.2:30,,"<talk>res\\script\\origin\\talkFinishQuest43.csv
+<npc><nes><showMenu>y
+<npc><noble><showMenu>y
+<npc><nes><pos>1:3:5
+<npc><noble><pos>1:3:4"
+Q67,"クエストが完了していたら
+クエストが完了していないなら","Q66
+Q67",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest44.csv
+Q68,"クエストが完了していたら
+クエストが完了していないなら","Q67
+Q68",<hint>Hoshiman (Head to the 'See Poroporo' spot on the map),位置,629:773.9:-1861.8:20.0,,<talk>res\\script\\origin\\talkFinishQuest45.csv
+Q69,"クエストが完了していたら
+クエストが完了していないなら","Q68
+Q69",<hint>Hoshiman (Head back to the ruin for now),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","10.6:491.5:-564:3
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest46.csv
+Q70,"クエストが完了していたら
+クエストが完了していないなら","Q69
+Q70",,自動完了,,,<talk>res\\script\\origin\\talkFinishQuest47.csv
+Q71,"クエストが完了していたら
+クエストが完了していないなら","Q70
+Q71",<hint>Hoshiman (Head to the seaside cave marked on the map),"時間が経過したら
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","0:0:0:1:0:0
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest48.csv
+Q72,"クエストが完了していたら
+クエストが完了していないなら","Q71
+Q72",<hint>Hoshiman (Head to the seaside cave marked on the map),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","1092.0:40.8:504.1:400.0
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest49.csv
+Q73,"クエストが完了していたら
+クエストが完了していないなら","Q72
+Q73",<hint>Hoshiman (Head to the seaside cave marked on the map),"位置
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","1092.0:40.8:504.1:200.0
+daikeiman
+sankakuman
+shikakuman",,"<talk>res\\script\\origin\\talkFinishQuest50.csv
+<activityBase>DirectNex"
+Q74,"クエストが完了していたら
+クエストが完了していないなら","Q73
+Q74",<hint>Hoshiman (Spend about a month improving the base),"時間が経過したら
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","0:1:0:0:0:0
+daikeiman
+sankakuman
+shikakuman",,<talk>res\\script\\origin\\talkFinishQuest51.csv
+Q75,"クエストが完了していたら
+クエストが完了していないなら","Q74
+Q75",<hint>Hoshiman (Head back to the ruin for now),位置,10.6:491.5:-564:3,,<talk>res\\script\\origin\\talkFinishQuest52.csv
+Q76,"クエストが完了していたら
+クエストが完了していないなら","Q75
+Q76",<hint>Hoshiman (Let's try building a raft),"時間が経過したら
+NPCのXが生存
+NPCのXが生存
+NPCのXが生存","0:0:3:0:0:0
+daikeiman
+sankakuman
+shikakuman",,"<talk>res\\script\\origin\\talkFinishQuest53.csv
+<shikakumanDeath>"
+Q77,"クエストが完了していたら
+クエストが完了していないなら","Q76
+Q77",<hint>Hoshiman (Let's go to the lighthouse),位置,-1321:632:-1529:20,,<talk>res\\script\\origin\\talkFinishQuest54.csv
+Q78,"クエストが完了していたら
+クエストが完了していないなら","Q77
+Q78",<hint>Hoshiman (Let's go to the old port),"位置
+夜だったら",1814.3:28.6:-899.2:30,,<talk>res\\script\\origin\\talkFinishQuest55.csv
+Q79,"クエストが完了していたら
+クエストが完了していないなら","Q78
+Q79",<hint>Hoshiman (Go back to the seaside cave),"位置
+NPCのXが生存
+NPCのXが生存","1092.0:40.8:504.1:100.0
+daikeiman
+sankakuman",,<talk>res\\script\\origin\\talkFinishQuest56.csv
+Q80,"クエストが完了していたら
+クエストが完了していないなら","Q79
+Q80",<hint>Hoshiman (Let's go to the shrine),位置,15.8:492.8:-1221.2:30,,<talk>res\\script\\origin\\talkFinishQuest57.csv
+Q81,"クエストが完了していたら
+クエストが完了していないなら","Q80
+Q81",,自動完了,,,"<talk>res\\script\\origin\\talkFinishQuest58.csv
+<hanawa>"
+Q82,"クエストが完了していたら
+クエストが完了していないなら","Q81
+Q82",,自動完了,,,<talk>res\\script\\origin\\talkFinishQuest59.csv
+Q83,"クエストが完了していたら
+クエストが完了していないなら","Q82
+Q83",<hint>Hoshiman (Get everything ready for departure),"時間が経過したら
+夜だったら
+NPCのXが生存
+NPCのXが生存
+位置","0:0:2:0:0:0
+
+daikeiman
+sankakuman
+1092.0:40.8:504.1:100.0",,<talk>res\\script\\origin\\talkFinishQuest60.csv
+Q84,"クエストが完了していたら
+クエストが完了していないなら","Q83
+Q84",,自動完了,,,"<talk>res\\script\\origin\\talkFinishQuest61.csv
+<npc><xeoff><pos>1116.6:158.3:647.4"
+Q85,"クエストが完了していたら
+クエストが完了していないなら","Q84
+Q85",,位置が範囲外,11:492:-559:30000,,<talk>res\\script\\origin\\talkFinishQuest62.csv
+Q86,クエストが完了していたら,Q1,,位置,-200000:0:0:100000,,<ending>
+Q87,クエストが完了していたら,Q1,,位置,-100000:0:200000:100000,,<ending>

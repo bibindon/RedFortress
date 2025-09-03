@@ -1,0 +1,45 @@
+﻿ID,オプション1,オプション2,オプション3,,
+1,"ホシマンは廃墟まで歯を食いしばって歩いていった。
+廃墟にたどり着くとホシマンは倒れた。",res\\image\\hoshiman00.png,,,
+2,サンカクマンがこちらにやってきた。,,res\\image\\sankakuman00.png,,
+3,「どうしたの？」,,res\\image\\sankakuman00.png,,
+4,「・・・毒・・・」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+5,「え？」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+6,「これ食べたら・・・毒・・・」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+7,「・・・」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+8,サンカクマンは赤い実をまじまじと見た。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+9,「水・・・」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+10,「水？　わかった！」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,,
+11,サンカクマンはシカクマンと二人でココナッツを持ってきた。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+12,"ホシマンはココナッツウォーターを飲んだあと、
+サンカクマンたちに連れられダイケイマンの部屋に移動した。",res\\image\\hoshiman00.png,,,
+13,「大丈夫か・・・？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+14,"「はぁ・・・はぁ・・・はぁ・・・
+　もう一口食べてたら死んでいた・・・」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+15,「いきなり一口食べるんじゃなくて、ちょっとずつ試すんじゃないっけ？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+16,　ダイケイマンが言った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+17,"「はぁっ・・・・はぁ・・・あぁ・・・
+　ネットで見たことあるかもしれない・・・」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+18,"「汁を肌につけてみて、唇に当ててみて、
+　米粒１つ分くらいだけ食べて・・・とかやるんでしょ？」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+19,「そうだ・・・そういうのをなんていうんだったか・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+20,「忘れた・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+21,"「その・・・ちょっとずつ検査する奴をやろう・・・
+　私たちは、みんな野草とかわからないし・・・」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+22,「あ・・・水に１週間浸しておくと食べれるようになる奴とかあるよね」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+23,「あぁ・・・聞いたことある」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+24,"ダイケイマンはさっきの赤い果物で試してみないか、を
+聞いてみようと思ったが苦しむホシマンをみてやめた。",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+25,翌朝。,,,,
+26,ホシマンは朝まで、嘔吐と下痢を繰り返し、その結果、細くなっていた。,res\\image\\hoshiman00.png,,,
+27,（マシになった・・・・。家の近くを歩くくらいならできそうだ）,res\\image\\hoshiman00.png,,,
+28,サンカクマンたちの部屋に行くとココナッツが沢山あった。,res\\image\\hoshiman00.png,,,
+29,「昨日はありがとう」,res\\image\\hoshiman00.png,,,
+30,「ココナッツの実が沢山あるね。これは全部石投げて落としたのかい？」,res\\image\\hoshiman00.png,,,
+31,「途中で石投げるのやめて木の枝で直接実を叩いたら簡単に落とせた」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+32,「ほう」,res\\image\\hoshiman00.png,,,
+33,（賢いな・・・）,res\\image\\hoshiman00.png,,,
+34,"「昨日ダイケイマンが言っていた、水に一週間浸す方法をやってみたい。
+　夕方に持ってくるからその時は手伝ってくれ」",res\\image\\hoshiman00.png,,,
+35,「う、うん」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+36,ホシマンは昨日の赤い実を取りに行った。,res\\image\\hoshiman00.png,,,

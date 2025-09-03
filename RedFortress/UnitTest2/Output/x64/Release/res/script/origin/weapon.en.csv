@@ -1,0 +1,70 @@
+﻿ID,名称,詳細,モデル名,画像のファイル名,重量(kg),体積(mL),強化可能回数,攻撃力補正(瞬発力ｘ攻撃力補正＝攻撃力),強化時の攻撃力補正の上昇値,飛距離(m),強化時の飛距離の上昇値(m),消費スタミナ,耐久値(壊れるまでの回数),強化時の耐久値の上昇値,使用時の肉体損傷
+w1,Stone,"Throw or bash with it—it's crazy strong.
+No matter how much you use it, it never
+breaks.",res\\model\\rock1.x,res\\image\\stone.png,0.5,500,0,3.0,0.0,30,0,10,999,0,10
+w2,Wooden Stick,"Breaks after about three swings; far
+weaker than punching.
+A twig won't hurt a person much, but a
+wooden bat can be fatal.
+Keep crafting and you'll manage a
+respectable bat‑like club.
+
+Can be upgraded from +1 to +5.",res\\model\\stick.x,res\\image\\stick.png,1.0,2000,5,0.2,0.3,10,0,10,3,10,10
+w3,Stone Spear,"Breaks after roughly three thrusts; far
+weaker than punching.
+A beginner's first stone spear hits like
+zero damage, but spares your hand
+injuries.
+Craft it repeatedly and it becomes
+usable.
+Some people have even bested a lion with
+one.
+
+Can be upgraded from +1 to +5.",res\\model\\spear.x,res\\image\\spear2.png,1.0,2000,5,0.2,0.3,10,0,10,3,10,10
+w4,Bow,"Homemade bow, breaks after around ten
+shots.
+A beginner's first bow barely flies five
+meters and does virtually no damage.
+Keep making new ones and they'll become
+serviceable.
+
+Can be upgraded from +1 to +10.
+Throwing the bow still travels the same
+distance.",res\\model\\bow.x,res\\image\\bow.png,1.0,3000,10,0.1,0.1,3,1,10,10,1,10
+w5,Iron Pipe,"Hard to break but deals modest damage;
+at least your hands stay safe.",res\\model\\ironPipe.x,res\\image\\pipe.png,1.0,2000,0,1.0,0.0,20,0,10,999,0,10
+w6,Stone‑Tipped Iron Pipe,"An iron pipe with a stone strapped to
+its tip.",res\\model\\ironPipeEx.x,res\\image\\ironPipe.png,2.0,3000,0,4.0,0.0,15,0,10,10,0,10
+w7,Stone Axe,"A branch with a stone tied on; the
+binding is fragile and breaks quickly.
+Recraft it often and you'll fashion
+sturdier versions.
+After several tries you'll realize
+sharpening the stone tip is crucial.
+
+Can be upgraded from +1 to +5.",res\\model\\ax.x,res\\image\\ax.png,1.5,2000,5,4.0,0.0,20,0,10,30,10,10
+w8,Arrow,"Arrows are a pain to make.
+Spent arrows can be picked up and
+reused.",res\\model\\arrow.x,res\\image\\arrow.png,0.2,500,1,2.0,0.0,40,1,5,10,1,5
+w9,Atlatl,"Not 'astral'—it's an atlatl.
+Starman once saw one on a video site.
+An average person would end up with
+brutal muscle aches after using it.",res\\model\\atlatl.x,res\\image\\atlatl.png,0.4,500,0,1.0,0.0,10,0,10,999,0,10
+w10,Atlatl Dart,"If the shaft isn't a flexible springy
+material, it won't fly at all.
+You'll figure that out after a few
+throws.
+
+Can be upgraded from +1 to +5.",res\\model\\arrow.x,res\\image\\arrow.png,0.6,2000,5,2.0,0.0,40,0,5,10,10,5
+w11,Torch,"While holding a stick you can craft a
+torch from the action menu.
+With a torch equipped you can choose
+'Light Torch'.
+It breaks after a single attack.
+If it's lit you can also 'Extinguish
+Torch'.
+
+To unequip it, you must extinguish the
+flame.
+You can also ditch it by throwing the
+torch.",res\\model\\\torch.x,res\\image\\torch2.png,1.0,2000,0,0.2,0.0,10,0,10,300,0,10

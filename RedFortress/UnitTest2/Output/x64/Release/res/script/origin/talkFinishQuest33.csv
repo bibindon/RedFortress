@@ -1,0 +1,62 @@
+﻿ID,オプション1,オプション2,オプション3,,
+1,ホシマンは廃墟に戻った。,res\\image\\hoshiman00.png,,,
+2,「だ、大丈夫か・・・！？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+3,ホシマンの傷を見てダイケイマンはうろたえた。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+4,「かなり厳しいが、命に別状はない・・・と思う」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+5,「そ、そうか・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+6,サンカクマンとシカクマンはホシマンの傷を見て絶句していた。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+7,ホシマンはダイケイマンたちに今日あったことを話した。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+8,「これがその地図だ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+9,ホシマンは地図を広げ、みんなで見た。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+10,"「私たちがいるのはおそらくこの辺。
+　ココナッツの木がある場所は『シンクハット海岸』という名前だったみたいだ」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+11,"「プロリタン島に船が来ることってあるのかなぁ。
+　オプティプル島に行こうとしたときに
+　ちょっと調べたけどプロリタン島に行く船ってなかったと思うよ」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+12,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+13,「それだけど・・・船を作って脱出を目指してみないか」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+14,「えっ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+15,"「私の場合は１年以内、というのがあるから、そうするしかない。
+　他の人については、ここに残って助けを待ったほうがいいかもしれない」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+16,「微妙なところだな・・・。」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+17,「うーん。結構難しい選択・・・、というか究極の二択だな」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+18,"「やったことはないが、４人乗りの船を作るというのは、
+　一人乗りの船を作るよりはるかに難しいのではないかと」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+19,「そりゃそうだ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+20,"「一人乗りの船を作って私がジーフォーク共和国に行き、
+　別の船を手に入れて戻ってくる、というのが一番現実的だと思う」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+21,「そうしてみよう。」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+22,"「そうだ、あとあの川の水に漬けていた赤い実のやつ。
+　食べてみたけど大丈夫だったよ」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+23,「よかった。それなら食糧事情がだいぶ改善できる」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+24,その日の夜,,,,
+25,　ホシマンは皮膚が溶けた痛みで寝ることができなかった。,res\\image\\hoshiman00.png,,,
+26,（これからどうしよう・・・。まずいことになった。動けない）,res\\image\\hoshiman00.png,,,
+27,「う・・・ぐっ・・・」,res\\image\\hoshiman00.png,,,
+28,　ホシマンは激痛に耐えながら座位になった。,res\\image\\hoshiman00.png,,,
+29,「ちょっと・・・こっちに来てくれ・・・」,res\\image\\hoshiman00.png,,,
+30,　ホシマンの様子を見ていた子どもたちを呼んだ。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+31,「見ての通りだ。しばらくの間、動けない」,res\\image\\hoshiman00.png,,,
+32,「大丈夫だよ」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+33,「うん」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+34,「３日くらいしたら歩けるようになると思う。それまで食料探しを頼む」,res\\image\\hoshiman00.png,,,
+35,「いつもやってるから大丈夫だよ」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+36,「ありがとう」,res\\image\\hoshiman00.png,,,
+37,三日後,,,,
+38,"３日経ってもホシマンは満足に歩けるようになれなかった。
+それから、ホシマンは１か月間、弓矢作りと魔法の訓練に励んだ。
+大人二人が動けず、子供二人に生かされている状態であった。",res\\image\\hoshiman00.png,,,
+39,赤い実の解毒方法を発見していたため死なないだけの食料は確保することができた。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+40,"ホシマンとダイケイマンは協力し家の周りの木の枝と紐で弓矢を作成した。
+刃物がないため石だけで作っており、見た目はモロに木の枝であった。
+矢を手で投げるよりはマシでそれなりに実用性はありそうだった。",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+41,"子どもたちも欲しがったため、４つ作りそれぞれが持つことになった。
+すぐに的あてをして競うことがブームとなった。",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,,
+42,ホシマンは船の材料集めを始めることにした。,res\\image\\hoshiman00.png,,,
+43,"１か月経ってもホシマンのやけどは治っておらず動くたびに
+傷口が開き黄色い液体が傷口から漏れた。",res\\image\\hoshiman00.png,,,
+44,"不幸中の幸いで肘、膝は少ししか酸がかからなかったため
+我慢すれば四肢を動かすことはできた。",res\\image\\hoshiman00.png,,,
+45,１年のタイムリミットがあるため、無理をして動く必要があった。,res\\image\\hoshiman00.png,,,
+46,"ホシマンは船の材料集めのついでで
+もう一度ウブントゥ洞窟に向かってみることにした。",res\\image\\hoshiman00.png,,,

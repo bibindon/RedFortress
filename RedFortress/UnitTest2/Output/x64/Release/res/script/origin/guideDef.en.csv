@@ -1,0 +1,249 @@
+ID,Category,Subcategory,Description,表示済み
+1,Status,About Status,"This game has ten stats: ""Body Stamina"",
+""Mind Stamina"", ""Explosive Power""
+""Hydration"", ""Body Fatigue / Injury""
+""Carbohydrates"", ""Protein"", ""Fat""
+""Vitamins"", ""Minerals""",○
+2,Status,"About ""Body Stamina"" 1","Each stat has a Max value, a Recoverable
+Max, and a Current value. Walking or
+running lowers both the Recoverable Max
+and the Current value.",○
+3,Status,"About ""Body Stamina"" 2","Standing still, sitting, or lying down
+restores the Current value but not the
+Recoverable Max. Sleeping restores the
+Recoverable Max in proportion to sleep
+time.",○
+4,Status,"About ""Body Stamina"" 3","If the Recoverable Max never falls below
+70 % in a day, the Max value decreases
+by 1 % due to lack of exercise.",○
+5,Status,"About ""Mind Stamina"" 1","Represents focus and willpower. It
+affects attack power and spellcasting.",○
+6,Status,"About ""Mind Stamina"" 2","Gradually decreases just by staying
+awake. Sleeping fully restores it; going
+to bed late restores only 50 %. Talking
+or casting spells also lowers it.",○
+7,Status,"About ""Mind Stamina"" 3","Has Max, Recoverable Max, and Current
+values. Lying down with 50 % or less
+causes you to fall asleep even at noon;
+sitting with 20 % or less does the same.",○
+8,Status,"About ""Explosive Power""","Thickness of fast‐twitch muscle.
+Influences damage dealt, damage taken,
+and movement speed.",○
+9,Status,"About ""Body Repair""","Represents injuries such as muscle
+soreness, bruises, cuts, sprains, and
+burns. A value of 100 means uninjured.
+Decreases when you are attacked—or when
+you attack. It also drops from various
+actions. Recovers while sleeping, and
+when it does, the Max values of Body
+Stamina and Explosive Power increase.",○
+10,Status,"About ""Hydration""","Top survival priority. Dropping even 1 %
+makes Stamina and Mind Stamina drain
+faster, worsening with every further 1 %
+loss. Death occurs at 90 %.",○
+11,Status,"About ""Carbohydrates""","Second only to water. When Carbohydrates
+reach 95 % or more, you are full and
+cannot eat further.",○
+12,Status,"About ""Protein""",A shortage hinders recovery.,○
+13,Status,"About ""Vitamins""",A shortage hinders recovery.,○
+14,Status,"About ""Minerals""",A shortage hinders recovery.,○
+15,Status,"About ""Sleep / Faint""","Occurs when Mind Stamina hits 0 or when
+you lie down with low Mind Stamina. You
+will move again after seven in‐game
+hours—or 1.5 real hours. Being attacked
+while asleep or unconscious is instant
+death. You will not fall asleep while
+swimming.",○
+16,Status,"About ""Common Cold""","Heals in five days. Physical activity
+makes it worse, as does mental exertion.",○
+17,Status,"About ""Arm Fracture""","Attack power reduced by 90 %. Lowers
+Body Stamina, Mind Stamina, and
+Explosive Power. Debuff lessens over
+time, but full recovery takes three
+months. Healing stops if any nutrient
+falls below half.",○
+18,Status,"About ""Leg Fracture""","Movement speed reduced by 90 %. Lowers
+Body Stamina, Mind Stamina, and
+Explosive Power. Debuff eases over time,
+but complete recovery takes three
+months. Healing stops if any nutrient
+falls below half.",○
+19,Status,"About ""Headache""","Takes one day to heal. Drinking water
+makes it worse.",○
+20,Status,"About ""Stomachache""","Heals in one day. Eating or drinking
+aggravates it.",○
+21,Status,"About ""Dehydration""","Heals in one day. Recovery stops if
+water or any nutrient is lacking.",○
+22,Status,Condition,"Possible states: Arm Fracture, Leg
+Fracture, Headache, Cold, Stomachache,
+Sleep, Dehydration, Sleep Deprivation.",○
+23,Status,Status Ailment Triggers,"- Arm/Leg Fracture ... falling -
+Headache/Cold/Stomachache ... chance -
+Dehydration ... lack of water - Sleep
+Deprivation ... staying up late",○
+24,Inventory,Item Weight,"Affects Body Stamina, Mind Stamina,
+Explosive Power, and movement speed.
+Sitting or lying down prevents stamina
+drain no matter the load.",○
+25,Inventory,Carry Capacity,"Total item volume you can carry.
+Exceeding it prevents movement.
+Equipping bags increases the limit.",○
+26,Inventory,Bag 1,"You can equip up to five bags: 1st & 2nd
+on the back, 3rd on the belly, 4th left
+hand, 5th right hand.",○
+27,Inventory,Bag 2,"Bag in left hand halves attack and
+disables bow and atlatl. Bag in right
+hand prevents attacking. Jumping or
+transferring items lowers bag
+durability.",○
+28,Inventory,Item Transfer,"While wearing a bag, every item transfer
+consumes bag durability and Mind
+Stamina.",○
+29,Magic,About Magic Mastery 1,"Using magic repeatedly gains experience.
+Once enough is stored, mastery rises the
+next morning. Growth seems to occur
+while resting.",○
+30,Magic,About Magic Mastery 2,"Experience gained from spells decays
+over time. Training less than three
+times a week is ineffective no matter
+how long.",○
+31,Action,Actions,"Press C to open the action button.
+Choose actions like ""Gather"", ""Chop"",
+""Sit"", or ""Lie Down"".",○
+32,Action,Gathering,"Gather plants and more; takes 30 in‐game
+minutes. Stamina cost depends on weapon.
+Cannot start if Body Stamina is too low.
+Try gathering near plants, trees,
+stones, or earth.",○
+33,Action,Woodcutting 1,"Cut down a tree; about six in‐game hours
+pass. Stamina cost depends on weapon.
+Can't start without an appropriate tool.",○
+34,Action,Woodcutting 2,"Each chopping session reduces stone‐axe
+durability by 1 000. A reinforced axe
+wears down more slowly. Chopping with an
+""elongated stone"" hurts the body. Colds
+or headaches lengthen recovery time.",○
+35,Action,Meditation,"Quietly reflect on what you should do
+next.",○
+36,Crafting,Crafting,"After some time, the finished item is
+placed in storage. Crafting time depends
+on the item. Cancelling returns no
+materials.",○
+37,Crafting,Crafting Requests 1,"Ask Trapezoid Man to craft. Early tools
+are nearly useless, but repetition
+yields better gear.",○
+38,Crafting,Crafting Requests 2,"Queue the next request before the
+current one finishes—up to five queued.",○
+39,Crafting,Crafting Materials,"Needed materials must already be in your
+inventory. When duplicates exist, the
+one with lower durability is used first.",○
+40,Crafting,Growth & Enhancement,"The first stone axe has no enhancement.
+The next one is +1. Once +1 is
+available, un‐enhanced axes can’t be
+crafted.",○
+41,Crafting,Raft,"Crafting a raft launches it onto the
+nearest river, not into storage. Up to
+three can float at once. Rafts can't be
+carried; sail them yourself.",○
+42,Patch Test,Patch Test,"Trapezoid Man taste‐tests unknown
+plants. Success rate starts at 60 %,
+rising to 90 % with repetition. You can
+test up to three at once; results come
+after one hour.",○
+43,Controls,Keyboard & Mouse Controls,"Menu ... ESCAPE Walk ... WASD Dash ...
+SHIFT +
+WASD Jump ... SPACE Step ... WASD +
+SPACE
+Attack ... Left Click Cast ... SHIFT +
+Left
+Click Switch Spell ... Wheel Confirm ...
+ENTER/SPACE Throw ... SHIFT + F",○
+44,Controls,Gamepad Controls,"Menu ... START Walk ... D‐Pad Dash ...
+Jump ...
+X Step ... D‐Pad + X Attack ... R1 Cast
+...
+Switch ... Confirm ... Circle Throw ...",○
+45,Controls,Attacking,"Each swing drains weapon durability and
+stamina and worsens ailments. Stone
+weapons do not lose durability.",○
+46,Controls,Condition,"Possible states: Arm Fracture, Leg
+Fracture, Headache, Cold, Stomachache,
+Sleep, Dehydration, Sleep Deprivation.",○
+47,Controls,Dashing,"You can sprint for about 10 seconds.
+Training extends this slightly.",○
+48,Controls,Walking,"You can walk continuously for roughly
+10 minutes. Training allows longer
+walks.",○
+49,Controls,Throwing,"Throw stones, launch stone spears with
+an atlatl, or shoot arrows.",○
+50,Raft Sailing,Direction,Check direction by looking at the sun.,○
+51,Raft Sailing,Wind Direction / Strength,"Look at the handkerchief on the sail to
+read wind direction and strength.",○
+52,Raft Sailing,Rowing Mode,"Select ""Sit"" to enter rowing mode.
+Right‐click operates the right oar;
+left‐click the left oar.",○
+53,Raft Sailing,Bag,Approach a bag to view its contents.,○
+54,Raft Sailing,"""Row for 3 Hours"" Command","Select ""Row for 3 hours"" to row toward
+the current heading for three hours.",○
+55,Raft Sailing,Hoist the Sail,"Select ""Hoist Sail"" to set the sail.",○
+56,Raft Sailing,Raft Status,Check raft status from the Status menu.,○
+57,Raft Sailing,Raft,"Days until a raft breaks vary with
+enhancement and weight.",○
+58,Raft Sailing,When the Raft Breaks,"If the raft breaks, swim and make a
+last‐ditch effort.",○
+59,Glossary,Rainen 1,"A contract granting powers at the cost
+of death in one year. Unlocks fire, ice,
+and darkness magic. Ghosts can only be
+harmed by darkness magic.",○
+60,Glossary,Rainen 2,"Allows one resurrection at the spot
+where the potion was drunk—effectively
+restoring you to full health just before
+death.",○
+61,Mushrooms,Mushrooms,Never eat mushrooms in survival.,○
+62,Storage,Warehouse,You can store items in the warehouse.,○
+63,Storage,Warehouse & Companions 1,"If no food is stored and you stay away
+for days, allies die. If any nutrient
+hits zero, they die: starvation for
+Carbs; illness for others.",○
+64,Storage,Warehouse & Companions 2,"If Word Breath is in storage, one bottle
+is consumed when an ally becomes
+critical. If they die then, they revive
+via Rainen. Near death, allies eat even
+forbidden foods.",○
+65,Miscellaneous,Force Quit Game,"Press Alt+F4 or the window’s X to quit;
+the game saves automatically first.",○
+66,Miscellaneous,Date & Time,"A day has 24 hours and a year 365 on
+Power Egg Planet. The sun rises east and
+sets west. Time flows 12× faster: 1 real
+hour = 12 in‐game hours.",○
+67,Miscellaneous,Weather,"There are day and night, and sunny or
+rainy weather. Rain debuffs stamina and
+movement speed.",○
+68,Miscellaneous,Hint 1,"Body Repair at 0 means death. No healing
+items exist; only natural recovery. To
+heal, eliminate hunger and rest.",○
+69,Miscellaneous,Hint 2,"Defeating foes gives no reward. Island
+edges and caves hold no treasure.",○
+70,Miscellaneous,Hint 3,Follow mountain paths when possible.,○
+71,Miscellaneous,Hint 4,"You can finish the game without quests
+or even if NPCs die.",○
+72,Miscellaneous,Hint 5,"No map or position display. Use the sun
+and mountains to judge the island’s
+shape and your location.",○
+73,Miscellaneous,Hint 6,"NPCs start consuming nutrients and water
+from the start. Delay, and they may die
+of starvation or dehydration.",○
+74,Miscellaneous,Hint 7,"If Stamina never falls below 70 % in a
+day, Max Body Stamina and Explosive
+Power drop from lack of training. If it
+falls below 30 % even once, those maxima
+rise.",○
+75,Miscellaneous,Hint 8,"Which ""Unknown Grass"" is poisonous
+changes with each new game.",○
+76,Miscellaneous,Hint 9,"Gathered plants and defeated enemies
+vanish forever—they do not respawn.",○
+77,Miscellaneous,Hint 10,There are no levels or leveling up.,○
+78,Miscellaneous,Hint 11,"If you break a bone, it may be faster to
+start over.",○
+79,Miscellaneous,Hint 12,"Keep the action list open for a while
+and an ""Escape"" option will appear.",○

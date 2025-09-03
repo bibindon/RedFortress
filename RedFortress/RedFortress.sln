@@ -1,0 +1,160 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{B9747D8D-4045-4589-B83C-3FEA057EE296}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest2", "UnitTest2\UnitTest2.vcxproj", "{68EF5F22-589B-4A66-8B6E-B54144629AF5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenerateWixScript", "GenerateWixScript\GenerateWixScript.vcxproj", "{AAF101BA-6C0A-4636-BCAC-158693664B4D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenerateMapAndEnemyData", "GenerateMapAndEnemyData\GenerateMapAndEnemyData.vcxproj", "{A10062D2-901B-43C4-968B-308528E488AE}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Bootstrapper1", "Bootstrapper1\Bootstrapper1.wixproj", "{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B9747D8D-4045-4589-B83C-3FEA057EE296} = {B9747D8D-4045-4589-B83C-3FEA057EE296}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedFortress", "RedFortress\RedFortress.vcxproj", "{6DD95551-4853-454C-9F8F-E15464132F19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_VisualStudio2019|x64 = Debug_VisualStudio2019|x64
+		Debug_VisualStudio2019|x86 = Debug_VisualStudio2019|x86
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Deploy|x64 = Deploy|x64
+		Deploy|x86 = Deploy|x86
+		DeployEncrypt|x64 = DeployEncrypt|x64
+		DeployEncrypt|x86 = DeployEncrypt|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug_VisualStudio2019|x64.ActiveCfg = Debug|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug_VisualStudio2019|x64.Build.0 = Debug|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug_VisualStudio2019|x86.ActiveCfg = Debug|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug_VisualStudio2019|x86.Build.0 = Debug|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug|x64.ActiveCfg = Debug|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug|x64.Build.0 = Debug|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug|x86.ActiveCfg = Debug|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug|x86.Build.0 = Debug|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Deploy|x64.ActiveCfg = Release|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Deploy|x64.Build.0 = Release|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Deploy|x86.ActiveCfg = Debug|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Deploy|x86.Build.0 = Debug|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.DeployEncrypt|x64.ActiveCfg = Release|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.DeployEncrypt|x86.ActiveCfg = Debug|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Release|x64.ActiveCfg = Release|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Release|x64.Build.0 = Release|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Release|x86.ActiveCfg = Release|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Release|x86.Build.0 = Release|x86
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug_VisualStudio2019|x86.Build.0 = Debug_VisualStudio2019|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug|x64.ActiveCfg = Debug|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug|x64.Build.0 = Debug|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug|x86.ActiveCfg = Debug|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug|x86.Build.0 = Debug|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Deploy|x64.ActiveCfg = Deploy|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Deploy|x64.Build.0 = Deploy|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Deploy|x86.ActiveCfg = Deploy|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Deploy|x86.Build.0 = Deploy|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.DeployEncrypt|x64.ActiveCfg = DeployEncrypt|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.DeployEncrypt|x64.Build.0 = DeployEncrypt|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.DeployEncrypt|x86.ActiveCfg = DeployEncrypt|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.DeployEncrypt|x86.Build.0 = DeployEncrypt|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Release|x64.ActiveCfg = Release|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Release|x64.Build.0 = Release|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Release|x86.ActiveCfg = Release|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Release|x86.Build.0 = Release|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug_VisualStudio2019|x86.Build.0 = Debug_VisualStudio2019|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug|x64.ActiveCfg = Debug|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug|x64.Build.0 = Debug|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug|x86.ActiveCfg = Debug|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug|x86.Build.0 = Debug|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Deploy|x64.ActiveCfg = Debug|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Deploy|x64.Build.0 = Debug|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Deploy|x86.ActiveCfg = Debug|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Deploy|x86.Build.0 = Debug|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.DeployEncrypt|x64.ActiveCfg = Debug|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.DeployEncrypt|x64.Build.0 = Debug|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.DeployEncrypt|x86.ActiveCfg = Debug|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.DeployEncrypt|x86.Build.0 = Debug|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Release|x64.ActiveCfg = Release|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Release|x64.Build.0 = Release|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Release|x86.ActiveCfg = Release|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Release|x86.Build.0 = Release|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug_VisualStudio2019|x86.Build.0 = Debug_VisualStudio2019|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug|x64.ActiveCfg = Debug|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug|x64.Build.0 = Debug|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug|x86.ActiveCfg = Debug|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debug|x86.Build.0 = Debug|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Deploy|x64.ActiveCfg = Release|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Deploy|x64.Build.0 = Release|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Deploy|x86.ActiveCfg = Release|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Deploy|x86.Build.0 = Release|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.DeployEncrypt|x64.ActiveCfg = Release|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.DeployEncrypt|x64.Build.0 = Release|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.DeployEncrypt|x86.ActiveCfg = Release|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.DeployEncrypt|x86.Build.0 = Release|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Release|x64.ActiveCfg = Release|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Release|x64.Build.0 = Release|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Release|x86.ActiveCfg = Release|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Release|x86.Build.0 = Release|Win32
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug_VisualStudio2019|x64.ActiveCfg = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug_VisualStudio2019|x64.Build.0 = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug_VisualStudio2019|x86.ActiveCfg = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug_VisualStudio2019|x86.Build.0 = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug|x64.ActiveCfg = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug|x64.Build.0 = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug|x86.ActiveCfg = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug|x86.Build.0 = Debug|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Deploy|x64.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Deploy|x64.Build.0 = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Deploy|x86.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Deploy|x86.Build.0 = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.DeployEncrypt|x64.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.DeployEncrypt|x64.Build.0 = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.DeployEncrypt|x86.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.DeployEncrypt|x86.Build.0 = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Release|x64.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Release|x64.Build.0 = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Release|x86.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Release|x86.Build.0 = Release|x86
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug_VisualStudio2019|x86.Build.0 = Debug_VisualStudio2019|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug|x64.ActiveCfg = Debug|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug|x64.Build.0 = Debug|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug|x86.ActiveCfg = Debug|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug|x86.Build.0 = Debug|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Deploy|x64.ActiveCfg = Deploy|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Deploy|x64.Build.0 = Deploy|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Deploy|x86.ActiveCfg = Deploy|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Deploy|x86.Build.0 = Deploy|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.DeployEncrypt|x64.ActiveCfg = DeployEncrypt|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.DeployEncrypt|x64.Build.0 = DeployEncrypt|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.DeployEncrypt|x86.ActiveCfg = DeployEncrypt|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.DeployEncrypt|x86.Build.0 = DeployEncrypt|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Release|x64.ActiveCfg = Release|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Release|x64.Build.0 = Release|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Release|x86.ActiveCfg = Release|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {171ADBAD-ADD2-47C2-A9DD-47BEAF1DDD3A}
+	EndGlobalSection
+EndGlobal

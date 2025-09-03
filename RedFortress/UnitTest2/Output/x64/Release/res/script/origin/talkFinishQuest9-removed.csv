@@ -1,0 +1,26 @@
+﻿ID,オプション1,オプション2,オプション3,,
+1,　ホシマンは歩き続け、廃墟を見つけた。,,,,
+11,（廃墟の中を探してみよう）,res\\image\\hoshiman00.png,,,
+12,廃墟は村役場だった。隅々まで探索したが建物が相当古く食料は見つからなかった。,,,,
+13,「おーい」,,,,
+14,ホシマンが廃墟を出ようとしたとき、どこかから声がした。,,,,
+15,「ヘールプ・・・」,,,,
+16,"ホシマンは声のする方へ恐る恐る進んでいった。
+声のする方をのぞき込むと頭が台形の男が寝そべっていた。",,res\\image\\daikeiman00.png,,
+17,「助けてくれ・・・」,,res\\image\\daikeiman00.png,,
+18,男は今にも死にそうであった。ホシマンは重い体を引きずりながら近寄っていく。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+19,「大丈夫ですか」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+20,「何か食べ物・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+21,"男は全身あざと出血でぼろぼろだった。
+そして両方の足が通常の３倍くらいの大きさになっていた。",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+22,「両足が折れた・・・。高いところから落ちて・・・。落とされて・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+23,男は声を出すだけでも大変そうだった。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+24,"「私も・・・今はなくて・・・、すまない。
+それでもドングリの木がある場所を知ってるから持ってこれる。
+数時間だけ持ちこたえることはできるか？」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+25,「あぁ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+26,「はぁ・・・はぁ・・・その前に・・・すまない・・・水はないか？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+27,「海の方にココナッツの木がある。ぐ・・・あれなら・・・水分にも食材にもなる」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+28,「わかった・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+29,「頼む・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,
+30,ホシマンはヨロヨロと外に歩いて行った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,,

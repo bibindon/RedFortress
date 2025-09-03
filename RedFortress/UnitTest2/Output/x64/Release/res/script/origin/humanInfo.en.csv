@@ -1,0 +1,57 @@
+﻿ID,名前,説明,画像
+hoshiman,Star Man,"27‑year‑old man, star‑shaped head and
+all‑yellow body; timid disposition.
+Worked temp at a port; after his
+contract ended in July, biked toward
+Optiple Island.
+Manual‑labor strength aided his survival
+of the wreck. 170 cm, 55 kg.",res\\image\\hoshiman00.png
+daikeiman,Trapezoid Man,"Male in his 40s with a trapezoid‑shaped
+head; body battered, both legs broken.
+Injured after leaping off a cliff during
+a battle with a monster.",res\\image\\daikeiman00.png
+sankakuman,Triangle Man,"11‑year‑old boy with a triangular head;
+spirited and mischievous.
+Capable of bullying and petty malice,
+yet still deserving patient love.
+Arrived on Prolitan Island together with
+Square Man.",res\\image\\sankakuman00.png
+shikakuman,Square Man,"8‑year‑old boy with quadrilateral head;
+quiet and reserved.
+Younger than Triangle Man and not
+related to him.",res\\image\\shikakuman00.png
+vim,Vim,"White humanoid experimental monster
+designed not to attack people.
+Created to give monsters personality;
+abandoned once project stalled.
+Had no name until Star Man’s group
+called it “Vim.”",res\\image\\vim00.png
+vsco,VSCO,"White humanoid experimental monster
+identical to Vim but made to attack.
+Visually indistinguishable from Vim;
+named “VSCO” by Star Man’s group.",res\\image\\vsco00.png
+webnin,Webnin,"Elderly native woman who lives alone on
+Prolitan Island.",res\\image\\rouba00.png
+xeoff,Xeoff,"Horned being with a bovine skull face
+who offers the fatal “Rainen” contract.
+Appears to those at death’s door,
+seeking contracts that kill after one
+year.
+Restricts dealings to Power‑Egg Island
+to limit social impact.",res\\image\\xeoff00.png
+gain,Gain,"Violent, selfish man who sees everyone
+else as trash; treats women far better.
+Claims deserted ruins as his property,
+beats and extorts intruders.
+Believes he’s “educating idiots,”
+lacking any sense of wrongdoing.",res\\image\\gain00.png
+nes,Nes,"Dishonest man with ~IQ 80; helpless
+alone and always blaming others.
+Laughs at death; exploited Noble,
+leading to his death.
+Once resurrected after brain injury;
+evil and low intellect are innate.",res\\image\\nes00.png
+noble,Noble,"Pure‑hearted man with a cognitive
+disability, exploited by Nes and killed.",res\\image\\noble00.png
+hishigataman,Diamond Woman,"Star Man’s former girlfriend; their
+youthful romance ultimately failed.",res\\image\\hishigata00.png

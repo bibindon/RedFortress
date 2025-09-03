@@ -1,0 +1,4 @@
+ID,倉庫ファイル,x,y,z,イカダ
+1,res\script\save/storehouse.csv,1.000000,4.000000,7.000000,n
+2,res\script\save/storehouse2.csv,2.000000,5.000000,8.000000,n
+3,res\script\save/storehouseRaft1.csv,0.000000,0.000000,0.000000,y

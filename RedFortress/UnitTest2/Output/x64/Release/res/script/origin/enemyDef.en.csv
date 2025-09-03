@@ -1,0 +1,26 @@
+ID,タイプ,説明,画像
+1,Cube,"Approaches and rams with a head‑butt. It
+probably weighs several hundred kilos.
+Stays perfectly still like a rock until
+the player moves close.",res\image\rippoutai01.png
+2,Sphere,"Rushes in quickly; a small fry. Not as
+heavy as a Cube but still weighs
+hundreds of kilos. Moves faster than a
+Cube but has less HP.",res\image\sphere00.png
+3,Disc,"Fires projectiles. Appears to float, but
+a closer look reveals small legs.",res\image\enban01.png
+4,Cylinder,Charges at ultra‑high speed.,res\image\enchuu01.png
+5,Big Cube,"An oversized Cube with high HP and high
+attack power.",res\image\bigCube.png
+6,Small Cube,Low HP and low attack power.,res\image\smallCube.png
+7,Hemisphere,"Hemisphere‑shaped foe that tries to
+dodge your attacks.",res\image\hankyuu.png
+8,Half Disc,"Half‑disc enemy with wings that flies
+and sprays acid.",res\image\hanen01.png
+9,Orange Cube,"Orange‑colored Cube that attacks with a
+spinning charge.",res\image\orange.png
+10,Islander Ghost,"Island resident who died after making a
+pact with Xeoff. Drawn to the hero,
+seeking his vial—the urge lingers from
+life—but even if it gets one, it can do
+nothing with it.",res\image\ghost00.png
