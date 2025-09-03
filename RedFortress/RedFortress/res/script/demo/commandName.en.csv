@@ -1,0 +1,28 @@
+﻿ID,Name
+cutTree,Chop Wood
+pickPlant,Gather
+rest3Hours,Rest 3 Hours
+lieDown,Lie Down
+sit,Sit
+escape,Escape
+craft,Craft
+patchTest,Patch Test
+rideRaft,Board Raft
+checkRaftBag,Check Raft Bags
+oar3Hours,Row for 3 Hours
+lit,Ignite Torch
+extinguish,Extinguish Torch
+createTorch,Craft Torch
+stand,Stand
+raiseSail,Raise Sail
+lowerSail,Lower Sail
+meisou,Meditate
+help,Help
+start,Start
+continue,Continue
+exit,Exit
+language,Language
+english,English
+japanese,Japanese
+demo,Demo
+back,Back

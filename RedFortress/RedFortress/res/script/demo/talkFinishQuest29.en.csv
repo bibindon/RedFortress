@@ -1,0 +1,44 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,"A week later, Star Man kept searching for an island but couldn't find one.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,"Trapezoid Man kept weaving baskets.
+After a week of practice, he could make large, sturdy baskets
+with a tight weave.",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+3,"They attached shoulder straps, and Star Man and the kids began
+heading out with them on their backs.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+4,"The children gathered coconuts and acorns.
+They also tried catching fish with baskets,
+but didn't catch a single one.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+5,"One day, when Star Man came home, the kids were holding stone spears.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+6,"""Star Man, we tried making these—take one with you tomorrow.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+7,Trapezoid Man handed Star Man a handmade stone spear.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+8,"""Oh... thanks.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+9,"""Same with the baskets—if we keep making them, they'll get better.
+If you see improvements, tell me.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+10,"""Got it.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+11,"Over the week, they gave the monsters names.",,,res\\image\\talkPrecision.png
+12,"They named the cube‑shaped monster ""Cube"" and the spherical one ""Sphere""—
+just as they were.",,,res\\image\\talkPrecision.png
+13,"During the week Star Man had encountered a Cube twice as big
+and a Cube half the size; he named them Big Cube and Small Cube.",,,res\\image\\talkPrecision.png
+14,"Star Man made a habit of practicing magic every day.
+For now, throwing stones was more effective on monsters than his magic.",,,res\\image\\talkPrecision.png
+15,"Even so, because there was a ghost that only magic worked on,
+he kept training just in case.",,,res\\image\\talkPrecision.png
+16,—,,,res\\image\\talkPrecision.png
+17,"One day, when Star Man returned to Precision, grilled fish had been set out.",,,res\\image\\talkPrecision.png
+18,"""Those kids finally did it (laughs). There's one for you in the next room too.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+19,said Trapezoid Man.,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+20,"""Then I'll gratefully partake as well.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+21,Star Man went to the next room.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+22,Square Man brought a fish skewered on a wooden stick.,res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+23,"""Here you go.""",res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+24,"""Thanks.""",res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+25,"Star Man bit into the grilled fish.
+Having eaten only acorns and coconuts, he savored every bite.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+26,"""How did you catch it?""",res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+27,"""We sank the net, and when a fish swam over it,
+we lifted the net and caught it.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+28,said Triangle Man.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+29,"""I see.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+30,(I'll try it too...),res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+31,Star Man decided that tomorrow he'd walk toward the mountains.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png

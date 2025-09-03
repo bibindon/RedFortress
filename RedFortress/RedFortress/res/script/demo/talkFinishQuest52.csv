@@ -1,0 +1,14 @@
+﻿ID,オプション1,オプション2,オプション3,background,BGM
+1,ホシマンはプレシジョンに到着した。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision3.png,res\\sound\\toudai.wav
+2,"廃墟に行く前に、隠しておいた武器・道具の方へ行くと
+以前の状態のまま置いてあった。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision3.png,
+3,"新たに作り直した武器・道具のほうが性能はよかったが、
+使ってるうちにすぐ壊れるため持ち帰れば使いようはあった。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision3.png,
+4,ホシマンは離れたところからプレシジョンを見てみた。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision3.png,
+5,"イカダが壊されていた。
+モンスターが壊したのか、雨と風で自然に壊れたのかわからない。
+しかし、あの男が壊したような気がしてならなかった。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision3.png,
+6,ホシマンは、恐る恐るプレシジョンの中に入っていった。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision3.png,
+7,"プレシジョンの内部は荒らされていた。
+あの男が暴れたようだった。
+ホシマンはこの場に長居するのが恐ろしくなり、すぐに帰ることにした。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision3.png,

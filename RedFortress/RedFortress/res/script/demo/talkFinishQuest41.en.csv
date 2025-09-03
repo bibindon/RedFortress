@@ -1,0 +1,42 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,More time had passed since Star Man made the contract.,,,res\\image\\talkGip.png
+2,"One day, Star Man decided to visit ""Gip Lighthouse"" shown on the map.
+He kept walking toward the mountain summit and arrived at his destination.",res\\image\\hoshiman00.png,,res\\image\\talkGip.png
+3,"There was a chubby man gazing out at the sea.
+Hearing Star Man's footsteps, the man turned around.",,res\\image\\gain00.png,res\\image\\talkGip.png
+4,"""Ah, hello...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+5,Star Man gave a slight bow.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+6,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+7,"The chubby man stood perfectly still, as if time had stopped.",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+8,"""Uh, hey...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+9,The man gave a small bow.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+10,"""Nice to meet you. Do you live around here?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+11,Star Man asked.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+12,"""Who the hell are you?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+13,Star Man was startled.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+14,"""Where do you live?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+15,the man asked.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+16,"""Inland.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+17,"""Don't lie to me.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+18,"""It's true.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+19,The man approached with heavy steps.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+20,"""Don't come near me.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+21,"""Huh?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+22,The man shot Star Man a sharp glare.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+23,"""Don't talk to me. Don't come near me.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+24,"""...Sorry. I won't.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+25,"""Hey!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+26,The chubby man kicked him.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+27,"""Ugh.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+28,Star Man fell to the ground.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+29,"""You looking to get killed?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+30,"""I won't come near here again. Relax.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+31,"""Where do you usually live?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+32,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+33,"""Answer me.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+34,The man poked Star Man with his foot.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+35,"""...!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+36,"Star Man started to head back, keeping an eye behind him,
+but the man had drawn a knife.",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+37,(I mustn't talk with this guy...),res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+38,Star Man ran and fled.,res\\image\\hoshiman00.png,,res\\image\\talkGip.png

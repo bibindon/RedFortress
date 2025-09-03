@@ -1,0 +1,36 @@
+﻿ID,タイプ,説明,画像
+cube,Cube,"Closes in and rams you with a
+headbutt. Judging by its size
+and movement, it likely weighs
+several hundred kilograms. It
+stays motionless like a rock
+until you get within a certain
+range.",res\image\rippoutai01.png
+sphere,Sphere,"Approaches quickly - a small
+fry. Not as heavy as a Cube,
+but probably still several
+hundred kilograms. Faster than
+a Cube, but it has less HP.",res\image\sphere00.png
+enban,Disk,"Fires projectiles. It looks
+like it's floating, but up
+close you can see it actually
+has legs.",res\image\enban01.png
+enchu,Cylinder,Attacks at extreme speed.,res\image\enchuu01.png
+bigCube,Big Cube,"A big Cube. High HP and high
+attack.",res\image\bigCube.png
+smallCube,Small Cube,Low HP and low attack.,res\image\smallCube.png
+hankyu,Hemisphere,"A hemisphere-shaped enemy.
+Tries to dodge incoming
+attacks.",res\image\hankyuu.png
+hanen,Semicircle,"A semicircular enemy. It has
+wings and flies, spraying
+acid.",res\image\hanen01.png
+orangeCube,Orange Cube,"An orange Cube. Uses a
+spinning attack.",res\image\orange.png
+ghost,Islander's Ghost,"An islander who died after
+making a contract with Xeoff.
+Drawn toward Star Man's vial,
+a desire lingering from life.
+Even if they obtain the vial,
+they can't do anything with
+it.",res\image\ghost00.png

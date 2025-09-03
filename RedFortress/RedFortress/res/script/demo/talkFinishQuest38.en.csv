@@ -1,0 +1,50 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,Star Man arrived near the See Poroporo Moss Garden.,res\\image\\hoshiman00.png,,res\\image\\talkKokeniwa.png
+2,(It feels like a place people shouldn't enter...),res\\image\\hoshiman00.png,,res\\image\\talkKokeniwa.png
+3,The white person he'd met by the coconut trees was there.,res\\image\\hoshiman00.png,,res\\image\\talkKokeniwa.png
+4,"""...""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+5,Star Man looked toward them and watched for a reaction.,res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+6,"""...""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+7,The white person kept staring at him expressionlessly.,res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+8,"""What do you want?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+9,"""...""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+10,(Maybe I should back away...),res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+11,"""I am an experimental subject.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+12,"""...!""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+13,Star Man asked again.,res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+14,"""One of those monsters?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+15,"""Yes.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+16,"""...""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+17,"""It seems we can talk, but are you human?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+18,"""No.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+19,"""Where did you come from?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+20,"""This island.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+21,"""If you don't trust me, I'll go.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+22,"""...No, that's not what I mean.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+23,"""What are you, exactly?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+24,"""A created being.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+25,"""Show me your back.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+26,"""I won't.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+27,"""I wanted to see if you have wings.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+28,"""I have wings.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+29,"""...!""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+30,"""I won't show you.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+31,"""Why won't you show me?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+32,"""Because I can't trust you.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+33,"""How can I get you to trust me?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+34,"""If I can tell you're not trying to harm me.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+35,The experimental subject seemed not to fully understand.,res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+36,"""If I come here, can I meet you again?""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+37,"""Yes. If the timing lines up.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+38,"""I see. All right.""",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+39,"(I kind of want to let the kids meet them,
+ but it's a little scary.)",res\\image\\hoshiman00.png,res\\image\\vim00.png,res\\image\\talkKokeniwa.png
+40,Star Man headed for the ruins.,res\\image\\hoshiman00.png,,res\\image\\talkKokeniwa.png
+41,—,,,res\\image\\black.png
+42,The experimental subject came up onto a hill. Another white person was there.,res\\image\\vim00.png,res\\image\\vsco00.png,res\\image\\talkKokeniwa2.png
+43,"""How was it?""",res\\image\\vim00.png,res\\image\\vsco00.png,res\\image\\talkKokeniwa2.png
+44,"""...""",res\\image\\vim00.png,res\\image\\vsco00.png,res\\image\\talkKokeniwa2.png
+45,"""Not harmful.""",res\\image\\vim00.png,res\\image\\vsco00.png,res\\image\\talkKokeniwa2.png
+46,"""I see.""",res\\image\\vim00.png,res\\image\\vsco00.png,res\\image\\talkKokeniwa2.png
+47,"""Yeah.""",res\\image\\vim00.png,res\\image\\vsco00.png,res\\image\\talkKokeniwa2.png
+48,The two stood there without moving.,res\\image\\vim00.png,res\\image\\vsco00.png,res\\image\\talkKokeniwa2.png

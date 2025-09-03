@@ -1,0 +1,32 @@
+﻿ID,オプション1,オプション2,オプション3,
+1,ホシマンは今日あったことを仲間に話した。,,,res\\image\\talkPrecision.png
+2,「この位置に危険な男がいる」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+3,「会ってすぐにナイフで襲ってきた」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+4,「もう一度会って、ちゃんと話してみたら？」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+5,サンカクマンは言った。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+6,「いや・・・話が通じる感じではなかった」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+7,ダイケイマンは渋い顔をした。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+8,「ガリガリの男だった？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+9,「いや・・・、どちらかというと少し太っていた」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+10,「じゃあノーブルだ。ありえんくらい太ってただろ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+11,「うーん・・・？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+12,（そこまでではなかった気がする。痩せたのか？）,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+13,"「ネスとノーブルは関わるな。
+　俺の足がこうなってるのもあいつらのせいみたいなもんだ」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+14,「なにがあったんだ・・・？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+15,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,「まぁ、いろいろだ・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+17,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+18,"「今はギップ灯台にいるのか。前は港跡に・・・、
+　多分このバーチャルベックス港跡にいたんだ。
+　ネスとノーブル。ネスがガリガリ、ノーブルは太ってる」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+19,"「てことは、今はバーチャルベックス港跡には人がいないんじゃないか？
+　イカダを作らなくても、そこに行けば船が手に入るかもしれない」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+20,"「船はなかったと思う。
+　船に使えそうな材料くらいは見つかるかもしれないが」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+21,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+22,「今度、行ってみるよ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+23,　ダイケイマンは少し考えた。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+24,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+25,「用心してくれ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+26,「ああ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png

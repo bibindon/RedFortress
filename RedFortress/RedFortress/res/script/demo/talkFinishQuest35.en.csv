@@ -1,0 +1,22 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,The four gathered in Trapezoid Man's room.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,"""About this... I think it might be copper ore.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+3,Star Man showed it to Trapezoid Man.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+4,"""Is that so?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+5,"""I've seen it in a game. If you heat it, it becomes copper. In that game, anyway.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+6,said Triangle Man.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+7,"""If we burn this, will it turn into copper?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+8,"""Probably not hot enough. A campfire won't cut it.
+Maybe you could melt it with magic?""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+9,said Triangle Man.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+10,"""Got it. I'll try later.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+11,"""I feel like you build something like a chimney and blow air in from below.
+I've seen a video like that.""",res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+12,said Square Man.,res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+13,"""I might've seen that too. But we don't need it for building the boat, do we?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+14,"""Not as a boat material, but it could help with processing wood.
+And if we can make a pot, we might increase how many days we can survive at sea.
+Also, right now I want weapons to move around the forest.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+15,"""I see. Right. Don't you make that kind of thing out of bronze?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,"""I think so. Does anyone know the difference between bronze and copper?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+17,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png

@@ -1,0 +1,47 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,夕方に４人はダイレクトネクス海岸洞窟に到着した。,,,res\\image\\talkKaigan.png
+2,ホシマンは洞窟の中を調べた。,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+3,"（洞窟・・・ではないような。
+　場所を間違えてるのかなんだかわからないが）",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+4,"（ここで問題ないだろう。
+　入口が限られているから襲撃に備えやすい・・・
+　ような気がする）",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+5,ホシマンは洞窟から出てきた。,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+6,"「人が生活できそうな形状だ。
+　今日はもう寝よう」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+7,"海岸洞窟で流木を集め焚き火を作ると、シカクマンは寝た。
+４人はそこで休んだ。",,,res\\image\\talkKaigan.png
+8,"ホシマンが海岸を歩いていると黒い貝が群生している岩があった。
+ホシマンは、石斧で一つ剥がしダイケイマンに見せに行った。",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+9,「これ・・・ムール貝だろうか？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+10,"「そうみえるけど、わからない・・・。
+　というか黒い貝でムール貝以外の貝を俺、知らないし」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+11,「私もだ・・・。焼いてから、米粒大のかけらだけ食べてみよう」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+12,「その役は俺がやるよ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+13,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+14,ホシマンは焚き火の横に石を置き石の上に貝を置いて焼いた。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+15,しばらくして貝に火が通った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+16,"ダイケイマンは貝の身を噛んでカケラだけ食べた。
+１時間後に問題がなかったので今度は一粒食べた。",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+17,「くぅ～うますぎる！」,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+18,「毒じゃないといいけどね～」,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+19,「うっ　は、腹がぁ～」,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+20,「あははは」,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+21,"ホシマンは一人、洞窟の掃除をしていた。
+ゴミの中にトランプの箱があった。
+中を見るとカードは全て揃っているようだった。",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+22,"ホシマンが焚き火の方を見るとシカクマンは寝ていて、
+サンカクマンとダイケイマンは木の枝で焚き火をつついて談笑していた。",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+23,「トランプがあった」,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+24,ホシマンは焚き火の前に座り二人に渡した。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+25,―――,,,res\\image\\talkKaigan.png
+26,１時間後。,,,res\\image\\talkKaigan.png
+27,"シカクマンは眠りから覚め、
+ダイケイマンがサンカクマンとシカクマンにポーカーを教えていた。",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+28,「フラッシュとストレートってどっちが強いんだっけ・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+29,「フラッシュだったと思う」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+30,「そうだ、ホシマン。さっきの貝だけどなんともないよ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+31,ダイケイマンは親指を立てた。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+32,「わかった。とってくる」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+33,"ホシマンは石斧と袋を抱えて黒い貝の群生地に向かった。
+その後、４人は黒い貝を焼いて食べながらポーカーをして過ごした。",,,res\\image\\talkKaigan.png

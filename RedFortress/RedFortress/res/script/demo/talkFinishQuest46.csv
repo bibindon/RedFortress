@@ -1,0 +1,112 @@
+﻿ID,オプション1,オプション2,オプション3,background,BGM
+1,"ホシマンがダイケイマンの部屋に入ると
+横から何者かに突然突き飛ばされた。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,res\\sound\\toudai.wav
+2,存在してはならない男がいた。,,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+3,"ギップ灯台の男だった。
+ホシマンは全身の毛が逆立ったのを感じた。
+ホシマンはダイケイマンたちの方を見た。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+4,ダイケイマンは倒れ顔から出血していた。,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+5,"
+床に血痕があった。子供たちは座り込んで顔が腫れ、泣いていた。",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+6,「何の用だ・・・！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+7,"「あぁ？　何の用だァ？　ふざけんじゃねェぞてめェ！
+　殺すぞオラァ！」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+8,男はホシマンの頭の角を掴んで握りつぶそうとしてくる。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+9,「何がしたいんだ、たのむ、説明をしてくれ・・・！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+10,「オマエらが、勝手に盗んだんだろ！　人のモンを！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+11,「わかった・・・話を聞くから、一度手を放してくれ・・・！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+12,"「あぁ？　うるせェなぁ！
+　ぬすっとがなめた口きいてんじゃねーよ！」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+13,ホシマンは男を蹴って突き飛ばした。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+14,"「あぁ？　てめぇやりやがったなぁ？
+　てめぇ何してくれてんだよ！　ブチ殺すぞ！」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+15,「盗んだって、一体何を盗んだって言ってるんだ！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+16,「ここにあるもの全部だバカが！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+17,「・・・全部・・・？！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+18,"どういうことかわからず、理解が追い付かなかった。
+ダイケイマンたちの方を見たが目を合わせず何も言わなかった。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+19,「オメーらが人の家に勝手に入ってンだろうが！！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+20,「・・・？」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+21,「ここに以前住んでたのか？」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+22,"「そうだよ！　ずっと前から住んでたのにちょっと家、
+　離れたらめちゃくちゃにしやがって！
+　どう責任とンだよ！　えぇ！？」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+23,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+24,「言いたいことは分かったが、まずは『返せ、出ていけ』と言えよ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+25,"「はぁ？！　ちげぇよ。
+　こっちが説明しようとしてんのにこいつらが先にやってきたんだ」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+26,男はダイケイマンたちの方を指さした。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+27,「・・・そうか。とりあえず、私たちは出ていく」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+28,"「はぁあ！？　そんなんでいいと思ってんのか？！
+　こんなに家をめちゃくちゃにしやがって！」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+29,「なるべく、元に戻すようにする」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+30,"「適当なこと言いやがって！
+　ふざけてんのかてめェ・・・オイ、正座しろやオラ！」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+31,「・・・？！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+32,「わりぃと思ってんなら謝罪しろよ。それが常識ってもンだろうが！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+33,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+34,ホシマンは正座した。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+35,「どうもすみませんでした」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+36,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+37,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+38,「ここにある食料は全部置いていけ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+39,「・・・？！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+40,「今、謝罪したよなぁ！　じゃあ自分が悪いって認めたんじゃねぇか！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+41,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+42,「あとこれから、手に入れた食料は半分ここに毎日収めろ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+43,「・・・！？」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+44,「そんな要求は引き受けられない」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+45,「こっちだってギリギリでやってるんだ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+46,「んだとテメェ！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+47,男はホシマンを蹴った。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+48,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+49,男はホシマンの首を絞め、揺さぶる。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+50,（もう・・・こいつを殺すしか・・・）,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+51,（やるか・・・やらないと・・・）,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+52,"男は手を離し、子供のほうに歩いて行った。
+座っていた子供たちは手で頭を覆う。",,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+53,"男はサンカクマンを殴った。
+男はサンカクマンの頭をつかみ地面にたたきつけた。",res\\image\\sankakuman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+54,"「俺だってこんなことしたくねぇよ？
+　でもこいつらが人のもの盗んで壊して返さねぇっていうからさぁ！」",res\\image\\sankakuman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+55,男はサンカクマンの顔をホシマンに向けた。,res\\image\\sankakuman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+56,"「自分のせいで子供がこんな目に遭っても、
+　それでも自分のことが一番大事なんだってよ。
+　性根が腐ってるよなぁ！　緑色の血でも流れてンだろ！」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+57,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+58,「わかったよ」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+59,ダイケイマンが言った。,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+60,「今から出ていくし、手に入れた食料も半分ここに持ってくる。すまなかった」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+61,男はサンカクマンから手を離し立ち上がった。,,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+62,「じゃ、そーいうことでよろしくぅ～」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+63,"男は出口の方に歩いて行った。
+通り道にいたホシマンの前で止まった。
+男は足でホシマンの顔を押そうとし、ホシマンは避けた。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+64,「どけオラ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+65,"ホシマンを足で押しのけ、男は廊下に出て帰って行った。
+ホシマンたちは男の足音が聞こえなくなってもしばらく黙っていた。
+子供たちは泣いていた。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+66,ホシマンは子供たちの方に歩み寄った。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+67,「大丈夫か・・・？」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+68,「・・・」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+69,返事はなかった。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+70,「・・・」,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+71,"「あいつは、ガインと言う奴だ。
+　あの、言っておくと、あいつが言っていた、
+　『こいつらが先に手を出した』って話。あれは嘘」",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+72,「会うなり殴りかかってきた」,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+73,ダイケイマンが言った。,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+74,「・・・そうか。そうだと思う」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+75,「あの人、船でみたよ。僕たちと同じ船に乗ってた」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+76,シカクマンが言った。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+77,「・・・」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+78,「じゃあずっと前からここにいたってのも嘘か・・・」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+79,「なんで僕たちが出ていかないといけないの？！　おかしいじゃん！」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+80,サンカクマンが言った。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+81,「・・・」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+82,「君の言ってることは正しいよ」,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+83,ダイケイマンが言った。,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+84,「だけど、そんなこと言ってもしょうがないんだ」,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+85,「おかしいって！　あんなやつ殺しちゃえばいいんだよ！」,res\\image\\sankakuman00.png,,res\\image\\talkPrecision.png,
+86,「・・・それは・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+87,ホシマンたちはなんて言っていいかわからなかった。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,

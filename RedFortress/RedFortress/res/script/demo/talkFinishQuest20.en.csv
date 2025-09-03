@@ -1,0 +1,187 @@
+﻿ID,オプション1,オプション2,オプション3,BackGround,BGM
+1,(My head hurts... My nose hurts... The soles of my feet hurt...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,res\\sound\\dying.wav
+2,He kept repeating the cycle of sitting down and walking again and again.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+3,Star Man sat and looked at his left arm. It had turned dark red and black.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+4,(It doesn't hurt as much as it looks.),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+5,Birdsong went on without a break.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+6,"(It'd be nice if I could catch a bird and eat it,
+ but there's no way. If I could take eggs from a nest, I would...)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+7,(I've never once found a bird's nest in my life...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+8,"Star Man looked up, searching for oak trees.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+9,"(Probably... You can't pick up acorns year‑round,
+ so I'll have to find other foods at some point.
+ How long do acorns keep? They seem like they'd store well.)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+10,(!!),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+11,"A heavy impact—<THUD>—hit Star Man.
+He looked around in a panic; his body was on fire.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+12,"""Ugh...!""",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+13,"Not knowing what was happening, Star Man rolled around on the ground.
+Even rolling and throwing dirt on himself wouldn't put out the flames.
+At length the fire went out on its own.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+14,"He had suffered severe burns; smoke rose from his body.
+Star Man couldn't grasp the situation, but he had a premonition he would not survive.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+15,(!?),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+16,"Looking around, he saw a semi‑transparent, human‑shaped thing slowly drawing near.
+...Flames appeared from the ghost's hand, and when it swung, the fire flew toward Star Man.",,res\\image\\ghost00.png,res\\image\\talkKaigan2.png,
+17,"""What the...?!""",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+18,The human‑shaped thing was passing through trees and rocks as it came toward him.,,res\\image\\ghost00.png,res\\image\\talkKaigan2.png,
+19,"Star Man tried to flee, but managing a few steps was the best he could do.
+His strength gave out and he dropped to his knees.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+20,"Looking back, the ghost was slowly approaching.",,res\\image\\ghost00.png,res\\image\\talkKaigan2.png,
+21,"The ghost reached out its hand. It looked about to do something,
+ but he could no longer even move.
+Flames appeared from the ghost's hand and flew toward Star Man with a flick.",,res\\image\\ghost00.png,res\\image\\talkKaigan2.png,
+22,"Unable to dodge, Star Man was burned all over by the flames.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+23,Star Man collapsed and couldn't move a millimeter.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+24,(So this is the end...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+25,"He closed his eyes.
+In the darkness, he could hear only his own heartbeat.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+26,"Events strongly imprinted in his past
+floated up in Star Man's mind.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+27,Not a single good thing came to mind.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+28,"(Me... I failed at everything...
+In the end, I never became anything...)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+29,—,,,res\\image\\talkKaigan2.png,
+30,<VROOOOM>,,,res\\image\\talkKaigan2.png,
+31,(!?),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+32,"A black vortex appeared before Star Man with a deep bass rumble.
+From it stepped a person whose face was an animal skull.
+Large horns sprouted from the skull.",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+33,"With this new ""monster"" appearing, Star Man wanted to run,
+but his body wouldn't move.",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+34,The horned person held out a hand.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+35,"""I'll be brief.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+36,"""If you make a contract with me, you'll be saved and gain tremendous power.
+However, you'll die in one year. Well?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+37,(?),res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+38,"""...If you make a contract with me, you'll be saved and gain tremendous power.
+However, you'll die in one year. Well?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+39,The ghost was drawing nearer.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+40,"""What... is that...?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+41,Star Man forced out the words.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+42,"""The ghost of a human who once lived on this island.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+43,"""If I make the contract... will these burns be healed...?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+44,"""Yes.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+45,"""...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+46,"""I'll make the contract.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+47,"""The contract is sealed.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+48,The horned person produced two small vials.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+49,"""This is WordBress. Drink it and, even if you die, you'll revive here.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+50,"""And the burns...?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+51,"""They won't heal just by drinking... They'll be healed when you revive.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+52,(So I have to die once...),res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+53,"""Don't worry. Strictly speaking, when you're on the verge of death,
+your body will be restored and you'll be returned here. If you truly die, it's no good.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+54,"""And you can revive only once per bottle of WordBress.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+55,"""For now... I'll drink one...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+56,The horned person nodded.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+57,"""...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+58,"""Shall I help you drink it?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+59,"""Please...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+60,"The horned person opened the WordBress and poured it into Star Man's mouth.
+Summoning his last strength, Star Man swallowed the liquid.
+He felt something settle inside him.",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+61,"""Also, from here on you'll be able to use magic—fire, ice, and darkness.
+That ghost can only be attacked with dark magic.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+62,"""Like this.""",,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+63,"The horned person faced a palm toward the ghost.
+Black flames shot toward it and struck home.
+The black flame shattered and scattered; the ghost writhed and then vanished.",res\\image\\ghost00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+64,"The horned person looked at Star Man, paused a moment,
+then formed an ice spear on their palm.",,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+65,"""...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+66,"""Want me to bring you back without suffering...?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+67,(...),res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+68,"(I'm not going to make it anyway...
+If this pain is going to continue...)",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+69,Star Man didn't even have the strength to answer. He gave a small nod.,,,res\\image\\talkKaigan2.png,
+70,<THUD! THUD!>,,,res\\image\\talkKaigan2.png,
+71,The ice spear pierced Star Man's neck and chest.,,,res\\image\\talkKaigan2.png,
+72,Star Man fell to the ground. His eyes stayed open and he stopped blinking.,,,res\\image\\talkKaigan2.png,
+73,—,,,res\\image\\talkKaigan2.png,
+74,Star Man woke up.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+75,An ice spear lay before him. The part that had pierced his body was gone.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+76,The horned person stood in front of him.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+77,(It wasn't a dream...),res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+78,Star Man checked the state of his body.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+79,(Everything really is healed.),res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+80,"""Th‑thank you.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+81,"""You're welcome.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+82,Star Man still had one unopened WordBress in his hand.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+83,(...Should I drink this right now?),res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+84,"""If months pass after I drink the vial and I die after that, does it still work?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+85,"""Yes. But if you drink now, the place you revive will be here.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+86,"""I see. I need to choose carefully where to drink it...
+Can I give it to someone else?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+87,"""You can, but only the person who made the contract gets the effect.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+88,"""...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+89,Star Man stared at the WordBress.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+90,(I need to take good care of this last one...),res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+91,"""I once gave about a thousand to the islanders.
+There should be some unused WordBress left here and there.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+92,"""I see...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+93,"""For a fine point: even if you drink two at once, it only counts once.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+94,"""...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+95,"""Also, even if your head is blown off you can revive.
+However, in that case, skills and memories are not restored.
+You won't know who you are, can't use your smartphone, and won't understand words.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+96,"""...I see.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+97,"""That's all.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+98,The horned person summoned a black vortex and started to leave.,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+99,"""...Thank you.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+100,"""No problem.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+101,"""Why did you help me?""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+102,"""Because I want a contract.
+Not many people will agree to a contract that kills them in a year.
+I inevitably appear before those on the verge of death.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+103,"""I see.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+104,"""...""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+105,"""For the record, that ghost earlier isn't in cahoots with me.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+106,"""O‑okay.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+107,"(No way to verify that, though...)",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+108,"""...Farewell, then.""",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan2.png,
+109,The horned person returned into the black vortex.,,,res\\image\\talkKaigan2.png,
+110,Star Man walked toward the forest where the acorns grew.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+111,(...Only one year left to live...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+112,"His body was fully recovered, but Star Man lost the will to do anything.
+He sat on a fallen tree and looked back on his 27 years of life.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+113,(So this is the end of my life...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+114,(...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+115,(What do I want to do in this one year...?),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+116,"Star Man decided he wanted to help Trapezoid Man and the others escape the island.
+Not out of goodwill, but by elimination there was little else.
+He decided to test fire and ice magic for the escape.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+117,(How do I make it come out...?),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+118,"When he imagined flames coming from his hand, flames came from his hand.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+119,(Eh... whoa... whoa!),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+120,"""Hah... hah... hah... hah...""",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+121,"Star Man felt that using magic tired him as much as sprinting at full speed.
+What's more, the flame from his hand was as weak as a candle's flame.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+122,"(If it costs this much stamina for this little, punching would be faster...)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+123,"It felt linked to his stamina and strength—the more he used it, the more tired he got,
+and the stronger it seemed to grow.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+124,"(I'll try the others, too...)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+125,"When he imagined ice, a small ice shard came from his hand.
+When he imagined dark flame, black flames came out.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+126,(I've never seen anything like this. For now I understand what it is.),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+127,Star Man decided to resume gathering acorns.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+128,"(It's still mostly cube‑shaped monsters.
+Until now just standing and walking took everything I had, but now I'm fully recovered.
+Maybe I should try fighting one here—there may be situations where I have to fight.)",res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+129,Star Man slowly approached and tried throwing a stone.,res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+130,"The monster didn't react even when the stone hit.
+It was a jelly‑like mass weighing hundreds of kilograms;
+a few pebbles thrown at it probably wouldn't damage it.",res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+131,"(I'd like to hit it with a heavy rock, but I'm afraid it might bounce back at me...)",res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+132,"After thinking a bit, Star Man came up with a strategy.",res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+133,"He lured the monster to a ledge two meters high.
+The monster could do nothing but jump.",res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+134,"Since it only came straight, staying up high let him attack one‑sided from close range.",res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+135,"Using the ledge, Star Man kept dropping rocks.
+The monster's body was gradually destroyed and collapsed.",res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+136,Eventually the monster stopped moving.,res\\image\\hoshiman00.png,res\\image\\rippoutai00.png,res\\image\\talkKaigan2.png,
+137,(...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+138,"Star Man went over to the monster and examined it.
+It felt like gelatin; when he poked it, it wobbled with a blorp.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+139,(It smells unnatural. It feels dangerous to touch...),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
+140,He decided to wrap a piece in a leaf and bring it back.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png,
