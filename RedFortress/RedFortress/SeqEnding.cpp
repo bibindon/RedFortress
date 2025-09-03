@@ -10,9 +10,9 @@
 
 #include <cassert>
 
-using namespace NSStoryTelling;
+using namespace NSSlideShow;
 
-namespace NSStoryTelling
+namespace NSSlideShow
 {
 class Sprite : public ISprite
 {
@@ -181,15 +181,15 @@ SeqEnding::SeqEnding()
 
     BGMManager::Get()->SetEnding(true);
     {
-        ISoundEffect* pSE = NEW NSStoryTelling::SoundEffect();
+        ISoundEffect* pSE = NEW NSSlideShow::SoundEffect();
 
-        ISprite* sprTextBack = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+        ISprite* sprTextBack = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
         sprTextBack->Load(_T("res\\image\\textBack.png"));
 
-        ISprite* sprFade = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+        ISprite* sprFade = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
         sprFade->Load(_T("res\\image\\black.png"));
 
-        NSStoryTelling::IFont* pFont = NEW NSStoryTelling::Font(SharedObj::GetD3DDevice());
+        NSSlideShow::IFont* pFont = NEW NSSlideShow::Font(SharedObj::GetD3DDevice());
 
         auto finished = QuestManager::Get()->GetQuestFinished(L"Q8500");
 
@@ -205,7 +205,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending01.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -242,7 +242,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending01.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -280,7 +280,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending02.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -362,7 +362,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending02.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -445,7 +445,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending03.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -475,7 +475,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending03.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -511,7 +511,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending04.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -549,7 +549,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending04.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -602,7 +602,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending05.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -620,7 +620,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending05.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -642,7 +642,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending06.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -700,7 +700,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending06.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -748,7 +748,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending07.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -768,7 +768,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending07.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -793,7 +793,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending08.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -822,7 +822,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending08.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -863,7 +863,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending09.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -944,7 +944,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending09.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -1053,7 +1053,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending10.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -1067,7 +1067,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending10.en.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -1084,7 +1084,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending01.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -1123,7 +1123,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending01.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -1170,7 +1170,7 @@ SeqEnding::SeqEnding()
             if (!SharedObj::IsEnglish())
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending10.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -1184,7 +1184,7 @@ SeqEnding::SeqEnding()
             else
             {
                 Page page;
-                ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+                ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
                 sprite->Load(_T("res\\image\\ending10.en.png"));
                 page.SetSprite(sprite);
                 std::vector<std::vector<std::wstring> > vvs;
@@ -1197,7 +1197,7 @@ SeqEnding::SeqEnding()
             }
         }
 
-        m_storyTelling = NEW StoryTelling();
+        m_storyTelling = NEW SlideShow();
         m_storyTelling->Init(pFont, pSE, sprTextBack, sprFade, pageList, SharedObj::IsEnglish());
     }
 }

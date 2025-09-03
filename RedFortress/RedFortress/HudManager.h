@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../../RedFortressHUD/HUD/hud.h"
+#include "../../RedFortressHUD/HUD/HUD.h"
 
 class HudManager
 {
@@ -10,6 +10,6 @@ public:
     void Update();
     void Draw();
 private:
-    NSHud::hud* m_hud = nullptr;
+    NSHUD::HUD* m_hud = nullptr;
 };
 

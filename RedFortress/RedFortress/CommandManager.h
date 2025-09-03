@@ -30,7 +30,7 @@ private:
     void BuildOpeningCommand();
     void BuildLangCommand();
 
-    NSCommand::CommandLib* m_commandLib = nullptr;
+    NSCommand::Command* m_commandLib = nullptr;
 
     // コマンド画面の表示カウント
     int m_counter = 0;

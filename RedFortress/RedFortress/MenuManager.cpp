@@ -23,7 +23,7 @@
 #include "../../RedFortressModel/Model/NpcStatusManager.h"
 #include <cstdio>
 
-namespace NSMenulib
+namespace NSMenu
 {
 // 画像のファイル名が同じなら読み込まずに共有するようにする。
 // さもないと簡単にメモリー不足で落ちる
@@ -258,33 +258,33 @@ MenuManager::MenuManager()
 MenuManager::~MenuManager()
 {
     m_menu.Finalize();
-    NSMenulib::Sprite::Finalize();
+    NSMenu::Sprite::Finalize();
 }
 
 void MenuManager::InitMenu()
 {
-    using namespace NSMenulib;
-    NSMenulib::ISprite* sprCursor = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+    using namespace NSMenu;
+    NSMenu::ISprite* sprCursor = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
     sprCursor->Load(_T("res\\image\\menu_cursor.png"));
 
-    NSMenulib::ISprite* sprBackground = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+    NSMenu::ISprite* sprBackground = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
     sprBackground->Load(_T("res\\image\\menu_back.png"));
 
-    NSMenulib::IFont* pFont = nullptr;
-    NSMenulib::IFont* pFontStatus = nullptr;
+    NSMenu::IFont* pFont = nullptr;
+    NSMenu::IFont* pFontStatus = nullptr;
 
     if (SharedObj::IsEnglish())
     {
-        pFont = NEW NSMenulib::Font(SharedObj::GetD3DDevice(), Common::FontNameEng(), Common::FontSizeEng());
-        pFontStatus = NEW NSMenulib::Font(SharedObj::GetD3DDevice(), L"Courier New", Common::FontSizeEng() - 4);
+        pFont = NEW NSMenu::Font(SharedObj::GetD3DDevice(), Common::FontNameEng(), Common::FontSizeEng());
+        pFontStatus = NEW NSMenu::Font(SharedObj::GetD3DDevice(), L"Courier New", Common::FontSizeEng() - 4);
     }
     else
     {
-        pFont = NEW NSMenulib::Font(SharedObj::GetD3DDevice(), L"BIZ UDMincho", 20);
-        pFontStatus = NEW NSMenulib::Font(SharedObj::GetD3DDevice(), L"BIZ UDMincho", 16);
+        pFont = NEW NSMenu::Font(SharedObj::GetD3DDevice(), L"BIZ UDMincho", 20);
+        pFontStatus = NEW NSMenu::Font(SharedObj::GetD3DDevice(), L"BIZ UDMincho", 16);
     }
 
-    NSMenulib::ISoundEffect* pSE = NEW NSMenulib::SoundEffect();
+    NSMenu::ISoundEffect* pSE = NEW NSMenu::SoundEffect();
 
     m_menu.Init(_T(""), pFont, pFontStatus, pSE, sprCursor, sprBackground, SharedObj::IsEnglish());
 
@@ -308,7 +308,7 @@ void MenuManager::InitMenu()
                 {
                     std::wstring work_str;
 
-                    NSMenulib::ItemInfo itemInfoG;
+                    NSMenu::ItemInfo itemInfoG;
 
                     itemInfoG.SetName(itemDef.GetName());
                     itemInfoG.SetLevel(itemDef.GetLevel());
@@ -317,7 +317,7 @@ void MenuManager::InitMenu()
 
                     itemInfoG.SetDurability(itemInfo.GetDurabilityCurrent());
 
-                    NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+                    NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
 
                     // 画像ファイル名を取得して設定
                     // アイテム種別が武器の時は武器クラスから取得する必要がある
@@ -413,7 +413,7 @@ void MenuManager::InitMenu()
 
             humanInfo.SetName(libHumanInfo.GetName());
 
-            NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+            NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
             sprItem->Load(libHumanInfo.GetImagePath());
             humanInfo.SetSprite(sprItem);
 
@@ -450,7 +450,7 @@ void MenuManager::InitMenu()
                 {
                     std::wstring work_str;
 
-                    NSMenulib::WeaponInfo weaponInfoG;
+                    NSMenu::WeaponInfo weaponInfoG;
 
                     weaponInfoG.SetId(idList.at(i));
                     weaponInfoG.SetSubId(subIdList.at(j));
@@ -462,7 +462,7 @@ void MenuManager::InitMenu()
 
                     weaponInfoG.SetDurability(itemInfo.GetDurabilityCurrent());
 
-                    NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+                    NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
 
                     work_str = weaponManager->GetImageName2(itemDef.GetWeaponId());
 
@@ -522,11 +522,11 @@ void MenuManager::InitMenu()
                 continue;
             }
 
-            NSMenulib::EnemyInfo enemyInfo;
+            NSMenu::EnemyInfo enemyInfo;
             enemyInfo.SetName(enemyDef.GetName());
             enemyInfo.SetDetail(enemyDef.GetDetail());
 
-            NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+            NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
             sprItem->Load(enemyDef.GetImagePath());
             enemyInfo.SetSprite(sprItem);
             infoList.push_back(enemyInfo);
@@ -551,7 +551,7 @@ void MenuManager::InitMenu()
             work_str = skillManager->GetDetail(nameList.at(i));
             info.SetDetail(work_str);
 
-            NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+            NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
 
             if (i == 0)
             {
@@ -603,7 +603,7 @@ void MenuManager::InitMenu()
                 mapInfo.SetName(mapInfoManager->GetName(mapId));
                 mapInfo.SetDetail(mapInfoManager->GetDetail(mapId));
 
-                NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+                NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
                 sprItem->Load(mapInfoManager->GetImagePath(mapId));
                 mapInfo.SetSprite(sprItem);
 
@@ -993,7 +993,7 @@ std::wstring MenuManager::OperateMenu()
 
     // ステータス画面の表示内容を更新
     {
-        std::vector<NSMenulib::StatusInfo> infoList;
+        std::vector<NSMenu::StatusInfo> infoList;
 
         // ホシマン
         {
@@ -1064,10 +1064,10 @@ std::wstring MenuManager::OperateMenu()
                 }
             }
 
-            NSMenulib::StatusInfo info;
+            NSMenu::StatusInfo info;
             info.SetName(Common::LoadString_(IDS_STRING211));
 
-            NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+            NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
             sprItem->Load(_T("res\\image\\hoshiman00.png"));
             info.SetSprite(sprItem);
 
@@ -1232,9 +1232,9 @@ std::wstring MenuManager::OperateMenu()
                 // イカダは複数個持つことができるが、ステータスに表示するのは乗船中のイカダだけ
                 // ・耐久度
                 // ・強化値
-                NSMenulib::StatusInfo info;
+                NSMenu::StatusInfo info;
                 info.SetName(Common::LoadString_(IDS_STRING169));
-                NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+                NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
                 sprItem->Load(_T("res\\image\\raft.png"));
                 info.SetSprite(sprItem);
                 std::wstring work;
@@ -1256,10 +1256,10 @@ std::wstring MenuManager::OperateMenu()
             auto humanInfo = NSModel::HumanInfoManager::GetObj()->GetHumanInfo(L"daikeiman");
             if (humanInfo.GetVisible())
             {
-                NSMenulib::StatusInfo info;
+                NSMenu::StatusInfo info;
                 info.SetName(Common::LoadString_(IDS_STRING121));
 
-                NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+                NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
                 sprItem->Load(_T("res\\image\\daikeiman00.png"));
                 info.SetSprite(sprItem);
 
@@ -1346,10 +1346,10 @@ std::wstring MenuManager::OperateMenu()
             auto humanInfo = NSModel::HumanInfoManager::GetObj()->GetHumanInfo(L"sankakuman");
             if (humanInfo.GetVisible())
             {
-                NSMenulib::StatusInfo info;
+                NSMenu::StatusInfo info;
                 info.SetName(Common::LoadString_(IDS_STRING112));
 
-                NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+                NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
                 sprItem->Load(_T("res\\image\\sankakuman00.png"));
                 info.SetSprite(sprItem);
 
@@ -1437,10 +1437,10 @@ std::wstring MenuManager::OperateMenu()
             auto humanInfo = NSModel::HumanInfoManager::GetObj()->GetHumanInfo(L"shikakuman");
             if (humanInfo.GetVisible())
             {
-                NSMenulib::StatusInfo info;
+                NSMenu::StatusInfo info;
                 info.SetName(Common::LoadString_(IDS_STRING113));
 
-                NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+                NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
                 sprItem->Load(_T("res\\image\\shikakuman00.png"));
                 info.SetSprite(sprItem);
 
@@ -1634,9 +1634,9 @@ void MenuManager::DeleteItem(const std::wstring& id, const int subId)
                 continue;
             }
 
-            // NSMenulib::ItemInfoとNSModel::ItemInfoの変換
+            // NSMenu::ItemInfoとNSModel::ItemInfoの変換
             // レベルと装備状態と耐久度だけでいい
-            NSMenulib::ItemInfo itemInfo;
+            NSMenu::ItemInfo itemInfo;
             itemInfo.SetId(it->GetId());
             itemInfo.SetSubId(it->GetSubId());
             itemInfo.SetLevel(it->GetItemDef().GetLevel());
@@ -1669,7 +1669,7 @@ void MenuManager::DeleteItem(const std::wstring& id, const int subId)
 
 void MenuManager::AddItem(const std::wstring& id, const int subId, const int durability)
 {
-    using namespace NSMenulib;
+    using namespace NSMenu;
     NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
     NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
     NSModel::WeaponManager* weaponManager = NSModel::WeaponManager::GetObj();
@@ -1677,12 +1677,12 @@ void MenuManager::AddItem(const std::wstring& id, const int subId, const int dur
     NSModel::ItemDef itemDef = itemManager->GetItemDef(id);
     std::wstring work_str;
 
-    NSMenulib::ItemInfo itemInfoG;
+    NSMenu::ItemInfo itemInfoG;
 
     itemInfoG.SetName(itemDef.GetName());
     itemInfoG.SetDurability(durability);
 
-    NSMenulib::Sprite* sprItem = NEW NSMenulib::Sprite(SharedObj::GetD3DDevice());
+    NSMenu::Sprite* sprItem = NEW NSMenu::Sprite(SharedObj::GetD3DDevice());
 
     // 画像ファイル名を取得して設定
     // アイテム種別が武器の時は武器クラスから取得する必要がある
@@ -1774,9 +1774,9 @@ void MenuManager::AddItem(const std::wstring& id, const int subId, const int dur
                 continue;
             }
 
-            // NSMenulib::ItemInfoとNSModel::ItemInfoの変換
+            // NSMenu::ItemInfoとNSModel::ItemInfoの変換
             // レベルと装備状態と耐久度だけでいい
-            NSMenulib::ItemInfo itemInfo;
+            NSMenu::ItemInfo itemInfo;
             itemInfo.SetId(it->GetId());
             itemInfo.SetSubId(it->GetSubId());
             itemInfo.SetLevel(it->GetItemDef().GetLevel());
@@ -1867,7 +1867,7 @@ void MenuManager::Equip(const std::wstring& id, const int subId)
         auto itemInfo = Common::Inventory()->GetItemInfo(id, subId);
         Common::Status()->SetEquipWeapon(itemInfo);
 
-        NSMenulib::ItemInfo itemInfoG;
+        NSMenu::ItemInfo itemInfoG;
         itemInfoG.SetId(id);
         itemInfoG.SetSubId(subId);
         itemInfoG.SetDurability(itemInfo.GetDurabilityCurrent());
@@ -1882,7 +1882,7 @@ void MenuManager::Equip(const std::wstring& id, const int subId)
         auto itemInfo = Common::Inventory()->GetItemInfo(id, subId);
         Common::Status()->SetSugegasa(true);
 
-        NSMenulib::ItemInfo itemInfoG;
+        NSMenu::ItemInfo itemInfoG;
         itemInfoG.SetId(id);
         itemInfoG.SetSubId(subId);
         itemInfoG.SetDurability(itemInfo.GetDurabilityCurrent());
@@ -1903,7 +1903,7 @@ void MenuManager::Equip(const std::wstring& id, const int subId)
         auto itemInfo = Common::Inventory()->GetItemInfo(id, subId);
         Common::Status()->EquipBag(itemInfo);
 
-        NSMenulib::ItemInfo itemInfoG;
+        NSMenu::ItemInfo itemInfoG;
         itemInfoG.SetId(id);
         itemInfoG.SetSubId(subId);
         itemInfoG.SetDurability(itemInfo.GetDurabilityCurrent());
@@ -1920,7 +1920,7 @@ void MenuManager::Equip(const std::wstring& id, const int subId)
 void MenuManager::Unequip(const std::wstring& id, const int subId)
 {
     auto itemInfo = Common::Inventory()->GetItemInfo(id, subId);
-    NSMenulib::ItemInfo itemInfoG;
+    NSMenu::ItemInfo itemInfoG;
     itemInfoG.SetId(id);
     itemInfoG.SetSubId(subId);
     itemInfoG.SetDurability(itemInfo.GetDurabilityCurrent());

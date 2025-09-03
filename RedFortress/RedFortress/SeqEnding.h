@@ -14,7 +14,7 @@ public:
     void Render();
 private:
 
-    NSStoryTelling::StoryTelling* m_storyTelling { nullptr };
+    NSSlideShow::SlideShow* m_storyTelling { nullptr };
 
     bool m_firstPage { true };
     bool m_bPlay { false };

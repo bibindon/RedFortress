@@ -9,9 +9,9 @@
 #include "Camera.h"
 #include <cassert>
 
-using namespace NSStoryTelling;
+using namespace NSSlideShow;
 
-namespace NSStoryTelling
+namespace NSSlideShow
 {
 class Sprite : public ISprite
 {
@@ -167,21 +167,21 @@ class SoundEffect : public ISoundEffect
 Opening::Opening()
 {
     {
-        ISoundEffect* pSE = NEW NSStoryTelling::SoundEffect();
+        ISoundEffect* pSE = NEW NSSlideShow::SoundEffect();
         pSE->Init();
 
-        ISprite* sprTextBack = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+        ISprite* sprTextBack = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
         sprTextBack->Load(_T("res\\image\\textBack.png"));
 
-        ISprite* sprFade = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+        ISprite* sprFade = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
         sprFade->Load(_T("res\\image\\black.png"));
 
-        NSStoryTelling::IFont* pFont = NEW NSStoryTelling::Font(SharedObj::GetD3DDevice());
+        NSSlideShow::IFont* pFont = NEW NSSlideShow::Font(SharedObj::GetD3DDevice());
 
         std::vector<Page> pageList;
         {
             Page page;
-            ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+            ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
             if (!SharedObj::IsEnglish())
             {
                 sprite->Load(_T("res\\image\\opening01.png"));
@@ -200,7 +200,7 @@ Opening::Opening()
         }
         {
             Page page;
-            ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+            ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
             sprite->Load(_T("res\\image\\opening02.png"));
             page.SetSprite(sprite);
             std::vector<std::vector<std::wstring> > vvs;
@@ -225,7 +225,7 @@ Opening::Opening()
         }
         {
             Page page;
-            ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+            ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
             sprite->Load(_T("res\\image\\opening03.png"));
             page.SetSprite(sprite);
             std::vector<std::vector<std::wstring> > vvs;
@@ -256,7 +256,7 @@ Opening::Opening()
         }
         {
             Page page;
-            ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+            ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
             sprite->Load(_T("res\\image\\opening04.png"));
             page.SetSprite(sprite);
             std::vector<std::vector<std::wstring> > vvs;
@@ -297,7 +297,7 @@ Opening::Opening()
             pageList.push_back(page);
         }
 
-        m_storyTelling = NEW StoryTelling();
+        m_storyTelling = NEW SlideShow();
         m_storyTelling->Init(pFont, pSE, sprTextBack, sprFade, pageList, SharedObj::IsEnglish());
     }
 }

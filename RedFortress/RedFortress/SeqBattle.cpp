@@ -35,7 +35,7 @@
 
 using namespace NSQuestSystem;
 
-namespace NSStorehouseLib
+namespace NSChest
 {
 
     class Sprite : public ISprite
@@ -196,7 +196,7 @@ namespace NSStorehouseLib
     };
 }
 
-namespace NSTalkLib2
+namespace NSTalk2D
 {
 
 class Sprite : public ISprite
@@ -471,8 +471,8 @@ SeqBattle::SeqBattle()
 
     if (Common::DebugMode())
     {
-        NSTalkLib2::Talk::SetFastMode(true);
-        NSStoryTelling::StoryTelling::SetFastMode(true);
+        NSTalk2D::Talk2D::SetFastMode(true);
+        NSSlideShow::SlideShow::SetFastMode(true);
     }
 
     m_commandManager.Init(CommandManager::eType::Main);
@@ -1117,18 +1117,18 @@ void SeqBattle::ShowStorehouse()
     Common::SetCursorVisibility(true);
 
     // TODO 倉庫を表示する度に倉庫画面を作るのをやめる
-    m_storehouse = NEW NSStorehouseLib::StorehouseLib();
+    m_storehouse = NEW NSChest::Chest();
 
-    NSStorehouseLib::Sprite* sprCursor = NEW NSStorehouseLib::Sprite(SharedObj::GetD3DDevice());
+    NSChest::Sprite* sprCursor = NEW NSChest::Sprite(SharedObj::GetD3DDevice());
     sprCursor->Load(_T("res\\image\\menu_cursor.png"));
 
-    NSStorehouseLib::Sprite* sprBackground = NEW NSStorehouseLib::Sprite(SharedObj::GetD3DDevice());
+    NSChest::Sprite* sprBackground = NEW NSChest::Sprite(SharedObj::GetD3DDevice());
     sprBackground->Load(_T("res\\image\\background.png"));
 
-    NSStorehouseLib::IFont* pFont = NEW NSStorehouseLib::Font(SharedObj::GetD3DDevice());
+    NSChest::IFont* pFont = NEW NSChest::Font(SharedObj::GetD3DDevice());
     pFont->Init(SharedObj::IsEnglish());
 
-    NSStorehouseLib::ISoundEffect* pSE = NEW NSStorehouseLib::SoundEffect();
+    NSChest::ISoundEffect* pSE = NEW NSChest::SoundEffect();
 
     m_storehouse->Init(pFont, pSE, sprCursor, sprBackground, SharedObj::IsEnglish());
     {
@@ -1137,7 +1137,7 @@ void SeqBattle::ShowStorehouse()
 
         auto idList = itemManager->GetItemIdList();
 
-        std::vector<NSStorehouseLib::StoreItem> itemInfoList;
+        std::vector<NSChest::StoreItem> itemInfoList;
         for (std::size_t i = 0; i < idList.size(); ++i)
         {
             NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
@@ -1147,7 +1147,7 @@ void SeqBattle::ShowStorehouse()
                 {
                     std::wstring work_str;
 
-                    NSStorehouseLib::StoreItem itemInfoG;
+                    NSChest::StoreItem itemInfoG;
 
                     itemInfoG.SetName(itemDef.GetName());
                     itemInfoG.SetId(itemDef.GetId());
@@ -1168,7 +1168,7 @@ void SeqBattle::ShowStorehouse()
 
         auto idList = itemManager->GetItemIdList();
 
-        std::vector<NSStorehouseLib::StoreItem> itemInfoList;
+        std::vector<NSChest::StoreItem> itemInfoList;
         for (std::size_t i = 0; i < idList.size(); ++i)
         {
             NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
@@ -1178,7 +1178,7 @@ void SeqBattle::ShowStorehouse()
                 {
                     std::wstring work_str;
 
-                    NSStorehouseLib::StoreItem itemInfoG;
+                    NSChest::StoreItem itemInfoG;
 
                     itemInfoG.SetName(itemDef.GetName());
                     itemInfoG.SetId(itemDef.GetId());
@@ -1954,12 +1954,12 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                     work = work.erase(it, 6);
                     work = Common::AddEnIfEng(work);
 
-                    NSTalkLib2::IFont* pFont = NEW NSTalkLib2::Font(SharedObj::GetD3DDevice());
-                    NSTalkLib2::ISoundEffect* pSE = NEW NSTalkLib2::SoundEffect();
-                    NSTalkLib2::IBGM* pBGM = NEW NSTalkLib2::BGM();
-                    NSTalkLib2::ISprite* sprite = NEW NSTalkLib2::Sprite(SharedObj::GetD3DDevice());
+                    NSTalk2D::IFont* pFont = NEW NSTalk2D::Font(SharedObj::GetD3DDevice());
+                    NSTalk2D::ISoundEffect* pSE = NEW NSTalk2D::SoundEffect();
+                    NSTalk2D::IBGM* pBGM = NEW NSTalk2D::BGM();
+                    NSTalk2D::ISprite* sprite = NEW NSTalk2D::Sprite(SharedObj::GetD3DDevice());
 
-                    m_talk = NEW NSTalkLib2::Talk();
+                    m_talk = NEW NSTalk2D::Talk2D();
                     m_talk->Init(Common::ModExt(work),
                                  pFont,
                                  pSE,
@@ -2039,12 +2039,12 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                         }
                     }
 
-                    NSTalkLib2::IFont* pFont = NEW NSTalkLib2::Font(SharedObj::GetD3DDevice());
-                    NSTalkLib2::ISoundEffect* pSE = NEW NSTalkLib2::SoundEffect();
-                    NSTalkLib2::IBGM* pBGM = NEW NSTalkLib2::BGM();
-                    NSTalkLib2::ISprite* sprite = NEW NSTalkLib2::Sprite(SharedObj::GetD3DDevice());
+                    NSTalk2D::IFont* pFont = NEW NSTalk2D::Font(SharedObj::GetD3DDevice());
+                    NSTalk2D::ISoundEffect* pSE = NEW NSTalk2D::SoundEffect();
+                    NSTalk2D::IBGM* pBGM = NEW NSTalk2D::BGM();
+                    NSTalk2D::ISprite* sprite = NEW NSTalk2D::Sprite(SharedObj::GetD3DDevice());
 
-                    m_talk = NEW NSTalkLib2::Talk();
+                    m_talk = NEW NSTalk2D::Talk2D();
                     m_talk->Init(Common::ModExt(work),
                                  pFont,
                                  pSE,
@@ -3026,12 +3026,12 @@ void SeqBattle::Confirm(eSequence* sequence)
             auto npcStatus = npcManager->GetNpcStatus(npcName);
             std::wstring csvfile = npcStatus.GetTalkCsv();
 
-            NSTalkLib2::IFont* pFont = NEW NSTalkLib2::Font(SharedObj::GetD3DDevice());
-            NSTalkLib2::ISoundEffect* pSE = NEW NSTalkLib2::SoundEffect();
-            NSTalkLib2::IBGM* pBGM = NEW NSTalkLib2::BGM();
-            NSTalkLib2::ISprite* sprite = NEW NSTalkLib2::Sprite(SharedObj::GetD3DDevice());
+            NSTalk2D::IFont* pFont = NEW NSTalk2D::Font(SharedObj::GetD3DDevice());
+            NSTalk2D::ISoundEffect* pSE = NEW NSTalk2D::SoundEffect();
+            NSTalk2D::IBGM* pBGM = NEW NSTalk2D::BGM();
+            NSTalk2D::ISprite* sprite = NEW NSTalk2D::Sprite(SharedObj::GetD3DDevice());
 
-            m_talk = NEW NSTalkLib2::Talk();
+            m_talk = NEW NSTalk2D::Talk2D();
             m_talk->Init(Common::ModExt(csvfile),
                          pFont,
                          pSE,
@@ -3277,18 +3277,18 @@ void SeqBattle::UpdateDebug()
                 Camera::SetCameraMode(eCameraMode::SLEEP);
                 Common::SetCursorVisibility(true);
 
-                m_storehouse = NEW NSStorehouseLib::StorehouseLib();
+                m_storehouse = NEW NSChest::Chest();
 
-                NSStorehouseLib::Sprite* sprCursor = NEW NSStorehouseLib::Sprite(SharedObj::GetD3DDevice());
+                NSChest::Sprite* sprCursor = NEW NSChest::Sprite(SharedObj::GetD3DDevice());
                 sprCursor->Load(_T("res\\image\\menu_cursor.png"));
 
-                NSStorehouseLib::Sprite* sprBackground = NEW NSStorehouseLib::Sprite(SharedObj::GetD3DDevice());
+                NSChest::Sprite* sprBackground = NEW NSChest::Sprite(SharedObj::GetD3DDevice());
                 sprBackground->Load(_T("res\\image\\background.png"));
 
-                NSStorehouseLib::IFont* pFont = NEW NSStorehouseLib::Font(SharedObj::GetD3DDevice());
+                NSChest::IFont* pFont = NEW NSChest::Font(SharedObj::GetD3DDevice());
                 pFont->Init(SharedObj::IsEnglish());
 
-                NSStorehouseLib::ISoundEffect* pSE = NEW NSStorehouseLib::SoundEffect();
+                NSChest::ISoundEffect* pSE = NEW NSChest::SoundEffect();
 
                 m_storehouse->Init(pFont, pSE, sprCursor, sprBackground, SharedObj::IsEnglish());
                 {
@@ -3298,7 +3298,7 @@ void SeqBattle::UpdateDebug()
 
                     auto idList = itemManager->GetItemIdList();
 
-                    std::vector<NSStorehouseLib::StoreItem> itemInfoList;
+                    std::vector<NSChest::StoreItem> itemInfoList;
                     for (std::size_t i = 0; i < idList.size(); ++i)
                     {
                         NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
@@ -3308,7 +3308,7 @@ void SeqBattle::UpdateDebug()
                             {
                                 std::wstring work_str;
 
-                                NSStorehouseLib::StoreItem itemInfoG;
+                                NSChest::StoreItem itemInfoG;
 
                                 itemInfoG.SetName(itemDef.GetName());
                                 itemInfoG.SetId(itemDef.GetId());
@@ -3338,7 +3338,7 @@ void SeqBattle::UpdateDebug()
 
                     auto idList = itemManager->GetItemIdList();
 
-                    std::vector<NSStorehouseLib::StoreItem> itemInfoList;
+                    std::vector<NSChest::StoreItem> itemInfoList;
                     for (std::size_t i = 0; i < idList.size(); ++i)
                     {
                         NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
@@ -3348,7 +3348,7 @@ void SeqBattle::UpdateDebug()
                             {
                                 std::wstring work_str;
 
-                                NSStorehouseLib::StoreItem itemInfoG;
+                                NSChest::StoreItem itemInfoG;
 
                                 itemInfoG.SetName(itemDef.GetName());
                                 itemInfoG.SetId(itemDef.GetId());

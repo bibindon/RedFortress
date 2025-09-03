@@ -19,7 +19,7 @@
 #include "resource.h"
 #include "Camera.h"
 
-namespace NSPatchTestLib
+namespace NSResearch
 {
 // 画像のファイル名が同じなら読み込まずに共有するようにする。
 // さもないと簡単にメモリー不足で落ちる
@@ -239,19 +239,19 @@ void PatchTestManager2::InitPatch()
     Camera::SetCameraMode(eCameraMode::SLEEP);
     Common::SetCursorVisibility(true);
 
-    using namespace NSPatchTestLib;
-    NSPatchTestLib::Sprite* sprCursor = NEW NSPatchTestLib::Sprite(SharedObj::GetD3DDevice());
+    using namespace NSResearch;
+    NSResearch::Sprite* sprCursor = NEW NSResearch::Sprite(SharedObj::GetD3DDevice());
     sprCursor->Load(_T("res\\image\\menu_cursor.png"));
 
-    NSPatchTestLib::Sprite* sprBackground = NEW NSPatchTestLib::Sprite(SharedObj::GetD3DDevice());
+    NSResearch::Sprite* sprBackground = NEW NSResearch::Sprite(SharedObj::GetD3DDevice());
     sprBackground->Load(_T("res\\image\\menu_back.png"));
 
-    NSPatchTestLib::Sprite* sprVBar = NEW NSPatchTestLib::Sprite(SharedObj::GetD3DDevice());
+    NSResearch::Sprite* sprVBar = NEW NSResearch::Sprite(SharedObj::GetD3DDevice());
     sprVBar->Load(_T("res\\image\\vbar.png"));
 
-    NSPatchTestLib::IFont* pFont = NEW NSPatchTestLib::Font(SharedObj::GetD3DDevice());
+    NSResearch::IFont* pFont = NEW NSResearch::Font(SharedObj::GetD3DDevice());
 
-    NSPatchTestLib::ISoundEffect* pSE = NEW NSPatchTestLib::SoundEffect();
+    NSResearch::ISoundEffect* pSE = NEW NSResearch::SoundEffect();
 
     m_guiLib.Init(pFont, pSE, sprCursor, sprBackground, sprVBar, SharedObj::IsEnglish());
 
@@ -462,7 +462,7 @@ void PatchTestManager2::CreateList()
 
             for (size_t j = 0; j < subIdList.size(); ++j)
             {
-                NSPatchTestLib::TestItem testItem;
+                NSResearch::TestItem testItem;
 
                 testItem.SetName(itemDef.GetName());
                 testItem.SetId(itemDef.GetId());
@@ -479,7 +479,7 @@ void PatchTestManager2::CreateList()
 
         for (size_t i = 0; i < queList.size(); ++i)
         {
-            NSPatchTestLib::QueuedTestItem itemInfo;
+            NSResearch::QueuedTestItem itemInfo;
 
             itemInfo.SetName(queList.at(i).GetItemName());
 

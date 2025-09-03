@@ -19,7 +19,7 @@ private:
 
     NSModel::PatchTestManager* GetPatchLib();
 
-    NSPatchTestLib::PatchTestLib m_guiLib;
+    NSResearch::Research m_guiLib;
 
 };
 

@@ -20,7 +20,7 @@ public:
 
 private:
 
-    NSCraftLib::CraftLib m_gui;
+    NSCraft::Craft m_gui;
 
 };
 

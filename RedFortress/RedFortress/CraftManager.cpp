@@ -14,7 +14,7 @@
 #include "Common.h"
 #include "resource.h"
 
-namespace NSCraftLib
+namespace NSCraft
 {
 class Sprite : public ISprite
 {
@@ -226,21 +226,21 @@ public:
 
 void CraftManager::Init()
 {
-    NSCraftLib::Sprite* sprCursor = NEW NSCraftLib::Sprite(SharedObj::GetD3DDevice());
+    NSCraft::Sprite* sprCursor = NEW NSCraft::Sprite(SharedObj::GetD3DDevice());
     sprCursor->Load(_T("res\\image\\menu_cursor.png"));
 
-    NSCraftLib::Sprite* sprBackground = NEW NSCraftLib::Sprite(SharedObj::GetD3DDevice());
+    NSCraft::Sprite* sprBackground = NEW NSCraft::Sprite(SharedObj::GetD3DDevice());
     sprBackground->Load(_T("res\\image\\background.png"));
 
-    NSCraftLib::Sprite* sprPanelLeft = NEW NSCraftLib::Sprite(SharedObj::GetD3DDevice());
+    NSCraft::Sprite* sprPanelLeft = NEW NSCraft::Sprite(SharedObj::GetD3DDevice());
     sprPanelLeft->Load(_T("res\\image\\panelLeft.png"));
 
-    NSCraftLib::Sprite* sprPanelTop = NEW NSCraftLib::Sprite(SharedObj::GetD3DDevice());
+    NSCraft::Sprite* sprPanelTop = NEW NSCraft::Sprite(SharedObj::GetD3DDevice());
     sprPanelTop->Load(_T("res\\image\\craftPanel.png"));
 
-    NSCraftLib::IFont* pFont = NEW NSCraftLib::Font(SharedObj::GetD3DDevice());
+    NSCraft::IFont* pFont = NEW NSCraft::Font(SharedObj::GetD3DDevice());
 
-    NSCraftLib::ISoundEffect* pSE = NEW NSCraftLib::SoundEffect();
+    NSCraft::ISoundEffect* pSE = NEW NSCraft::SoundEffect();
 
     m_gui.Init(pFont, pSE, sprCursor, sprBackground,
                sprPanelLeft, sprPanelTop, SharedObj::IsEnglish());
@@ -743,7 +743,7 @@ void CraftManager::Build()
                 m_gui.SetOutputInfo(unreinforcedId, work);
                 work.clear();
 
-                NSCraftLib::ISprite* sprite1 = NEW NSCraftLib::Sprite(SharedObj::GetD3DDevice());
+                NSCraft::ISprite* sprite1 = NEW NSCraft::Sprite(SharedObj::GetD3DDevice());
                 auto itemDef = Common::ItemManager()->GetItemDef(info.GetItemId());
                 auto imagePath = itemDef.GetImagePath();
 

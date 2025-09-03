@@ -8,9 +8,9 @@
 #include "SoundEffect.h"
 #include <cassert>
 
-using namespace NSStoryTelling;
+using namespace NSSlideShow;
 
-namespace NSStoryTelling
+namespace NSSlideShow
 {
 class Sprite : public ISprite
 {
@@ -168,20 +168,20 @@ class SoundEffect : public ISoundEffect
 StoryManager::StoryManager(const std::wstring& csvFile)
 {
     {
-        NSStoryTelling::ISoundEffect* pSE = NEW NSStoryTelling::SoundEffect();
+        NSSlideShow::ISoundEffect* pSE = NEW NSSlideShow::SoundEffect();
         pSE->Init();
 
-        NSStoryTelling::ISprite* sprTextBack = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+        NSSlideShow::ISprite* sprTextBack = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
         sprTextBack->Load(_T("res\\image\\textBack.png"));
 
-        NSStoryTelling::ISprite* sprFade = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+        NSSlideShow::ISprite* sprFade = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
         sprFade->Load(_T("res\\image\\black.png"));
 
-        NSStoryTelling::IFont* pFont = NEW NSStoryTelling::Font(SharedObj::GetD3DDevice());
+        NSSlideShow::IFont* pFont = NEW NSSlideShow::Font(SharedObj::GetD3DDevice());
 
-        NSStoryTelling::ISprite* sprite = NEW NSStoryTelling::Sprite(SharedObj::GetD3DDevice());
+        NSSlideShow::ISprite* sprite = NEW NSSlideShow::Sprite(SharedObj::GetD3DDevice());
 
-        m_storyTelling = NEW StoryTelling();
+        m_storyTelling = NEW SlideShow();
         m_storyTelling->Init(pFont,
                              pSE,
                              sprTextBack,

@@ -91,7 +91,7 @@ private:
     // 会話
     // TalkManagerがあったほうがよい？
     //----------------------------------------------------------
-    NSTalkLib2::Talk* m_talk = nullptr;
+    NSTalk2D::Talk2D* m_talk = nullptr;
     void OperateTalk();
 
     //----------------------------------------------------------
@@ -115,7 +115,7 @@ private:
     // 倉庫画面
     //----------------------------------------------------------
     void OperateStorehouse();
-    NSStorehouseLib::StorehouseLib* m_storehouse = nullptr;
+    NSChest::Chest* m_storehouse = nullptr;
     bool m_bShowStorehouse = false;
     void ShowStorehouse();
 

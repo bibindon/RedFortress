@@ -6,7 +6,7 @@
 #include <cassert>
 #include "resource.h"
 
-namespace NSHud
+namespace NSHUD
 {
 class Sprite : public ISprite
 {
@@ -151,16 +151,16 @@ void HudManager::Init()
         {
             delete m_hud;
         }
-        m_hud = NEW NSHud::hud();
-        NSHud::IFont* pFont = NEW NSHud::Font(SharedObj::GetD3DDevice());
+        m_hud = NEW NSHUD::HUD();
+        NSHUD::IFont* pFont = NEW NSHUD::Font(SharedObj::GetD3DDevice());
 
-        NSHud::ISprite* sprBack = NEW NSHud::Sprite(SharedObj::GetD3DDevice());
+        NSHUD::ISprite* sprBack = NEW NSHUD::Sprite(SharedObj::GetD3DDevice());
         sprBack->Load(_T("res\\image\\status_back.png"));
 
-        NSHud::ISprite* sprMiddle = NEW NSHud::Sprite(SharedObj::GetD3DDevice());
+        NSHUD::ISprite* sprMiddle = NEW NSHUD::Sprite(SharedObj::GetD3DDevice());
         sprMiddle->Load(_T("res\\image\\status_middle.png"));
 
-        NSHud::ISprite* sprFront = NEW NSHud::Sprite(SharedObj::GetD3DDevice());
+        NSHUD::ISprite* sprFront = NEW NSHUD::Sprite(SharedObj::GetD3DDevice());
         sprFront->Load(_T("res\\image\\status_front.png"));
 
         m_hud->Init(pFont, sprBack, sprMiddle, sprFront, SharedObj::IsEnglish());

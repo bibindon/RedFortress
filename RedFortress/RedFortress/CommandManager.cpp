@@ -184,7 +184,7 @@ void CommandManager::Init(const eType type)
         delete m_commandLib;
     }
 
-    m_commandLib = NEW NSCommand::CommandLib();
+    m_commandLib = NEW NSCommand::Command();
 
     NSCommand::Sprite* sprCursor = NEW NSCommand::Sprite(SharedObj::GetD3DDevice());
     sprCursor->Load(_T("res\\image\\command_cursor.png"));

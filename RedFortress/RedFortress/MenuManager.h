@@ -18,7 +18,7 @@ public:
 
 private:
 
-    NSMenulib::MenuLib m_menu;
+    NSMenu::Menu m_menu;
 
     bool IsBagEquiped(const std::wstring& id, const int subId);
     void Equip(const std::wstring& id, const int subId);
