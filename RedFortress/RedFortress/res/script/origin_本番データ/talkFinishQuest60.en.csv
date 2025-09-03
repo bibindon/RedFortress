@@ -1,0 +1,41 @@
+ID,オプション1,オプション2,オプション3,background
+1,"One night, the three sat by the campfire eating bananas and papayas.",,,res\\image\\talkKaigan3.png
+2,"Eating a banana, Star Man spoke.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan3.png
+3,"""No matter how much hassle or fear there is, I will never fail to come back.
+ Make me swear it.""",res\\image\\hoshiman00.png,,res\\image\\talkKaigan3.png
+4,"""Yeah, I believe you. You've earned it with your daily conduct.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+5,"""I'll be waiting—!""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan3.png
+6,"""Thank you. Even if I'm bones, I'll make it back.
+ If we ask the government for help, I feel like it'll only lower the odds of returning.
+ I'll somehow get ahold of something like a motorboat and come to you.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan3.png
+7,"""Worst case, I'll steal a boat and become a criminal if I have to—
+ but I'll come for sure.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan3.png
+8,"""O-oh...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+9,"""When I come back to the island, getting close might reactivate the contract,
+ and I could die while steering the boat.
+ If that happens, do what you can to catch the boat.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+10,"""If that happens—well, let's hope it doesn't—
+ we'll have to catch an unmanned boat.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+11,"""Right.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+12,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+13,"""Also, if you get mixed up in some incident and this spot gets hard,
+ come to ThinkHat Beach.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+14,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+15,Trapezoid Man fell into thought.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+16,"""Are we overlooking anything?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+17,"""..."" ""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+18,They paused their meal and thought for a while.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+19,"""It's 100 km to the opposite shore, so even if the raft breaks,
+ if we swim hard, we might make it.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+20,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+21,"""The biggest worry is getting swept south into the Blenber Sea Area...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+22,"To the south was nothing but ocean—no islands, no continent.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+23,"""Out there it'll be nothing but sea, so we might not notice how far we're drifting.
+ I've seen movie scenes where sailors find their position by the stars.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+24,"""I don't really know how that works...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+25,"""Me neither...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+26,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+27,"""The countermeasure I can think of now is a short, decisive dash—
+ cover the 100 km in one go.
+ The longer it takes, the likelier we drift off course.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png
+28,"""Hmm...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan3.png

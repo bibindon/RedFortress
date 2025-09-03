@@ -1,0 +1,156 @@
+﻿ID,オプション1,オプション2,オプション3,background,bgm
+1,"「ネスに会ったが知らないと言っていた。
+　ネスの周りにシカクマンの手がかりになりそうなものはなかった」",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+2,ホシマンはダイケイマンとサンカクマンに言った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+3,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+4,「となるとガインか、モンスターか・・・？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+5,"「モンスターに襲われた、のほうがあり得ると思う。
+　ガインがシカクマンを誘拐するのがわからないし、
+　仮にそうだとしたら人質を使ってゆすりに来るだろう」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+6,「モンスターはこの島のどこにでもいる・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+7,「「「・・・」」」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+8,すでにシカクマンが行方不明となってから１週間が経過していた。,,,res\\image\\talkKaigan.png,
+9,―――,,,res\\image\\talkKaigan.png,
+10,さらに１週間後。,,,res\\image\\talkKaigan.png,res\\sound\\toudai.wav
+11,シカクマンが行方不明となってから２週間。皆、諦め始めていた。,,,res\\image\\talkKaigan.png,
+12,"ある日の昼、ガインがやってきた。
+その日、ホシマンは遠出しておらず海岸洞窟にいた。
+ガインはホシマンの方へ早歩きでやって来て、肩を強く掴んだ。",,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+13,「おい！　てめェ・・・」,,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+14,ホシマンは手を払おうとしたがガインはホシマンの首を掴んだ。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+15,「舐めたマネしやがったな・・・。ブチ殺すぞこの野郎！！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+16,ガインがホシマンの顔面を殴った。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+17,"ホシマンはよろめき倒れた。
+ガインは倒れたホシマンに駆け寄るとホシマンの頭を何度も踏みつけた。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+18,ホシマンは丸まって手で頭を守った。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+19,「・・・！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+20,ホシマンの背中に激痛が走った。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+21,"ガインはニヤけながらホシマンの背中やわき腹をナイフでつついていた。
+故意に１センチ近く刺していた。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+22,―――,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+23,（・・・っ）,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+24,（やはり殺すしか・・・）,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+25,"ホシマンはガインの足首を掴んだ。
+ホシマンが足を凍らせようと力を込めたとき、「ドス」という音がした。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+26,ガインの腕に矢が刺さっていた。,,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+27,周りを見回すとダイケイマンが弓を構えていた。,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+28,「てめぇ・・・！」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+29,「どうしてこの場所がわかった」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+30,ダイケイマンはガインに聞いた。,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+31,「はぁ？　なんでンなこと、言わなきゃいけねぇんだよ！」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+32,「・・・」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+33,「あ」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+34,ガインは何かを思い出し、ニヤニヤと笑い出した。,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+35,「頭が四角のガキから教わったんだよ」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+36,「「！！」」,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+37,ホシマンはガインの腕をつかんだ。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+38,「シカクマンはどこだ。話せ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+39,ガインの腕は燃え始めた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+40,「なっ・・・！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+41,ガインは暴れ、ホシマンが手を離すと後ずさりした。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+42,「俺は知らねぇよ・・・！　ネスが言ってたんだ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+43,「ネスはシカクマンのことを知らないって言ってたぞ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+44,「・・・！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+45,「チッ、バカが！,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+46,「あいつは嘘しか喋らねぇんだよ！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+47,ガインは走り去ろうとした。ホシマンは追いかけた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+48,"（こいつを逃したら、シカクマンへの手がかりを失う。
+　もう逮捕されようが刑務所に入ろうが知ったことか・・・！）",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkKaigan.png,
+49,"ホシマンが走り出したとき、
+どこからか現れた亡霊がサンカクマンやダイケイマンの方へ向かってきていた。",,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+50,（くそ・・・こんなときに！）,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+51,（亡霊はゆっくりとしか歩けない・・・）,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+52,（後で対処するようにしたいが、それだとダイケイマンが・・・）,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+53,「！！」,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+54,ホシマンは立ち止まった。,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+55,「そんな・・・」,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+56,亡霊はシカクマンだった。,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+57,シカクマンの亡霊は無表情でサンカクマンに近づいてきた。,res\\image\\sankakuman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+58,"サンカクマンはたじろぐが、シカクマンと触れても何も起きなかった。
+シカクマンはサンカクマンの隣で座った。
+サンカクマンもそれを見て座った。シカクマンはサンカクマンの隣でくつろぎ始めた。",res\\image\\sankakuman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+59,ホシマンは膝から崩れ落ちた。,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+60,―――,,,res\\image\\talkKaigan.png,
+61,"３人はしばらくシカクマンと過ごした。
+シカクマンはサンカクマンの近くをうろうろするだけで何もしなかった。",res\\image\\sankakuman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+62,「このまま同居するかぁ・・・？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+63,「え・・・。別にいいけど・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+64,（ありなのか・・・？　まぁそういう漫画とかあるよな・・・）,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+65,ホシマンがシカクマンの方を見ると、シカクマンが森の方を見つめていた。,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+66,（？）,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+67,シカクマンは後ずさりした。,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+68,"ホシマンは武器をもって森の方に歩いて行った。
+森の方に歩いていくとガサガサと葉っぱの擦れる音がした。
+逃げているように聞こえたのでホシマンは走って確認しに行った。",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+69,そこにはモンスターがいた。半球状のモンスターだった。,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+70,"（いや・・・違う。こいつは関係ない。
+　さっきの音は森の奥の方に走り去っていった・・・。
+　気になるが、こいつはこいつで倒しておこう）",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+71,ホシマンがモンスターと距離をとって弓矢で戦おうとするとシカクマンがやってきた。,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+72,「どうした？　どうした？」,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+73,"サンカクマンは追いかけた。
+シカクマンはホシマンの横を通り過ぎると敵の方に歩いて行った。",res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+74,（・・・？）,res\\image\\hoshiman00.png,res\\image\\shikakuman01.png,res\\image\\talkKaigan.png,
+75,シカクマンが敵の方に歩いていくとシカクマンは姿を消した。,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+76,「・・・」,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+77,"モンスターは苦しんでのたうち回っているようだった。
+モンスターはやがて赤く変色し、人型に変形していった。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+78,「これ・・・シカクマンじゃないか？」,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+79,頭の形が四角になっていた。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+80,"何が起きているか分からないが・・・
+もしかしてシカクマンは生き返るのでは・・・、そんな期待を皆がしていた。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+81,"しばらくして変形が終わり、シカクマンと同じ形状で全身が赤い人の姿があった。
+赤い人は立ち上がった。
+３人とも何が起きるか息をひそめて見守っていた。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+82,"赤い人は「あー」と言いながら、サンカクマンの方に歩いて行った。
+その歩く姿と声からシカクマンであることは疑いようがなかった。",res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+83,"シカクマンは亡霊だった時と同じようにサンカクマンの周りをウロウロした。
+「あー」と「うー」しか話せないようだった。",res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+84,「よかったよかった」,res\\image\\daikeiman00.png,,res\\image\\talkKaigan.png,
+85,ダイケイマンは言った。,res\\image\\daikeiman00.png,,res\\image\\talkKaigan.png,
+86,"「シカクマンは元々大人しくて頭よかったし、
+　また言葉を覚えなおして元通りになれるんじゃないか？」",res\\image\\daikeiman00.png,,res\\image\\talkKaigan.png,
+87,ダイケイマンはドングリを見せた。,res\\image\\daikeiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+88,「食べなー」,res\\image\\daikeiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+89,シカクマンはドングリをじっと見ると手に取って食べた。,res\\image\\daikeiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+90,そこに黒い渦が現れた。黒い渦から角の生えた人が現れた。,,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+91,「！？」,res\\image\\daikeiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+92,「だ、だれ！？」,res\\image\\daikeiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+93,「彼が前に話した角の生えた人だ」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+94,ホシマンは仲間に伝えた。,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+95,「『角の生えた人』・・・。まぁいい」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+96,角の生えた人、という呼び名に少し引っかかったようだった。,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+97,「一応、親切で教えるんだが・・・」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+98,「彼はレッドマン。シカクマンの魂にモンスターの肉体が合体した姿だ」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+99,「・・・」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+100,「レッドマンは１週間しか生きられない」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+101,「「！！」」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+102,「それは本当なのか・・・！」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+103,「本当だ」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+104,「・・・」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+105,"「信じなくてもよいが、
+　心の準備とお別れの挨拶ができるように、
+　１週間しか生きられない、と教えることにしている」",res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+106,「・・・何か方法はないのか」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+107,「ない」,res\\image\\hoshiman00.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+108,角の生えた人はレッドマンに近寄り頭を撫でた。,res\\image\\shikakuman02.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+109,「・・・」,res\\image\\shikakuman02.png,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+110,"角の生えた人はレッドマンから離れ黒い渦を出現させた。
+角の生えた人は黒い渦の中に消えた。",,res\\image\\xeoff00.png,res\\image\\talkKaigan.png,
+111,「まぁ・・・本当なんだろうな・・・」,res\\image\\daikeiman00.png,,res\\image\\talkKaigan.png,
+112,ダイケイマンが言った。,res\\image\\daikeiman00.png,,res\\image\\talkKaigan.png,
+113,―――,,,res\\image\\talkKaigan.png,
+114,ホシマンたちは何もする気が起きなかった。適当に時間を過ごしていた。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+115,「ダイケイマン、サンカクマン、あの老婆のところに行ってくる」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+116,「ん？　あ、あぁ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+117,「できることがないか確認しておきたい」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+118,ホシマンはシカクマンに歩み寄った。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+119,シカクマンは怪訝そうに身構えた。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+120,"ホシマンが握手をしようとシカクマンに手を差し出した。
+しかしシカクマンはその意味を理解できなかった。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+121,"サンカクマンがシカクマンの腕をつかんでホシマンと握手させると
+シカクマンは笑顔になった。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+122,「行ってくる」,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+123,ホシマンはシカクマンに言った。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+124,"地図を確認すると、老婆がいた場所はセントオーズ神社というところのようだった。
+ホシマンはセントオーズ神社へ駆け足で向かった。",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,

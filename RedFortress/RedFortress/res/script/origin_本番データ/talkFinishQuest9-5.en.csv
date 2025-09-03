@@ -1,0 +1,29 @@
+﻿ID,オプション1,オプション2,オプション3
+1,"Star Man crept toward the voice.
+Peering that way, he saw a man with a trapezoid head lying down.",,res\\image\\daikeiman00.png
+2,"""Help me...""",,res\\image\\daikeiman00.png
+3,"The man looked on the verge of death.
+Star Man dragged his heavy body closer.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+4,"""Are you okay?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+5,"""Something to drink...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+6,"The man was covered in bruises and bleeding all over.
+Both his legs had swollen to about three times their normal size.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+7,"""Both legs are broken...
+I fell from high up... I was dropped...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+8,Even speaking seemed painful for him.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+9,"""Should I go find some fruit outside and bring it?
+I only find it once in a while, though...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+10,"""There are coconut trees toward the sea.
+Ngh... with those... you can definitely get water.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+11,"""Got it...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+12,"""You're going to get them?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+13,"""Yeah.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+14,"""But...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+15,"""Is there a problem?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+16,"""The place where the coconut trees grow... is pretty far.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+17,"""I see. But I want to learn a sure way to get water as soon as possible.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+18,"""Okay...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+19,Star Man tottered outside.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+20,"[The sun rises in the east and sets in the west.
+Watch the sun's direction and head for the coconut trees.]",,
+21,[Map info updated.],,

@@ -1,0 +1,6 @@
+﻿クエストID,開始タイプ,開始タイプオプション,開始イベント,完了タイプ,完了オプション１,完了オプション２,完了イベント
+Q1,位置,-285.0:16.0:539.0:10.0,,調べたら,-265.0:16.0:539.0:10.0,,<talk>res\\script\\origin\\talkFinishQuest1.csv
+Q2,クエストが完了していたら,Q1,,調べたら,-245.0:26.0:539.0:10.0,,<talk>res\\script\\origin\\talkFinishQuest2.csv
+Q3,クエストが完了していたら,Q2,,調べたら,-225.0:31.0:539.0:10.0,,<talk>res\\script\\origin\\talkFinishQuest3.csv
+Q4,クエストが完了していたら,Q3,,位置,1172.0:16.0:330.0:20.0,,<talk>res\\script\\origin\\talkFinishQuest4.csv
+Q5,クエストが完了していたら,Q4,,自動完了,,,<ending>

@@ -1,0 +1,63 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,Star Man returned to the ruins.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,"""A-are you okay...?!""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+3,"Seeing Star Man's wounds, Trapezoid Man panicked.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+4,"""It's pretty bad, but I don't think... it's life-threatening.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+5,"""I-I see...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+6,Triangle Man and Square Man were speechless at Star Man's wounds.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+7,Star Man told Trapezoid Man and the others what had happened today.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+8,"""This is the map.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+9,Star Man spread out the map and they all looked at it.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+10,"""We're probably around here.
+The place with the coconut trees seems to be called 'Sinkhat Coast.'""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+11,"""I wonder if ships ever come to Prolitan Island.
+When I was looking into going to Optipul Island,
+I checked a bit and I don't think there were any ships to Prolitan.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+12,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+13,"""About that... how about we build a boat and try to escape?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+14,"""Huh?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+15,"""In my case there's the 'within a year' thing, so I have no choice.
+As for the rest of you, it might be better to stay here and wait for rescue.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,"""That's a tough call...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+17,"""Hmm. That's a hard choice—really an ultimatum between two options.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+18,"""I've never done it, but building a four‑person boat
+is probably far harder than building a one‑person one.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+19,"""True.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+20,"""I think the most realistic plan is
+I build a one‑person boat, go to the Republic of GEFORQE,
+get another boat, and come back.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+21,"""Let's do that.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+22,"""Oh, and that red fruit we soaked in the river water—
+I tried eating it and it was fine.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+23,"""Good. Then our food situation will improve a lot.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+24,"That night,",,,res\\image\\talkPrecision.png
+25,Star Man couldn't sleep from the pain of his dissolved skin.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+26,(What do I do from here... This is bad. I can't move.),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+27,"""Ugh... guh...""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+28,"Gritting his teeth through the agony, Star Man sat up.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+29,"""Hey... come here a sec...""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+30,He called to the children who had been watching him.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+31,"""As you can see, I won't be able to move for a while.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+32,"""We'll be fine.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+33,"""Yeah.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+34,"""I think I can walk in about three days. Until then, please handle gathering food.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+35,"""We do that all the time, so it's fine.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+36,"""Thanks.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+37,"Three days later,",,,res\\image\\talkPrecision.png
+38,"Even after three days, Star Man still couldn't walk properly.
+After that, for a month he devoted himself to making bows and arrows and training magic.
+With the two adults unable to move, the two children kept them alive.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+39,"Because they'd found a way to detoxify the red fruit, they were able to secure enough food not to die.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+40,"Star Man and Trapezoid Man worked together to make bows and arrows from branches and vines around the house.
+With no blades, they made them only with stones; they looked plainly like branches.
+Still, they seemed somewhat practical—better than throwing arrows by hand.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+41,"The children wanted them too, so they made four and each took one.
+Soon target practice became a fad, and they competed.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+42,Star Man decided to start collecting materials for a boat.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+43,"Even after a month, Star Man's burns hadn't healed; every movement reopened the wounds,
+and yellow fluid seeped from them.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+44,"Fortunately, only a little acid had hit his elbows and knees,
+so if he endured it he could still move his limbs.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+45,"With a one‑year time limit, he had to force himself to move.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+46,"Along with gathering boat materials,
+Star Man decided to try heading to Ubuntu Cave once more.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png

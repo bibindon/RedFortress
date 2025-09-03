@@ -1,0 +1,38 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,The three gathered in Trapezoid Man's room.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+2,"""... Today, I made a contract with a demon.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+3,"""If I hadn't, I would have died. I had no choice but to accept it.
+In exchange for reviving once from death, I'll die in a year.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+4,(...),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+5,(...I feel like I messed this up... How should I have said it...?),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+6,"""Ha... haah.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+7,Trapezoid Man and the others couldn't process the sudden news.,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+8,"""When I was about to die from a monster attack,
+a horned person appeared and urged me to make a contract. I had to accept.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+9,Star Man produced flame from his hand.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+10,"""As proof of the pact with the demon, I can use magic.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+11,"""...""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+12,"""I want our goal to be escaping this island within a year.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+13,"""Uh... no... there's no way...""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+14,"Trapezoid Man couldn't grasp it right away,
+but the children accepted it immediately.",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+15,"After that, while eating acorns, they talked about the horned person,
+the ghost, the magic, and the small vials.",,,res\\image\\talkPrecision.png
+16,"""Right. I brought a piece of a monster.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+17,Star Man took out a leaf and opened it. Everyone peered in.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+18,"""It smells like a factory... Feels like it'll make you sick...""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+19,All three of them grimaced.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+20,"""Tomorrow I'll look for acorns and also check if there are any islands nearby.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+21,"""Got it. I... sorry, but there's nothing I can do...""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png
+22,"""It's okay, don't worry.
+I'll have Triangle Man and Square Man gather coconuts.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+23,"""Okay.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+24,"""Throw stones at the coconuts to knock them down, then collect them.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+25,"""Okay!""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+26,"""Be very careful.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+27,"""They hit people's heads a lot, right (laughs).""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+28,"""...""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+29,[Check NPC status.],,,res\\image\\talkPrecision.png
+30,"[If any status reaches 0, the NPC dies.]
+[If hydration reaches 90 remaining, they die.]",,,res\\image\\talkPrecision.png
+31,"[If you put ingredients in Storage, they'll be consumed as needed.]",,,res\\image\\talkPrecision.png

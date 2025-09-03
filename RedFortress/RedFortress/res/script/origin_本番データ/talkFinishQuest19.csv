@@ -1,0 +1,24 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,"ホシマンは喉、鼻、頭が痛くて目が覚めた。
+さらに全身が痛く、しばらく起き上がれなかった。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,子供たちは座って何か話していた。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+3,（よく起きられるな・・・）,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+4,"ホシマンは１時間半くらいして起き上がった。
+円盤状のモンスターにやられた腕に激痛が走る。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+5,（ぐ・・・腕が・・・）,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+6,"ホシマンはケガをしている左腕を
+反対の腕で掴んでゆっくりと動かした。",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+7,"（胸が苦しい・・・。ココナッツとドングリしか食べてないからか・・・？
+　野菜っぽいものも探さないと・・・）",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+8,外は危険なためホシマンが一人で出かけることにした。,,,res\\image\\talkPrecision.png
+9,"「私はドングリを拾ってくる。
+　外は危ないから留守番しててくれ。
+　たまにダイケイマンの様子をみてほしい。」",res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+10,「あ。あと、掃除しておいてくれると助かる」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+11,「うん」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+12,「はーい」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+13,（子供がやる掃除だ・・・あまり期待しないでおこう・・・）,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+14,ホシマンはダイケイマンの部屋の前に行った。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+15,"「またドングリ拾ってくる。
+　子供達には留守番して掃除をするように言った」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,「ぐ・・・あぁ・・・。頑張ってな」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png

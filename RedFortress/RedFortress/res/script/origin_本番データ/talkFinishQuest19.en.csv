@@ -1,0 +1,23 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,"Star Man woke with pain in his throat, nose, and head.
+His whole body hurt, and he couldn't get up for a while.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,The children sat talking about something.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+3,(How can they even get up...?),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+4,"About an hour and a half later, Star Man got up.
+A sharp pain shot through the arm struck by the disk‑shaped monster.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+5,(Ugh... my arm...),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+6,Star Man grabbed his injured left arm with his other hand and moved it slowly.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+7,"(My chest feels tight... Maybe because I've only been eating coconuts and acorns...?
+I should look for something more like vegetables, too.)",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+8,"Because it was dangerous outside, Star Man decided to go out alone.",,,res\\image\\talkPrecision.png
+9,"""I'll go pick up acorns.
+It's dangerous outside, so please stay here.
+Check on Trapezoid Man from time to time.""",res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+10,"""Oh, and it'd help if you could clean up.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+11,"""Okay.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+12,"""Okay!""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+13,(Kids are doing the cleaning... I shouldn't expect much...),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+14,Star Man went to Trapezoid Man's room.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+15,"""I'm going to pick up more acorns.
+I told the kids to stay and clean while I'm gone.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,"""Ugh... ahh... Good luck.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png

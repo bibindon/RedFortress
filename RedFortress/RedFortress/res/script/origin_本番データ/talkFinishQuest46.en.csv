@@ -1,0 +1,120 @@
+﻿ID,オプション1,オプション2,オプション3,background,BGM
+1,"When Star Man entered Trapezoid Man's room,
+someone suddenly shoved him from the side.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,res\\sound\\toudai.wav
+2,There was a man who shouldn't exist.,,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+3,"It was the man from Gip Lighthouse.
+Star Man felt every hair on his body stand on end.
+He looked toward Trapezoid Man and the others.",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+4,Trapezoid Man had fallen and was bleeding from the face.,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+5,"There were bloodstains on the floor. The children sat with swollen faces,
+crying.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+6,"""What do you want?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+7,"""Huh? 'What do I want,' huh?
+Don't screw with me, punk!
+I'll kill you!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+8,The man grabbed Star Man by his head horn and tried to crush it.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+9,"""What do you want? Please—explain!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+10,"""You lot stole it without permission!
+Other people's stuff!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+11,"""Fine... I'll listen. Let go of me first!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+12,"""Huh? Shut the hell up!
+A thief doesn't get to run his mouth!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+13,Star Man kicked the man and shoved him away.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+14,"""Oh yeah? You did it now!
+What the hell do you think you're doing?!
+I'll beat you to death!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+15,"""You say we stole—what exactly did we steal?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+16,"""Everything in here, you idiot!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+17,"""...Everything...?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+18,"He couldn't make sense of it; his mind couldn't catch up.
+He looked to Trapezoid Man and the others,
+but they averted their eyes and said nothing.",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+19,"""You barged into someone else's house without permission!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+20,"""...?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+21,"""You used to live here?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+22,"""Yeah! I'd been living here forever, and the moment I stepped out,
+you trashed the place!
+How are you gonna take responsibility, huh?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+23,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+24,"""I get what you're saying—but start with
+'Give it back and get out.'""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+25,"""Hah?! Wrong.
+I was trying to explain and these punks started first.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+26,The man pointed at Trapezoid Man and the others.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+27,"""...I see. For now, we'll leave.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+28,"""Huh?! You think that makes it okay?!
+After wrecking the place like this!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+29,"""We'll put it back as best we can.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+30,"""Don't give me that!
+You messing with me?
+Hey—sit seiza!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+31,"""...?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+32,"""If you're sorry, apologize. That's basic manners!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+33,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+34,Star Man sat in seiza.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+35,"""We're very sorry.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+36,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+37,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+38,"""Leave all the food here.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+39,"""...?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+40,"""You just apologized, didn't you?
+That means you admit you're at fault!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+41,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+42,"""And from now on, bring half the food you get here every day.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+43,"""...!?""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+44,"""I can't accept a demand like that.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+45,"""We're barely scraping by ourselves.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+46,"""The hell did you say?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+47,The man kicked Star Man.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+48,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+49,The man strangled Star Man and shook him.,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+50,(At this point... I have to kill him...),res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+51,(Do it... if I don't...),res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+52,"The man let go and walked toward the children.
+The seated children covered their heads with their hands.",,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+53,"The man punched Triangle Man.
+He grabbed Triangle Man's head and slammed it into the ground.",res\\image\\sankakuman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+54,"""I don't wanna do this, okay?
+But they stole and smashed other people's stuff
+and won't give it back!""",res\\image\\sankakuman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+55,The man turned Triangle Man's face toward Star Man.,res\\image\\sankakuman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+56,"""Even when kids end up like this because of you,
+you still care only about yourself.
+Your character's rotten—got green blood in there or what?!""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+57,"""...""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+58,"""All right.""",res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+59,said Trapezoid Man.,res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+60,"""We'll leave right now, and we'll bring half of the food we've gotten here.
+I'm sorry.""",res\\image\\daikeiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+61,The man released Triangle Man and stood up.,,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+62,"""So, let's do it that way—got it~""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+63,"The man walked toward the exit.
+He stopped in front of Star Man in the doorway.
+He tried to press Star Man's face with his foot; Star Man dodged.",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+64,"""Outta the way, punk.""",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkPrecision.png,
+65,"Shoving Star Man aside with his foot, the man stepped into the hall and left.
+Even after his footsteps faded, Star Man and the others stayed silent.
+The children were crying.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+66,Star Man walked over to the children.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+67,"""You okay...?""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+68,"""...""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+69,There was no reply.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+70,"""...""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+71,"""That guy's name is Gain.
+And, for the record, that claim 'they started it first'—that was a lie.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+72,"""He took a swing at me the instant we met.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+73,said Trapezoid Man.,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+74,"""...I see. I figured.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+75,"""I saw him on the ship. He was on the same ship as us.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+76,said Square Man.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+77,"""...""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+78,"""So the part about him being here long before us was a lie too...""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+79,"""Why do we have to be the ones to leave?! That's not right!""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+80,said Triangle Man.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+81,"""...""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+82,"""You're right.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+83,said Trapezoid Man.,res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+84,"""But saying that doesn't change anything.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+85,"""It is wrong! We should just kill him!""",res\\image\\sankakuman00.png,,res\\image\\talkPrecision.png,
+86,"""...That's...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+87,Star Man and the others didn't know what to say.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,

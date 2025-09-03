@@ -1,0 +1,44 @@
+﻿ID,オプション1,オプション2,オプション3,background,BGM
+1,"ある日、サンカクマンとシカクマンは
+いつものように二人で食材を採集していた。",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+2,採集ではバナナを見つけることが第一の目的だった。,,,res\\image\\talkKaigan2.png,
+3,"ダイケイマンがパッチテストを行い、
+バナナには毒がないことを確認していた。",,,res\\image\\talkKaigan2.png,
+4,"毒のあるバナナは存在せず、果物全般に毒はほぼないが、
+誰もそのことを知らなかった。",,,res\\image\\talkKaigan2.png,
+5,"バナナは食用ではなく野生のバナナであったため味がなかった。
+",,,res\\image\\talkKaigan2.png,
+6,"シカクマンは背中のカゴにバナナを入れていたが、
+カゴが満タンになっていた。",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+7,「一度、バナナを置いてくるね」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+8,シカクマンはサンカクマンに言った。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+9,「はーい」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+10,"サンカクマンはバナナの収穫を続けた。
+サンカクマンのカゴもバナナで一杯になったため
+一度拠点に戻ることにした。",res\\image\\sankakuman00.png,,res\\image\\talkKaigan2.png,
+11,―――,,,res\\image\\black.png,
+12,"サンカクマンは拠点に戻った。
+ダイケイマンはイカダ用の縄づくりをしていた。",res\\image\\sankakuman00.png,,res\\image\\talkKaigan.png,
+13,「シカクマンは？」,res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+14,サンカクマンはダイケイマンに聞いた。,res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+15,「え？」,res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+16,―――,,,res\\image\\talkKaigan.png,
+17,シカクマンがいなくなっていた。,,,res\\image\\talkKaigan.png,
+18,"サンカクマンはシカクマンを探し続けたが見つからなかった。
+夕方にホシマンが帰ってきた。",,,res\\image\\talkKaigan.png,
+19,「ホシマン、シカクマンがいなくなった。サンカクマンが探している」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+20,ダイケイマンが言った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+21,「・・・！　私も探しに行ってくる。どの辺でいなくなった？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+22,「湿地帯の方だ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+23,"海岸洞窟のすぐ近くには
+ジェンキング湿地帯というエリアがあった。
+ホシマンは湿地帯の方に向かって歩いていった。",,,res\\image\\talkKaigan.png,
+24,"ホシマンとサンカクマンはシカクマンを夜まで探した。
+夜は捜索が不可能であったため朝が来るのを待った。",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+25,"「明日、朝になったら湿地帯をもう一度探そう。
+　それと、ネスとガインが怪しい。
+　状況が状況だ・・・。あいつらに会いに行くしかない」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+26,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+27,「最終的には、私は死んでも生き返られるし、魔法も使える」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+28,（ついに・・・殺人を犯すことになるのかもしれない・・・）,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+29,３人はイカダ作りをやめてシカクマンの捜索を行うことにした。,,,res\\image\\talkKaigan.png,

@@ -1,0 +1,66 @@
+﻿ID,名称,詳細,モデル名,画像のファイル名,重量(kg),体積(mL),強化可能回数,攻撃力補正(瞬発力ｘ攻撃力補正＝攻撃力),強化時の攻撃力補正の上昇値,飛距離(m),強化時の飛距離の上昇値(m),消費スタミナ,耐久値(壊れるまでの回数),強化時の耐久値の上昇値,使用時の肉体損傷
+w1,Stone,"You can throw it or use it to club.
+Ridiculously strong.
+It never breaks no matter how much you use it.
+",res\\model\\rock1.x,res\\image\\stone.png,0.5,500,0,3.0,0.0,30,0,10,999,0,10
+w2,Wooden Stick,"Breaks after about three uses. Far weaker than punching.
+Being hit with a tree branch usually doesn't hurt much,
+but a hit with a wooden bat can be fatal.
+If you keep making them, you'll eventually be able to craft
+a proper weapon like a wooden bat.
+
+Can be upgraded up to +5.
+",res\\model\\stick.x,res\\image\\stick.png,1.0,2000,5,0.2,0.3,10,0,10,3,10,10
+w3,Stone Spear,"Breaks after about three uses. Far weaker than punching.
+A beginner's first stone spear has virtually no attack power.
+It spares your hands from injury.
+By making many, it becomes a usable weapon.
+...
+After using it many times, you'll notice that.
+
+Can be upgraded up to +5.
+",res\\model\\spear.x,res\\image\\spear2.png,1.0,2000,5,0.2,0.3,10,0,10,3,10,10
+w4,Bow,"A homemade bow. Breaks after about ten uses.
+A beginner's first bow only shoots about five meters
+and its attack power is close to zero.
+By making many, it becomes a usable weapon.
+
+Can be upgraded up to +10.
+Throwing distance of the bow itself does not change.
+",res\\model\\bow.x,res\\image\\bow.png,1.0,3000,10,0.1,0.1,3,1,10,10,1,10
+w5,Iron Pipe,"Hard to break, but it doesn't deal much damage.
+Keeps your hands from getting injured.
+",res\\model\\ironPipe.x,res\\image\\pipe.png,1.0,2000,0,1.0,0.0,20,0,10,999,0,10
+w6,Iron Pipe with Stone,"An iron pipe with a stone tied to the tip.
+",res\\model\\ironPipeEx.x,res\\image\\ironPipe.png,2.0,3000,0,4.0,0.0,15,0,10,10,0,10
+w7,Stone Axe,"A stone tied to a tree branch.
+The tied section is fragile and breaks easily.
+By making many, you'll be able to craft a more durable weapon.
+After crafting it several times, you'll realize
+that sharpening the stone tip is important.
+
+Can be upgraded up to +5.
+",res\\model\\ax.x,res\\image\\ax.png,1.5,2000,5,4.0,0.0,20,0,10,30,100,10
+w8,Arrow,"Arrows for the bow are very labor‑intensive to make.
+Used arrows can be picked up and reused.
+",res\\model\\arrow.x,res\\image\\arrow.png,0.2,500,1,2.0,0.0,40,1,5,10,1,5
+w9,Atlatl,"It's ""atlatl"", not ""astral"".
+Star Man had seen an atlatl on a video sharing site.
+If an ordinary person used it, they'd probably be hit
+with brutal muscle soreness.
+",res\\model\\atlatl.x,res\\image\\atlatl.png,0.4,500,0,1.0,0.0,10,0,10,999,0,10
+w10,Spear for Atlatl,"Unless the shaft is a flexible, springy material,
+it actually won't fly at all.
+After using it many times, you'll notice that.
+
+Can be upgraded up to +5.
+",res\\model\\arrow.x,res\\image\\arrow.png,0.6,2000,5,2.0,0.0,40,0,5,10,10,5
+w11,Torch,"When a Wooden Stick is equipped,
+you can craft a torch from the action menu.
+While a torch is equipped, you can execute ""Light Torch"".
+If you use it for even one attack, it breaks.
+While the torch is lit, you can execute ""Extinguish Torch"".
+
+To unequip it, you must extinguish the torch.
+You can also unequip it by throwing the torch away.
+",res\\model\\\torch.x,res\\image\\torch2.png,1.0,2000,0,0.2,0.0,10,0,10,300,0,10

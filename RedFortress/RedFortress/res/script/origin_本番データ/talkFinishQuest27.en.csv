@@ -1,0 +1,49 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,"Star Man grit his teeth and walked to the ruins.
+When he reached them, he collapsed.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,Triangle Man came over.,,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+3,"""What happened?""",,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+4,"""...Poison...""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+5,"""Huh?""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+6,"""I ate this... poison...""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+7,"""...""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+8,Triangle Man stared closely at the red fruit.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+9,"""Water...""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+10,"""Water? Got it!""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+11,Triangle Man and Square Man brought coconuts.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+12,"After drinking coconut water, Star Man was taken by the kids
+to Trapezoid Man's room.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+13,"""You all right...?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+14,"""Hah... hah... hah...
+If I'd taken one more bite, I'd have died...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+15,"""Aren't you supposed to test a little at a time instead of
+ taking a whole bite right away?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,said Trapezoid Man.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+17,"""Hah... ha... ah...
+I may have seen that online...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+18,"""You dab the juice on your skin, touch it to your lips,
+then eat about a grain‑of‑rice's worth... that kind of thing, right?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+19,"""Right... What was that called again...?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+20,"""Forgot...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+21,"""Let's do that... the test‑a‑little‑at‑a‑time thing...
+None of us knows anything about wild plants...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+22,"""Oh... there's that thing where if you soak it in water for a week
+you can eat it, right?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+23,"""Yeah... I've heard of that.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+24,"Trapezoid Man thought to ask, ""Want to try it with that red fruit from before?""
+but seeing Star Man suffering, he decided not to.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+25,The next morning.,,,res\\image\\talkPrecision.png
+26,"Through the night, Star Man kept vomiting and having diarrhea,
+and as a result, he'd grown gaunt.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+27,(It's better... I think I can at least walk around near the place.),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+28,"When he went to the kids' room, there were lots of coconuts.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+29,"""Thanks for yesterday.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+30,"""That's a lot of coconuts. Did you knock all these down by throwing stones?""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+31,"""We stopped throwing stones halfway and just hit the nuts directly with a branch—
+then they fell easily.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+32,"""I see.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+33,(Smart...),res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+34,"""I want to try the 'soak in water for a week' method Trapezoid Man mentioned yesterday.
+I'll bring them in the evening, so help me then.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+35,"""O-okay.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+36,Star Man went to fetch yesterday's red fruit.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png

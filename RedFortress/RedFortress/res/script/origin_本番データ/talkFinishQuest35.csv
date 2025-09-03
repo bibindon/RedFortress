@@ -1,0 +1,22 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,ダイケイマンの部屋に４人で集まった。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,「これなんだけど・・・銅鉱石というものじゃないかと思う」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+3,ホシマンはダイケイマンに見せた。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+4,「そうなのかなぁ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+5,「ゲームで見たことある。焼けば銅になるよ。そのゲームではね」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+6,サンカクマンが言った。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+7,「こいつを焼いたら銅になるだろうか」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+8,"「温度が足りなさそう。たき火で焼いてもダメだろうし。
+　魔法で解かせるんじゃない？」",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+9,サンカクマンが言った。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+10,「わかった。あとで試してみよう」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+11,"「煙突みたいのを作って、下から風を送るんだったような気がする。
+　そういう動画があったよ」",res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+12,シカクマンは言った。,res\\image\\hoshiman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+13,「見たことあるかも。でも船作るのに要らないよなぁ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+14,"「船の材料としては必要ないが、木材を加工するのに使えると思う。
+　それと鍋を作れれば、船で生存できる日数が増えるかもしれない。
+　あとは、今、森の中を出歩くのに武器が欲しい」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+15,「そうか。そうだな。そういうのって青銅っていうので作るんじゃないっけ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,「そうだと思う。青銅と銅の違いって誰かわかる？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+17,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
