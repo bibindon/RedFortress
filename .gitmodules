@@ -1,0 +1,3 @@
+[submodule "RedFortressMenu"]
+	path = RedFortressMenu
+	url = https://github.com/bibindon/RedFortressMenu.git
