@@ -266,14 +266,17 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         D3DPRESENT_PARAMETERS d3dpp { };
 
-        if (SharedObj::WindowStyle() == eWindowStyle::WINDOW)
+        m_eCurrentWindowStyle = SharedObj::WindowStyleRequest();
+        SharedObj::SetWindowStyleRequest(eWindowStyle::NONE);
+
+        if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
         {
             d3dpp.BackBufferWidth = 0;
             d3dpp.BackBufferHeight = 0;
             d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
             d3dpp.BackBufferCount = 0;
         }
-        else if (SharedObj::WindowStyle() == eWindowStyle::FULLSCREEN)
+        else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
         {
             int dispx = GetSystemMetrics(SM_CXSCREEN);
             int dispy = GetSystemMetrics(SM_CYSCREEN);
@@ -283,7 +286,7 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
             d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
             d3dpp.BackBufferCount = 1;
         }
-        else if (SharedObj::WindowStyle() == eWindowStyle::BORDERLESS)
+        else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
         {
             int dispx = GetSystemMetrics(SM_CXSCREEN);
             int dispy = GetSystemMetrics(SM_CYSCREEN);
@@ -305,17 +308,17 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 
-        if (SharedObj::WindowStyle() == eWindowStyle::WINDOW)
+        if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
         {
             d3dpp.hDeviceWindow = nullptr;
             d3dpp.Windowed = TRUE;
         }
-        else if (SharedObj::WindowStyle() == eWindowStyle::FULLSCREEN)
+        else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
         {
             d3dpp.hDeviceWindow = m_hWnd;
             d3dpp.Windowed = FALSE;
         }
-        else if (SharedObj::WindowStyle() == eWindowStyle::BORDERLESS)
+        else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
         {
             d3dpp.hDeviceWindow = nullptr;
             d3dpp.Windowed = TRUE;
@@ -531,6 +534,94 @@ int MainWindow::MainLoop()
         SharedObj::KeyBoard()->Update();
         Mouse::Update();
         GamePad::Update();
+
+        // ウィンドウモード、フルスクリーンモード、ボーダーレスウィンドウモードの切り替え
+        {
+            auto request = SharedObj::WindowStyleRequest();
+            SharedObj::SetWindowStyleRequest(eWindowStyle::NONE);
+
+            if (request == eWindowStyle::NONE)
+            {
+                // Nothing to do
+            }
+            else
+            {
+                if (request == eWindowStyle::WINDOW)
+                {
+                    if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
+                    {
+                        // Nothing to do
+                    }
+                    else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
+                    {
+
+                    }
+                    else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
+                    {
+                        // 目的モニタを決める
+                        HMONITOR mon = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+                        MONITORINFO mi { sizeof(mi) };
+                        GetMonitorInfo(mon, &mi);
+
+                        // 物理座標（タスクバー含む全面）
+                        RECT r = mi.rcMonitor;
+
+                        SetWindowLongPtr(m_hWnd, GWL_STYLE, WS_POPUP);
+                        SetWindowPos(m_hWnd,
+                                     HWND_TOP,
+                                     r.left,
+                                     r.top,
+                                     r.right - r.left,
+                                     r.bottom - r.top,
+                                     SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+                    }
+                }
+                else if (request == eWindowStyle::FULLSCREEN)
+                {
+                    if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
+                    {
+                    }
+                    else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
+                    {
+                        // Nothing to do
+                    }
+                    else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
+                    {
+
+                    }
+                }
+                else if (request == eWindowStyle::BORDERLESS)
+                {
+                    if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
+                    {
+                        /* ウィンドウサイズの変更をさせない。最小化はOK */
+                        SetWindowLongPtr(m_hWnd,
+                                         GWL_STYLE,
+                                         WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE);
+
+                        SetWindowPos(m_hWnd,
+                                     HWND_TOP,
+                                     0,
+                                     0,
+                                     1600,
+                                     900,
+                                     SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+
+                        D3DPRESENT_PARAMETERS d3dpp { };
+                        SharedObj::GetD3DDevice()->Reset(&d3dpp);
+                    }
+                    else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
+                    {
+
+                    }
+                    else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
+                    {
+                        // Nothing to do
+                    }
+                }
+                m_eCurrentWindowStyle = request;
+            }
+        }
 
         static int counter = 0;
         counter++;

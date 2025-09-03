@@ -3230,17 +3230,17 @@ void SeqBattle::UpdateDebug()
     {
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_F7))
         {
-            SharedObj::SetWindowStyle(eWindowStyle::WINDOW);
+            SharedObj::SetWindowStyleRequest(eWindowStyle::WINDOW);
         }
 
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_F8))
         {
-            SharedObj::SetWindowStyle(eWindowStyle::FULLSCREEN);
+            SharedObj::SetWindowStyleRequest(eWindowStyle::FULLSCREEN);
         }
 
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_F9))
         {
-            SharedObj::SetWindowStyle(eWindowStyle::BORDERLESS);
+            SharedObj::SetWindowStyleRequest(eWindowStyle::BORDERLESS);
         }
     }
 

@@ -96,12 +96,12 @@ bool SharedObj::IsEnglish()
     return m_bEnglish;
 }
 
-eWindowStyle SharedObj::WindowStyle()
+eWindowStyle SharedObj::WindowStyleRequest()
 {
     return m_eWindowStyle;
 }
 
-void SharedObj::SetWindowStyle(const eWindowStyle arg)
+void SharedObj::SetWindowStyleRequest(const eWindowStyle arg)
 {
     m_eWindowStyle = arg;
 }

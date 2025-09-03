@@ -13,6 +13,7 @@ enum class eWindowStyle
     WINDOW,
     FULLSCREEN,
     BORDERLESS,
+    NONE,
 };
 
 class SharedObj
@@ -40,8 +41,8 @@ public:
     static void SetEnglish(const bool bEnglish);
     static bool IsEnglish();
 
-    static eWindowStyle WindowStyle();
-    static void SetWindowStyle(const eWindowStyle arg);
+    static eWindowStyle WindowStyleRequest();
+    static void SetWindowStyleRequest(const eWindowStyle arg);
 
 private:
     static LPDIRECT3DDEVICE9 m_D3DDevice;

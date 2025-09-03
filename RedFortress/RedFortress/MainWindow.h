@@ -21,6 +21,7 @@
 #include "Opening.h"
 #include "SeqEnding.h"
 #include "KeyBoard.h"
+#include "SharedObj.h"
 
 class MainWindow
 {
@@ -60,5 +61,6 @@ private:
     // デバッグ用
     LPD3DXFONT m_D3DFont = nullptr;
 
+    eWindowStyle m_eCurrentWindowStyle = eWindowStyle::NONE;
 };
 
