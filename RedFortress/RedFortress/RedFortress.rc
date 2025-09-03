@@ -1,0 +1,472 @@
+// Microsoft Visual C++ generated resource script.
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 (日本) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "res\\image\\starman.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_STRING101           "ホシマン"
+    IDS_STRING102           "装備中の袋を倉庫に移動することはできない"
+    IDS_STRING103           "装備中の武器を倉庫に移動することはできない"
+    IDS_STRING104           "「私が次にやるべきことはなんだ？」"
+    IDS_STRING105           "「何も思いつかない・・・。いったいどうすれば・・・。」"
+    IDS_STRING106           "適切な道具を装備し、スタミナ等がある程度ないと伐採を開始できない"
+    IDS_STRING107           "スタミナがある程度ないと採取を開始できない"
+    IDS_STRING108           "その方角に３時間漕ぐことはできない。"
+    IDS_STRING109           "袋を装備していたらイカダに乗ることはできない"
+    IDS_STRING110           "松明の耐久値が０の時は点灯できない"
+    IDS_STRING111           "雨の時は松明を点灯できない"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_SANKAKUMAN   "サンカクマン"
+    IDS_STRING_SHIKAKUMAN   "シカクマン"
+    IDS_STRING114           "%s をもらった"
+    IDS_STRING115           "炎魔法のレベルが上がった"
+    IDS_STRING116           "氷魔法のレベルが上がった"
+    IDS_STRING117           "闇魔法のレベルが上がった"
+    IDS_STRING118           "炎魔法のレベルが下がった"
+    IDS_STRING119           "氷魔法のレベルが下がった"
+    IDS_STRING120           "闇魔法のレベルが下がった"
+    IDS_STRING_DAIKEIMAN    "ダイケイマン"
+    IDS_STRING122           "ビム"
+    IDS_STRING123           "謎の草１"
+    IDS_STRING124           "謎の草２"
+    IDS_STRING125           "謎の草３"
+    IDS_STRING126           "謎の草４"
+    IDS_STRING127           "謎の草５"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING128           "%s を手に入れた。"
+    IDS_STRING129           "細い木の幹を手に入れた。"
+    IDS_STRING130           "縦長の石"
+    IDS_STRING131           "石斧"
+    IDS_STRING132           "細い木の幹"
+    IDS_STRING133           "松明"
+    IDS_STRING134           "死亡。ワードブレスを飲んだ場所で復活します。"
+    IDS_STRING135           "睡眠・気絶"
+    IDS_STRING136           "最大積載量を超えています。"
+    IDS_STRING137           "無"
+    IDS_STRING138           "炎"
+    IDS_STRING139           "氷"
+    IDS_STRING140           "闇"
+    IDS_STRING141           "弓矢の弓"
+    IDS_STRING142           "アトラトル"
+    IDS_STRING143           "弓矢の矢"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING144           "アトラトルに使う槍"
+    IDS_STRING145           "（袋が壊れた気がする）"
+    IDS_STRING146           "身体のスタミナ"
+    IDS_STRING147           "脳のスタミナ"
+    IDS_STRING148           "水分"
+    IDS_STRING149           "肉体の修復度"
+    IDS_STRING150           "糖質"
+    IDS_STRING151           "タンパク質"
+    IDS_STRING152           "脂質"
+    IDS_STRING153           "ビタミン"
+    IDS_STRING154           "ミネラル"
+    IDS_STRING155           "腕骨折"
+    IDS_STRING156           "足骨折"
+    IDS_STRING157           "頭痛"
+    IDS_STRING158           "風邪"
+    IDS_STRING159           "腹痛"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING160           "睡眠・気絶"
+    IDS_STRING161           "脱水症状"
+    IDS_STRING162           "睡眠不足"
+    IDS_STRING163           "死亡"
+    IDS_STRING164           "未実施"
+    IDS_STRING165           "テスト中"
+    IDS_STRING166           "毒"
+    IDS_STRING167           "毒ではない"
+    IDS_STRING168           "パッチテストの予約は３件まで"
+    IDS_STRING169           "イカダ"
+    IDS_STRING170           "船着き場にイカダがある"
+    IDS_STRING171           "イカダを移動してから依頼しよう"
+    IDS_STRING172           "成果物の名前："
+    IDS_STRING173           "成果物の数："
+    IDS_STRING174           "成果物の強化値："
+    IDS_STRING175           "素材%sの名前："
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING176           "素材%sの必要数："
+    IDS_STRING177           "素材%sの必要強化値："
+    IDS_STRING178           "伐採"
+    IDS_STRING179           "採取"
+    IDS_STRING180           "横になる"
+    IDS_STRING181           "座る"
+    IDS_STRING182           "瞑想"
+    IDS_STRING183           "脱出"
+    IDS_STRING184           "帆を張る"
+    IDS_STRING185           "帆を畳む"
+    IDS_STRING186           "３時間漕ぐ"
+    IDS_STRING187           "立ち上がる"
+    IDS_STRING188           "イカダに乗る"
+    IDS_STRING189           "イカダの袋を見る"
+    IDS_STRING190           "松明を作る"
+    IDS_STRING191           "木の棒"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING192           "松明に火をつける"
+    IDS_STRING193           "松明の火を消す"
+    IDS_STRING194           "クラフト"
+    IDS_STRING195           "パッチテスト"
+    IDS_STRING196           "お手伝い"
+    IDS_STRING197           "点灯中の松明を装備していたら武器を装備できない。袋も装備できない。"
+    IDS_STRING198           "点灯中の松明の装備を外すことはできない。"
+    IDS_STRING199           "装備中の袋を捨てることはできない"
+    IDS_STRING200           "装備中の武器を捨てることはできない"
+    IDS_STRING201           "このゲームをクリアすることができなくなりました"
+    IDS_STRING202           "袋を6個以上装備することはできない"
+    IDS_STRING203           "３時間休憩する"
+    IDS_STRING_NPC_DIED     "%sが死亡した。"
+    IDS_STRING_SAVE_COMPLETE "セーブが完了しました。"
+    IDS_STRING_CANNOT_EAT   "満腹なのでこれ以上食べられない。"
+    IDS_STRING_USE_MATERIAL "ホシマン（何かの素材として使えそうだ）"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_USE_SUMAHO   "ホシマン（反応しない。海水で基盤がダメになったのだろう）"
+    IDS_STRING209           "瞬発力"
+    IDS_STRING210           "パラメータ          現在値/回復可能値/最大値"
+    IDS_STRING211           "ホシマン"
+    IDS_STRING212           "袋"
+    IDS_STRING213           "状態異常"
+    IDS_STRING214           "装備武器"
+    IDS_STRING215           "攻撃力"
+    IDS_STRING_USE_HOMEKEY  "ホシマン（まだ捨てないで取っておこう）"
+    IDS_STRING_USE_DEFAULT  "ホシマン（使い道が思いつかない）"
+    IDS_STRING_RIGHT_HAND   "右手がふさがっている"
+    IDS_STRING_ARM_BROKEN   "腕の骨が折れた"
+    IDS_STRING_LEG_BROKEN   "足の骨が折れた"
+    IDS_STRING_KAKAN        "お墓に花輪を飾った。"
+    IDS_STRING_SOTETSU1     "脱水症状・頭痛・腹痛・錯乱状態になった。"
+    IDS_STRING_SOTETSU2     "スタミナ・ミネラル・ビタミン・肉体の修復度が減少した。"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_ACID1        "錯乱状態になった。"
+    IDS_STRING_ACID2        "肉体の修復度が減少した。"
+    IDS_STRING_DEATH_REASON1 "死因：不明"
+    IDS_STRING_DEATH_REASON2 "死因：肉体の修復度が０になった"
+    IDS_STRING_DEATH_REASON3 "死因：水分量が９０％以下になった"
+    IDS_STRING_DEATH_REASON4 "死因：身体のスタミナが０％になった"
+    IDS_STRING_DEATH_REASON5 "死因：ライネンの契約をして１年が経過した"
+    IDS_STRING_DEATH_REASON6 "死因：餓死"
+    IDS_STRING_DEATH_REASON7 "死因：水中で寝た。"
+    IDS_STRING_DEATH_REASON8 "死因：睡眠中に攻撃された。"
+    IDS_STRING_HELP_EMPTY   "（今は分けてもらえないようだ）"
+    IDS_STRING_CURE_TIME_ARM "腕の骨折が治るまでの日数"
+    IDS_STRING_CURE_TIME_LEG "足の骨折が治るまでの日数"
+    IDS_STRING_CURE_TIME_HEAD "頭痛が治るまでの日数"
+    IDS_STRING_CURE_TIME_COLD "風邪が治るまでの日数"
+    IDS_STRING_CURE_TIME_STOMACH "腹痛が治るまでの日数"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_CURE_TIME_WATER "脱水症状が治るまでの日数"
+    IDS_STRING_WORDBRESS    "ワードブレス"
+    IDS_STRING_REVIVE_OK    "復活可能"
+    IDS_STRING_REVIVED      "復活済み"
+    IDS_STRING_CURRENT_DURA "現在の耐久値"
+    IDS_STRING_CURRENT_LEVEL "現在の強化値"
+    IDS_STRING_WORDBRESS_USED "使用済み"
+    IDS_STRING_WORDBRESS_UNUSED "未使用"
+    IDS_STRING_NPC_ALIVE    "生存"
+    IDS_STRING_NPC_DEAD     "死亡"
+END
+
+#endif    // 日本語 (日本) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 英語 (米国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_STRING101           "starman"
+    IDS_STRING102           "Equipped bags cannot be moved to storage."
+    IDS_STRING103           "Equipped weapons cannot be moved to the storage."
+    IDS_STRING104           """What should I do next?"""
+    IDS_STRING105           """I can't come up with anything... What should I do...?"""
+    IDS_STRING106           "You can't start chopping without the proper tool and enough stamina."
+    IDS_STRING107           "You can't start gathering without enough stamina."
+    IDS_STRING108           "It's impossible to row that way for three hours."
+    IDS_STRING109           "Unable to board the raft with a bag equipped."
+    IDS_STRING110           "The torch can't be lit when its durability is 0."
+    IDS_STRING111           "Torches can't be lit in the rain."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_SANKAKUMAN   "Triangle Man"
+    IDS_STRING_SHIKAKUMAN   "Square Man"
+    IDS_STRING114           "Received %s"
+    IDS_STRING115           "Fire Magic level increased."
+    IDS_STRING116           "Ice Magic level increased."
+    IDS_STRING117           "Dark Magic level increased."
+    IDS_STRING118           "Fire Magic level decreased."
+    IDS_STRING119           "Ice Magic level decreased."
+    IDS_STRING120           "Dark Magic level decreased."
+    IDS_STRING_DAIKEIMAN    "Trapezoid Man"
+    IDS_STRING122           "Vim"
+    IDS_STRING123           "Unknown Grass 1"
+    IDS_STRING124           "Unknown Grass 2"
+    IDS_STRING125           "Unknown Grass 3"
+    IDS_STRING126           "Unknown Grass 4"
+    IDS_STRING127           "Unknown gGass 5"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING128           "Get %s."
+    IDS_STRING129           "Starman got a thin tree trunk."
+    IDS_STRING130           "Tall Stone"
+    IDS_STRING131           "Stone Axe"
+    IDS_STRING132           "Slender Tree Trunk"
+    IDS_STRING133           "Torch"
+    IDS_STRING134           "Starman died. He will respawn where you drank the Wordbress."
+    IDS_STRING135           "Sleep / Unconscious"
+    IDS_STRING136           "Maximum carry weight exceeded."
+    IDS_STRING137           "No Magic"
+    IDS_STRING138           "Fire"
+    IDS_STRING139           "Ice"
+    IDS_STRING140           "Dark"
+    IDS_STRING141           "Bow"
+    IDS_STRING142           "Atlatl"
+    IDS_STRING143           "Arrow"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING144           "Spear For Atlatl"
+    IDS_STRING145           "(I think the bag has broken.)"
+    IDS_STRING146           "Body Stamina"
+    IDS_STRING147           "Brain Stamina"
+    IDS_STRING148           "Water"
+    IDS_STRING149           "Body Repair Level"
+    IDS_STRING150           "Carbo"
+    IDS_STRING151           "Protein"
+    IDS_STRING152           "Lipid"
+    IDS_STRING153           "Vitamin"
+    IDS_STRING154           "Mineral"
+    IDS_STRING155           "Fracture Arm"
+    IDS_STRING156           "Fracture Leg"
+    IDS_STRING157           "Headache"
+    IDS_STRING158           "Cold"
+    IDS_STRING159           "Stomachache"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING160           "Sleep / Unconscious"
+    IDS_STRING161           "Dehydration"
+    IDS_STRING162           "Lack Of Sleep"
+    IDS_STRING163           "Dead"
+    IDS_STRING164           "Not done"
+    IDS_STRING165           "Testing"
+    IDS_STRING166           "Poison"
+    IDS_STRING167           "Not Poison"
+    IDS_STRING168           "Starman can book up to 3 patch tests."
+    IDS_STRING169           "Raft"
+    IDS_STRING170           "There is a raft at the dock."
+    IDS_STRING171           "Let's move the raft before making the request."
+    IDS_STRING172           "Output Name : "
+    IDS_STRING173           "Output Num : "
+    IDS_STRING174           "Output Level : "
+    IDS_STRING175           "Material %s Name : "
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING176           "Material %s Num :"
+    IDS_STRING177           "Material %s Level :"
+    IDS_STRING178           "Cut Tree"
+    IDS_STRING179           "Pick Plant"
+    IDS_STRING180           "Lie Down"
+    IDS_STRING181           "Sit"
+    IDS_STRING182           "Meditate"
+    IDS_STRING183           "Escape"
+    IDS_STRING184           "Raise Sail"
+    IDS_STRING185           "Lower Sail"
+    IDS_STRING186           "Row For 3 Hours"
+    IDS_STRING187           "Stand Up"
+    IDS_STRING188           "Ride the Raft"
+    IDS_STRING189           "Open The Raft Bag"
+    IDS_STRING190           "Create The Torch"
+    IDS_STRING191           "Stick"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING192           "Light Torch"
+    IDS_STRING193           "Put Out Torch"
+    IDS_STRING194           "Craft"
+    IDS_STRING195           "Patch Test"
+    IDS_STRING196           "Help"
+    IDS_STRING197           "Cannot equip weapon or bag while holding a lit torch."
+    IDS_STRING198           "Cannot unequip lit torch."
+    IDS_STRING199           "Cannot discard equipped bag."
+    IDS_STRING200           "Cannot discard a weapon while it is equipped."
+    IDS_STRING201           "You can no longer complete this game."
+    IDS_STRING202           "Starman cannot equip more than 6 bags."
+    IDS_STRING203           "Rest 3 Hours"
+    IDS_STRING_NPC_DIED     "%s died."
+    IDS_STRING_SAVE_COMPLETE "Save completed."
+    IDS_STRING_CANNOT_EAT   "Too full to eat more."
+    IDS_STRING_USE_MATERIAL "Star Man (Seems usable as material.)"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_USE_SUMAHO   "Star Man (Unresponsive. The seawater must have corroded the board.)"
+    IDS_STRING209           "Explosiveness"
+    IDS_STRING210           "Parameter           Current/MaxSub/Max"
+    IDS_STRING211           "Starman"
+    IDS_STRING212           "Bag"
+    IDS_STRING213           "Debuff"
+    IDS_STRING214           "Equiped Weapon"
+    IDS_STRING215           "Attack Power"
+    IDS_STRING_USE_HOMEKEY  "Star Man (I won’t throw it away yet. Better keep it for now.)"
+    IDS_STRING_USE_DEFAULT  "Star Man (I can’t think of any use for it.)"
+    IDS_STRING_RIGHT_HAND   "My right hand is full."
+    IDS_STRING_ARM_BROKEN   "Arm broken."
+    IDS_STRING_LEG_BROKEN   "Leg broken."
+    IDS_STRING_KAKAN        "I placed a wreath on the grave."
+    IDS_STRING_SOTETSU1     "Dehydration, Headache, Stomach Pain, Confusion."
+    IDS_STRING_SOTETSU2     "Stamina, minerals, vitamins, and body recovery decreased."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_ACID1        "Entered confusion."
+    IDS_STRING_ACID2        "Body recovery decreased."
+    IDS_STRING_DEATH_REASON1 "Cause of Death: Unknown"
+    IDS_STRING_DEATH_REASON2 "Cause of Death: Body recovery reached 0"
+    IDS_STRING_DEATH_REASON3 "Cause of Death: Hydration fell below 90%"
+    IDS_STRING_DEATH_REASON4 "Cause of Death: Stamina reached 0%"
+    IDS_STRING_DEATH_REASON5 
+                            "Cause of Death: One year after the contract with Rynen"
+    IDS_STRING_DEATH_REASON6 "Cause of Death: Starvation"
+    IDS_STRING_DEATH_REASON7 "Cause of Death: Slept underwater"
+    IDS_STRING_DEATH_REASON8 "Cause of Death: Attacked while sleeping"
+    IDS_STRING_HELP_EMPTY   "(It seems I can’t get any right now.)"
+    IDS_STRING_CURE_TIME_ARM "Broken Arm Heal Time"
+    IDS_STRING_CURE_TIME_LEG "Broken Leg Heal Time"
+    IDS_STRING_CURE_TIME_HEAD "Headache Heal Time"
+    IDS_STRING_CURE_TIME_COLD "Cold Heal Time"
+    IDS_STRING_CURE_TIME_STOMACH "Stomachache Heal Time"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_CURE_TIME_WATER "Dehydration Heal Time"
+    IDS_STRING_WORDBRESS    "WordBress"
+    IDS_STRING_REVIVE_OK    "Revive Available"
+    IDS_STRING_REVIVED      "Revived"
+    IDS_STRING_CURRENT_DURA "Durability"
+    IDS_STRING_CURRENT_LEVEL "Level"
+    IDS_STRING_WORDBRESS_USED "Used"
+    IDS_STRING_WORDBRESS_UNUSED "Unused"
+    IDS_STRING_NPC_ALIVE    "Alive"
+    IDS_STRING_NPC_DEAD     "Dead"
+END
+
+#endif    // 英語 (米国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

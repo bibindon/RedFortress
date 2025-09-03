@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_VisualStudio2019|Win32">
+      <Configuration>Debug_VisualStudio2019</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_VisualStudio2019|x64">
+      <Configuration>Debug_VisualStudio2019</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DeployEncrypt|Win32">
+      <Configuration>DeployEncrypt</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DeployEncrypt|x64">
+      <Configuration>DeployEncrypt</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Deploy|Win32">
+      <Configuration>Deploy</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Deploy|x64">
+      <Configuration>Deploy</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{6dd95551-4853-454c-9f8f-e15464132f19}</ProjectGuid>
+    <RootNamespace>starman</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;DEPLOY_ENCRYPT;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;DEPLOY;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;DEPLOY_ENCRYPT;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MULTI_SAMPLE_NONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\debug\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;DEPLOY;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;DEPLOY_ENCRYPT;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AnimationStrategy.cpp" />
+    <ClCompile Include="AnimController.cpp" />
+    <ClCompile Include="AnimMesh.cpp" />
+    <ClCompile Include="AnimMeshAlloc.cpp" />
+    <ClCompile Include="BGM.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CommandManager.cpp" />
+    <ClCompile Include="Common.cpp" />
+    <ClCompile Include="CraftManager.cpp" />
+    <ClCompile Include="EnemyBigCube.cpp" />
+    <ClCompile Include="EnemyCube.cpp" />
+    <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyDisk.cpp" />
+    <ClCompile Include="EnemyEnchu.cpp" />
+    <ClCompile Include="EnemyGhost.cpp" />
+    <ClCompile Include="EnemyHanen.cpp" />
+    <ClCompile Include="EnemyHankyuu.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="EnemyOrangeCube.cpp" />
+    <ClCompile Include="EnemySmallCube.cpp" />
+    <ClCompile Include="EnemySphere.cpp" />
+    <ClCompile Include="GamePad.cpp" />
+    <ClCompile Include="HudManager.cpp" />
+    <ClCompile Include="KeyBoard.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="MenuManager.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshClone.cpp" />
+    <ClCompile Include="MeshNoShade.cpp" />
+    <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="NpcManager.cpp" />
+    <ClCompile Include="PatchTestManager2.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PopUp.cpp" />
+    <ClCompile Include="PopUp2.cpp" />
+    <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="Rain.cpp" />
+    <ClCompile Include="SaveManager.cpp" />
+    <ClCompile Include="SeqBattle.cpp" />
+    <ClCompile Include="SeqEnding.cpp" />
+    <ClCompile Include="Opening.cpp" />
+    <ClCompile Include="StoryManager.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="SharedObj.cpp" />
+    <ClCompile Include="SoundEffect.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="StackBackTrace.cpp" />
+    <ClCompile Include="VoyageManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimationStrategy.h" />
+    <ClInclude Include="AnimController.h" />
+    <ClInclude Include="AnimMesh.h" />
+    <ClInclude Include="AnimMeshAlloc.h" />
+    <ClInclude Include="BGM.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CommandManager.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="CraftManager.h" />
+    <ClInclude Include="EnemyBigCube.h" />
+    <ClInclude Include="EnemyCube.h" />
+    <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyDisk.h" />
+    <ClInclude Include="EnemyEnchu.h" />
+    <ClInclude Include="EnemyGhost.h" />
+    <ClInclude Include="EnemyHanen.h" />
+    <ClInclude Include="EnemyHankyuu.h" />
+    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyOrangeCube.h" />
+    <ClInclude Include="EnemySmallCube.h" />
+    <ClInclude Include="EnemySphere.h" />
+    <ClInclude Include="GamePad.h" />
+    <ClInclude Include="HudManager.h" />
+    <ClInclude Include="KeyBoard.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="MenuManager.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshClone.h" />
+    <ClInclude Include="MeshNoShade.h" />
+    <ClInclude Include="Mouse.h" />
+    <ClInclude Include="NpcManager.h" />
+    <ClInclude Include="PatchTestManager2.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PopUp.h" />
+    <ClInclude Include="PopUp2.h" />
+    <ClInclude Include="QuestManager.h" />
+    <ClInclude Include="Rain.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SaveManager.h" />
+    <ClInclude Include="SeqBattle.h" />
+    <ClInclude Include="SeqEnding.h" />
+    <ClInclude Include="Opening.h" />
+    <ClInclude Include="StoryManager.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="SharedObj.h" />
+    <ClInclude Include="SoundEffect.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="StackBackTrace.h" />
+    <ClInclude Include="VoyageManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\shader\AnimationMeshShader.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">2.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">2.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">2.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">2.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Deploy|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <SuppressStartupBanner Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</SuppressStartupBanner>
+      <SuppressStartupBanner Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">true</SuppressStartupBanner>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cso</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(OutDir)%(Filename).cso</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="res\shader\MeshShader.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">2.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">2.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">2.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">2.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Deploy|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|Win32'">Effect</ShaderType>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cso</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(OutDir)%(Filename).cso</Outputs>
+      <RootFolder Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </RootFolder>
+      <RootFolder Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">
+      </RootFolder>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/LD tool\D3DCompiler_43.dll %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">/LD tool\D3DCompiler_43.dll %(AdditionalOptions)</AdditionalOptions>
+    </CustomBuild>
+    <CustomBuild Include="res\shader\MeshShaderCullNone.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cso</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(OutDir)%(Filename).cso</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="res\shader\MeshShaderNoShade.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cso</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(OutDir)%(Filename).cso</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\.gitignore" />
+    <None Include="..\..\README.md" />
+    <None Include="cpp.hint" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RedFortress.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\image\starman.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\shader\MeshShader2Texture.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(ProjectDir)tool\fxc.exe /Zi /Od /Fo $(OutDir)%(Filename).cso /T fx_2_0 /nologo %(FullPath)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cso</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">$(OutDir)%(Filename).cso</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="res\shader\Common.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_VisualStudio2019|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DeployEncrypt|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Deploy|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets" Condition="Exists('..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets'))" />
+  </Target>
+</Project>
