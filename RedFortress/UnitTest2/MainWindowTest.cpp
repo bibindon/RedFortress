@@ -88,11 +88,7 @@ public:
 
             std::thread th1([&]
                             {
-#ifdef _DEBUG
                                 Sleep(40 * 1000);
-#else
-                                Sleep(40 * 1000);
-#endif
 
                                 keyboard->SetAltF4();
                             });
@@ -134,11 +130,7 @@ public:
             std::thread th1([&]
                             {
                                 // 1分エンターを押し続ける
-#ifdef _DEBUG
                                 for (int i = 0; i < 90; ++i)
-#else
-                                for (int i = 0; i < 60; ++i)
-#endif
                                 {
                                     Sleep(1000 * 1);
                                     keyboard->SetKeyDownFirst(DIK_RETURN);
@@ -212,11 +204,7 @@ public:
             std::thread th1([&]
                             {
                                 // 1分エンターを押し続ける
-#ifdef _DEBUG
                                 for (int i = 0; i < 90; ++i)
-#else
-                                for (int i = 0; i < 60; ++i)
-#endif
                                 {
                                     Sleep(1000 * 1); 
                                     keyboard->SetKeyDownFirst(DIK_RETURN);
