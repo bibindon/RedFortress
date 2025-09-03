@@ -1,0 +1,14 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,"Star Man, Triangle Man, and Square Man floated a raft on the river.",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkRiver.png
+2,"""All right...""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkRiver.png
+3,"Star Man carefully stepped onto the raft.
+The raft held without sinking.",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkRiver.png
+4,"""Yay!!""",res\\image\\daikeiman00.png,,res\\image\\talkRiver.png
+5,"Trapezoid Man shouted, raising both arms in a fist‑pump.",res\\image\\daikeiman00.png,,res\\image\\talkRiver.png
+6,"Knot‑tying took know‑how, and none of them had it.
+They decided to just wind the rope around and around.",,,res\\image\\talkRiver.png
+7,"The raft didn't break right away,
+but it seemed to be sinking little by little.",,,res\\image\\talkRiver.png
+8,"(No matter how hard we try, it feels like it'll sink in about three days.
+Maybe we just can't make a raft that won't sink.
+We may have to make one that sinks slowly and reach the next island before it does.)",res\\image\\hoshiman00.png,,res\\image\\talkRiver.png

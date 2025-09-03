@@ -1,0 +1,47 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,ホシマンが契約してからさらに月日が経過していた。,,,res\\image\\talkGip.png
+2,"ある日、ホシマンは地図に載っている「ギップ灯台」に行ってみることにした。
+山の頂上に向かって歩き続け、目的地に到着した。
+",res\\image\\hoshiman00.png,,res\\image\\talkGip.png
+3,"そこには海の方を眺めている小太りの男性がいた。
+小太りの男性はホシマンの足音に気づき振り向いた。",,res\\image\\gain00.png,res\\image\\talkGip.png
+4,「あ、どうも・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+5,ホシマンは会釈した。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+6,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+7,小太りの男性は時が止まったように静止していた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+8,「あぁ、ウィッス・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+9,男性は小さく会釈した。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+10,「初めまして、この辺に住んでいるのか？」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+11,ホシマンは聞いた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+12,「ていうか誰オマエ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+13,小太りの男性は眉を寄せ睨みつけてきた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+14,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+15,"「何　勝手に入ってきてンだよ。
+　何してンだテメェ、こんなとこでよォ、オイ」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+16,ホシマンは背筋が凍った。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+17,"「・・・私は最近この島に漂流して・・・。
+　仲間と一緒にサバイバル生活をしている」",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+18,「知らねーよ！　てめェのそんな都合の話なんかよォ！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+19,小太りの男性は声を上げながら近づいてきた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+20,「失礼した・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+21,ホシマンは立ち去ろうとした。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+22,「オイ・・・何逃げようとしてんだよ！　オイ！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+23,（モンスターより人間のほうが危険だ・・・）,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+24,"ホシマンが背中を向けて早歩きで去ろうとすると、
+後ろから走ってくる音が聞こえた。
+振り返ると小太りの男性が走ってきていた。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+25,「オラッ！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+26,小太りの男性は蹴ってきた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+27,「うっ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+28,ホシマンは地面に倒れた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+29,「ブッ殺されてェのか！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+30,「もうここには近寄らない。安心しろ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+31,「普段どこに住んでるんだ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+32,「・・・」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+33,「言えよオラ」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+34,男はホシマンを足でつついた。,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+35,「・・・！」,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+36,"ホシマンは背後に用心しながら帰ろうとしたが
+男はナイフを取り出していた。",res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+37,（こいつと会話してはダメだ・・・）,res\\image\\hoshiman00.png,res\\image\\gain00.png,res\\image\\talkGip.png
+38,ホシマンは走って逃げた。,res\\image\\hoshiman00.png,,res\\image\\talkGip.png

@@ -1,0 +1,36 @@
+﻿ID,地名,説明文,X,Y,画像ファイル名
+poweregg,Poweregg Planet,"The planet where Star Man and the others live.
+Its axial tilt is large.
+",342,345,res\\image\\poweregg.png
+prolitan,Prolitan Island,"An uninhabited island.
+Perimeter 20 km. Area 25 km².
+",464,809,res\\image\\widemap1.png
+precision,Precision,"Ruins.
+It appears to have been a city hall.
+",304,794,res\\image\\narrowmap1.png
+centoz,CentOZ Church,,781,156,res\\image\\narrowmap3.png
+ubuntu,Ubuntu Cave,,648,898,res\\image\\narrowmap2.png
+redpat,RedPat Riverside,,651,826,res\\image\\narrowmap8.png
+thinkhat,ThinkHat Beach,,220,909,res\\image\\narrowmap10.png
+bitnabi,BitNabi Forest,"A coastline lined with palm trees.
+",300,282,res\\image\\narrowmap9.png
+redmize,Redmize Mountain,,110,115,res\\image\\narrowmap12.png
+jenking,Jenking Swamp,,624,348,res\\image\\narrowmap6.png
+geforqe,Republic of GEFORQE,"A country to the west.
+",461,426,res\\image\\widemap3.png
+radeou,The Radeou Union,"Star Man's home country.
+",411,957,res\\image\\widemap2.png
+optiple,Optiple Island,"The island he was originally supposed to go to.
+A holy land for bikers.
+Full of brown bears.
+",686,19,res\\image\\widemap5.png
+quesee,QueSee,"The star of Poweregg Planet.
+Near the end of its life: red and weak.
+",637,461,res\\image\\qc.png
+gip,Gip Lighthouse,,920,990,res\\image\\narrowmap7.png
+virtualbecks,VirtualBecks Port ruins,,227,659,res\\image\\narrowmap5.png
+directnex,DirectNex,,475,480,res\\image\\narrowmap11.png
+seeporoporo,See Poroporo moss garden,,549,23,res\\image\\narrowmap4.png
+blenber,Blenber Sea Area,"The southern sea area.
+A vast sea stretches out, with no land.
+",649,1,res\\image\\widemap4.png

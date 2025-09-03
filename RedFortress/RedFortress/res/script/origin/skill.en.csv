@@ -1,0 +1,24 @@
+﻿ID,名称,説明,＋０（攻撃力）,＋１,＋２,＋３,＋４,＋５,＋６,＋７,＋８,＋９,＋１０,＋０（範囲）,＋１.1,＋２.1,＋３.1,＋４.1,＋５.1,＋６.1,＋７.1,＋８.1,＋９.1,＋１０.1
+1,Fire Magic,"Basically like carrying a gas
+burner.
+You're better off just
+punching.
+
+Can be upgraded up to +10,
+letting you
+hurl a massive fireball at the
+target.
+",10,20,30,40,50,60,70,80,90,100,110,10,20,30,40,50,60,70,80,90,100,110
+2,Ice Magic,"Getting hit by a rock hurts
+far more
+than getting hit by ice.
+Useless.
+
+Can be upgraded up to +10,
+letting you
+slam a massive block of ice
+into the target.
+",10,20,30,40,50,60,70,80,90,100,110,10,20,30,40,50,60,70,80,90,100,110
+3,Dark Magic,"A technique against ghosts.
+Only this can damage them.
+",10,20,30,40,50,60,70,80,90,100,110,10,20,30,40,50,60,70,80,90,100,110

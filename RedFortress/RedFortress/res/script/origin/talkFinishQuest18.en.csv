@@ -1,0 +1,23 @@
+﻿ID,オプション1,オプション2,オプション3,BackGround,BGM
+1,Star Man and the others arrived at the ruins.,,,res\\image\\talkPrecision.png,
+2,"""Excuse us. I'm Star Man.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+3,Star Man and the others walked to Trapezoid Man's room.,,,res\\image\\talkPrecision.png,
+4,"""Excuse me.""",res\\image\\shikakuman00.png,,res\\image\\talkPrecision.png,
+5,A sound came from inside the room.,,,res\\image\\talkPrecision.png,
+6,"""O-okay...""",,,res\\image\\talkPrecision.png,
+7,"Peering into the room, Trapezoid Man was just getting up.
+He was clenching his teeth, looking in pain.",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+8,"""No need to get up.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+9,"""No, I'm fine.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+10,"""...""
+""These are the children I mentioned earlier.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+11,"""N-nice to meet you...""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+12,"""Nice to meet you.""
+""Nice to meet you.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+13,"""If you like, please go ahead.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+14,Star Man and the others handed the coconuts to Trapezoid Man.,,,res\\image\\talkPrecision.png,
+15,"""Okay, thanks—thanks.""",res\\image\\daikeiman00.png,,res\\image\\talkPrecision.png,
+16,"After the greetings, they moved to another room.
+It was covered in trash and dust, but they had no strength or will to clean.",,,res\\image\\talkPrecision.png,
+17,"""Let's rest for now... We can't do any more today.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+18,They decided to sleep for now.,,,res\\image\\talkPrecision.png,

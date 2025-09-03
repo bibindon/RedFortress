@@ -1,0 +1,24 @@
+﻿ID,オプション1,オプション2,オプション3
+1,"ホシマンは声のする方へ恐る恐る進んでいった。
+声のする方をのぞき込むと頭が台形の男が寝そべっていた。",,res\\image\\daikeiman00.png
+2,「助けてくれ・・・」,,res\\image\\daikeiman00.png
+3,男は今にも死にそうであった。ホシマンは重い体を引きずりながら近寄っていく。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+4,「大丈夫か」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+5,「何か飲み物・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+6,"男は全身あざと出血でぼろぼろだった。
+そして両方の足が通常の３倍くらいの大きさになっていた。",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+7,「両足が折れた・・・。高いところから落ちて・・・。落とされて・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+8,男は声を出すだけでも大変そうだった。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+9,「外で果物を探して持ってこようか？　たまにしか見つからないが・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+10,「海の方にココナッツの木がある。ぐ・・・あれなら・・・確実に水分を確保できる」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+11,「わかった・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+12,「取りに行くのか？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+13,「そうだ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+14,「それは・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+15,「何か問題があるのか？」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+16,「ココナッツの木が生えてる場所は・・・かなり遠い」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+17,「そうか。だが、確実に水を手に入れる方法は早めに知っておきたい」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+18,「わかった・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+19,ホシマンはヨロヨロと外に歩いて行った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png
+20,【太陽は東から登り、西に沈む。太陽の向きに注意してココナッツの木を目指そう】,,
+21,【マップ情報が更新された】,,

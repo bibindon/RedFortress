@@ -1,0 +1,24 @@
+﻿ID,オプション1,オプション2,オプション3,background,BGM
+1,植物が生い茂っているが、どれが食べられるものなのか、ホシマンには全く分からなかった。,,,res\\image\\talkSunahama.png,
+2,"パワーエッグ星の空は暗く赤みがかっている。パワーエッグ星の恒星の寿命が近く弱いためだ。
+植物は恒星の方向に生えており、葉っぱは黒い。
+パワーエッグ星は地軸が傾いていてプロリタン島はずっと夕方かずっと夜であった。",,,res\\image\\talkSunahama.png,
+3,（何か食べるもの・・・。死んでしまう・・・）,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+4,ホシマンは適当に葉っぱをちぎって口に入れた。,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+5,（・・・。うっ！　ぐぇえ！）,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+6,「はぁっ・・・は？」,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+7,口の中の葉っぱを吐き出したとき、視界に不思議なものが映った。,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+8,"巨大な立方体が置かれていた。
+緑色で一辺が１メートルくらいあり、みずみずしさがあった。",,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+9,（岩という感じではない・・・なんだあれは・・・）,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+10,ホシマンが歩いていくと立方体はグルン、と回転した。,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+11,「！？」,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+12,（何かしてしまったか？）,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+13,立方体は跳ねながらこちらの方にゆっくり進んできた。,,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+14,（！！）,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+15,ホシマンは疲労のためその場で固まっていた。,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+16,＜ドーン　ドーン＞,,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+17,"立方体は体が大きいためすぐに木に引っかかって進めなくなった。
+しかし、それでも立方体は関係なく壁に向かい続け、木はバリバリと音を立てながら倒れ始めていた。",,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+18,（木に当たり続けるところがロボットのようだ・・・）,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+19,ホシマンは急いで逃げた。,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,

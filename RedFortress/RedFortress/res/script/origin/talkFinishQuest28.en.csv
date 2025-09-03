@@ -1,0 +1,42 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,"Star Man stuffed the bag with red fruit and brought it back.
+The four gathered in Trapezoid Man's room.
+Star Man set the red fruit and vines on the floor.",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+2,"""I planned to slice the red fruit with a knife,
+put it in a bag, and soak it in the river, but...""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+3,"""We don't have a knife or a bag.
+If we pound the fruit with a stone, we can crush it,
+so we can do without a knife.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+4,Star Man pointed at the vines laid on the floor.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+5,"""Let's try making a bag with this.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+6,"""Uh, I don't know how to do that!""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+7,said Triangle Man.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+8,"""I've never done it either.
+For now we just need something bag‑like so the fruit won't wash away.
+Let's just try.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+9,None of the four had ever done weaving.,,,res\\image\\talkPrecision.png
+10,"Trapezoid Man laid five vines vertically.  Then from the side he wove over‑under‑over‑under‑over; then again from the side, under‑under‑over‑under‑over.
+This made it look like a basket.",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+11,"They crushed the red fruit, put it in the basket,
+and wrapped it around and around with vines till it looked like a bag.",,,res\\image\\talkPrecision.png
+12,"""We'll soak this in the river... but will all the fish die?""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+13,Star Man muttered.,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+14,"""Not impossible.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+15,"""When we make bows and arrows, maybe we could
+coat the tips with it first.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,They carried the bag to the river and fixed it firmly with rocks.,,,res\\image\\talkPrecision.png
+17,"""Let's try eating it in a week.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+18,"""Eek, scary!""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+19,"""I'm free, so I'll make a basket or two.
+Might be useful not only for leaching,
+but for catching fish.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+20,said Trapezoid Man.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+21,"""Yeah, please do.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+22,"""I'll keep looking for an island we can escape to.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+23,"""Good luck.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+24,"""Kids, can you bring back coconuts and acorns?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+25,said Trapezoid Man.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+26,"""Okay.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png
+27,"""Stay near the house, okay?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+28,Star Man and the others decided to carry out their assigned tasks.,,,res\\image\\talkPrecision.png
+29,"[Try using the Patch Test feature, the Craft feature, and the Helper feature.]",,,res\\image\\talkPrecision.png

@@ -1,0 +1,24 @@
+﻿ID,オプション1,オプション2,オプション3,background,BGM
+1,"Vegetation grew thick, but Star Man had no idea which plants were edible.",,,res\\image\\talkSunahama.png,
+2,"On Poweregg Planet the sky was dark and reddish, because its star was near the end of its life and weak.
+Plants grew leaning toward the star, and their leaves were black.
+Poweregg Planet's axial tilt was large, so Prolitan Island was in perpetual evening or perpetual night.",,,res\\image\\talkSunahama.png,
+3,(Something to eat... I'll die...),res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+4,Star Man tore off a leaf at random and put it in his mouth.,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+5,(... Ugh! Gag!),res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+6,"""Hah... what?""",res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+7,"When he spat out the leaves from his mouth, something strange came into view.",res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+8,"A huge cube was sitting there.
+It was green, about a meter on a side, and had a fresh, moist look.",,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+9,(It doesn't feel like a rock... what is that...?),res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+10,"As Star Man walked toward it, the cube whirled around.",res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+11,"""?!""",res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+12,(Did I just trigger something?),res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+13,"The cube came toward him slowly, bouncing as it went.",,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+14,(!!),res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+15,Star Man froze on the spot from exhaustion.,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+16,<BOOM BOOM>,,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+17,"Because of its bulk, the cube soon snagged on a tree and couldn't get through.
+Even so, it kept pushing straight toward the obstacle; the tree began to crackle and topple.",,res\\image\\rippoutai00.png,res\\image\\talkSunahama.png,
+18,(The way it keeps ramming the tree is like a robot...),res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,
+19,Star Man fled in a hurry.,res\\image\\hoshiman00.png,,res\\image\\talkSunahama.png,

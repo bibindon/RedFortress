@@ -1,0 +1,60 @@
+﻿ID,名前,説明,画像
+hoshiman,Star Man,"Male, 27.
+Protagonist. His head is star-shaped, his whole body
+yellow—he looks like a star. He tends to be gloomy.
+
+He worked as a temp at the port, loading cargo onto ships
+and preparing paperwork. At the end of July his contract
+ended, and he headed to Optiple Island by motorbike.
+
+His past physical labor turned out to be
+a small blessing in this shipwreck.
+
+170 cm. 55 kg.",res\\image\\hoshiman00.png
+daikeiman,Trapezoid Man,"Male in his forties.
+A man with a trapezoid head; his whole body
+is battered and both legs are broken.
+He was injured jumping off a cliff during
+a fight with a monster.",res\\image\\daikeiman00.png
+sankakuman,Triangle Man,"A child with a triangular head.
+Arrived on Prolitan Island together with
+Square Man. A rambunctious boy.
+
+11 years old.",res\\image\\sankakuman00.png
+shikakuman,Square Man,"A child with a quadrilateral head.
+Younger than Triangle Man; on the quiet
+side.
+8 years old.
+
+No relation to Triangle Man.",res\\image\\shikakuman00.png
+vim,VIM,"Humanoid monster, pure white. A test subject; does not
+attack humans. Monsters are made as weapons to attack
+people, but VIM was an experiment to give monsters a
+personality.
+The research had not progressed to the point
+of attacking humans.
+It was discarded here, with nothing to do.
+It had no name; Star Man and the others gave it one.",res\\image\\vim00.png
+vsco,VSCO,"Humanoid monster, pure white.
+A test subject; attacks humans.
+VIM and VSCO look identical and cannot be
+distinguished by appearance.
+It had no name; Star Man and the others gave it one.",res\\image\\vsco00.png
+webnin,Webnin,An elderly native woman.,res\\image\\rouba00.png
+xeoff,Xeoff,"Can make a pact called Rainen.
+Appears to those on the brink of death and urges them
+to sign.
+
+To limit social impact, pacts are available
+only on Poweregg Island.
+
+It seeks to gain the pact that causes death
+one year later, so it shows up at desperate moments.
+
+Its face is a cow's skull.",res\\image\\xeoff00.png
+gain,Gain,A violent man.,res\\image\\gain00.png
+nes,Nes,A man who lies and cheats.,res\\image\\nes00.png
+noble,Noble,"A man with a straightforward, pure nature.
+Used by Nes, and died.",res\\image\\noble00.png
+hishigataman,Diamond Woman,"Star Man's former lover.
+Young love rarely works out.",res\\image\\hishigata00.png

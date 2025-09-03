@@ -1,0 +1,103 @@
+﻿ID,オプション1,オプション2,オプション3,background
+1,"When Star Man looked straight ahead, a cylindrical object was coming toward him.",res\\image\\enchuu00.png,,res\\image\\talkKaigan2.png
+2,"(Ah, crap. Is that a monster too?)",res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+3,"Because the monsters usually stood perfectly still, they were hard to spot,
+and often he didn't notice them until they started coming his way.",res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+4,(I see that one a lot... It's the one that does a charge attack.),res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+5,"The monster was cylinder‑shaped, about the same size as the cubes.",res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+6,(Should I try fighting it...?),res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+7,Star Man leveled his stone spear.,res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+8,"Star Man had spent a week fleeing monsters,
+and in particular he had to dodge the shots the disk‑shaped enemy threw,
+so his reflexes were honed.",res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+9,<SHAAA!>,res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+10,(!!),res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+11,The cylindrical monster charged like a bull.,res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+12,Star Man leapt sideways to dodge. Mud and leaves flew.,res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+13,"The cylindrical monster turned toward him and crept closer, inch by inch.",res\\image\\enchuu00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+14,"(I avoided it earlier because it was far away, but if it does that point‑blank...
+I probably can't dodge it. If I have the bad luck to be trampled,
+that could be instant death...)",,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+15,"Like the others, the cylindrical enemy looked to weigh hundreds of kilograms.",res\\image\\enchuu00.png,,res\\image\\talkKaigan2.png
+16,(I'll run.),,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+17,"Star Man trotted away.
+Even if you beat a monster, you couldn't eat it and got no materials,
+so unless it was a road he used often or one he couldn't avoid, he ran.",,res\\image\\hoshiman00.png,res\\image\\talkKaigan2.png
+18,"After a while he reached an open place.
+There was an old collapsed house.
+It had straw and earthen walls, a type not seen today.",,,res\\image\\talkKaigan2.png
+19,Human bones lay scattered inside the house.,,,res\\image\\talkKaigan2.png
+20,"(You don't end up with a house containing human bones if people were living normally.
+This looks like there was an incident...)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png
+21,"Though hidden by grass, faint traces of a path led from the ruin into the forest.
+Brushing aside with a wooden stick, Star Man proceeded that way.
+Ahead lay a small graveyard and a shrine.",,,res\\image\\talkKaigan2.png
+22,(!! A person...!),res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png
+23,An old woman was sitting in the graveyard.,res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+24,"""Um...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+25,Star Man spoke to her nervously.,res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+26,(I really hope it's not another robot‑like person...),res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+27,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+28,"""Got a minute?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+29,"""Ah... Is it that time already...?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+30,"""?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+31,"""Ah...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+32,The old woman sighed.,res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+33,"""I want to hear your story.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+34,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+35,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+36,Silence passed between them.,res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+37,"""All right.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+38,(Good... someone who understands speech...),res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+39,"""I drifted ashore here.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+40,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+41,"""Pleased to meet you...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+42,"""Yes, likewise.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+43,"""Tell me about the monsters all over the place. What are they?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+44,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+45,"""Biological weapons. GEFORQE's experimental subjects dumped here.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+46,"""...!""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+47,GEFORQE was a developing country to the west of this island.,res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+48,"""...I see...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+49,"""They're not anything that advanced.
+Things like making plants able to move, or implanting plant cells into animals—
+that's all. Thanks to that they can live without eating or drinking.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+50,"On Poweregg Planet, genetic modification had spread to households and individuals,
+and even developing countries created organisms for many purposes.",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+51,"""I'd never heard news like that before.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+52,"""People don't come near this island.
+You—didn't you make a pact with a demon?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+53,"""Eh... ...Yeah.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+54,"""That demon goes to people on the brink of death and urges them to make a contract.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+55,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+56,"""Those who revive gain power.",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+57,"""Once conflict breaks out, those with power can beat those without. They can kill.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+58,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+59,"""Those about to be killed—the powerless—make the demon pact and revive.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+60,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+61,Star Man's expression grew grim.,res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+62,"""Those who've made the pact can use magic.
+With training the magic becomes tremendously powerful and can kill many at once.
+When many are killed, everyone makes the pact and revives.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+63,"""The number of contractors multiplied like doubling upon doubling.
+But with the clause that you die in a year. That's how the island's people died out.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+64,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+65,"""The monsters started being dumped afterward.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+66,"""I see. So that's how it was.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+67,"(From the horned person's point of view,
+if the islanders fought each other, they'd get lots of contracts...)",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+68,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+69,"""One more thing. For my companions' sake I want to escape within a year.
+Do you know any good way?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+70,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+71,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+72,"""Can't think of anything... It'd be nice if you could get off the island.
+Then the contract ends, too.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+73,"""? The contract ends?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+74,"""Yeah. If you can leave the island, the contract disappears and you're saved.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+75,"""Really? How do you know that?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+76,"""Eh? Why was it again...?""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+77,"""...""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+78,(Is that really true...?),res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+79,"""Anyway, thank you.""",res\\image\\hoshiman00.png,res\\image\\rouba00.png,res\\image\\talkKaigan2.png
+80,"After this, Star Man gathered food and returned to the ruins.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan2.png

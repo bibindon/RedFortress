@@ -1,0 +1,376 @@
+﻿ID,大分類,小分類,説明文
+1,Status,About Status,"This game has the following ten stats.
+
+""Body Stamina"", ""Brain Stamina"", ""Quickness""
+""Hydration"", ""Body Fatigue / Injury""
+""Carbohydrates"", ""Protein"", ""Fat""
+""Vitamins"", ""Minerals""
+"
+2,Status,"About ""Body Stamina"" １","""Max Value"", ""Recoverable Value"", and ""Current Value"" exist.
+Every time you walk or run, the stamina ""Recoverable Value"" and ""Current Value"" decrease.
+"
+3,Status,"About ""Body Stamina"" ２","When you stop, sit, or lie down,
+the ""Current Value"" recovers, but the ""Recoverable Value"" does not.
+Sleeping restores the ""Recoverable Value"" according to sleep duration.
+"
+4,Status,"About ""Body Stamina"" ３","If the ""Recoverable Value"" never drops below 70% even once in a day,
+your Max Value decreases by 1% due to lack of exercise.
+"
+5,Status,"About ""Brain Stamina"" １","Concentration and willpower.
+
+Affects attack power and the use of magic.
+"
+6,Status,"About ""Brain Stamina"" ２","Gradually decreases just by staying awake.
+Fully recovers after sleep. If you go to bed late, only 50% recovers.
+Talking or using magic lowers it.
+"
+7,Status,"About ""Brain Stamina"" ３","""Max Value"", ""Recoverable Value"", and ""Current Value"" exist.
+If you lie down at 50% or less, you will sleep even during the day.
+If you sit at 20% or less, you will fall asleep even during the day.
+"
+8,Status,"About ""Quickness""","Thickness of fast‑twitch muscles.
+
+Affects damage dealt, damage taken, movement speed,
+and how slowly ""Brain Stamina"" declines.
+"
+9,Status,"About ""Body Repair""","A value representing various kinds of physical damage such as muscle soreness,
+bruises, cuts, sprains, and burns.
+
+100 means uninjured.
+Decreases when you are attacked.
+Also decreases when you attack.
+Other actions can lower it as well.
+It recovers through sleep, and when it recovers,
+the Max Values of ""Stamina"" and ""Quickness"" increase.
+"
+10,Status,"About ""Hydration""","The highest priority in survival.
+Even a 1% drop worsens how easily ""Stamina"" and ""Brain Stamina"" fall.
+Each additional 1% drop worsens it further.
+At 90%, you die.
+"
+11,Status,"About ""Carbohydrates""","Second only to water in survival.
+
+When carbohydrates reach 95 or higher,
+you are considered full and cannot eat any more.
+"
+12,Status,"About ""Protein""","If deficient, recovery suffers.
+"
+13,Status,"About ""Vitamins""","If deficient, recovery suffers.
+"
+14,Status,"About ""Minerals""","If deficient, recovery suffers.
+"
+15,Status,"About ""Sleep / Faint""","""Brain Stamina"" reaching 0, or lying down while it is low,
+puts you in the ""Sleep / Faint"" state.
+After 7 hours on Poweregg Planet, or after 1.5 hours, you will move.
+If you are attacked while sleeping/fainted, you die instantly.
+
+If your Brain Stamina stays high, you cannot fall asleep at night
+and morning will come.
+If morning comes without sleeping, you will enter the Sleep state,
+wake at noon, and receive the status ailment ""Sleep Deprivation"".
+
+You will not fall asleep while swimming.
+"
+16,Status,"About ""Cold""","Cures in 5 days.
+Worsens with physical activity.
+Worsens with mental exertion.
+"
+17,Status,"About ""Arm Fracture""","Attack power −90%.
+
+Affects ""Body Stamina"", ""Brain Stamina"", and ""Quickness"".
+The debuff decreases as days pass.
+Takes 3 months to fully heal.
+If any of the five nutrients is at half or lower, recovery stops.
+"
+18,Status,"About ""Leg Fracture""","Movement speed −50%.
+
+Affects ""Body Stamina"", ""Brain Stamina"", and ""Quickness"".
+The debuff decreases as days pass.
+Takes 3 months to fully heal.
+If any of the five nutrients is at half or lower, recovery stops.
+"
+19,Status,"About ""Headache""","Takes 1 day to fully heal.
+Drinking water makes it worse.
+"
+20,Status,"About ""Stomachache""","Takes 1 day to fully heal.
+Eating or drinking makes it worse.
+"
+21,Status,"About ""Dehyderation""","Takes 1 day to recover.
+If any of the five nutrients or hydration is insufficient, recovery stops.
+"
+22,Status,States,"You may enter the following states.
+
+Arm Fracture, Leg Fracture, Headache, Cold, Stomachache, Sleep, Dehydration, Sleep Deprivation
+"
+23,Status,Conditions for Status Ailments,"Conditions for status ailments:
+
+- Arm / Leg Fracture — falling
+- Headache / Cold / Stomachache — chance
+- Dehydration — lack of water
+- Sleep Deprivation — staying up late
+- Confusion — severe stress
+"
+24,Status,"About ""Confuse""","When Confused, Brain Stamina is halved
+"
+25,Inventory,Item Weight,"""Item Weight"" affects ""Body Stamina"", ""Brain Stamina"", ""Quickness"", and ""Movement Speed"".
+No matter how heavy your load is, as long as you are sitting or lying down,
+it doesn't affect stamina consumption.
+"
+26,Inventory,Max Carry Volume ,"The volume of items you can carry.
+Volume and weight are distinct.
+
+If you exceed Max Carry Volume, you cannot move.
+Equipping a bag increases Max Carry Volume.
+"
+27,Inventory,Bag １,"You can equip up to 5 bags.
+The first is on your back. The second is also on your back.
+The third is on your belly. The fourth in your left hand. The fifth in your right hand.
+"
+28,Inventory,Bag ２,"Holding a bag in your left hand halves your attack power, and you cannot use the bow or the atlatl.
+Holding a bag in your right hand prevents you from attacking.
+
+Jumping or stowing/retrieving items reduces bag durability.
+"
+29,Inventory,Stowing and retrieving items,"If a bag is equipped, each time you move items into or out of the inventory,
+the bag’s durability is consumed.
+Brain Stamina is also consumed.
+"
+30,Magic,About Magic Skill 1,"Using magic repeatedly earns experience,
+and once it reaches a certain point, your proficiency increases
+the next morning.
+
+Growth seems to happen while resting.
+"
+31,Magic,About Magic Skill 2,"Experience gained from using magic decreases over time.
+
+Efforts fewer than three times per week are said to have no effect
+no matter how many years you continue.
+"
+32,Actions,Actions,"Press C to show the action buttons.
+
+From the action buttons you can choose actions such as
+""Gather"", ""Chop"",
+""Sit"", ""Lie Down"".
+"
+33,Actions,Gather,"Gather plants and more. 30 minutes pass in game.
+The weapon you have equipped affects how much stamina is consumed.
+You cannot start unless you have a certain amount of Body Stamina.
+
+Try gathering near plants, trees, rocks, and soil.
+"
+34,Actions,Chop Trees １,"Chop down trees. About 6 hours pass in game.
+
+The weapon you have equipped affects how much stamina is consumed.
+You cannot start unless you have the proper tool equipped.
+"
+35,Actions,Chop Trees ２,"Each time you chop, the Stone Axe loses 1000 durability.
+If the Stone Axe is upgraded, durability loss is reduced.
+
+You can also chop with a ""Long Stone"", but it injures your body.
+
+If you have a cold or headache, the number of days needed for recovery increases.
+"
+36,Actions,Meditate,"Quietly think about what you should do next.
+"
+37,Crafting,Crafting,"After some time has passed, the finished product will be placed into Storage.
+Crafting time depends on the item.
+
+You can cancel a request you already started, but the materials will not be returned.
+"
+38,Crafting,Crafting Requests １,"You can ask Trapezoid Man to craft items.
+
+At first, because there’s no experienced craftsman, the tools are unusable.
+By making them repeatedly, you’ll be able to make better ones.
+"
+39,Crafting,Crafting Requests ２,"You can queue the next request before the previous one finishes.
+Up to 5 requests can be reserved.
+"
+40,Crafting,Crafting Materials,"To place a crafting request, you must have enough crafting materials
+in your inventory.
+
+If you have multiple copies of a material in your inventory,
+the ones with lower durability are consumed first.
+"
+41,Crafting,Reinforce,"When you first craft a Stone Axe, you obtain one with no upgrade value.
+Craft it again and you’ll obtain a Stone Axe with +1 upgrade.
+
+If you can craft a +1 Stone Axe,
+you cannot craft a Stone Axe with no upgrades.
+"
+42,Crafting,Raft,"When you craft a raft, it isn’t placed in Storage;
+it is launched into the nearest river.
+You can have up to three rafts on the river.
+
+A raft cannot be put into your inventory and can only be transported by sailing it yourself.
+"
+43,Crafting,How to Make a Torch,"How to make a torch.
+
+After you can use magic,
+equip a ""Wooden Stick"" and open the action menu
+to see ""Make Torch"".
+
+""Wooden Stick"" can be crafted.
+"
+44,Patch Test,Patch Test,"To eat unknown wild plants, Trapezoid Man does a patch test (poison tasting).
+The correct‑judgment rate is 60%. Repeating can raise it up to 90%.
+
+You can request up to three at once.
+He will tell you the result after 1 hour.
+"
+45,Controls,Keyboard & Mouse Controls,"Keyboard & Mouse Controls
+Menu — ESCAPE
+Walk — WASD
+Dash — SHIFT + WASD
+Jump — SPACE
+Step — WASD + SPACE
+Attack — Left Click
+Use Magic — SHIFT + Left Click
+Switch Magic — Mouse Wheel
+Confirm — ENTER / SPACE
+Throw — SHIFT + F
+"
+46,Controls,Gamepad Controls,"Menu — START button
+Walk — Left Stick
+Dash — L2 + Left Stick
+Jump — Cross (×) Button
+Step — Left Stick + Cross (×) Button
+Attack — R1
+Use Magic — Hold R2 and press R1
+Switch Magic — D-pad
+Confirm — Circle (○) Button
+Throw — L1
+"
+47,Controls,Attack,"Each swing consumes weapon durability and your own stamina.
+Status ailments such as colds and headaches worsen.
+If the weapon is stone, durability is not consumed.
+"
+48,Controls,States,"You may enter the following states.
+
+Arm Fracture, Leg Fracture, Headache, Cold, Stomachache, Sleep, Dehydration, Sleep Deprivation
+"
+49,Controls,Dash,"You can sprint at full speed for about 10 seconds.
+Training will let you run a little longer.
+"
+50,Controls,Walk,"You can walk continuously for about 10 minutes.
+Training lets you walk longer.
+"
+51,Controls,Throw,"Throw stones, throw a stone spear with the atlatl, or shoot arrows.
+"
+52,Sailing by Raft,Direction,"Look at the sun’s direction.
+"
+53,Sailing by Raft,Wind Direction & Strength,"Check the handkerchief hanging from the sail to know the wind’s direction and strength.
+"
+54,Sailing by Raft,Rowing Mode,"If you choose ""Sit"" from the Commands menu, you enter Rowing Mode,
+and you can operate the right oar with Right Click and the left oar with Left Click.
+"
+55,Sailing by Raft,Bag,"Approach a bag to see what's inside.
+"
+56,Sailing by Raft,"""Row for 3 Hours"" Command","If you choose the ""Row for 3 Hours"" command from the menu,
+you will row for 3 hours in the current heading.
+"
+57,Sailing by Raft,Hoist Sail,"If you choose ""Hoist Sail"" from the menu,
+you can raise the sail.
+"
+58,Sailing by Raft,Raft Status,"You can check the raft's status in the Status menu.
+"
+59,Sailing by Raft,Raft,"The number of days until the raft breaks changes based on upgrade value and weight.
+"
+60,Sailing by Raft,If the Raft Breaks,"If the raft breaks, swim and make one last desperate effort.
+"
+61,Stretcher Mode,Stretcher Mode １,"There are times in the middle of the story when you enter Stretcher Mode.
+Stretcher Mode is a mode for carrying an NPC on a stretcher.
+"
+62,Stretcher Mode,Stretcher Mode ２,"In Stretcher Mode you can hardly do anything, such as jumping or attacking.
+"
+63,Stretcher Mode,Stretcher Mode ３,"During Stretcher Mode, NPCs cannot consume food stored in Storage.
+"
+64,Stretcher Mode,Stretcher Mode ４,"Normally, executing ""Rest 3 Hours"" reduces an NPC's status,
+but in Stretcher Mode, the NPC recovers.
+"
+65,Stretcher Mode,Stretcher Mode ５,"If you enter a river or the sea in Stretcher Mode, everyone consumes stamina intensely.
+"
+66,Terms,Rynen １,"A pact that grants special abilities in exchange for dying after one year.
+
+You become able to use fire, ice, and dark magic.
+Ghosts can only be damaged by dark magic.
+"
+67,Terms,Rynen ２,"Even if you die, you can revive once at the place where you drank the vial.
+(Strictly speaking, your stamina fully recovers right before death.)
+"
+68,Mushrooms,Mushrooms,"In survival, never eat mushrooms.
+"
+69,Storage,Storage,"You can deposit items in Storage.
+"
+70,Storage,Storage & Companions １,"If you stay away for days with no food in Storage, your companions will die.
+If any of the five nutrients (carbohydrates, protein, fat, vitamins, minerals)
+drops to 0, they die.
+If carbohydrates reach 0, it's death by starvation; otherwise, illness.
+"
+71,Storage,Storage & Companions ２,"When there is a WordBress in Storage and a companion becomes critical, one is consumed.
+If a companion dies in that state, they will be revived by making the Rynen pact.
+
+When near death, they will eat foods they normally shouldn't.
+"
+72,Misc.,Quitting the Game,"If you try to exit the game with Alt+F4 or the window's close button,
+the game is saved in its current state.
+"
+73,Misc.,Date & Time,"A day on Poweregg Planet is 24 hours,
+and a year is 365 days.
+
+The sun rises in the east and sets in the west.
+
+Time flows 12× faster,
+so playing for 1 hour advances 12 hours on Poweregg Planet.
+"
+74,Misc.,Weather,"There are day and night.
+There is sun and rain.
+
+When it rains, debuffs apply to stamina and movement speed.
+"
+75,Misc.,Tips １,"If ""Body Repair"" reaches 0 you die,
+and there are no healing items; only natural recovery can heal you.
+If you want to recover injuries or status ailments,
+first resolve hunger, then rest and wait for them to heal.
+"
+76,Misc.,Tips ２,"There are no rewards for defeating enemies.
+"
+77,Misc.,Tips ３,"It’s better to follow the mountain paths.
+"
+78,Misc.,Tips ４,"You can clear the game without progressing the quests.
+You can clear the game even if NPCs die.
+"
+79,Misc.,Tips ５,"There is no function to display your current location or a map.
+Use the direction of the sun and the mountains to infer the island’s shape and where you are.
+"
+80,Misc.,Tips ６,"Early in the story, Star Man makes a pact called ""Rynen"".
+From that moment, NPC stamina consumption begins.
+If there is food in Storage, it will be consumed automatically.
+"
+81,Misc.,Tips ７,"If your stamina never drops below 70% even once in a day,
+you are under‑trained, and the Max Value of Body Stamina and Quickness decreases.
+
+If it drops to 30% or lower even once,
+the Max Value of Body Stamina and Quickness increases.
+"
+82,Misc.,Tips ８,"There are items like ""Unkndown Plant 1"" and ""Unkndown Plant 2"",
+but which plants are poisonous changes every time you start a new game.
+"
+83,Misc.,Tips ９,"Once you gather a plant or defeat an enemy, it disappears from the map
+and never respawns.
+"
+84,Misc.,Tips １０,"There are no levels or level‑ups.
+"
+85,Misc.,Tips １１,"If you suffer a fracture, you should consider restarting from the beginning.
+"
+86,Misc.,Tips １２,"If you display the Action menu and keep it open for a certain time,
+""Escape"" will appear.
+"
+87,Misc.,Tips １３,"If you lower Brain Stamina below half and wait until it is sufficiently dark,
+executing ""Lie Down"" will let you sleep for 7 hours.
+If you don't do it right, you may fail to sleep until morning,
+only get 90 minutes, or get ""Sleep Deprivation"".
+"
+88,Misc.,Tips １４,"If you are attacked while sleeping, you die instantly.
+"
+89,Misc.,Tips １５,"On rainy days, executing ""Rest 3 Hours"" fully restores hydration.
+"

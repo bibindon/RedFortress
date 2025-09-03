@@ -1,0 +1,42 @@
+ID,オプション1,オプション2,オプション3,background,BGM
+1,"One day, Triangle Man and Square Man were out foraging together as usual.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+2,"On their foraging runs, the top priority was finding bananas.",,,res\\image\\talkKaigan2.png,
+3,"Trapezoid Man had done a patch test and confirmed
+that the bananas weren't poisonous.",,,res\\image\\talkKaigan2.png,
+4,"There aren't poisonous bananas, and fruit in general is almost never poisonous,
+but none of them knew that.",,,res\\image\\talkKaigan2.png,
+5,"They weren't a cultivated variety but wild bananas,
+so they had no flavor.",,,res\\image\\talkKaigan2.png,
+6,"Square Man had been putting bananas in the basket on his back,
+and it was now full.",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+7,"""I'll go drop these bananas off once.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+8,Square Man said to Triangle Man.,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+9,"""Okaaay.""",res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkKaigan2.png,
+10,"Triangle Man kept harvesting bananas.
+His basket filled up too, so he decided
+to return to base for the moment.",res\\image\\sankakuman00.png,,res\\image\\talkKaigan2.png,
+11,———,,,res\\image\\black.png,
+12,"Triangle Man got back to base.
+Trapezoid Man was making rope for the raft.",res\\image\\sankakuman00.png,,res\\image\\talkKaigan.png,
+13,"""Where's Square Man?""",res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+14,Triangle Man asked Trapezoid Man.,res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+15,"""Huh?""",res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+16,———,,,res\\image\\talkKaigan.png,
+17,Square Man had disappeared.,,,res\\image\\talkKaigan.png,
+18,"Triangle Man kept searching for him but couldn't find him.
+In the evening, Star Man returned.",,,res\\image\\talkKaigan.png,
+19,"""Star Man, Square Man is gone. Triangle Man is out searching.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+20,Trapezoid Man said.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+21,"""...! I'll go search too. Around where did he go missing?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+22,"""The wetlands.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+23,"Right near the coastal cave was an area called Jenking Swamp.
+Star Man headed toward the wetlands.",,,res\\image\\talkKaigan.png,
+24,"Star Man and Triangle Man searched for Square Man until night.
+Since searching was impossible at night, they waited for morning.",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+25,"""Tomorrow morning, let's search the wetlands again.
+Also, Nes and Gain are suspicious.
+Given the situation... we have no choice but to go see them.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+26,…,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+27,"""In the end, I can die and come back to life, and I can use magic.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+28,(At last... I might end up committing murder...),res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+29,The three stopped building the raft and decided to search for Square Man.,,,res\\image\\talkKaigan.png,

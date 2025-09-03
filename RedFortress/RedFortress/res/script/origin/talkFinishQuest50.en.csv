@@ -1,0 +1,48 @@
+ID,オプション1,オプション2,オプション3,background
+1,"By evening, the four arrived at DirectNex, the coastal cave.",,,res\\image\\talkKaigan.png
+2,Star Man examined the interior of the cave.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+3,"(This doesn't really feel like a cave.
+ Not sure if we've got the location wrong
+ or what.)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+4,"(This spot should be fine.
+ With limited entrances, it'll be easier to brace for an attack...
+ or so I think.)",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+5,Star Man came out of the cave.,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+6,"""This place looks livable.
+ Let's get some sleep for today.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+7,"After gathering driftwood at the coastal cave and making a campfire, Square Man fell asleep.
+The four rested there.",,,res\\image\\talkKaigan.png
+8,"As Star Man walked along the shore, he found a rock swarming with black shellfish.
+He pried one off with a stone axe and went to show Trapezoid Man.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+9,"""Are these... mussels?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+10,"""Looks like it, but I don't know...
+ I mean, when it comes to black shellfish, mussels are the only kind I know.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+11,"""Same here... Let's roast them, then try just a rice-grain-sized chip.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+12,"""I'll take that role.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+13,...,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+14,"Star Man set a stone beside the fire, placed the shell on it, and roasted it.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+15,"After a while, the shell was cooked through.",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+16,"Trapezoid Man chewed the meat and ate only a tiny fragment.
+An hour later, with no issues, he ate a whole piece.",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+17,"""Mmm—this is way too good!""",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+18,"""Hope it isn't poisonous, though.""",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+19,"""Ugh, m-my stomach...!""",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+20,"""Hahaha.""",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+21,"Star Man cleaned the cave alone.
+In the trash he found a box of playing cards.
+Inside, the deck seemed complete.",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+22,"When Star Man looked toward the fire, Square Man was asleep,
+while Triangle Man and Trapezoid Man were poking the fire with sticks and chatting.",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+23,"""Found some playing cards.""",res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png
+24,Star Man sat in front of the fire and handed them to the two.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+25,———,,,res\\image\\talkKaigan.png
+26,One hour later.,,,res\\image\\talkKaigan.png
+27,"Square Man awoke,
+and Trapezoid Man was teaching poker to Triangle Man and Square Man.",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png
+28,"""Which is stronger again, a flush or a straight...?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+29,"""I think it's a flush.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+30,"""Oh, Star Man. About those shells earlier—no problems at all.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+31,Trapezoid Man gave a thumbs-up.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+32,"""Got it. I'll go get some.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png
+33,"Star Man took a stone axe and a bag and headed for the black shellfish bed.
+After that, the four spent their time playing poker while roasting and eating the black shellfish.",,,res\\image\\talkKaigan.png

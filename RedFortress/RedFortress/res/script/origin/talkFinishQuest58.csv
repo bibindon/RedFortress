@@ -1,0 +1,166 @@
+﻿ID,オプション1,オプション2,オプション3,background,bgm
+1,"ホシマンが海岸洞窟へ帰るとシカクマンが
+うずくまっていて、うめいていた。
+ほかの二人は座ってシカクマンを見ていた。",res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,res\\sound\\forest.wav
+2,「どうした？」,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+3,「赤い実を見せたらうずくまってしまった。毒抜きしてある赤い実だ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+4,「へぇ・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+5,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+6,"「亡霊には生前の未練でワードブレスを奪おうとしてくる、
+　というのがあるが・・・」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+7,「ふーん。じゃあ赤い実で死にそうになったことがあったのかな」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+8,「見たことないけど、実はあったのかもな」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+9,「ははは、気づかなかったよ。ポーカーフェイスだなぁ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+10,「赤い実は見えない場所に隠しておこう」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+11,ホシマンたちは赤い実を見えないところに置くことにした。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkKaigan.png,
+12,その日の夜。,,,res\\image\\talkKaigan.png,
+13,ホシマンたちはせめてもの施しとしてシカクマンに食事を沢山用意した。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+14,"夏が近づくにつれ、プロリタン島では
+マンゴーやパパイヤなどが収穫できるようになっていた。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+15,サンカクマンがシカクマンに自分の弓矢を見せていた。,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+16,「わかる？　これ。弓矢なんだけど」,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+17,シカクマンは興味ありげに見ていた。,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+18,「こうやって使うんだよ」,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+19,サンカクマンは矢を１０メートルほど先にある的に向かって放った。,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+20,＜カン＞,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+21,的に当たると乾いた音がした。,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+22,"サンカクマンがシカクマンに用心しつつ渡すと
+シカクマンも真似して矢を的に放った。",res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+23,＜カン＞,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+24,"「自転車みたいに、どうやって操作してるか
+　自分でもわからないような動きは出来るんだろう」",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+25,ホシマンが言った。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+26,その日の夜、４人は弓矢で的あてをして遊んだ。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+27,"翌朝、シカクマンの咳き込む声で目を覚ました。
+苦しすぎて起き上がれないようだった。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+28,シカクマンは血を吐き、息が浅く早かった。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+29,（クソ・・・どうすることもできない・・・）,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+30,すぐ近くにビムが立っていた。,res\\image\\vim00.png,,res\\image\\talkKaigan.png,
+31,「びっくりした・・・全然気づかなかった」,res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+32,ビムはシカクマンの様子を興味ありげに見ていた。,res\\image\\vim00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+33,"「シカクマンだよ。亡霊になって、
+　モンスターと合体してレッドマンになったんだ」",res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+34,ビムは無表情だった。,res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+35,「レッドマンのことは知ってた？」,res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+36,「知らなかった」,res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+37,「・・・」,res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+38,"「レッドマンは１週間で死んでしまうんだって。
+　何か助かる方法を知らない？」",res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+39,「知らない」,res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+40,「・・・」,res\\image\\vim00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+41,３人とも下を向いた。,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+42,"シカクマンはますます苦しむようになった。
+シカクマンの苦しむ声と咳と嘔吐の音がずっとしていた。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+43,息はとても荒く、涙を流して苦しんでいた。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+44,（死ぬまであと３時間くらいだろうか・・・）,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+45,「もう・・・楽にしてあげないか」,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+46,ホシマンが言った。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+47,「・・・」,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+48,誰も返事はしなかった。,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+49,サンカクマンは少し戸惑ったが、シカクマンから離れた。,res\\image\\sankakuman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+50,"ホシマンが石斧を持って立ち上がり、両手で握りしめた。
+シカクマンはそれを見ると目を伏せた。",res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+51,ダイケイマンとサンカクマンは目をそらした。,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+52,しかし、ホシマンは石斧を振るうことができずに座った。,res\\image\\hoshiman00.png,res\\image\\shikakuman02.png,res\\image\\talkKaigan.png,
+53,―――,,,res\\image\\talkKaigan.png,
+54,数時間後、シカクマンは死んだ。,,,res\\image\\talkKaigan.png,
+55,"シカクマンは苦しみ続け、その過程で徐々に形が崩れていった。
+そして死ぬと赤い液体となった。
+３人はしばらくその場から動けなかった。",,,res\\image\\talkKaigan.png,
+56,「君と初めてドングリを食べたときのことを思い出すよ・・・」,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+57,ホシマンは、ビットナビ森林でドングリを上げたときのことを思い出していた。,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+58,＜ガサガサ＞,,,res\\image\\talkKaigan.png,res\\sound\\minatoato.wav
+59,「うぃっす、うぃっす」,,,res\\image\\talkKaigan.png,
+60,森の方から男が一人やってきた。ネスだった。,,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+61,「あれ～（笑）どうかしたんですか～？（笑）」,,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+62,「・・・」,,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+63,「どっかいっててくれ」,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+64,ダイケイマンが言った。,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+65,「え～（笑）なんでここにいちゃいけないんですか？（笑）」,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+66,"「シカクマンが死んだ・・・」
+サンカクマンが言った。",res\\image\\sankakuman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+67,「え～いや～それは悲しいなぁ～（笑）うえ～んうえ～ん（笑）」,res\\image\\sankakuman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+68,「・・・」,res\\image\\sankakuman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+69,ネスは口元を抑え屈んで顔を隠すようにした。,res\\image\\sankakuman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+70,「んふっ・・・んふっ・・・」,res\\image\\sankakuman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+71,「お前・・・」,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+72,"「あっはっはっは！　人が死んでる（笑）今夜は宴会やー！
+　今日は一日中酒でも飲んでようかなぁ（笑）」",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+73,ネスは笑いすぎて立てなくなり膝をついた。,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+74,「・・・」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+75,「なぜ笑う」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+76,"「だって本当は皆悲しくないのに、
+　悲しんでる演技をしてるのがおかしくて（笑）」",res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+77,「演技・・・？」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+78,"「だって、悲しいわけないじゃん（笑）
+　どうみたって、あはっ、あはっ、別人じゃん（笑）」",res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+79,ネスは地面に転がり足をバタバタさせた。,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+80,「あははははっ、ぷっ、くっ、あっ、あはははははっ」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+81,「お前、シカクマンがなぜ死んだか知ってないか？」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+82,"「いや～全然（笑）全く知りません（笑）
+　なぁ～んで私がそんなこと知ってるんですか（笑）」",res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+83,ホシマンはネスに馬乗りになった。ネスが笑い転げていたから簡単だった。,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+84,「知ってることを言え」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+85,「だから、知りませんよぉ～（笑）」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+86,＜バン＞,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+87,ホシマンはネスの顔面を殴った。そして頭をつかんで激しく揺さぶった。,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+88,「知ってることを言ええええ！！！」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+89,「ちょっとちょっと（笑）」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+90,"「え～、なんか～やめろっていうのに自分で食べたんですよぉ～。
+　僕は『ソテツっていうんだよ～、食べたら死んじゃうから駄目だよ～』て
+　言ったんですよぉ～」",res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+91,"「でも、『パクパクパク～おいし～おいしおいし～』って言って
+　食べちゃったんですよ（笑）」",res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+92,「そんなわけないだろ。シカクマンは赤い実が猛毒だって知ってたんだぞ」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+93,"「だ～か～ら～、僕はシカクマンが食べてる最中も
+　『いますぐやめなさ～い』って言ったんですよぉ～（笑）
+　力づくで止めても食べ続けたんですよ～（笑）」",res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+94,"「多分、この子、＊＊＊＊＊だったんですよ（笑）
+　だってほら、この人も＊＊＊だし（笑）」",res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+95,ネスはホシマンの方を指さした。,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+96,「知らないんですか～（笑）この人、両親も＊＊＊なんですよ～（笑）」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+97,「ホシマン！　やめろ！」,res\\image\\daikeiman00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+98,ダイケイマンの声でホシマンは振り上げた拳をおろした。,res\\image\\daikeiman00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+99,"ネスは全身が震えていた。
+言動とは対照的に恐怖で震えてしまっているらしかった。",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+100,"「信じてくださいよぉ～（笑）
+　『猛毒ってみんな言ってるけど、どうせ嘘だーい、
+　ガインに皆のこと話しちゃおー』って言って食べたんですよぉ～（笑）」",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+101,「・・・」,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+102,"「『ガインに居場所をバラされたくなかったら赤い実を食え』って脅して
+　シカクマンに食べさせたな？」",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+103,ダイケイマンは言った。,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+104,"「え～違いますよ違いますよ、違いますよぉ～（笑）
+　『もうわかったからやめて、もうこれ以上食べないで』って
+　言ったんですよぉ～（笑）」",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+105,「・・・」,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+106,"「つまり、『１個食べないとバラす』『やっぱり２個食べないとバラす』
+　『やっぱり３個食べないとバラす』と条件を変更し続けて食べさせ続けたのか？」",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+107,"「ちょっと～（笑）想像で話すのやめてくださ～い（笑）
+　僕がそんな酷いことするわけないじゃないですか～（笑）
+　『あいつらあの辺にいるからやっちゃってくださーい』って言ってましたよ（笑）」",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+108,"「そして、シカクマンが命と引き換えに、
+　ガインに居場所を話さないよう懇願したのに、ガインに教えに行ったわけだ」",res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+109,「違いますって（笑）あの子の頼みを聞いたんじゃないですか～（笑）」,res\\image\\daikeiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+110,「・・・」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+111,ホシマンは立ち上がった。,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+112,「・・・」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+113,「もういい。どっか行け」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+114,ホシマンがそういうとネスは立ち上がった。,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+115,「あーひどいひどい」,res\\image\\hoshiman00.png,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+116,ネスは手と膝を震わせながら、シカクマンに手を振った。,,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+117,「じゃあね～天国で好きなだけソテツ食べるんだよ～（笑）」,,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+118,「・・・」,res\\image\\hoshiman00.png,,res\\image\\talkKaigan.png,
+119,「わーいわーい、人が死んだ～、人が死んだ～」,,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+120,ネスはスキップしながら森の中に消えた。,,res\\image\\nes00.png,res\\image\\talkKaigan.png,
+121,＜ガン＞,,,res\\image\\talkKaigan.png,
+122,ダイケイマンはこぶしを地面にたたきつけた。,res\\image\\daikeiman00.png,,res\\image\\talkKaigan.png,
+123,「僕の言うとおりだったじゃん！」,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+124,「ガインを殺してればシカクマンが死ななくて済んだんじゃん！」,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+125,サンカクマンは言った。,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkKaigan.png,
+126,「・・・」,res\\image\\daikeiman00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+127,「・・・」,res\\image\\daikeiman00.png,res\\image\\hoshiman00.png,res\\image\\talkKaigan.png,
+128,―――,,,res\\image\\talkKaigan.png,
+129,"３人は赤い液体が染み込んだ土を崖の方に持っていった。
+石を土の上に立たせてシカクマンの墓とした。",,,res\\image\\talkKaigan.png,
+130,一週間くらいは皆何も話さず静かにイカダづくりをしていた。,,,res\\image\\talkKaigan.png,

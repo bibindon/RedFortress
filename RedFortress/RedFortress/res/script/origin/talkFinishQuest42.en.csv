@@ -1,0 +1,31 @@
+﻿ID,オプション1,オプション2,オプション3,Unnamed: 4
+1,Star Man told his companions what happened today.,,,res\\image\\talkPrecision.png
+2,"""There's a dangerous man at this spot.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+3,"""He attacked me with a knife the moment we met.""",res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png
+4,"""Why not meet him again and try talking properly?""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+5,said Triangle Man.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+6,"""No... I didn't get the sense we could communicate.""",res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+7,Trapezoid Man made a grim face.,res\\image\\hoshiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png
+8,"""Was he a scrawny guy?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+9,"""No... if anything, he was a bit chubby.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+10,"""Then that's Noble. He was insanely fat, right?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+11,"""Hmm...?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+12,(I don't think he was that fat. Did he lose weight?),res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+13,"""Stay away from Nes and Noble.
+My legs ended up like this basically because of them.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+14,"""What happened...?""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+15,...,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+16,"""Well... a lot of things...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+17,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+18,"""So they're at Gip Lighthouse now?  Before, at the port ruins.
+Probably at these Virtual Bex Port Ruins.  Nes and Noble.  Nes is scrawny; Noble is fat. """,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+19,"""Then maybe no one is at the Virtual Bex Port Ruins now?
+Even without making a raft, if we go there we might get a boat.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+20,"""I don't think there was a boat.
+We might find materials usable for a boat, though.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+21,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+22,"""I'll go check it out next time.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+23,Trapezoid Man thought for a moment.,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+24,"""...""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+25,"""Be careful.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png
+26,"""Yeah.""",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png

@@ -1,0 +1,54 @@
+﻿ID,オプション1,オプション2,オプション3,background,BGM
+1,ホシマンたちは紐と木の棒で即席の担架を作っていた。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,res\\sound\\weak.wav
+2,「そういえば・・・、ここに来る前、シーポロポロでビムに会った」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+3,ホシマンは言った。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+4,「おう」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+5,"「ブイエスコ・・・、
+　攻撃する方の白い人だけど、さっきの男に殺されたそうだ」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+6,「「・・・！」」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+7,「そうか・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+8,「・・・」,,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+9,"「サンカクマン。さっき、あの暴力男にさ、
+　仕返ししたいって言ってたじゃん」",,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+10,ダイケイマンは言った。,,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+11,「・・・」,res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+12,"「悪い人は、悪い人とバトルするから
+　遠くから観戦してればいいのよ」",res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+13,「・・・」,res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+14,サンカクマンは納得行かないようだった。,res\\image\\sankakuman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+15,ホシマンは地図を３人に見せ、南側の海岸を指さした。,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+16,"「ここにダイレクトネクス海岸洞窟というのがある。
+　ここに移動したい」",res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+17,「おっけー」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+18,「担架ができたらこの洞窟に場所に行こう」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+19,「・・・」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+20,「今日は徹夜を覚悟してくれ」,res\\image\\hoshiman00.png,res\\image\\daikeiman00.png,res\\image\\talkPrecision.png,
+21,ホシマンが言うと子供たちは頷いた。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+22,深夜,,,res\\image\\talkPrecision.png,
+23,"担架にダイケイマンを乗せホシマン、サンカクマン、
+シカクマンは担架を持って出発した。
+ダイケイマンはずっと「すんませんです・・・」と言っていた。",,,res\\image\\talkPrecision.png,
+24,"ホシマンたちは必要最小限の荷物だけ持ち、
+残りは諦めることにした。武器は廃墟の外に捨てた。
+他の人に取られると厄介だと判断したからだった。",,,res\\image\\talkPrecision.png,
+25,ホシマンがプレシジョンの外を伺った。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+26,（誰もいないな）,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+27,プレシジョンを離れるときに作成中のイカダの横を通った。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+28,ホシマンは３人の方を見た。,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+29,「・・・」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+30,「イカダはまた作ろう」,res\\image\\hoshiman00.png,,res\\image\\talkPrecision.png,
+31,「おっけー」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png,res\\image\\talkPrecision.png,
+32,"「ノウハウは頭に残ってる。『財産は盗めても知識は盗めない』
+　っていう言葉があるんだよ、知ってる～？」",res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png,
+33,ダイケイマンがドヤ顔で言った。,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png,
+34,「ふーん」,res\\image\\daikeiman00.png,res\\image\\sankakuman00.png,res\\image\\talkPrecision.png,
+35,４人は森の中に入っていった。,,,res\\image\\talkPrecision.png,
+36,【ダイケイマンを担架に乗せたまま、海岸洞窟を目指そう】,,,,
+37,"【担架モードでは、ジャンプや攻撃ができない。】
+【担架モードで、川や海に入ると、全員が体力を猛烈に消費する】
+",,,,
+38,"【通常は「３時間休憩」を実行すると、ＮＰＣのステータスは減少するが、
+　担架モード中に「３時間休憩」を実行すると、ＮＰＣのステータスは回復する】",,,,
+39,【ＮＰＣが死亡した場合、担架モードは終了し、死亡していないＮＰＣはその場にとどまる】,,,,
+40,【水中でＮＰＣが死亡した場合、他のＮＰＣも全員死亡する】,,,,
+41,【担架モード中にホシマンが死亡したらＮＰＣも全員死亡する】,,,,

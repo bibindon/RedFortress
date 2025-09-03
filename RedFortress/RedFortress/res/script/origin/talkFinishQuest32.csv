@@ -1,0 +1,26 @@
+﻿ID,オプション1,オプション2,オプション3
+1,"ホシマンは洞くつを出て廃墟に向かっていた。
+",res\\image\\hoshiman00.png,
+2,"（そういえば、この島に来てから動物にあっていない。
+　蛇とか虫とかはたまに見るけど、鹿とか熊とかはいないんだろうか）",res\\image\\hoshiman00.png,
+3,"廃墟に向かう道の途中で半円状のモンスターを見つけた。
+",res\\image\\hoshiman00.png,res\\image\\hanen00.png
+4,（この先、何度もこのモンスターと戦わないといけないことがあるかもしれない）,res\\image\\hanen00.png,res\\image\\hanen00.png
+5,"（どういう敵か知っておいたほうが
+　いざというときに役に立つだろう。戦ってみるか）",res\\image\\hoshiman00.png,
+6,"ホシマンは石を拾い、モンスターの方に投げてみた。
+片方は逃げて行ったが、もう片方のモンスターは向かってきた。",res\\image\\hoshiman00.png,
+7,"モンスターは飛行しホシマンの方に突撃してきた。
+ほかのモンスターと違い、半円状のモンスターは厚みがなく軽そうであった。",res\\image\\hoshiman00.png,res\\image\\hanen00.png
+8,"モンスターの接近に合わせて、ホシマンは敵をたたき落とした。
+そのとき、ホシマンの右腕と右足に液体がかかった。",res\\image\\hoshiman00.png,res\\image\\hanen00.png
+9,ホシマンの右腕と右足から煙が上がった。,res\\image\\hoshiman00.png,
+10,（あぁ・・・しまった・・・）,res\\image\\hoshiman00.png,
+11,"皮膚が解け、白い皮下脂肪が覗いていた。
+即死するほどではないが死んだほうがマシと思えるような苦痛がホシマンを襲った。",res\\image\\hoshiman00.png,
+12,"ホシマンは歯を食いしばって何度もモンスターを踏みつぶした。
+モンスターは動かなくなった。",res\\image\\hoshiman00.png,res\\image\\hanen00.png
+13,（ぐ・・・）,res\\image\\hoshiman00.png,
+14,"ホシマンは体を動かすたびに激痛が走った。
+（この先、弓矢があったほうがいいな・・・。帰ったら依頼しよう）",res\\image\\hoshiman00.png,
+15,ホシマンは廃墟に向かった。,res\\image\\hoshiman00.png,

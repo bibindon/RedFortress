@@ -1,0 +1,46 @@
+﻿ID,オプション1,オプション2,オプション3
+1,近づいてみると、片方の子供は頭の形が二等辺三角形でもう片方は平行四辺形だった。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+2,「君たちも、一昨日沈没した船に乗っていた乗客かい？」,res\\image\\hoshiman00.png,
+3,「・・・」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+4,子供たちは頷いた。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+5,「水とか食べ物とかは？」,res\\image\\hoshiman00.png,
+6,「・・・」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+7,子供たちはお互いの顔を見た。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+8,「何も食べてないし飲んでない」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+9,三角の方の子供が答えた。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+10,「じゃあ、このドングリあげるよ。水は私も探してるところだ」,res\\image\\hoshiman00.png,
+11,子供たちは興味津々でドングリを覗き込みホシマンから受け取った。,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+12,「ありがとうございます」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+13,ホシマンは石でドングリを割って見せた。,res\\image\\hoshiman00.png,
+14,"「サバイバルは詳しくないけど、
+　さっき自分もこうやって食べて大丈夫だったから、おそらく大丈夫だろう」",res\\image\\hoshiman00.png,
+15,三人でドングリを割って子供達が食べた。,,
+16,「私はホシマン。君たちは？」,res\\image\\hoshiman00.png,
+17,「シカクマン。こっちは、サンカクマン」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+18,"頭が平行四辺形の子供はシカクマン、三角形の子供はサンカクマンと言うらしい。
+ドングリを割って子供たちに食べさせながら３人は話した。",,
+19,「君たちは知り合い？」,res\\image\\hoshiman00.png,
+20,「うーうん。さっき知り合った」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+21,「そこら中に妙な生物がいるが・・・」,res\\image\\hoshiman00.png,
+,ホシマンは緑色のモンスターの方を見た。,,
+22,「うん」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+23,"「『近寄らなければ動かない』、という仕組みらしい。
+　一定の距離を保っていれば安全だ」",res\\image\\hoshiman00.png,
+24,「知ってる」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+25,"「そうか。
+　私はこれから水を探しに行くけど、危ないから君たちは連れていけない」",res\\image\\hoshiman00.png,
+26,「うん」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+27,"ホシマンの体力は尽きかけていて、水を見つけるのに失敗すれば死ぬしかなさそうだった。
+そして、ホシマンが戻ってくるのを子供たちがここで待ち続けると共倒れになりそうだった。
+",,
+28,「水を見つけたらここに戻ってくるつもりだけど、戻ってこれるかわからない」,res\\image\\hoshiman00.png,
+29,「うん」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+30,「これを目印にしよう」,res\\image\\hoshiman00.png,
+31,ホシマンは足元の大きな岩を指さした。,,
+32,「わかった」,res\\image\\sankakuman00.png,res\\image\\shikakuman00.png
+33,子供たちは返事をした。,,
+34,"（といったものの、水を見つけられる感じがしない。
+　人工物があれば近くに水があるかもしれない。
+　山道が山頂のほうに続いているからそっちに行ってみよう）",res\\image\\hoshiman00.png,
+35,"
+ホシマンは山頂の方に歩いて行くことにした。",,
