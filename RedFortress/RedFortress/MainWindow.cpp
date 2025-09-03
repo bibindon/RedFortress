@@ -207,28 +207,18 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
         // ウィンドウが画面中央に表示されるように設定
         //-------------------------------------------------
         RECT rect { };
-        SetRect(&rect, 0, 0, 1600, 900);
 
-        // タイトルバー、ウィンドウフレームの幅を考慮したサイズを取得
-        AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
-
-        rect.right = rect.right - rect.left;
-        rect.bottom = rect.bottom - rect.top;
-
-        int monitorWidth = GetSystemMetrics(SM_CXSCREEN);
-        int monitorHeight = GetSystemMetrics(SM_CYSCREEN);
-
-        int startX = (monitorWidth / 2) - (1600 / 2);
-        int startY = (monitorHeight / 2) - (900 / 2);
+        int dispW = GetSystemMetrics(SM_CXSCREEN);
+        int dispH = GetSystemMetrics(SM_CYSCREEN);
 
         m_hWnd = CreateWindow(m_title.c_str(),
                               m_title.c_str(),
                               /* ウィンドウサイズの変更をさせない。最小化はOK */
-                              WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE,
-                              startX,
-                              startY,
-                              rect.right,
-                              rect.bottom,
+                              WS_POPUP,
+                              0,
+                              0,
+                              dispW,
+                              dispH,
                               NULL,
                               NULL,
                               hInstance,
@@ -276,29 +266,32 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         D3DPRESENT_PARAMETERS d3dpp { };
 
-        if (m_eWindowStyle == eWindowStyle::WINDOW)
+        if (SharedObj::WindowStyle() == eWindowStyle::WINDOW)
         {
             d3dpp.BackBufferWidth = 0;
             d3dpp.BackBufferHeight = 0;
             d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
             d3dpp.BackBufferCount = 0;
         }
-        else if (m_eWindowStyle == eWindowStyle::FULLSCREEN)
+        else if (SharedObj::WindowStyle() == eWindowStyle::FULLSCREEN)
         {
-            d3dpp.BackBufferWidth = 1600;
-            d3dpp.BackBufferHeight = 900;
+            int dispx = GetSystemMetrics(SM_CXSCREEN);
+            int dispy = GetSystemMetrics(SM_CYSCREEN);
+
+            d3dpp.BackBufferWidth = dispx;
+            d3dpp.BackBufferHeight = dispy;
             d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
             d3dpp.BackBufferCount = 1;
         }
-        else if (m_eWindowStyle == eWindowStyle::BORDERLESS)
+        else if (SharedObj::WindowStyle() == eWindowStyle::BORDERLESS)
         {
-            // TODO 解像度に合わせるべき？
-            d3dpp.BackBufferWidth = 1600;
-            d3dpp.BackBufferHeight = 900;
+            int dispx = GetSystemMetrics(SM_CXSCREEN);
+            int dispy = GetSystemMetrics(SM_CYSCREEN);
+
+            d3dpp.BackBufferWidth = dispx;
+            d3dpp.BackBufferHeight = dispy;
             d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
             d3dpp.BackBufferCount = 0;
-
-            SetWindowLongPtr(m_hWnd, GWL_STYLE, WS_POPUP);
         }
 
         // マルチサンプリングをオフにする
@@ -312,17 +305,17 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 
-        if (m_eWindowStyle == eWindowStyle::WINDOW)
+        if (SharedObj::WindowStyle() == eWindowStyle::WINDOW)
         {
             d3dpp.hDeviceWindow = nullptr;
             d3dpp.Windowed = TRUE;
         }
-        else if (m_eWindowStyle == eWindowStyle::FULLSCREEN)
+        else if (SharedObj::WindowStyle() == eWindowStyle::FULLSCREEN)
         {
             d3dpp.hDeviceWindow = m_hWnd;
             d3dpp.Windowed = FALSE;
         }
-        else if (m_eWindowStyle == eWindowStyle::BORDERLESS)
+        else if (SharedObj::WindowStyle() == eWindowStyle::BORDERLESS)
         {
             d3dpp.hDeviceWindow = nullptr;
             d3dpp.Windowed = TRUE;

@@ -22,13 +22,6 @@
 #include "SeqEnding.h"
 #include "KeyBoard.h"
 
-enum class eWindowStyle
-{
-    WINDOW,
-    FULLSCREEN,
-    BORDERLESS,
-};
-
 class MainWindow
 {
 public:
@@ -67,6 +60,5 @@ private:
     // デバッグ用
     LPD3DXFONT m_D3DFont = nullptr;
 
-    eWindowStyle m_eWindowStyle = eWindowStyle::WINDOW;
 };
 

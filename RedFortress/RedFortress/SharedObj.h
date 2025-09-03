@@ -8,6 +8,13 @@
 #include "VoyageManager.h"
 #include "KeyBoard.h"
 
+enum class eWindowStyle
+{
+    WINDOW,
+    FULLSCREEN,
+    BORDERLESS,
+};
+
 class SharedObj
 {
 public:
@@ -33,6 +40,9 @@ public:
     static void SetEnglish(const bool bEnglish);
     static bool IsEnglish();
 
+    static eWindowStyle WindowStyle();
+    static void SetWindowStyle(const eWindowStyle arg);
+
 private:
     static LPDIRECT3DDEVICE9 m_D3DDevice;
     static HWND m_hWnd;
@@ -43,5 +53,7 @@ private:
 
     static IKeyBoard* m_keyBoard;
     static bool m_bEnglish;
+
+    static eWindowStyle m_eWindowStyle;
 };
 

@@ -3224,48 +3224,29 @@ void SeqBattle::RenderGameover()
 
 void SeqBattle::UpdateDebug()
 {
-    // PopUp Sample
+    //-----------------------------------------------------------
+    // ウィンドウモード、フルスクリーンモード、ボーダーレスウィンドウモードの切り替え
+    //-----------------------------------------------------------
     {
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_F7))
         {
-            std::vector<std::vector<std::wstring>> vvs;
-            std::vector<std::wstring> vs;
-            vs.push_back(_T("サンプルテキスト１"));
-            vs.push_back(_T("サンプルテキスト２サンプルテキスト２"));
-            vs.push_back(_T("サンプルテキスト３サンプルテキスト３サンプルテキスト３"));
-            vvs.push_back(vs);
-            vs.clear();
-            vs.push_back(_T("サンプルテキスト４"));
-            vs.push_back(_T("サンプルテキスト５サンプルテキスト５"));
-            vs.push_back(_T("サンプルテキスト６サンプルテキスト６サンプルテキスト６"));
-            vvs.push_back(vs);
-            vs.clear();
-            vs.push_back(_T("サンプルテキスト７サンプルテキスト７サンプルテキスト７サンプルテキスト７"));
-            vs.push_back(_T("サンプルテキスト８サンプルテキスト８サンプルテキスト８"));
-            vs.push_back(_T("サンプルテキスト９サンプルテキスト９"));
-            vvs.push_back(vs);
-            vs.clear();
-            vs.push_back(_T("サンプルテキスト１０"));
-            vvs.push_back(vs);
-            PopUp::Get()->SetText(vvs);
+            SharedObj::SetWindowStyle(eWindowStyle::WINDOW);
         }
 
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_F8))
         {
-            PopUp::Get()->Next();
+            SharedObj::SetWindowStyle(eWindowStyle::FULLSCREEN);
         }
 
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_F9))
         {
-            PopUp::Get()->Cancel();
+            SharedObj::SetWindowStyle(eWindowStyle::BORDERLESS);
         }
-
-        // PopUp::Get()->Update();
     }
 
-    //--------------------------------------
+    //-----------------------------------------------------------
     // 倉庫機能
-    //--------------------------------------
+    //-----------------------------------------------------------
     {
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_F1))
         {

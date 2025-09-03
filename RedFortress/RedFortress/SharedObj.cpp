@@ -11,6 +11,8 @@ D3DXMATRIX SharedObj::m_rightHandMat;
 IKeyBoard* SharedObj::m_keyBoard = nullptr;
 bool SharedObj::m_bEnglish = false;
 
+eWindowStyle SharedObj::m_eWindowStyle = eWindowStyle::BORDERLESS;
+
 LPDIRECT3DDEVICE9 SharedObj::GetD3DDevice()
 {
     return m_D3DDevice;
@@ -92,6 +94,16 @@ void SharedObj::SetEnglish(const bool bEnglish)
 bool SharedObj::IsEnglish()
 {
     return m_bEnglish;
+}
+
+eWindowStyle SharedObj::WindowStyle()
+{
+    return m_eWindowStyle;
+}
+
+void SharedObj::SetWindowStyle(const eWindowStyle arg)
+{
+    m_eWindowStyle = arg;
 }
 
 void SharedObj::SetD3DDevice(const LPDIRECT3DDEVICE9 D3DDevice)
