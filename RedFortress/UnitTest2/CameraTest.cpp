@@ -1,6 +1,6 @@
 ﻿#include "CppUnitTest.h"
-#include "../starman/Camera.h"
-#include "../starman/GamePad.h"
+#include "../RedFortress/Camera.h"
+#include "../RedFortress/GamePad.h"
 #include <tchar.h>
 
 #pragma comment(lib, "dxguid.lib")

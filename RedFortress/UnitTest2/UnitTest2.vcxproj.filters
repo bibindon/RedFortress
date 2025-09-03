@@ -18,153 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\starman\AnimationStrategy.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\AnimController.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\AnimMesh.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\AnimMeshAlloc.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\BGM.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Camera.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\CommandManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Common.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyBase.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyBigCube.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyCube.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyDisk.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyEnchu.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyGhost.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyHanen.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyHankyuu.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemyOrangeCube.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemySmallCube.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\EnemySphere.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\GamePad.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\HudManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\KeyBoard.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Light.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\main.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\MainWindow.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Map.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\MenuManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Mesh.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\MeshClone.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\MeshNoShade.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Mouse.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\NpcManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Opening.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\PatchTestManager2.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Player.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\PopUp.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\PopUp2.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\QuestManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\SaveManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\SeqBattle.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\SeqEnding.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\SharedObj.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\SoundEffect.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Sprite.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\StackBackTrace.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\StoryManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\Title.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\starman\VoyageManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
     <ClCompile Include="CameraTest.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -177,168 +30,318 @@
     <ClCompile Include="CraftTest.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="..\starman\CraftManager.cpp">
-      <Filter>target</Filter>
-    </ClCompile>
     <ClCompile Include="MainWindowTest.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="..\starman\Rain.cpp">
+    <ClCompile Include="..\RedFortress\AnimationStrategy.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\AnimController.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\AnimMesh.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\AnimMeshAlloc.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\BGM.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Camera.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\CommandManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Common.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemySphere.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\CraftManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyBase.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyBigCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyDisk.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyEnchu.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyGhost.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyHanen.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyHankyuu.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemyOrangeCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\EnemySmallCube.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Light.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\GamePad.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\HudManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\KeyBoard.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Opening.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\MainWindow.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Map.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\MenuManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Mesh.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\MeshClone.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\MeshNoShade.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Mouse.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\NpcManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\QuestManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Rain.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\PatchTestManager2.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Player.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Title.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\VoyageManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\SaveManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\SeqBattle.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\SeqEnding.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\SharedObj.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\SoundEffect.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\Sprite.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\StackBackTrace.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\StoryManager.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\PopUp.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\PopUp2.cpp">
+      <Filter>target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RedFortress\main.cpp">
       <Filter>target</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\starman\AnimationStrategy.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\AnimController.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\AnimMesh.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\AnimMeshAlloc.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\BGM.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Camera.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\CommandManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Common.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyBase.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyBigCube.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyCube.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyDisk.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyEnchu.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyGhost.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyHanen.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyHankyuu.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemyOrangeCube.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemySmallCube.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\EnemySphere.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\GamePad.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\HudManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\KeyBoard.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Light.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\MainWindow.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Map.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\MenuManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Mesh.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\MeshClone.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\MeshNoShade.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Mouse.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\NpcManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Opening.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\PatchTestManager2.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Player.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\PopUp.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\PopUp2.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\QuestManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\SaveManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\SeqBattle.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\SeqEnding.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\SharedObj.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\SoundEffect.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Sprite.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\StackBackTrace.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\StoryManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\Title.h">
-      <Filter>target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\starman\VoyageManager.h">
-      <Filter>target</Filter>
-    </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\starman\CraftManager.h">
+    <ClInclude Include="..\RedFortress\Common.h">
       <Filter>target</Filter>
     </ClInclude>
-    <ClInclude Include="..\starman\Rain.h">
+    <ClInclude Include="..\RedFortress\AnimationStrategy.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\AnimController.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\AnimMesh.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\AnimMeshAlloc.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\BGM.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Camera.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\CommandManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemySphere.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\CraftManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyBase.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyBigCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyDisk.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyEnchu.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyGhost.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyHanen.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyHankyuu.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemyOrangeCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\EnemySmallCube.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\KeyBoard.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Light.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\GamePad.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\HudManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Opening.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\MainWindow.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Map.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\MenuManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Mesh.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\MeshClone.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\MeshNoShade.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Mouse.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\NpcManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\QuestManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Rain.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\PatchTestManager2.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Player.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Title.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\VoyageManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\resource.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\SaveManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\SeqBattle.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\SeqEnding.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\SharedObj.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\SoundEffect.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\Sprite.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\StackBackTrace.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\StoryManager.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\PopUp.h">
+      <Filter>target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RedFortress\PopUp2.h">
       <Filter>target</Filter>
     </ClInclude>
   </ItemGroup>

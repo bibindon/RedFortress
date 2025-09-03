@@ -1,13 +1,13 @@
 ﻿#include "CppUnitTest.h"
 #include "Util.h"
-#include "../starman/CraftManager.h"
-#include "../starman/MainWindow.h"
-#include "../starman/SaveManager.h"
-#include "../starman/KeyBoard.h"
+#include "../RedFortress/CraftManager.h"
+#include "../RedFortress/MainWindow.h"
+#include "../RedFortress/SaveManager.h"
+#include "../RedFortress/KeyBoard.h"
 #include "../../RedFortressModel/Model/CraftSystem.h"
 #include "../../RedFortressModel/Model/CraftInfoManager.h"
-#include "../starman/PopUp2.h"
-#include "../starman/SharedObj.h"
+#include "../RedFortress/PopUp2.h"
+#include "../RedFortress/SharedObj.h"
 
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "d3d9.lib")

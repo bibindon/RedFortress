@@ -3,10 +3,10 @@
 
 #include "CppUnitTest.h"
 #include "Util.h"
-#include "../starman/SharedObj.h"
-#include "../starman/MainWindow.h"
-#include "../starman/QuestManager.h"
-#include "../starman/SaveManager.h"
+#include "../RedFortress/SharedObj.h"
+#include "../RedFortress/MainWindow.h"
+#include "../RedFortress/QuestManager.h"
+#include "../RedFortress/SaveManager.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

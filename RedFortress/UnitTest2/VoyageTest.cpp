@@ -1,9 +1,9 @@
 ﻿#include "CppUnitTest.h"
-#include "../starman/VoyageManager.h"
+#include "../RedFortress/VoyageManager.h"
 #include "../../RedFortressModel/Model/Voyage.h"
-#include "../starman/SharedObj.h"
+#include "../RedFortress/SharedObj.h"
 #include "Util.h"
-#include "../starman/SaveManager.h"
+#include "../RedFortress/SaveManager.h"
 
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "d3d9.lib")
