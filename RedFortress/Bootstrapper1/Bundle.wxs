@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+
+    <Bundle Name="Star Man"
+            Version="0.0.0.1"
+            Manufacturer="Bibindon"
+            IconSourceFile="starman.ico"
+            UpgradeCode="221E6CB4-03F7-4ED9-89EF-31EF107A8EF0">
+
+        <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
+            <bal:WixStandardBootstrapperApplication
+              LogoFile="banner.bmp"
+              LogoSideFile="banner2.bmp"
+              LicenseFile="Eula.rtf"
+              ShowVersion="yes"
+              SuppressOptionsUI="yes" />
+        </BootstrapperApplicationRef>
+
+        <Chain>
+            <!-- VC++ 再頒布パッケージ -->
+            <ExePackage Id="VCredist"
+                        SourceFile="VC_redist.x64.exe"
+                        InstallCommand="/quiet /norestart"
+                        Compressed="yes"
+                        DetectCondition="VCINSTALLERINSTALLED"
+                        Vital="yes">
+
+                <!-- 既に入っている場合は 1638 を返すので成功扱いにする -->
+                <ExitCode Value="0"    Behavior="success" />
+                <ExitCode Value="1638" Behavior="success" />
+            </ExePackage>
+
+            <!-- あなたのアプリの MSI -->
+            <MsiPackage SourceFile="starman.msi"
+                        DisplayInternalUI="yes"
+                        Compressed="yes"
+                        Vital="yes" />
+        </Chain>
+    </Bundle>
+</Wix>
