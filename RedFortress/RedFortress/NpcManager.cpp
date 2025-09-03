@@ -25,7 +25,7 @@ void NpcManager::Finalize()
 
 void NpcManager::SetPos(const std::wstring& npcName, const float fx, const float fy, const float fz)
 {
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     auto status = npcStatusMgr->GetNpcStatus(npcName);
     status.SetX(fx);
     status.SetY(fy);
@@ -35,7 +35,7 @@ void NpcManager::SetPos(const std::wstring& npcName, const float fx, const float
 
 void NpcManager::SetRot(const std::wstring& npcName, const float fRot)
 {
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     auto status = npcStatusMgr->GetNpcStatus(npcName);
     status.SetRotY(fRot);
     npcStatusMgr->SetNpcStatus(npcName, status);
@@ -43,7 +43,7 @@ void NpcManager::SetRot(const std::wstring& npcName, const float fRot)
 
 void NpcManager::SetTalkEnable(const std::wstring& npcName, const bool arg)
 {
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     auto status = npcStatusMgr->GetNpcStatus(npcName);
     status.SetHasTalk(arg);
     npcStatusMgr->SetNpcStatus(npcName, status);
@@ -51,7 +51,7 @@ void NpcManager::SetTalkEnable(const std::wstring& npcName, const bool arg)
 
 void NpcManager::SetTalkScript(const std::wstring& npcName, const std::wstring& arg)
 {
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     auto status = npcStatusMgr->GetNpcStatus(npcName);
     status.SetTalkCsv(Common::ModExt(arg));
     npcStatusMgr->SetNpcStatus(npcName, status);
@@ -60,23 +60,23 @@ void NpcManager::SetTalkScript(const std::wstring& npcName, const std::wstring& 
 void NpcManager::SetEnableFeature(const std::wstring& npcName,
                                   const bool arg)
 {
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     auto status = npcStatusMgr->GetNpcStatus(npcName);
     status.SetFeatureEnable(arg);
     npcStatusMgr->SetNpcStatus(npcName, status);
 }
 
-NSStarmanLib::NpcStatus NpcManager::GetNpcStatus(const std::wstring& npcName)
+NSModel::NpcStatus NpcManager::GetNpcStatus(const std::wstring& npcName)
 {
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     auto status = npcStatusMgr->GetNpcStatus(npcName);
 
     return status;
 }
 
-void NpcManager::SetNpcStatus(const std::wstring& npcName, const NSStarmanLib::NpcStatus& status)
+void NpcManager::SetNpcStatus(const std::wstring& npcName, const NSModel::NpcStatus& status)
 {
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     npcStatusMgr->SetNpcStatus(npcName, status);
 }
 
@@ -86,7 +86,7 @@ bool NpcManager::GetNpcTalkable(const D3DXVECTOR3& pos, std::wstring* npcName)
     // 球だと重いのでバウンディングボックス
 
     bool exist = false;
-    auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
     auto nameList = npcStatusMgr->GetNameList();
 
     for (size_t i = 0; i < nameList.size(); ++i)
@@ -123,7 +123,7 @@ bool NpcManager::GetNpcTalkable(const D3DXVECTOR3& pos, std::wstring* npcName)
 void NpcManager::Update()
 {
     // ライネンの契約をするまではNpcのステータスを消費させない
-    auto rynen = NSStarmanLib::Rynen::GetObj();
+    auto rynen = NSModel::Rynen::GetObj();
     if (!rynen->GetContracted())
     {
         return;
@@ -134,7 +134,7 @@ void NpcManager::Update()
     auto sankaku = GetNpcStatus(_T("sankakuman")).GetDead();
     auto shikaku = GetNpcStatus(_T("shikakuman")).GetDead();
 
-    NSStarmanLib::NpcStatusManager::GetObj()->Update();
+    NSModel::NpcStatusManager::GetObj()->Update();
 
     auto daikei2 = GetNpcStatus(_T("daikeiman")).GetDead();
     auto sankaku2 = GetNpcStatus(_T("sankakuman")).GetDead();

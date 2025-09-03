@@ -7,9 +7,9 @@
 #include "BGM.h"
 #include "SoundEffect.h"
 
-static NSStarmanLib::Voyage* Voyage()
+static NSModel::Voyage* Voyage()
 {
-    return NSStarmanLib::Voyage::Get();
+    return NSModel::Voyage::Get();
 }
 
 VoyageManager* VoyageManager::m_obj = nullptr;
@@ -184,13 +184,13 @@ bool VoyageManager::GetRaftMode() const
     return Voyage()->GetRaftMode();
 }
 
-NSStarmanLib::Raft::ePosType VoyageManager::GetPosType()
+NSModel::Raft::ePosType VoyageManager::GetPosType()
 {
     auto id = Voyage()->GetRaftCurrentId();
     return Voyage()->GetRaft(id).GetPosType();
 }
 
-void VoyageManager::SetPosType(const NSStarmanLib::Raft::ePosType arg)
+void VoyageManager::SetPosType(const NSModel::Raft::ePosType arg)
 {
     auto id = Voyage()->GetRaftCurrentId();
     Voyage()->GetRaft(id).SetPosType(arg);
@@ -748,11 +748,11 @@ void Raft2::Update()
 
     if (m_pos.y <= 15.f)
     {
-        Voyage()->SetPosTypeCurrentRaft(NSStarmanLib::Raft::ePosType::Sea);
+        Voyage()->SetPosTypeCurrentRaft(NSModel::Raft::ePosType::Sea);
     }
     else
     {
-        Voyage()->SetPosTypeCurrentRaft(NSStarmanLib::Raft::ePosType::River);
+        Voyage()->SetPosTypeCurrentRaft(NSModel::Raft::ePosType::River);
     }
 
     // もし海の下にいるならば、海の上に戻す

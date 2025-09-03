@@ -26,9 +26,9 @@ public:
     void SetEnableFeature(const std::wstring& npcName,
                           const bool arg);
 
-    NSStarmanLib::NpcStatus GetNpcStatus(const std::wstring& npcName);
+    NSModel::NpcStatus GetNpcStatus(const std::wstring& npcName);
 
-    void SetNpcStatus(const std::wstring& npcName, const NSStarmanLib::NpcStatus& status);
+    void SetNpcStatus(const std::wstring& npcName, const NSModel::NpcStatus& status);
 
     bool GetNpcTalkable(const D3DXVECTOR3& pos, std::wstring* npcName = nullptr);
 

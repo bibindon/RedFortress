@@ -178,7 +178,7 @@ void EnemyHanen::Update()
             {
                 m_bAttack = false;
                 SharedObj::GetPlayer()->SetDamaged();
-                auto status = NSStarmanLib::StatusManager::GetObj();
+                auto status = NSModel::StatusManager::GetObj();
 
                 auto muscle = status->GetMuscleCurrent();
                 status->SetMuscleCurrent(muscle - 1);

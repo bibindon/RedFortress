@@ -288,20 +288,20 @@ void MenuManager::InitMenu()
 
     m_menu.Init(_T(""), pFont, pFontStatus, pSE, sprCursor, sprBackground, SharedObj::IsEnglish());
 
-    NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
-    NSStarmanLib::WeaponManager* weaponManager = NSStarmanLib::WeaponManager::GetObj();
+    NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
+    NSModel::WeaponManager* weaponManager = NSModel::WeaponManager::GetObj();
     //------------------------------------------------------
     // アイテム情報（＝インベントリ）
     //------------------------------------------------------
     {
-        NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
+        NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
 
         std::vector<std::wstring> idList = itemManager->GetItemIdList();
 
         std::vector<ItemInfo> itemInfoList;
         for (std::size_t i = 0; i < idList.size(); ++i)
         {
-            NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
+            NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
             std::vector<int> subIdList = inventory->GetSubIdList(idList.at(i));
             {
                 for (std::size_t j = 0; j < subIdList.size(); ++j)
@@ -313,7 +313,7 @@ void MenuManager::InitMenu()
                     itemInfoG.SetName(itemDef.GetName());
                     itemInfoG.SetLevel(itemDef.GetLevel());
 
-                    NSStarmanLib::ItemInfo itemInfo = inventory->GetItemInfo(idList.at(i), subIdList.at(j));
+                    NSModel::ItemInfo itemInfo = inventory->GetItemInfo(idList.at(i), subIdList.at(j));
 
                     itemInfoG.SetDurability(itemInfo.GetDurabilityCurrent());
 
@@ -321,7 +321,7 @@ void MenuManager::InitMenu()
 
                     // 画像ファイル名を取得して設定
                     // アイテム種別が武器の時は武器クラスから取得する必要がある
-                    if (itemDef.GetType() != NSStarmanLib::ItemDef::ItemType::WEAPON)
+                    if (itemDef.GetType() != NSModel::ItemDef::ItemType::WEAPON)
                     {
                         work_str = itemDef.GetImagePath();
                     }
@@ -333,7 +333,7 @@ void MenuManager::InitMenu()
                     sprItem->Load(work_str);
                     itemInfoG.SetSprite(sprItem);
 
-                    if (itemDef.GetType() != NSStarmanLib::ItemDef::ItemType::WEAPON)
+                    if (itemDef.GetType() != NSModel::ItemDef::ItemType::WEAPON)
                     {
                         work_str = itemDef.GetDetail();
                     }
@@ -367,7 +367,7 @@ void MenuManager::InitMenu()
                             itemInfoG.SetEquip(true);
                         }
                     }
-                    else if (itemDef.GetType() == NSStarmanLib::ItemDef::ItemType::WEAPON)
+                    else if (itemDef.GetType() == NSModel::ItemDef::ItemType::WEAPON)
                     {
                         itemInfoG.SetEquipEnable(true);
 
@@ -398,13 +398,13 @@ void MenuManager::InitMenu()
     //------------------------------------------------------
     std::vector<HumanInfo> humanInfoList;
     {
-        NSStarmanLib::HumanInfoManager* humanInfoManager = NSStarmanLib::HumanInfoManager::GetObj();
+        NSModel::HumanInfoManager* humanInfoManager = NSModel::HumanInfoManager::GetObj();
         std::vector<std::wstring> humanIdList = humanInfoManager->GetHumanIdList();
         for (std::size_t i = 0; i < humanIdList.size(); ++i)
         {
             HumanInfo humanInfo;
 
-            NSStarmanLib::HumanInfo libHumanInfo = humanInfoManager->GetHumanInfo(humanIdList.at(i));
+            NSModel::HumanInfo libHumanInfo = humanInfoManager->GetHumanInfo(humanIdList.at(i));
 
             if (libHumanInfo.GetVisible() == false)
             {
@@ -428,18 +428,18 @@ void MenuManager::InitMenu()
     // 武器情報
     //------------------------------------------------------
     {
-        NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
+        NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
 
         auto idList = itemManager->GetItemIdList();
 
         std::vector<WeaponInfo> weaponInfoList;
         for (std::size_t i = 0; i < idList.size(); ++i)
         {
-            NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
-            NSStarmanLib::ItemDef::ItemType itemType = itemDef.GetType();
+            NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
+            NSModel::ItemDef::ItemType itemType = itemDef.GetType();
 
             // 武器じゃなかったら無視
-            if (itemType != NSStarmanLib::ItemDef::ItemType::WEAPON)
+            if (itemType != NSModel::ItemDef::ItemType::WEAPON)
             {
                 continue;
             }
@@ -458,7 +458,7 @@ void MenuManager::InitMenu()
                     weaponInfoG.SetName(itemDef.GetName());
                     weaponInfoG.SetLevel(itemDef.GetLevel());
 
-                    NSStarmanLib::ItemInfo itemInfo = inventory->GetItemInfo(idList.at(i), subIdList.at(j));
+                    NSModel::ItemInfo itemInfo = inventory->GetItemInfo(idList.at(i), subIdList.at(j));
 
                     weaponInfoG.SetDurability(itemInfo.GetDurabilityCurrent());
 
@@ -485,7 +485,7 @@ void MenuManager::InitMenu()
     //------------------------------------------------------
     {
         std::vector<GuideInfo> infoList;
-        NSStarmanLib::Guide* guide = NSStarmanLib::Guide::GetObj();
+        NSModel::Guide* guide = NSModel::Guide::GetObj();
         std::vector<std::wstring> vs = guide->GetCategoryList();
         for (std::size_t i = 0; i < vs.size(); ++i)
         {
@@ -512,7 +512,7 @@ void MenuManager::InitMenu()
     //------------------------------------------------------
     {
         std::vector<EnemyInfo> infoList;
-        NSStarmanLib::EnemyInfoManager* enemyInfoManager = NSStarmanLib::EnemyInfoManager::GetObj();
+        NSModel::EnemyInfoManager* enemyInfoManager = NSModel::EnemyInfoManager::GetObj();
         auto idList = enemyInfoManager->GetEnemyIdList();
         for (size_t i = 0; i < idList.size(); ++i)
         {
@@ -540,7 +540,7 @@ void MenuManager::InitMenu()
     {
         std::vector<SkillInfo> infoList;
 
-        NSStarmanLib::SkillManager* skillManager = NSStarmanLib::SkillManager::GetObj();
+        NSModel::SkillManager* skillManager = NSModel::SkillManager::GetObj();
         std::vector<std::wstring> nameList = skillManager->GetNameList();
         for (std::size_t i = 0; i < nameList.size(); ++i)
         {
@@ -585,7 +585,7 @@ void MenuManager::InitMenu()
     {
         std::vector<MapInfo> mapInfoList;
         {
-            NSStarmanLib::MapInfoManager* mapInfoManager = NSStarmanLib::MapInfoManager::GetObj();
+            NSModel::MapInfoManager* mapInfoManager = NSModel::MapInfoManager::GetObj();
 
             std::vector<std::wstring> mapIdList = mapInfoManager->GetIdList();
             for (std::size_t i = 0; i < mapIdList.size(); ++i)
@@ -724,7 +724,7 @@ std::wstring MenuManager::OperateMenu()
             else if (vs.at(4) == _T("Equip"))
             {
                 // 火のついた松明を装備していたら武器を装備できない。袋も装備できない。
-                bool lit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+                bool lit = NSModel::WeaponManager::GetObj()->IsTorchLit();
 
                 if (lit)
                 {
@@ -740,7 +740,7 @@ std::wstring MenuManager::OperateMenu()
             else if (vs.at(4) == _T("Unequip"))
             {
                 // 点灯中の松明の装備を外すことはできない。
-                bool lit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+                bool lit = NSModel::WeaponManager::GetObj()->IsTorchLit();
                 if (lit)
                 {
                     PopUp2::Get()->SetText(IDS_STRING198);
@@ -837,10 +837,10 @@ std::wstring MenuManager::OperateMenu()
                 auto& id = vs.at(2);
                 int subId = std::stoi(vs.at(3));
 
-                NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
-                NSStarmanLib::ItemInfo itemInfo = inventory->GetItemInfo(id, subId);
+                NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
+                NSModel::ItemInfo itemInfo = inventory->GetItemInfo(id, subId);
 
-                NSStarmanLib::StatusManager* statusManager = NSStarmanLib::StatusManager::GetObj();
+                NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
                 statusManager->SetEquipWeapon(itemInfo);
             }
         }
@@ -966,10 +966,10 @@ std::wstring MenuManager::OperateMenu()
                 auto& id = vs.at(2);
                 int subId = std::stoi(vs.at(3));
 
-                NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
-                NSStarmanLib::ItemInfo itemInfo = inventory->GetItemInfo(id, subId);
+                NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
+                NSModel::ItemInfo itemInfo = inventory->GetItemInfo(id, subId);
 
-                NSStarmanLib::StatusManager* statusManager = NSStarmanLib::StatusManager::GetObj();
+                NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
                 statusManager->SetEquipWeapon(itemInfo);
             }
         }
@@ -998,15 +998,15 @@ std::wstring MenuManager::OperateMenu()
         // ホシマン
         {
 
-            NSStarmanLib::StatusManager* statusManager = NSStarmanLib::StatusManager::GetObj();
+            NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
 
-            NSStarmanLib::ItemInfo itemInfo = statusManager->GetEquipWeapon();
+            NSModel::ItemInfo itemInfo = statusManager->GetEquipWeapon();
             std::wstring weaponName;
 
             if (itemInfo.GetId().size() >= 1)
             {
-                NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
-                NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(itemInfo.GetId());
+                NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
+                NSModel::ItemDef itemDef = itemManager->GetItemDef(itemInfo.GetId());
                 weaponName = itemDef.GetName();
             }
 
@@ -1204,7 +1204,7 @@ std::wstring MenuManager::OperateMenu()
                 work += Common::ToStringWithPrecision((float)statusManager->GetDehydrationCureRemain() / 3600 / 24 * 12, 2) + _T("\n");
             }
 
-            auto rynen = NSStarmanLib::Rynen::GetObj();
+            auto rynen = NSModel::Rynen::GetObj();
             if (rynen->GetContracted())
             {
                 work += PadRightDisplayWidth(Common::LoadString_(IDS_STRING_WORDBRESS), 20);
@@ -1250,10 +1250,10 @@ std::wstring MenuManager::OperateMenu()
 
         // ダイケイマン
         {
-            auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+            auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
 
             auto status = npcStatusMgr->GetNpcStatus(_T("daikeiman"));
-            auto humanInfo = NSStarmanLib::HumanInfoManager::GetObj()->GetHumanInfo(L"daikeiman");
+            auto humanInfo = NSModel::HumanInfoManager::GetObj()->GetHumanInfo(L"daikeiman");
             if (humanInfo.GetVisible())
             {
                 NSMenulib::StatusInfo info;
@@ -1340,10 +1340,10 @@ std::wstring MenuManager::OperateMenu()
 
         // サンカクマン
         {
-            auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+            auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
 
             auto status = npcStatusMgr->GetNpcStatus(_T("sankakuman"));
-            auto humanInfo = NSStarmanLib::HumanInfoManager::GetObj()->GetHumanInfo(L"sankakuman");
+            auto humanInfo = NSModel::HumanInfoManager::GetObj()->GetHumanInfo(L"sankakuman");
             if (humanInfo.GetVisible())
             {
                 NSMenulib::StatusInfo info;
@@ -1431,10 +1431,10 @@ std::wstring MenuManager::OperateMenu()
 
         // シカクマン
         {
-            auto npcStatusMgr = NSStarmanLib::NpcStatusManager::GetObj();
+            auto npcStatusMgr = NSModel::NpcStatusManager::GetObj();
 
             auto status = npcStatusMgr->GetNpcStatus(_T("shikakuman"));
-            auto humanInfo = NSStarmanLib::HumanInfoManager::GetObj()->GetHumanInfo(L"shikakuman");
+            auto humanInfo = NSModel::HumanInfoManager::GetObj()->GetHumanInfo(L"shikakuman");
             if (humanInfo.GetVisible())
             {
                 NSMenulib::StatusInfo info;
@@ -1530,11 +1530,11 @@ bool MenuManager::UseItem(const std::wstring& id, const int subId)
 
     // 食材だったらステータスを更新
     // TODO 食材以外はあとで考える
-    auto itemManager = NSStarmanLib::ItemManager::GetObj();
+    auto itemManager = NSModel::ItemManager::GetObj();
     auto itemDef = itemManager->GetItemDef(id);
-    auto statusManager = NSStarmanLib::StatusManager::GetObj();
+    auto statusManager = NSModel::StatusManager::GetObj();
 
-    if (itemDef.GetType() == NSStarmanLib::ItemDef::ItemType::FOOD)
+    if (itemDef.GetType() == NSModel::ItemDef::ItemType::FOOD)
     {
         // 満腹だったらfalseが返ってくる
         result = statusManager->Eat(itemDef);
@@ -1543,12 +1543,12 @@ bool MenuManager::UseItem(const std::wstring& id, const int subId)
             PopUp2::Get()->SetText(IDS_STRING_CANNOT_EAT);
         }
     }
-    else if (itemDef.GetType() == NSStarmanLib::ItemDef::ItemType::MATERIAL)
+    else if (itemDef.GetType() == NSModel::ItemDef::ItemType::MATERIAL)
     {
         PopUp2::Get()->SetText(IDS_STRING_USE_MATERIAL);
         result = false;
     }
-    else if (itemDef.GetType() == NSStarmanLib::ItemDef::ItemType::VALUABLES)
+    else if (itemDef.GetType() == NSModel::ItemDef::ItemType::VALUABLES)
     {
         // スマホ
         if (itemDef.GetId() == L"sumaho")
@@ -1563,7 +1563,7 @@ bool MenuManager::UseItem(const std::wstring& id, const int subId)
             result = false;
         }
     }
-    else if (itemDef.GetType() == NSStarmanLib::ItemDef::ItemType::OTHERS)
+    else if (itemDef.GetType() == NSModel::ItemDef::ItemType::OTHERS)
     {
         // ワードブレス
         if (itemDef.GetId() == L"wordbress")
@@ -1634,7 +1634,7 @@ void MenuManager::DeleteItem(const std::wstring& id, const int subId)
                 continue;
             }
 
-            // NSMenulib::ItemInfoとNSStarmanLib::ItemInfoの変換
+            // NSMenulib::ItemInfoとNSModel::ItemInfoの変換
             // レベルと装備状態と耐久度だけでいい
             NSMenulib::ItemInfo itemInfo;
             itemInfo.SetId(it->GetId());
@@ -1670,11 +1670,11 @@ void MenuManager::DeleteItem(const std::wstring& id, const int subId)
 void MenuManager::AddItem(const std::wstring& id, const int subId, const int durability)
 {
     using namespace NSMenulib;
-    NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
-    NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
-    NSStarmanLib::WeaponManager* weaponManager = NSStarmanLib::WeaponManager::GetObj();
+    NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
+    NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
+    NSModel::WeaponManager* weaponManager = NSModel::WeaponManager::GetObj();
 
-    NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(id);
+    NSModel::ItemDef itemDef = itemManager->GetItemDef(id);
     std::wstring work_str;
 
     NSMenulib::ItemInfo itemInfoG;
@@ -1686,7 +1686,7 @@ void MenuManager::AddItem(const std::wstring& id, const int subId, const int dur
 
     // 画像ファイル名を取得して設定
     // アイテム種別が武器の時は武器クラスから取得する必要がある
-    if (itemDef.GetType() != NSStarmanLib::ItemDef::ItemType::WEAPON)
+    if (itemDef.GetType() != NSModel::ItemDef::ItemType::WEAPON)
     {
         work_str = itemDef.GetImagePath();
     }
@@ -1698,7 +1698,7 @@ void MenuManager::AddItem(const std::wstring& id, const int subId, const int dur
     sprItem->Load(work_str);
     itemInfoG.SetSprite(sprItem);
 
-    if (itemDef.GetType() != NSStarmanLib::ItemDef::ItemType::WEAPON)
+    if (itemDef.GetType() != NSModel::ItemDef::ItemType::WEAPON)
     {
         work_str = itemDef.GetDetail();
     }
@@ -1731,7 +1731,7 @@ void MenuManager::AddItem(const std::wstring& id, const int subId, const int dur
             itemInfoG.SetEquip(true);
         }
     }
-    else if (itemDef.GetType() == NSStarmanLib::ItemDef::ItemType::WEAPON)
+    else if (itemDef.GetType() == NSModel::ItemDef::ItemType::WEAPON)
     {
         itemInfoG.SetEquipEnable(true);
 
@@ -1774,7 +1774,7 @@ void MenuManager::AddItem(const std::wstring& id, const int subId, const int dur
                 continue;
             }
 
-            // NSMenulib::ItemInfoとNSStarmanLib::ItemInfoの変換
+            // NSMenulib::ItemInfoとNSModel::ItemInfoの変換
             // レベルと装備状態と耐久度だけでいい
             NSMenulib::ItemInfo itemInfo;
             itemInfo.SetId(it->GetId());
@@ -1809,10 +1809,10 @@ void MenuManager::AddItem(const std::wstring& id, const int subId, const int dur
 
 bool MenuManager::IsBagEquiped(const std::wstring& id, const int subId)
 {
-    auto statusManager = NSStarmanLib::StatusManager::GetObj();
+    auto statusManager = NSModel::StatusManager::GetObj();
     auto allBag = statusManager->GetAllBag();
     auto it = std::find_if(allBag.begin(), allBag.end(),
-                           [&](const NSStarmanLib::ItemInfo& x)
+                           [&](const NSModel::ItemInfo& x)
                            {
                                return x.GetId() == id && x.GetSubId() == subId;
                            });
@@ -1835,7 +1835,7 @@ void MenuManager::Equip(const std::wstring& id, const int subId)
     auto itemdef = Common::ItemManager()->GetItemDef(id);
 
     // 武器だったら
-    if (itemdef.GetType() == NSStarmanLib::ItemDef::ItemType::WEAPON)
+    if (itemdef.GetType() == NSModel::ItemDef::ItemType::WEAPON)
     {
         //--------------------------------------
         // すでに装備していたものがあったら、その装備状態は解除する
@@ -1844,7 +1844,7 @@ void MenuManager::Equip(const std::wstring& id, const int subId)
         // しかし、右手に袋を装備していた場合、武器を装備ができないようにする。
         //--------------------------------------
         {
-            bool lit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+            bool lit = NSModel::WeaponManager::GetObj()->IsTorchLit();
             if (lit)
             {
                 PopUp2::Get()->SetText(IDS_STRING198);
@@ -1931,9 +1931,9 @@ void MenuManager::Unequip(const std::wstring& id, const int subId)
     auto itemdef = Common::ItemManager()->GetItemDef(id);
 
     // 武器だったら
-    if (itemdef.GetType() == NSStarmanLib::ItemDef::ItemType::WEAPON)
+    if (itemdef.GetType() == NSModel::ItemDef::ItemType::WEAPON)
     {
-        NSStarmanLib::ItemInfo itemInfo;
+        NSModel::ItemInfo itemInfo;
         itemInfo.SetId(L"");
         Common::Status()->SetEquipWeapon(itemInfo);
     }

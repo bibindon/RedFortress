@@ -167,7 +167,7 @@ void EnemySphere::Update()
             if (distance <= 1.0f)
             {
                 player->SetDamaged();
-                auto status = NSStarmanLib::StatusManager::GetObj();
+                auto status = NSModel::StatusManager::GetObj();
 
                 auto muscle = status->GetMuscleCurrent();
                 status->SetMuscleCurrent(muscle - 1);

@@ -43,7 +43,7 @@ namespace UnitTest2
         TEST_METHOD(RaftTest_TestMethod02)
         {
             Util::InitWin_DX9_DI8();
-            auto voyage = NSStarmanLib::Voyage::Get();
+            auto voyage = NSModel::Voyage::Get();
             voyage->Init(_T("raft1.csv"));
 
             Raft2 raft;
@@ -52,7 +52,7 @@ namespace UnitTest2
             raft.Init(1);
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -74,8 +74,8 @@ namespace UnitTest2
             map->Init();
             SharedObj::SetMap(map);
 
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto player = NEW Player();
             SharedObj::SetPlayer(player);
@@ -91,7 +91,7 @@ namespace UnitTest2
             delete player;
             SharedObj::SetPlayer(nullptr);
 
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
 
             delete map;
             SharedObj::SetMap(nullptr);
@@ -106,8 +106,8 @@ namespace UnitTest2
             Util::InitWin_DX9_DI8();
             SaveManager::Get()->LoadOrigin();
 
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Map* map = NEW Map();
             map->Init();
@@ -140,7 +140,7 @@ namespace UnitTest2
             SharedObj::SetMap(nullptr);
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -148,8 +148,8 @@ namespace UnitTest2
         TEST_METHOD(RaftTest_TestMethod06)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -159,7 +159,7 @@ namespace UnitTest2
             raft.SetSail(false);
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -175,8 +175,8 @@ namespace UnitTest2
             auto player = NEW Player();
             SharedObj::SetPlayer(player);
 
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -186,7 +186,7 @@ namespace UnitTest2
             raft.PullOarBoth(&_move);
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
 
             delete player;
             SharedObj::SetPlayer(nullptr);
@@ -210,8 +210,8 @@ namespace UnitTest2
             auto player = NEW Player();
             SharedObj::SetPlayer(player);
 
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -220,7 +220,7 @@ namespace UnitTest2
             raft.PullOarLeft();
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
 
             delete player;
             SharedObj::SetPlayer(nullptr);
@@ -243,8 +243,8 @@ namespace UnitTest2
             auto player = NEW Player();
             SharedObj::SetPlayer(player);
 
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -253,7 +253,7 @@ namespace UnitTest2
             raft.PullOarRight();
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
 
             delete player;
             SharedObj::SetPlayer(nullptr);
@@ -268,8 +268,8 @@ namespace UnitTest2
         TEST_METHOD(RaftTest_TestMethod10)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -278,7 +278,7 @@ namespace UnitTest2
             raft.GetPos();
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -286,8 +286,8 @@ namespace UnitTest2
         TEST_METHOD(RaftTest_TestMethod11)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -297,7 +297,7 @@ namespace UnitTest2
             raft.SetPos(pos);
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -305,8 +305,8 @@ namespace UnitTest2
         TEST_METHOD(RaftTest_TestMethod12)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -315,7 +315,7 @@ namespace UnitTest2
             raft.GetRotate();
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -323,8 +323,8 @@ namespace UnitTest2
         TEST_METHOD(RaftTest_TestMethod13)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -334,7 +334,7 @@ namespace UnitTest2
             raft.SetRotate(rot);
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -342,8 +342,8 @@ namespace UnitTest2
         TEST_METHOD(RaftTest_TestMethod14)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             Raft2 raft;
             raft.Init(1);
@@ -352,7 +352,7 @@ namespace UnitTest2
 //            raft.GetMesh();
 
             raft.Finalize();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
     };
@@ -417,8 +417,8 @@ namespace UnitTest2
             Map* map = NEW Map();
             map->Init();
             SharedObj::SetMap(map);
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
@@ -447,7 +447,7 @@ namespace UnitTest2
             delete map;
             SharedObj::SetMap(nullptr);
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
 
             Util::ReleaseWin_DX9_DI8();
         }
@@ -456,8 +456,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod06)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
@@ -466,7 +466,7 @@ namespace UnitTest2
             voyageMgr->GetSail();
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -474,8 +474,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod07)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
@@ -485,7 +485,7 @@ namespace UnitTest2
             voyageMgr->SetSail(false);
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -493,8 +493,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod08)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
 
@@ -502,7 +502,7 @@ namespace UnitTest2
             voyageMgr->Set3HoursAuto();
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -533,8 +533,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod11)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
 
@@ -542,7 +542,7 @@ namespace UnitTest2
             voyageMgr->GetPosType();
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -550,17 +550,17 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod12)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
 
             // Target
-            voyageMgr->SetPosType(NSStarmanLib::Raft::ePosType::River);
-            voyageMgr->SetPosType(NSStarmanLib::Raft::ePosType::Sea);
+            voyageMgr->SetPosType(NSModel::Raft::ePosType::River);
+            voyageMgr->SetPosType(NSModel::Raft::ePosType::Sea);
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -617,7 +617,7 @@ namespace UnitTest2
         {
             Util::InitWin_DX9_DI8();
 
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
 
@@ -627,7 +627,7 @@ namespace UnitTest2
             voyageMgr->WallSlide(pos, move);
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -635,8 +635,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod20)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
@@ -645,7 +645,7 @@ namespace UnitTest2
             voyageMgr->GetRaftXYZ(1);
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -653,8 +653,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod21)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
@@ -663,7 +663,7 @@ namespace UnitTest2
             voyageMgr->GetRaftRotateY(1);
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -671,8 +671,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod22)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
@@ -681,7 +681,7 @@ namespace UnitTest2
             voyageMgr->GetRaftDurability();
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
 
@@ -689,8 +689,8 @@ namespace UnitTest2
         TEST_METHOD(VoyageTest_TestMethod23)
         {
             Util::InitWin_DX9_DI8();
-            NSStarmanLib::Voyage::Get()->Init(_T("raft1.csv"));
-            NSStarmanLib::Voyage::Get()->SetRaftCurrentId(1);
+            NSModel::Voyage::Get()->Init(_T("raft1.csv"));
+            NSModel::Voyage::Get()->SetRaftCurrentId(1);
 
             auto voyageMgr = VoyageManager::Get();
             voyageMgr->Init();
@@ -699,7 +699,7 @@ namespace UnitTest2
             voyageMgr->GetRaftLevel();
 
             VoyageManager::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::Voyage::Destroy();
             Util::ReleaseWin_DX9_DI8();
         }
     };

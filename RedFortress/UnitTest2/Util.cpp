@@ -220,22 +220,22 @@ void MockKeyBoard::SetAltF4()
 
 void Util::DestroyLibData()
 {
-    NSStarmanLib::Rynen::Destroy();
-    NSStarmanLib::HumanInfoManager::Destroy();
-    NSStarmanLib::MapInfoManager::Destroy();
-    NSStarmanLib::ItemManager::Destroy();
-    NSStarmanLib::Inventory::Destroy();
-    NSStarmanLib::StorehouseManager::Destroy();
-    NSStarmanLib::WeaponManager::Destroy();
-    NSStarmanLib::EnemyInfoManager::Destroy();
-    NSStarmanLib::SkillManager::Destroy();
-    NSStarmanLib::StatusManager::Destroy();
-    NSStarmanLib::Guide::Destroy();
-    NSStarmanLib::PowereggDateTime::Destroy();
-    NSStarmanLib::MapObjManager::Destroy();
-    NSStarmanLib::Voyage::Destroy();
-    NSStarmanLib::CraftInfoManager::Destroy();
-    NSStarmanLib::CraftSystem::Destroy();
+    NSModel::Rynen::Destroy();
+    NSModel::HumanInfoManager::Destroy();
+    NSModel::MapInfoManager::Destroy();
+    NSModel::ItemManager::Destroy();
+    NSModel::Inventory::Destroy();
+    NSModel::StorehouseManager::Destroy();
+    NSModel::WeaponManager::Destroy();
+    NSModel::EnemyInfoManager::Destroy();
+    NSModel::SkillManager::Destroy();
+    NSModel::StatusManager::Destroy();
+    NSModel::Guide::Destroy();
+    NSModel::PowereggDateTime::Destroy();
+    NSModel::MapObjManager::Destroy();
+    NSModel::Voyage::Destroy();
+    NSModel::CraftInfoManager::Destroy();
+    NSModel::CraftSystem::Destroy();
     SaveManager::Destroy();
 }
 

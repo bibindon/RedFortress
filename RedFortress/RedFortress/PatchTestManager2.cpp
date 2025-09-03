@@ -272,7 +272,7 @@ std::wstring PatchTestManager2::Operate()
         // 一秒に一回くらいの処理
         if (counter % 60 == 0)
         {
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             m_guiLib.UpdateDateTime(datetime->GetYear(),
                                           datetime->GetMonth(),
                                           datetime->GetDay(),
@@ -490,27 +490,27 @@ void PatchTestManager2::CreateList()
             queList.at(i).GetDateTimeStart(&y, &M, &d, &h, &m, &s);
             itemInfo.SetDateStart(y, M, d, h, m, s);
 
-            if (queList.at(i).GetState() == NSStarmanLib::PatchTest::eState::FINISHED)
+            if (queList.at(i).GetState() == NSModel::PatchTest::eState::FINISHED)
             {
                 queList.at(i).GetDateTimeEnd(&y, &M, &d, &h, &m, &s);
                 itemInfo.SetDateEnd(y, M, d, h, m, s);
             }
 
-            if (queList.at(i).GetState() == NSStarmanLib::PatchTest::eState::NOT_START)
+            if (queList.at(i).GetState() == NSModel::PatchTest::eState::NOT_START)
             {
                 itemInfo.SetResult(Common::LoadString_(IDS_STRING164));
             }
-            else if (queList.at(i).GetState() == NSStarmanLib::PatchTest::eState::STARTED)
+            else if (queList.at(i).GetState() == NSModel::PatchTest::eState::STARTED)
             {
                 itemInfo.SetResult(Common::LoadString_(IDS_STRING165));
             }
-            else if (queList.at(i).GetState() == NSStarmanLib::PatchTest::eState::FINISHED)
+            else if (queList.at(i).GetState() == NSModel::PatchTest::eState::FINISHED)
             {
-                if (queList.at(i).GetResult() == NSStarmanLib::PatchTest::eResult::POISON)
+                if (queList.at(i).GetResult() == NSModel::PatchTest::eResult::POISON)
                 {
                     itemInfo.SetResult(Common::LoadString_(IDS_STRING166));
                 }
-                else if (queList.at(i).GetResult() == NSStarmanLib::PatchTest::eResult::NOT_POISON)
+                else if (queList.at(i).GetResult() == NSModel::PatchTest::eResult::NOT_POISON)
                 {
                     itemInfo.SetResult(Common::LoadString_(IDS_STRING167));
                 }
@@ -552,7 +552,7 @@ void PatchTestManager2::QueueTest(const std::wstring& result)
     }
 }
 
-NSStarmanLib::PatchTestManager* PatchTestManager2::GetPatchLib()
+NSModel::PatchTestManager* PatchTestManager2::GetPatchLib()
 {
-    return NSStarmanLib::PatchTestManager::Get();
+    return NSModel::PatchTestManager::Get();
 }

@@ -407,7 +407,7 @@ void BGMModel::InvestigateCurrentStatus()
     //------------------------------------------
     // 夜
     //------------------------------------------
-    auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+    auto datetime = NSModel::PowereggDateTime::GetObj();
 
     if (6 < datetime->GetHour() && datetime->GetHour() < 18)
     {
@@ -786,7 +786,7 @@ void BGMEnvModel::InvestigateBGMEnv()
         }
     }
 
-    auto lit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+    auto lit = NSModel::WeaponManager::GetObj()->IsTorchLit();
     if (lit)
     {
         m_bTorch = true;

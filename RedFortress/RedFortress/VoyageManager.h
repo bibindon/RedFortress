@@ -72,8 +72,8 @@ public:
     void SetRaftMode(const bool arg);
     bool GetRaftMode() const;
 
-    NSStarmanLib::Raft::ePosType GetPosType();
-    void SetPosType(const NSStarmanLib::Raft::ePosType arg);
+    NSModel::Raft::ePosType GetPosType();
+    void SetPosType(const NSModel::Raft::ePosType arg);
 
     // イカダが2メートル以内にあるか？
     bool CheckNearRaft(const D3DXVECTOR3& pos);

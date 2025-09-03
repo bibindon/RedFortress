@@ -694,7 +694,7 @@ void Map::Init()
 
 void Map::Update()
 {
-    NSStarmanLib::EnemyInfoManager* enemyInfoManager = NSStarmanLib::EnemyInfoManager::GetObj();
+    NSModel::EnemyInfoManager* enemyInfoManager = NSModel::EnemyInfoManager::GetObj();
     for (auto it = m_vecEnemy.begin(); it != m_vecEnemy.end();)
     {
         (*it)->Update();
@@ -719,7 +719,7 @@ void Map::Update()
         //-------------------------------------
         // 昼の12時が最も明るく、
         // 夜の8時から朝の4時までは真っ暗
-        auto dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+        auto dateTime = NSModel::PowereggDateTime::GetObj();
         float hour = (float)dateTime->GetHour();
         float work1 = 0.f;
 
@@ -895,7 +895,7 @@ void Map::Update()
                 }
             }
 
-            NSStarmanLib::PowereggDateTime* dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+            NSModel::PowereggDateTime* dateTime = NSModel::PowereggDateTime::GetObj();
 
             //-------------------------------------
             // 陰の表示
@@ -938,9 +938,9 @@ void Map::Update()
                 m_meshCloneMap.clear();
 
                 auto player = SharedObj::GetPlayer();
-                auto mapObjManager = NSStarmanLib::MapObjManager::GetObj();
-                std::vector<NSStarmanLib::stMapObj> needShow;
-                std::vector<NSStarmanLib::stMapObj> needHide;
+                auto mapObjManager = NSModel::MapObjManager::GetObj();
+                std::vector<NSModel::stMapObj> needShow;
+                std::vector<NSModel::stMapObj> needHide;
                 mapObjManager->GetMapObjListShow(player->GetPos().x, player->GetPos().z, &needShow);
 
                 for (int i = 0; i < (int)needShow.size(); ++i)
@@ -1055,7 +1055,7 @@ void Map::Update()
                 UpdateNpcPos(L"xeoff");
 
                 // ダイケイマンがクラフトできるようになっていたらモーションを変える
-                auto npcManager= NSStarmanLib::NpcStatusManager::GetObj();
+                auto npcManager= NSModel::NpcStatusManager::GetObj();
                 auto craftman = npcManager->GetNpcStatus(L"daikeiman").GetFeatureEnable();
                 if (craftman)
                 {
@@ -1111,7 +1111,7 @@ void Map::Update()
         // モンスターに当たったらダメージを与える
         if (it->m_bHit == false)
         {
-            auto enemyInfoManager = NSStarmanLib::EnemyInfoManager::GetObj();
+            auto enemyInfoManager = NSModel::EnemyInfoManager::GetObj();
             for (auto it2 = m_vecEnemy.begin(); it2 != m_vecEnemy.end(); ++it2)
             {
                 auto enemyPos = (*it2)->GetPos();
@@ -1154,15 +1154,15 @@ void Map::Update()
         // 地面などにぶつかったら消す
         if (Intersect(pos, it->m_move))
         {
-            if (it->m_eMagicType == NSStarmanLib::eMagicType::Fire)
+            if (it->m_eMagicType == NSModel::eMagicType::Fire)
             {
                 SoundEffect::get_ton()->play(_T("res\\sound\\fireHit.wav"), 20);
             }
-            else if (it->m_eMagicType == NSStarmanLib::eMagicType::Ice)
+            else if (it->m_eMagicType == NSModel::eMagicType::Ice)
             {
                 SoundEffect::get_ton()->play(_T("res\\sound\\iceHit.wav"), 20);
             }
-            else if (it->m_eMagicType == NSStarmanLib::eMagicType::Dark)
+            else if (it->m_eMagicType == NSModel::eMagicType::Dark)
             {
                 SoundEffect::get_ton()->play(_T("res\\sound\\darkHit.wav"), 20);
             }
@@ -1177,11 +1177,11 @@ void Map::Update()
         bool bHit = false;
         if (it->m_bHit == false)
         {
-            auto enemyInfoManager = NSStarmanLib::EnemyInfoManager::GetObj();
+            auto enemyInfoManager = NSModel::EnemyInfoManager::GetObj();
             for (auto it2 = m_vecEnemy.begin(); it2 != m_vecEnemy.end(); ++it2)
             {
                 // 島民の霊は闇魔法でのみダメージを与えられる。
-                if (it->m_eMagicType != NSStarmanLib::eMagicType::Dark)
+                if (it->m_eMagicType != NSModel::eMagicType::Dark)
                 {
                     if ((*it2)->GetEnemyType() == eEnemyType::Ghost)
                     {
@@ -1200,15 +1200,15 @@ void Map::Update()
 
                     BGMManager::Get()->SetBattle(true);
 
-                    if (it->m_eMagicType == NSStarmanLib::eMagicType::Fire)
+                    if (it->m_eMagicType == NSModel::eMagicType::Fire)
                     {
                         SoundEffect::get_ton()->play(_T("res\\sound\\fireHit.wav"));
                     }
-                    else if (it->m_eMagicType == NSStarmanLib::eMagicType::Ice)
+                    else if (it->m_eMagicType == NSModel::eMagicType::Ice)
                     {
                         SoundEffect::get_ton()->play(_T("res\\sound\\iceHit.wav"));
                     }
-                    else if (it->m_eMagicType == NSStarmanLib::eMagicType::Dark)
+                    else if (it->m_eMagicType == NSModel::eMagicType::Dark)
                     {
                         SoundEffect::get_ton()->play(_T("res\\sound\\darkHit.wav"));
                     }
@@ -1239,7 +1239,7 @@ void Map::Update()
 
 void Map::UpdateNpcPos(const std::wstring& npcId)
 {
-    auto npcManager= NSStarmanLib::NpcStatusManager::GetObj();
+    auto npcManager= NSModel::NpcStatusManager::GetObj();
 
     auto x = npcManager->GetNpcStatus(npcId).GetX();
     auto y = npcManager->GetNpcStatus(npcId).GetY();
@@ -1298,7 +1298,7 @@ void Map::Render()
         // 花輪を飾っていたら表示
         if (pair.first == _T("hanawa"))
         {
-            if (!NSStarmanLib::ActivityBase::Get()->GetHanawa())
+            if (!NSModel::ActivityBase::Get()->GetHanawa())
             {
                 continue;
             }
@@ -1804,7 +1804,7 @@ D3DXVECTOR3 Map::WallSlide(const D3DXVECTOR3& pos,
 void Map::AddThrownItem(const D3DXVECTOR3& pos,
                         const D3DXVECTOR3& move,
                         const std::wstring& weaponName,
-                        const NSStarmanLib::ItemInfo& itemInfo,
+                        const NSModel::ItemInfo& itemInfo,
                         const float scale,
                         const float power,
                         const float rotY)
@@ -1814,7 +1814,7 @@ void Map::AddThrownItem(const D3DXVECTOR3& pos,
     work.m_move = move;
     work.m_power = power;
 
-    auto weaponManager = NSStarmanLib::WeaponManager::GetObj();
+    auto weaponManager = NSModel::WeaponManager::GetObj();
     std::wstring xfilename = weaponManager->GetXfilename2(itemInfo.GetItemDef().GetWeaponId());
 
     D3DXVECTOR3 rot(0.f, rotY, 0.f);
@@ -1827,10 +1827,10 @@ void Map::AddThrownItem(const D3DXVECTOR3& pos,
 }
 
 // 見つからなければidが-1のItemInfoが返る。
-NSStarmanLib::ItemInfo Map::GetThrownItem(const D3DXVECTOR3& pos)
+NSModel::ItemInfo Map::GetThrownItem(const D3DXVECTOR3& pos)
 {
     bool exist = false;
-    NSStarmanLib::ItemInfo result;
+    NSModel::ItemInfo result;
     result.SetId(L"");
 
     // 2メートル以内のアイテムを拾えるようにする
@@ -1855,7 +1855,7 @@ NSStarmanLib::ItemInfo Map::GetThrownItem(const D3DXVECTOR3& pos)
     return result;
 }
 
-void Map::DeleteThrownItem(const NSStarmanLib::ItemInfo& thrownItem)
+void Map::DeleteThrownItem(const NSModel::ItemInfo& thrownItem)
 {
     for (auto it = m_thrownList.begin(); it != m_thrownList.end(); ++it)
     {
@@ -1870,7 +1870,7 @@ void Map::DeleteThrownItem(const NSStarmanLib::ItemInfo& thrownItem)
 
 void Map::SetThrownMagic(const D3DXVECTOR3& pos,
                          const D3DXVECTOR3& move,
-                         const NSStarmanLib::eMagicType& magicType,
+                         const NSModel::eMagicType& magicType,
                          const float power)
 {
     ThrownMagic work;
@@ -1880,15 +1880,15 @@ void Map::SetThrownMagic(const D3DXVECTOR3& pos,
 
     std::wstring xfilename;
 
-    if (magicType == NSStarmanLib::eMagicType::Fire)
+    if (magicType == NSModel::eMagicType::Fire)
     {
         xfilename = _T("res\\model\\MagicFire.x");
     }
-    else if (magicType == NSStarmanLib::eMagicType::Ice)
+    else if (magicType == NSModel::eMagicType::Ice)
     {
         xfilename = _T("res\\model\\MagicIce.x");
     }
-    else if (magicType == NSStarmanLib::eMagicType::Dark)
+    else if (magicType == NSModel::eMagicType::Dark)
     {
         xfilename = _T("res\\model\\MagicDark.x");
     }
@@ -2075,7 +2075,7 @@ bool Map::NearMinatoato(const D3DXVECTOR3& ppos)
 
 void Map::DeleteThinTree(const D3DXVECTOR3& pos)
 {
-    std::vector<NSStarmanLib::stMapObj> mapObjs = MapLib()->GetMapObjListR(pos.x, pos.z, 2.f);
+    std::vector<NSModel::stMapObj> mapObjs = MapLib()->GetMapObjListR(pos.x, pos.z, 2.f);
 
     int id = MapLib()->GetModelId(_T("res\\\\model\\\\treeThin.blend.x"));
 
@@ -2094,7 +2094,7 @@ void Map::DeleteThinTree(const D3DXVECTOR3& pos)
 
 void Map::DeletePlant(const D3DXVECTOR3& pos)
 {
-    std::vector<NSStarmanLib::stMapObj> mapObjs = MapLib()->GetMapObjListR(pos.x, pos.z, 2.f);
+    std::vector<NSModel::stMapObj> mapObjs = MapLib()->GetMapObjListR(pos.x, pos.z, 2.f);
 
     int modelId1 = MapLib()->GetModelId(_T("res\\\\model\\\\plant.x"));
     int modelId2 = MapLib()->GetModelId(_T("res\\\\model\\\\grass.x"));
@@ -2112,9 +2112,9 @@ void Map::DeletePlant(const D3DXVECTOR3& pos)
     }
 }
 
-NSStarmanLib::MapObjManager* Map::MapLib()
+NSModel::MapObjManager* Map::MapLib()
 {
-    auto mapObjManager = NSStarmanLib::MapObjManager::GetObj();
+    auto mapObjManager = NSModel::MapObjManager::GetObj();
     return mapObjManager;
 }
 
@@ -2360,7 +2360,7 @@ D3DXVECTOR3 Map::WallSlideSub(const D3DXVECTOR3& pos,
 
 void Map::DeleteObj(const D3DXVECTOR3& pos, const eMapObjType eMapObjType_)
 {
-    std::vector<NSStarmanLib::stMapObj> mapObjs = MapLib()->GetMapObjListR(pos.x, pos.z, 2.f);
+    std::vector<NSModel::stMapObj> mapObjs = MapLib()->GetMapObjListR(pos.x, pos.z, 2.f);
 
     int id = (int)eMapObjType_;
 

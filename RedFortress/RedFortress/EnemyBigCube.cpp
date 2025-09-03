@@ -170,7 +170,7 @@ void EnemyBigCube::Update()
             if (distance <= 3.0f)
             {
                 player->SetDamaged();
-                auto status = NSStarmanLib::StatusManager::GetObj();
+                auto status = NSModel::StatusManager::GetObj();
 
                 auto muscle = status->GetMuscleCurrent();
                 status->SetMuscleCurrent(muscle - 3);

@@ -139,7 +139,7 @@ namespace UnitTest2
             craft.Init();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
             }
 
@@ -187,7 +187,7 @@ namespace UnitTest2
 
             // Target
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
             }
 
@@ -206,7 +206,7 @@ namespace UnitTest2
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
             storehouse->AddItem(_T("trunk"));
             storehouse->AddItem(_T("tsuta"));
 
@@ -221,7 +221,7 @@ namespace UnitTest2
             craft.Init();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
             }
 
@@ -268,7 +268,7 @@ namespace UnitTest2
             PopUp2::Get()->Render();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
             }
 
@@ -287,7 +287,7 @@ namespace UnitTest2
             Util::InitWin_DX9_DI8(true);
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 100; ++i)
             {
@@ -306,7 +306,7 @@ namespace UnitTest2
             craft.Init();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
             }
 
@@ -352,7 +352,7 @@ namespace UnitTest2
             PopUp2::Get()->Render();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
                 Assert::AreEqual(_T("raft"), reqList.front().GetId().c_str());
             }
@@ -369,15 +369,15 @@ namespace UnitTest2
         // 警告を拠点のイカダを移動させるように促すポップアップが表示されること
         TEST_METHOD(CraftTest_CraftRaftTest04)
         {
-            NSStarmanLib::CraftSystem::Destroy();
+            NSModel::CraftSystem::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
-            NSStarmanLib::Raft raft;
+            NSModel::Raft raft;
             raft.SetXYZ(-4.f, 458.f, -711.f);
-            NSStarmanLib::Voyage::Get()->AddRaft(raft);
+            NSModel::Voyage::Get()->AddRaft(raft);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -396,7 +396,7 @@ namespace UnitTest2
             craft.Init();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
             }
 
@@ -429,7 +429,7 @@ namespace UnitTest2
             PopUp2::Get()->Render();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
             }
 
@@ -444,12 +444,12 @@ namespace UnitTest2
         // イカダが拠点に配置されること
         TEST_METHOD(CraftTest_CraftRaftTest05)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -465,10 +465,10 @@ namespace UnitTest2
             craft.Init();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -500,7 +500,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -510,7 +510,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -520,10 +520,10 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(-1, raftList.at(0).GetLevel());
                 Assert::AreEqual(100, raftList.at(0).GetDurability());
@@ -538,12 +538,12 @@ namespace UnitTest2
         // 強化値+1のイカダがクラフトできることが熟練度によって自動で決まること
         TEST_METHOD(CraftTest_CraftRaftTest06)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -558,13 +558,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 1);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 1);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -596,7 +596,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -606,7 +606,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -616,10 +616,10 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(1, raftList.at(0).GetLevel());
                 Assert::AreEqual(200, raftList.at(0).GetDurability());
@@ -634,12 +634,12 @@ namespace UnitTest2
         // 強化値+2のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest07)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -654,13 +654,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 2);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 2);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -692,7 +692,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -702,7 +702,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -712,10 +712,10 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(2, raftList.at(0).GetLevel());
                 Assert::AreEqual(300, raftList.at(0).GetDurability());
@@ -730,12 +730,12 @@ namespace UnitTest2
         // 強化値+3のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest08)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -750,13 +750,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 3);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 3);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -788,7 +788,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -798,7 +798,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -808,14 +808,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(3, raftList.at(0).GetLevel());
                 Assert::AreEqual(400, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 4);
             }
 
@@ -828,12 +828,12 @@ namespace UnitTest2
         // 強化値+4のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest09)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -848,13 +848,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 4);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 4);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -886,7 +886,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -896,7 +896,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -906,14 +906,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(4, raftList.at(0).GetLevel());
                 Assert::AreEqual(500, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 5);
             }
 
@@ -926,12 +926,12 @@ namespace UnitTest2
         // 強化値+5のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest10)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -946,13 +946,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 5);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 5);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -984,7 +984,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -994,7 +994,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1004,14 +1004,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(5, raftList.at(0).GetLevel());
                 Assert::AreEqual(600, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 6);
             }
 
@@ -1024,12 +1024,12 @@ namespace UnitTest2
         // 強化値+6のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest11)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -1044,13 +1044,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 6);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 6);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -1082,7 +1082,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1092,7 +1092,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1102,14 +1102,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(6, raftList.at(0).GetLevel());
                 Assert::AreEqual(700, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 7);
             }
 
@@ -1122,12 +1122,12 @@ namespace UnitTest2
         // 強化値+7のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest12)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -1142,13 +1142,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 7);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 7);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -1180,7 +1180,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1190,7 +1190,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1200,14 +1200,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(7, raftList.at(0).GetLevel());
                 Assert::AreEqual(800, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 8);
             }
 
@@ -1220,12 +1220,12 @@ namespace UnitTest2
         // 強化値+8のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest13)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -1240,13 +1240,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 8);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 8);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -1278,7 +1278,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1288,7 +1288,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1298,14 +1298,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(8, raftList.at(0).GetLevel());
                 Assert::AreEqual(900, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 9);
             }
 
@@ -1318,12 +1318,12 @@ namespace UnitTest2
         // 強化値+9のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest14)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -1338,13 +1338,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 9);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 9);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -1376,7 +1376,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1386,7 +1386,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1396,14 +1396,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(9, raftList.at(0).GetLevel());
                 Assert::AreEqual(1000, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 10);
             }
 
@@ -1416,12 +1416,12 @@ namespace UnitTest2
         // 強化値+10のイカダがクラフトできること
         TEST_METHOD(CraftTest_CraftRaftTest15)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -1436,13 +1436,13 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 10);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"raft", 10);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual(true, raftList.empty());
             }
 
@@ -1474,7 +1474,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1484,7 +1484,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1494,14 +1494,14 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
-                auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+                auto raftList = NSModel::Voyage::Get()->GetRaftList();
                 Assert::AreEqual<size_t>(1, raftList.size());
                 Assert::AreEqual(10, raftList.at(0).GetLevel());
                 Assert::AreEqual(1100, raftList.at(0).GetDurability());
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"raft");
                 Assert::AreEqual(skillLevel, 10);
             }
 
@@ -1513,12 +1513,12 @@ namespace UnitTest2
         // 武器をクラフト
         TEST_METHOD(CraftTest_CraftWeapon01)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             storehouse->AddItem(_T("trunk"));
 
@@ -1528,10 +1528,10 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-//            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 1);
+//            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 1);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1582,7 +1582,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1592,7 +1592,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1602,7 +1602,7 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1614,7 +1614,7 @@ namespace UnitTest2
                 auto level = allItem.front().GetItemDef().GetLevel();
                 Assert::AreEqual(-1, level);
 
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
                 Assert::AreEqual(skillLevel, -1);
             }
 
@@ -1626,12 +1626,12 @@ namespace UnitTest2
         // +1の武器をクラフト
         TEST_METHOD(CraftTest_CraftWeapon02)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             storehouse->AddItem(_T("trunk"));
 
@@ -1641,10 +1641,10 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 1);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 1);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1695,7 +1695,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1705,7 +1705,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1715,7 +1715,7 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1727,7 +1727,7 @@ namespace UnitTest2
                 auto level = allItem.front().GetItemDef().GetLevel();
                 Assert::AreEqual(1, level);
 
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
                 Assert::AreEqual(skillLevel, 1);
             }
 
@@ -1739,12 +1739,12 @@ namespace UnitTest2
         // +2の武器をクラフト
         TEST_METHOD(CraftTest_CraftWeapon03)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             storehouse->AddItem(_T("trunk"));
 
@@ -1754,10 +1754,10 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 2);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 2);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1808,7 +1808,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1818,7 +1818,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1828,7 +1828,7 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1840,7 +1840,7 @@ namespace UnitTest2
                 auto level = allItem.front().GetItemDef().GetLevel();
                 Assert::AreEqual(2, level);
 
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
                 Assert::AreEqual(skillLevel, 2);
             }
 
@@ -1852,12 +1852,12 @@ namespace UnitTest2
         // +3の武器をクラフト
         TEST_METHOD(CraftTest_CraftWeapon04)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             storehouse->AddItem(_T("trunk"));
 
@@ -1867,10 +1867,10 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 3);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 3);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1921,7 +1921,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -1931,7 +1931,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -1941,7 +1941,7 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -1953,7 +1953,7 @@ namespace UnitTest2
                 auto level = allItem.front().GetItemDef().GetLevel();
                 Assert::AreEqual(3, level);
 
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
                 Assert::AreEqual(skillLevel, 3);
             }
 
@@ -1965,12 +1965,12 @@ namespace UnitTest2
         // +4の武器をクラフト
         TEST_METHOD(CraftTest_CraftWeapon05)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             storehouse->AddItem(_T("trunk"));
 
@@ -1980,10 +1980,10 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 4);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 4);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -2034,7 +2034,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -2044,7 +2044,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -2054,7 +2054,7 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -2066,7 +2066,7 @@ namespace UnitTest2
                 auto level = allItem.front().GetItemDef().GetLevel();
                 Assert::AreEqual(4, level);
 
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
                 Assert::AreEqual(skillLevel, 4);
             }
 
@@ -2078,12 +2078,12 @@ namespace UnitTest2
         // +5の武器をクラフト
         TEST_METHOD(CraftTest_CraftWeapon06)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             storehouse->AddItem(_T("trunk"));
 
@@ -2093,10 +2093,10 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 5);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 5);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -2147,7 +2147,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -2157,7 +2157,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -2167,7 +2167,7 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -2179,7 +2179,7 @@ namespace UnitTest2
                 auto level = allItem.front().GetItemDef().GetLevel();
                 Assert::AreEqual(5, level);
 
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
                 Assert::AreEqual(skillLevel, 5);
             }
 
@@ -2192,12 +2192,12 @@ namespace UnitTest2
         // 3回クラフトした後の職人のスキルが+5のままであること
         TEST_METHOD(CraftTest_CraftWeapon07)
         {
-            NSStarmanLib::CraftSystem::Destroy();
-            NSStarmanLib::Voyage::Destroy();
+            NSModel::CraftSystem::Destroy();
+            NSModel::Voyage::Destroy();
             Util::InitWin_DX9_DI8();
 
             SaveManager::Get()->LoadOrigin();
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
             storehouse->AddItem(_T("trunk"));
             storehouse->AddItem(_T("trunk"));
@@ -2209,10 +2209,10 @@ namespace UnitTest2
             CraftManager craft;
 
             craft.Init();
-            NSStarmanLib::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 5);
+            NSModel::CraftSystem::GetObj()->SetCraftsmanSkill(L"stick", 5);
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -2279,7 +2279,7 @@ namespace UnitTest2
             craft.Draw();
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(false, reqList.empty());
             }
 
@@ -2289,7 +2289,7 @@ namespace UnitTest2
                 craft.Update();
             }
 
-            auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+            auto datetime = NSModel::PowereggDateTime::GetObj();
             datetime->IncreaseDateTime(0, 1, 1, 0, 0);
 
             // Updateを60回実行しないと更新処理が走らないので60回呼ぶ
@@ -2315,7 +2315,7 @@ namespace UnitTest2
             }
 
             {
-                auto reqList = NSStarmanLib::CraftSystem::GetObj()->GetCraftRequestList();
+                auto reqList = NSModel::CraftSystem::GetObj()->GetCraftRequestList();
                 Assert::AreEqual(true, reqList.empty());
 
                 auto allItem = storehouse->GetAllItem();
@@ -2327,7 +2327,7 @@ namespace UnitTest2
                 auto level = allItem.front().GetItemDef().GetLevel();
                 Assert::AreEqual(5, level);
 
-                auto skillLevel = NSStarmanLib::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
+                auto skillLevel = NSModel::CraftSystem::GetObj()->GetCraftsmanSkill(L"stick");
                 Assert::AreEqual(skillLevel, 5);
             }
 

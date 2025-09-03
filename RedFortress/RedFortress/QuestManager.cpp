@@ -114,7 +114,7 @@ void QuestManager::Update()
     // クエストシステムに現在時刻を設定。
     //-------------------------------------
     {
-        auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+        auto datetime = NSModel::PowereggDateTime::GetObj();
         m_questSystem.SetCurrentDateTime(datetime->GetYear(),
                                          datetime->GetMonth(),
                                          datetime->GetDay(),
@@ -130,8 +130,8 @@ void QuestManager::Update()
 
     // インベントリ
     {
-        auto inventory = NSStarmanLib::Inventory::GetObj();
-        auto itemManager = NSStarmanLib::ItemManager::GetObj();
+        auto inventory = NSModel::Inventory::GetObj();
+        auto itemManager = NSModel::ItemManager::GetObj();
         auto allItem = inventory->GetAllItem();
 
         std::vector<NSQuestSystem::ItemInfo> itemList;
@@ -150,13 +150,13 @@ void QuestManager::Update()
 
     // 倉庫
     {
-        auto storehouseIdList = NSStarmanLib::StorehouseManager::Get()->GetStorehouseIdList();
-        auto itemManager = NSStarmanLib::ItemManager::GetObj();
+        auto storehouseIdList = NSModel::StorehouseManager::Get()->GetStorehouseIdList();
+        auto itemManager = NSModel::ItemManager::GetObj();
 
         for (size_t i = 0; i < storehouseIdList.size(); ++i)
         {
             auto id = storehouseIdList.at(i);
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(id);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(id);
             auto allItem = storehouse->GetAllItem();
 
             std::vector<NSQuestSystem::ItemInfo> itemList;
@@ -196,7 +196,7 @@ void QuestManager::Update()
 
     // イカダの個数
     {
-        auto raftList = NSStarmanLib::Voyage::Get()->GetRaftList();
+        auto raftList = NSModel::Voyage::Get()->GetRaftList();
         m_questSystem.SetRaftNum((int)raftList.size(), false);
     }
 

@@ -71,16 +71,16 @@ public:
     void AddThrownItem(const D3DXVECTOR3& pos,
                        const D3DXVECTOR3& move,
                        const std::wstring& weaponName,
-                       const NSStarmanLib::ItemInfo& itemInfo,
+                       const NSModel::ItemInfo& itemInfo,
                        const float scale = 1.f,
                        const float power = 10.f,
                        const float rotY = 0.f);
 
     // 投げて地面に落ちた武器のうち近くのものを1つ取得（半径2メートル以内）
-    NSStarmanLib::ItemInfo GetThrownItem(const D3DXVECTOR3& pos);
+    NSModel::ItemInfo GetThrownItem(const D3DXVECTOR3& pos);
 
     // 投げて地面に落ちた武器を削除
-    void DeleteThrownItem(const NSStarmanLib::ItemInfo& thrownItem);
+    void DeleteThrownItem(const NSModel::ItemInfo& thrownItem);
 
     //------------------------------------
     // 魔法攻撃
@@ -90,7 +90,7 @@ public:
     // 武器を投げた時と違い、地面に落ちたら消える。
     void SetThrownMagic(const D3DXVECTOR3& pos,
                         const D3DXVECTOR3& move,
-                        const NSStarmanLib::eMagicType& magicType,
+                        const NSModel::eMagicType& magicType,
                         const float power);
 
     // 草の近くにいるか
@@ -144,7 +144,7 @@ public:
 
 private:
 
-    NSStarmanLib::MapObjManager* MapLib();
+    NSModel::MapObjManager* MapLib();
 
     // bInside : 壁の中にいる場合にtrue
     // bEnableWallWalk : 通常、3Dモデルの内側から外側へ移動しようとした場合は、衝突判定を行わない。
@@ -182,7 +182,7 @@ private:
     // 投げるもの
     struct ThrownItem
     {
-        NSStarmanLib::ItemInfo m_itemInfo;
+        NSModel::ItemInfo m_itemInfo;
         D3DXVECTOR3 m_move;
         MeshClone* m_mesh = nullptr;
 
@@ -208,7 +208,7 @@ private:
     // 投げるもの（魔法）
     struct ThrownMagic
     {
-        NSStarmanLib::eMagicType m_eMagicType = NSStarmanLib::eMagicType::None;
+        NSModel::eMagicType m_eMagicType = NSModel::eMagicType::None;
         D3DXVECTOR3 m_move;
 
         MeshNoShade* m_mesh = nullptr;

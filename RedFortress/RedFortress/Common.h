@@ -101,9 +101,9 @@ public:
                                         const D3DXVECTOR3& point);
 
     static std::wstring ModExt(const std::wstring& filepath);
-    static NSStarmanLib::StatusManager* Status();
-    static NSStarmanLib::Inventory* Inventory();
-    static NSStarmanLib::ItemManager* ItemManager();
+    static NSModel::StatusManager* Status();
+    static NSModel::Inventory* Inventory();
+    static NSModel::ItemManager* ItemManager();
 
     static void ReduceBrainStaminaCurrent(const float arg);
     static void ReduceBrainStaminaMaxSub(const float arg);

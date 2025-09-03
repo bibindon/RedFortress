@@ -65,7 +65,7 @@ public:
 private:
     Ptr<AnimMesh> m_AnimMesh2 = nullptr;
     std::unordered_map<std::wstring, Ptr<Mesh>> m_weaponMesh;
-    std::unordered_map<NSStarmanLib::eBagPos, Ptr<Mesh>> m_bagMesh;
+    std::unordered_map<NSModel::eBagPos, Ptr<Mesh>> m_bagMesh;
 
     // 菅笠の3Dモデル
     Ptr<Mesh> m_sugegasaMesh;

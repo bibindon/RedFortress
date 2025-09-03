@@ -169,7 +169,7 @@ void EnemyGhost::Update()
             {
                 SoundEffect::get_ton()->play(_T("res\\sound\\fireHit.wav"), 90);
                 player->SetDamaged();
-                auto status = NSStarmanLib::StatusManager::GetObj();
+                auto status = NSModel::StatusManager::GetObj();
 
                 auto muscle = status->GetMuscleCurrent();
                 status->SetMuscleCurrent(muscle - 1);

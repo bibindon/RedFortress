@@ -420,27 +420,27 @@ MainWindow::~MainWindow()
 
     SaveManager::Destroy();
 
-    NSStarmanLib::Voyage::Destroy();
-    NSStarmanLib::PatchTestManager::Destroy();
-    NSStarmanLib::MapObjManager::Destroy();
-    NSStarmanLib::PowereggDateTime::Destroy();
-    NSStarmanLib::Guide::Destroy();
-    NSStarmanLib::StatusManager::Destroy();
-    NSStarmanLib::SkillManager::Destroy();
-    NSStarmanLib::EnemyInfoManager::Destroy();
-    NSStarmanLib::WeaponManager::Destroy();
-    NSStarmanLib::StorehouseManager::Destroy();
-    NSStarmanLib::Inventory::Destroy();
-    NSStarmanLib::ItemManager::Destroy();
-    NSStarmanLib::MapInfoManager::Destroy();
-    NSStarmanLib::HumanInfoManager::Destroy();
-    NSStarmanLib::Rynen::Destroy();
-    NSStarmanLib::RainModel::Get()->Destroy();
-    NSStarmanLib::CraftInfoManager::Destroy();
-    NSStarmanLib::CraftSystem::Destroy();
-    NSStarmanLib::NpcStatusManager::Destroy();
-    NSStarmanLib::Help::Destroy();
-    NSStarmanLib::ActivityBase::Get()->Finalize();
+    NSModel::Voyage::Destroy();
+    NSModel::PatchTestManager::Destroy();
+    NSModel::MapObjManager::Destroy();
+    NSModel::PowereggDateTime::Destroy();
+    NSModel::Guide::Destroy();
+    NSModel::StatusManager::Destroy();
+    NSModel::SkillManager::Destroy();
+    NSModel::EnemyInfoManager::Destroy();
+    NSModel::WeaponManager::Destroy();
+    NSModel::StorehouseManager::Destroy();
+    NSModel::Inventory::Destroy();
+    NSModel::ItemManager::Destroy();
+    NSModel::MapInfoManager::Destroy();
+    NSModel::HumanInfoManager::Destroy();
+    NSModel::Rynen::Destroy();
+    NSModel::RainModel::Get()->Destroy();
+    NSModel::CraftInfoManager::Destroy();
+    NSModel::CraftSystem::Destroy();
+    NSModel::NpcStatusManager::Destroy();
+    NSModel::Help::Destroy();
+    NSModel::ActivityBase::Get()->Finalize();
 
     QuestManager::Finalize();
 

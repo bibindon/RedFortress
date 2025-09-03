@@ -298,7 +298,7 @@ void MeshClone::Render()
     // ポイントライトの位置を設定
     //--------------------------------------------------------
     HRESULT hResult = E_FAIL;
-    bool isLit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+    bool isLit = NSModel::WeaponManager::GetObj()->IsTorchLit();
 
     // 松明の点灯状態が変わったらシェーダーにポイントライトのON/OFFを設定する
     if (isLit != m_bPointLightEnablePrevious)
@@ -508,7 +508,7 @@ void MeshClone::Begin()
     //--------------------------------------------------------
     // ポイントライトの位置を設定
     //--------------------------------------------------------
-    bool isLit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+    bool isLit = NSModel::WeaponManager::GetObj()->IsTorchLit();
 
     // 松明の点灯状態が変わったらシェーダーにポイントライトのON/OFFを設定する
     if (isLit != m_bPointLightEnablePrevious)

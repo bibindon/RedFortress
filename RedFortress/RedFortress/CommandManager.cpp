@@ -431,7 +431,7 @@ void CommandManager::BuildCommand()
     // ３時間漕ぐ・・・イカダモードの時、川ではなく海にいるとき
     if (raftMode)
     {
-        if (voyage->GetPosType() == NSStarmanLib::Raft::ePosType::Sea)
+        if (voyage->GetPosType() == NSModel::Raft::ePosType::Sea)
         {
             m_commandLib->UpsertCommand(L"oar3Hours", true);
         }
@@ -494,7 +494,7 @@ void CommandManager::BuildCommand()
     // 木の棒を装備していると活性状態になる。
     //----------------------------------------------
     {
-        auto enableMagic = NSStarmanLib::Rynen::GetObj()->GetContracted();
+        auto enableMagic = NSModel::Rynen::GetObj()->GetContracted();
         if (enableMagic)
         {
             auto weapon = Common::Status()->GetEquipWeapon();
@@ -524,10 +524,10 @@ void CommandManager::BuildCommand()
         {
             if (Common::Status()->GetEquipWeapon().GetItemDef().GetId() == L"torch")
             {
-                auto lit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+                auto lit = NSModel::WeaponManager::GetObj()->IsTorchLit();
                 if (!lit)
                 {
-                    auto enableMagic = NSStarmanLib::Rynen::GetObj()->GetContracted();
+                    auto enableMagic = NSModel::Rynen::GetObj()->GetContracted();
                     if (enableMagic)
                     {
                         m_commandLib->UpsertCommand(L"lit", true);
@@ -550,7 +550,7 @@ void CommandManager::BuildCommand()
     {
         // ダイケイマン
         {
-            auto npcMgr = NSStarmanLib::NpcStatusManager::GetObj();
+            auto npcMgr = NSModel::NpcStatusManager::GetObj();
             auto status = npcMgr->GetNpcStatus(_T("daikeiman"));
             auto enable = status.GetFeatureEnable();
             if (enable)
@@ -570,7 +570,7 @@ void CommandManager::BuildCommand()
         // サンカクマン
         bool bShowSankakuHelp = false;
         {
-            auto npcMgr = NSStarmanLib::NpcStatusManager::GetObj();
+            auto npcMgr = NSModel::NpcStatusManager::GetObj();
             auto status = npcMgr->GetNpcStatus(_T("sankakuman"));
             auto enable = status.GetFeatureEnable();
             if (enable)
@@ -581,7 +581,7 @@ void CommandManager::BuildCommand()
 
                 if (_near)
                 {
-                    bool canReceive = NSStarmanLib::Help::Get()->CanReceive(_T("sankakuman"));
+                    bool canReceive = NSModel::Help::Get()->CanReceive(_T("sankakuman"));
                     if (canReceive)
                     {
                         m_commandLib->UpsertCommand(L"help", true);
@@ -595,7 +595,7 @@ void CommandManager::BuildCommand()
         {
             if (!bShowSankakuHelp)
             {
-                auto npcMgr = NSStarmanLib::NpcStatusManager::GetObj();
+                auto npcMgr = NSModel::NpcStatusManager::GetObj();
                 auto status = npcMgr->GetNpcStatus(_T("shikakuman"));
                 auto enable = status.GetFeatureEnable();
                 if (enable)
@@ -606,7 +606,7 @@ void CommandManager::BuildCommand()
 
                     if (_near)
                     {
-                        bool canReceive = NSStarmanLib::Help::Get()->CanReceive(_T("shikakuman"));
+                        bool canReceive = NSModel::Help::Get()->CanReceive(_T("shikakuman"));
                         if (canReceive)
                         {
                             m_commandLib->UpsertCommand(L"help", true);

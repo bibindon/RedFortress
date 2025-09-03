@@ -775,12 +775,12 @@ void SeqBattle::OperateStorehouse()
         id_ = vs.at(2);
         subId_ = std::stoi(vs.at(3));
 
-        NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
+        NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
 
         // 倉庫の複数化対応
         float x_ = SharedObj::GetPlayer()->GetPos().x;
         float z_ = SharedObj::GetPlayer()->GetPos().z;
-        auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetNearStorehouse(x_, z_);
+        auto storehouse = NSModel::StorehouseManager::Get()->GetNearStorehouse(x_, z_);
 
         if (storehouse != nullptr)
         {
@@ -816,7 +816,7 @@ void SeqBattle::OperateStorehouse()
                 // 装備中の袋ではないし、装備中の武器でもない。
                 if (!equipBagExist && !equipWeaponExist)
                 {
-                    NSStarmanLib::ItemInfo itemInfo = inventory->GetItemInfo(id_, subId_);
+                    NSModel::ItemInfo itemInfo = inventory->GetItemInfo(id_, subId_);
                     durability_ = itemInfo.GetDurabilityCurrent();
                     inventory->RemoveItem(id_, subId_);
                     storehouse->AddItemWithSubID(id_, subId_, durability_);
@@ -826,7 +826,7 @@ void SeqBattle::OperateStorehouse()
             }
             else if (vs.at(0) == _T("right"))
             {
-                NSStarmanLib::ItemInfo itemInfo = storehouse->GetItemInfo(id_, subId_);
+                NSModel::ItemInfo itemInfo = storehouse->GetItemInfo(id_, subId_);
                 durability_ = itemInfo.GetDurabilityCurrent();
                 storehouse->RemoveItem(id_, subId_);
                 inventory->AddItemWithSubID(id_, subId_, durability_);
@@ -868,12 +868,12 @@ void SeqBattle::OperateStorehouse()
             id_ = vs.at(2);
             subId_ = std::stoi(vs.at(3));
 
-            NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
+            NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
 
             // 倉庫の複数化対応
             float x_ = SharedObj::GetPlayer()->GetPos().x;
             float z_ = SharedObj::GetPlayer()->GetPos().z;
-            auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetNearStorehouse(x_, z_);
+            auto storehouse = NSModel::StorehouseManager::Get()->GetNearStorehouse(x_, z_);
 
             if (storehouse != nullptr)
             {
@@ -909,7 +909,7 @@ void SeqBattle::OperateStorehouse()
                     // 装備中の袋ではないし、装備中の武器でもない。
                     if (!equipBagExist && !equipWeaponExist)
                     {
-                        NSStarmanLib::ItemInfo itemInfo = inventory->GetItemInfo(id_, subId_);
+                        NSModel::ItemInfo itemInfo = inventory->GetItemInfo(id_, subId_);
                         durability_ = itemInfo.GetDurabilityCurrent();
                         inventory->RemoveItem(id_, subId_);
                         storehouse->AddItemWithSubID(id_, subId_, durability_);
@@ -919,7 +919,7 @@ void SeqBattle::OperateStorehouse()
                 }
                 else if (vs.at(0) == _T("right"))
                 {
-                    NSStarmanLib::ItemInfo itemInfo = storehouse->GetItemInfo(id_, subId_);
+                    NSModel::ItemInfo itemInfo = storehouse->GetItemInfo(id_, subId_);
                     durability_ = itemInfo.GetDurabilityCurrent();
                     storehouse->RemoveItem(id_, subId_);
                     inventory->AddItemWithSubID(id_, subId_, durability_);
@@ -1021,12 +1021,12 @@ void SeqBattle::OperateStorehouse()
         id_ = vs.at(2);
         subId_ = std::stoi(vs.at(3));
 
-        NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
+        NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
 
         // 倉庫の複数化対応
         float x_ = SharedObj::GetPlayer()->GetPos().x;
         float z_ = SharedObj::GetPlayer()->GetPos().z;
-        auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetNearStorehouse(x_, z_);
+        auto storehouse = NSModel::StorehouseManager::Get()->GetNearStorehouse(x_, z_);
 
         if (storehouse != nullptr)
         {
@@ -1062,7 +1062,7 @@ void SeqBattle::OperateStorehouse()
                 // 装備中の袋ではないし、装備中の武器でもない。
                 if (!equipBagExist && !equipWeaponExist)
                 {
-                    NSStarmanLib::ItemInfo itemInfo = inventory->GetItemInfo(id_, subId_);
+                    NSModel::ItemInfo itemInfo = inventory->GetItemInfo(id_, subId_);
                     durability_ = itemInfo.GetDurabilityCurrent();
                     inventory->RemoveItem(id_, subId_);
                     storehouse->AddItemWithSubID(id_, subId_, durability_);
@@ -1072,7 +1072,7 @@ void SeqBattle::OperateStorehouse()
             }
             else if (vs.at(0) == _T("right"))
             {
-                NSStarmanLib::ItemInfo itemInfo = storehouse->GetItemInfo(id_, subId_);
+                NSModel::ItemInfo itemInfo = storehouse->GetItemInfo(id_, subId_);
                 durability_ = itemInfo.GetDurabilityCurrent();
                 storehouse->RemoveItem(id_, subId_);
                 inventory->AddItemWithSubID(id_, subId_, durability_);
@@ -1099,7 +1099,7 @@ void SeqBattle::OperateStorehouse()
 
 void SeqBattle::ShowStorehouse()
 {
-    using namespace NSStarmanLib;
+    using namespace NSModel;
     // 倉庫は複数存在できる。
     // 距離が近い倉庫を対象とする
     auto ppos = SharedObj::GetPlayer()->GetPos();
@@ -1132,15 +1132,15 @@ void SeqBattle::ShowStorehouse()
 
     m_storehouse->Init(pFont, pSE, sprCursor, sprBackground, SharedObj::IsEnglish());
     {
-        NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
-        NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
+        NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
+        NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
 
         auto idList = itemManager->GetItemIdList();
 
         std::vector<NSStorehouseLib::StoreItem> itemInfoList;
         for (std::size_t i = 0; i < idList.size(); ++i)
         {
-            NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
+            NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
             std::vector<int> subIdList = inventory->GetSubIdList(idList.at(i));
             {
                 for (std::size_t j = 0; j < subIdList.size(); ++j)
@@ -1164,14 +1164,14 @@ void SeqBattle::ShowStorehouse()
         m_storehouse->SetInventoryList(itemInfoList);
     }
     {
-        NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
+        NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
 
         auto idList = itemManager->GetItemIdList();
 
         std::vector<NSStorehouseLib::StoreItem> itemInfoList;
         for (std::size_t i = 0; i < idList.size(); ++i)
         {
-            NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
+            NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
             std::vector<int> subIdList = storehouse->GetSubIdList(idList.at(i));
             {
                 for (std::size_t j = 0; j < subIdList.size(); ++j)
@@ -1287,7 +1287,7 @@ void SeqBattle::OperateCommand()
     else if (result == L"cutTree")
     {
         // 石斧を装備しているか、縦長の石を所有していないと切れない
-        auto status = NSStarmanLib::StatusManager::GetObj();
+        auto status = NSModel::StatusManager::GetObj();
         auto itemInfo = status->GetEquipWeapon();
 
         std::wstring id;
@@ -1306,7 +1306,7 @@ void SeqBattle::OperateCommand()
             bHaveAxe = true;
         }
 
-        auto itemDef = NSStarmanLib::ItemManager::GetObj()->GetItemDef(L"longstone");
+        auto itemDef = NSModel::ItemManager::GetObj()->GetItemDef(L"longstone");
         auto subIdList = Common::Inventory()->GetSubIdList(itemDef.GetId());
 
         bool bHaveLongStone = false;
@@ -1341,7 +1341,7 @@ void SeqBattle::OperateCommand()
     }
     else if (result == L"pickPlant")
     {
-        auto status = NSStarmanLib::StatusManager::GetObj();
+        auto status = NSModel::StatusManager::GetObj();
         auto stamina = status->GetBodyStaminaCurrent();
         if (stamina <= 16.f)
         {
@@ -1426,7 +1426,7 @@ void SeqBattle::OperateCommand()
             }
             else
             {
-                NSStarmanLib::WeaponManager::GetObj()->SetTorchLit(true);
+                NSModel::WeaponManager::GetObj()->SetTorchLit(true);
                 leave = true;
                 m_eState = eBattleState::NORMAL;
             }
@@ -1434,7 +1434,7 @@ void SeqBattle::OperateCommand()
     }
     else if (result == L"extinguish")
     {
-        NSStarmanLib::WeaponManager::GetObj()->SetTorchLit(false);
+        NSModel::WeaponManager::GetObj()->SetTorchLit(false);
         leave = true;
         m_eState = eBattleState::NORMAL;
     }
@@ -1459,7 +1459,7 @@ void SeqBattle::OperateCommand()
     {
         // サンカクマンかシカクマンのどちらかと近くにいなくてはならない。
         // どちらも近くにいる場合、サンカクマンを優先する
-        auto npcManager = NSStarmanLib::NpcStatusManager::GetObj();
+        auto npcManager = NSModel::NpcStatusManager::GetObj();
         auto status = npcManager->GetNpcStatus(_T("sankakuman"));
         auto npcPos = D3DXVECTOR3(status.GetX(), status.GetY(), status.GetZ());
         auto ppos = m_player->GetPos();
@@ -1476,7 +1476,7 @@ void SeqBattle::OperateCommand()
         if (_near)
         {
             auto npcName = status.GetName();
-            auto help = NSStarmanLib::Help::Get();
+            auto help = NSModel::Help::Get();
             auto enable = help->CanReceive(npcName);
 
             if (enable)
@@ -1643,7 +1643,7 @@ void SeqBattle::InitializeAfterLoad()
     m_menuManager = NEW MenuManager();
     m_menuManager->InitMenu();
 
-    auto status = NSStarmanLib::StatusManager::GetObj();
+    auto status = NSModel::StatusManager::GetObj();
     D3DXVECTOR3 pos;
     status->GetXYZ(&pos.x, &pos.y, &pos.z);
     m_player->SetPos(pos);
@@ -1815,7 +1815,7 @@ void SeqBattle::OperateSleep()
 {
     if (m_fadeBlackCount == 1)
     {
-        auto status = NSStarmanLib::StatusManager::GetObj();
+        auto status = NSModel::StatusManager::GetObj();
         status->Sleep();
         if (status->GetLevelUpFire())
         {
@@ -2009,7 +2009,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                     // 花輪が飾られていたら会話を少し変える。
                     if (work == L"res\\\\script\\\\origin\\\\talkFinishQuest59.csv")
                     {
-                        if (NSStarmanLib::ActivityBase::Get()->GetHanawa())
+                        if (NSModel::ActivityBase::Get()->GetHanawa())
                         {
                             work = L"res\\\\script\\\\origin\\\\talkFinishQuest59-2.csv";
                         }
@@ -2017,7 +2017,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
 
                     if (work == L"res\\\\script\\\\origin\\\\talkFinishQuest61.csv")
                     {
-                        if (NSStarmanLib::ActivityBase::Get()->GetHanawa())
+                        if (NSModel::ActivityBase::Get()->GetHanawa())
                         {
                             work = L"res\\\\script\\\\origin\\\\talkFinishQuest61-2.csv";
                         }
@@ -2025,7 +2025,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
 
                     if (work == L"res\\\\script\\\\origin\\\\talkFinishQuest59.en.csv")
                     {
-                        if (NSStarmanLib::ActivityBase::Get()->GetHanawa())
+                        if (NSModel::ActivityBase::Get()->GetHanawa())
                         {
                             work = L"res\\\\script\\\\origin\\\\talkFinishQuest59-2.en.csv";
                         }
@@ -2033,7 +2033,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
 
                     if (work == L"res\\\\script\\\\origin\\\\talkFinishQuest61.en.csv")
                     {
-                        if (NSStarmanLib::ActivityBase::Get()->GetHanawa())
+                        if (NSModel::ActivityBase::Get()->GetHanawa())
                         {
                             work = L"res\\\\script\\\\origin\\\\talkFinishQuest61-2.en.csv";
                         }
@@ -2063,7 +2063,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                     std::wstring::size_type it = work.find(_T("<hide>"));
                     work = work.erase(it, 6);
 
-                    auto mapObjManager = NSStarmanLib::MapObjManager::GetObj();
+                    auto mapObjManager = NSModel::MapObjManager::GetObj();
                     auto mapObjs = mapObjManager->GetMapObjListR(m_player->GetPos().x, m_player->GetPos().z, 5.f);
 
                     for (int i = 0; i < (int)mapObjs.size(); ++i)
@@ -2214,7 +2214,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                         work2 = Common::RemoveSubstring(work, _T("<showMenu>"));
                         if (work2 == _T("y"))
                         {
-                            NSStarmanLib::HumanInfoManager::GetObj()->SetHumanVisible(npcNameKey);
+                            NSModel::HumanInfoManager::GetObj()->SetHumanVisible(npcNameKey);
                         }
                     }
                 }
@@ -2230,10 +2230,10 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                 }
                 else if (vs2.at(j).find(_T("<rynenContract>")) != std::wstring::npos)
                 {
-                    auto rynen = NSStarmanLib::Rynen::GetObj();
+                    auto rynen = NSModel::Rynen::GetObj();
                     rynen->SetContracted(true);
 
-                    auto datetime = NSStarmanLib::PowereggDateTime::GetObj();
+                    auto datetime = NSModel::PowereggDateTime::GetObj();
                     rynen->SetContractDate(datetime->GetYear(),
                                            datetime->GetMonth(),
                                            datetime->GetDay());
@@ -2290,7 +2290,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                 {
                     std::wstring work2 = Common::RemoveSubstring(vs2.at(j), _T("<showMap>"));
 
-                    auto mapInfoManager = NSStarmanLib::MapInfoManager::GetObj();
+                    auto mapInfoManager = NSModel::MapInfoManager::GetObj();
                     mapInfoManager->SetDiscovered(work2);
                 }
                 else if (vs2.at(j).find(_T("<activityBase>")) != std::wstring::npos)
@@ -2298,18 +2298,18 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                     std::wstring work2 = Common::RemoveSubstring(vs2.at(j), _T("<activityBase>"));
                     if (work2 == L"DirectNex")
                     {
-                        auto activityBase = NSStarmanLib::ActivityBase::Get();
-                        activityBase->SetBaseType(NSStarmanLib::eBaseType::DirectNex);
+                        auto activityBase = NSModel::ActivityBase::Get();
+                        activityBase->SetBaseType(NSModel::eBaseType::DirectNex);
                     }
                 }
                 else if (vs2.at(j).find(_T("<showGuide>")) != std::wstring::npos)
                 {
                     std::wstring work2 = Common::RemoveSubstring(vs2.at(j), _T("<showGuide>"));
-                    NSStarmanLib::Guide::GetObj()->SetVisible(std::stoi(work2));
+                    NSModel::Guide::GetObj()->SetVisible(std::stoi(work2));
                 }
                 else if (vs2.at(j).find(_T("<morning>")) != std::wstring::npos)
                 {
-                    auto dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+                    auto dateTime = NSModel::PowereggDateTime::GetObj();
                     auto hour = dateTime->GetHour();
                     // 午前6時にする
                     auto work = 30 - hour;
@@ -2317,7 +2317,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                 }
                 else if (vs2.at(j).find(_T("<night>")) != std::wstring::npos)
                 {
-                    auto dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+                    auto dateTime = NSModel::PowereggDateTime::GetObj();
                     auto hour = dateTime->GetHour();
                     // 午後6時にする
                     auto work = 18 - hour;
@@ -2332,7 +2332,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                     std::wstring work2 = Common::RemoveSubstring(vs2.at(j), _T("<dateTime>"));
                     auto vs = Common::split(work2, L':');
 
-                    auto dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+                    auto dateTime = NSModel::PowereggDateTime::GetObj();
                     dateTime->IncreaseDateTime(std::stoi(vs.at(1)),
                                                std::stoi(vs.at(2)),
                                                std::stoi(vs.at(3)),
@@ -2346,13 +2346,13 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                     if (!subIdList.empty())
                     {
                         Common::Inventory()->RemoveItem(L"kakan", subIdList.at(0));
-                        NSStarmanLib::ActivityBase::Get()->SetHanawa(true);
+                        NSModel::ActivityBase::Get()->SetHanawa(true);
                         PopUp2::Get()->SetText(IDS_STRING_KAKAN);
                     }
                     // インベントリになければ倉庫を見る
                     else
                     {
-                        auto storeHouseManager = NSStarmanLib::StorehouseManager::Get();
+                        auto storeHouseManager = NSModel::StorehouseManager::Get();
 
                         // 海岸洞窟の倉庫を見る
                         auto storehouse = storeHouseManager->GetStorehouse(2);
@@ -2360,7 +2360,7 @@ void SeqBattle::OperateQuest(eSequence* sequence)
                         if (!subIdList2.empty())
                         {
                             storehouse->RemoveItem(L"kakan", subIdList2.at(0));
-                            NSStarmanLib::ActivityBase::Get()->SetHanawa(true);
+                            NSModel::ActivityBase::Get()->SetHanawa(true);
                             PopUp2::Get()->SetText(IDS_STRING_KAKAN);
                         }
                     }
@@ -2697,7 +2697,7 @@ void SeqBattle::OperatePickPlant()
         PopUp2::Get()->SetText(Common::LoadStringWithArg(IDS_STRING128, pick));
 
         // 30分経過させる処理
-        auto dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+        auto dateTime = NSModel::PowereggDateTime::GetObj();
         dateTime->IncreaseDateTime(0, 0, 0, 30, 0);
 
         // 体力を消費
@@ -2727,13 +2727,13 @@ void SeqBattle::OperateCutTree()
         // 装備武器で消費する時間や体力が変わる
         // 
 
-        auto status = NSStarmanLib::StatusManager::GetObj();
+        auto status = NSModel::StatusManager::GetObj();
         auto itemInfo = status->GetEquipWeapon();
 
         // 細長の石は装備できないが、
         // 細長の石で伐採することもできることに注意
         // 武器を装備していないなら細長の石を使ったということにする
-        auto dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+        auto dateTime = NSModel::PowereggDateTime::GetObj();
 
         std::wstring itemId;
         int level = -1;
@@ -2987,10 +2987,10 @@ void SeqBattle::Confirm(eSequence* sequence)
     {
         m_bObtainable = false;
 
-        NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
+        NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
 
         D3DXVECTOR3 playerPos = SharedObj::GetPlayer()->GetPos();
-        NSStarmanLib::ItemPos itemPos = itemManager->GetItemPosByPos(playerPos.x,
+        NSModel::ItemPos itemPos = itemManager->GetItemPosByPos(playerPos.x,
                                                                      playerPos.y,
                                                                      playerPos.z);
         if (itemPos.GetItemPosId() != -1)
@@ -3000,7 +3000,7 @@ void SeqBattle::Confirm(eSequence* sequence)
             
             // どれだけ荷物が重くても落ちているものを拾うことはできる。
             // 代わりに、まともに歩いたりできなくなる。
-            auto inventory = NSStarmanLib::Inventory::GetObj();
+            auto inventory = NSModel::Inventory::GetObj();
             int newSubID = inventory->AddItem(itemPos.GetItemDefId());
             m_menuManager->AddItem(itemPos.GetItemDefId(), newSubID);
 
@@ -3057,7 +3057,7 @@ void SeqBattle::Confirm(eSequence* sequence)
         D3DXVECTOR3 playerPos = SharedObj::GetPlayer()->GetPos();
         auto thrownItem = SharedObj::GetMap()->GetThrownItem(playerPos);
 
-        NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
+        NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
 
         if (thrownItem.GetId().size() >= 1)
         {
@@ -3065,7 +3065,7 @@ void SeqBattle::Confirm(eSequence* sequence)
             
             // どれだけ荷物が重くても落ちているものを拾うことはできる。
             // 代わりに、まともに歩いたりできなくなる。
-            auto inventory = NSStarmanLib::Inventory::GetObj();
+            auto inventory = NSModel::Inventory::GetObj();
             int newSubID = inventory->AddItem(thrownItem.GetId());
             m_menuManager->AddItem(thrownItem.GetId(), newSubID);
 
@@ -3192,7 +3192,7 @@ void SeqBattle::RenderGameover()
     D3DXVECTOR3 pos(0.f, 0.f, 0.f);
     int transparency = 0;
 
-    auto rynen = NSStarmanLib::Rynen::GetObj();
+    auto rynen = NSModel::Rynen::GetObj();
     // 復活可能か
     if (rynen->GetReviveEnable() == false)
     {
@@ -3292,16 +3292,16 @@ void SeqBattle::UpdateDebug()
 
                 m_storehouse->Init(pFont, pSE, sprCursor, sprBackground, SharedObj::IsEnglish());
                 {
-                    using namespace NSStarmanLib;
-                    NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
-                    NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
+                    using namespace NSModel;
+                    NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
+                    NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
 
                     auto idList = itemManager->GetItemIdList();
 
                     std::vector<NSStorehouseLib::StoreItem> itemInfoList;
                     for (std::size_t i = 0; i < idList.size(); ++i)
                     {
-                        NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
+                        NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
                         std::vector<int> subIdList = inventory->GetSubIdList(idList.at(i));
                         {
                             for (std::size_t j = 0; j < subIdList.size(); ++j)
@@ -3330,18 +3330,18 @@ void SeqBattle::UpdateDebug()
                     m_storehouse->SetInventoryList(itemInfoList);
                 }
                 {
-                    using namespace NSStarmanLib;
+                    using namespace NSModel;
 
-                    auto storehouse = NSStarmanLib::StorehouseManager::Get()->GetStorehouse(1);
+                    auto storehouse = NSModel::StorehouseManager::Get()->GetStorehouse(1);
 
-                    NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
+                    NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
 
                     auto idList = itemManager->GetItemIdList();
 
                     std::vector<NSStorehouseLib::StoreItem> itemInfoList;
                     for (std::size_t i = 0; i < idList.size(); ++i)
                     {
-                        NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
+                        NSModel::ItemDef itemDef = itemManager->GetItemDef(idList.at(i));
                         std::vector<int> subIdList = storehouse->GetSubIdList(idList.at(i));
                         {
                             for (std::size_t j = 0; j < subIdList.size(); ++j)
@@ -3413,7 +3413,7 @@ void SeqBattle::UpdatePerSecond()
     // 時刻を進める
     //-------------------------------------
     // 2時間ゲームをしたらパワーエッグ星で24時間経過する
-    NSStarmanLib::PowereggDateTime* dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+    NSModel::PowereggDateTime* dateTime = NSModel::PowereggDateTime::GetObj();
 
     if (Common::DebugMode() == false)
     {
@@ -3428,7 +3428,7 @@ void SeqBattle::UpdatePerSecond()
     //-------------------------------------
     // ステータスを更新
     //-------------------------------------
-    NSStarmanLib::StatusManager* statusManager = NSStarmanLib::StatusManager::GetObj();
+    NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
     statusManager->Update();
 
     //-------------------------------------
@@ -3452,35 +3452,35 @@ void SeqBattle::UpdatePerSecond()
         {
             auto reason = statusManager->GetDeadReason();
 
-            if (reason == NSStarmanLib::eDeadReason::NONE)
+            if (reason == NSModel::eDeadReason::NONE)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON1);
             }
-            else if (reason == NSStarmanLib::eDeadReason::MUSCLE_ZERO)
+            else if (reason == NSModel::eDeadReason::MUSCLE_ZERO)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON2);
             }
-            else if (reason == NSStarmanLib::eDeadReason::WATER_90)
+            else if (reason == NSModel::eDeadReason::WATER_90)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON3);
             }
-            else if (reason == NSStarmanLib::eDeadReason::KAROSHI)
+            else if (reason == NSModel::eDeadReason::KAROSHI)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON4);
             }
-            else if (reason == NSStarmanLib::eDeadReason::RYNEN_1_YEAR)
+            else if (reason == NSModel::eDeadReason::RYNEN_1_YEAR)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON5);
             }
-            else if (reason == NSStarmanLib::eDeadReason::STARVATION)
+            else if (reason == NSModel::eDeadReason::STARVATION)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON6);
             }
-            else if (reason == NSStarmanLib::eDeadReason::DROWNING)
+            else if (reason == NSModel::eDeadReason::DROWNING)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON7);
             }
-            else if (reason == NSStarmanLib::eDeadReason::ATTACK_ON_SLEEP)
+            else if (reason == NSModel::eDeadReason::ATTACK_ON_SLEEP)
             {
                 PopUp2::Get()->SetText(IDS_STRING_DEATH_REASON8);
             }
@@ -3488,7 +3488,7 @@ void SeqBattle::UpdatePerSecond()
             m_eState = eBattleState::DEAD;
             m_nDeadCounter = 0;
 
-            auto rynen = NSStarmanLib::Rynen::GetObj();
+            auto rynen = NSModel::Rynen::GetObj();
             if (rynen->GetReviveEnable())
             {
                 PopUp2::Get()->SetText(IDS_STRING134);
@@ -3520,9 +3520,9 @@ void SeqBattle::UpdatePerSecond()
     // アイテム発見
     //-------------------------------------
     D3DXVECTOR3 playerPos = SharedObj::GetPlayer()->GetPos();
-    NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
+    NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
 
-    NSStarmanLib::ItemPos itemPos = itemManager->GetItemPosByPos(playerPos.x,
+    NSModel::ItemPos itemPos = itemManager->GetItemPosByPos(playerPos.x,
                                                                  playerPos.y,
                                                                  playerPos.z);
 
@@ -3556,7 +3556,7 @@ void SeqBattle::UpdatePerSecond()
         static float previousVol = 0.f;
         static float previousVolMax = 0.f;
 
-        auto inventory = NSStarmanLib::Inventory::GetObj();
+        auto inventory = NSModel::Inventory::GetObj();
 
         auto vol = inventory->GetVolume();
         auto volMax = inventory->GetVolumeMax();
@@ -3576,7 +3576,7 @@ void SeqBattle::UpdatePerSecond()
     // 松明を使用していたら松明の耐久値を低下
     //-------------------------------------
     {
-        auto lit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+        auto lit = NSModel::WeaponManager::GetObj()->IsTorchLit();
         if (lit)
         {
             auto weapon = Common::Status()->GetEquipWeapon();
@@ -3593,7 +3593,7 @@ void SeqBattle::UpdatePerSecond()
             if (dura < 0)
             {
                 dura = 0;
-                NSStarmanLib::WeaponManager::GetObj()->SetTorchLit(false);
+                NSModel::WeaponManager::GetObj()->SetTorchLit(false);
             }
 
             Common::Inventory()->SetItemDurability(weapon.GetId(), weapon.GetSubId(), dura);
@@ -3602,7 +3602,7 @@ void SeqBattle::UpdatePerSecond()
         }
     }
     {
-        auto help = NSStarmanLib::Help::Get();
+        auto help = NSModel::Help::Get();
         help->Update();
     }
 }
@@ -3724,7 +3724,7 @@ void SeqBattle::OperateNormal(eSequence* sequence)
             {
                 auto ppos = m_player->GetPos();
                 auto storehouse = 
-                    NSStarmanLib::StorehouseManager::Get()-> GetNearStorehouse(ppos.x, ppos.z);
+                    NSModel::StorehouseManager::Get()-> GetNearStorehouse(ppos.x, ppos.z);
                 if (storehouse != nullptr)
                 {
                     m_bShowStorehouse = true;
@@ -3812,7 +3812,7 @@ void SeqBattle::OperateGameover(eSequence* sequence)
 
     if (m_nDeadCounter >= 120)
     {
-        auto rynen = NSStarmanLib::Rynen::GetObj();
+        auto rynen = NSModel::Rynen::GetObj();
 
         // 復活ナシ
         if (rynen->GetReviveEnable() == false)
@@ -3854,7 +3854,7 @@ void SeqBattle::OperateGameover(eSequence* sequence)
 
             m_eState = eBattleState::NORMAL;
 
-            auto status = NSStarmanLib::StatusManager::GetObj();
+            auto status = NSModel::StatusManager::GetObj();
             float work1 = 0.f;
             work1 = status->GetBodyStaminaMax();
             status->SetBodyStaminaCurrent(work1);
@@ -3940,10 +3940,10 @@ void SeqBattle::OperateRest()
     if (m_eFadeSeq == eFadeSeq::Finish)
     {
         // 3時間経過させる処理
-        auto dateTime = NSStarmanLib::PowereggDateTime::GetObj();
+        auto dateTime = NSModel::PowereggDateTime::GetObj();
         dateTime->IncreaseDateTime(0, 0, 3, 0, 0);
 
-        auto status = NSStarmanLib::StatusManager::GetObj();
+        auto status = NSModel::StatusManager::GetObj();
 
         // 体力を消費
         // 装備武器で消費する時間や体力が変わる

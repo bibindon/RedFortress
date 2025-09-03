@@ -164,7 +164,7 @@ void EnemyBase::Update()
             {
                 player->SetDamaged();
 
-                auto status = NSStarmanLib::StatusManager::GetObj();
+                auto status = NSModel::StatusManager::GetObj();
                 auto muscle = status->GetMuscleCurrent();
                 status->SetMuscleCurrent(muscle - 1);
 
@@ -296,7 +296,7 @@ eEnemyType EnemyBase::GetEnemyType()
 
 void EnemyBase::SetShowMenu(const std::wstring& id)
 {
-    auto enemyInfoManager = NSStarmanLib::EnemyInfoManager::GetObj();
+    auto enemyInfoManager = NSModel::EnemyInfoManager::GetObj();
     auto enemyIdList = enemyInfoManager->GetEnemyIdList();
 
     std::wstring enemyName_;

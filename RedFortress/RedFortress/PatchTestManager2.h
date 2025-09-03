@@ -17,7 +17,7 @@ private:
 
     void QueueTest(const std::wstring& result);
 
-    NSStarmanLib::PatchTestManager* GetPatchLib();
+    NSModel::PatchTestManager* GetPatchLib();
 
     NSPatchTestLib::PatchTestLib m_guiLib;
 

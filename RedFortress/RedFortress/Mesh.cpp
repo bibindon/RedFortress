@@ -254,7 +254,7 @@ void Mesh::Render()
     // ポイントライトの位置を設定
     //--------------------------------------------------------
 
-    bool isLit = NSStarmanLib::WeaponManager::GetObj()->IsTorchLit();
+    bool isLit = NSModel::WeaponManager::GetObj()->IsTorchLit();
 
     // 松明の点灯状態が変わったらシェーダーにポイントライトのON/OFFを設定する
     if (isLit != m_bPointLightEnablePrevious)

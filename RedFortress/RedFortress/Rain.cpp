@@ -68,7 +68,7 @@ void Rain::Update()
 
     if (counter % 60 == 1)
     {
-        NSStarmanLib::RainModel::Get()->Update();
+        NSModel::RainModel::Get()->Update();
     }
 
     for (int i = 0; i < RAINDROP; ++i)
@@ -92,7 +92,7 @@ void Rain::Draw()
         }
     }
     
-    bool isRain = NSStarmanLib::RainModel::Get()->IsRain();
+    bool isRain = NSModel::RainModel::Get()->IsRain();
 
     if (isRain)
     {
@@ -117,7 +117,7 @@ void Rain::Draw()
 
 bool Rain::IsRain()
 {
-    return NSStarmanLib::RainModel::Get()->IsRain();
+    return NSModel::RainModel::Get()->IsRain();
 }
 
 // タイトル画面を表示している、など、何らかの理由で雨の描画をしないでおきたいときに呼ぶ。

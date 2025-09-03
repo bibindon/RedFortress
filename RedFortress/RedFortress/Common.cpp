@@ -258,19 +258,19 @@ std::wstring Common::ModExt(const std::wstring& filepath)
     return work;
 }
 
-NSStarmanLib::StatusManager* Common::Status()
+NSModel::StatusManager* Common::Status()
 {
-    return NSStarmanLib::StatusManager::GetObj();
+    return NSModel::StatusManager::GetObj();
 }
 
-NSStarmanLib::Inventory* Common::Inventory()
+NSModel::Inventory* Common::Inventory()
 {
-    return NSStarmanLib::Inventory::GetObj();
+    return NSModel::Inventory::GetObj();
 }
 
-NSStarmanLib::ItemManager* Common::ItemManager()
+NSModel::ItemManager* Common::ItemManager()
 {
-    return NSStarmanLib::ItemManager::GetObj();
+    return NSModel::ItemManager::GetObj();
 }
 
 void Common::ReduceBrainStaminaCurrent(const float arg)

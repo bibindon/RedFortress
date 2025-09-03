@@ -155,7 +155,7 @@ Player::Player()
 
     // 読み込み処理の前に走ってしまうので以下のような書き方でXファイルの名前を参照できない。
     // 考え物である
-//    auto weaponManager = NSStarmanLib::WeaponManager::GetObj();
+//    auto weaponManager = NSModel::WeaponManager::GetObj();
 //    auto weaponNameList = weaponManager->GetWeaponNameList();
 //
 //    for (auto it = weaponNameList.begin(); it != weaponNameList.end(); ++it)
@@ -266,7 +266,7 @@ Player::Player()
         Mesh * mesh = NEW Mesh(L"res\\shader\\MeshShaderCullNone.fx",
                                _T("res\\model\\bag.x"), pos, rot, 1.0f);
         mesh->Init();
-        m_bagMesh[NSStarmanLib::eBagPos::Back1] = Ptr<Mesh>(mesh);
+        m_bagMesh[NSModel::eBagPos::Back1] = Ptr<Mesh>(mesh);
     }
     {
         D3DXVECTOR3 pos = D3DXVECTOR3(0.f, 0.f, 0.f);
@@ -274,7 +274,7 @@ Player::Player()
         Mesh * mesh = NEW Mesh(L"res\\shader\\MeshShaderCullNone.fx",
                                _T("res\\model\\bag.x"), pos, rot, 1.0f);
         mesh->Init();
-        m_bagMesh[NSStarmanLib::eBagPos::Back2] = Ptr<Mesh>(mesh);
+        m_bagMesh[NSModel::eBagPos::Back2] = Ptr<Mesh>(mesh);
     }
     {
         D3DXVECTOR3 pos = D3DXVECTOR3(0.f, 0.f, 0.f);
@@ -282,7 +282,7 @@ Player::Player()
         Mesh * mesh = NEW Mesh(L"res\\shader\\MeshShaderCullNone.fx",
                                _T("res\\model\\bag.x"), pos, rot, 1.0f);
         mesh->Init();
-        m_bagMesh[NSStarmanLib::eBagPos::Front] = Ptr<Mesh>(mesh);
+        m_bagMesh[NSModel::eBagPos::Front] = Ptr<Mesh>(mesh);
     }
     {
         D3DXVECTOR3 pos = D3DXVECTOR3(0.f, 0.f, 0.f);
@@ -290,7 +290,7 @@ Player::Player()
         Mesh * mesh = NEW Mesh(L"res\\shader\\MeshShaderCullNone.fx",
                                _T("res\\model\\bag.x"), pos, rot, 1.0f);
         mesh->Init();
-        m_bagMesh[NSStarmanLib::eBagPos::Left] = Ptr<Mesh>(mesh);
+        m_bagMesh[NSModel::eBagPos::Left] = Ptr<Mesh>(mesh);
     }
     {
         D3DXVECTOR3 pos = D3DXVECTOR3(0.f, 0.f, 0.f);
@@ -298,7 +298,7 @@ Player::Player()
         Mesh * mesh = NEW Mesh(L"res\\shader\\MeshShaderCullNone.fx",
                                _T("res\\model\\bag.x"), pos, rot, 1.0f);
         mesh->Init();
-        m_bagMesh[NSStarmanLib::eBagPos::Right] = Ptr<Mesh>(mesh);
+        m_bagMesh[NSModel::eBagPos::Right] = Ptr<Mesh>(mesh);
     }
 
     // 菅笠
@@ -313,7 +313,7 @@ Player::Player()
     float x = 0.f;
     float y = 0.f;
     float z = 0.f;
-    NSStarmanLib::StatusManager::GetObj()->GetXYZ(&x, &y, &z);
+    NSModel::StatusManager::GetObj()->GetXYZ(&x, &y, &z);
     m_loadingPos.x = x;
     m_loadingPos.y = y + 1.f;
     m_loadingPos.z = z;
@@ -355,8 +355,8 @@ void Player::Update(Map* map)
         if (m_bUnderwater)
         {
             m_AnimMesh2->SetAnim(_T("IdleWater"));
-            auto status = NSStarmanLib::StatusManager::GetObj();
-            status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::IDLE_WATER);
+            auto status = NSModel::StatusManager::GetObj();
+            status->SetPlayerAction(NSModel::StatusManager::PlayerState::IDLE_WATER);
 
             // 水中にいたら寝ることはない
             auto sleep = Common::Status()->GetSleep();
@@ -372,7 +372,7 @@ void Player::Update(Map* map)
                 if (!Common::Status()->GetDead())
                 {
                     Common::Status()->SetDead(true);
-                    Common::Status()->SetDeadReason(NSStarmanLib::eDeadReason::DROWNING);
+                    Common::Status()->SetDeadReason(NSModel::eDeadReason::DROWNING);
                 }
             }
         }
@@ -601,8 +601,8 @@ void Player::Update(Map* map)
         // 木を消す
         if (SharedObj::KeyBoard()->IsDownFirstFrame(DIK_Z))
         {
-            auto mapObjManager = NSStarmanLib::MapObjManager::GetObj();
-            std::vector<NSStarmanLib::stMapObj> mapObjs =
+            auto mapObjManager = NSModel::MapObjManager::GetObj();
+            std::vector<NSModel::stMapObj> mapObjs =
                 mapObjManager->GetMapObjListR(m_loadingPos.x, m_loadingPos.z, 20);
 
             for (size_t i = 0; i < mapObjs.size(); ++i)
@@ -693,26 +693,26 @@ void Player::Update(Map* map)
     // 魔法切り替え
     if (Mouse::IsWheelUp())
     {
-        if (NSStarmanLib::Rynen::GetObj()->GetContracted())
+        if (NSModel::Rynen::GetObj()->GetContracted())
         {
-            auto status = NSStarmanLib::StatusManager::GetObj();
+            auto status = NSModel::StatusManager::GetObj();
             auto magicType = status->GetMagicType();
 
-            if (magicType == NSStarmanLib::eMagicType::None)
+            if (magicType == NSModel::eMagicType::None)
             {
-                magicType = NSStarmanLib::eMagicType::Dark;
+                magicType = NSModel::eMagicType::Dark;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Fire)
+            else if (magicType == NSModel::eMagicType::Fire)
             {
-                magicType = NSStarmanLib::eMagicType::None;
+                magicType = NSModel::eMagicType::None;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Ice)
+            else if (magicType == NSModel::eMagicType::Ice)
             {
-                magicType = NSStarmanLib::eMagicType::Fire;
+                magicType = NSModel::eMagicType::Fire;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Dark)
+            else if (magicType == NSModel::eMagicType::Dark)
             {
-                magicType = NSStarmanLib::eMagicType::Ice;
+                magicType = NSModel::eMagicType::Ice;
             }
 
             status->SetMagicType(magicType);
@@ -722,26 +722,26 @@ void Player::Update(Map* map)
     }
     else if (Mouse::IsWheelDown())
     {
-        if (NSStarmanLib::Rynen::GetObj()->GetContracted())
+        if (NSModel::Rynen::GetObj()->GetContracted())
         {
-            auto status = NSStarmanLib::StatusManager::GetObj();
+            auto status = NSModel::StatusManager::GetObj();
             auto magicType = status->GetMagicType();
 
-            if (magicType == NSStarmanLib::eMagicType::None)
+            if (magicType == NSModel::eMagicType::None)
             {
-                magicType = NSStarmanLib::eMagicType::Fire;
+                magicType = NSModel::eMagicType::Fire;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Fire)
+            else if (magicType == NSModel::eMagicType::Fire)
             {
-                magicType = NSStarmanLib::eMagicType::Ice;
+                magicType = NSModel::eMagicType::Ice;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Ice)
+            else if (magicType == NSModel::eMagicType::Ice)
             {
-                magicType = NSStarmanLib::eMagicType::Dark;
+                magicType = NSModel::eMagicType::Dark;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Dark)
+            else if (magicType == NSModel::eMagicType::Dark)
             {
-                magicType = NSStarmanLib::eMagicType::None;
+                magicType = NSModel::eMagicType::None;
             }
 
             status->SetMagicType(magicType);
@@ -834,26 +834,26 @@ void Player::Update(Map* map)
     if (GamePad::IsDownFirst(eGamePadButtonType::UP) &&
         !GamePad::IsLeftStickUsed())
     {
-        if (NSStarmanLib::Rynen::GetObj()->GetContracted())
+        if (NSModel::Rynen::GetObj()->GetContracted())
         {
-            auto status = NSStarmanLib::StatusManager::GetObj();
+            auto status = NSModel::StatusManager::GetObj();
             auto magicType = status->GetMagicType();
 
-            if (magicType == NSStarmanLib::eMagicType::None)
+            if (magicType == NSModel::eMagicType::None)
             {
-                magicType = NSStarmanLib::eMagicType::Dark;
+                magicType = NSModel::eMagicType::Dark;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Fire)
+            else if (magicType == NSModel::eMagicType::Fire)
             {
-                magicType = NSStarmanLib::eMagicType::None;
+                magicType = NSModel::eMagicType::None;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Ice)
+            else if (magicType == NSModel::eMagicType::Ice)
             {
-                magicType = NSStarmanLib::eMagicType::Fire;
+                magicType = NSModel::eMagicType::Fire;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Dark)
+            else if (magicType == NSModel::eMagicType::Dark)
             {
-                magicType = NSStarmanLib::eMagicType::Ice;
+                magicType = NSModel::eMagicType::Ice;
             }
 
             status->SetMagicType(magicType);
@@ -865,26 +865,26 @@ void Player::Update(Map* map)
     if (GamePad::IsDownFirst(eGamePadButtonType::DOWN) &&
         !GamePad::IsLeftStickUsed())
     {
-        if (NSStarmanLib::Rynen::GetObj()->GetContracted())
+        if (NSModel::Rynen::GetObj()->GetContracted())
         {
-            auto status = NSStarmanLib::StatusManager::GetObj();
+            auto status = NSModel::StatusManager::GetObj();
             auto magicType = status->GetMagicType();
 
-            if (magicType == NSStarmanLib::eMagicType::None)
+            if (magicType == NSModel::eMagicType::None)
             {
-                magicType = NSStarmanLib::eMagicType::Fire;
+                magicType = NSModel::eMagicType::Fire;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Fire)
+            else if (magicType == NSModel::eMagicType::Fire)
             {
-                magicType = NSStarmanLib::eMagicType::Ice;
+                magicType = NSModel::eMagicType::Ice;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Ice)
+            else if (magicType == NSModel::eMagicType::Ice)
             {
-                magicType = NSStarmanLib::eMagicType::Dark;
+                magicType = NSModel::eMagicType::Dark;
             }
-            else if (magicType == NSStarmanLib::eMagicType::Dark)
+            else if (magicType == NSModel::eMagicType::Dark)
             {
-                magicType = NSStarmanLib::eMagicType::None;
+                magicType = NSModel::eMagicType::None;
             }
 
             status->SetMagicType(magicType);
@@ -898,7 +898,7 @@ void Player::Update(Map* map)
     //----------------------------------------------------------
 
     // ジャンプ中は移動方向を変えたり加速したりできない
-    auto statusManager = NSStarmanLib::StatusManager::GetObj();
+    auto statusManager = NSModel::StatusManager::GetObj();
     if (m_bJump || m_bStep || statusManager->GetDead())
     {
         move = D3DXVECTOR3(0.f, 0.f, 0.f);
@@ -940,15 +940,15 @@ void Player::Update(Map* map)
         }
         else
         {
-            if (action == NSStarmanLib::StatusManager::PlayerState::WALK)
+            if (action == NSModel::StatusManager::PlayerState::WALK)
             {
                 MAX_XZ_MOVE = 0.025f;
             }
-            else if (action == NSStarmanLib::StatusManager::PlayerState::JOGGING)
+            else if (action == NSModel::StatusManager::PlayerState::JOGGING)
             {
                 MAX_XZ_MOVE = 0.075f;
             }
-            else if (action == NSStarmanLib::StatusManager::PlayerState::SPRINTING)
+            else if (action == NSModel::StatusManager::PlayerState::SPRINTING)
             {
                 MAX_XZ_MOVE = 0.125f;
             }
@@ -1043,14 +1043,14 @@ void Player::Update(Map* map)
 
             // 投げた後、インベントリに同一のアイテムがある場合、
             // 再度装備される。なければ素手になる。
-            NSStarmanLib::Inventory* inventory = NSStarmanLib::Inventory::GetObj();
+            NSModel::Inventory* inventory = NSModel::Inventory::GetObj();
             std::vector<int> subIdList = inventory->GetSubIdList(m_throwItemId);
             if (subIdList.empty() == false)
             {
-                NSStarmanLib::ItemInfo itemInfo =
+                NSModel::ItemInfo itemInfo =
                     inventory->GetItemInfo(m_throwItemId, subIdList.at(0));
 
-                NSStarmanLib::StatusManager* statusManager = NSStarmanLib::StatusManager::GetObj();
+                NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
                 statusManager->SetEquipWeapon(itemInfo);
             }
         }
@@ -1212,13 +1212,13 @@ void Player::Render()
     m_AnimMesh2->SetRotate(m_rotate);
     m_AnimMesh2->Render();
 
-    NSStarmanLib::StatusManager* statusManager = NSStarmanLib::StatusManager::GetObj();
-    NSStarmanLib::ItemInfo itemInfo = statusManager->GetEquipWeapon();
+    NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
+    NSModel::ItemInfo itemInfo = statusManager->GetEquipWeapon();
 
     if (!itemInfo.GetId().empty())
     {
-        NSStarmanLib::ItemManager* itemManager = NSStarmanLib::ItemManager::GetObj();
-        NSStarmanLib::ItemDef itemDef = itemManager->GetItemDef(itemInfo.GetId());
+        NSModel::ItemManager* itemManager = NSModel::ItemManager::GetObj();
+        NSModel::ItemDef itemDef = itemManager->GetItemDef(itemInfo.GetId());
         m_weaponMesh.at(itemDef.GetWeaponId())->Render();
     }
 
@@ -1227,45 +1227,45 @@ void Player::Render()
     {
         auto pos = m_loadingPos;
 
-        if ((*it) == NSStarmanLib::eBagPos::Back1)
+        if ((*it) == NSModel::eBagPos::Back1)
         {
             pos.y += 0.6f;
             pos.x += std::sin(m_rotate.y) * 0.1f;
             pos.z += std::cos(m_rotate.y) * 0.1f;
 
         }
-        else if ((*it) == NSStarmanLib::eBagPos::Back2)
+        else if ((*it) == NSModel::eBagPos::Back2)
         {
             pos.y += 0.7f;
             pos.x += std::sin(m_rotate.y) * 0.5f;
             pos.z += std::cos(m_rotate.y) * 0.5f;
         }
-        else if ((*it) == NSStarmanLib::eBagPos::Front)
+        else if ((*it) == NSModel::eBagPos::Front)
         {
             pos.y += 0.5f;
             pos.x += std::sin(m_rotate.y + D3DX_PI) * 0.5f;
             pos.z += std::cos(m_rotate.y + D3DX_PI) * 0.5f;
         }
-        else if ((*it) == NSStarmanLib::eBagPos::Left)
+        else if ((*it) == NSModel::eBagPos::Left)
         {
             pos.y += 0.1f;
             pos.x += std::sin(m_rotate.y + (D3DX_PI/2.f)) * 0.5f;
             pos.z += std::cos(m_rotate.y + (D3DX_PI/2.f)) * 0.5f;
         }
-        else if ((*it) == NSStarmanLib::eBagPos::Right)
+        else if ((*it) == NSModel::eBagPos::Right)
         {
             pos.y += 0.1f;
             pos.x += std::sin(m_rotate.y - (D3DX_PI/2.f)) * 0.5f;
             pos.z += std::cos(m_rotate.y - (D3DX_PI/2.f)) * 0.5f;
         }
 
-        if (Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::SIT ||
-            Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::LYING_DOWN)
+        if (Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::SIT ||
+            Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::LYING_DOWN)
         {
             pos.y -= 0.4f;
         }
-        else if (Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::IDLE_WATER ||
-                 Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::SWIM)
+        else if (Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::IDLE_WATER ||
+                 Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::SWIM)
         {
             pos.y -= 1.0f;
         }
@@ -1279,7 +1279,7 @@ void Player::Render()
     {
         auto pos = m_loadingPos;
 
-        if (Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::SIT)
+        if (Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::SIT)
         {
             if (VoyageManager::Get()->GetRaftMode())
             {
@@ -1290,15 +1290,15 @@ void Player::Render()
                 pos.y += 1.0f;
             }
         }
-        else if (Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::LYING_DOWN)
+        else if (Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::LYING_DOWN)
         {
             pos.y += 0.2f;
         }
-        else if (Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::IDLE_WATER)
+        else if (Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::IDLE_WATER)
         {
             pos.y += 0.6f;
         }
-        else if (Common::Status()->GetPlayerAction() == NSStarmanLib::StatusManager::PlayerState::SWIM)
+        else if (Common::Status()->GetPlayerAction() == NSModel::StatusManager::PlayerState::SWIM)
         {
             pos.y += 0.4f;
         }
@@ -1327,17 +1327,17 @@ void Player::Render2D()
 
         std::wstring magicType = Common::LoadString_(IDS_STRING137);
 
-        auto statusManager = NSStarmanLib::StatusManager::GetObj();
+        auto statusManager = NSModel::StatusManager::GetObj();
         auto equipMagic = statusManager->GetMagicType();
-        if (equipMagic == NSStarmanLib::eMagicType::Fire)
+        if (equipMagic == NSModel::eMagicType::Fire)
         {
             magicType = Common::LoadString_(IDS_STRING138);
         }
-        else if (equipMagic == NSStarmanLib::eMagicType::Ice)
+        else if (equipMagic == NSModel::eMagicType::Ice)
         {
             magicType = Common::LoadString_(IDS_STRING139);
         }
-        else if (equipMagic == NSStarmanLib::eMagicType::Dark)
+        else if (equipMagic == NSModel::eMagicType::Dark)
         {
             magicType = Common::LoadString_(IDS_STRING140);
         }
@@ -1365,7 +1365,7 @@ D3DXVECTOR3 Player::GetPos() const
 
 void Player::SetMove(const D3DXVECTOR3& move)
 {
-    if (m_bJumpEnable && NSStarmanLib::StatusManager::GetObj()->GetDead() == false)
+    if (m_bJumpEnable && NSModel::StatusManager::GetObj()->GetDead() == false)
     {
         m_move = move;
     }
@@ -1378,7 +1378,7 @@ D3DXVECTOR3 Player::GetMove() const
 
 void Player::SetRotate(const D3DXVECTOR3& rotate)
 {
-    if (!m_bJump && !m_bStep && NSStarmanLib::StatusManager::GetObj()->GetDead() == false)
+    if (!m_bJump && !m_bStep && NSModel::StatusManager::GetObj()->GetDead() == false)
     {
         m_rotate = rotate;
     }
@@ -1391,7 +1391,7 @@ D3DXVECTOR3 Player::GetRotate() const
 
 bool Player::SetAttack()
 {
-    if (m_bAttack || m_bDamaged || NSStarmanLib::StatusManager::GetObj()->GetDead())
+    if (m_bAttack || m_bDamaged || NSModel::StatusManager::GetObj()->GetDead())
     {
         return false;
     }
@@ -1401,17 +1401,17 @@ bool Player::SetAttack()
         return false;
     }
 
-    auto statusManager = NSStarmanLib::StatusManager::GetObj();
+    auto statusManager = NSModel::StatusManager::GetObj();
 
     // 右手にバッグを持っているときは攻撃できない。
-    if (statusManager->GetBag(NSStarmanLib::eBagPos::Right).GetId().size() >= 1)
+    if (statusManager->GetBag(NSModel::eBagPos::Right).GetId().size() >= 1)
     {
         return false;
     }
 
     statusManager->ConsumeAttackCost();
 
-    auto itemManager = NSStarmanLib::ItemManager::GetObj();
+    auto itemManager = NSModel::ItemManager::GetObj();
     auto weaponId = statusManager->GetEquipWeapon().GetId();
     if (statusManager->GetEquipWeapon().GetId().size() >= 1)
     {
@@ -1486,7 +1486,7 @@ bool Player::SetAttack()
             {
                 if (itemInfo.GetItemDef().GetName() == Common::LoadString_(IDS_STRING133))
                 {
-                    NSStarmanLib::WeaponManager::GetObj()->SetTorchLit(false);
+                    NSModel::WeaponManager::GetObj()->SetTorchLit(false);
                     Common::Inventory()->SetItemDurability(itemInfo.GetId(), itemInfo.GetSubId(), 0);
                 }
             }
@@ -1501,8 +1501,8 @@ bool Player::SetAttack()
 bool Player::SetAttackArrow()
 {
     // インベントリから弓矢の矢を一つ減らす。
-    auto inventory = NSStarmanLib::Inventory::GetObj();
-    auto itemManager = NSStarmanLib::ItemManager::GetObj();
+    auto inventory = NSModel::Inventory::GetObj();
+    auto itemManager = NSModel::ItemManager::GetObj();
 
     // 強化値の強い矢のほうからなくなる
     int arrowCnt = 0;
@@ -1510,8 +1510,8 @@ bool Player::SetAttackArrow()
 
     int arrowLevel = 0;
 
-    NSStarmanLib::ItemDef itemDef;
-    NSStarmanLib::ItemInfo itemInfo;
+    NSModel::ItemDef itemDef;
+    NSModel::ItemInfo itemInfo;
 
     if (arrowCnt > 0)
     {
@@ -1548,9 +1548,9 @@ bool Player::SetAttackArrow()
 
     int bowLevel = 0;
     {
-        auto statusManager = NSStarmanLib::StatusManager::GetObj();
-        NSStarmanLib::ItemInfo equip = statusManager->GetEquipWeapon();
-        NSStarmanLib::ItemDef equip2 = itemManager->GetItemDef(equip.GetId());
+        auto statusManager = NSModel::StatusManager::GetObj();
+        NSModel::ItemInfo equip = statusManager->GetEquipWeapon();
+        NSModel::ItemDef equip2 = itemManager->GetItemDef(equip.GetId());
         bowLevel = equip2.GetLevel();
         if (bowLevel == -1)
         {
@@ -1585,7 +1585,7 @@ bool Player::SetAttackArrow()
 
     // 体力を消耗する
     {
-        auto statusManager = NSStarmanLib::StatusManager::GetObj();
+        auto statusManager = NSModel::StatusManager::GetObj();
         statusManager->ConsumeAttackCost();
     }
     return true;
@@ -1594,8 +1594,8 @@ bool Player::SetAttackArrow()
 bool Player::SetAttackAtlatl()
 {
     // インベントリからアトラトルの矢を一つ減らす。
-    auto inventory = NSStarmanLib::Inventory::GetObj();
-    auto itemManager = NSStarmanLib::ItemManager::GetObj();
+    auto inventory = NSModel::Inventory::GetObj();
+    auto itemManager = NSModel::ItemManager::GetObj();
 
     // 強化値の強い槍のほうからなくなる
     // 強化値は-1,1,2,3,4,5の6種類
@@ -1634,8 +1634,8 @@ bool Player::SetAttackAtlatl()
         return false;
     }
 
-    NSStarmanLib::ItemDef itemDef;
-    NSStarmanLib::ItemInfo itemInfo;
+    NSModel::ItemDef itemDef;
+    NSModel::ItemInfo itemInfo;
 
     // インベントリから槍を一つ減らす
     {
@@ -1676,7 +1676,7 @@ bool Player::SetAttackAtlatl()
 
     // 体力を消耗する
     {
-        auto statusManager = NSStarmanLib::StatusManager::GetObj();
+        auto statusManager = NSModel::StatusManager::GetObj();
         statusManager->ConsumeAttackCost();
     }
 
@@ -1685,7 +1685,7 @@ bool Player::SetAttackAtlatl()
 
 void Player::SetWalk()
 {
-    auto status = NSStarmanLib::StatusManager::GetObj();
+    auto status = NSModel::StatusManager::GetObj();
     if (!m_bJump &&
         !m_bStep &&
         !status->GetDead() &&
@@ -1694,7 +1694,7 @@ void Player::SetWalk()
         if (m_bUnderwater)
         {
             m_AnimMesh2->SetAnim(_T("Swim"));
-            status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::SWIM);
+            status->SetPlayerAction(NSModel::StatusManager::PlayerState::SWIM);
         }
         else
         {
@@ -1706,7 +1706,7 @@ void Player::SetWalk()
             {
                 m_AnimMesh2->SetAnim(_T("Walk"));
             }
-            status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::WALK);
+            status->SetPlayerAction(NSModel::StatusManager::PlayerState::WALK);
         }
     }
 
@@ -1715,7 +1715,7 @@ void Player::SetWalk()
 
 void Player::SetJogging()
 {
-    auto status = NSStarmanLib::StatusManager::GetObj();
+    auto status = NSModel::StatusManager::GetObj();
     if (!m_bJump &&
         !m_bStep &&
         !status->GetDead() &&
@@ -1724,7 +1724,7 @@ void Player::SetJogging()
         if (m_bUnderwater)
         {
             m_AnimMesh2->SetAnim(_T("Swim"));
-            status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::SWIM);
+            status->SetPlayerAction(NSModel::StatusManager::PlayerState::SWIM);
         }
         else
         {
@@ -1736,7 +1736,7 @@ void Player::SetJogging()
             {
                 m_AnimMesh2->SetAnim(_T("Walk"));
             }
-            status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::JOGGING);
+            status->SetPlayerAction(NSModel::StatusManager::PlayerState::JOGGING);
         }
     }
 
@@ -1745,7 +1745,7 @@ void Player::SetJogging()
 
 void Player::SetDash()
 {
-    auto status = NSStarmanLib::StatusManager::GetObj();
+    auto status = NSModel::StatusManager::GetObj();
     if (!m_bJump &&
         !m_bStep &&
         !status->GetDead() &&
@@ -1754,7 +1754,7 @@ void Player::SetDash()
         if (m_bUnderwater)
         {
             m_AnimMesh2->SetAnim(_T("Swim"));
-            status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::SWIM);
+            status->SetPlayerAction(NSModel::StatusManager::PlayerState::SWIM);
         }
         else
         {
@@ -1766,7 +1766,7 @@ void Player::SetDash()
             {
                 m_AnimMesh2->SetAnim(_T("Walk"));
             }
-            status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::SPRINTING);
+            status->SetPlayerAction(NSModel::StatusManager::PlayerState::SPRINTING);
         }
     }
 
@@ -1776,12 +1776,12 @@ void Player::SetDash()
 void Player::SetIdle()
 {
     m_AnimMesh2->SetAnim(_T("0_Idle"));
-    Common::Status()->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::STAND);
+    Common::Status()->SetPlayerAction(NSModel::StatusManager::PlayerState::STAND);
 }
 
 void Player::SetDamaged()
 {
-    if (!NSStarmanLib::StatusManager::GetObj()->GetDead())
+    if (!NSModel::StatusManager::GetObj()->GetDead())
     {
         SoundEffect::get_ton()->play(_T("res\\sound\\damage01.wav"), 90);
         m_AnimMesh2->SetAnim(_T("Damaged"), 0.f);
@@ -1800,10 +1800,10 @@ void Player::SetDamaged()
     }
 
     // 睡眠中に攻撃されたら即死
-    if (NSStarmanLib::StatusManager::GetObj()->GetSleep())
+    if (NSModel::StatusManager::GetObj()->GetSleep())
     {
-        NSStarmanLib::StatusManager::GetObj()->SetDead(true);
-        NSStarmanLib::StatusManager::GetObj()->SetDeadReason(NSStarmanLib::eDeadReason::ATTACK_ON_SLEEP);
+        NSModel::StatusManager::GetObj()->SetDead(true);
+        NSModel::StatusManager::GetObj()->SetDeadReason(NSModel::eDeadReason::ATTACK_ON_SLEEP);
     }
 }
 
@@ -1852,7 +1852,7 @@ void Player::SetDead()
 
 bool Player::GetDead() const
 {
-    return NSStarmanLib::StatusManager::GetObj()->GetDead();
+    return NSModel::StatusManager::GetObj()->GetDead();
 }
 
 void Player::SetSleep(const bool arg)
@@ -1867,15 +1867,15 @@ void Player::SetSleep(const bool arg)
         {
             m_AnimMesh2->SetAnim(_T("LieDown"), 0.f);
         }
-        auto status = NSStarmanLib::StatusManager::GetObj();
-        status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::LYING_DOWN);
+        auto status = NSModel::StatusManager::GetObj();
+        status->SetPlayerAction(NSModel::StatusManager::PlayerState::LYING_DOWN);
         status->SetSleep(true);
     }
     else
     {
         m_AnimMesh2->SetAnim(_T("0_Idle"), 0.f);
-        auto status = NSStarmanLib::StatusManager::GetObj();
-        status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::STAND);
+        auto status = NSModel::StatusManager::GetObj();
+        status->SetPlayerAction(NSModel::StatusManager::PlayerState::STAND);
         status->SetSleep(false);
     }
 }
@@ -1933,7 +1933,7 @@ void Player::SetJump()
         return;
     }
 
-    if (m_bJumpEnable && NSStarmanLib::StatusManager::GetObj()->GetDead() == false)
+    if (m_bJumpEnable && NSModel::StatusManager::GetObj()->GetDead() == false)
     {
         m_bJump = true;
         m_bJumpEnable = false;
@@ -1985,16 +1985,16 @@ void Player::SetSit()
         m_AnimMesh2->SetAnim(_T("Sit"), 0.f);
     }
 
-    auto status = NSStarmanLib::StatusManager::GetObj();
-    status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::SIT);
+    auto status = NSModel::StatusManager::GetObj();
+    status->SetPlayerAction(NSModel::StatusManager::PlayerState::SIT);
 }
 
 void Player::SetLieDown()
 {
     m_AnimMesh2->SetAnim(_T("LieDown"), 0.f);
 
-    auto status = NSStarmanLib::StatusManager::GetObj();
-    status->SetPlayerAction(NSStarmanLib::StatusManager::PlayerState::LYING_DOWN);
+    auto status = NSModel::StatusManager::GetObj();
+    status->SetPlayerAction(NSModel::StatusManager::PlayerState::LYING_DOWN);
 }
 
 void Player::SetStep(const eDir dir)
@@ -2105,7 +2105,7 @@ void Player::Throw()
     // ・体力を消耗する
     //-------------------------------------------------------------
 
-    auto statusManager = NSStarmanLib::StatusManager::GetObj();
+    auto statusManager = NSModel::StatusManager::GetObj();
 
     // 担架モードなら何もしない
     if (Common::Status()->IsStretcherMode())
@@ -2127,7 +2127,7 @@ void Player::Throw()
     }
 
     // インベントリから一つアイテムを減らす。
-    auto inventory = NSStarmanLib::Inventory::GetObj();
+    auto inventory = NSModel::Inventory::GetObj();
     inventory->RemoveItem(itemInfo.GetId(), itemInfo.GetSubId());
 
     // 投げるものをセット
@@ -2144,9 +2144,9 @@ void Player::Throw()
         norm *= 0.4f;
         norm.y = 0.1f;
 
-        auto itemManager = NSStarmanLib::ItemManager::GetObj();
+        auto itemManager = NSModel::ItemManager::GetObj();
         auto itemDef = itemManager->GetItemDef(itemInfo.GetId());
-        auto weaponManager = NSStarmanLib::WeaponManager::GetObj();
+        auto weaponManager = NSModel::WeaponManager::GetObj();
         std::wstring xfilename = weaponManager->GetXfilename2(itemDef.GetWeaponId());
 
         if (xfilename.find(_T("rock")) != std::wstring::npos)
@@ -2163,7 +2163,7 @@ void Player::Throw()
 
     // 素手にする
     {
-        NSStarmanLib::ItemInfo itemInfo;
+        NSModel::ItemInfo itemInfo;
         itemInfo.SetId(L"");
         statusManager->SetEquipWeapon(itemInfo);
 
@@ -2185,10 +2185,10 @@ void Player::SetMagic()
     // ・体力を消耗する
     //-------------------------------------------------------------
 
-    auto statusManager = NSStarmanLib::StatusManager::GetObj();
+    auto statusManager = NSModel::StatusManager::GetObj();
 
     auto magicType = statusManager->GetMagicType();
-    if (magicType == NSStarmanLib::eMagicType::None)
+    if (magicType == NSModel::eMagicType::None)
     {
         return;
     }
@@ -2223,15 +2223,15 @@ void Player::SetMagic()
 
         float power = 0.f;
 
-        if (magicType == NSStarmanLib::eMagicType::Fire)
+        if (magicType == NSModel::eMagicType::Fire)
         {
             power = ((float)statusManager->GetLevelFire()+1) * 2;
         }
-        else if (magicType == NSStarmanLib::eMagicType::Ice)
+        else if (magicType == NSModel::eMagicType::Ice)
         {
             power = ((float)statusManager->GetLevelIce()+1) * 2;
         }
-        else if (magicType == NSStarmanLib::eMagicType::Dark)
+        else if (magicType == NSModel::eMagicType::Dark)
         {
             power = ((float)statusManager->GetLevelDark()+1) * 2;
         }
@@ -2239,15 +2239,15 @@ void Player::SetMagic()
         SharedObj::GetMap()->SetThrownMagic(pos, norm, magicType, power);
     }
 
-    if (magicType == NSStarmanLib::eMagicType::Fire)
+    if (magicType == NSModel::eMagicType::Fire)
     {
         SoundEffect::get_ton()->play(_T("res\\sound\\fireSet.wav"));
     }
-    else if (magicType == NSStarmanLib::eMagicType::Ice)
+    else if (magicType == NSModel::eMagicType::Ice)
     {
         SoundEffect::get_ton()->play(_T("res\\sound\\iceSet.wav"));
     }
-    else if (magicType == NSStarmanLib::eMagicType::Dark)
+    else if (magicType == NSModel::eMagicType::Dark)
     {
         SoundEffect::get_ton()->play(_T("res\\sound\\darkSet.wav"));
     }

@@ -178,7 +178,7 @@ void HudManager::Finalize()
 
 void HudManager::Update()
 {
-    NSStarmanLib::StatusManager* statusManager = NSStarmanLib::StatusManager::GetObj();
+    NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
     float work1 = 0.f;
     float work2 = 0.f;
     float work3 = 0.f;

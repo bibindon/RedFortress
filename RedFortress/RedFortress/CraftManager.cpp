@@ -256,7 +256,7 @@ void CraftManager::Finalize()
 // この関数はクラフト画面が表示されていないときも呼ばれることに気を付ける
 void CraftManager::Update()
 {
-    auto craftSys = NSStarmanLib::CraftSystem::GetObj();
+    auto craftSys = NSModel::CraftSystem::GetObj();
 
     static int counter = 0;
     ++counter;
@@ -270,7 +270,7 @@ void CraftManager::Update()
 
 void CraftManager::Operate(eBattleState* state)
 {
-    auto craftSys = NSStarmanLib::CraftSystem::GetObj();
+    auto craftSys = NSModel::CraftSystem::GetObj();
 
     // 定期的に画面を作り直す。
     static int counter = 0;
@@ -423,7 +423,7 @@ void CraftManager::Operate(eBattleState* state)
         // イカダの場合は活動拠点の船着き場にイカダがないかチェック
         else if (result == L"raft")
         {
-            bool raftExist = NSStarmanLib::ActivityBase::Get()->CheckRaftExist();
+            bool raftExist = NSModel::ActivityBase::Get()->CheckRaftExist();
 
             if (raftExist)
             {
@@ -531,8 +531,8 @@ void CraftManager::Draw()
 
 void CraftManager::Build()
 {
-    auto craftSys = NSStarmanLib::CraftSystem::GetObj();
-    auto craftInfo = NSStarmanLib::CraftInfoManager::GetObj();
+    auto craftSys = NSModel::CraftSystem::GetObj();
+    auto craftInfo = NSModel::CraftInfoManager::GetObj();
 
     {
         std::vector<std::wstring> idList;
@@ -654,7 +654,7 @@ void CraftManager::Build()
             auto allCraftList = craftInfo->GetCraftItemList();
 
             // クラフトマンの熟練度に応じて成果物の強化値を変更
-            auto craftSys = NSStarmanLib::CraftSystem::GetObj();
+            auto craftSys = NSModel::CraftSystem::GetObj();
 
             for (auto& info : allCraftList)
             {
