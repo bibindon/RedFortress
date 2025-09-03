@@ -1,3 +1,21 @@
 [submodule "RedFortressMenu"]
 	path = RedFortressMenu
 	url = https://github.com/bibindon/RedFortressMenu.git
+[submodule "RedFortressChest"]
+	path = RedFortressChest
+	url = https://github.com/bibindon/RedFortressChest.git
+[submodule "RedFortressCommand"]
+	path = RedFortressCommand
+	url = https://github.com/bibindon/RedFortressCommand.git
+[submodule "RedFortressCraft"]
+	path = RedFortressCraft
+	url = https://github.com/bibindon/RedFortressCraft.git
+[submodule "RedFortressCutScene"]
+	path = RedFortressCutScene
+	url = https://github.com/bibindon/RedFortressCutScene.git
+[submodule "RedFortressHUD"]
+	path = RedFortressHUD
+	url = https://github.com/bibindon/RedFortressHUD.git
+[submodule "RedFortressModel"]
+	path = RedFortressModel
+	url = https://github.com/bibindon/RedFortressModel.git
