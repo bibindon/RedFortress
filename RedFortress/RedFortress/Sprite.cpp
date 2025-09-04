@@ -78,13 +78,13 @@ void Sprite::SetFill(const bool isFill)
 // 解像度やウィンドウモードを変更したときのための関数
 void Sprite::OnDeviceLost()
 {
-
+    m_D3DSprite->OnLostDevice();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void Sprite::OnDeviceReset()
 {
-
+    m_D3DSprite->OnResetDevice();
 }
 
 

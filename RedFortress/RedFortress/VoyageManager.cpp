@@ -929,6 +929,10 @@ VoyageManager::VoyageManager()
 // 解像度やウィンドウモードを変更したときのための関数
 void VoyageManager::OnDeviceLost()
 {
+    for (auto& item : m_raftMap)
+    {
+        item.second.OnDeviceLost();
+    }
 
 }
 
@@ -936,5 +940,32 @@ void VoyageManager::OnDeviceLost()
 void VoyageManager::OnDeviceReset()
 {
 
+    for (auto& item : m_raftMap)
+    {
+        item.second.OnDeviceReset();
+    }
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Raft2::OnDeviceLost()
+{
+    m_meshRaft->OnDeviceLost();
+    m_meshRaftCollision->OnDeviceLost();
+    m_meshSail->OnDeviceLost();
+    m_meshOarLeft->OnDeviceLost();
+    m_meshOarRight->OnDeviceLost();
+    m_meshCord->OnDeviceLost();
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Raft2::OnDeviceReset()
+{
+    m_meshRaft->OnDeviceReset();
+    m_meshRaftCollision->OnDeviceReset();
+    m_meshSail->OnDeviceReset();
+    m_meshOarLeft->OnDeviceReset();
+    m_meshOarRight->OnDeviceReset();
+    m_meshCord->OnDeviceReset();
 }
 

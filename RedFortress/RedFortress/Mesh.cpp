@@ -482,12 +482,12 @@ std::wstring Mesh::GetMeshName()
 // 解像度やウィンドウモードを変更したときのための関数
 void Mesh::OnDeviceLost()
 {
-
+    m_D3DEffect->OnLostDevice();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void Mesh::OnDeviceReset()
 {
-
+    m_D3DEffect->OnResetDevice();
 }
 

@@ -2488,12 +2488,62 @@ void Map::ResetShow()
 // 解像度やウィンドウモードを変更したときのための関数
 void Map::OnDeviceLost()
 {
+    for (auto& item : m_vecEnemy)
+    {
+        item->OnDeviceLost();
+    }
 
+    m_pSun->OnDeviceLost();
+
+    for (auto& item : m_NPC)
+    {
+        item.second->OnDeviceLost();
+    }
+
+    for (auto& item : m_thrownList)
+    {
+        item.m_mesh->OnDeviceLost();
+    }
+
+    for (auto& item : m_thrownMagicList)
+    {
+        item.m_mesh->OnDeviceLost();
+    }
+
+    for (auto& item : m_meshMap)
+    {
+        item.second->OnDeviceLost();
+    }
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void Map::OnDeviceReset()
 {
+    for (auto& item : m_vecEnemy)
+    {
+        item->OnDeviceReset();
+    }
 
+    m_pSun->OnDeviceReset();
+
+    for (auto& item : m_NPC)
+    {
+        item.second->OnDeviceReset();
+    }
+
+    for (auto& item : m_thrownList)
+    {
+        item.m_mesh->OnDeviceReset();
+    }
+
+    for (auto& item : m_thrownMagicList)
+    {
+        item.m_mesh->OnDeviceReset();
+    }
+
+    for (auto& item : m_meshMap)
+    {
+        item.second->OnDeviceReset();
+    }
 }
 

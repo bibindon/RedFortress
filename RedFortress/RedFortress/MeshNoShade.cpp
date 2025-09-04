@@ -212,12 +212,12 @@ LPD3DXMESH MeshNoShade::GetD3DMesh() const
 // 解像度やウィンドウモードを変更したときのための関数
 void MeshNoShade::OnDeviceLost()
 {
-
+    m_D3DEffect->OnLostDevice();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void MeshNoShade::OnDeviceReset()
 {
-
+    m_D3DEffect->OnResetDevice();
 }
 

@@ -2261,12 +2261,36 @@ void Player::SetMagic()
 // 解像度やウィンドウモードを変更したときのための関数
 void Player::OnDeviceLost()
 {
+    m_AnimMesh2->OnDeviceLost();
+    for (auto& item : m_weaponMesh)
+    {
+        item.second->OnDeviceLost();
+    }
 
+    for (auto& item : m_bagMesh)
+    {
+        item.second->OnDeviceLost();
+    }
+
+    m_sugegasaMesh->OnDeviceLost();
+    m_D3DFont->OnLostDevice();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void Player::OnDeviceReset()
 {
+    m_AnimMesh2->OnDeviceReset();
+    for (auto& item : m_weaponMesh)
+    {
+        item.second->OnDeviceReset();
+    }
 
+    for (auto& item : m_bagMesh)
+    {
+        item.second->OnDeviceReset();
+    }
+
+    m_sugegasaMesh->OnDeviceReset();
+    m_D3DFont->OnResetDevice();
 }
 
