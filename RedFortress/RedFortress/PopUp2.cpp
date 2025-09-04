@@ -170,12 +170,22 @@ PopUpFont::~PopUpFont()
 // 解像度やウィンドウモードを変更したときのための関数
 void PopUp2::OnDeviceLost()
 {
-
+    m_font->OnDeviceLost();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void PopUp2::OnDeviceReset()
 {
+    m_font->OnDeviceReset();
+}
 
+void PopUpFont::OnDeviceLost()
+{
+    m_D3DFont->OnLostDevice();
+}
+
+void PopUpFont::OnDeviceReset()
+{
+    m_D3DFont->OnResetDevice();
 }
 

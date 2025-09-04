@@ -10,6 +10,12 @@ class IPopUpFont
 public:
     virtual void Draw(const std::wstring& text, const int transparent) = 0;
     virtual ~IPopUpFont() { };
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    virtual void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    virtual void OnDeviceReset();
 };
 
 class PopUpFont : public IPopUpFont
@@ -18,6 +24,12 @@ public:
     PopUpFont(LPDIRECT3DDEVICE9 device, const bool bEnglish);
     void Draw(const std::wstring& text, const int transparent);
     ~PopUpFont();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
 
 private:
     LPD3DXFONT m_D3DFont = nullptr;

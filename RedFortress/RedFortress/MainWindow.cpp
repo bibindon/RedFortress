@@ -621,7 +621,9 @@ int MainWindow::MainLoop()
                         d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
                         d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
+                        m_seqBattle->OnDeviceLost();
                         SharedObj::GetD3DDevice()->Reset(&d3dpp);
+                        m_seqBattle->OnDeviceReset();
                     }
                     else if (request == eWindowStyle::FULLSCREEN)
                     {
