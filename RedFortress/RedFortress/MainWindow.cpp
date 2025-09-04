@@ -546,17 +546,16 @@ int MainWindow::MainLoop()
             }
             else
             {
-                if (request == eWindowStyle::WINDOW)
+                if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
                 {
-                    if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
+                    if (request == eWindowStyle::WINDOW)
                     {
                         // Nothing to do
                     }
-                    else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
+                    else if (request == eWindowStyle::FULLSCREEN)
                     {
-
                     }
-                    else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
+                    else if (request == eWindowStyle::BORDERLESS)
                     {
                         // 目的モニタを決める
                         HMONITOR mon = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
@@ -576,28 +575,27 @@ int MainWindow::MainLoop()
                                      SWP_FRAMECHANGED | SWP_SHOWWINDOW);
                     }
                 }
-                else if (request == eWindowStyle::FULLSCREEN)
+                else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
                 {
-                    if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
+                    if (request == eWindowStyle::WINDOW)
                     {
                     }
-                    else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
+                    else if (request == eWindowStyle::FULLSCREEN)
                     {
                         // Nothing to do
                     }
-                    else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
+                    else if (request == eWindowStyle::BORDERLESS)
                     {
-
                     }
                 }
-                else if (request == eWindowStyle::BORDERLESS)
+                else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
                 {
-                    if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
+                    if (request == eWindowStyle::WINDOW)
                     {
                         /* ウィンドウサイズの変更をさせない。最小化はOK */
                         SetWindowLongPtr(m_hWnd,
                                          GWL_STYLE,
-                                         WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE);
+                                         WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME) | WS_VISIBLE);
 
                         SetWindowPos(m_hWnd,
                                      HWND_TOP,
@@ -608,17 +606,32 @@ int MainWindow::MainLoop()
                                      SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
                         D3DPRESENT_PARAMETERS d3dpp { };
+                        d3dpp.Windowed = TRUE;
+                        d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+                        d3dpp.BackBufferWidth = 1600;
+                        d3dpp.BackBufferHeight = 900;
+                        d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+                        d3dpp.MultiSampleQuality = 0;
+
+                        d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+                        d3dpp.EnableAutoDepthStencil = TRUE;
+                        d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+                        d3dpp.Flags = 0;
+
+                        d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+                        d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+
                         SharedObj::GetD3DDevice()->Reset(&d3dpp);
                     }
-                    else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
+                    else if (request == eWindowStyle::FULLSCREEN)
                     {
-
                     }
-                    else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
+                    else if (request == eWindowStyle::BORDERLESS)
                     {
                         // Nothing to do
                     }
                 }
+
                 m_eCurrentWindowStyle = request;
             }
         }
