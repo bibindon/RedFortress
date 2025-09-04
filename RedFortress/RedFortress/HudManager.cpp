@@ -68,6 +68,16 @@ public:
         m_pD3DTexture->Release();
     }
 
+    void OnDeviceLost()
+    {
+        m_D3DSprite->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_D3DSprite->OnResetDevice();
+    }
+
 private:
 
     LPDIRECT3DDEVICE9 m_pD3DDevice = NULL;
@@ -133,6 +143,16 @@ public:
     ~Font()
     {
         m_pFont->Release();
+    }
+
+    void OnDeviceLost()
+    {
+        m_pFont->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_pFont->OnResetDevice();
     }
 
 private:
@@ -375,12 +395,12 @@ void HudManager::Draw()
 // 解像度やウィンドウモードを変更したときのための関数
 void HudManager::OnDeviceLost()
 {
-
+    m_hud->OnDeviceLost();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void HudManager::OnDeviceReset()
 {
-
+    m_hud->OnDeviceReset();
 }
 
