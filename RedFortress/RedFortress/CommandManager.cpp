@@ -667,3 +667,15 @@ void CommandManager::BuildLangCommand()
     m_commandLib->UpsertCommand(_T("back"), true);
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void CommandManager::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void CommandManager::OnDeviceReset()
+{
+
+}
+

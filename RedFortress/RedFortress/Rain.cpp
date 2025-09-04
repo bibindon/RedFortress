@@ -127,4 +127,16 @@ void Rain::SetShow(const bool bShow)
     m_bShow = bShow;
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void Rain::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Rain::OnDeviceReset()
+{
+
+}
+
 

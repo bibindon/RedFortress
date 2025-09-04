@@ -22,6 +22,12 @@ public:
     void SetPreviousState(const eBattleState previousState);
     eBattleState GetPreviousState() const;
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     // コマンドの作成

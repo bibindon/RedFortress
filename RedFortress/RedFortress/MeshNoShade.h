@@ -22,7 +22,13 @@ public:
     D3DXVECTOR3 GetPos();
     void Render();
 
-    LPD3DXMESH GetD3DMesh();
+    LPD3DXMESH GetD3DMesh() const;
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
 
 private:
     const std::wstring SHADER_FILENAME { _T("res\\shader\\MeshShaderNoShade.fx") };

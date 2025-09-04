@@ -204,8 +204,20 @@ void MeshNoShade::Render()
     m_D3DEffect->End();
 }
 
-LPD3DXMESH MeshNoShade::GetD3DMesh()
+LPD3DXMESH MeshNoShade::GetD3DMesh() const
 {
     return m_D3DMesh;
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void MeshNoShade::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void MeshNoShade::OnDeviceReset()
+{
+
 }
 

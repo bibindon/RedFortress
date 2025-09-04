@@ -75,4 +75,17 @@ void Sprite::SetFill(const bool isFill)
     m_isFill = isFill;
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void Sprite::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Sprite::OnDeviceReset()
+{
+
+}
+
+
 

@@ -54,6 +54,12 @@ public:
 
     static void ForceRelease();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     std::wstring m_shaderFilename { _T("res\\shader\\MeshShader.fx") };
 

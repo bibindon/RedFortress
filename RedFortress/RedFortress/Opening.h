@@ -12,6 +12,13 @@ public:
     ~Opening();
     void Update(eBattleState* eState);
     void Render();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     NSSlideShow::SlideShow* m_storyTelling { nullptr };

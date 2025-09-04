@@ -2485,3 +2485,15 @@ void Map::ResetShow()
     MapLib()->ResetShow();
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void Map::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Map::OnDeviceReset()
+{
+
+}
+

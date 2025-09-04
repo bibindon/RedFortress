@@ -251,7 +251,20 @@ void StoryManager::Render()
     }
 }
 
-bool StoryManager::IsFinish()
+bool StoryManager::IsFinish() const
 {
     return bFinish;
 }
+
+// 解像度やウィンドウモードを変更したときのための関数
+void StoryManager::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void StoryManager::OnDeviceReset()
+{
+
+}
+

@@ -1953,4 +1953,15 @@ void MenuManager::Unequip(const std::wstring& id, const int subId)
     }
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void MenuManager::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void MenuManager::OnDeviceReset()
+{
+
+}
 

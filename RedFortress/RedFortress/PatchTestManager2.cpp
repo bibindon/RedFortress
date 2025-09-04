@@ -556,3 +556,16 @@ NSModel::PatchTestManager* PatchTestManager2::GetPatchLib()
 {
     return NSModel::PatchTestManager::Get();
 }
+
+// 解像度やウィンドウモードを変更したときのための関数
+void PatchTestManager2::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void PatchTestManager2::OnDeviceReset()
+{
+
+}
+

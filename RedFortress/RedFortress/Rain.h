@@ -20,6 +20,12 @@ public:
     // 雨が降っている・いないこととは関係ない。
     void SetShow(const bool bShow);
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     void Init();

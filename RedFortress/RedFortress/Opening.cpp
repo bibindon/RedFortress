@@ -373,3 +373,16 @@ void Opening::Render()
         m_storyTelling->Render();
     }
 }
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Opening::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Opening::OnDeviceReset()
+{
+
+}
+

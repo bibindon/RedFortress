@@ -306,3 +306,15 @@ void AnimMesh::RenderMeshContainer(
     m_D3DEffect->End();
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void AnimMesh::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void AnimMesh::OnDeviceReset()
+{
+
+}
+

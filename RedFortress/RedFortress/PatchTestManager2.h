@@ -13,6 +13,12 @@ public:
     void Draw();
     void CreateList();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     void QueueTest(const std::wstring& result);

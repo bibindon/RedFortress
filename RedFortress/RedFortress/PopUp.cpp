@@ -155,3 +155,15 @@ void PopUp::Render()
     }
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void PopUp::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void PopUp::OnDeviceReset()
+{
+
+}
+

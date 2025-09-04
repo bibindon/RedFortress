@@ -13,6 +13,13 @@ public:
     // ??? m_pos.x shows z-order. That should be 0.0f ~ 1.0f.
     void Render(const D3DXVECTOR3& pos, const BYTE transparency = 255, const LONG width = -1);
     void SetFill(const bool isFill);
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     LPD3DXSPRITE m_D3DSprite;
     LPDIRECT3DTEXTURE9 m_D3DTexture;

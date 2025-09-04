@@ -323,3 +323,15 @@ D3DXVECTOR3 EnemyBase::GetAttackPos() const
     return pos;
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void EnemyBase::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void EnemyBase::OnDeviceReset()
+{
+
+}
+

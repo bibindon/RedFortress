@@ -926,3 +926,15 @@ VoyageManager::VoyageManager()
 
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void VoyageManager::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void VoyageManager::OnDeviceReset()
+{
+
+}
+

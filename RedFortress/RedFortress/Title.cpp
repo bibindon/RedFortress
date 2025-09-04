@@ -364,3 +364,16 @@ bool Title::GetLoading() const
 {
     return m_bLoading;
 }
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Title::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Title::OnDeviceReset()
+{
+
+}
+

@@ -35,6 +35,12 @@ public:
     void SetCenterPos(const D3DXVECTOR3& pos);
     void SetRotateLocal(const D3DXVECTOR3& rotate);
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     struct frame_root_deleter_object

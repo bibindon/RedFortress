@@ -13,8 +13,13 @@ public:
     ~StoryManager();
     void Update();
     void Render();
-    bool IsFinish();
+    bool IsFinish() const;
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
 private:
 
     NSSlideShow::SlideShow* m_storyTelling { nullptr };

@@ -57,6 +57,12 @@ public:
 
     void SetShowMenu(const std::wstring& id);
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 protected:
 
     AnimMesh* m_AnimMesh { nullptr };

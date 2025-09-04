@@ -40,6 +40,12 @@ public:
     void Cancel();
     ~PopUp2();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     static PopUp2* m_singleTonObj;
 

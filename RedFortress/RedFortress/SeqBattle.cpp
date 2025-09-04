@@ -3086,6 +3086,54 @@ eBattleState SeqBattle::GetState() const
     return m_eState;
 }
 
+void SeqBattle::OnDeviceLost()
+{
+    m_player->OnDeviceLost();
+    m_map->OnDeviceLost();
+    SharedObj::Voyage()->OnDeviceLost();
+    PopUp2::Get()->OnDeviceLost();
+    Rain::Get()->OnDeviceLost();
+    m_patchManager2.OnDeviceLost();
+    m_menuManager->OnDeviceLost();
+    m_hudManager.OnDeviceLost();
+    m_craft.OnDeviceLost();
+    m_commandManager.OnDeviceLost();
+    m_title->OnDeviceLost();
+
+    m_story->OnDeviceLost();
+
+    m_sprBlack->OnDeviceLost();
+    m_sprLoadBack->OnDeviceLost();
+    m_sprLoadClock->OnDeviceLost();
+    m_sprLoadLoading->OnDeviceLost();
+    m_spriteExamine->OnDeviceLost();
+    m_spriteGameover->OnDeviceLost();
+}
+
+void SeqBattle::OnDeviceReset()
+{
+    m_player->OnDeviceReset();
+    m_map->OnDeviceReset();
+    SharedObj::Voyage()->OnDeviceReset();
+    PopUp2::Get()->OnDeviceReset();
+    Rain::Get()->OnDeviceReset();
+    m_patchManager2.OnDeviceReset();
+    m_menuManager->OnDeviceReset();
+    m_hudManager.OnDeviceReset();
+    m_craft.OnDeviceReset();
+    m_commandManager.OnDeviceReset();
+    m_title->OnDeviceReset();
+
+    m_story->OnDeviceReset();
+
+    m_sprBlack->OnDeviceReset();
+    m_sprLoadBack->OnDeviceReset();
+    m_sprLoadClock->OnDeviceReset();
+    m_sprLoadLoading->OnDeviceReset();
+    m_spriteExamine->OnDeviceReset();
+    m_spriteGameover->OnDeviceReset();
+}
+
 void SeqBattle::UpdateCommon()
 {
     if (m_eState == eBattleState::LOAD)

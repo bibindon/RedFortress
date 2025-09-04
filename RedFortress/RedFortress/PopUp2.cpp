@@ -167,3 +167,15 @@ PopUpFont::~PopUpFont()
     SAFE_RELEASE(m_D3DFont);
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void PopUp2::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void PopUp2::OnDeviceReset()
+{
+
+}
+

@@ -142,6 +142,12 @@ public:
     // 
     void ResetShow();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     NSModel::MapObjManager* MapLib();

@@ -45,6 +45,13 @@ public:
     void Render();
 
     eBattleState GetState() const;
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     void Confirm(eSequence* sequence);
     void UpdateCommon();

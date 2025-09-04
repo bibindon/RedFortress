@@ -371,3 +371,16 @@ void HudManager::Draw()
 {
     m_hud->Draw();
 }
+
+// 解像度やウィンドウモードを変更したときのための関数
+void HudManager::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void HudManager::OnDeviceReset()
+{
+
+}
+

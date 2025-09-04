@@ -16,6 +16,12 @@ public:
     void DeleteItem(const std::wstring& id, const int subId);
     std::wstring OperateMenu();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     NSMenu::Menu m_menu;

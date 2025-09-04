@@ -62,6 +62,12 @@ public:
 
     void PlayPullOarAnim();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     Ptr<AnimMesh> m_AnimMesh2 = nullptr;
     std::unordered_map<std::wstring, Ptr<Mesh>> m_weaponMesh;

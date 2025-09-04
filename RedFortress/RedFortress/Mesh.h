@@ -40,6 +40,12 @@ public:
 
     std::wstring GetMeshName();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     const bool FLAT_SHADING = false;
     const std::wstring SHADER_FILENAME = _T("res\\shader\\MeshShader.fx");

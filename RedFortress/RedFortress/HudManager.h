@@ -9,6 +9,13 @@ public:
     void Finalize();
     void Update();
     void Draw();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     NSHUD::HUD* m_hud = nullptr;
 };

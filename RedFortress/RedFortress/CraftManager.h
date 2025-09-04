@@ -18,6 +18,12 @@ public:
     // 画面を作り直す。
     void Build();
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     NSCraft::Craft m_gui;

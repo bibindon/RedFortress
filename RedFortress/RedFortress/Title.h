@@ -32,6 +32,12 @@ public:
     bool GetLoading() const;
     bool GetFirst() const { return m_bFirst; }
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
     Sprite* m_sprite1 { nullptr };
     Sprite* m_sprite3 { nullptr };

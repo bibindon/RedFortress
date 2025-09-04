@@ -754,3 +754,15 @@ void CraftManager::Build()
     }
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void CraftManager::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void CraftManager::OnDeviceReset()
+{
+
+}
+

@@ -30,6 +30,12 @@ public:
     Mesh* GetCollisionMesh();
     int GetId() const;
 
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
+
 private:
 
     int m_id = 0;
@@ -99,6 +105,12 @@ public:
     int GetRaftLevel();
 
     bool Can3HoursAuto();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceLost();
+
+    // 解像度やウィンドウモードを変更したときのための関数
+    void OnDeviceReset();
 
 private:
 

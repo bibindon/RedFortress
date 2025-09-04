@@ -2258,4 +2258,15 @@ void Player::SetMagic()
     statusManager->UseMagic();
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void Player::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Player::OnDeviceReset()
+{
+
+}
 

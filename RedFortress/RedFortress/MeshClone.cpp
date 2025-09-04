@@ -776,4 +776,16 @@ void MeshClone::ForceRelease()
     m_D3DMeshMap.clear();
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void MeshClone::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void MeshClone::OnDeviceReset()
+{
+
+}
+
 

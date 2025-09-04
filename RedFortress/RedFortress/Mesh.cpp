@@ -479,3 +479,15 @@ std::wstring Mesh::GetMeshName()
     return m_meshName;
 }
 
+// 解像度やウィンドウモードを変更したときのための関数
+void Mesh::OnDeviceLost()
+{
+
+}
+
+// 解像度やウィンドウモードを変更したときのための関数
+void Mesh::OnDeviceReset()
+{
+
+}
+
