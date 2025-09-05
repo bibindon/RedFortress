@@ -623,10 +623,17 @@ int MainWindow::MainLoop()
 
                         m_seqBattle->OnDeviceLost();
 
+                        {
+                            m_D3DFont->OnLostDevice();
+                        }
+
                         HRESULT hr = SharedObj::GetD3DDevice()->Reset(&d3dpp);
                         assert(hr == S_OK);
 
                         m_seqBattle->OnDeviceReset();
+                        {
+                            m_D3DFont->OnResetDevice();
+                        }
                     }
                     else if (request == eWindowStyle::FULLSCREEN)
                     {
