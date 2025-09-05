@@ -86,6 +86,16 @@ public:
         }
     }
 
+    void OnDeviceLost()
+    {
+        m_D3DSprite->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_D3DSprite->OnResetDevice();
+    }
+
 private:
 
     LPDIRECT3DDEVICE9 m_pD3DDevice = NULL;
@@ -152,6 +162,16 @@ public:
     {
         m_pFont->Release();
         m_pFont = nullptr;
+    }
+
+    void OnDeviceLost()
+    {
+        m_pFont->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_pFont->OnResetDevice();
     }
 
 private:

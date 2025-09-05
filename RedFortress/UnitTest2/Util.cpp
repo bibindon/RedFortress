@@ -155,6 +155,16 @@ std::wstring MockPopUpFont::GetShowText()
     return m_text;
 }
 
+void MockPopUpFont::OnDeviceLost()
+{
+    // Nothing to do
+}
+
+void MockPopUpFont::OnDeviceReset()
+{
+    // Nothing to do
+}
+
 void MockKeyBoard::Init(LPDIRECTINPUT8, HWND)
 {
 }

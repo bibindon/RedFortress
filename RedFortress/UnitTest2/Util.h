@@ -47,6 +47,10 @@ public:
 private:
 
     std::wstring m_text;
+
+    // IPopUpFont を介して継承されました
+    void OnDeviceLost() override;
+    void OnDeviceReset() override;
 };
 
 class MockKeyBoard : public IKeyBoard

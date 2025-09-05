@@ -12,10 +12,10 @@ public:
     virtual ~IPopUpFont() { };
 
     // 解像度やウィンドウモードを変更したときのための関数
-    virtual void OnDeviceLost();
+    virtual void OnDeviceLost() = 0;
 
     // 解像度やウィンドウモードを変更したときのための関数
-    virtual void OnDeviceReset();
+    virtual void OnDeviceReset() = 0;
 };
 
 class PopUpFont : public IPopUpFont
