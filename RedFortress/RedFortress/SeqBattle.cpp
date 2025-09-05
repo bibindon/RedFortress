@@ -3142,6 +3142,7 @@ void SeqBattle::OnDeviceLost()
     m_title->OnDeviceLost();
 
     m_story->OnDeviceLost();
+    m_storehouse->OnDeviceLost();
 
     m_sprBlack->OnDeviceLost();
     m_sprLoadBack->OnDeviceLost();
@@ -3166,6 +3167,7 @@ void SeqBattle::OnDeviceReset()
     m_title->OnDeviceReset();
 
     m_story->OnDeviceReset();
+    m_storehouse->OnDeviceReset();
 
     m_sprBlack->OnDeviceReset();
     m_sprLoadBack->OnDeviceReset();
