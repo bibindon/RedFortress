@@ -524,6 +524,7 @@ int MainWindow::MainLoop()
         GamePad::Update();
 
         // ウィンドウモード、フルスクリーンモード、ボーダーレスウィンドウモードの切り替え
+        // あまりにもひどいプログラム。なおすべき。
         {
             auto request = SharedObj::WindowStyleRequest();
             SharedObj::SetWindowStyleRequest(eWindowStyle::NONE);
