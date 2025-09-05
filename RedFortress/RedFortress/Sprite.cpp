@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "SharedObj.h"
+#include <cassert>
 
 Sprite::Sprite(std::wstring filename)
 {
@@ -78,13 +79,15 @@ void Sprite::SetFill(const bool isFill)
 // 解像度やウィンドウモードを変更したときのための関数
 void Sprite::OnDeviceLost()
 {
-    m_D3DSprite->OnLostDevice();
+    HRESULT hr = m_D3DSprite->OnLostDevice();
+    assert(hr == S_OK);
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void Sprite::OnDeviceReset()
 {
-    m_D3DSprite->OnResetDevice();
+    HRESULT hr = m_D3DSprite->OnResetDevice();
+    assert(hr == S_OK);
 }
 
 

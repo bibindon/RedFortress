@@ -14,6 +14,7 @@
 #include "resource.h"
 #include "BGM.h"
 #include "NpcManager.h"
+#include <cassert>
 
 Player::Player()
 {
@@ -2273,7 +2274,9 @@ void Player::OnDeviceLost()
     }
 
     m_sugegasaMesh->OnDeviceLost();
-    m_D3DFont->OnLostDevice();
+
+    HRESULT hr = m_D3DFont->OnLostDevice();
+    assert(hr == S_OK);
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
@@ -2291,6 +2294,8 @@ void Player::OnDeviceReset()
     }
 
     m_sugegasaMesh->OnDeviceReset();
-    m_D3DFont->OnResetDevice();
+
+    HRESULT hr = m_D3DFont->OnResetDevice();
+    assert(hr == S_OK);
 }
 

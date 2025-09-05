@@ -317,6 +317,7 @@ void AnimMesh::OnDeviceLost()
 // 解像度やウィンドウモードを変更したときのための関数
 void AnimMesh::OnDeviceReset()
 {
-    m_D3DEffect->OnResetDevice();
+    HRESULT hr = m_D3DEffect->OnResetDevice();
+    assert(hr == S_OK);
 }
 
