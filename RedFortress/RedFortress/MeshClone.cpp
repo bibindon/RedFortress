@@ -779,13 +779,19 @@ void MeshClone::ForceRelease()
 // 解像度やウィンドウモードを変更したときのための関数
 void MeshClone::OnDeviceLost()
 {
-
+    for (auto& item : m_D3DEffectMap)
+    {
+        item.second->OnLostDevice();
+    }
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void MeshClone::OnDeviceReset()
 {
-
+    for (auto& item : m_D3DEffectMap)
+    {
+        item.second->OnResetDevice();
+    }
 }
 
 

@@ -2514,6 +2514,11 @@ void Map::OnDeviceLost()
     {
         item.second->OnDeviceLost();
     }
+
+    for (auto& item : m_meshCloneMap)
+    {
+        item.second->OnDeviceLost();
+    }
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
