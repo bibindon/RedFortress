@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedFortress", "RedFortress\
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debg_VirtualBox|x64 = Debg_VirtualBox|x64
+		Debg_VirtualBox|x86 = Debg_VirtualBox|x86
 		Debug_VisualStudio2019|x64 = Debug_VisualStudio2019|x64
 		Debug_VisualStudio2019|x86 = Debug_VisualStudio2019|x86
 		Debug|x64 = Debug|x64
@@ -32,6 +34,10 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debg_VirtualBox|x64.ActiveCfg = Release|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debg_VirtualBox|x64.Build.0 = Release|x64
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debg_VirtualBox|x86.ActiveCfg = Release|x86
+		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debg_VirtualBox|x86.Build.0 = Release|x86
 		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug_VisualStudio2019|x64.ActiveCfg = Debug|x64
 		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug_VisualStudio2019|x64.Build.0 = Debug|x64
 		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Debug_VisualStudio2019|x86.ActiveCfg = Debug|x86
@@ -48,6 +54,10 @@ Global
 		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Release|x64.ActiveCfg = Release|x64
 		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Release|x86.ActiveCfg = Release|x86
 		{B9747D8D-4045-4589-B83C-3FEA057EE296}.Release|x86.Build.0 = Release|x86
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debg_VirtualBox|x64.ActiveCfg = Debg_VirtualBox|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debg_VirtualBox|x64.Build.0 = Debg_VirtualBox|x64
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debg_VirtualBox|x86.ActiveCfg = Debg_VirtualBox|Win32
+		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debg_VirtualBox|x86.Build.0 = Debg_VirtualBox|Win32
 		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
 		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
 		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32
@@ -68,6 +78,10 @@ Global
 		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Release|x64.Build.0 = Release|x64
 		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Release|x86.ActiveCfg = Release|Win32
 		{68EF5F22-589B-4A66-8B6E-B54144629AF5}.Release|x86.Build.0 = Release|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debg_VirtualBox|x64.ActiveCfg = Debg_VirtualBox|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debg_VirtualBox|x64.Build.0 = Debg_VirtualBox|x64
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debg_VirtualBox|x86.ActiveCfg = Debg_VirtualBox|Win32
+		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debg_VirtualBox|x86.Build.0 = Debg_VirtualBox|Win32
 		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
 		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
 		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32
@@ -88,6 +102,10 @@ Global
 		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Release|x64.Build.0 = Release|x64
 		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Release|x86.ActiveCfg = Release|Win32
 		{AAF101BA-6C0A-4636-BCAC-158693664B4D}.Release|x86.Build.0 = Release|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debg_VirtualBox|x64.ActiveCfg = Debg_VirtualBox|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debg_VirtualBox|x64.Build.0 = Debg_VirtualBox|x64
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debg_VirtualBox|x86.ActiveCfg = Debg_VirtualBox|Win32
+		{A10062D2-901B-43C4-968B-308528E488AE}.Debg_VirtualBox|x86.Build.0 = Debg_VirtualBox|Win32
 		{A10062D2-901B-43C4-968B-308528E488AE}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
 		{A10062D2-901B-43C4-968B-308528E488AE}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
 		{A10062D2-901B-43C4-968B-308528E488AE}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32
@@ -108,6 +126,10 @@ Global
 		{A10062D2-901B-43C4-968B-308528E488AE}.Release|x64.Build.0 = Release|x64
 		{A10062D2-901B-43C4-968B-308528E488AE}.Release|x86.ActiveCfg = Release|Win32
 		{A10062D2-901B-43C4-968B-308528E488AE}.Release|x86.Build.0 = Release|Win32
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debg_VirtualBox|x64.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debg_VirtualBox|x64.Build.0 = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debg_VirtualBox|x86.ActiveCfg = Release|x86
+		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debg_VirtualBox|x86.Build.0 = Release|x86
 		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug_VisualStudio2019|x64.ActiveCfg = Debug|x86
 		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug_VisualStudio2019|x64.Build.0 = Debug|x86
 		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Debug_VisualStudio2019|x86.ActiveCfg = Debug|x86
@@ -126,6 +148,10 @@ Global
 		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Release|x64.ActiveCfg = Release|x86
 		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Release|x86.ActiveCfg = Release|x86
 		{C9FC7BDC-3B49-4609-9D7C-345BB05D54DE}.Release|x86.Build.0 = Release|x86
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debg_VirtualBox|x64.ActiveCfg = Debg_VirtualBox|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debg_VirtualBox|x64.Build.0 = Debg_VirtualBox|x64
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debg_VirtualBox|x86.ActiveCfg = Debg_VirtualBox|Win32
+		{6DD95551-4853-454C-9F8F-E15464132F19}.Debg_VirtualBox|x86.Build.0 = Debg_VirtualBox|Win32
 		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug_VisualStudio2019|x64.ActiveCfg = Debug_VisualStudio2019|x64
 		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug_VisualStudio2019|x64.Build.0 = Debug_VisualStudio2019|x64
 		{6DD95551-4853-454C-9F8F-E15464132F19}.Debug_VisualStudio2019|x86.ActiveCfg = Debug_VisualStudio2019|Win32

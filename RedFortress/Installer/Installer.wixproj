@@ -36,6 +36,27 @@
     <LinkerAdditionalOptions>-ext WixUIExtension -loc WixUI_ja-jp.wxl</LinkerAdditionalOptions>
     <SuppressIces>ICE60</SuppressIces>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debg_VirtualBox|x86' ">
+    <DefineConstants>Debug</DefineConstants>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debg_VirtualBox|x64' ">
+    <DefineConstants>Debug</DefineConstants>
+    <CompilerAdditionalOptions>-arch x64</CompilerAdditionalOptions>
+    <LinkerAdditionalOptions>-ext WixUIExtension -loc WixUI_ja-jp.wxl</LinkerAdditionalOptions>
+    <SuppressIces>ICE60</SuppressIces>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debg_VirtualBox|AnyCPU' ">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debg_VirtualBox|Any CPU' ">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
   </ItemGroup>
