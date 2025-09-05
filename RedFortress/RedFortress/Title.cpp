@@ -373,6 +373,11 @@ void Title::OnDeviceLost()
     m_sprLoading->OnDeviceLost();
     m_sprLogo->OnDeviceLost();
     m_font->OnLostDevice();
+
+    if (m_titleCommand != nullptr)
+    {
+        m_titleCommand->OnDeviceLost();
+    }
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
@@ -383,5 +388,10 @@ void Title::OnDeviceReset()
     m_sprLoading->OnDeviceReset();
     m_sprLogo->OnDeviceReset();
     m_font->OnResetDevice();
+
+    if (m_titleCommand != nullptr)
+    {
+        m_titleCommand->OnDeviceReset();
+    }
 }
 
