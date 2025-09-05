@@ -573,6 +573,36 @@ int MainWindow::MainLoop()
                                      r.right - r.left,
                                      r.bottom - r.top,
                                      SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+
+                        D3DPRESENT_PARAMETERS d3dpp { };
+                        d3dpp.Windowed = TRUE;
+                        d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+                        d3dpp.BackBufferWidth = r.right;
+                        d3dpp.BackBufferHeight = r.bottom;
+                        d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+                        d3dpp.MultiSampleQuality = 0;
+
+                        d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+                        d3dpp.EnableAutoDepthStencil = TRUE;
+                        d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+                        d3dpp.Flags = 0;
+
+                        d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+                        d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+
+                        m_seqBattle->OnDeviceLost();
+
+                        {
+                            m_D3DFont->OnLostDevice();
+                        }
+
+                        HRESULT hr = SharedObj::GetD3DDevice()->Reset(&d3dpp);
+                        assert(hr == S_OK);
+
+                        m_seqBattle->OnDeviceReset();
+                        {
+                            m_D3DFont->OnResetDevice();
+                        }
                     }
                 }
                 else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
