@@ -2550,5 +2550,10 @@ void Map::OnDeviceReset()
     {
         item.second->OnDeviceReset();
     }
+
+    for (auto& item : m_meshCloneMap)
+    {
+        item.second->OnDeviceReset();
+    }
 }
 

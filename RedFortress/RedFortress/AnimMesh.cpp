@@ -7,6 +7,7 @@
 #include "Light.h"
 #include "Camera.h"
 #include "SharedObj.h"
+#include <cassert>
 
 void AnimMesh::frame_root_deleter_object::operator()(const LPD3DXFRAME frameRoot)
 {
@@ -309,12 +310,13 @@ void AnimMesh::RenderMeshContainer(
 // 解像度やウィンドウモードを変更したときのための関数
 void AnimMesh::OnDeviceLost()
 {
-
+    HRESULT hr = m_D3DEffect->OnLostDevice();
+    assert(hr == S_OK);
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void AnimMesh::OnDeviceReset()
 {
-
+    m_D3DEffect->OnResetDevice();
 }
 

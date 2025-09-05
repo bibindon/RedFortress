@@ -299,7 +299,7 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         // マルチサンプリングをオフにする
         // VirtualBoxだとサポートしていない
-#ifdef MULTI_SAMPLE_NONE
+#ifdef VIRTUALBOX
         d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
 #else
         d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
