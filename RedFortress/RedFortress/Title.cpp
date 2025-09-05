@@ -368,12 +368,28 @@ bool Title::GetLoading() const
 // 解像度やウィンドウモードを変更したときのための関数
 void Title::OnDeviceLost()
 {
-
+    m_sprBack->OnDeviceLost();
+    m_sprClock->OnDeviceLost();
+    m_sprite1->OnDeviceLost();
+    m_sprite3->OnDeviceLost();
+    m_spriteBlack->OnDeviceLost();
+    m_spriteTimer->OnDeviceLost();
+    m_sprLoading->OnDeviceLost();
+    m_sprLogo->OnDeviceLost();
+    m_font->OnLostDevice();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void Title::OnDeviceReset()
 {
-
+    m_sprBack->OnDeviceReset();
+    m_sprClock->OnDeviceReset();
+    m_sprite1->OnDeviceReset();
+    m_sprite3->OnDeviceReset();
+    m_spriteBlack->OnDeviceReset();
+    m_spriteTimer->OnDeviceReset();
+    m_sprLoading->OnDeviceReset();
+    m_sprLogo->OnDeviceReset();
+    m_font->OnResetDevice();
 }
 

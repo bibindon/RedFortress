@@ -121,6 +121,16 @@ public:
         m_D3DSprite.Release();
     }
 
+    void OnDeviceLost() override
+    {
+        m_D3DSprite->OnLostDevice();
+    }
+
+    void OnDeviceReset() override
+    {
+        m_D3DSprite->OnResetDevice();
+    }
+
 private:
 
     LPDIRECT3DDEVICE9 m_pD3DDevice = NULL;
@@ -217,6 +227,16 @@ public:
     ~Font()
     {
         SAFE_RELEASE(m_pFont);
+    }
+
+    void OnDeviceLost() override
+    {
+        m_pFont->OnLostDevice();
+    }
+
+    void OnDeviceReset() override
+    {
+        m_pFont->OnResetDevice();
     }
 
 private:
@@ -1956,12 +1976,12 @@ void MenuManager::Unequip(const std::wstring& id, const int subId)
 // 解像度やウィンドウモードを変更したときのための関数
 void MenuManager::OnDeviceLost()
 {
-
+    m_menu.OnDeviceLost();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void MenuManager::OnDeviceReset()
 {
-
+    m_menu.OnDeviceReset();
 }
 

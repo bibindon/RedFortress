@@ -109,6 +109,16 @@ public:
         }
     }
 
+    void OnDeviceLost()
+    {
+        m_D3DSprite->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_D3DSprite->OnResetDevice();
+    }
+
 private:
 
     LPDIRECT3DDEVICE9 m_pD3DDevice = NULL;
@@ -184,6 +194,16 @@ public:
     ~Font()
     {
         m_pFont->Release();
+    }
+
+    void OnDeviceLost()
+    {
+        m_pFont->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_pFont->OnResetDevice();
     }
 
 private:
@@ -757,12 +777,12 @@ void CraftManager::Build()
 // 解像度やウィンドウモードを変更したときのための関数
 void CraftManager::OnDeviceLost()
 {
-
+    m_gui.OnDeviceLost();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void CraftManager::OnDeviceReset()
 {
-
+    m_gui.OnDeviceReset();
 }
 

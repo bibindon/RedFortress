@@ -105,6 +105,16 @@ namespace NSChest
         LPDIRECT3DTEXTURE9 m_pD3DTexture = NULL;
         UINT m_width{ 0 };
         UINT m_height{ 0 };
+
+        void OnDeviceLost() override
+        {
+            m_D3DSprite->OnLostDevice();
+        }
+
+        void OnDeviceReset() override
+        {
+            m_D3DSprite->OnResetDevice();
+        }
     };
 
     class Font : public IFont
@@ -170,6 +180,16 @@ namespace NSChest
 
         LPDIRECT3DDEVICE9 m_pD3DDevice = NULL;
         LPD3DXFONT m_pFont = NULL;
+
+        void OnDeviceLost() override
+        {
+            m_pFont->OnLostDevice();
+        }
+
+        void OnDeviceReset() override
+        {
+            m_pFont->OnResetDevice();
+        }
     };
 
 
@@ -309,6 +329,17 @@ public:
     {
         return NEW Sprite(m_pD3DDevice);
     }
+
+    void OnDeviceLost() override
+    {
+        m_D3DSprite->OnLostDevice();
+    }
+
+    void OnDeviceReset() override
+    {
+        m_D3DSprite->OnResetDevice();
+    }
+
 private:
     LPDIRECT3DDEVICE9 m_pD3DDevice = NULL;
 
@@ -384,6 +415,16 @@ public:
     {
         m_pFont->Release();
         m_pFont = nullptr;
+    }
+
+    void OnDeviceLost() override
+    {
+        m_pFont->OnLostDevice();
+    }
+
+    void OnDeviceReset() override
+    {
+        m_pFont->OnResetDevice();
     }
 
 private:

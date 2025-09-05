@@ -670,12 +670,12 @@ void CommandManager::BuildLangCommand()
 // 解像度やウィンドウモードを変更したときのための関数
 void CommandManager::OnDeviceLost()
 {
-
+    m_commandLib->OnDeviceLost();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void CommandManager::OnDeviceReset()
 {
-
+    m_commandLib->OnDeviceReset();
 }
 

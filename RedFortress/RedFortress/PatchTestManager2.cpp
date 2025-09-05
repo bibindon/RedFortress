@@ -117,6 +117,16 @@ public:
         }
     }
 
+    void OnDeviceLost()
+    {
+        m_D3DSprite->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_D3DSprite->OnResetDevice();
+    }
+
 private:
 
     LPDIRECT3DDEVICE9 m_pD3DDevice = NULL;
@@ -196,6 +206,16 @@ public:
     ~Font()
     {
         SAFE_RELEASE(m_pFont);
+    }
+
+    void OnDeviceLost()
+    {
+        m_pFont->OnLostDevice();
+    }
+
+    void OnDeviceReset()
+    {
+        m_pFont->OnResetDevice();
     }
 
 private:
@@ -560,12 +580,12 @@ NSModel::PatchTestManager* PatchTestManager2::GetPatchLib()
 // 解像度やウィンドウモードを変更したときのための関数
 void PatchTestManager2::OnDeviceLost()
 {
-
+    m_guiLib.OnDeviceLost();
 }
 
 // 解像度やウィンドウモードを変更したときのための関数
 void PatchTestManager2::OnDeviceReset()
 {
-
+    m_guiLib.OnDeviceReset();
 }
 
