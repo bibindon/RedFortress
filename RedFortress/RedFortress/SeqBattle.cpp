@@ -3129,52 +3129,170 @@ eBattleState SeqBattle::GetState() const
 
 void SeqBattle::OnDeviceLost()
 {
-    m_player->OnDeviceLost();
-    m_map->OnDeviceLost();
-    SharedObj::Voyage()->OnDeviceLost();
-    PopUp2::Get()->OnDeviceLost();
-    Rain::Get()->OnDeviceLost();
+    if (m_player != nullptr)
+    {
+        m_player->OnDeviceLost();
+    }
+
+    if (m_map != nullptr)
+    {
+        m_map->OnDeviceLost();
+    }
+
+    if (SharedObj::Voyage() != nullptr)
+    {
+        SharedObj::Voyage()->OnDeviceLost();
+    }
+
+    if (PopUp2::Get() != nullptr)
+    {
+        PopUp2::Get()->OnDeviceLost();
+    }
+
+    if (Rain::Get() != nullptr)
+    {
+        Rain::Get()->OnDeviceLost();
+    }
+
     m_patchManager2.OnDeviceLost();
-    m_menuManager->OnDeviceLost();
+
+    if (m_menuManager != nullptr)
+    {
+        m_menuManager->OnDeviceLost();
+    }
+
     m_hudManager.OnDeviceLost();
     m_craft.OnDeviceLost();
     m_commandManager.OnDeviceLost();
-    m_title->OnDeviceLost();
 
-    m_story->OnDeviceLost();
-    m_storehouse->OnDeviceLost();
+    if (m_title != nullptr)
+    {
+        m_title->OnDeviceLost();
+    }
 
-    m_sprBlack->OnDeviceLost();
-    m_sprLoadBack->OnDeviceLost();
-    m_sprLoadClock->OnDeviceLost();
-    m_sprLoadLoading->OnDeviceLost();
-    m_spriteExamine->OnDeviceLost();
-    m_spriteGameover->OnDeviceLost();
+    if (m_story != nullptr)
+    {
+        m_story->OnDeviceLost();
+    }
+
+    if (m_storehouse != nullptr)
+    {
+        m_storehouse->OnDeviceLost();
+    }
+
+    if (m_sprBlack != nullptr)
+    {
+        m_sprBlack->OnDeviceLost();
+    }
+
+    if (m_sprLoadBack != nullptr)
+    {
+        m_sprLoadBack->OnDeviceLost();
+    }
+
+    if (m_sprLoadClock != nullptr)
+    {
+        m_sprLoadClock->OnDeviceLost();
+    }
+
+    if (m_sprLoadLoading != nullptr)
+    {
+        m_sprLoadLoading->OnDeviceLost();
+    }
+
+    if (m_spriteExamine != nullptr)
+    {
+        m_spriteExamine->OnDeviceLost();
+    }
+
+    if (m_spriteGameover != nullptr)
+    {
+        m_spriteGameover->OnDeviceLost();
+    }
 }
 
 void SeqBattle::OnDeviceReset()
 {
-    m_player->OnDeviceReset();
-    m_map->OnDeviceReset();
-    SharedObj::Voyage()->OnDeviceReset();
-    PopUp2::Get()->OnDeviceReset();
-    Rain::Get()->OnDeviceReset();
+    if (m_player != nullptr)
+    {
+        m_player->OnDeviceReset();
+    }
+
+    if (m_map != nullptr)
+    {
+        m_map->OnDeviceReset();
+    }
+
+    if (SharedObj::Voyage() != nullptr)
+    {
+        SharedObj::Voyage()->OnDeviceReset();
+    }
+
+    if (PopUp2::Get() != nullptr)
+    {
+        PopUp2::Get()->OnDeviceReset();
+    }
+
+    if (Rain::Get() != nullptr)
+    {
+        Rain::Get()->OnDeviceReset();
+    }
+
     m_patchManager2.OnDeviceReset();
-    m_menuManager->OnDeviceReset();
+
+    if (m_menuManager != nullptr)
+    {
+        m_menuManager->OnDeviceReset();
+    }
+
     m_hudManager.OnDeviceReset();
     m_craft.OnDeviceReset();
     m_commandManager.OnDeviceReset();
-    m_title->OnDeviceReset();
 
-    m_story->OnDeviceReset();
-    m_storehouse->OnDeviceReset();
+    if (m_title != nullptr)
+    {
+        m_title->OnDeviceReset();
+    }
 
-    m_sprBlack->OnDeviceReset();
-    m_sprLoadBack->OnDeviceReset();
-    m_sprLoadClock->OnDeviceReset();
-    m_sprLoadLoading->OnDeviceReset();
-    m_spriteExamine->OnDeviceReset();
-    m_spriteGameover->OnDeviceReset();
+    if (m_story != nullptr)
+    {
+        m_story->OnDeviceReset();
+    }
+
+    if (m_storehouse != nullptr)
+    {
+        m_storehouse->OnDeviceReset();
+    }
+
+    if (m_sprBlack != nullptr)
+    {
+        m_sprBlack->OnDeviceReset();
+    }
+
+    if (m_sprLoadBack != nullptr)
+    {
+        m_sprLoadBack->OnDeviceReset();
+    }
+
+    if (m_sprLoadClock != nullptr)
+    {
+        m_sprLoadClock->OnDeviceReset();
+    }
+
+    if (m_sprLoadLoading != nullptr)
+    {
+        m_sprLoadLoading->OnDeviceReset();
+    }
+
+    if (m_spriteExamine != nullptr)
+    {
+        m_spriteExamine->OnDeviceReset();
+    }
+
+    if (m_spriteGameover != nullptr)
+    {
+        m_spriteGameover->OnDeviceReset();
+    }
 }
 
 void SeqBattle::UpdateCommon()

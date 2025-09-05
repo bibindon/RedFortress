@@ -39,10 +39,6 @@ public:
     void OnDeviceReset();
 
 private:
-    Sprite* m_sprite1 { nullptr };
-    Sprite* m_sprite3 { nullptr };
-    Sprite* m_spriteBlack { nullptr };
-    Sprite* m_spriteTimer { nullptr };
 
     CommandManager* m_titleCommand = nullptr;
 

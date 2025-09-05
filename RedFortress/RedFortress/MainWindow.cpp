@@ -622,7 +622,10 @@ int MainWindow::MainLoop()
                         d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
                         m_seqBattle->OnDeviceLost();
-                        SharedObj::GetD3DDevice()->Reset(&d3dpp);
+
+                        HRESULT hr = SharedObj::GetD3DDevice()->Reset(&d3dpp);
+                        assert(hr == S_OK);
+
                         m_seqBattle->OnDeviceReset();
                     }
                     else if (request == eWindowStyle::FULLSCREEN)
