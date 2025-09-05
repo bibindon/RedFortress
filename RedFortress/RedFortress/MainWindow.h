@@ -55,6 +55,10 @@ private:
     // デバッグ用
     int CalcFPS();
 
+    RECT CalcWindowRectForClient(HWND hWnd, int clientW, int clientH);
+
+    void SetClientSizeAndCenter(HWND hWnd, int clientW, int clientH, bool useWorkArea = true);
+
     // デバッグ用
     std::vector<std::chrono::system_clock::time_point> m_vecTime;
 

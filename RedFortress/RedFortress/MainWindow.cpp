@@ -105,18 +105,6 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lPara
 MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 {
     //-------------------------------------------------
-    // 解像度が1680x1050以下だったら警告を出す
-    //-------------------------------------------------
-    {
-        int dispx = GetSystemMetrics(SM_CXSCREEN);
-        int dispy = GetSystemMetrics(SM_CYSCREEN);
-        if (dispx < 1680 || dispy < 1050)
-        {
-            MessageBox(NULL, _T("モニターの解像度が1680x1050以下の場合、正常動作しません。"), _T("警告"), MB_OK);
-        }
-    }
-
-    //-------------------------------------------------
     // 言語設定
     // 英語と日本語のみ
     // システムが日本語だったら日本語、それ以外だったら英語
@@ -153,14 +141,14 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
             SetThreadLocale(MAKELCID(MAKELANGID(LANG_JAPANESE, SUBLANG_JAPANESE_JAPAN), SORT_DEFAULT));
             SetThreadUILanguage(MAKELANGID(LANG_JAPANESE, SUBLANG_JAPANESE_JAPAN));
 
-            m_title = L"ホシマン";
+            m_title = L"Red Fortress";
         }
         else
         {
             SetThreadLocale(MAKELCID(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), SORT_DEFAULT));
             SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
 
-            m_title = L"starman";
+            m_title = L"Red Fortress";
         }
 
     }
@@ -579,7 +567,11 @@ int MainWindow::MainLoop()
                         d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
                         d3dpp.BackBufferWidth = r.right;
                         d3dpp.BackBufferHeight = r.bottom;
+#ifdef VIRTUALBOX
+                        d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+#else
                         d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+#endif
                         d3dpp.MultiSampleQuality = 0;
 
                         d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
@@ -627,20 +619,18 @@ int MainWindow::MainLoop()
                                          GWL_STYLE,
                                          WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME) | WS_VISIBLE);
 
-                        SetWindowPos(m_hWnd,
-                                     HWND_TOP,
-                                     0,
-                                     0,
-                                     1600,
-                                     900,
-                                     SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+                        SetClientSizeAndCenter(m_hWnd, 1600, 900);
 
                         D3DPRESENT_PARAMETERS d3dpp { };
                         d3dpp.Windowed = TRUE;
                         d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
                         d3dpp.BackBufferWidth = 1600;
                         d3dpp.BackBufferHeight = 900;
+#ifdef VIRTUALBOX
+                        d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+#else
                         d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+#endif
                         d3dpp.MultiSampleQuality = 0;
 
                         d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
@@ -854,5 +844,75 @@ int MainWindow::CalcFPS()
     }
 
     return fps;
+}
+
+
+RECT MainWindow::CalcWindowRectForClient(HWND hWnd, int clientW, int clientH)
+{
+    DWORD style = (DWORD)GetWindowLongPtr(hWnd, GWL_STYLE);
+    DWORD exStyle = (DWORD)GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+    BOOL  hasMenu = (GetMenu(hWnd) != NULL);
+
+    RECT rc = { 0, 0, clientW, clientH };
+
+    // Win10以降 & Per-Monitor DPI対応ならこちら
+    HMODULE hUser32 = GetModuleHandleW(L"user32.dll");
+    if (hUser32 != NULL)
+    {
+        auto pGetDpiForWindow = (UINT(WINAPI*)(HWND))GetProcAddress(hUser32, "GetDpiForWindow");
+        auto pAdjustWindowRectExForDpi =
+            (BOOL(WINAPI*)(LPRECT, DWORD, BOOL, DWORD, UINT))GetProcAddress(hUser32, "AdjustWindowRectExForDpi");
+
+        if (pGetDpiForWindow != NULL && pAdjustWindowRectExForDpi != NULL)
+        {
+            UINT dpi = pGetDpiForWindow(hWnd);
+            if (!pAdjustWindowRectExForDpi(&rc, style, hasMenu, exStyle, dpi))
+            {
+                // フォールバック（下の非DPI版へ）
+            }
+            else
+            {
+                return rc;
+            }
+        }
+    }
+
+    // フォールバック（DPI非対応）
+    AdjustWindowRectEx(&rc, style, hasMenu, exStyle);
+    return rc;
+}
+
+void MainWindow::SetClientSizeAndCenter(HWND hWnd, int clientW, int clientH, bool useWorkArea)
+{
+    // まず外枠サイズへ変換
+    RECT winRc = CalcWindowRectForClient(hWnd, clientW, clientH);
+    int winW = winRc.right - winRc.left;
+    int winH = winRc.bottom - winRc.top;
+
+    // どのモニター上で中央にするか（ウィンドウ所属モニター）
+    HMONITOR hMon = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO mi = {};
+    mi.cbSize = sizeof(mi);
+    if (!GetMonitorInfo(hMon, &mi))
+    {
+        // 取得失敗時は画面全体（プライマリ）に対して中央
+        RECT screen = { 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
+        int x = screen.left + (screen.right - screen.left - winW) / 2;
+        int y = screen.top + (screen.bottom - screen.top - winH) / 2;
+
+        SetWindowPos(hWnd, NULL, x, y, winW, winH,
+                     SWP_NOZORDER | SWP_NOACTIVATE);
+        return;
+    }
+
+    // タスクバー等を除いた作業領域で中央にするか、モニター全体で中央にするか
+    const RECT area = useWorkArea ? mi.rcWork : mi.rcMonitor;
+
+    int x = area.left + ((area.right - area.left) - winW) / 2;
+    int y = area.top + ((area.bottom - area.top) - winH) / 2;
+
+    // 位置・サイズを同時に適用
+    SetWindowPos(hWnd, NULL, x, y, winW, winH,
+                 SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
