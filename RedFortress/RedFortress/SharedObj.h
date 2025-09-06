@@ -44,6 +44,10 @@ public:
     static eWindowStyle WindowStyleRequest();
     static void SetWindowStyleRequest(const eWindowStyle arg);
 
+    // (0, 0)だったらリクエスト無し、と判断する
+    static POINT WindowSizeRequest();
+    static void SetWindowSizeRequest(const POINT& arg);
+
 private:
     static LPDIRECT3DDEVICE9 m_D3DDevice;
     static HWND m_hWnd;
@@ -56,5 +60,6 @@ private:
     static bool m_bEnglish;
 
     static eWindowStyle m_eWindowStyle;
+    static POINT m_windowSize;
 };
 

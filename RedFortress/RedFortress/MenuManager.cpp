@@ -632,6 +632,43 @@ void MenuManager::InitMenu()
         }
         m_menu.SetMap(mapInfoList);
     }
+    //------------------------------------------------------
+    // 設定
+    //------------------------------------------------------
+    {
+        std::vector<SettingInfo> infoList;
+
+        {
+            SettingInfo info;
+            info.SetId(L"Setting");
+            info.SetCategory(L"Resolution");
+            info.SetSubCategory(L"1600x900");
+            infoList.push_back(info);
+        }
+        {
+            SettingInfo info;
+            info.SetId(L"Setting");
+            info.SetCategory(L"Resolution");
+            info.SetSubCategory(L"1920x1080");
+            infoList.push_back(info);
+        }
+        {
+            SettingInfo info;
+            info.SetId(L"Setting");
+            info.SetCategory(L"Resolution");
+            info.SetSubCategory(L"2560x1440");
+            infoList.push_back(info);
+        }
+        {
+            SettingInfo info;
+            info.SetId(L"Setting");
+            info.SetCategory(L"Resolution");
+            info.SetSubCategory(L"3840x2160");
+            infoList.push_back(info);
+        }
+
+        m_menu.SetSetting(infoList);
+    }
 }
 
 void MenuManager::Finalize()
@@ -783,6 +820,18 @@ std::wstring MenuManager::OperateMenu()
                 Equip(id, subId);
             }
         }
+        else if (!vs.empty() && vs.at(0) == _T("Setting"))
+        {
+            if (vs.at(1) == _T("Resolution"))
+            {
+                auto& resolution = vs.at(2);
+                auto width_str = resolution.substr(0, 4);
+                auto width = std::stoi(width_str);
+                auto height_str = resolution.substr(5, 4);
+                auto height = std::stoi(height_str);
+                SharedObj::SetWindowSizeRequest(POINT { width, height });
+            }
+        }
         else if (vs.size() >= 1 && vs.at(0) == _T("Save"))
         {
             auto saveManager = SaveManager::Get();
@@ -862,6 +911,18 @@ std::wstring MenuManager::OperateMenu()
 
                 NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
                 statusManager->SetEquipWeapon(itemInfo);
+            }
+        }
+        else if (!vs.empty() && vs.at(0) == _T("Setting"))
+        {
+            if (vs.at(1) == _T("Resolution"))
+            {
+                auto& resolution = vs.at(2);
+                auto width_str = resolution.substr(0, 4);
+                auto width = std::stoi(width_str);
+                auto height_str = resolution.substr(5, 4);
+                auto height = std::stoi(height_str);
+                SharedObj::SetWindowSizeRequest(POINT { width, height });
             }
         }
         else if (vs.size() >= 1 && vs.at(0) == _T("Save"))
@@ -991,6 +1052,18 @@ std::wstring MenuManager::OperateMenu()
 
                 NSModel::StatusManager* statusManager = NSModel::StatusManager::GetObj();
                 statusManager->SetEquipWeapon(itemInfo);
+            }
+        }
+        else if (!vs.empty() && vs.at(0) == _T("Setting"))
+        {
+            if (vs.at(1) == _T("Resolution"))
+            {
+                auto& resolution = vs.at(2);
+                auto width_str = resolution.substr(0, 4);
+                auto width = std::stoi(width_str);
+                auto height_str = resolution.substr(5, 4);
+                auto height = std::stoi(height_str);
+                SharedObj::SetWindowSizeRequest(POINT { width, height });
             }
         }
         else if (vs.size() >= 1 && vs.at(0) == _T("Save"))

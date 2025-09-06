@@ -811,6 +811,143 @@ int MainWindow::MainLoop()
             }
         }
 
+        // 解像度の変更
+        {
+            auto request = SharedObj::WindowSizeRequest();
+            SharedObj::SetWindowSizeRequest(POINT { 0, 0 });
+
+            if (request.x == 0)
+            {
+                // Nothing to do
+            }
+            else
+            {
+                if (m_eCurrentWindowStyle == eWindowStyle::WINDOW)
+                {
+                    /* ウィンドウサイズの変更をさせない。最小化はOK */
+                    SetWindowLongPtr(m_hWnd,
+                                     GWL_STYLE,
+                                     WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME) | WS_VISIBLE);
+
+                    D3DPRESENT_PARAMETERS d3dpp { };
+                    d3dpp.Windowed = TRUE;
+                    d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+                    d3dpp.BackBufferWidth = request.x;
+                    d3dpp.BackBufferHeight = request.y;
+#ifdef VIRTUALBOX
+                    d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+#else
+                    d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+#endif
+                    d3dpp.MultiSampleQuality = 0;
+
+                    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+                    d3dpp.EnableAutoDepthStencil = TRUE;
+                    d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+                    d3dpp.Flags = 0;
+
+                    d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+                    d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+
+                    m_seqBattle->OnDeviceLost();
+                    m_D3DFont->OnLostDevice();
+
+                    HRESULT hr = SharedObj::GetD3DDevice()->Reset(&d3dpp);
+                    assert(hr == S_OK);
+
+                    m_seqBattle->OnDeviceReset();
+                    m_D3DFont->OnResetDevice();
+
+                    SetClientSizeAndCenter(m_hWnd, request.x, request.y);
+                }
+                else if (m_eCurrentWindowStyle == eWindowStyle::FULLSCREEN)
+                {
+                    SetClientSizeAndCenter(m_hWnd, request.x, request.y);
+
+                    D3DPRESENT_PARAMETERS d3dpp { };
+                    d3dpp.Windowed = FALSE;
+                    d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
+
+                    d3dpp.BackBufferWidth = request.x;
+                    d3dpp.BackBufferHeight = request.y;
+
+                    d3dpp.BackBufferCount = 1;
+#ifdef VIRTUALBOX
+                    d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+#else
+                    d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+#endif
+                    d3dpp.MultiSampleQuality = 0;
+
+                    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+                    d3dpp.EnableAutoDepthStencil = TRUE;
+                    d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+                    d3dpp.Flags = 0;
+
+                    d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+                    d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+                    d3dpp.hDeviceWindow = m_hWnd;
+
+                    m_seqBattle->OnDeviceLost();
+                    m_D3DFont->OnLostDevice();
+
+                    HRESULT hr = SharedObj::GetD3DDevice()->Reset(&d3dpp);
+                    assert(hr == S_OK);
+
+                    m_seqBattle->OnDeviceReset();
+                    m_D3DFont->OnResetDevice();
+                }
+                else if (m_eCurrentWindowStyle == eWindowStyle::BORDERLESS)
+                {
+                    // 目的モニタを決める
+                    HMONITOR mon = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+                    MONITORINFO mi { sizeof(mi) };
+                    GetMonitorInfo(mon, &mi);
+
+                    // 物理座標（タスクバー含む全面）
+                    RECT r = mi.rcMonitor;
+
+                    SetWindowLongPtr(m_hWnd, GWL_STYLE, WS_POPUP);
+                    SetWindowPos(m_hWnd,
+                                 HWND_TOP,
+                                 r.left,
+                                 r.top,
+                                 r.right - r.left,
+                                 r.bottom - r.top,
+                                 SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+
+                    D3DPRESENT_PARAMETERS d3dpp { };
+                    d3dpp.Windowed = TRUE;
+                    d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+                    d3dpp.BackBufferWidth = request.x;
+                    d3dpp.BackBufferHeight = request.y;
+#ifdef VIRTUALBOX
+                    d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+#else
+                    d3dpp.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+#endif
+                    d3dpp.MultiSampleQuality = 0;
+
+                    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+                    d3dpp.EnableAutoDepthStencil = TRUE;
+                    d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+                    d3dpp.Flags = 0;
+
+                    d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+                    d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+
+                    m_seqBattle->OnDeviceLost();
+                    m_D3DFont->OnLostDevice();
+
+                    HRESULT hr = SharedObj::GetD3DDevice()->Reset(&d3dpp);
+                    assert(hr == S_OK);
+
+                    m_seqBattle->OnDeviceReset();
+                    m_D3DFont->OnResetDevice();
+                }
+            }
+        }
+
         static int counter = 0;
         counter++;
 

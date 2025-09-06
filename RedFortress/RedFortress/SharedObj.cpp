@@ -12,6 +12,7 @@ IKeyBoard* SharedObj::m_keyBoard = nullptr;
 bool SharedObj::m_bEnglish = false;
 
 eWindowStyle SharedObj::m_eWindowStyle = eWindowStyle::BORDERLESS;
+POINT SharedObj::m_windowSize = POINT { };
 
 LPDIRECT3DDEVICE9 SharedObj::GetD3DDevice()
 {
@@ -104,6 +105,16 @@ eWindowStyle SharedObj::WindowStyleRequest()
 void SharedObj::SetWindowStyleRequest(const eWindowStyle arg)
 {
     m_eWindowStyle = arg;
+}
+
+POINT SharedObj::WindowSizeRequest()
+{
+    return m_windowSize;
+}
+
+void SharedObj::SetWindowSizeRequest(const POINT& arg)
+{
+    m_windowSize = arg;
 }
 
 void SharedObj::SetD3DDevice(const LPDIRECT3DDEVICE9 D3DDevice)
