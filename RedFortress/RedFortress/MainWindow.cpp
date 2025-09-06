@@ -150,7 +150,11 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
             m_title = L"Red Fortress";
         }
+    }
 
+    // TODO 設定ファイルを読み込むようにする
+    {
+        SharedObj::SetWindowStyleRequest(eWindowStyle::BORDERLESS);
     }
 
     SharedObj::Init();
@@ -249,8 +253,6 @@ MainWindow::MainWindow(const HINSTANCE& hInstance, IKeyBoard* keyboard)
 
         std::wstring GPUName = Common::Utf8ToWstring(adapterInfo.Description);
         Common::SetGPUName(GPUName);
-
-        // TODO フルスクリーン対応
 
         D3DPRESENT_PARAMETERS d3dpp { };
 
