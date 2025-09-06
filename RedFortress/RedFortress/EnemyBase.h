@@ -65,20 +65,20 @@ public:
 
 protected:
 
-    AnimMesh* m_AnimMesh { nullptr };
+    AnimMesh* m_AnimMesh = nullptr;
 
     D3DXVECTOR3 m_loadingPos { 0.f, 0.f, 0.f };
     D3DXVECTOR3 m_rotate { 0.f, 0.f, 0.f };
 
-    bool m_bAttack { false };
-    int m_attackTimeCounter { 0 };
+    bool m_bAttack = false;
+    int m_attackTimeCounter = 0;
 
-    int m_HP { 100 };
-    Sprite* m_spriteHP { nullptr };
-    Sprite* m_spriteHPBack { nullptr };
-    eEnemyState m_state { eEnemyState::IDLE };
-    int m_deadTimeCounter { 0 };
-    int m_damagedTimeCounter { 0 };
+    int m_HP = 100;
+    Sprite* m_spriteHP = nullptr;
+    Sprite* m_spriteHPBack = nullptr;
+    eEnemyState m_state = eEnemyState::IDLE;
+    int m_deadTimeCounter = 0;
+    int m_damagedTimeCounter = 0;
     D3DXVECTOR3 GetAttackPos() const;
 
     int m_idSub = 0;
