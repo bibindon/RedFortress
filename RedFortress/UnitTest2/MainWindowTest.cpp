@@ -71,7 +71,7 @@ public:
         }
 
         hInstance = (HINSTANCE)GetModuleHandle(0);
-        BOOL result2 = UnregisterClass(_T("ホシマン"), hInstance);
+        BOOL result2 = UnregisterClass(L"Red Fortress", hInstance);
         assert(result2 == 1);
     }
 
@@ -104,7 +104,7 @@ public:
         }
 
         hInstance = (HINSTANCE)GetModuleHandle(0);
-        BOOL result2 = UnregisterClass(_T("ホシマン"), hInstance);
+        BOOL result2 = UnregisterClass(L"Red Fortress", hInstance);
         assert(result2 == 1);
     }
 
@@ -185,7 +185,7 @@ public:
         Assert::AreNotEqual(std::wstring::npos, it);
 
         hInstance = (HINSTANCE)GetModuleHandle(0);
-        BOOL result2 = UnregisterClass(_T("ホシマン"), hInstance);
+        BOOL result2 = UnregisterClass(L"Red Fortress", hInstance);
         assert(result2 == 1);
 
     }
@@ -225,7 +225,7 @@ public:
         }
 
         hInstance = (HINSTANCE)GetModuleHandle(0);
-        BOOL result2 = UnregisterClass(_T("ホシマン"), hInstance);
+        BOOL result2 = UnregisterClass(L"Red Fortress", hInstance);
         assert(result2 == 1);
 
         try
@@ -259,7 +259,7 @@ public:
         }
 
         hInstance = (HINSTANCE)GetModuleHandle(0);
-        BOOL result3 = UnregisterClass(_T("ホシマン"), hInstance);
+        BOOL result3 = UnregisterClass(L"Red Fortress", hInstance);
         assert(result3 == 1);
     }
 };
