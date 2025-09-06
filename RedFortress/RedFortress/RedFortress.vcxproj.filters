@@ -13,6 +13,36 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\UI">
+      <UniqueIdentifier>{fc4e165a-4ece-4983-bd08-49ba6e9003e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy">
+      <UniqueIdentifier>{cb83ceeb-132a-4e7e-aec3-ef806cb8acfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Mesh">
+      <UniqueIdentifier>{368a3003-764d-4d74-b534-cb6bde66eb50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Controller">
+      <UniqueIdentifier>{1a3dc47a-177c-49c5-bf74-9f83a2fe3b1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sound">
+      <UniqueIdentifier>{a5d90e98-2bf5-4ae2-86d2-6e678fa8786f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Enemy">
+      <UniqueIdentifier>{d108efd5-331e-4aa1-ae50-a2b4b35a8890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI">
+      <UniqueIdentifier>{390d657a-75be-4981-9b69-2ab6fa0038e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Mesh">
+      <UniqueIdentifier>{1fab79f3-d85a-49fe-936d-9036800d47e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Controller">
+      <UniqueIdentifier>{0971e73d-1552-45f0-b832-d9ec2d1f82c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sound">
+      <UniqueIdentifier>{439af1a8-5af4-4b52-886b-c745959239ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,43 +54,13 @@
     <ClCompile Include="Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="KeyBoard.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundEffect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BGM.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimMesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePad.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyCube.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Common.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimMeshAlloc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationStrategy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
@@ -81,43 +81,7 @@
     <ClCompile Include="SharedObj.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="AnimController.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Map.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemySphere.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyDisk.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="PopUp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="HudManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshNoShade.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyBase.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="PopUp2.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshClone.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="SaveManager.cpp">
@@ -126,47 +90,113 @@
     <ClCompile Include="StackBackTrace.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyBigCube.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyEnchu.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyGhost.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyHanen.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyHankyuu.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyOrangeCube.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemySmallCube.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="StoryManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="NpcManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="QuestManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="PatchTestManager2.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="VoyageManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CraftManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Rain.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuManager.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandManager.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CraftManager.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="HudManager.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBase.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBigCube.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCube.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDisk.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyEnchu.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyGhost.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyHanen.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyHankyuu.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyOrangeCube.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySmallCube.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySphere.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="StoryManager.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUp2.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUp.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PatchTestManager2.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationStrategy.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimController.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimMesh.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimMeshAlloc.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshClone.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNoShade.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyBoard.cpp">
+      <Filter>ソース ファイル\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePad.cpp">
+      <Filter>ソース ファイル\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>ソース ファイル\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundEffect.cpp">
+      <Filter>ソース ファイル\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="BGM.cpp">
+      <Filter>ソース ファイル\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,43 +206,13 @@
     <ClInclude Include="Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="KeyBoard.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BGM.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimMesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GamePad.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyCube.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimMeshAlloc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationStrategy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
@@ -233,43 +233,7 @@
     <ClInclude Include="SharedObj.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="AnimController.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Map.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemySphere.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyDisk.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="PopUp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="HudManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshNoShade.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyBase.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="PopUp2.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshClone.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="SaveManager.h">
@@ -279,30 +243,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="StackBackTrace.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyBigCube.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyEnchu.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyGhost.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyHanen.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyHankyuu.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyOrangeCube.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemySmallCube.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="StoryManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="NpcManager.h">
@@ -317,11 +257,101 @@
     <ClInclude Include="VoyageManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CraftManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Rain.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBase.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBigCube.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCube.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDisk.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyEnchu.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyGhost.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyHanen.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyHankyuu.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyOrangeCube.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySmallCube.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySphere.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="HudManager.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUp.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUp2.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="StoryManager.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CraftManager.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuManager.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationStrategy.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimController.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimMesh.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimMeshAlloc.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshClone.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNoShade.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyBoard.h">
+      <Filter>ヘッダー ファイル\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePad.h">
+      <Filter>ヘッダー ファイル\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>ヘッダー ファイル\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="BGM.h">
+      <Filter>ヘッダー ファイル\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEffect.h">
+      <Filter>ヘッダー ファイル\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandManager.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
