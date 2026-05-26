@@ -117,29 +117,27 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
     while (true)
     {
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             DispatchMessage(&msg);
         }
-        else
+
+        Sleep(16);
+
+        InputDevice::Update();
+
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
         {
-            Sleep(16);
-
-            InputDevice::Update();
-
-            if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
-            {
-                MessageBox(hWnd, _T("F1キーが押されました。"), _T("F1"), MB_OK);
-            }
-
-            RenderPass1();
-            RenderPass2();
+            MessageBox(hWnd, _T("F1キーが押されました。"), _T("F1"), MB_OK);
         }
 
         if (g_bClose)
         {
             break;
         }
+
+        RenderPass1();
+        RenderPass2();
     }
 
     InputDevice::Finalize();
