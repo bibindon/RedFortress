@@ -35,6 +35,9 @@ LPD3DXEFFECT g_pEffect2 = NULL;
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 NSRender::Render g_Render;
+const float CAMERA_MOVE_SPEED = 0.08f;
+const float CAMERA_FAST_MOVE_SPEED = 0.25f;
+const float MOUSE_CAMERA_SENSITIVITY = 0.005f;
 
 // === 変更: RT を 2 枚用意 ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
@@ -59,6 +62,7 @@ static void Cleanup();
 static void RenderPass1();
 static void RenderPass2();
 static void DrawFullscreenQuad();
+static void UpdateCameraByInput();
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -142,6 +146,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         Sleep(16);
 
         InputDevice::Update();
+        UpdateCameraByInput();
+
         SoundLib::Vector3 listenerPosition { 0.0f, 0.0f, 0.0f };
         SoundLib::Vector3 listenerFront { 0.0f, 0.0f, 1.0f };
         SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
@@ -172,6 +178,57 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
     UnregisterClass(_T("Window1"), wc.hInstance);
     return 0;
+}
+
+void UpdateCameraByInput()
+{
+    D3DXVECTOR3 forward = g_Render.GetCameraRotate();
+    forward.y = 0.0f;
+    if (D3DXVec3LengthSq(&forward) > 0.0f)
+    {
+        D3DXVec3Normalize(&forward, &forward);
+    }
+
+    D3DXVECTOR3 worldUp(0.0f, 1.0f, 0.0f);
+    D3DXVECTOR3 right(1.0f, 0.0f, 0.0f);
+    D3DXVec3Cross(&right, &worldUp, &forward);
+    if (D3DXVec3LengthSq(&right) > 0.0f)
+    {
+        D3DXVec3Normalize(&right, &right);
+    }
+
+    D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
+    if (InputDevice::SKeyBoard::IsDown(DIK_W))
+    {
+        move += forward;
+    }
+    if (InputDevice::SKeyBoard::IsDown(DIK_S))
+    {
+        move -= forward;
+    }
+    if (InputDevice::SKeyBoard::IsDown(DIK_D))
+    {
+        move += right;
+    }
+    if (InputDevice::SKeyBoard::IsDown(DIK_A))
+    {
+        move -= right;
+    }
+
+    if (D3DXVec3LengthSq(&move) > 0.0f)
+    {
+        D3DXVec3Normalize(&move, &move);
+        const float speed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT) ? CAMERA_FAST_MOVE_SPEED : CAMERA_MOVE_SPEED;
+        g_Render.MoveCamera(move * speed);
+    }
+
+    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
+    if (mouseDelta.x != 0 || mouseDelta.y != 0)
+    {
+        g_Render.RotateCamera(D3DXVECTOR3(static_cast<float>(mouseDelta.y) * MOUSE_CAMERA_SENSITIVITY,
+                                          static_cast<float>(mouseDelta.x) * MOUSE_CAMERA_SENSITIVITY,
+                                          0.0f));
+    }
 }
 
 void TextDraw(LPD3DXFONT pFont, TCHAR* text, int X, int Y)
