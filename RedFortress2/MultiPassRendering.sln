@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.6.11819.183 stable
+VisualStudioVersion = 18.6.11819.183
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple-directx9", "MultiPassRendering\simple-directx9.vcxproj", "{A70DB775-E3B5-456E-840E-F549901A6748}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoundLib", "..\SoundLib\SoundLib\SoundLib.vcxproj", "{4683EDAB-3715-4C0B-B9D6-F6AC46F221BF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InputDevice", "..\InputDevice\InputDevice\InputDevice.vcxproj", "{4789CF6C-2204-40F9-A733-976227C23547}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Render", "..\RedFortressRender\Render\Render.vcxproj", "{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{4789CF6C-2204-40F9-A733-976227C23547}.Release|x64.Build.0 = Release|x64
 		{4789CF6C-2204-40F9-A733-976227C23547}.Release|x86.ActiveCfg = Release|Win32
 		{4789CF6C-2204-40F9-A733-976227C23547}.Release|x86.Build.0 = Release|Win32
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Debug|x64.ActiveCfg = Debug|x64
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Debug|x64.Build.0 = Debug|x64
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Debug|x86.ActiveCfg = Debug|Win32
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Debug|x86.Build.0 = Debug|Win32
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Release|x64.ActiveCfg = Release|x64
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Release|x64.Build.0 = Release|x64
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Release|x86.ActiveCfg = Release|Win32
+		{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
