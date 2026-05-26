@@ -107,6 +107,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                              wc.hInstance,
                              NULL);
 
+    InputDevice::Initialize(wc.hInstance, hWnd);
+
     InitD3D(hWnd);
     ShowWindow(hWnd, SW_SHOWDEFAULT);
     UpdateWindow(hWnd);
@@ -123,6 +125,13 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         {
             Sleep(16);
 
+            InputDevice::Update();
+
+            if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
+            {
+                MessageBox(hWnd, _T("F1キーが押されました。"), _T("F1"), MB_OK);
+            }
+
             RenderPass1();
             RenderPass2();
         }
@@ -133,6 +142,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+    InputDevice::Finalize();
     Cleanup();
 
     UnregisterClass(_T("Window1"), wc.hInstance);
@@ -511,15 +521,6 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
-    case WM_KEYDOWN:
-    {
-        if (wParam == VK_F1)
-        {
-            MessageBox(hWnd, _T("F1キーが押されました。"), _T("F1"), MB_OK);
-            return 0;
-        }
-        break;
-    }
     case WM_DESTROY:
     {
         PostQuitMessage(0);
