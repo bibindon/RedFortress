@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
+#include "../../SoundLib/SoundLib/SoundLib.h"
 
 #define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = NULL; } }
 
@@ -31,6 +32,7 @@ LPD3DXEFFECT g_pEffect1 = NULL;
 LPD3DXEFFECT g_pEffect2 = NULL;
 
 bool g_bClose = false;
+const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 
 // === 変更: RT を 2 枚用意 ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
@@ -112,6 +114,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
     InitD3D(hWnd);
     InputDevice::Initialize(hInstance, hWnd);
+    SoundLib::SoundLib::Initialize(hWnd);
+    SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
 
     MSG msg;
 
@@ -125,10 +129,19 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         Sleep(16);
 
         InputDevice::Update();
+        SoundLib::Vector3 listenerPosition { 0.0f, 0.0f, 0.0f };
+        SoundLib::Vector3 listenerFront { 0.0f, 0.0f, 1.0f };
+        SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
+        SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
         {
             MessageBox(hWnd, _T("F1キーが押されました。"), _T("F1"), MB_OK);
+        }
+
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F2))
+        {
+            SoundLib::SoundLib::PlaySoundEffect(g_arrowSoundPath, 100);
         }
 
         if (g_bClose)
@@ -140,6 +153,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         RenderPass2();
     }
 
+    SoundLib::SoundLib::Finalize();
     InputDevice::Finalize();
     Cleanup();
 
