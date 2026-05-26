@@ -115,7 +115,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     UpdateWindow(hWnd);
 
     g_Render.Initialize(hWnd);
-    g_Render.ChangeResolution(640, 480);
+    g_Render.ChangeResolution(1600, 900);
     g_Render.SetShowFPS(false);
     g_Render.SetCamera(D3DXVECTOR3(0.0f, 1.5f, -5.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, -1.0f, 0.6f));
