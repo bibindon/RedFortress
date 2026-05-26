@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
+#include "../../RedFortressRender/Render/Render.h"
 #include "../../SoundLib/SoundLib/SoundLib.h"
 
 #define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = NULL; } }
@@ -33,6 +34,7 @@ LPD3DXEFFECT g_pEffect2 = NULL;
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
+NSRender::Render g_Render;
 
 // === 変更: RT を 2 枚用意 ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
@@ -112,7 +114,18 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     ShowWindow(hWnd, SW_SHOWDEFAULT);
     UpdateWindow(hWnd);
 
-    InitD3D(hWnd);
+    g_Render.Initialize(hWnd);
+    g_Render.ChangeResolution(640, 480);
+    g_Render.SetShowFPS(false);
+    g_Render.SetCamera(D3DXVECTOR3(0.0f, 1.5f, -5.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    g_Render.SetLightDir(D3DXVECTOR3(-0.4f, -1.0f, 0.6f));
+    g_Render.SetAmbientLightBrightness(0.4f);
+    g_Render.AddMeshMix(L"res\\model\\cube.x",
+                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                        1.0f,
+                        100.0f);
+
     InputDevice::Initialize(hInstance, hWnd);
     SoundLib::SoundLib::Initialize(hWnd);
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
@@ -149,10 +162,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             break;
         }
 
-        RenderPass1();
-        RenderPass2();
+        g_Render.Draw();
     }
 
+    g_Render.Finalize();
     SoundLib::SoundLib::Finalize();
     InputDevice::Finalize();
     Cleanup();
