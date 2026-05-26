@@ -186,6 +186,12 @@
       <Project>{4683edab-3715-4c0b-b9d6-f6ac46f221bf}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="simple-directx9.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets" Condition="Exists('..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets')" />
