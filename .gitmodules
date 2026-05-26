@@ -31,3 +31,6 @@
 [submodule "RedFortressTalk2D"]
 	path = RedFortressTalk2D
 	url = https://github.com/bibindon/RedFortressTalk2D.git
+[submodule "RedFortressRender"]
+	path = RedFortressRender
+	url = https://github.com/bibindon/RedFortressRender.git
