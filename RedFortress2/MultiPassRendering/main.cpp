@@ -107,11 +107,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                              wc.hInstance,
                              NULL);
 
-    InputDevice::Initialize(wc.hInstance, hWnd);
-
-    InitD3D(hWnd);
     ShowWindow(hWnd, SW_SHOWDEFAULT);
     UpdateWindow(hWnd);
+
+    InitD3D(hWnd);
+    InputDevice::Initialize(hInstance, hWnd);
 
     MSG msg;
 
