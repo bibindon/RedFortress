@@ -13,6 +13,8 @@
 #include <crtdbg.h>
 #include <vector>
 
+#include "../../InputDevice/InputDevice/InputDevice.h"
+
 #define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = NULL; } }
 
 LPDIRECT3D9 g_pD3D = NULL;
