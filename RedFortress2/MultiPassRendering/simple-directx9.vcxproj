@@ -176,6 +176,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
+      <Project>{4789cf6c-2204-40f9-a733-976227c23547}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RedFortressRender\Render\Render.vcxproj">
+      <Project>{d8a93a58-4392-4fc4-a4f7-634d4dac81b4}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\SoundLib\SoundLib\SoundLib.vcxproj">
       <Project>{4683edab-3715-4c0b-b9d6-f6ac46f221bf}</Project>
     </ProjectReference>
