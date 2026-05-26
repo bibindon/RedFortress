@@ -16,6 +16,7 @@
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../SoundLib/SoundLib/SoundLib.h"
+#include "resource.h"
 
 #define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = NULL; } }
 
@@ -63,6 +64,7 @@ static void RenderPass1();
 static void RenderPass2();
 static void DrawFullscreenQuad();
 static void UpdateCameraByInput();
+static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -163,6 +165,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             SoundLib::SoundLib::PlaySoundEffect(g_arrowSoundPath, 100);
         }
 
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F3))
+        {
+            DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, SettingsDialogProc);
+        }
+
         if (g_bClose)
         {
             break;
@@ -229,6 +236,31 @@ void UpdateCameraByInput()
                                           static_cast<float>(mouseDelta.x) * MOUSE_CAMERA_SENSITIVITY,
                                           0.0f));
     }
+}
+
+INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    switch (msg)
+    {
+    case WM_INITDIALOG:
+        return TRUE;
+
+    case WM_COMMAND:
+        switch (LOWORD(wParam))
+        {
+        case IDOK:
+        case IDCANCEL:
+            EndDialog(hDlg, LOWORD(wParam));
+            return TRUE;
+        }
+        break;
+
+    case WM_CLOSE:
+        EndDialog(hDlg, IDCANCEL);
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 void TextDraw(LPD3DXFONT pFont, TCHAR* text, int X, int Y)
