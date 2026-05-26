@@ -34,3 +34,9 @@
 [submodule "RedFortressRender"]
 	path = RedFortressRender
 	url = https://github.com/bibindon/RedFortressRender.git
+[submodule "InputDevice"]
+	path = InputDevice
+	url = https://github.com/bibindon/InputDevice.git
+[submodule "SoundLib"]
+	path = SoundLib
+	url = https://github.com/bibindon/SoundLib.git
