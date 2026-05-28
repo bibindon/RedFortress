@@ -329,8 +329,8 @@ void UpdateCameraByInput()
     const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
     if (mouseDelta.x != 0 || mouseDelta.y != 0)
     {
-        g_cameraYaw   -= static_cast<float>(mouseDelta.x) * 0.005f;
-        g_cameraPitch  += static_cast<float>(mouseDelta.y) * 0.005f;
+        g_cameraYaw   -= static_cast<float>(mouseDelta.x) * 0.00025f;
+        g_cameraPitch  += static_cast<float>(mouseDelta.y) * 0.00025f;
         g_cameraPitch  = ClampFloat(g_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
     }
 }
