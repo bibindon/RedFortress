@@ -48,6 +48,16 @@ const D3DXVECTOR3 PLAYER_CAMERA_OFFSET(0.0f, 2.0f, -6.0f);
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
 PhysicsLib::CharacterMover g_playerMover;
+PhysicsLib::CameraMover g_cameraMover;
+float g_cameraYaw = 0.0f;
+float g_cameraPitch = D3DXToRadian(18.0f);
+float g_cameraDistance = 6.0f;
+float g_playerYaw = 0.0f;
+const float kPlayerTurnRadiansPerSecond = 10.0f;
+const float kTargetFrameSeconds = 1.0f / 60.0f;
+const float kMinCameraDistance = 1.5f;
+const float kMaxCameraDistance = 20.0f;
+const float kCameraWheelZoomStep = 0.5f;
 
 // === 変更: RT を 2 枚用意 ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
@@ -298,43 +308,62 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     return 0;
 }
 
+static float ClampFloat(float v, float lo, float hi)
+{
+    if (v < lo) return lo;
+    if (v > hi) return hi;
+    return v;
+}
+
+static float MoveAngleToward(float current, float target, float maxDelta)
+{
+    float diff = target - current;
+    while (diff > D3DX_PI)  diff -= 2.0f * D3DX_PI;
+    while (diff < -D3DX_PI) diff += 2.0f * D3DX_PI;
+    if (fabsf(diff) <= maxDelta) return target;
+    return current + (diff > 0.0f ? maxDelta : -maxDelta);
+}
+
 void UpdateCameraByInput()
 {
     const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
     if (mouseDelta.x != 0 || mouseDelta.y != 0)
     {
-        g_Render.RotateCamera(D3DXVECTOR3(static_cast<float>(mouseDelta.y) * MOUSE_CAMERA_SENSITIVITY,
-                                          static_cast<float>(mouseDelta.x) * MOUSE_CAMERA_SENSITIVITY,
-                                          0.0f));
+        g_cameraYaw   -= static_cast<float>(mouseDelta.x) * 0.005f;
+        g_cameraPitch  += static_cast<float>(mouseDelta.y) * 0.005f;
+        g_cameraPitch  = ClampFloat(g_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
     }
 }
 
 void UpdatePlayerByInput()
 {
     const D3DXVECTOR3 previousRenderPosition = g_playerMover.GetPosition();
-    const D3DXVECTOR3 forward = GetCameraPlanarForward();
-    const D3DXVECTOR3 right = GetCameraPlanarRight(forward);
+    const D3DXVECTOR3 cameraForward = GetCameraPlanarForward();
+    const D3DXVECTOR3 cameraRight   = GetCameraPlanarRight(cameraForward);
+
+    D3DXVECTOR3 localMove(0.0f, 0.0f, 0.0f);
+    if (InputDevice::SKeyBoard::IsDown(DIK_W)) localMove.z += 1.0f;
+    if (InputDevice::SKeyBoard::IsDown(DIK_S)) localMove.z -= 1.0f;
+    if (InputDevice::SKeyBoard::IsDown(DIK_D)) localMove.x += 1.0f;
+    if (InputDevice::SKeyBoard::IsDown(DIK_A)) localMove.x -= 1.0f;
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
-    if (InputDevice::SKeyBoard::IsDown(DIK_W))
+    if (localMove.x != 0.0f || localMove.z != 0.0f)
     {
-        move += forward;
-    }
-    if (InputDevice::SKeyBoard::IsDown(DIK_S))
-    {
-        move -= forward;
-    }
-    if (InputDevice::SKeyBoard::IsDown(DIK_D))
-    {
-        move += right;
-    }
-    if (InputDevice::SKeyBoard::IsDown(DIK_A))
-    {
-        move -= right;
-    }
-
-    if (D3DXVec3LengthSq(&move) > 0.0f)
-    {
+        const D3DXVECTOR3 desiredMove = cameraRight * localMove.x + cameraForward * localMove.z;
+        const bool focusModeEnabled = PhysicsWorld::IsFocusModeEnabled();
+        if (focusModeEnabled)
+        {
+            g_playerYaw = atan2f(cameraForward.x, cameraForward.z);
+        }
+        else
+        {
+            const float targetYaw = atan2f(desiredMove.x, desiredMove.z);
+            g_playerYaw = MoveAngleToward(g_playerYaw,
+                                          targetYaw,
+                                          kPlayerTurnRadiansPerSecond * kTargetFrameSeconds);
+        }
+        move = desiredMove;
         D3DXVec3Normalize(&move, &move);
     }
 
@@ -344,15 +373,7 @@ void UpdatePlayerByInput()
 
 D3DXVECTOR3 GetCameraPlanarForward()
 {
-    D3DXVECTOR3 forward = g_Render.GetLookAtPos() - g_Render.GetCameraPos();
-    forward.y = 0.0f;
-    if (D3DXVec3LengthSq(&forward) <= 0.0001f)
-    {
-        return D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-    }
-
-    D3DXVec3Normalize(&forward, &forward);
-    return forward;
+    return D3DXVECTOR3(-sinf(g_cameraYaw), 0.0f, cosf(g_cameraYaw));
 }
 
 D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward)
@@ -444,14 +465,7 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
         if (g_playerIsSkinAnim)
         {
             g_Render.SetMeshMixSkinAnimPos(g_playerMeshId, currentRenderPosition);
-
-            D3DXVECTOR3 delta = currentRenderPosition - previousRenderPosition;
-            delta.y = 0.0f;
-            if (D3DXVec3LengthSq(&delta) > 0.0001f)
-            {
-                const float rotY = atan2f(-delta.x, -delta.z);
-                g_Render.SetMeshMixSkinAnimRotY(g_playerMeshId, rotY);
-            }
+            g_Render.SetMeshMixSkinAnimRotY(g_playerMeshId, g_playerYaw);
         }
         else
         {
@@ -459,7 +473,15 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
         }
     }
 
-    g_Render.MoveCamera(currentRenderPosition - previousRenderPosition);
+    // カメラ位置をyaw/pitch/distanceから算出し、CameraMoverで障害物を回避する
+    const D3DXVECTOR3 cameraTarget = currentRenderPosition + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
+    const float horizontalDistance = g_cameraDistance * cosf(g_cameraPitch);
+    const D3DXVECTOR3 offset(sinf(g_cameraYaw) * horizontalDistance,
+                              sinf(g_cameraPitch) * g_cameraDistance,
+                              -cosf(g_cameraYaw) * horizontalDistance);
+    const D3DXVECTOR3 desiredCameraPosition = cameraTarget + offset;
+    const D3DXVECTOR3 cameraPosition = g_cameraMover.ResolvePosition(cameraTarget, desiredCameraPosition);
+    g_Render.SetCamera(cameraPosition, cameraTarget);
 }
 
 INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
