@@ -1,4 +1,4 @@
-﻿#pragma comment( lib, "d3d9.lib" )
+#pragma comment( lib, "d3d9.lib" )
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment( lib, "d3dx9d.lib" )
 #else
@@ -59,20 +59,20 @@ const float kMinCameraDistance = 1.5f;
 const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 
-// === 変更: RT を 2 枚用意 ===
+// === ??: RT ? 2 ??? ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
 LPDIRECT3DTEXTURE9 g_pRenderTarget2 = NULL;
 
-// フルスクリーンクアッド用
+// ????????????
 LPDIRECT3DVERTEXDECLARATION9 g_pQuadDecl = NULL;
 
-// 追加: スプライト
+// ??: ?????
 LPD3DXSPRITE g_pSprite = NULL;
 
 struct QuadVertex
 {
-    float x, y, z, w; // クリップ空間（-1..1, w=1）
-    float u, v;       // テクスチャ座標
+    float x, y, z, w; // ??????(-1..1, w=1)
+    float u, v;       // ???????
 };
 
 static void TextDraw(LPD3DXFONT pFont, TCHAR* text, int X, int Y);
@@ -267,7 +267,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
         {
-            MessageBox(hWnd, _T("F1キーが押されました。"), _T("F1"), MB_OK);
+            MessageBox(hWnd, _T("F1??????????"), _T("F1"), MB_OK);
         }
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F2))
@@ -354,11 +354,11 @@ void UpdatePlayerByInput()
         const bool focusModeEnabled = PhysicsWorld::IsFocusModeEnabled();
         if (focusModeEnabled)
         {
-            g_playerYaw = atan2f(cameraForward.x, cameraForward.z);
+            g_playerYaw = atan2f(-cameraForward.x, -cameraForward.z);
         }
         else
         {
-            const float targetYaw = atan2f(desiredMove.x, desiredMove.z);
+            const float targetYaw = atan2f(-desiredMove.x, -desiredMove.z);
             g_playerYaw = MoveAngleToward(g_playerYaw,
                                           targetYaw,
                                           kPlayerTurnRadiansPerSecond * kTargetFrameSeconds);
@@ -473,7 +473,7 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
         }
     }
 
-    // カメラ位置をyaw/pitch/distanceから算出し、CameraMoverで障害物を回避する
+    // ??????yaw/pitch/distance??????CameraMover?????????
     const D3DXVECTOR3 cameraTarget = currentRenderPosition + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
     const float horizontalDistance = g_cameraDistance * cosf(g_cameraPitch);
     const D3DXVECTOR3 offset(sinf(g_cameraYaw) * horizontalDistance,
@@ -573,7 +573,7 @@ void InitD3D(HWND hWnd)
                              OUT_TT_ONLY_PRECIS,
                              CLEARTYPE_NATURAL_QUALITY,
                              FF_DONTCARE,
-                             _T("ＭＳ ゴシック"),
+                             _T("MS ????"),
                              &g_pFont);
     assert(hResult == S_OK);
 
@@ -655,7 +655,7 @@ void InitD3D(HWND hWnd)
                                NULL);
     assert(hResult == S_OK);
 
-    // === 変更: RT を 2 枚作成（両方 A8R8G8B8） ===
+    // === ??: RT ? 2 ???(?? A8R8G8B8) ===
     hResult = D3DXCreateTexture(g_pd3dDevice,
                                 640, 480,
                                 1,
@@ -674,7 +674,7 @@ void InitD3D(HWND hWnd)
                                 &g_pRenderTarget2);
     assert(hResult == S_OK);
 
-    // フルスクリーンクアッドの頂宣言
+    // ???????????????
     D3DVERTEXELEMENT9 elems[] =
     {
         { 0,  0, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
@@ -684,7 +684,7 @@ void InitD3D(HWND hWnd)
     hResult = g_pd3dDevice->CreateVertexDeclaration(elems, &g_pQuadDecl);
     assert(hResult == S_OK);
 
-    // スプライト
+    // ?????
     hResult = D3DXCreateSprite(g_pd3dDevice, &g_pSprite);
     assert(hResult == S_OK);
 }
@@ -702,7 +702,7 @@ void Cleanup()
     SAFE_RELEASE(g_pEffect2);
     SAFE_RELEASE(g_pFont);
 
-    // 追加: 解放漏れ防止
+    // ??: ??????
     SAFE_RELEASE(g_pRenderTarget);
     SAFE_RELEASE(g_pRenderTarget2);
     SAFE_RELEASE(g_pQuadDecl);
@@ -716,18 +716,18 @@ void RenderPass1()
 {
     HRESULT hResult = E_FAIL;
 
-    // 既存の RT0 を保存
+    // ??? RT0 ???
     LPDIRECT3DSURFACE9 pOldRT0 = NULL;
     hResult = g_pd3dDevice->GetRenderTarget(0, &pOldRT0);
     assert(hResult == S_OK);
 
-    // 2 枚の RT サーフェスを取得
+    // 2 ?? RT ????????
     LPDIRECT3DSURFACE9 pRT0 = NULL;
     LPDIRECT3DSURFACE9 pRT1 = NULL;
     hResult = g_pRenderTarget->GetSurfaceLevel(0, &pRT0);  assert(hResult == S_OK);
     hResult = g_pRenderTarget2->GetSurfaceLevel(0, &pRT1); assert(hResult == S_OK);
 
-    // MRT セット（スロット 0 と 1）
+    // MRT ???(???? 0 ? 1)
     hResult = g_pd3dDevice->SetRenderTarget(0, pRT0); assert(hResult == S_OK);
     hResult = g_pd3dDevice->SetRenderTarget(1, pRT1); assert(hResult == S_OK);
 
@@ -761,12 +761,12 @@ void RenderPass1()
 
     hResult = g_pd3dDevice->BeginScene(); assert(hResult == S_OK);
 
-    // タイトル
+    // ????
     TCHAR msg[100];
-    _tcscpy_s(msg, 100, _T("SSAOに挑戦"));
+    _tcscpy_s(msg, 100, _T("SSAO???"));
     TextDraw(g_pFont, msg, 0, 0);
 
-    // === 変更: MRT 用テクニックを使用 ===
+    // === ??: MRT ????????? ===
     hResult = g_pEffect1->SetTechnique("TechniqueMRT");
     assert(hResult == S_OK);
 
@@ -774,7 +774,7 @@ void RenderPass1()
     hResult = g_pEffect1->Begin(&numPass, 0); assert(hResult == S_OK);
     hResult = g_pEffect1->BeginPass(0);       assert(hResult == S_OK);
 
-    // メッシュ（テクスチャあり）
+    // ????(???????)
     hResult = g_pEffect1->SetBool("g_bUseTexture", TRUE); assert(hResult == S_OK);
     for (DWORD i = 0; i < g_dwNumMaterials; i++)
     {
@@ -783,7 +783,7 @@ void RenderPass1()
         hResult = g_pMesh->DrawSubset(i);                              assert(hResult == S_OK);
     }
 
-    // 球（テクスチャなし）
+    // ?(???????)
     {
         hResult = g_pEffect1->SetBool("g_bUseTexture", FALSE); assert(hResult == S_OK);
         hResult = g_pEffect1->SetTexture("texture1", NULL);    assert(hResult == S_OK);
@@ -796,7 +796,7 @@ void RenderPass1()
 
     hResult = g_pd3dDevice->EndScene(); assert(hResult == S_OK);
 
-    // MRT を解除してバックバッファへ戻す
+    // MRT ???????????????
     hResult = g_pd3dDevice->SetRenderTarget(1, NULL);   assert(hResult == S_OK);
     hResult = g_pd3dDevice->SetRenderTarget(0, pOldRT0); assert(hResult == S_OK);
 
@@ -815,13 +815,13 @@ void RenderPass2()
                                   1.0f, 0);
     assert(hResult == S_OK);
 
-    // 2D 全面描画なので Z 無効
+    // 2D ??????? Z ??
     hResult = g_pd3dDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
     assert(hResult == S_OK);
 
     hResult = g_pd3dDevice->BeginScene(); assert(hResult == S_OK);
 
-    // フルスクリーン: RT0 を simple2.fx で表示
+    // ???????: RT0 ? simple2.fx ???
     hResult = g_pEffect2->SetTechnique("Technique1");       assert(hResult == S_OK);
 
     UINT numPass = 0;
@@ -836,18 +836,18 @@ void RenderPass2()
     hResult = g_pEffect2->EndPass(); assert(hResult == S_OK);
     hResult = g_pEffect2->End();     assert(hResult == S_OK);
 
-    // === 追加: 左上に RT1 を 1/2 スケールで表示（D3DXSPRITE） ===
+    // === ??: ??? RT1 ? 1/2 ???????(D3DXSPRITE) ===
     if (g_pSprite)
     {
         hResult = g_pSprite->Begin(D3DXSPRITE_ALPHABLEND);  assert(hResult == S_OK);
 
         D3DXMATRIX mat;
-        D3DXVECTOR2 scaling(0.5f, 0.5f);     // 半分
-        D3DXVECTOR2 trans(0.0f, 0.0f);       // 左上
+        D3DXVECTOR2 scaling(0.5f, 0.5f);     // ??
+        D3DXVECTOR2 trans(0.0f, 0.0f);       // ??
         D3DXMatrixTransformation2D(&mat, NULL, 0.0f, &scaling, NULL, 0.0f, &trans);
         g_pSprite->SetTransform(&mat);
 
-        // そのまま (0,0) へ描画
+        // ???? (0,0) ???
         hResult = g_pSprite->Draw(g_pRenderTarget2, NULL, NULL, NULL, 0xFFFFFFFF);
         assert(hResult == S_OK);
 
