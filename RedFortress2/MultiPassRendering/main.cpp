@@ -126,6 +126,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetCamera(D3DXVECTOR3(0.0f, 1.5f, -5.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
+    g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
+                                D3DXVECTOR3(0.0f, 3.0f, 0.0f),
+                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                1.0f,
+                                NSRender::AnimSetMap());
 
     InputDevice::Initialize(hInstance, hWnd);
     SoundLib::SoundLib::Initialize(hWnd);
