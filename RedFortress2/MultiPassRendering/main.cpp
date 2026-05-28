@@ -11,6 +11,8 @@
 #include <tchar.h>
 #include <cassert>
 #include <crtdbg.h>
+#include <fstream>
+#include <sstream>
 #include <vector>
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
@@ -74,8 +76,89 @@ static void UpdatePlayerByInput();
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
 static void InitializePlayerPhysics();
+static void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
 static void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
 static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
+
+namespace
+{
+std::wstring TrimCsvField(const std::wstring& text)
+{
+    const std::wstring whitespace = L" \t\r\n";
+    const std::size_t first = text.find_first_not_of(whitespace);
+    if (first == std::wstring::npos)
+    {
+        return L"";
+    }
+
+    const std::size_t last = text.find_last_not_of(whitespace);
+    return text.substr(first, last - first + 1);
+}
+
+std::vector<std::wstring> SplitCsvLine(const std::wstring& line)
+{
+    std::vector<std::wstring> fields;
+    std::wstring current;
+    bool insideQuotes = false;
+
+    for (wchar_t ch : line)
+    {
+        if (ch == L'"')
+        {
+            insideQuotes = !insideQuotes;
+            continue;
+        }
+
+        if (ch == L',' && !insideQuotes)
+        {
+            fields.push_back(TrimCsvField(current));
+            current.clear();
+            continue;
+        }
+
+        current.push_back(ch);
+    }
+
+    fields.push_back(TrimCsvField(current));
+    return fields;
+}
+
+std::wstring GetParentDirectoryPath(const std::wstring& path)
+{
+    const std::size_t pos = path.find_last_of(L"\\/");
+    if (pos == std::wstring::npos)
+    {
+        return L"";
+    }
+
+    return path.substr(0, pos);
+}
+
+std::wstring ResolveRelativePath(const std::wstring& baseDirectory, const std::wstring& relativePath)
+{
+    if (relativePath.empty())
+    {
+        return L"";
+    }
+
+    if (relativePath.size() > 1 && relativePath[1] == L':')
+    {
+        return relativePath;
+    }
+
+    if (!relativePath.empty() && (relativePath[0] == L'\\' || relativePath[0] == L'/'))
+    {
+        return relativePath;
+    }
+
+    if (baseDirectory.empty())
+    {
+        return relativePath;
+    }
+
+    return baseDirectory + L"\\" + relativePath;
+}
+}
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -312,6 +395,53 @@ void InitializePlayerPhysics()
     settings.airControlEnabled = true;
     g_playerMover.SetSettings(settings);
     g_playerMover.Reset(PLAYER_START_POSITION);
+}
+
+void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath)
+{
+    std::wifstream file(csvPath);
+    if (!file)
+    {
+        return;
+    }
+
+    const std::wstring baseDirectory = GetParentDirectoryPath(csvPath);
+    std::wstring line;
+    while (std::getline(file, line))
+    {
+        const std::wstring trimmedLine = TrimCsvField(line);
+        if (trimmedLine.empty() || trimmedLine.front() == L'#')
+        {
+            continue;
+        }
+
+        const std::vector<std::wstring> fields = SplitCsvLine(trimmedLine);
+        if (fields.size() < 5)
+        {
+            continue;
+        }
+
+        const std::wstring modelPath = ResolveRelativePath(baseDirectory, fields[0]);
+        const int objectId = PhysicsWorld::Load(modelPath.c_str(), PhysicsWorld::ObjectType::Slide, 1.0f);
+        if (objectId < 0)
+        {
+            continue;
+        }
+
+        try
+        {
+            const D3DXVECTOR3 position(static_cast<float>(std::stof(fields[1])),
+                                       static_cast<float>(std::stof(fields[2])),
+                                       static_cast<float>(std::stof(fields[3])));
+            const D3DXVECTOR3 rotation(0.0f,
+                                       D3DXToRadian(static_cast<float>(std::stof(fields[4]))),
+                                       0.0f);
+            PhysicsWorld::SetTransform(objectId, position, rotation);
+        }
+        catch (...)
+        {
+        }
+    }
 }
 
 void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
