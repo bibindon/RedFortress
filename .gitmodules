@@ -40,3 +40,6 @@
 [submodule "SoundLib"]
 	path = SoundLib
 	url = https://github.com/bibindon/SoundLib.git
+[submodule "PhysicsLib"]
+	path = PhysicsLib
+	url = https://github.com/bibindon/PhysicsLib.git
