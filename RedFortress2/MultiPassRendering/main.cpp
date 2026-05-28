@@ -42,7 +42,6 @@ const float CAMERA_MOVE_SPEED = 0.08f;
 const float CAMERA_FAST_MOVE_SPEED = 0.25f;
 const float MOUSE_CAMERA_SENSITIVITY = 0.0001f;
 const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.5f, 0.0f);
-const D3DXVECTOR3 PLAYER_RENDER_OFFSET(0.0f, 0.5f, 0.0f);
 const D3DXVECTOR3 PLAYER_CAMERA_OFFSET(0.0f, 2.0f, -6.0f);
 int g_playerMeshId = -1;
 PhysicsLib::CharacterMover g_playerMover;
@@ -138,7 +137,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
     g_playerMeshId = g_Render.AddMeshMix(L"res\\model\\cube.x",
-                                         PLAYER_START_POSITION + PLAYER_RENDER_OFFSET,
+                                         PLAYER_START_POSITION,
                                          D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                          1.0f);
     g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
@@ -147,8 +146,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                                 1.0f,
                                 NSRender::AnimSetMap());
     InitializePlayerPhysics();
-    g_Render.SetCamera(PLAYER_START_POSITION + PLAYER_RENDER_OFFSET + PLAYER_CAMERA_OFFSET,
-                       PLAYER_START_POSITION + PLAYER_RENDER_OFFSET);
+    g_Render.SetCamera(PLAYER_START_POSITION + PLAYER_CAMERA_OFFSET,
+                       PLAYER_START_POSITION);
 
     InputDevice::Initialize(hInstance, hWnd);
     SoundLib::SoundLib::Initialize(hWnd);
@@ -169,7 +168,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         UpdateCameraByInput();
         UpdatePlayerByInput();
 
-        const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition() + PLAYER_RENDER_OFFSET;
+        const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
         const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
         SoundLib::Vector3 listenerPosition { playerRenderPosition.x, playerRenderPosition.y, playerRenderPosition.z };
         SoundLib::Vector3 listenerFront { listenerForward.x, listenerForward.y, listenerForward.z };
@@ -227,7 +226,7 @@ void UpdateCameraByInput()
 
 void UpdatePlayerByInput()
 {
-    const D3DXVECTOR3 previousRenderPosition = g_playerMover.GetPosition() + PLAYER_RENDER_OFFSET;
+    const D3DXVECTOR3 previousRenderPosition = g_playerMover.GetPosition();
     const D3DXVECTOR3 forward = GetCameraPlanarForward();
     const D3DXVECTOR3 right = GetCameraPlanarRight(forward);
 
@@ -303,7 +302,7 @@ void InitializePlayerPhysics()
 
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
-    settings.shapeOffset = PLAYER_RENDER_OFFSET;
+    settings.shapeOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     settings.radius = 0.45f;
     settings.height = 1.0f;
     settings.moveSpeed = 6.0f;
@@ -317,7 +316,7 @@ void InitializePlayerPhysics()
 
 void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
 {
-    const D3DXVECTOR3 currentRenderPosition = g_playerMover.GetPosition() + PLAYER_RENDER_OFFSET;
+    const D3DXVECTOR3 currentRenderPosition = g_playerMover.GetPosition();
     if (g_playerMeshId >= 0)
     {
         g_Render.SetMeshMixPos(g_playerMeshId, currentRenderPosition);
@@ -732,3 +731,5 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
+
+
