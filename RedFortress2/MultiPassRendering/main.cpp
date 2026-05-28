@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
+#include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../SoundLib/SoundLib/SoundLib.h"
 #include "resource.h"
@@ -36,9 +37,15 @@ LPD3DXEFFECT g_pEffect2 = NULL;
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 NSRender::Render g_Render;
+using PhysicsWorld = PhysicsLib::PhysicsLib;
 const float CAMERA_MOVE_SPEED = 0.08f;
 const float CAMERA_FAST_MOVE_SPEED = 0.25f;
-    const float MOUSE_CAMERA_SENSITIVITY = 0.0001f;
+const float MOUSE_CAMERA_SENSITIVITY = 0.0001f;
+const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.5f, 0.0f);
+const D3DXVECTOR3 PLAYER_RENDER_OFFSET(0.0f, 0.5f, 0.0f);
+const D3DXVECTOR3 PLAYER_CAMERA_OFFSET(0.0f, 2.0f, -6.0f);
+int g_playerMeshId = -1;
+PhysicsLib::CharacterMover g_playerMover;
 
 // === 変更: RT を 2 枚用意 ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
@@ -64,6 +71,11 @@ static void RenderPass1();
 static void RenderPass2();
 static void DrawFullscreenQuad();
 static void UpdateCameraByInput();
+static void UpdatePlayerByInput();
+static D3DXVECTOR3 GetCameraPlanarForward();
+static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
+static void InitializePlayerPhysics();
+static void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
 static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -125,15 +137,18 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
-    g_Render.AddMeshMix(L"res\\model\\cube.x",
-                        D3DXVECTOR3(0.0f, 1.0f, 0.0f),
-                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                        1.0f);
+    g_playerMeshId = g_Render.AddMeshMix(L"res\\model\\cube.x",
+                                         PLAYER_START_POSITION + PLAYER_RENDER_OFFSET,
+                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                         1.0f);
     g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
                                 D3DXVECTOR3(0.0f, 3.0f, 0.0f),
                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                 1.0f,
                                 NSRender::AnimSetMap());
+    InitializePlayerPhysics();
+    g_Render.SetCamera(PLAYER_START_POSITION + PLAYER_RENDER_OFFSET + PLAYER_CAMERA_OFFSET,
+                       PLAYER_START_POSITION + PLAYER_RENDER_OFFSET);
 
     InputDevice::Initialize(hInstance, hWnd);
     SoundLib::SoundLib::Initialize(hWnd);
@@ -152,9 +167,12 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
         InputDevice::Update();
         UpdateCameraByInput();
+        UpdatePlayerByInput();
 
-        SoundLib::Vector3 listenerPosition { 0.0f, 0.0f, 0.0f };
-        SoundLib::Vector3 listenerFront { 0.0f, 0.0f, 1.0f };
+        const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition() + PLAYER_RENDER_OFFSET;
+        const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
+        SoundLib::Vector3 listenerPosition { playerRenderPosition.x, playerRenderPosition.y, playerRenderPosition.z };
+        SoundLib::Vector3 listenerFront { listenerForward.x, listenerForward.y, listenerForward.z };
         SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
         SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
 
@@ -187,6 +205,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     }
 
     g_Render.Finalize();
+    PhysicsWorld::Finalize();
     SoundLib::SoundLib::Finalize();
     InputDevice::Finalize();
     Cleanup();
@@ -197,20 +216,20 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
 void UpdateCameraByInput()
 {
-    D3DXVECTOR3 forward = g_Render.GetCameraRotate();
-    forward.y = 0.0f;
-    if (D3DXVec3LengthSq(&forward) > 0.0f)
+    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
+    if (mouseDelta.x != 0 || mouseDelta.y != 0)
     {
-        D3DXVec3Normalize(&forward, &forward);
+        g_Render.RotateCamera(D3DXVECTOR3(static_cast<float>(mouseDelta.y) * MOUSE_CAMERA_SENSITIVITY,
+                                          static_cast<float>(mouseDelta.x) * MOUSE_CAMERA_SENSITIVITY,
+                                          0.0f));
     }
+}
 
-    D3DXVECTOR3 worldUp(0.0f, 1.0f, 0.0f);
-    D3DXVECTOR3 right(1.0f, 0.0f, 0.0f);
-    D3DXVec3Cross(&right, &worldUp, &forward);
-    if (D3DXVec3LengthSq(&right) > 0.0f)
-    {
-        D3DXVec3Normalize(&right, &right);
-    }
+void UpdatePlayerByInput()
+{
+    const D3DXVECTOR3 previousRenderPosition = g_playerMover.GetPosition() + PLAYER_RENDER_OFFSET;
+    const D3DXVECTOR3 forward = GetCameraPlanarForward();
+    const D3DXVECTOR3 right = GetCameraPlanarRight(forward);
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
     if (InputDevice::SKeyBoard::IsDown(DIK_W))
@@ -233,17 +252,78 @@ void UpdateCameraByInput()
     if (D3DXVec3LengthSq(&move) > 0.0f)
     {
         D3DXVec3Normalize(&move, &move);
-        const float speed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT) ? CAMERA_FAST_MOVE_SPEED : CAMERA_MOVE_SPEED;
-        g_Render.MoveCamera(move * speed);
     }
 
-    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
-    if (mouseDelta.x != 0 || mouseDelta.y != 0)
+    g_playerMover.Update(move, InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE));
+    UpdatePlayerMeshAndCamera(previousRenderPosition);
+}
+
+D3DXVECTOR3 GetCameraPlanarForward()
+{
+    D3DXVECTOR3 forward = g_Render.GetLookAtPos() - g_Render.GetCameraPos();
+    forward.y = 0.0f;
+    if (D3DXVec3LengthSq(&forward) <= 0.0001f)
     {
-        g_Render.RotateCamera(D3DXVECTOR3(static_cast<float>(mouseDelta.y) * MOUSE_CAMERA_SENSITIVITY,
-                                          static_cast<float>(mouseDelta.x) * MOUSE_CAMERA_SENSITIVITY,
-                                          0.0f));
+        return D3DXVECTOR3(0.0f, 0.0f, 1.0f);
     }
+
+    D3DXVec3Normalize(&forward, &forward);
+    return forward;
+}
+
+D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward)
+{
+    D3DXVECTOR3 worldUp(0.0f, 1.0f, 0.0f);
+    D3DXVECTOR3 right(1.0f, 0.0f, 0.0f);
+    D3DXVec3Cross(&right, &worldUp, &forward);
+    if (D3DXVec3LengthSq(&right) <= 0.0001f)
+    {
+        return D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+    }
+
+    D3DXVec3Normalize(&right, &right);
+    return right;
+}
+
+void InitializePlayerPhysics()
+{
+    PhysicsWorld::Initialize();
+
+    const int floorId = PhysicsWorld::Load(_T("res\\model\\plateField.x"), PhysicsWorld::ObjectType::Slide, 1.0f);
+    if (floorId >= 0)
+    {
+        PhysicsWorld::SetTransform(floorId, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    }
+
+    const int obstacleId = PhysicsWorld::Load(_T("res\\model\\cubeNormalInverse.x"), PhysicsWorld::ObjectType::Slide, 1.0f);
+    if (obstacleId >= 0)
+    {
+        PhysicsWorld::SetTransform(obstacleId, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    }
+
+    PhysicsLib::CharacterMover::Settings settings;
+    settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
+    settings.shapeOffset = PLAYER_RENDER_OFFSET;
+    settings.radius = 0.45f;
+    settings.height = 1.0f;
+    settings.moveSpeed = 6.0f;
+    settings.groundAcceleration = 18.0f;
+    settings.airAcceleration = 8.0f;
+    settings.jumpVelocity = 5.0f;
+    settings.airControlEnabled = true;
+    g_playerMover.SetSettings(settings);
+    g_playerMover.Reset(PLAYER_START_POSITION);
+}
+
+void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
+{
+    const D3DXVECTOR3 currentRenderPosition = g_playerMover.GetPosition() + PLAYER_RENDER_OFFSET;
+    if (g_playerMeshId >= 0)
+    {
+        g_Render.SetMeshMixPos(g_playerMeshId, currentRenderPosition);
+    }
+
+    g_Render.MoveCamera(currentRenderPosition - previousRenderPosition);
 }
 
 INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
