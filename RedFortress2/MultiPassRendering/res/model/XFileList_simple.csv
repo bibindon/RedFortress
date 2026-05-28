@@ -1,3 +1,4 @@
 # path, x, y, z, yawDegrees
 cubeNormalInverse.x, 0, 0, 0, 0
 plateField.x, 0, 0, 0, 0
+monkey.blend.x, 5, 0, 0, 0
