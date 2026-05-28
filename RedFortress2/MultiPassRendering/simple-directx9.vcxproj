@@ -176,6 +176,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj">
+      <Project>{b3effbe0-0c53-40fa-a961-b2856809a23c}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
       <Project>{4789cf6c-2204-40f9-a733-976227c23547}</Project>
     </ProjectReference>
