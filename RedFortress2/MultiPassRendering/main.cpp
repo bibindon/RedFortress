@@ -1,4 +1,4 @@
-#pragma comment( lib, "d3d9.lib" )
+﻿#pragma comment( lib, "d3d9.lib" )
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment( lib, "d3dx9d.lib" )
 #else
@@ -58,6 +58,8 @@ const float kTargetFrameSeconds = 1.0f / 60.0f;
 const float kMinCameraDistance = 1.5f;
 const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
+enum class PlayerAnimState { Idle, Walk, Run };
+PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 
 // === ??: RT ? 2 ??? ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
@@ -231,6 +233,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
     g_playerMeshId = g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
+                                                 L"res\\model2\\separatedAnim\\wolfAnim.csv",
                                                  PLAYER_START_POSITION,
                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                                  1.0f,
@@ -347,8 +350,16 @@ void UpdatePlayerByInput()
     if (InputDevice::SKeyBoard::IsDown(DIK_D)) localMove.x += 1.0f;
     if (InputDevice::SKeyBoard::IsDown(DIK_A)) localMove.x -= 1.0f;
 
+    const bool isMoving  = (localMove.x != 0.0f || localMove.z != 0.0f);
+    const bool isRunning = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LSHIFT);
+
+    PhysicsLib::CharacterMover::Settings settings = g_playerMover.GetSettings();
+    const float baseSpeed = 6.0f;
+    settings.moveSpeed = isRunning ? baseSpeed * 1.5f : baseSpeed;
+    g_playerMover.SetSettings(settings);
+
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
-    if (localMove.x != 0.0f || localMove.z != 0.0f)
+    if (isMoving)
     {
         const D3DXVECTOR3 desiredMove = cameraRight * localMove.x + cameraForward * localMove.z;
         const bool focusModeEnabled = PhysicsWorld::IsFocusModeEnabled();
@@ -365,6 +376,24 @@ void UpdatePlayerByInput()
         }
         move = desiredMove;
         D3DXVec3Normalize(&move, &move);
+    }
+
+    if (g_playerMeshId >= 0)
+    {
+        PlayerAnimState nextState = PlayerAnimState::Idle;
+        if (isRunning)     nextState = PlayerAnimState::Run;
+        else if (isMoving) nextState = PlayerAnimState::Walk;
+
+        if (nextState != g_playerAnimState)
+        {
+            g_playerAnimState = nextState;
+            if (nextState == PlayerAnimState::Run)
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, L"run");
+            else if (nextState == PlayerAnimState::Walk)
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, L"walk");
+            else
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, L"idle");
+        }
     }
 
     g_playerMover.Update(move, InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE));
