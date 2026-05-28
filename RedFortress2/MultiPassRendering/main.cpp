@@ -371,17 +371,7 @@ void InitializePlayerPhysics()
 {
     PhysicsWorld::Initialize();
 
-    const int floorId = PhysicsWorld::Load(_T("res\\model\\plateField.x"), PhysicsWorld::ObjectType::Slide, 1.0f);
-    if (floorId >= 0)
-    {
-        PhysicsWorld::SetTransform(floorId, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-    }
-
-    const int obstacleId = PhysicsWorld::Load(_T("res\\model\\cubeNormalInverse.x"), PhysicsWorld::ObjectType::Slide, 1.0f);
-    if (obstacleId >= 0)
-    {
-        PhysicsWorld::SetTransform(obstacleId, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-    }
+    LoadPhysicsObjectsFromCsv(L"res\\model\\XFileList_simple.csv");
 
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
