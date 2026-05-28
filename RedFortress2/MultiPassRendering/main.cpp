@@ -449,7 +449,7 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
             delta.y = 0.0f;
             if (D3DXVec3LengthSq(&delta) > 0.0001f)
             {
-                const float rotY = atan2f(delta.x, delta.z);
+                const float rotY = atan2f(-delta.x, -delta.z);
                 g_Render.SetMeshMixSkinAnimRotY(g_playerMeshId, rotY);
             }
         }
