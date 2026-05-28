@@ -46,6 +46,7 @@ const float MOUSE_CAMERA_SENSITIVITY = 0.0001f;
 const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.5f, 0.0f);
 const D3DXVECTOR3 PLAYER_CAMERA_OFFSET(0.0f, 2.0f, -6.0f);
 int g_playerMeshId = -1;
+bool g_playerIsSkinAnim = true;
 PhysicsLib::CharacterMover g_playerMover;
 
 // === 変更: RT を 2 枚用意 ===
@@ -219,15 +220,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
-    g_playerMeshId = g_Render.AddMeshMix(L"res\\model\\cube.x",
-                                         PLAYER_START_POSITION,
-                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                         1.0f);
-    g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
-                                D3DXVECTOR3(0.0f, 3.0f, 0.0f),
-                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                1.0f,
-                                NSRender::AnimSetMap());
+    g_playerMeshId = g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
+                                                 PLAYER_START_POSITION,
+                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                 1.0f,
+                                                 NSRender::AnimSetMap());
     InitializePlayerPhysics();
     g_Render.SetCamera(PLAYER_START_POSITION + PLAYER_CAMERA_OFFSET,
                        PLAYER_START_POSITION);
@@ -444,7 +441,14 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
     const D3DXVECTOR3 currentRenderPosition = g_playerMover.GetPosition();
     if (g_playerMeshId >= 0)
     {
-        g_Render.SetMeshMixPos(g_playerMeshId, currentRenderPosition);
+        if (g_playerIsSkinAnim)
+        {
+            g_Render.SetMeshMixSkinAnimPos(g_playerMeshId, currentRenderPosition);
+        }
+        else
+        {
+            g_Render.SetMeshMixPos(g_playerMeshId, currentRenderPosition);
+        }
     }
 
     g_Render.MoveCamera(currentRenderPosition - previousRenderPosition);
