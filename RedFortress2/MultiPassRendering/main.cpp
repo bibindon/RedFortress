@@ -170,6 +170,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, SettingsDialogProc);
         }
 
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F8))
+        {
+            g_Render.ShowSettingsDialog();
+        }
+
         if (g_bClose)
         {
             break;
