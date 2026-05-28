@@ -278,6 +278,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             g_Render.ShowSettingsDialog();
         }
 
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F9))
+        {
+            PhysicsWorld::ShowSettingsDialog(hWnd);
+        }
+
         if (g_bClose)
         {
             break;
