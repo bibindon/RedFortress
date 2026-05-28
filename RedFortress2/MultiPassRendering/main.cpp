@@ -125,11 +125,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetShowFPS(false);
     g_Render.SetCamera(D3DXVECTOR3(0.0f, 1.5f, -5.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
-    g_Render.AddMeshMix(L"res\\model\\cube.x",
-                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                        1.0f,
-                        100.0f);
+    g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
 
     InputDevice::Initialize(hInstance, hWnd);
     SoundLib::SoundLib::Initialize(hWnd);
