@@ -2,4 +2,5 @@
 cubeNormalInverse.x, 0, 0, 0, 0
 plateField.x, 0, 0, 0, 0
 monkey.blend.x, 5, 0, 0, 0
-cubeEmitYellow.x, -5,2,0,0
+cubeEmitYellow.x, -5, 2, 0, 0
+collision_wall.x, 0, 0, 5, 0
