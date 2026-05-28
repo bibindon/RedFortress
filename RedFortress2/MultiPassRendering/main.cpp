@@ -38,7 +38,7 @@ const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 NSRender::Render g_Render;
 const float CAMERA_MOVE_SPEED = 0.08f;
 const float CAMERA_FAST_MOVE_SPEED = 0.25f;
-const float MOUSE_CAMERA_SENSITIVITY = 0.005f;
+    const float MOUSE_CAMERA_SENSITIVITY = 0.0001f;
 
 // === 変更: RT を 2 枚用意 ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
