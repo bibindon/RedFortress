@@ -123,7 +123,6 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.Initialize(hWnd, L"res\\RenderSettings.csv");
     g_Render.ChangeResolution(1600, 900);
     g_Render.SetShowFPS(false);
-    g_Render.SetCamera(D3DXVECTOR3(0.0f, 1.5f, -5.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
     g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",

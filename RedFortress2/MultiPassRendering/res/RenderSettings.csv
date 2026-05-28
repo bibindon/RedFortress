@@ -1,4 +1,4 @@
-SaturateEnable,1
+﻿SaturateEnable,1
 SaturateLevel,0.7
 ,
 HalfLambertShadowSaturation,2.0
@@ -118,6 +118,13 @@ GodRayLightPosZ,1000.0
 ,
 CameraNear,0.1
 CameraFar,30000.0
+CameraHorizontalFov,90.0
+CameraPosX,0.0
+CameraPosY,1.5
+CameraPosZ,-5.0
+CameraLookAtX,0.0
+CameraLookAtY,0.0
+CameraLookAtZ,0.0
 GBufferNear,0.1
 GBufferFar,30.0
 ,
