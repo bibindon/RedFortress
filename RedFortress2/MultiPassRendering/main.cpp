@@ -340,8 +340,9 @@ void UpdatePlayerByInput()
     const bool isRunning = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LSHIFT);
 
     PhysicsLib::CharacterMover::Settings settings = g_playerMover.GetSettings();
-    const float baseSpeed = 6.0f;
-    settings.moveSpeed = isRunning ? baseSpeed * 1.5f : baseSpeed;
+    const float walkSpeed = 1.5f;
+    const float runSpeed = 4.5f;
+    settings.moveSpeed = isRunning ? runSpeed : walkSpeed;
     g_playerMover.SetSettings(settings);
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
