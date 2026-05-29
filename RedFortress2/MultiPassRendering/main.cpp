@@ -28,7 +28,9 @@ NSRender::Render g_Render;
 using PhysicsWorld = PhysicsLib::PhysicsLib;
 const float CAMERA_MOVE_SPEED = 0.08f;
 const float CAMERA_FAST_MOVE_SPEED = 0.25f;
-const float MOUSE_CAMERA_SENSITIVITY = 0.0001f;
+const float MOUSE_CAMERA_SENSITIVITY_NORMAL = 0.005f;
+const float MOUSE_CAMERA_SENSITIVITY_REMOTE = 0.00025f;
+bool g_remoteDesktopMode = false;
 const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.5f, 0.0f);
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
@@ -318,8 +320,9 @@ void UpdateCameraByInput()
     const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
     if (mouseDelta.x != 0 || mouseDelta.y != 0)
     {
-        g_cameraYaw   -= static_cast<float>(mouseDelta.x) * 0.005f;
-        g_cameraPitch  += static_cast<float>(mouseDelta.y) * 0.005f;
+        const float sensitivity = g_remoteDesktopMode ? MOUSE_CAMERA_SENSITIVITY_REMOTE : MOUSE_CAMERA_SENSITIVITY_NORMAL;
+        g_cameraYaw   -= static_cast<float>(mouseDelta.x) * sensitivity;
+        g_cameraPitch  += static_cast<float>(mouseDelta.y) * sensitivity;
         g_cameraPitch  = ClampFloat(g_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
     }
 }
@@ -505,11 +508,17 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
     switch (msg)
     {
     case WM_INITDIALOG:
+        SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_SETCHECK,
+                    g_remoteDesktopMode ? BST_CHECKED : BST_UNCHECKED, 0);
         return TRUE;
 
     case WM_COMMAND:
         switch (LOWORD(wParam))
         {
+        case IDC_CHECK1:
+            g_remoteDesktopMode = (SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_GETCHECK, 0, 0) == BST_CHECKED);
+            return TRUE;
+
         case IDOK:
         case IDCANCEL:
             EndDialog(hDlg, LOWORD(wParam));
