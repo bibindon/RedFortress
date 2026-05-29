@@ -248,7 +248,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             SoundLib::SoundLib::PlaySoundEffect(g_arrowSoundPath, 100);
         }
 
-        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F3))
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
         {
             DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, SettingsDialogProc);
         }
@@ -318,8 +318,8 @@ void UpdateCameraByInput()
     const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
     if (mouseDelta.x != 0 || mouseDelta.y != 0)
     {
-        g_cameraYaw   -= static_cast<float>(mouseDelta.x) * 0.00025f;
-        g_cameraPitch  += static_cast<float>(mouseDelta.y) * 0.00025f;
+        g_cameraYaw   -= static_cast<float>(mouseDelta.x) * 0.005f;
+        g_cameraPitch  += static_cast<float>(mouseDelta.y) * 0.005f;
         g_cameraPitch  = ClampFloat(g_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
     }
 }
