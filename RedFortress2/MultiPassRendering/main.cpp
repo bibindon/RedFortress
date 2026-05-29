@@ -17,6 +17,7 @@
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
+#include "../../PhysicsLib/PhysicsLib/PhysicsLibInternal.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../SoundLib/SoundLib/SoundLib.h"
 #include "resource.h"
@@ -202,6 +203,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                                                  1.0f,
                                                  NSRender::AnimSetMap());
     InitializePlayerPhysics();
+    PhysicsLib::SettingsState::SetCameraAutoMoveEnabled(true);
+    PhysicsLib::SettingsState::SetFocusModeEnabled(false);
     InitializeCameraFromRenderSettings();
     UpdatePlayerMeshAndCamera(PLAYER_START_POSITION);
 
