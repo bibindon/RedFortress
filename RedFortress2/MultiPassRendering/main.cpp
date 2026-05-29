@@ -48,6 +48,7 @@ const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 bool g_mouseCursorVisible = false;
+HWND g_settingsDialog = NULL;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -221,7 +222,12 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     {
         while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
-            DispatchMessage(&msg);
+            if (g_settingsDialog == NULL || !IsWindowVisible(g_settingsDialog) ||
+                !IsDialogMessage(g_settingsDialog, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
         }
 
         InputDevice::Update();
@@ -252,7 +258,16 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
         {
-            DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, SettingsDialogProc);
+            if (g_settingsDialog == NULL)
+            {
+                g_settingsDialog = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, SettingsDialogProc);
+            }
+
+            if (g_settingsDialog != NULL)
+            {
+                const bool isVisible = IsWindowVisible(g_settingsDialog);
+                ShowWindow(g_settingsDialog, isVisible ? SW_HIDE : SW_SHOW);
+            }
         }
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F8))
@@ -271,6 +286,12 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
 
         g_Render.Draw();
+    }
+
+    if (g_settingsDialog != NULL)
+    {
+        DestroyWindow(g_settingsDialog);
+        g_settingsDialog = NULL;
     }
 
     g_Render.Finalize();
@@ -521,13 +542,13 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
         case IDOK:
         case IDCANCEL:
-            EndDialog(hDlg, LOWORD(wParam));
+            ShowWindow(hDlg, SW_HIDE);
             return TRUE;
         }
         break;
 
     case WM_CLOSE:
-        EndDialog(hDlg, IDCANCEL);
+        ShowWindow(hDlg, SW_HIDE);
         return TRUE;
     }
 
