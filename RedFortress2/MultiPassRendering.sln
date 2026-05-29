@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InputDevice", "..\InputDevi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Render", "..\RedFortressRender\Render\Render.vcxproj", "{D8A93A58-4392-4FC4-A4F7-634D4DAC81B4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsLib", "..\..\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj", "{B3EFFBE0-0C53-40FA-A961-B2856809A23C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsLib", "..\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj", "{B3EFFBE0-0C53-40FA-A961-B2856809A23C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
