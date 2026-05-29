@@ -60,6 +60,7 @@ const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
+bool g_mouseCursorVisible = false;
 
 // === ??: RT ? 2 ??? ===
 LPDIRECT3DTEXTURE9 g_pRenderTarget = NULL;
@@ -243,6 +244,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                        PLAYER_START_POSITION);
 
     InputDevice::Initialize(hInstance, hWnd);
+    InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
     SoundLib::SoundLib::Initialize(hWnd);
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
 
@@ -256,7 +258,16 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
 
         InputDevice::Update();
-        UpdateCameraByInput();
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+        {
+            g_mouseCursorVisible = !g_mouseCursorVisible;
+            InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
+        }
+
+        if (!g_mouseCursorVisible)
+        {
+            UpdateCameraByInput();
+        }
         UpdatePlayerByInput();
 
         const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
