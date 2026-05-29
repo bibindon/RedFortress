@@ -226,6 +226,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
         }
 
+        // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
         if (!g_mouseCursorVisible)
         {
             UpdateCameraByInput();
@@ -238,11 +239,6 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         SoundLib::Vector3 listenerFront { listenerForward.x, listenerForward.y, listenerForward.z };
         SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
         SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
-
-        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
-        {
-            MessageBox(hWnd, _T("F1??????????"), _T("F1"), MB_OK);
-        }
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F2))
         {
@@ -472,7 +468,7 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
         }
     }
 
-    // ??????yaw/pitch/distance??????CameraMover?????????
+    // yaw/pitch/distanceから理想位置を作り、CameraMoverで壁めり込みを補正する。
     const D3DXVECTOR3 cameraTarget = currentRenderPosition + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
     const float horizontalDistance = g_cameraDistance * cosf(g_cameraPitch);
     const D3DXVECTOR3 offset(sinf(g_cameraYaw) * horizontalDistance,
