@@ -255,8 +255,6 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
 
-        Sleep(16);
-
         InputDevice::Update();
         UpdateCameraByInput();
         UpdatePlayerByInput();
