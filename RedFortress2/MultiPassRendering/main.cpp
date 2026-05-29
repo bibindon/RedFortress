@@ -29,7 +29,6 @@ const float CAMERA_MOVE_SPEED = 0.08f;
 const float CAMERA_FAST_MOVE_SPEED = 0.25f;
 const float MOUSE_CAMERA_SENSITIVITY = 0.0001f;
 const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.5f, 0.0f);
-const D3DXVECTOR3 PLAYER_CAMERA_OFFSET(0.0f, 2.0f, -6.0f);
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
 PhysicsLib::CharacterMover g_playerMover;
@@ -51,6 +50,7 @@ static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
+static void InitializeCameraFromRenderSettings();
 static void InitializePlayerPhysics();
 static void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
 static void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
@@ -202,8 +202,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                                                  1.0f,
                                                  NSRender::AnimSetMap());
     InitializePlayerPhysics();
-    g_Render.SetCamera(PLAYER_START_POSITION + PLAYER_CAMERA_OFFSET,
-                       PLAYER_START_POSITION);
+    InitializeCameraFromRenderSettings();
+    UpdatePlayerMeshAndCamera(PLAYER_START_POSITION);
 
     InputDevice::Initialize(hInstance, hWnd);
     InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
@@ -291,6 +291,23 @@ static float MoveAngleToward(float current, float target, float maxDelta)
     while (diff < -D3DX_PI) diff += 2.0f * D3DX_PI;
     if (fabsf(diff) <= maxDelta) return target;
     return current + (diff > 0.0f ? maxDelta : -maxDelta);
+}
+
+void InitializeCameraFromRenderSettings()
+{
+    const D3DXVECTOR3 cameraPos = g_Render.GetCameraPos();
+    const D3DXVECTOR3 lookAtPos = g_Render.GetLookAtPos();
+    const D3DXVECTOR3 offset = cameraPos - lookAtPos;
+    const float distance = D3DXVec3Length(&offset);
+    if (distance <= 0.0001f)
+    {
+        return;
+    }
+
+    g_cameraDistance = ClampFloat(distance, kMinCameraDistance, kMaxCameraDistance);
+    g_cameraPitch = asinf(ClampFloat(offset.y / distance, -1.0f, 1.0f));
+    g_cameraPitch = ClampFloat(g_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
+    g_cameraYaw = atan2f(offset.x, -offset.z);
 }
 
 void UpdateCameraByInput()
