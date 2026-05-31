@@ -164,6 +164,35 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         {
             UpdateCameraByInput();
         }
+
+        PhysicsWorld::Update();
+        for (size_t i = 0; i < PhysicsWorld::GetMovingObjectCount(); ++i)
+        {
+            const int id = PhysicsWorld::GetMovingObjectId(i);
+            const D3DXVECTOR3 startPos = PhysicsWorld::GetMovingObjectStart(i);
+            const D3DXVECTOR3 endPos = PhysicsWorld::GetMovingObjectEnd(i);
+            const PhysicsWorld::Transform transform = PhysicsWorld::GetTransform(id);
+
+            const D3DXVECTOR3 moveDir = endPos - startPos;
+            const float moveLength = D3DXVec3Length(&moveDir);
+
+            const D3DXVECTOR3 vecFromStart = transform.position - startPos;
+            if (D3DXVec3Length(&vecFromStart) >= moveLength)
+            {
+                D3DXVECTOR3 backDir = startPos - endPos;
+                D3DXVec3Normalize(&backDir, &backDir);
+                PhysicsWorld::SetVelocity(id, backDir * D3DXVec3Length(&transform.velocity));
+            }
+
+            const D3DXVECTOR3 vecFromEnd = transform.position - endPos;
+            if (D3DXVec3Length(&vecFromEnd) >= moveLength)
+            {
+                D3DXVECTOR3 forwardDir = endPos - startPos;
+                D3DXVec3Normalize(&forwardDir, &forwardDir);
+                PhysicsWorld::SetVelocity(id, forwardDir * D3DXVec3Length(&transform.velocity));
+            }
+        }
+
         UpdatePlayerByInput();
 
         const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
@@ -357,6 +386,7 @@ void InitializePlayerPhysics()
     PhysicsWorld::Initialize();
 
     LoadPhysicsObjectsFromCsv(L"res\\model\\XFileListPhysics.csv");
+    PhysicsWorld::LoadMoveFromCsv(L"res\\model\\XFileListMove.csv");
 
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
