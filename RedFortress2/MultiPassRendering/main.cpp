@@ -438,7 +438,6 @@ void InitializePlayerPhysics()
 
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
-    settings.shapeOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     settings.radius = 0.45f;
     settings.height = 1.0f;
     settings.moveSpeed = 6.0f;
