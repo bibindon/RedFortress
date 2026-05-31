@@ -1,7 +1,7 @@
 ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
-1,res\model2\monkey.blend.x,0,0,0,0,0,0,1,normal
-2,res\model2\monkey.blend.x,8,0,0,0,45,0,1,normal
-3,res\model2\monkey.blend.x,-8,0,0,0,-45,0,1,normal
-4,res\model2\monkey.blend.x,0,0,8,0,90,0,1,normal
-5,res\model2\monkey.blend.x,0,0,-8,0,180,0,1,normal
-6,res\model2\collision_moving_platform.x,0,0,0,0,0,0,1,normal
+1,cubeNormalInverse.x, 0, 0, 0, 0, 0, 0, 1, normal
+2,plateField.x, 0, 0, 0, 0, 0, 0, 1, normal
+3,monkey.blend.x, 5, 0, 0, 0, 0, 0, 1, normal
+4,cubeEmitYellow.x, -5, 2, 0, 0, 0, 0, 1, normal
+5,collision_wall.x, 0, 0, 5, 0, 0, 0, 1, normal
+6,collision_moving_platform.x, 10, 3, 0, 0, 0, 0, 1, normal
