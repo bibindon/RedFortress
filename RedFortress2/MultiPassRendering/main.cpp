@@ -453,6 +453,11 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
             g_remoteDesktopMode = (SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_GETCHECK, 0, 0) == BST_CHECKED);
             return TRUE;
 
+        case IDC_BUTTON_RESET_MOVING:
+            PhysicsWorld::ResetMovingObjects();
+            g_Render.ResetMovingPlatforms();
+            return TRUE;
+
         case IDOK:
         case IDCANCEL:
             ShowWindow(hDlg, SW_HIDE);
