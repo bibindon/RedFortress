@@ -51,6 +51,7 @@ enum class PlayerAnimState { Idle, Walk, Run };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
+int g_movingPlatformRenderId = -1;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -125,6 +126,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
+    g_movingPlatformRenderId = g_Render.AddMeshMix(L"res\\model\\collision_moving_platform.x",
+                                                   D3DXVECTOR3(10.0f, 3.0f, 0.0f),
+                                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                   1.0f);
     g_playerMeshId = g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
                                                  L"res\\model2\\separatedAnim\\wolfAnim.csv",
                                                  PLAYER_START_POSITION,
@@ -194,6 +199,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 D3DXVECTOR3 forwardDir = endPos - startPos;
                 D3DXVec3Normalize(&forwardDir, &forwardDir);
                 PhysicsWorld::SetVelocity(id, forwardDir * D3DXVec3Length(&transform.velocity));
+            }
+
+            if (g_movingPlatformRenderId >= 0)
+            {
+                g_Render.SetMeshMixPos(g_movingPlatformRenderId, transform.position);
             }
         }
 

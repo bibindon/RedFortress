@@ -4,4 +4,3 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 3,monkey.blend.x, 5, 0, 0, 0, 0, 0, 1, normal
 4,cubeEmitYellow.x, -5, 2, 0, 0, 0, 0, 1, normal
 5,collision_wall.x, 0, 0, 5, 0, 0, 0, 1, normal
-6,collision_moving_platform.x, 10, 3, 0, 0, 0, 0, 1, normal
