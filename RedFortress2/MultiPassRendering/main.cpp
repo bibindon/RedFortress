@@ -28,7 +28,11 @@ const float CAMERA_MOVE_SPEED = 0.08f;
 const float CAMERA_FAST_MOVE_SPEED = 0.25f;
 const float MOUSE_CAMERA_SENSITIVITY_NORMAL = 0.005f;
 const float MOUSE_CAMERA_SENSITIVITY_REMOTE = 0.00025f;
-bool g_remoteDesktopMode = false;
+bool g_remoteDesktopMode = []() {
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    return st.wDayOfWeek >= 1 && st.wDayOfWeek <= 5 && st.wHour >= 8 && st.wHour < 19;
+}();
 const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.5f, 0.0f);
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
