@@ -174,36 +174,37 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             UpdateCameraByInput();
         }
 
-        PhysicsWorld::Update();
-        for (size_t i = 0; i < PhysicsWorld::GetMovingObjectCount(); ++i)
+        // 動く床の位置を計算し、物理と描画に反映する。
         {
-            const int id = PhysicsWorld::GetMovingObjectId(i);
-            const D3DXVECTOR3 startPos = PhysicsWorld::GetMovingObjectStart(i);
-            const D3DXVECTOR3 endPos = PhysicsWorld::GetMovingObjectEnd(i);
-            const PhysicsWorld::Transform transform = PhysicsWorld::GetTransform(id);
+            constexpr int kMovingPlatformCsvId = 6;
+            constexpr D3DXVECTOR3 kPlatformStart(4.0f, 3.0f, 0.0f);
+            constexpr D3DXVECTOR3 kPlatformEnd(16.0f, 3.0f, 0.0f);
+            constexpr float kPlatformDuration = 10.0f;
 
-            const D3DXVECTOR3 moveDir = endPos - startPos;
-            const float moveLength = D3DXVec3Length(&moveDir);
+            static ULONGLONG s_movingPlatformStartTick = GetTickCount64();
+            static D3DXVECTOR3 s_prevPlatformPos = kPlatformStart;
 
-            const D3DXVECTOR3 vecFromStart = transform.position - startPos;
-            if (D3DXVec3Length(&vecFromStart) >= moveLength)
+            const float elapsed = static_cast<float>(GetTickCount64() - s_movingPlatformStartTick) / 1000.0f;
+            const float t = fmodf(elapsed, kPlatformDuration) / kPlatformDuration;
+            const float pingPong = (sinf(t * D3DX_PI * 2.0f) + 1.0f) * 0.5f;
+            const D3DXVECTOR3 platformPos = kPlatformStart + (kPlatformEnd - kPlatformStart) * pingPong;
+
+            const D3DXVECTOR3 platformVelocity = (platformPos - s_prevPlatformPos) / kTargetFrameSeconds;
+            s_prevPlatformPos = platformPos;
+
+            const D3DXVECTOR3 platformRot(0.0f, 0.0f, 0.0f);
+            const D3DXVECTOR3 platformScale(1.0f, 1.0f, 1.0f);
+
+            PhysicsWorld::UpdateCsvTransform(kMovingPlatformCsvId, platformPos, platformRot, platformScale);
+            const int physicsId = PhysicsWorld::GetCsvObjectId(kMovingPlatformCsvId);
+            if (physicsId >= 0)
             {
-                D3DXVECTOR3 backDir = startPos - endPos;
-                D3DXVec3Normalize(&backDir, &backDir);
-                PhysicsWorld::SetVelocity(id, backDir * D3DXVec3Length(&transform.velocity));
-            }
-
-            const D3DXVECTOR3 vecFromEnd = transform.position - endPos;
-            if (D3DXVec3Length(&vecFromEnd) >= moveLength)
-            {
-                D3DXVECTOR3 forwardDir = endPos - startPos;
-                D3DXVec3Normalize(&forwardDir, &forwardDir);
-                PhysicsWorld::SetVelocity(id, forwardDir * D3DXVec3Length(&transform.velocity));
+                PhysicsWorld::SetVelocity(physicsId, platformVelocity);
             }
 
             if (g_movingPlatformRenderId >= 0)
             {
-                g_Render.SetMeshMixPos(g_movingPlatformRenderId, transform.position);
+                g_Render.SetMeshMixPos(g_movingPlatformRenderId, platformPos);
             }
         }
 
@@ -400,7 +401,6 @@ void InitializePlayerPhysics()
     PhysicsWorld::Initialize();
 
     LoadPhysicsObjectsFromCsv(L"res\\model\\XFileListPhysics.csv");
-    PhysicsWorld::LoadMoveFromCsv(L"res\\model\\XFileListMove.csv");
 
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
