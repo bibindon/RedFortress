@@ -52,6 +52,8 @@ PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 int g_movingPlatformRenderId = -1;
+D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
+bool g_pendingJump = false;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -130,6 +132,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                                                    D3DXVECTOR3(10.0f, 3.0f, 0.0f),
                                                    D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                                    1.0f);
+    g_Render.RegisterCsvIdMapping(6, g_movingPlatformRenderId);
+    g_Render.LoadXFileListMoveFromCsv(L"res\\model\\XFileListMove.csv");
     g_playerMeshId = g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
                                                  L"res\\model2\\separatedAnim\\wolfAnim.csv",
                                                  PLAYER_START_POSITION,
@@ -153,7 +157,9 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     {
         while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
+            const bool isEscKey = (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE);
             if (g_settingsDialog == NULL || !IsWindowVisible(g_settingsDialog) ||
+                isEscKey ||
                 !IsDialogMessage(g_settingsDialog, &msg))
             {
                 TranslateMessage(&msg);
@@ -174,41 +180,37 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             UpdateCameraByInput();
         }
 
-        // 動く床の位置を計算し、物理と描画に反映する。
+        // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
+        UpdatePlayerByInput();
+
+        // 描画（動く床の位置が更新される）
+        g_Render.Draw();
+
+        // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
         {
             constexpr int kMovingPlatformCsvId = 6;
-            constexpr D3DXVECTOR3 kPlatformStart(4.0f, 3.0f, 0.0f);
-            constexpr D3DXVECTOR3 kPlatformEnd(16.0f, 3.0f, 0.0f);
-            constexpr float kPlatformDuration = 10.0f;
+            const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
+            const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
 
-            static ULONGLONG s_movingPlatformStartTick = GetTickCount64();
-            static D3DXVECTOR3 s_prevPlatformPos = kPlatformStart;
-
-            const float elapsed = static_cast<float>(GetTickCount64() - s_movingPlatformStartTick) / 1000.0f;
-            const float t = fmodf(elapsed, kPlatformDuration) / kPlatformDuration;
-            const float pingPong = (sinf(t * D3DX_PI * 2.0f) + 1.0f) * 0.5f;
-            const D3DXVECTOR3 platformPos = kPlatformStart + (kPlatformEnd - kPlatformStart) * pingPong;
-
-            const D3DXVECTOR3 platformVelocity = (platformPos - s_prevPlatformPos) / kTargetFrameSeconds;
-            s_prevPlatformPos = platformPos;
-
-            const D3DXVECTOR3 platformRot(0.0f, 0.0f, 0.0f);
-            const D3DXVECTOR3 platformScale(1.0f, 1.0f, 1.0f);
-
-            PhysicsWorld::UpdateCsvTransform(kMovingPlatformCsvId, platformPos, platformRot, platformScale);
-            const int physicsId = PhysicsWorld::GetCsvObjectId(kMovingPlatformCsvId);
-            if (physicsId >= 0)
-            {
-                PhysicsWorld::SetVelocity(physicsId, platformVelocity);
-            }
+            static D3DXVECTOR3 s_prevPlatformPos = D3DXVECTOR3(10.0f, 3.0f, 0.0f);
 
             if (g_movingPlatformRenderId >= 0)
             {
-                g_Render.SetMeshMixPos(g_movingPlatformRenderId, platformPos);
+                const D3DXVECTOR3 platformPos = g_Render.GetMeshMixPos(g_movingPlatformRenderId);
+                const D3DXVECTOR3 platformVelocity = (platformPos - s_prevPlatformPos) / kTargetFrameSeconds;
+                s_prevPlatformPos = platformPos;
+
+                PhysicsWorld::UpdateCsvTransform(kMovingPlatformCsvId, platformPos, kPlatformRot, kPlatformScale);
+                const int physicsId = PhysicsWorld::GetCsvObjectId(kMovingPlatformCsvId);
+                if (physicsId >= 0)
+                {
+                    PhysicsWorld::SetVelocity(physicsId, platformVelocity);
+                }
             }
         }
 
-        UpdatePlayerByInput();
+        // 衝突判定（動く床の最新位置を反映）
+        g_playerMover.Update(g_pendingMove, g_pendingJump);
 
         const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
         const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
@@ -251,7 +253,6 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             break;
         }
 
-        g_Render.Draw();
     }
 
     if (g_settingsDialog != NULL)
@@ -373,8 +374,11 @@ void UpdatePlayerByInput()
         }
     }
 
-    g_playerMover.Update(move, InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE));
+    // 衝突判定は後で行う。カメラはここで設定する。
     UpdatePlayerMeshAndCamera(previousRenderPosition);
+
+    g_pendingMove = move;
+    g_pendingJump = InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE);
 }
 
 D3DXVECTOR3 GetCameraPlanarForward()
@@ -464,7 +468,6 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
             return TRUE;
 
         case IDC_BUTTON_RESET_MOVING:
-            PhysicsWorld::ResetMovingObjects();
             g_Render.ResetMovingPlatforms();
             return TRUE;
 
