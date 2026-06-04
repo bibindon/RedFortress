@@ -1,0 +1,5 @@
+Anim, "000", "marine.000.x", default
+Anim, "walk", "marine.walk.x", loop
+Anim, "run", "marine.run.x", loop
+Anim, "slash", "marine.slash.x", normal
+Anim, "jump", "marine.jump.x", stopend

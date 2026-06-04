@@ -1,0 +1,29 @@
+import bpy
+
+SCALE = 0.1
+
+# 選択中のアーマチュアを対象にする
+obj = bpy.context.object
+
+if obj is None:
+    raise Exception("アーマチュアを選択してください")
+
+if obj.animation_data is None or obj.animation_data.action is None:
+    raise Exception("選択オブジェクトにアニメーションがありません")
+
+action = obj.animation_data.action
+
+for fcurve in action.fcurves:
+    # Locationだけ対象
+    if fcurve.data_path.endswith("location"):
+        for key in fcurve.keyframe_points:
+            # キーフレーム値
+            key.co.y *= SCALE
+
+            # ベジェハンドルも同じ倍率にする
+            key.handle_left.y *= SCALE
+            key.handle_right.y *= SCALE
+
+        fcurve.update()
+
+print("Locationキーフレームを 1/10 にしました")

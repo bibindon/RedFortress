@@ -1,0 +1,89 @@
+日本語から英語への置換対応表
+============================
+
+宝鐘マリンV2_arm → MarineV2_arm
+宝鐘マリンV2 → MarineV2
+全ての親 → root
+センター → center
+グルーブ → groove
+上半身2 → upper_body2
+上半身 → upper_body
+下半身 → lower_body
+コート_root → coat_root
+コート → coat
+スカートベルト → skirt_belt
+スカート → skirt
+スカートルート → skirtroot
+コートルート → coat_root
+前スカート → front_skirt
+後スカート → back_skirt
+帽子カミカゲ → hat_hair_shadow
+帽子前髪 → hat_front_hair
+前帽子 → front_hat
+後帽子 → back_hat
+帽子 → hat
+髪リボン → hair_ribbon
+前髪 → front_hair
+後髪 → back_hair
+髪 → hair
+カミカゲ → hair_shadow
+両目 → both_eyes
+白目 → white_eye
+眼帯 → eyepatch
+まつげ → eyelash
+右まつげ → right_eyelash
+左まつげ → left_eyelash
+目 → eye
+瞳 → pupil
+口 → mouth
+歯 → teeth
+舌 → tongue
+首 → neck
+頭 → head
+肩 → shoulder
+胸上 → chest_upper
+胸中 → chest_middle
+胸下 → chest_lower
+胸 → chest
+腕 → arm
+ひじ → elbow
+手首 → wrist
+手 → hand
+親指 → thumb
+人差指 → index_finger
+中指 → middle_finger
+薬指 → ring_finger
+小指 → pinky
+足首 → ankle
+つま先 → toe
+ひざ → knee
+太もも → thigh
+足 → foot
+長袖 → long_sleeve
+短袖 → short_sleeve
+袖 → sleeve
+服 → clothes
+革 → leather
+青ざめ → pale
+新規材質 → new_material
+はちまき → headband
+
+--- 全角文字 ---
+０→0  １→1  ２→2  ３→3  ４→4  ５→5  ６→6  ７→7  ８→8  ９→9
+Ａ→A  Ｂ→B  Ｃ→C  Ｄ→D  Ｅ→E  Ｆ→F  Ｇ→G  Ｈ→H  Ｉ→I  Ｊ→J
+Ｋ→K  Ｌ→L  Ｍ→M  Ｎ→N  Ｏ→O  Ｐ→P  Ｑ→Q  Ｒ→R  Ｓ→S  Ｔ→T
+Ｕ→U  Ｖ→V  Ｗ→W  Ｘ→X  Ｙ→Y  Ｚ→Z
+Ｌ_→L_  Ｒ_→R_  ＩＫ→IK
+
+--- 追加 ---
+先 → _tip
+親 → parent
+毛 → fur
+金 → gold
+錘 → weight
+リボン → ribbon
+まゆ → eyebrow
+はう → hau
+人指 → index
+捩 → twist
+顔 → face
