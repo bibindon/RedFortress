@@ -27,6 +27,7 @@ const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
 const std::wstring g_playerIdleAnimName = L"000";
 const std::wstring g_playerWalkAnimName = L"walk";
 const std::wstring g_playerRunAnimName = L"run";
+const std::wstring g_playerJumpAnimName = L"jump";
 NSRender::Render g_Render;
 using PhysicsWorld = PhysicsLib::PhysicsLib;
 const float CAMERA_MOVE_SPEED = 0.08f;
@@ -52,13 +53,14 @@ const float kTargetFrameSeconds = 1.0f / 60.0f;
 const float kMinCameraDistance = 1.5f;
 const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
-enum class PlayerAnimState { Idle, Walk, Run };
+enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 int g_movingPlatformRenderId = -1;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
 bool g_pendingJump = false;
+bool g_wasGrounded = false;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -220,6 +222,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
         // 衝突判定（動く床の最新位置を反映）
         g_playerMover.Update(g_pendingMove, g_pendingJump);
+        g_wasGrounded = g_playerMover.IsGrounded();
 
         const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
         const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
@@ -367,9 +370,23 @@ void UpdatePlayerByInput()
 
     if (g_playerMeshId >= 0)
     {
-        PlayerAnimState nextState = PlayerAnimState::Idle;
-        if (isRunning)     nextState = PlayerAnimState::Run;
-        else if (isMoving) nextState = PlayerAnimState::Walk;
+        const bool isGrounded = g_playerMover.IsGrounded();
+
+        PlayerAnimState nextState;
+        if (g_pendingJump)
+        {
+            nextState = PlayerAnimState::Jump;
+        }
+        else if (isGrounded)
+        {
+            if (isRunning)      nextState = PlayerAnimState::Run;
+            else if (isMoving)  nextState = PlayerAnimState::Walk;
+            else                nextState = PlayerAnimState::Idle;
+        }
+        else
+        {
+            nextState = PlayerAnimState::Jump;
+        }
 
         if (nextState != g_playerAnimState)
         {
@@ -378,6 +395,8 @@ void UpdatePlayerByInput()
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerRunAnimName);
             else if (nextState == PlayerAnimState::Walk)
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerWalkAnimName);
+            else if (nextState == PlayerAnimState::Jump)
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerJumpAnimName);
             else
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerIdleAnimName);
         }
