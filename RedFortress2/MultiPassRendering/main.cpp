@@ -22,6 +22,11 @@
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
+const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
+const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
+const std::wstring g_playerIdleAnimName = L"000";
+const std::wstring g_playerWalkAnimName = L"walk";
+const std::wstring g_playerRunAnimName = L"run";
 NSRender::Render g_Render;
 using PhysicsWorld = PhysicsLib::PhysicsLib;
 const float CAMERA_MOVE_SPEED = 0.08f;
@@ -134,12 +139,16 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                                                    1.0f);
     g_Render.RegisterCsvIdMapping(6, g_movingPlatformRenderId);
     g_Render.LoadXFileListMoveFromCsv(L"res\\model\\XFileListMove.csv");
-    g_playerMeshId = g_Render.AddMeshMixSkinAnim(L"res\\model2\\separatedAnim\\wolfAnim.x",
-                                                 L"res\\model2\\separatedAnim\\wolfAnim.csv",
+    g_playerMeshId = g_Render.AddMeshMixSkinAnim(g_playerMeshPath,
+                                                 g_playerAnimCsvPath,
                                                  PLAYER_START_POSITION,
                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                                  1.0f,
-                                                 NSRender::AnimSetMap());
+                                                 NSRender::AnimSetMap(),
+                                                 -1.0f,
+                                                 false,
+                                                 false,
+                                                 NSRender::MeshMixSkinAnimLoadMode::Custom);
     InitializePlayerPhysics();
     PhysicsLib::SettingsState::SetCameraAutoMoveEnabled(true);
     PhysicsLib::SettingsState::SetFocusModeEnabled(false);
@@ -366,11 +375,11 @@ void UpdatePlayerByInput()
         {
             g_playerAnimState = nextState;
             if (nextState == PlayerAnimState::Run)
-                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, L"run");
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerRunAnimName);
             else if (nextState == PlayerAnimState::Walk)
-                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, L"walk");
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerWalkAnimName);
             else
-                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, L"idle");
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerIdleAnimName);
         }
     }
 
