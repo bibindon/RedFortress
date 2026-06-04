@@ -403,13 +403,25 @@ void UpdatePlayerByInput()
         {
             g_playerAnimState = nextState;
             if (nextState == PlayerAnimState::Run)
+            {
+                g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerRunAnimName);
+            }
             else if (nextState == PlayerAnimState::Walk)
+            {
+                g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerWalkAnimName);
+            }
             else if (nextState == PlayerAnimState::Jump)
+            {
+                g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 0.5f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerJumpAnimName);
+            }
             else
+            {
+                g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerIdleAnimName);
+            }
         }
     }
 
