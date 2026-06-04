@@ -145,6 +145,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\RedFortressCommand\Command\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\RedFortressCommand\Command\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortressCommand\Command\x64\Release\Command.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -155,7 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\RedFortressCommand\Command\Command.vcxproj">
-      <Project>{d10f8778-1d21-46be-932e-e35a5445ecdb}</Project>
+      <Project>{adaa0e96-6763-43a7-9756-94c8b96fecd0}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
       <Project>{4789cf6c-2204-40f9-a733-976227c23547}</Project>

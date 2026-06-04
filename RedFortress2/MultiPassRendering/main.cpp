@@ -18,6 +18,7 @@
 #include "../../PhysicsLib/PhysicsLib/PhysicsLibInternal.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../SoundLib/SoundLib/SoundLib.h"
+#include "../../RedFortressCommand/Command/Command.h"
 #include "resource.h"
 
 bool g_bClose = false;
@@ -58,10 +59,6 @@ enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 enum class GameState { Loading, Title, Playing };
 GameState g_gameState = GameState::Loading;
-const int kTitleMenuCount = 3;
-int g_titleMenuIndex = 0;
-const float kCursorX = 0.35f;
-const float kCursorYPositions[kTitleMenuCount] = { 0.57f, 0.66f, 0.75f };
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 int g_movingPlatformRenderId = -1;
@@ -81,8 +78,63 @@ static void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
 static void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
 static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
+int g_commandFontId = -1;
+
+class CommandFont : public NSCommand::IFont
+{
+public:
+    void DrawText_(const std::wstring& msg, const int x, const int y, const int transparent) override
+    {
+        if (g_commandFontId >= 0)
+        {
+            g_Render.DrawText_(g_commandFontId, msg, x, y, D3DCOLOR_RGBA(255, 255, 255, transparent));
+        }
+    }
+
+    void Init(const bool bEnglish) override
+    {
+        (void)bEnglish;
+        g_commandFontId = g_Render.SetUpFont(L"MS Gothic", 32, D3DCOLOR_ARGB(255, 255, 255, 255));
+    }
+
+    void OnDeviceLost() override {}
+    void OnDeviceReset() override {}
+};
+
+class CommandSprite : public NSCommand::ISprite
+{
+public:
+    void DrawImage(const int x, const int y, const int transparency) override
+    {
+        g_Render.DrawImage(L"res\\2D_Image\\cursor.png", x, y, transparency);
+    }
+
+    void Load(const std::wstring& filepath) override
+    {
+        (void)filepath;
+    }
+
+    void OnDeviceLost() override {}
+    void OnDeviceReset() override {}
+};
+
+class CommandSE : public NSCommand::ISoundEffect
+{
+public:
+    void PlayMove() override
+    {
+        SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
+    }
+
+    void PlayClick() override {}
+    void PlayBack() override {}
+
+    void Init() override {}
+};
+
 namespace
 {
+    NSCommand::Command g_command;
 }
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -175,6 +227,14 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
     SoundLib::SoundLib::LoadSoundEffect(g_cursorMoveSoundPath);
 
+    CommandFont* pFont = new CommandFont();
+    CommandSE* pSE = new CommandSE();
+    CommandSprite* pSpr = new CommandSprite();
+    g_command.Init(pFont, pSE, pSpr, false, L"res\\commandName_title.csv");
+    g_command.UpsertCommand(L"start", true);
+    g_command.UpsertCommand(L"continue", true);
+    g_command.UpsertCommand(L"exit", true);
+
     MSG msg;
 
     while (true)
@@ -212,6 +272,23 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         {
             UpdateTitleByInput();
             DrawTitleScreen();
+
+            if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+            {
+                const std::wstring selectedId = g_command.Into();
+                if (selectedId == L"start")
+                {
+                    g_gameState = GameState::Playing;
+                }
+                else if (selectedId == L"continue")
+                {
+                    g_gameState = GameState::Playing;
+                }
+                else if (selectedId == L"exit")
+                {
+                    g_bClose = true;
+                }
+            }
         }
         else
         {
@@ -576,47 +653,19 @@ void UpdateTitleByInput()
 {
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
     {
-        g_titleMenuIndex--;
-        if (g_titleMenuIndex < 0)
-        {
-            g_titleMenuIndex = kTitleMenuCount - 1;
-        }
-        SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
+        g_command.Previous();
     }
 
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
     {
-        g_titleMenuIndex++;
-        if (g_titleMenuIndex >= kTitleMenuCount)
-        {
-            g_titleMenuIndex = 0;
-        }
-        SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
-    }
-
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
-    {
-        if (g_titleMenuIndex == 0)
-        {
-            g_gameState = GameState::Playing;
-        }
-        else if (g_titleMenuIndex == 1)
-        {
-            g_gameState = GameState::Playing;
-        }
-        else if (g_titleMenuIndex == 2)
-        {
-            g_bClose = true;
-        }
+        g_command.Next();
     }
 }
 
 void DrawTitleScreen()
 {
     g_Render.DrawImageAutoResize(L"res\\2D_Image\\title.png", 0.5f, 0.5f);
-    g_Render.DrawImageAutoResize(L"res\\2D_Image\\cursor.png",
-                                 kCursorX,
-                                 kCursorYPositions[g_titleMenuIndex]);
+    g_command.Draw();
     g_Render.Draw();
 }
 
