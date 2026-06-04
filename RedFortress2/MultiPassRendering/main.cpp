@@ -87,20 +87,20 @@ public:
     {
         if (g_commandFontId >= 0)
         {
-            g_Render.DrawTextCenter(g_commandFontId,
-                                    msg,
-                                    x,
-                                    y,
-                                    100,
-                                    100,
-                                    D3DCOLOR_RGBA(255, 255, 255, transparent));
+            g_Render.DrawTextExCenter(g_commandFontId,
+                                      msg,
+                                      x,
+                                      y,
+                                      100,
+                                      100,
+                                      D3DCOLOR_RGBA(255, 255, 255, transparent));
         }
     }
 
     void Init(const bool bEnglish) override
     {
         (void)bEnglish;
-        g_commandFontId = g_Render.SetUpFont(L"BIZ UDMincho Medium", 18, D3DCOLOR_ARGB(255, 255, 255, 255));
+        g_commandFontId = g_Render.SetUpFontEx(L"BIZ UDMincho Medium", 18, D3DCOLOR_ARGB(255, 255, 255, 255));
     }
 
     void OnDeviceLost() override {}
