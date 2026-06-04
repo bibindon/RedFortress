@@ -72,6 +72,7 @@ static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
 static void UpdateTitleByInput();
 static void DrawTitleScreen();
+static POINT ConvertMouseToBaseResolution(int clientX, int clientY);
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
 static void InitializeCameraFromRenderSettings();
@@ -617,6 +618,27 @@ void DrawTitleScreen()
                                  kCursorX,
                                  kCursorYPositions[g_titleMenuIndex]);
     g_Render.Draw();
+}
+
+POINT ConvertMouseToBaseResolution(int clientX, int clientY)
+{
+    RECT clientRect;
+    GetClientRect(g_Render.GetWindowHandle(), &clientRect);
+
+    const int clientW = clientRect.right - clientRect.left;
+    const int clientH = clientRect.bottom - clientRect.top;
+
+    POINT result;
+    if (clientW <= 0 || clientH <= 0)
+    {
+        result.x = clientX;
+        result.y = clientY;
+        return result;
+    }
+
+    result.x = static_cast<int>(static_cast<float>(clientX) * static_cast<float>(NSRender::Common::BASE_W) / static_cast<float>(clientW));
+    result.y = static_cast<int>(static_cast<float>(clientY) * static_cast<float>(NSRender::Common::BASE_H) / static_cast<float>(clientH));
+    return result;
 }
 
 
