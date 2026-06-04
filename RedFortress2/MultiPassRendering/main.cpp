@@ -672,12 +672,12 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 void UpdateTitleByInput()
 {
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    if (InputDevice::UnifiedInput::IsDownFirstFrame(InputDevice::GAMEPAD_POV_LEFT))
     {
         g_command.Previous();
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    if (InputDevice::UnifiedInput::IsDownFirstFrame(InputDevice::GAMEPAD_POV_RIGHT))
     {
         g_command.Next();
     }
