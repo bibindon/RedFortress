@@ -153,6 +153,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     InitializePlayerPhysics();
     PhysicsLib::SettingsState::SetCameraAutoMoveEnabled(true);
     PhysicsLib::SettingsState::SetFocusModeEnabled(false);
+    PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
     InitializeCameraFromRenderSettings();
     UpdatePlayerMeshAndCamera(PLAYER_START_POSITION);
 
@@ -450,6 +451,7 @@ void InitializePlayerPhysics()
     settings.airAcceleration = 8.0f;
     settings.jumpVelocity = 5.0f;
     settings.airControlEnabled = true;
+    settings.doubleJumpEnabled = true;
     g_playerMover.SetSettings(settings);
     g_playerMover.Reset(PLAYER_START_POSITION);
 
