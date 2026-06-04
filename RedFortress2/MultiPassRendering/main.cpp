@@ -94,7 +94,7 @@ public:
     void Init(const bool bEnglish) override
     {
         (void)bEnglish;
-        g_commandFontId = g_Render.SetUpFont(L"MS Gothic", 32, D3DCOLOR_ARGB(255, 255, 255, 255));
+        g_commandFontId = g_Render.SetUpFont(L"BIZ UDMincho Medium", 18, D3DCOLOR_ARGB(255, 255, 255, 255));
     }
 
     void OnDeviceLost() override {}
@@ -106,7 +106,7 @@ class CommandSprite : public NSCommand::ISprite
 public:
     void DrawImage(const int x, const int y, const int transparency) override
     {
-        g_Render.DrawImage(L"res\\2D_Image\\cursor.png", x, y, transparency);
+        g_Render.DrawImage(L"res\\2D_Image\\command_cursor.png", x, y, transparency);
     }
 
     void Load(const std::wstring& filepath) override
@@ -285,6 +285,27 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                     g_gameState = GameState::Playing;
                 }
                 else if (selectedId == L"exit")
+                {
+                    g_bClose = true;
+                }
+            }
+
+            const InputDevice::MousePosition mousePos = InputDevice::Mouse::GetPosition();
+            const POINT baseMousePos = ConvertMouseToBaseResolution(mousePos.x, mousePos.y);
+            g_command.MouseMove(baseMousePos.x, baseMousePos.y);
+
+            if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+            {
+                const std::wstring clickedId = g_command.Click(baseMousePos.x, baseMousePos.y);
+                if (clickedId == L"start")
+                {
+                    g_gameState = GameState::Playing;
+                }
+                else if (clickedId == L"continue")
+                {
+                    g_gameState = GameState::Playing;
+                }
+                else if (clickedId == L"exit")
                 {
                     g_bClose = true;
                 }
@@ -651,12 +672,12 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 void UpdateTitleByInput()
 {
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
     {
         g_command.Previous();
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
     {
         g_command.Next();
     }
