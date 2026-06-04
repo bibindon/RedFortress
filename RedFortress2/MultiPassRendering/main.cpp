@@ -126,11 +126,13 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                              wc.hInstance,
                              NULL);
 
-    ShowWindow(hWnd, SW_SHOWDEFAULT);
-    UpdateWindow(hWnd);
-
     g_Render.Initialize(hWnd, L"res\\RenderSettings.csv");
     g_Render.ChangeResolution(1600, 900);
+    ShowWindow(hWnd, SW_SHOWDEFAULT);
+    UpdateWindow(hWnd);
+    g_Render.DrawImageAutoResize(L"res\\2D_Image\\title.png", 0.5f, 0.5f);
+    g_Render.Draw();
+
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
