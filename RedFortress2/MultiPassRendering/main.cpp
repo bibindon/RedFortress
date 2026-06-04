@@ -397,8 +397,8 @@ void UpdatePlayerByInput()
             }
             else if (nextState == PlayerAnimState::Jump)
             {
-                g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 0.8f);
-                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerJumpAnimName);
+                g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 0.1f);
+                g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerRunAnimName);
             }
             else
             {
