@@ -130,7 +130,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.ChangeResolution(1600, 900);
     ShowWindow(hWnd, SW_SHOWDEFAULT);
     UpdateWindow(hWnd);
-    g_Render.DrawImageAutoResize(L"res\\2D_Image\\title.png", 0.5f, 0.5f);
+    g_Render.DrawImageAutoResize(L"res\\2D_Image\\loading.png", 0.5f, 0.5f);
     g_Render.Draw();
 
     g_Render.SetShowFPS(false);
