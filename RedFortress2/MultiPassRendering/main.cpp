@@ -194,6 +194,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
         UpdatePlayerByInput();
 
+        g_Render.DrawImageAutoResize(L"res\\2D_Image\\title.png", 0.5f, 0.5f);
+
         // 描画（動く床の位置が更新される）
         g_Render.Draw();
 
