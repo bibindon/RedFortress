@@ -39,7 +39,7 @@ bool g_remoteDesktopMode = []() {
     GetLocalTime(&st);
     return st.wDayOfWeek >= 1 && st.wDayOfWeek <= 5 && st.wHour >= 8 && st.wHour < 19;
 }();
-const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.5f, 0.0f);
+const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 1.0f, 0.0f);
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
 PhysicsLib::CharacterMover g_playerMover;
@@ -442,8 +442,9 @@ void InitializePlayerPhysics()
 
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
-    settings.radius = 0.45f;
-    settings.height = 1.0f;
+    settings.radius = 0.3f;
+    settings.height = 2.0f;
+    settings.collisionCenterY = 1.0f;
     settings.moveSpeed = 6.0f;
     settings.groundAcceleration = 18.0f;
     settings.airAcceleration = 8.0f;
@@ -451,6 +452,10 @@ void InitializePlayerPhysics()
     settings.airControlEnabled = true;
     g_playerMover.SetSettings(settings);
     g_playerMover.Reset(PLAYER_START_POSITION);
+
+    PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
+    PhysicsLib::SettingsState::SetCylinderRadius(0.3f);
+    PhysicsLib::SettingsState::SetCylinderHeight(2.0f);
 }
 
 void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath)
