@@ -60,8 +60,6 @@ HWND g_settingsDialog = NULL;
 int g_movingPlatformRenderId = -1;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
 bool g_pendingJump = false;
-bool g_isJumping = false;
-bool g_wasGrounded = false;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -223,14 +221,6 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
         // 衝突判定（動く床の最新位置を反映）
         g_playerMover.Update(g_pendingMove, g_pendingJump);
-        {
-            const bool isGrounded = g_playerMover.IsGrounded();
-            if (isGrounded && !g_wasGrounded)
-            {
-                g_isJumping = false;
-            }
-            g_wasGrounded = isGrounded;
-        }
 
         const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
         const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
@@ -378,17 +368,10 @@ void UpdatePlayerByInput()
 
     if (g_playerMeshId >= 0)
     {
-        if (g_pendingJump)
-        {
-            g_isJumping = true;
-        }
+        const bool isJumping = g_playerMover.IsJumping();
 
         PlayerAnimState nextState;
-        if (g_pendingJump)
-        {
-            nextState = PlayerAnimState::Jump;
-        }
-        else if (g_isJumping)
+        if (isJumping)
         {
             nextState = PlayerAnimState::Jump;
         }
