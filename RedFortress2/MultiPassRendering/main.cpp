@@ -56,8 +56,8 @@ const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
-enum class GameState { Title, Playing };
-GameState g_gameState = GameState::Title;
+enum class GameState { Loading, Title, Playing };
+GameState g_gameState = GameState::Loading;
 const int kTitleMenuCount = 3;
 int g_titleMenuIndex = 0;
 const float kCursorX = 0.35f;
@@ -197,7 +197,17 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
         }
 
-        if (g_gameState == GameState::Title)
+        if (g_gameState == GameState::Loading)
+        {
+            g_Render.DrawImageAutoResize(L"res\\2D_Image\\loading.png", 0.5f, 0.5f);
+            g_Render.Draw();
+
+            if (g_Render.IsAllMeshLoaded())
+            {
+                g_gameState = GameState::Title;
+            }
+        }
+        else if (g_gameState == GameState::Title)
         {
             UpdateTitleByInput();
             DrawTitleScreen();
