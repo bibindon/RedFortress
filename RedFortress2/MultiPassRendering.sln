@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Render", "..\RedFortressRen
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsLib", "..\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj", "{B3EFFBE0-0C53-40FA-A961-B2856809A23C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Command", "..\..\RedFortressCommand\Command\Command.vcxproj", "{ADAA0E96-6763-43A7-9756-94C8B96FECD0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Command", "..\RedFortressCommand\Command\Command.vcxproj", "{ADAA0E96-6763-43A7-9756-94C8B96FECD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -157,9 +157,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\RedFortressCommand\Command\Command.vcxproj">
-      <Project>{adaa0e96-6763-43a7-9756-94c8b96fecd0}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
       <Project>{4789cf6c-2204-40f9-a733-976227c23547}</Project>
     </ProjectReference>
