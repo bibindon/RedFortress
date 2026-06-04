@@ -87,7 +87,13 @@ public:
     {
         if (g_commandFontId >= 0)
         {
-            g_Render.DrawText_(g_commandFontId, msg, x, y, D3DCOLOR_RGBA(255, 255, 255, transparent));
+            g_Render.DrawTextCenter(g_commandFontId,
+                                    msg,
+                                    x,
+                                    y,
+                                    100,
+                                    100,
+                                    D3DCOLOR_RGBA(255, 255, 255, transparent));
         }
     }
 
