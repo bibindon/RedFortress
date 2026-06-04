@@ -22,6 +22,7 @@
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
+const std::wstring g_cursorMoveSoundPath = L"res\\sound\\cursor_move.wav";
 const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
 const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
 const std::wstring g_playerIdleAnimName = L"000";
@@ -55,6 +56,12 @@ const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
+enum class GameState { Title, Playing };
+GameState g_gameState = GameState::Title;
+const int kTitleMenuCount = 3;
+int g_titleMenuIndex = 0;
+const float kCursorX = 0.35f;
+const float kCursorYPositions[kTitleMenuCount] = { 0.57f, 0.66f, 0.75f };
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 int g_movingPlatformRenderId = -1;
@@ -63,6 +70,8 @@ bool g_pendingJump = false;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
+static void UpdateTitleByInput();
+static void DrawTitleScreen();
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
 static void InitializeCameraFromRenderSettings();
@@ -163,6 +172,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
     SoundLib::SoundLib::Initialize(hWnd);
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
+    SoundLib::SoundLib::LoadSoundEffect(g_cursorMoveSoundPath);
 
     MSG msg;
 
@@ -187,56 +197,62 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
         }
 
-        // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
-        if (!g_mouseCursorVisible)
+        if (g_gameState == GameState::Title)
         {
-            UpdateCameraByInput();
+            UpdateTitleByInput();
+            DrawTitleScreen();
         }
-
-        // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
-        UpdatePlayerByInput();
-
-        g_Render.DrawImageAutoResize(L"res\\2D_Image\\title.png", 0.5f, 0.5f);
-
-        // 描画（動く床の位置が更新される）
-        g_Render.Draw();
-
-        // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
+        else
         {
-            constexpr int kMovingPlatformCsvId = 6;
-            const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
-            const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
-
-            static D3DXVECTOR3 s_prevPlatformPos = D3DXVECTOR3(10.0f, 3.0f, 0.0f);
-
-            if (g_movingPlatformRenderId >= 0)
+            // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
+            if (!g_mouseCursorVisible)
             {
-                const D3DXVECTOR3 platformPos = g_Render.GetMeshMixPos(g_movingPlatformRenderId);
-                const D3DXVECTOR3 platformVelocity = (platformPos - s_prevPlatformPos) / kTargetFrameSeconds;
-                s_prevPlatformPos = platformPos;
+                UpdateCameraByInput();
+            }
 
-                PhysicsWorld::UpdateCsvTransform(kMovingPlatformCsvId, platformPos, kPlatformRot, kPlatformScale);
-                const int physicsId = PhysicsWorld::GetCsvObjectId(kMovingPlatformCsvId);
-                if (physicsId >= 0)
+            // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
+            UpdatePlayerByInput();
+
+            // 描画（動く床の位置が更新される）
+            g_Render.Draw();
+
+            // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
+            {
+                constexpr int kMovingPlatformCsvId = 6;
+                const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
+                const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
+
+                static D3DXVECTOR3 s_prevPlatformPos = D3DXVECTOR3(10.0f, 3.0f, 0.0f);
+
+                if (g_movingPlatformRenderId >= 0)
                 {
-                    PhysicsWorld::SetVelocity(physicsId, platformVelocity);
+                    const D3DXVECTOR3 platformPos = g_Render.GetMeshMixPos(g_movingPlatformRenderId);
+                    const D3DXVECTOR3 platformVelocity = (platformPos - s_prevPlatformPos) / kTargetFrameSeconds;
+                    s_prevPlatformPos = platformPos;
+
+                    PhysicsWorld::UpdateCsvTransform(kMovingPlatformCsvId, platformPos, kPlatformRot, kPlatformScale);
+                    const int physicsId = PhysicsWorld::GetCsvObjectId(kMovingPlatformCsvId);
+                    if (physicsId >= 0)
+                    {
+                        PhysicsWorld::SetVelocity(physicsId, platformVelocity);
+                    }
                 }
             }
-        }
 
-        // 衝突判定（動く床の最新位置を反映）
-        g_playerMover.Update(g_pendingMove, g_pendingJump);
+            // 衝突判定（動く床の最新位置を反映）
+            g_playerMover.Update(g_pendingMove, g_pendingJump);
 
-        const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
-        const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
-        SoundLib::Vector3 listenerPosition { playerRenderPosition.x, playerRenderPosition.y, playerRenderPosition.z };
-        SoundLib::Vector3 listenerFront { listenerForward.x, listenerForward.y, listenerForward.z };
-        SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
-        SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
+            const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
+            const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
+            SoundLib::Vector3 listenerPosition { playerRenderPosition.x, playerRenderPosition.y, playerRenderPosition.z };
+            SoundLib::Vector3 listenerFront { listenerForward.x, listenerForward.y, listenerForward.z };
+            SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
+            SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
 
-        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F2))
-        {
-            SoundLib::SoundLib::PlaySoundEffect(g_arrowSoundPath, 100);
+            if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F2))
+            {
+                SoundLib::SoundLib::PlaySoundEffect(g_arrowSoundPath, 100);
+            }
         }
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
@@ -543,6 +559,54 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+void UpdateTitleByInput()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    {
+        g_titleMenuIndex--;
+        if (g_titleMenuIndex < 0)
+        {
+            g_titleMenuIndex = kTitleMenuCount - 1;
+        }
+        SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    {
+        g_titleMenuIndex++;
+        if (g_titleMenuIndex >= kTitleMenuCount)
+        {
+            g_titleMenuIndex = 0;
+        }
+        SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        if (g_titleMenuIndex == 0)
+        {
+            g_gameState = GameState::Playing;
+        }
+        else if (g_titleMenuIndex == 1)
+        {
+            g_gameState = GameState::Playing;
+        }
+        else if (g_titleMenuIndex == 2)
+        {
+            g_bClose = true;
+        }
+    }
+}
+
+void DrawTitleScreen()
+{
+    g_Render.DrawImageAutoResize(L"res\\2D_Image\\title.png", 0.5f, 0.5f);
+    g_Render.DrawImageAutoResize(L"res\\2D_Image\\cursor.png",
+                                 kCursorX,
+                                 kCursorYPositions[g_titleMenuIndex]);
+    g_Render.Draw();
 }
 
 
