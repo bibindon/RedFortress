@@ -356,6 +356,15 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             // 衝突判定（動く床の最新位置を反映）
             g_playerMover.Update(g_pendingMove, g_pendingJump);
 
+            if (g_playerMover.JustJumped() && g_playerAnimState == PlayerAnimState::Jump)
+            {
+                if (g_playerMeshId >= 0)
+                {
+                    g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 0.1f);
+                    g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerRunAnimName);
+                }
+            }
+
             const D3DXVECTOR3 playerRenderPosition = g_playerMover.GetPosition();
             const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
             SoundLib::Vector3 listenerPosition { playerRenderPosition.x, playerRenderPosition.y, playerRenderPosition.z };
