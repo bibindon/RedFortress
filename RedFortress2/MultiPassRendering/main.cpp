@@ -587,7 +587,7 @@ void InitializePlayerPhysics()
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
     settings.radius = 0.3f;
-    settings.height = 2.0f;
+    settings.height = 1.7f;
     settings.collisionCenterY = 1.0f;
     settings.moveSpeed = 6.0f;
     settings.groundAcceleration = 18.0f;
@@ -600,7 +600,7 @@ void InitializePlayerPhysics()
 
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
     PhysicsLib::SettingsState::SetCylinderRadius(0.3f);
-    PhysicsLib::SettingsState::SetCylinderHeight(2.0f);
+    PhysicsLib::SettingsState::SetCylinderHeight(1.7f);
 }
 
 void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath)
