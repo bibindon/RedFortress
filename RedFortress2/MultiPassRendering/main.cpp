@@ -11,7 +11,6 @@
 #include <tchar.h>
 #include <cassert>
 #include <crtdbg.h>
-#include <vector>
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
