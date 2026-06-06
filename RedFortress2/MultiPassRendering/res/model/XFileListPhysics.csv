@@ -6,3 +6,6 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 5,res/model/collision_wall.x,0,0,5,0,0,0,1,Collision,n
 6,res/model/tree2Physics/lemonTree.Instancing.x,0,0,0,0,0,0,1,Collision,n,y
 7,res/model/collision_moving_platform.x,10,3,0,0,0,0,1,Collision,y
+8,res/model/collision_moving_platform.x,-3,1,-2,0,0,0,1,Collision,y
+9,res/model/collision_moving_platform.x,-2,1,-5,0,0,0,1,Collision,y
+10,res/model/collision_moving_platform.x,3,0,5,0,0,0,1,Collision,y
