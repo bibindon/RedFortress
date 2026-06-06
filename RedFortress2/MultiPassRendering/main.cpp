@@ -11,6 +11,7 @@
 #include <tchar.h>
 #include <cassert>
 #include <crtdbg.h>
+#include <unordered_map>
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
@@ -60,7 +61,6 @@ enum class GameState { Loading, Title, Playing };
 GameState g_gameState = GameState::Loading;
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
-int g_movingPlatformRenderId = -1;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
 bool g_pendingJump = false;
 
@@ -203,7 +203,6 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
-    g_movingPlatformRenderId = g_Render.GetRenderIdFromCsvId(8);
     g_Render.LoadXFileListMoveFromCsv(L"res\\model\\XFileListMove.csv");
     g_playerMeshId = g_Render.AddMeshMixSkinAnim(g_playerMeshPath,
                                                  g_playerAnimCsvPath,
@@ -328,20 +327,21 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
             {
-                constexpr int kMovingPlatformCsvId = 8;
                 const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
                 const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
 
-                static D3DXVECTOR3 s_prevPlatformPos = D3DXVECTOR3(10.0f, 3.0f, 0.0f);
+                static std::unordered_map<int, D3DXVECTOR3> s_prevPositions;
 
-                if (g_movingPlatformRenderId >= 0)
+                const auto& platforms = g_Render.GetMovingPlatforms();
+                for (const auto& platform : platforms)
                 {
-                    const D3DXVECTOR3 platformPos = g_Render.GetMeshMixPos(g_movingPlatformRenderId);
-                    const D3DXVECTOR3 platformVelocity = (platformPos - s_prevPlatformPos) / kTargetFrameSeconds;
-                    s_prevPlatformPos = platformPos;
+                    const D3DXVECTOR3 platformPos = g_Render.GetMeshMixPos(platform.renderId);
+                    D3DXVECTOR3& prevPos = s_prevPositions[platform.csvId];
+                    const D3DXVECTOR3 platformVelocity = (platformPos - prevPos) / kTargetFrameSeconds;
+                    prevPos = platformPos;
 
-                    PhysicsWorld::UpdateCsvTransform(kMovingPlatformCsvId, platformPos, kPlatformRot, kPlatformScale);
-                    const int physicsId = PhysicsWorld::GetCsvObjectId(kMovingPlatformCsvId);
+                    PhysicsWorld::UpdateCsvTransform(platform.csvId, platformPos, kPlatformRot, kPlatformScale);
+                    const int physicsId = PhysicsWorld::GetCsvObjectId(platform.csvId);
                     if (physicsId >= 0)
                     {
                         PhysicsWorld::SetVelocity(physicsId, platformVelocity);
