@@ -9,3 +9,12 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 8,res/model/collision_moving_platform.x,-3,1,-2,0,0,0,1,Collision,y
 9,res/model/collision_moving_platform.x,-2,1,-5,0,0,0,1,Collision,y
 10,res/model/collision_moving_platform.x,3,0,5,0,0,0,1,Collision,y
+11,res/model/collision_moving_platform.x,5,4.5,5,0,0,0,1,Collision,y
+12,res/model/collision_moving_platform.x,7.5,6.2,3,0,0,0,1,Collision,y
+13,res/model/collision_moving_platform.x,10,7.9,5,0,0,0,1,Collision,y
+14,res/model/collision_moving_platform.x,12.5,9.6,3,0,0,0,1,Collision,y
+15,res/model/collision_moving_platform.x,15,11.3,5,0,0,0,1,Collision,y
+16,res/model/collision_moving_platform.x,17.5,13,3,0,0,0,1,Collision,y
+17,res/model/collision_moving_platform.x,20,14.7,5,0,0,0,1,Collision,y
+18,res/model/collision_moving_platform.x,22.5,16.4,3,0,0,0,1,Collision,y
+19,res/model/collision_moving_platform.x,25,18.1,5,0,0,0,1,Collision,y
