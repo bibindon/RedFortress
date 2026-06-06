@@ -192,7 +192,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                              NULL,
                              wc.hInstance,
                              NULL);
-
+ 
     g_Render.Initialize(hWnd, L"res\\RenderSettings.csv");
     g_Render.ChangeResolution(1600, 900);
     ShowWindow(hWnd, SW_SHOWDEFAULT);
