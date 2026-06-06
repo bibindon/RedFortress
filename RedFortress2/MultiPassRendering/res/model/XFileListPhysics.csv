@@ -4,5 +4,5 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 3,res/model/monkey.blend.x,5,0,0,0,0,0,1,Collision,n
 4,res/model/cubeEmitYellow.x,-5,2,0,0,0,0,1,Collision,n
 5,res/model/collision_wall.x,0,0,5,0,0,0,1,Collision,n
-6,res/model/collision_moving_platform.x,10,3,0,0,0,0,1,Collision,y
-7,res/model/tree2Physics/lemonTree.Instancing.x,0,0,0,0,0,0,1,Collision,n,y
+6,res/model/tree2Physics/lemonTree.Instancing.x,0,0,0,0,0,0,1,Collision,n,y
+7,res/model/collision_moving_platform.x,10,3,0,0,0,0,1,Collision,y

@@ -203,11 +203,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
-    g_movingPlatformRenderId = g_Render.AddMeshMix(L"res\\model\\collision_moving_platform.x",
-                                                   D3DXVECTOR3(10.0f, 3.0f, 0.0f),
-                                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                   1.0f);
-    g_Render.RegisterCsvIdMapping(6, g_movingPlatformRenderId);
+    g_movingPlatformRenderId = g_Render.GetRenderIdFromCsvId(8);
     g_Render.LoadXFileListMoveFromCsv(L"res\\model\\XFileListMove.csv");
     g_playerMeshId = g_Render.AddMeshMixSkinAnim(g_playerMeshPath,
                                                  g_playerAnimCsvPath,
@@ -332,7 +328,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
             {
-                constexpr int kMovingPlatformCsvId = 6;
+                constexpr int kMovingPlatformCsvId = 8;
                 const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
                 const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
 
