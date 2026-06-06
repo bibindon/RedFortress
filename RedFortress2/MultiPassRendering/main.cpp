@@ -584,7 +584,7 @@ void InitializePlayerPhysics()
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
     settings.radius = 0.3f;
     settings.height = 1.7f;
-    settings.collisionCenterY = 1.0f;
+    settings.collisionCenterY = 0.85f;
     settings.moveSpeed = 6.0f;
     settings.groundAcceleration = 18.0f;
     settings.airAcceleration = 8.0f;
