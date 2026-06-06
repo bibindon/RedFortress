@@ -163,6 +163,9 @@
     <ProjectReference Include="..\..\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj">
       <Project>{b3effbe0-0c53-40fa-a961-b2856809a23c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\RedFortressCommand\Command\Command.vcxproj">
+      <Project>{adaa0e96-6763-43a7-9756-94c8b96fecd0}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\RedFortressRender\Render\Render.vcxproj">
       <Project>{d8a93a58-4392-4fc4-a4f7-634d4dac81b4}</Project>
     </ProjectReference>
