@@ -26,7 +26,6 @@ bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 const std::wstring g_cursorMoveSoundPath = L"res\\sound\\cursor_move.wav";
 const std::wstring g_slideShowCsvPath = L"res\\script\\hoshigirl_trial_novel.csv";
-const std::wstring g_slideShowCharaPath = L"res\\2D_Image\\chara1.png";
 const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
 const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
 const std::wstring g_playerIdleAnimName = L"000";
@@ -156,7 +155,14 @@ public:
             return;
         }
 
-        g_Render.DrawImageStretched(m_filepath, transparency);
+        if (m_filepath.find(L"novel_chr_") != std::wstring::npos)
+        {
+            g_Render.DrawImageAutoResize(m_filepath, 0.78f, 0.48f, transparency);
+        }
+        else
+        {
+            g_Render.DrawImageStretched(m_filepath, transparency);
+        }
     }
 
     void Load(const std::wstring& filepath) override
@@ -826,7 +832,6 @@ void UpdateSlideShow()
     }
 
     g_slideShow->Render();
-    g_Render.DrawImageAutoResize(g_slideShowCharaPath, 0.78f, 0.48f);
     g_Render.Draw();
 }
 
