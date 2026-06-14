@@ -197,6 +197,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_Render.ChangeResolution(1600, 900);
     ShowWindow(hWnd, SW_SHOWDEFAULT);
     UpdateWindow(hWnd);
+    g_Render.SetLoadingScreenTitleFontPath(L"res\\font\\BIZUDMincho-Regular.ttf");
     g_Render.StartLoadingScreen();
     g_Render.Draw();
 
