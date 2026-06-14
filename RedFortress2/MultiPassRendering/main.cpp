@@ -187,7 +187,7 @@ public:
         }
         else
         {
-            DrawImage(x, y, transparency);
+            g_Render.DrawImageEx(m_filepath, x, y, transparency, flipX, scale);
         }
     }
 
@@ -252,6 +252,7 @@ static void InitializeSlideShow()
     NSSlideShow::ISprite* sprImage = new SlideShowSprite();
 
     g_slideShow = new NSSlideShow::SlideShow();
+    g_slideShow->SetScreenSize(NSRender::Common::BASE_W, NSRender::Common::BASE_H);
     g_slideShow->Init(font, se, sprTextBack, sprFade, g_slideShowCsvPath, sprImage, false, false);
 }
 
