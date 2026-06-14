@@ -199,12 +199,17 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     UpdateWindow(hWnd);
     g_Render.SetLoadingScreenTitleFontPath(L"res\\font\\BIZUDMincho-Regular.ttf");
     g_Render.StartLoadingScreen();
+    g_Render.SetLoadingScreenProgress(0);
     g_Render.Draw();
 
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
+    g_Render.SetLoadingScreenProgress(15);
+    g_Render.Draw();
     g_Render.LoadXFileListMoveFromCsv(L"res\\model\\XFileListMove.csv");
+    g_Render.SetLoadingScreenProgress(25);
+    g_Render.Draw();
     g_playerMeshId = g_Render.AddMeshMixSkinAnim(g_playerMeshPath,
                                                  g_playerAnimCsvPath,
                                                  PLAYER_START_POSITION,
@@ -215,7 +220,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                                                  false,
                                                  false,
                                                  NSRender::MeshMixSkinAnimLoadMode::Custom);
+    g_Render.SetLoadingScreenProgress(40);
+    g_Render.Draw();
     InitializePlayerPhysics();
+    g_Render.SetLoadingScreenProgress(55);
+    g_Render.Draw();
     PhysicsLib::SettingsState::SetCameraAutoMoveEnabled(true);
     PhysicsLib::SettingsState::SetFocusModeEnabled(false);
     PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
@@ -224,6 +233,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
     InputDevice::Initialize(hInstance, hWnd);
     InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
+    g_Render.SetLoadingScreenProgress(70);
+    g_Render.Draw();
     SoundLib::SoundLib::Initialize(hWnd);
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
     SoundLib::SoundLib::LoadSoundEffect(g_cursorMoveSoundPath);
@@ -235,6 +246,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_command.UpsertCommand(L"start", true);
     g_command.UpsertCommand(L"continue", true);
     g_command.UpsertCommand(L"exit", true);
+    g_Render.SetLoadingScreenProgress(85);
+    g_Render.Draw();
 
     MSG msg;
 
