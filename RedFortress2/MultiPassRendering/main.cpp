@@ -78,6 +78,7 @@ static void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
 static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int g_commandFontId = -1;
+int g_titleFontId = -1;
 
 class CommandFont : public NSCommand::IFont
 {
@@ -709,6 +710,12 @@ void UpdateTitleByInput()
 
 void DrawTitleScreen()
 {
+    if (g_titleFontId < 0)
+    {
+        g_titleFontId = g_Render.SetUpFont(L"BIZ UDMincho", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    g_Render.DrawTextCenter(g_titleFontId, L"ホ  シ  ガ  ー  ル", 0, 220, NSRender::Common::BASE_W, 100);
     g_command.Draw();
     g_Render.Draw();
 }
