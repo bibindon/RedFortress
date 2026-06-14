@@ -247,6 +247,7 @@ static void InitializeSlideShow()
     NSSlideShow::IFont* font = new SlideShowFont();
     NSSlideShow::ISoundEffect* se = new SlideShowSE();
     NSSlideShow::ISprite* sprTextBack = new SlideShowSprite();
+    sprTextBack->Load(L"res\\2D_Image\\textBack.png");
     NSSlideShow::ISprite* sprFade = new SlideShowSprite();
     sprFade->Load(L"res\\2D_Image\\black2x2.bmp");
     NSSlideShow::ISprite* sprImage = new SlideShowSprite();
