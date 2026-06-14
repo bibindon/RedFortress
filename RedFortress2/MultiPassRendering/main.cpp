@@ -25,6 +25,8 @@
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 const std::wstring g_cursorMoveSoundPath = L"res\\sound\\cursor_move.wav";
+const std::wstring g_slideShowCsvPath = L"res\\script\\hoshigirl_trial_novel.csv";
+const std::wstring g_slideShowCharaPath = L"res\\2D_Image\\chara1.png";
 const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
 const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
 const std::wstring g_playerIdleAnimName = L"000";
@@ -149,6 +151,11 @@ public:
     {
         (void)x;
         (void)y;
+        if (m_filepath.empty())
+        {
+            return;
+        }
+
         g_Render.DrawImageStretched(m_filepath, transparency);
     }
 
@@ -185,7 +192,7 @@ public:
     void Init(const bool bEnglish) override
     {
         (void)bEnglish;
-        g_slideShowFontId = g_Render.SetUpFont(L"BIZ UDMincho", 24, D3DCOLOR_RGBA(255, 255, 255, 255));
+        g_slideShowFontId = g_Render.SetUpFont(L"BIZ UDMincho", 22, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
     void OnDeviceLost() override {}
@@ -208,49 +215,12 @@ static void InitializeSlideShow()
     NSSlideShow::IFont* font = new SlideShowFont();
     NSSlideShow::ISoundEffect* se = new SlideShowSE();
     NSSlideShow::ISprite* sprTextBack = new SlideShowSprite();
-    sprTextBack->Load(L"res\\2D_Image\\black2x2.bmp");
     NSSlideShow::ISprite* sprFade = new SlideShowSprite();
     sprFade->Load(L"res\\2D_Image\\black2x2.bmp");
-
-    std::vector<NSSlideShow::Page> pageList;
-
-    {
-        NSSlideShow::Page page;
-        NSSlideShow::ISprite* sprite = new SlideShowSprite();
-        sprite->Load(L"res\\2D_Image\\loading.png");
-        page.SetSprite(sprite);
-        std::vector<std::vector<std::wstring>> textList;
-        textList.push_back({ L"むかしむかし、あるところに", L"おじいさんとおばあさんが", L"いました。" });
-        textList.push_back({ L"おじいさんは山へしばかりに、", L"おばあさんは川へせんたくに", L"でかけました。" });
-        page.SetTextList(textList);
-        pageList.push_back(page);
-    }
-
-    {
-        NSSlideShow::Page page;
-        NSSlideShow::ISprite* sprite = new SlideShowSprite();
-        sprite->Load(L"res\\2D_Image\\loading.png");
-        page.SetSprite(sprite);
-        std::vector<std::vector<std::wstring>> textList;
-        textList.push_back({ L"おばあさんが川でせんたくを", L"していると、大きな桃が", L"どんぶらこっこと流れてきました。" });
-        textList.push_back({ L"おばあさんは桃をひろって", L"家に持ち帰りました。" });
-        page.SetTextList(textList);
-        pageList.push_back(page);
-    }
-
-    {
-        NSSlideShow::Page page;
-        NSSlideShow::ISprite* sprite = new SlideShowSprite();
-        sprite->Load(L"res\\2D_Image\\loading.png");
-        page.SetSprite(sprite);
-        std::vector<std::vector<std::wstring>> textList;
-        textList.push_back({ L"おしまい" });
-        page.SetTextList(textList);
-        pageList.push_back(page);
-    }
+    NSSlideShow::ISprite* sprImage = new SlideShowSprite();
 
     g_slideShow = new NSSlideShow::SlideShow();
-    g_slideShow->Init(font, se, sprTextBack, sprFade, pageList, false);
+    g_slideShow->Init(font, se, sprTextBack, sprFade, g_slideShowCsvPath, sprImage, false, false);
 }
 
 namespace
@@ -856,6 +826,7 @@ void UpdateSlideShow()
     }
 
     g_slideShow->Render();
+    g_Render.DrawImageAutoResize(g_slideShowCharaPath, 0.78f, 0.48f);
     g_Render.Draw();
 }
 
