@@ -194,6 +194,21 @@ public:
     void Load(const std::wstring& filepath) override
     {
         m_filepath = filepath;
+        g_Render.LoadImage(m_filepath);
+    }
+
+    void GetImageSize(int& width, int& height) const override
+    {
+        if (m_filepath.empty())
+        {
+            width = 0;
+            height = 0;
+            return;
+        }
+
+        const SIZE size = g_Render.GetImageSize(m_filepath);
+        width = size.cx;
+        height = size.cy;
     }
 
     NSSlideShow::ISprite* Create() override
