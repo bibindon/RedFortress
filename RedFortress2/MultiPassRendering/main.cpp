@@ -19,6 +19,7 @@
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../SoundLib/SoundLib/SoundLib.h"
 #include "../../RedFortressCommand/Command/Command.h"
+#include "../../RedFortressSlideShow/SlideShow/SlideShow.h"
 #include "resource.h"
 
 bool g_bClose = false;
@@ -57,8 +58,10 @@ const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
-enum class GameState { Loading, Title, Playing };
+enum class GameState { Loading, Title, SlideShow, Playing };
 GameState g_gameState = GameState::Loading;
+NSSlideShow::SlideShow* g_slideShow = nullptr;
+int g_slideShowFontId = -1;
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
@@ -137,6 +140,117 @@ public:
 
     void Init() override {}
 };
+
+class SlideShowSprite : public NSSlideShow::ISprite
+{
+public:
+    void DrawImage(const int x, const int y, const int transparency) override
+    {
+        (void)x;
+        (void)y;
+        g_Render.DrawImageStretched(m_filepath, transparency);
+    }
+
+    void Load(const std::wstring& filepath) override
+    {
+        m_filepath = filepath;
+    }
+
+    NSSlideShow::ISprite* Create() override
+    {
+        SlideShowSprite* sprite = new SlideShowSprite();
+        sprite->m_filepath = m_filepath;
+        return sprite;
+    }
+
+    void OnDeviceLost() override {}
+    void OnDeviceReset() override {}
+
+private:
+    std::wstring m_filepath;
+};
+
+class SlideShowFont : public NSSlideShow::IFont
+{
+public:
+    void DrawText_(const std::wstring& msg, const int x, const int y) override
+    {
+        if (g_slideShowFontId >= 0)
+        {
+            g_Render.DrawText_(g_slideShowFontId, msg, x, y, D3DCOLOR_RGBA(255, 255, 255, 255));
+        }
+    }
+
+    void Init(const bool bEnglish) override
+    {
+        (void)bEnglish;
+        g_slideShowFontId = g_Render.SetUpFont(L"BIZ UDMincho", 24, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    void OnDeviceLost() override {}
+    void OnDeviceReset() override {}
+};
+
+class SlideShowSE : public NSSlideShow::ISoundEffect
+{
+public:
+    void PlayMove() override
+    {
+        SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
+    }
+
+    void Init() override {}
+};
+
+static void InitializeSlideShow()
+{
+    NSSlideShow::IFont* font = new SlideShowFont();
+    NSSlideShow::ISoundEffect* se = new SlideShowSE();
+    NSSlideShow::ISprite* sprTextBack = new SlideShowSprite();
+    sprTextBack->Load(L"res\\2D_Image\\black2x2.bmp");
+    NSSlideShow::ISprite* sprFade = new SlideShowSprite();
+    sprFade->Load(L"res\\2D_Image\\black2x2.bmp");
+
+    std::vector<NSSlideShow::Page> pageList;
+
+    {
+        NSSlideShow::Page page;
+        NSSlideShow::ISprite* sprite = new SlideShowSprite();
+        sprite->Load(L"res\\2D_Image\\loading.png");
+        page.SetSprite(sprite);
+        std::vector<std::vector<std::wstring>> textList;
+        textList.push_back({ L"むかしむかし、あるところに", L"おじいさんとおばあさんが", L"いました。" });
+        textList.push_back({ L"おじいさんは山へしばかりに、", L"おばあさんは川へせんたくに", L"でかけました。" });
+        page.SetTextList(textList);
+        pageList.push_back(page);
+    }
+
+    {
+        NSSlideShow::Page page;
+        NSSlideShow::ISprite* sprite = new SlideShowSprite();
+        sprite->Load(L"res\\2D_Image\\loading.png");
+        page.SetSprite(sprite);
+        std::vector<std::vector<std::wstring>> textList;
+        textList.push_back({ L"おばあさんが川でせんたくを", L"していると、大きな桃が", L"どんぶらこっこと流れてきました。" });
+        textList.push_back({ L"おばあさんは桃をひろって", L"家に持ち帰りました。" });
+        page.SetTextList(textList);
+        pageList.push_back(page);
+    }
+
+    {
+        NSSlideShow::Page page;
+        NSSlideShow::ISprite* sprite = new SlideShowSprite();
+        sprite->Load(L"res\\2D_Image\\loading.png");
+        page.SetSprite(sprite);
+        std::vector<std::vector<std::wstring>> textList;
+        textList.push_back({ L"おしまい" });
+        page.SetTextList(textList);
+        pageList.push_back(page);
+    }
+
+    g_slideShow = new NSSlideShow::SlideShow();
+    g_slideShow->Init(font, se, sprTextBack, sprFade, pageList, false);
+}
 
 namespace
 {
@@ -293,7 +407,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 const std::wstring selectedId = g_command.Into();
                 if (selectedId == L"start")
                 {
-                    g_gameState = GameState::Playing;
+                    InitializeSlideShow();
+                    g_gameState = GameState::SlideShow;
                 }
                 else if (selectedId == L"continue")
                 {
@@ -314,7 +429,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 const std::wstring clickedId = g_command.Click(baseMousePos.x, baseMousePos.y);
                 if (clickedId == L"start")
                 {
-                    g_gameState = GameState::Playing;
+                    InitializeSlideShow();
+                    g_gameState = GameState::SlideShow;
                 }
                 else if (clickedId == L"continue")
                 {
@@ -554,9 +670,29 @@ void UpdatePlayerByInput()
             {
                 g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 0.1f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerRunAnimName);
-            }
-            else
+        }
+        else if (g_gameState == GameState::SlideShow)
+        {
+            if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+                InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+                InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
             {
+                g_slideShow->Next();
+            }
+
+            if (g_slideShow->Update())
+            {
+                g_slideShow->Finalize();
+                delete g_slideShow;
+                g_slideShow = nullptr;
+                g_gameState = GameState::Playing;
+            }
+
+            g_Render.Draw();
+            g_slideShow->Render();
+        }
+        else
+        {
                 g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerIdleAnimName);
             }
