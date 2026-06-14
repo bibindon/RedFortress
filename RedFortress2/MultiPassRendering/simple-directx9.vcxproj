@@ -169,6 +169,9 @@
     <ProjectReference Include="..\..\RedFortressRender\Render\Render.vcxproj">
       <Project>{d8a93a58-4392-4fc4-a4f7-634d4dac81b4}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\RedFortressSlideShow\SlideShow\SlideShow.vcxproj">
+      <Project>{214fd1f0-38ac-4b1d-b8a7-c71fe78be66f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\SoundLib\SoundLib\SoundLib.vcxproj">
       <Project>{4683edab-3715-4c0b-b9d6-f6ac46f221bf}</Project>
     </ProjectReference>
