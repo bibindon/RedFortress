@@ -165,6 +165,32 @@ public:
         }
     }
 
+    void DrawImageEx(const int x,
+                     const int y,
+                     const int transparency,
+                     const bool flipX,
+                     const float scale) override
+    {
+        if (m_filepath.empty())
+        {
+            return;
+        }
+
+        if (m_filepath.find(L"novel_chr_") != std::wstring::npos)
+        {
+            g_Render.DrawImageAutoResizeEx(m_filepath,
+                                           static_cast<float>(x) / static_cast<float>(NSRender::Common::BASE_W),
+                                           static_cast<float>(y) / static_cast<float>(NSRender::Common::BASE_H),
+                                           scale,
+                                           flipX,
+                                           transparency);
+        }
+        else
+        {
+            DrawImage(x, y, transparency);
+        }
+    }
+
     void Load(const std::wstring& filepath) override
     {
         m_filepath = filepath;
