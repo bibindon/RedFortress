@@ -69,6 +69,7 @@ bool g_pendingJump = false;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
+static void UpdateSlideShow();
 static void UpdateTitleByInput();
 static void DrawTitleScreen();
 static POINT ConvertMouseToBaseResolution(int clientX, int clientY);
@@ -442,6 +443,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 }
             }
         }
+        else if (g_gameState == GameState::SlideShow)
+        {
+            UpdateSlideShow();
+        }
         else
         {
             // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
@@ -670,29 +675,9 @@ void UpdatePlayerByInput()
             {
                 g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 0.1f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerRunAnimName);
-        }
-        else if (g_gameState == GameState::SlideShow)
-        {
-            if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
-                InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-                InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
-            {
-                g_slideShow->Next();
             }
-
-            if (g_slideShow->Update())
+            else
             {
-                g_slideShow->Finalize();
-                delete g_slideShow;
-                g_slideShow = nullptr;
-                g_gameState = GameState::Playing;
-            }
-
-            g_Render.Draw();
-            g_slideShow->Render();
-        }
-        else
-        {
                 g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
                 g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerIdleAnimName);
             }
@@ -842,6 +827,36 @@ void UpdateTitleByInput()
     {
         g_command.Next();
     }
+}
+
+void UpdateSlideShow()
+{
+    if (g_slideShow == nullptr)
+    {
+        g_gameState = GameState::Playing;
+        g_Render.Draw();
+        return;
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        g_slideShow->Next();
+    }
+
+    if (g_slideShow->Update())
+    {
+        g_slideShow->Finalize();
+        delete g_slideShow;
+        g_slideShow = nullptr;
+        g_gameState = GameState::Playing;
+        g_Render.Draw();
+        return;
+    }
+
+    g_slideShow->Render();
+    g_Render.Draw();
 }
 
 void DrawTitleScreen()
