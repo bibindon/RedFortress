@@ -709,7 +709,6 @@ void UpdateTitleByInput()
 
 void DrawTitleScreen()
 {
-    g_Render.DrawImageAutoResize(L"res\\2D_Image\\title.png", 0.5f, 0.5f);
     g_command.Draw();
     g_Render.Draw();
 }
