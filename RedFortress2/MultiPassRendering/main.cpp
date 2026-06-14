@@ -187,7 +187,7 @@ public:
         }
         else
         {
-            g_Render.DrawImageEx(m_filepath, x, y, transparency, flipX, scale);
+            g_Render.DrawImageStretchedScaled(m_filepath, scale, transparency);
         }
     }
 
