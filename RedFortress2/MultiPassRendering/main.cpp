@@ -73,6 +73,7 @@ static void UpdatePlayerByInput();
 static void UpdateSlideShow();
 static void UpdateTitleByInput();
 static void DrawTitleScreen();
+static void DrawStageTitle();
 static POINT ConvertMouseToBaseResolution(int clientX, int clientY);
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
@@ -84,6 +85,9 @@ static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, L
 
 int g_commandFontId = -1;
 int g_titleFontId = -1;
+int g_stageTitleFontId = -1;
+int g_stageTitleFrame = 0;
+const int kStageTitleFrameMax = 180;
 
 class CommandFont : public NSCommand::IFont
 {
@@ -478,6 +482,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             UpdatePlayerByInput();
 
             // 描画（動く床の位置が更新される）
+            DrawStageTitle();
             g_Render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -870,6 +875,7 @@ void UpdateSlideShow()
         delete g_slideShow;
         g_slideShow = nullptr;
         g_gameState = GameState::Playing;
+        g_stageTitleFrame = kStageTitleFrameMax;
         g_Render.Draw();
         return;
     }
@@ -888,6 +894,22 @@ void DrawTitleScreen()
     g_Render.DrawTextCenter(g_titleFontId, L"ホ  シ  ガ  ー  ル", 0, 220, NSRender::Common::BASE_W, 100);
     g_command.Draw();
     g_Render.Draw();
+}
+
+void DrawStageTitle()
+{
+    if (g_stageTitleFrame <= 0)
+    {
+        return;
+    }
+
+    if (g_stageTitleFontId < 0)
+    {
+        g_stageTitleFontId = g_Render.SetUpFont(L"BIZ UDGothic", 56, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    g_Render.DrawTextCenter(g_stageTitleFontId, L"Stage 1", 0, 260, NSRender::Common::BASE_W, 90);
+    --g_stageTitleFrame;
 }
 
 POINT ConvertMouseToBaseResolution(int clientX, int clientY)
