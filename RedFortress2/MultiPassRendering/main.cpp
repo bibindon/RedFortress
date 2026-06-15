@@ -43,7 +43,9 @@ bool g_remoteDesktopMode = []() {
     GetLocalTime(&st);
     return st.wDayOfWeek >= 1 && st.wDayOfWeek <= 5 && st.wHour >= 8 && st.wHour < 19;
 }();
-const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 1.0f, 0.0f);
+const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.2f, -14.0f);
+const D3DXVECTOR3 STAGE_CLEAR_POSITION(0.0f, 1.0f, 14.0f);
+const float kStageClearDistance = 1.0f;
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
 PhysicsLib::CharacterMover g_playerMover;
@@ -59,7 +61,7 @@ const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
-enum class GameState { Loading, Title, SlideShow, Playing };
+enum class GameState { Loading, Title, SlideShow, Playing, StageClear };
 GameState g_gameState = GameState::Loading;
 NSSlideShow::SlideShow* g_slideShow = nullptr;
 int g_slideShowFontId = -1;
@@ -75,9 +77,12 @@ static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
 static void UpdateSlideShow();
 static void UpdateTitleByInput();
+static void UpdateStageClear();
+static bool IsStageClearReached();
 static void DrawSlideShowSkipHint();
 static void DrawTitleScreen();
 static void DrawStageTitle();
+static void DrawStageClear();
 static POINT ConvertMouseToBaseResolution(int clientX, int clientY);
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
@@ -90,6 +95,7 @@ static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, L
 int g_commandFontId = -1;
 int g_titleFontId = -1;
 int g_stageTitleFontId = -1;
+int g_stageClearFontId = -1;
 int g_stageTitleFrame = 0;
 const int kStageTitleFrameMax = 180;
 
@@ -476,6 +482,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         {
             UpdateSlideShow();
         }
+        else if (g_gameState == GameState::StageClear)
+        {
+            UpdateStageClear();
+        }
         else
         {
             // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
@@ -517,6 +527,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
             // 衝突判定（動く床の最新位置を反映）
             g_playerMover.Update(g_pendingMove, g_pendingJump);
+            if (IsStageClearReached())
+            {
+                g_gameState = GameState::StageClear;
+            }
 
             if (g_playerMover.JustJumped() && g_playerAnimState == PlayerAnimState::Jump)
             {
@@ -859,6 +873,25 @@ void UpdateTitleByInput()
     }
 }
 
+void UpdateStageClear()
+{
+    DrawStageClear();
+    g_Render.Draw();
+}
+
+bool IsStageClearReached()
+{
+    const D3DXVECTOR3 playerPosition = g_playerMover.GetPosition();
+    const D3DXVECTOR3 difference = playerPosition - STAGE_CLEAR_POSITION;
+    const float distance = D3DXVec3Length(&difference);
+    if (distance <= kStageClearDistance)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void UpdateSlideShow()
 {
     if (g_slideShow == nullptr)
@@ -947,6 +980,16 @@ void DrawStageTitle()
 
     g_Render.DrawTextCenter(g_stageTitleFontId, L"Stage 1", 0, 260, NSRender::Common::BASE_W, 90);
     --g_stageTitleFrame;
+}
+
+void DrawStageClear()
+{
+    if (g_stageClearFontId < 0)
+    {
+        g_stageClearFontId = g_Render.SetUpFont(L"BIZ UDGothic", 64, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    g_Render.DrawTextCenter(g_stageClearFontId, L"Stage Clear", 0, 330, NSRender::Common::BASE_W, 100);
 }
 
 POINT ConvertMouseToBaseResolution(int clientX, int clientY)
