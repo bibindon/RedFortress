@@ -5,49 +5,45 @@ void StageManager::Initialize()
     m_stages.clear();
     m_currentStageIndex = 0;
 
-    StageData stage1;
-    stage1.number = 1;
-    stage1.displayName = L"Stage 1-1";
-    stage1.renderCsvPath = L"res\\model\\stage1\\XFileList_simple.csv";
-    stage1.physicsCsvPath = L"res\\model\\stage1\\XFileListPhysics.csv";
-    stage1.moveCsvPath = L"res\\model\\stage1\\XFileListMove.csv";
-    stage1.playerStartPosition = D3DXVECTOR3(0.0f, 0.2f, -14.0f);
-    stage1.clearPosition = D3DXVECTOR3(0.0f, 1.0f, 14.0f);
-    stage1.clearDistance = 1.0f;
-    m_stages.push_back(stage1);
+    AddStage(1, L"Stage 1-1", L"stage1", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(2, L"Stage 1-2", L"stage2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(3, L"Stage 1-3", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
+    AddStage(4, L"Stage 1-4", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
 
-    StageData stage2;
-    stage2.number = 2;
-    stage2.displayName = L"Stage 1-2";
-    stage2.renderCsvPath = L"res\\model\\stage2\\XFileList_simple.csv";
-    stage2.physicsCsvPath = L"res\\model\\stage2\\XFileListPhysics.csv";
-    stage2.moveCsvPath = L"res\\model\\stage2\\XFileListMove.csv";
-    stage2.playerStartPosition = D3DXVECTOR3(-14.0f, 0.2f, 0.0f);
-    stage2.clearPosition = D3DXVECTOR3(14.0f, 1.0f, 0.0f);
-    stage2.clearDistance = 1.0f;
-    m_stages.push_back(stage2);
+    AddStage(5, L"Stage 2-1", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(6, L"Stage 2-2", L"stage6", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(7, L"Stage 2-3", L"stage7", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
+    AddStage(8, L"Stage 2-4", L"stage8", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
 
-    StageData stage3;
-    stage3.number = 3;
-    stage3.displayName = L"Stage 1-3";
-    stage3.renderCsvPath = L"res\\model\\stage3\\XFileList_simple.csv";
-    stage3.physicsCsvPath = L"res\\model\\stage3\\XFileListPhysics.csv";
-    stage3.moveCsvPath = L"res\\model\\stage3\\XFileListMove.csv";
-    stage3.playerStartPosition = D3DXVECTOR3(0.0f, 0.2f, 14.0f);
-    stage3.clearPosition = D3DXVECTOR3(0.0f, 1.0f, -14.0f);
-    stage3.clearDistance = 1.0f;
-    m_stages.push_back(stage3);
+    AddStage(9, L"Stage 3-1", L"stage9", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(10, L"Stage 3-2", L"stage10", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(11, L"Stage 3-3", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
+    AddStage(12, L"Stage 3-4", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
 
-    StageData stage4;
-    stage4.number = 4;
-    stage4.displayName = L"Stage 1-4";
-    stage4.renderCsvPath = L"res\\model\\stage4\\XFileList_simple.csv";
-    stage4.physicsCsvPath = L"res\\model\\stage4\\XFileListPhysics.csv";
-    stage4.moveCsvPath = L"res\\model\\stage4\\XFileListMove.csv";
-    stage4.playerStartPosition = D3DXVECTOR3(14.0f, 0.2f, 14.0f);
-    stage4.clearPosition = D3DXVECTOR3(-14.0f, 1.0f, -14.0f);
-    stage4.clearDistance = 1.0f;
-    m_stages.push_back(stage4);
+    AddStage(13, L"Stage 4-1", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(14, L"Stage 4-2", L"stage14", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(15, L"Stage 4-3", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
+    AddStage(16, L"Stage 4-4", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
+}
+
+void StageManager::AddStage(int number,
+                            const std::wstring& displayName,
+                            const std::wstring& folderName,
+                            const D3DXVECTOR3& playerStartPosition,
+                            const D3DXVECTOR3& clearPosition)
+{
+    const std::wstring basePath = L"res\\model\\" + folderName + L"\\";
+
+    StageData stage;
+    stage.number = number;
+    stage.displayName = displayName;
+    stage.renderCsvPath = basePath + L"XFileList_simple.csv";
+    stage.physicsCsvPath = basePath + L"XFileListPhysics.csv";
+    stage.moveCsvPath = basePath + L"XFileListMove.csv";
+    stage.playerStartPosition = playerStartPosition;
+    stage.clearPosition = clearPosition;
+    stage.clearDistance = 1.0f;
+    m_stages.push_back(stage);
 }
 
 const StageManager::StageData& StageManager::GetCurrentStage() const

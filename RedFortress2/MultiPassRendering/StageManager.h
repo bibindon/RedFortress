@@ -28,6 +28,12 @@ public:
     const std::wstring& GetCurrentStageDisplayName() const;
 
 private:
+    void AddStage(int number,
+                  const std::wstring& displayName,
+                  const std::wstring& folderName,
+                  const D3DXVECTOR3& playerStartPosition,
+                  const D3DXVECTOR3& clearPosition);
+
     std::vector<StageData> m_stages;
     std::size_t m_currentStageIndex = 0;
 };
