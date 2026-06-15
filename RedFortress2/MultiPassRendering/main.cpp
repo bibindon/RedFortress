@@ -1199,8 +1199,10 @@ void DrawPlayerHpBar()
 
     const int x = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
     const int y = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
-    const int imageWidth = static_cast<int>((1024.0f * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
-    const int imageHeight = static_cast<int>((64.0f * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
+    const int sourceWidth = 1000;
+    const int sourceHeight = 32;
+    const int imageWidth = static_cast<int>((static_cast<float>(sourceWidth) * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
+    const int imageHeight = static_cast<int>((static_cast<float>(sourceHeight) * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
 
     const int maxHp = g_player.GetMaxHp();
     if (maxHp <= 0)
@@ -1211,9 +1213,9 @@ void DrawPlayerHpBar()
     const int damageWidth = HpToBarWidth(g_hpDamageDisplay, imageWidth, maxHp);
     const int frontWidth = HpToBarWidth(g_hpFrontDisplay, imageWidth, maxHp);
 
-    g_Render.DrawImageSized(g_hpBackImagePath, x, y, imageWidth, imageHeight, 255);
-    g_Render.DrawImageSized(g_hpDamageImagePath, x, y, damageWidth, imageHeight, 255);
-    g_Render.DrawImageSized(g_hpFrontImagePath, x, y, frontWidth, imageHeight, 255);
+    g_Render.DrawImageSizedRect(g_hpBackImagePath, x, y, imageWidth, imageHeight, 0, 0, sourceWidth, sourceHeight, 255);
+    g_Render.DrawImageSizedRect(g_hpDamageImagePath, x, y, damageWidth, imageHeight, 0, 0, sourceWidth, sourceHeight, 255);
+    g_Render.DrawImageSizedRect(g_hpFrontImagePath, x, y, frontWidth, imageHeight, 0, 0, sourceWidth, sourceHeight, 255);
 }
 
 void DrawTitleScreen()
