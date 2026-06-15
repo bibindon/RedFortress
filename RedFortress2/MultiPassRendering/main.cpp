@@ -1019,8 +1019,12 @@ void DrawStageTitle()
         g_stageTitleFontId = g_Render.SetUpFont(L"BIZ UDGothic", 56, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    const std::wstring stageText = L"Stage " + std::to_wstring(g_stageManager.GetCurrentStageNumber());
-    g_Render.DrawTextCenter(g_stageTitleFontId, stageText, 0, 260, NSRender::Common::BASE_W, 90);
+    g_Render.DrawTextCenter(g_stageTitleFontId,
+                            g_stageManager.GetCurrentStageDisplayName(),
+                            0,
+                            260,
+                            NSRender::Common::BASE_W,
+                            90);
     --g_stageTitleFrame;
 }
 
@@ -1042,7 +1046,7 @@ void DrawStageClear()
         return;
     }
 
-    const std::wstring clearText = L"Stage " + std::to_wstring(g_stageManager.GetCurrentStageNumber()) + L" Clear";
+    const std::wstring clearText = g_stageManager.GetCurrentStageDisplayName() + L" Clear";
     g_Render.DrawTextCenter(g_stageClearFontId, clearText, 0, 300, NSRender::Common::BASE_W, 100);
     g_Render.DrawTextCenter(g_stageClearHintFontId,
                             L"Space / Enter で次のステージへ",

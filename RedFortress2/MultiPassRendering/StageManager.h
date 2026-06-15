@@ -10,6 +10,7 @@ public:
     struct StageData
     {
         int number = 1;
+        std::wstring displayName;
         std::wstring renderCsvPath;
         std::wstring physicsCsvPath;
         std::wstring moveCsvPath;
@@ -24,6 +25,7 @@ public:
     bool IsLastStage() const;
     bool IsClearReached(const D3DXVECTOR3& playerPosition) const;
     int GetCurrentStageNumber() const;
+    const std::wstring& GetCurrentStageDisplayName() const;
 
 private:
     std::vector<StageData> m_stages;
