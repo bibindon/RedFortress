@@ -1222,7 +1222,7 @@ void DrawTitleScreen()
 {
     if (g_titleFontId < 0)
     {
-        g_titleFontId = g_Render.SetUpFont(L"BIZ UDGothic", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
+        g_titleFontId = g_Render.SetUpFont(L"BIZ UDMincho", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
     g_Render.DrawTextCenter(g_titleFontId, L"ホ  シ  ガ  ー  ル", 0, 220, NSRender::Common::BASE_W, 100);
