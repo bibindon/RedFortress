@@ -63,6 +63,9 @@ enum class GameState { Loading, Title, SlideShow, Playing };
 GameState g_gameState = GameState::Loading;
 NSSlideShow::SlideShow* g_slideShow = nullptr;
 int g_slideShowFontId = -1;
+int g_slideShowSkipHoldFrame = 0;
+bool g_slideShowSkipRequested = false;
+const int kSlideShowSkipHoldFrameMax = 60;
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
@@ -263,6 +266,9 @@ public:
 
 static void InitializeSlideShow()
 {
+    g_slideShowSkipHoldFrame = 0;
+    g_slideShowSkipRequested = false;
+
     NSSlideShow::IFont* font = new SlideShowFont();
     NSSlideShow::ISoundEffect* se = new SlideShowSE();
     NSSlideShow::ISprite* sprTextBack = new SlideShowSprite();
@@ -869,12 +875,29 @@ void UpdateSlideShow()
         g_slideShow->Next();
     }
 
+    if (InputDevice::SKeyBoard::IsDown(DIK_SPACE))
+    {
+        ++g_slideShowSkipHoldFrame;
+        if (!g_slideShowSkipRequested && g_slideShowSkipHoldFrame >= kSlideShowSkipHoldFrameMax)
+        {
+            g_slideShow->Skip();
+            g_slideShowSkipRequested = true;
+        }
+    }
+    else
+    {
+        g_slideShowSkipHoldFrame = 0;
+        g_slideShowSkipRequested = false;
+    }
+
     if (g_slideShow->Update())
     {
         g_slideShow->Finalize();
         delete g_slideShow;
         g_slideShow = nullptr;
         g_gameState = GameState::Playing;
+        g_slideShowSkipHoldFrame = 0;
+        g_slideShowSkipRequested = false;
         g_stageTitleFrame = kStageTitleFrameMax;
         g_Render.Draw();
         return;
