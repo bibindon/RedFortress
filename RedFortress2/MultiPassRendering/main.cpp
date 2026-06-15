@@ -28,6 +28,7 @@ bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 const std::wstring g_cursorMoveSoundPath = L"res\\sound\\cursor_move.wav";
 const std::wstring g_slideShowCsvPath = L"res\\script\\hoshigirl_trial_novel.csv";
+const std::wstring g_endingCsvPath = L"res\\script\\ending.csv";
 const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
 const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
 const std::wstring g_playerIdleAnimName = L"000";
@@ -65,7 +66,7 @@ const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
-enum class GameState { Loading, Title, SlideShow, Playing, StageClear };
+enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending };
 GameState g_gameState = GameState::Loading;
 NSSlideShow::SlideShow* g_slideShow = nullptr;
 int g_slideShowFontId = -1;
@@ -96,6 +97,7 @@ const float kHpBarDamageDelayFrameMax = 30.0f;
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
 static void UpdateSlideShow();
+static void UpdateEnding();
 static void UpdateTitleByInput();
 static void UpdateStageClear();
 static bool IsStageClearReached();
@@ -324,6 +326,23 @@ static void InitializeSlideShow()
     g_slideShow->Init(font, se, sprTextBack, sprFade, g_slideShowCsvPath, sprImage, false, false);
 }
 
+static void InitializeEndingSlideShow()
+{
+    g_slideShowSkipRequested = false;
+
+    NSSlideShow::IFont* font = new SlideShowFont();
+    NSSlideShow::ISoundEffect* se = new SlideShowSE();
+    NSSlideShow::ISprite* sprTextBack = new SlideShowSprite();
+    sprTextBack->Load(L"res\\2D_Image\\textBack.png");
+    NSSlideShow::ISprite* sprFade = new SlideShowSprite();
+    sprFade->Load(L"res\\2D_Image\\black2x2.bmp");
+    NSSlideShow::ISprite* sprImage = new SlideShowSprite();
+
+    g_slideShow = new NSSlideShow::SlideShow();
+    g_slideShow->SetScreenSize(NSRender::Common::BASE_W, NSRender::Common::BASE_H);
+    g_slideShow->Init(font, se, sprTextBack, sprFade, g_endingCsvPath, sprImage, false, false);
+}
+
 namespace
 {
     NSCommand::Command g_command;
@@ -523,6 +542,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         else if (g_gameState == GameState::StageClear)
         {
             UpdateStageClear();
+        }
+        else if (g_gameState == GameState::Ending)
+        {
+            UpdateEnding();
         }
         else
         {
@@ -1012,15 +1035,19 @@ void UpdateTitleByInput()
 
 void UpdateStageClear()
 {
-    if (!g_stageManager.IsLastStage())
+    if (g_stageManager.IsLastStage())
     {
-        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+        InitializeEndingSlideShow();
+        g_gameState = GameState::Ending;
+        return;
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        if (StartNextStage())
         {
-            if (StartNextStage())
-            {
-                return;
-            }
+            return;
         }
     }
 
@@ -1285,7 +1312,27 @@ void DrawSlideShowSkipHint()
                             820,
                             360,
                             40,
-                            D3DCOLOR_RGBA(255, 255, 255, 190));
+                             D3DCOLOR_RGBA(255, 255, 255, 190));
+}
+
+void UpdateEnding()
+{
+    if (g_slideShow == nullptr)
+    {
+        return;
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        g_slideShow->Next();
+    }
+
+    g_slideShow->Update();
+
+    g_slideShow->Render();
+    g_Render.Draw();
 }
 
 void DrawPlayerHpBar()

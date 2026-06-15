@@ -1,0 +1,9 @@
+PageNo,Image,Message,Character,Position,FlipX,Scale
+1,res\2D_Image\back01.png,"　すべてのステージをクリアした。
+　人々は平和を取り戻し、世界に再び光が戻った。",res\2D_Image\chara1.png,right,false,1.00
+1,res\2D_Image\back01.png,"「ありがとう、勇者よ」
+　人々の歓声が、どこまでも響いていく。",res\2D_Image\chara1.png,right,false,1.00
+2,res\2D_Image\back01.png,"　こうして長い戦いの日々は終わりを告げた。
+　傷ついた大地も、いつか緑を取り戻すだろう。",res\2D_Image\chara1.png,center,false,1.00
+2,res\2D_Image\back01.png,"　勇者の名は、永遠に語り継がれる――",res\2D_Image\chara1.png,center,false,1.00
+3,res\2D_Image\back01.png,"　　　　　Fin",,,,
