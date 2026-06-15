@@ -77,6 +77,20 @@ HWND g_settingsDialog = NULL;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
 bool g_pendingJump = false;
 std::unordered_map<int, D3DXVECTOR3> g_prevMovingPlatformPositions;
+float g_hpFrontDisplay = 100.0f;
+float g_hpDamageDisplay = 100.0f;
+float g_hpFrontStart = 100.0f;
+float g_hpFrontTarget = 100.0f;
+float g_hpFrontAnimFrame = 0.0f;
+bool g_hpFrontAnimating = false;
+float g_hpDamageStart = 100.0f;
+float g_hpDamageTarget = 100.0f;
+float g_hpDamageDelayFrame = 0.0f;
+float g_hpDamageAnimFrame = 0.0f;
+bool g_hpDamageWaiting = false;
+bool g_hpDamageAnimating = false;
+const float kHpBarAnimFrameMax = 60.0f;
+const float kHpBarDamageDelayFrameMax = 60.0f;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -86,6 +100,14 @@ static void UpdateStageClear();
 static bool IsStageClearReached();
 static bool StartNextStage();
 static void LoadCurrentStageObjects();
+static void ResetPlayerHp();
+static void DamagePlayerHp(int amount);
+static void HealPlayerHp(int amount);
+static void BeginHpIncreaseAnimation(int newHp);
+static void BeginHpDamageAnimation(int oldHp, int newHp);
+static void UpdatePlayerHpBarAnimation();
+static float ClampFloatValue(float value, float minValue, float maxValue);
+static int HpToBarWidth(float hpValue, int imageWidth, int maxHp);
 static void DrawSlideShowSkipHint();
 static void DrawPlayerHpBar();
 static void DrawTitleScreen();
@@ -782,7 +804,7 @@ void InitializePlayerPhysics()
     settings.airControlEnabled = true;
     settings.doubleJumpEnabled = true;
     g_playerMover.SetSettings(settings);
-    g_player.ResetHp();
+    ResetPlayerHp();
     g_playerMover.Reset(g_stageManager.GetCurrentStage().playerStartPosition);
 
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
@@ -843,11 +865,11 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
             return TRUE;
 
         case IDC_BUTTON_HP_MINUS:
-            g_player.Damage(10);
+            DamagePlayerHp(10);
             return TRUE;
 
         case IDC_BUTTON_HP_PLUS:
-            g_player.Heal(10);
+            HealPlayerHp(10);
             return TRUE;
 
         case IDOK:
@@ -915,6 +937,152 @@ bool IsStageClearReached()
     return g_stageManager.IsClearReached(g_playerMover.GetPosition());
 }
 
+void ResetPlayerHp()
+{
+    g_player.ResetHp();
+    const float hp = static_cast<float>(g_player.GetHp());
+    g_hpFrontDisplay = hp;
+    g_hpDamageDisplay = hp;
+    g_hpFrontStart = hp;
+    g_hpFrontTarget = hp;
+    g_hpFrontAnimFrame = 0.0f;
+    g_hpFrontAnimating = false;
+    g_hpDamageStart = hp;
+    g_hpDamageTarget = hp;
+    g_hpDamageDelayFrame = 0.0f;
+    g_hpDamageAnimFrame = 0.0f;
+    g_hpDamageWaiting = false;
+    g_hpDamageAnimating = false;
+}
+
+void DamagePlayerHp(int amount)
+{
+    const int oldHp = g_player.GetHp();
+    g_player.Damage(amount);
+    const int newHp = g_player.GetHp();
+    if (newHp < oldHp)
+    {
+        BeginHpDamageAnimation(oldHp, newHp);
+    }
+}
+
+void HealPlayerHp(int amount)
+{
+    const int oldHp = g_player.GetHp();
+    g_player.Heal(amount);
+    const int newHp = g_player.GetHp();
+    if (oldHp < newHp)
+    {
+        BeginHpIncreaseAnimation(newHp);
+    }
+}
+
+void BeginHpIncreaseAnimation(int newHp)
+{
+    const float newHpValue = static_cast<float>(newHp);
+    g_hpFrontStart = g_hpFrontDisplay;
+    g_hpFrontTarget = newHpValue;
+    g_hpFrontAnimFrame = 0.0f;
+    g_hpFrontAnimating = true;
+    g_hpDamageDisplay = newHpValue;
+    g_hpDamageWaiting = false;
+    g_hpDamageAnimating = false;
+    g_hpDamageDelayFrame = 0.0f;
+    g_hpDamageAnimFrame = 0.0f;
+}
+
+void BeginHpDamageAnimation(int oldHp, int newHp)
+{
+    const float oldHpValue = static_cast<float>(oldHp);
+    const float newHpValue = static_cast<float>(newHp);
+    g_hpFrontDisplay = newHpValue;
+    g_hpFrontStart = newHpValue;
+    g_hpFrontTarget = newHpValue;
+    g_hpFrontAnimFrame = 0.0f;
+    g_hpFrontAnimating = false;
+    g_hpDamageStart = g_hpDamageDisplay;
+    if (g_hpDamageStart < oldHpValue)
+    {
+        g_hpDamageStart = oldHpValue;
+    }
+    g_hpDamageTarget = newHpValue;
+    g_hpDamageDelayFrame = 0.0f;
+    g_hpDamageAnimFrame = 0.0f;
+    g_hpDamageWaiting = true;
+    g_hpDamageAnimating = false;
+}
+
+void UpdatePlayerHpBarAnimation()
+{
+    if (g_hpFrontAnimating)
+    {
+        g_hpFrontAnimFrame += 1.0f;
+        const float rate = ClampFloatValue(g_hpFrontAnimFrame / kHpBarAnimFrameMax, 0.0f, 1.0f);
+        g_hpFrontDisplay = g_hpFrontStart + ((g_hpFrontTarget - g_hpFrontStart) * rate);
+        if (rate >= 1.0f)
+        {
+            g_hpFrontDisplay = g_hpFrontTarget;
+            g_hpFrontAnimating = false;
+        }
+    }
+
+    if (g_hpDamageWaiting)
+    {
+        g_hpDamageDelayFrame += 1.0f;
+        if (g_hpDamageDelayFrame >= kHpBarDamageDelayFrameMax)
+        {
+            g_hpDamageWaiting = false;
+            g_hpDamageAnimating = true;
+            g_hpDamageAnimFrame = 0.0f;
+            g_hpDamageStart = g_hpDamageDisplay;
+        }
+    }
+
+    if (g_hpDamageAnimating)
+    {
+        g_hpDamageAnimFrame += 1.0f;
+        const float rate = ClampFloatValue(g_hpDamageAnimFrame / kHpBarAnimFrameMax, 0.0f, 1.0f);
+        g_hpDamageDisplay = g_hpDamageStart + ((g_hpDamageTarget - g_hpDamageStart) * rate);
+        if (rate >= 1.0f)
+        {
+            g_hpDamageDisplay = g_hpDamageTarget;
+            g_hpDamageAnimating = false;
+        }
+    }
+}
+
+float ClampFloatValue(float value, float minValue, float maxValue)
+{
+    if (value < minValue)
+    {
+        return minValue;
+    }
+
+    if (maxValue < value)
+    {
+        return maxValue;
+    }
+
+    return value;
+}
+
+int HpToBarWidth(float hpValue, int imageWidth, int maxHp)
+{
+    if (maxHp <= 0)
+    {
+        return 0;
+    }
+
+    const float rate = ClampFloatValue(hpValue / static_cast<float>(maxHp), 0.0f, 1.0f);
+    int width = static_cast<int>(static_cast<float>(imageWidth) * rate);
+    if (width < 1 && hpValue > 0.0f)
+    {
+        width = 1;
+    }
+
+    return width;
+}
+
 bool StartNextStage()
 {
     if (!g_stageManager.MoveNextStage())
@@ -944,7 +1112,7 @@ void LoadCurrentStageObjects()
     g_pendingJump = false;
     g_playerYaw = 0.0f;
     g_playerAnimState = PlayerAnimState::Idle;
-    g_player.ResetHp();
+    ResetPlayerHp();
     g_playerMover.Reset(stage.playerStartPosition);
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
 }
@@ -1014,26 +1182,24 @@ void DrawSlideShowSkipHint()
 
 void DrawPlayerHpBar()
 {
-    const int x = 30;
-    const int y = 30;
-    const int imageWidth = 512;
-    const int imageHeight = 64;
+    UpdatePlayerHpBarAnimation();
 
-    const int hp = g_player.GetHp();
+    const int x = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
+    const int y = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
+    const int imageWidth = static_cast<int>((1024.0f * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
+    const int imageHeight = static_cast<int>((64.0f * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
+
     const int maxHp = g_player.GetMaxHp();
     if (maxHp <= 0)
     {
         return;
     }
 
-    int frontWidth = imageWidth * hp / maxHp;
-    if (frontWidth < 1 && hp > 0)
-    {
-        frontWidth = 1;
-    }
+    const int damageWidth = HpToBarWidth(g_hpDamageDisplay, imageWidth, maxHp);
+    const int frontWidth = HpToBarWidth(g_hpFrontDisplay, imageWidth, maxHp);
 
     g_Render.DrawImageSized(g_hpBackImagePath, x, y, imageWidth, imageHeight, 255);
-    g_Render.DrawImageSized(g_hpDamageImagePath, x, y, imageWidth, imageHeight, 255);
+    g_Render.DrawImageSized(g_hpDamageImagePath, x, y, damageWidth, imageHeight, 255);
     g_Render.DrawImageSized(g_hpFrontImagePath, x, y, frontWidth, imageHeight, 255);
 }
 
