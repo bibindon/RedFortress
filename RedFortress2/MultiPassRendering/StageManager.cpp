@@ -52,6 +52,21 @@ const StageManager::StageData& StageManager::GetCurrentStage() const
     return m_stages.at(m_currentStageIndex);
 }
 
+const StageManager::StageData& StageManager::GetStage(std::size_t index) const
+{
+    return m_stages.at(index);
+}
+
+std::size_t StageManager::GetStageCount() const
+{
+    return m_stages.size();
+}
+
+std::size_t StageManager::GetCurrentStageIndex() const
+{
+    return m_currentStageIndex;
+}
+
 bool StageManager::MoveNextStage()
 {
     if (IsLastStage())
@@ -60,6 +75,17 @@ bool StageManager::MoveNextStage()
     }
 
     ++m_currentStageIndex;
+    return true;
+}
+
+bool StageManager::MoveToStage(std::size_t index)
+{
+    if (index >= m_stages.size())
+    {
+        return false;
+    }
+
+    m_currentStageIndex = index;
     return true;
 }
 

@@ -21,7 +21,11 @@ public:
 
     void Initialize();
     const StageData& GetCurrentStage() const;
+    const StageData& GetStage(std::size_t index) const;
+    std::size_t GetStageCount() const;
+    std::size_t GetCurrentStageIndex() const;
     bool MoveNextStage();
+    bool MoveToStage(std::size_t index);
     bool IsLastStage() const;
     bool IsClearReached(const D3DXVECTOR3& playerPosition) const;
     int GetCurrentStageNumber() const;

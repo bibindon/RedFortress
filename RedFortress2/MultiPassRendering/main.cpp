@@ -109,6 +109,10 @@ static void BeginHpDamageAnimation(int oldHp, int newHp);
 static void UpdatePlayerHpBarAnimation();
 static float ClampFloatValue(float value, float minValue, float maxValue);
 static int HpToBarWidth(float hpValue, int imageWidth, int maxHp);
+static void PopulateStageCombo(HWND hDlg);
+static std::wstring BuildStageComboText(const StageManager::StageData& stage);
+static bool StartStageByIndex(std::size_t stageIndex);
+static void MoveToSelectedStage(HWND hDlg);
 static void DrawSlideShowSkipHint();
 static void DrawPlayerHpBar();
 static void DrawTitleScreen();
@@ -602,6 +606,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             if (g_settingsDialog != NULL)
             {
                 const bool isVisible = IsWindowVisible(g_settingsDialog);
+                if (!isVisible)
+                {
+                    PopulateStageCombo(g_settingsDialog);
+                }
                 ShowWindow(g_settingsDialog, isVisible ? SW_HIDE : SW_SHOW);
             }
         }
@@ -850,6 +858,83 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
     g_Render.SetCamera(cameraPosition, cameraTarget);
 }
 
+void PopulateStageCombo(HWND hDlg)
+{
+    HWND combo = GetDlgItem(hDlg, IDC_COMBO_STAGE);
+    if (combo == NULL)
+    {
+        return;
+    }
+
+    SendMessage(combo, CB_RESETCONTENT, 0, 0);
+
+    const std::size_t stageCount = g_stageManager.GetStageCount();
+    for (std::size_t i = 0; i < stageCount; ++i)
+    {
+        const std::wstring text = BuildStageComboText(g_stageManager.GetStage(i));
+        const LRESULT itemIndex = SendMessage(combo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(text.c_str()));
+        if (itemIndex >= 0)
+        {
+            SendMessage(combo, CB_SETITEMDATA, static_cast<WPARAM>(itemIndex), static_cast<LPARAM>(i));
+        }
+    }
+
+    SendMessage(combo, CB_SETCURSEL, static_cast<WPARAM>(g_stageManager.GetCurrentStageIndex()), 0);
+}
+
+std::wstring BuildStageComboText(const StageManager::StageData& stage)
+{
+    if (stage.displayName == L"拠点")
+    {
+        return L"Base";
+    }
+
+    const std::wstring prefix = L"Stage ";
+    if (stage.displayName.find(prefix) == 0)
+    {
+        return stage.displayName.substr(prefix.size());
+    }
+
+    return stage.displayName;
+}
+
+bool StartStageByIndex(std::size_t stageIndex)
+{
+    if (!g_stageManager.MoveToStage(stageIndex))
+    {
+        return false;
+    }
+
+    LoadCurrentStageObjects();
+    g_gameState = GameState::Playing;
+    g_stageTitleFrame = kStageTitleFrameMax;
+    return true;
+}
+
+void MoveToSelectedStage(HWND hDlg)
+{
+    HWND combo = GetDlgItem(hDlg, IDC_COMBO_STAGE);
+    if (combo == NULL)
+    {
+        return;
+    }
+
+    const LRESULT selectedIndex = SendMessage(combo, CB_GETCURSEL, 0, 0);
+    if (selectedIndex == CB_ERR)
+    {
+        return;
+    }
+
+    const LRESULT stageIndex = SendMessage(combo, CB_GETITEMDATA, static_cast<WPARAM>(selectedIndex), 0);
+    if (stageIndex == CB_ERR)
+    {
+        return;
+    }
+
+    StartStageByIndex(static_cast<std::size_t>(stageIndex));
+    PopulateStageCombo(hDlg);
+}
+
 INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
@@ -857,6 +942,7 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
     case WM_INITDIALOG:
         SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_SETCHECK,
                     g_remoteDesktopMode ? BST_CHECKED : BST_UNCHECKED, 0);
+        PopulateStageCombo(hDlg);
         return TRUE;
 
     case WM_COMMAND:
@@ -876,6 +962,10 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
         case IDC_BUTTON_HP_PLUS:
             HealPlayerHp(10);
+            return TRUE;
+
+        case IDC_BUTTON_STAGE_GO:
+            MoveToSelectedStage(hDlg);
             return TRUE;
 
         case IDOK:
