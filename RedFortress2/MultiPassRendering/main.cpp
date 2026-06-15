@@ -105,7 +105,7 @@ public:
     void Init(const bool bEnglish) override
     {
         (void)bEnglish;
-        g_commandFontId = g_Render.SetUpFontEx(L"BIZ UDMincho Medium", 18, D3DCOLOR_ARGB(255, 255, 255, 255));
+        g_commandFontId = g_Render.SetUpFontEx(L"BIZ UDGothic", 18, D3DCOLOR_ARGB(255, 255, 255, 255));
     }
 
     void OnDeviceLost() override {}
@@ -239,7 +239,7 @@ public:
     void Init(const bool bEnglish) override
     {
         (void)bEnglish;
-        g_slideShowFontId = g_Render.SetUpFont(L"BIZ UDMincho", 22, D3DCOLOR_RGBA(255, 255, 255, 255));
+        g_slideShowFontId = g_Render.SetUpFont(L"BIZ UDGothic", 22, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
     void OnDeviceLost() override {}
@@ -882,7 +882,7 @@ void DrawTitleScreen()
 {
     if (g_titleFontId < 0)
     {
-        g_titleFontId = g_Render.SetUpFont(L"BIZ UDMincho", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
+        g_titleFontId = g_Render.SetUpFont(L"BIZ UDGothic", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
     g_Render.DrawTextCenter(g_titleFontId, L"ホ  シ  ガ  ー  ル", 0, 220, NSRender::Common::BASE_W, 100);
