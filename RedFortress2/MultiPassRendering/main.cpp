@@ -19,7 +19,7 @@
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../SoundLib/SoundLib/SoundLib.h"
 #include "../../RedFortressCommand/Command/Command.h"
-#include "../../RedFortressSlideShow/SlideShow/SlideShow.h"
+#include "SlideShowManager.h"
 #include "Player.h"
 #include "resource.h"
 #include "StageManager.h"
@@ -27,8 +27,6 @@
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
 const std::wstring g_cursorMoveSoundPath = L"res\\sound\\cursor_move.wav";
-const std::wstring g_slideShowCsvPath = L"res\\script\\hoshigirl_trial_novel.csv";
-const std::wstring g_endingCsvPath = L"res\\script\\ending.csv";
 const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
 const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
 const std::wstring g_playerIdleAnimName = L"000";
@@ -68,11 +66,7 @@ enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending };
 GameState g_gameState = GameState::Loading;
-NSSlideShow::SlideShow* g_slideShow = nullptr;
-int g_slideShowFontId = -1;
-int g_slideShowSkipHintFontId = -1;
-bool g_slideShowSkipRequested = false;
-const float kSlideShowSkipHoldSeconds = 1.0f;
+SlideShowManager g_slideShowManager(g_Render);
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
@@ -96,8 +90,6 @@ const float kHpBarDamageDelayFrameMax = 30.0f;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
-static void UpdateSlideShow();
-static void UpdateEnding();
 static void UpdateTitleByInput();
 static void UpdateStageClear();
 static bool IsStageClearReached();
@@ -115,7 +107,6 @@ static void PopulateStageCombo(HWND hDlg);
 static std::wstring BuildStageComboText(const StageManager::StageData& stage);
 static bool StartStageByIndex(std::size_t stageIndex);
 static void MoveToSelectedStage(HWND hDlg);
-static void DrawSlideShowSkipHint();
 static void DrawPlayerHpBar();
 static void DrawTitleScreen();
 static void DrawStageTitle();
@@ -194,154 +185,6 @@ public:
 
     void Init() override {}
 };
-
-class SlideShowSprite : public NSSlideShow::ISprite
-{
-public:
-    void DrawImage(const int x, const int y, const int transparency) override
-    {
-        (void)x;
-        (void)y;
-        if (m_filepath.empty())
-        {
-            return;
-        }
-
-        if (m_filepath.find(L"novel_chr_") != std::wstring::npos)
-        {
-            g_Render.DrawImageAutoResize(m_filepath, 0.78f, 0.48f, transparency);
-        }
-        else
-        {
-            g_Render.DrawImageStretched(m_filepath, transparency);
-        }
-    }
-
-    void DrawImageEx(const int x,
-                     const int y,
-                     const int transparency,
-                     const bool flipX,
-                     const float scale) override
-    {
-        if (m_filepath.empty())
-        {
-            return;
-        }
-
-        if (m_filepath.find(L"novel_chr_") != std::wstring::npos)
-        {
-            g_Render.DrawImageAutoResizeEx(m_filepath,
-                                           static_cast<float>(x) / static_cast<float>(NSRender::Common::BASE_W),
-                                           static_cast<float>(y) / static_cast<float>(NSRender::Common::BASE_H),
-                                           scale,
-                                           flipX,
-                                           transparency);
-        }
-        else
-        {
-            g_Render.DrawImageStretchedScaled(m_filepath, scale, transparency);
-        }
-    }
-
-    void Load(const std::wstring& filepath) override
-    {
-        m_filepath = filepath;
-        g_Render.LoadImage(m_filepath);
-    }
-
-    void GetImageSize(int& width, int& height) const override
-    {
-        if (m_filepath.empty())
-        {
-            width = 0;
-            height = 0;
-            return;
-        }
-
-        const SIZE size = g_Render.GetImageSize(m_filepath);
-        width = size.cx;
-        height = size.cy;
-    }
-
-    NSSlideShow::ISprite* Create() override
-    {
-        SlideShowSprite* sprite = new SlideShowSprite();
-        sprite->m_filepath = m_filepath;
-        return sprite;
-    }
-
-    void OnDeviceLost() override {}
-    void OnDeviceReset() override {}
-
-private:
-    std::wstring m_filepath;
-};
-
-class SlideShowFont : public NSSlideShow::IFont
-{
-public:
-    void DrawText_(const std::wstring& msg, const int x, const int y) override
-    {
-        if (g_slideShowFontId >= 0)
-        {
-            g_Render.DrawText_(g_slideShowFontId, msg, x, y, D3DCOLOR_RGBA(255, 255, 255, 255));
-        }
-    }
-
-    void Init(const bool bEnglish) override
-    {
-        (void)bEnglish;
-        g_slideShowFontId = g_Render.SetUpFont(L"BIZ UDGothic", 22, D3DCOLOR_RGBA(255, 255, 255, 255));
-    }
-
-    void OnDeviceLost() override {}
-    void OnDeviceReset() override {}
-};
-
-class SlideShowSE : public NSSlideShow::ISoundEffect
-{
-public:
-    void PlayMove() override
-    {
-        SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
-    }
-
-    void Init() override {}
-};
-
-static void InitializeSlideShow()
-{
-    g_slideShowSkipRequested = false;
-
-    NSSlideShow::IFont* font = new SlideShowFont();
-    NSSlideShow::ISoundEffect* se = new SlideShowSE();
-    NSSlideShow::ISprite* sprTextBack = new SlideShowSprite();
-    sprTextBack->Load(L"res\\2D_Image\\textBack.png");
-    NSSlideShow::ISprite* sprFade = new SlideShowSprite();
-    sprFade->Load(L"res\\2D_Image\\black2x2.bmp");
-    NSSlideShow::ISprite* sprImage = new SlideShowSprite();
-
-    g_slideShow = new NSSlideShow::SlideShow();
-    g_slideShow->SetScreenSize(NSRender::Common::BASE_W, NSRender::Common::BASE_H);
-    g_slideShow->Init(font, se, sprTextBack, sprFade, g_slideShowCsvPath, sprImage, false, false);
-}
-
-static void InitializeEndingSlideShow()
-{
-    g_slideShowSkipRequested = false;
-
-    NSSlideShow::IFont* font = new SlideShowFont();
-    NSSlideShow::ISoundEffect* se = new SlideShowSE();
-    NSSlideShow::ISprite* sprTextBack = new SlideShowSprite();
-    sprTextBack->Load(L"res\\2D_Image\\textBack.png");
-    NSSlideShow::ISprite* sprFade = new SlideShowSprite();
-    sprFade->Load(L"res\\2D_Image\\black2x2.bmp");
-    NSSlideShow::ISprite* sprImage = new SlideShowSprite();
-
-    g_slideShow = new NSSlideShow::SlideShow();
-    g_slideShow->SetScreenSize(NSRender::Common::BASE_W, NSRender::Common::BASE_H);
-    g_slideShow->Init(font, se, sprTextBack, sprFade, g_endingCsvPath, sprImage, false, false);
-}
 
 namespace
 {
@@ -500,7 +343,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 const std::wstring selectedId = g_command.Into();
                 if (selectedId == L"start")
                 {
-                    InitializeSlideShow();
+                    g_slideShowManager.Start(L"res\\script\\hoshigirl_trial_novel.csv");
+                    g_slideShowManager.SetStopOnFinish(false);
                     g_gameState = GameState::SlideShow;
                 }
                 else if (selectedId == L"continue")
@@ -522,7 +366,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 const std::wstring clickedId = g_command.Click(baseMousePos.x, baseMousePos.y);
                 if (clickedId == L"start")
                 {
-                    InitializeSlideShow();
+                    g_slideShowManager.Start(L"res\\script\\hoshigirl_trial_novel.csv");
+                    g_slideShowManager.SetStopOnFinish(false);
                     g_gameState = GameState::SlideShow;
                 }
                 else if (clickedId == L"continue")
@@ -537,7 +382,30 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
         else if (g_gameState == GameState::SlideShow)
         {
-            UpdateSlideShow();
+            if (!g_slideShowManager.IsActive())
+            {
+                g_gameState = GameState::Playing;
+                g_stageTitleFrame = kStageTitleFrameMax;
+                g_prevMovingPlatformPositions.clear();
+                g_Render.Draw();
+            }
+            else
+            {
+                g_slideShowManager.ProcessInput();
+                if (g_slideShowManager.Update())
+                {
+                    g_gameState = GameState::Playing;
+                    g_stageTitleFrame = kStageTitleFrameMax;
+                    g_prevMovingPlatformPositions.clear();
+                    g_Render.Draw();
+                }
+                else
+                {
+                    g_Render.Draw();
+                    g_slideShowManager.Render();
+                    g_slideShowManager.DrawSkipHint();
+                }
+            }
         }
         else if (g_gameState == GameState::StageClear)
         {
@@ -545,7 +413,17 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
         else if (g_gameState == GameState::Ending)
         {
-            UpdateEnding();
+            if (g_slideShowManager.IsActive())
+            {
+                g_slideShowManager.ProcessInput();
+                g_slideShowManager.Update();
+                g_Render.Draw();
+                g_slideShowManager.Render();
+            }
+            else
+            {
+                g_Render.Draw();
+            }
         }
         else
         {
@@ -1037,7 +915,8 @@ void UpdateStageClear()
 {
     if (g_stageManager.IsLastStage())
     {
-        InitializeEndingSlideShow();
+        g_slideShowManager.Start(L"res\\script\\ending.csv");
+        g_slideShowManager.SetStopOnFinish(true);
         g_gameState = GameState::Ending;
         return;
     }
@@ -1250,89 +1129,6 @@ void LoadCurrentStageObjects()
     ResetPlayerHp();
     g_playerMover.Reset(stage.playerStartPosition);
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
-}
-
-void UpdateSlideShow()
-{
-    if (g_slideShow == nullptr)
-    {
-        g_gameState = GameState::Playing;
-        g_Render.Draw();
-        return;
-    }
-
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
-        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
-    {
-        g_slideShow->Next();
-    }
-
-    if (InputDevice::SKeyBoard::IsHoldDuration(DIK_SPACE, kSlideShowSkipHoldSeconds))
-    {
-        if (!g_slideShowSkipRequested)
-        {
-            g_slideShow->Skip();
-            g_slideShowSkipRequested = true;
-        }
-    }
-    else
-    {
-        g_slideShowSkipRequested = false;
-    }
-
-    if (g_slideShow->Update())
-    {
-        g_slideShow->Finalize();
-        delete g_slideShow;
-        g_slideShow = nullptr;
-        g_gameState = GameState::Playing;
-        g_slideShowSkipRequested = false;
-        g_stageTitleFrame = kStageTitleFrameMax;
-        g_prevMovingPlatformPositions.clear();
-        g_Render.Draw();
-        return;
-    }
-
-    g_slideShow->Render();
-    DrawSlideShowSkipHint();
-    g_Render.Draw();
-}
-
-void DrawSlideShowSkipHint()
-{
-    if (g_slideShowSkipHintFontId < 0)
-    {
-        g_slideShowSkipHintFontId = g_Render.SetUpFont(L"BIZ UDGothic", 18, D3DCOLOR_RGBA(255, 255, 255, 255));
-    }
-
-    g_Render.DrawTextCenter(g_slideShowSkipHintFontId,
-                            L"Space長押しでスキップ",
-                            1190,
-                            820,
-                            360,
-                            40,
-                             D3DCOLOR_RGBA(255, 255, 255, 190));
-}
-
-void UpdateEnding()
-{
-    if (g_slideShow == nullptr)
-    {
-        return;
-    }
-
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
-        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
-    {
-        g_slideShow->Next();
-    }
-
-    g_slideShow->Update();
-
-    g_slideShow->Render();
-    g_Render.Draw();
 }
 
 void DrawPlayerHpBar()

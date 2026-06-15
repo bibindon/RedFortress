@@ -154,9 +154,16 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="StageManager.cpp" />
+    <ClCompile Include="SlideShowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SlideShowManager.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="StageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
@@ -177,11 +184,6 @@
     <ProjectReference Include="..\..\SoundLib\SoundLib\SoundLib.vcxproj">
       <Project>{4683edab-3715-4c0b-b9d6-f6ac46f221bf}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="StageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="simple-directx9.rc" />
