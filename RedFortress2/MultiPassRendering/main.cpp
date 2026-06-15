@@ -560,6 +560,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
             // 衝突判定（動く床の最新位置を反映）
             g_playerMover.Update(g_pendingMove, g_pendingJump);
+            if (g_playerMover.IsCrushed())
+            {
+                DamagePlayerHp(g_player.GetHp());
+            }
+
             if (IsStageClearReached())
             {
                 g_gameState = GameState::StageClear;
