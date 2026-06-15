@@ -21,6 +21,7 @@
 #include "../../RedFortressCommand/Command/Command.h"
 #include "../../RedFortressSlideShow/SlideShow/SlideShow.h"
 #include "resource.h"
+#include "StageManager.h"
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
@@ -43,9 +44,7 @@ bool g_remoteDesktopMode = []() {
     GetLocalTime(&st);
     return st.wDayOfWeek >= 1 && st.wDayOfWeek <= 5 && st.wHour >= 8 && st.wHour < 19;
 }();
-const D3DXVECTOR3 PLAYER_START_POSITION(0.0f, 0.2f, -14.0f);
-const D3DXVECTOR3 STAGE_CLEAR_POSITION(0.0f, 1.0f, 14.0f);
-const float kStageClearDistance = 1.0f;
+StageManager g_stageManager;
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
 PhysicsLib::CharacterMover g_playerMover;
@@ -72,6 +71,7 @@ bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
 bool g_pendingJump = false;
+std::unordered_map<int, D3DXVECTOR3> g_prevMovingPlatformPositions;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -79,6 +79,8 @@ static void UpdateSlideShow();
 static void UpdateTitleByInput();
 static void UpdateStageClear();
 static bool IsStageClearReached();
+static bool StartNextStage();
+static void LoadCurrentStageObjects();
 static void DrawSlideShowSkipHint();
 static void DrawTitleScreen();
 static void DrawStageTitle();
@@ -96,6 +98,7 @@ int g_commandFontId = -1;
 int g_titleFontId = -1;
 int g_stageTitleFontId = -1;
 int g_stageClearFontId = -1;
+int g_stageClearHintFontId = -1;
 int g_stageTitleFrame = 0;
 const int kStageTitleFrameMax = 180;
 
@@ -355,15 +358,17 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
     g_Render.SetShowFPS(false);
     g_Render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
-    g_Render.LoadXFileListFromCsv(L"res\\model\\XFileList_simple.csv");
+    g_stageManager.Initialize();
+    const StageManager::StageData& initialStage = g_stageManager.GetCurrentStage();
+    g_Render.LoadXFileListFromCsv(initialStage.renderCsvPath);
     g_Render.SetLoadingScreenProgress(15);
     g_Render.Draw();
-    g_Render.LoadXFileListMoveFromCsv(L"res\\model\\XFileListMove.csv");
+    g_Render.LoadXFileListMoveFromCsv(initialStage.moveCsvPath);
     g_Render.SetLoadingScreenProgress(25);
     g_Render.Draw();
     g_playerMeshId = g_Render.AddMeshMixSkinAnim(g_playerMeshPath,
                                                  g_playerAnimCsvPath,
-                                                 PLAYER_START_POSITION,
+                                                 initialStage.playerStartPosition,
                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                                  1.0f,
                                                  NSRender::AnimSetMap(),
@@ -380,7 +385,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     PhysicsLib::SettingsState::SetFocusModeEnabled(false);
     PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
     InitializeCameraFromRenderSettings();
-    UpdatePlayerMeshAndCamera(PLAYER_START_POSITION);
+    UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
 
     InputDevice::Initialize(hInstance, hWnd);
     InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
@@ -506,13 +511,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
                 const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
 
-                static std::unordered_map<int, D3DXVECTOR3> s_prevPositions;
-
                 const auto& platforms = g_Render.GetMovingPlatforms();
                 for (const auto& platform : platforms)
                 {
                     const D3DXVECTOR3 platformPos = g_Render.GetMeshMixPos(platform.renderId);
-                    D3DXVECTOR3& prevPos = s_prevPositions[platform.csvId];
+                    D3DXVECTOR3& prevPos = g_prevMovingPlatformPositions[platform.csvId];
                     const D3DXVECTOR3 platformVelocity = (platformPos - prevPos) / kTargetFrameSeconds;
                     prevPos = platformPos;
 
@@ -758,7 +761,7 @@ void InitializePlayerPhysics()
 {
     PhysicsWorld::Initialize();
 
-    LoadPhysicsObjectsFromCsv(L"res\\model\\XFileListPhysics.csv");
+    LoadPhysicsObjectsFromCsv(g_stageManager.GetCurrentStage().physicsCsvPath);
 
     PhysicsLib::CharacterMover::Settings settings;
     settings.shapeType = PhysicsWorld::ShapeType::Cylinder;
@@ -772,7 +775,7 @@ void InitializePlayerPhysics()
     settings.airControlEnabled = true;
     settings.doubleJumpEnabled = true;
     g_playerMover.SetSettings(settings);
-    g_playerMover.Reset(PLAYER_START_POSITION);
+    g_playerMover.Reset(g_stageManager.GetCurrentStage().playerStartPosition);
 
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
     PhysicsLib::SettingsState::SetCylinderRadius(0.3f);
@@ -875,21 +878,58 @@ void UpdateTitleByInput()
 
 void UpdateStageClear()
 {
+    if (!g_stageManager.IsLastStage())
+    {
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+        {
+            if (StartNextStage())
+            {
+                return;
+            }
+        }
+    }
+
     DrawStageClear();
     g_Render.Draw();
 }
 
 bool IsStageClearReached()
 {
-    const D3DXVECTOR3 playerPosition = g_playerMover.GetPosition();
-    const D3DXVECTOR3 difference = playerPosition - STAGE_CLEAR_POSITION;
-    const float distance = D3DXVec3Length(&difference);
-    if (distance <= kStageClearDistance)
+    return g_stageManager.IsClearReached(g_playerMover.GetPosition());
+}
+
+bool StartNextStage()
+{
+    if (!g_stageManager.MoveNextStage())
     {
-        return true;
+        return false;
     }
 
-    return false;
+    LoadCurrentStageObjects();
+    g_gameState = GameState::Playing;
+    g_stageTitleFrame = kStageTitleFrameMax;
+    return true;
+}
+
+void LoadCurrentStageObjects()
+{
+    const StageManager::StageData& stage = g_stageManager.GetCurrentStage();
+
+    g_Render.ClearCsvLoadedMeshes();
+    g_Render.LoadXFileListFromCsv(stage.renderCsvPath);
+    g_Render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
+
+    PhysicsWorld::ClearObjects();
+    LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
+
+    g_prevMovingPlatformPositions.clear();
+    g_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    g_pendingJump = false;
+    g_playerYaw = 0.0f;
+    g_playerAnimState = PlayerAnimState::Idle;
+    g_playerMover.Reset(stage.playerStartPosition);
+    UpdatePlayerMeshAndCamera(stage.playerStartPosition);
 }
 
 void UpdateSlideShow()
@@ -929,6 +969,7 @@ void UpdateSlideShow()
         g_gameState = GameState::Playing;
         g_slideShowSkipRequested = false;
         g_stageTitleFrame = kStageTitleFrameMax;
+        g_prevMovingPlatformPositions.clear();
         g_Render.Draw();
         return;
     }
@@ -978,7 +1019,8 @@ void DrawStageTitle()
         g_stageTitleFontId = g_Render.SetUpFont(L"BIZ UDGothic", 56, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    g_Render.DrawTextCenter(g_stageTitleFontId, L"Stage 1", 0, 260, NSRender::Common::BASE_W, 90);
+    const std::wstring stageText = L"Stage " + std::to_wstring(g_stageManager.GetCurrentStageNumber());
+    g_Render.DrawTextCenter(g_stageTitleFontId, stageText, 0, 260, NSRender::Common::BASE_W, 90);
     --g_stageTitleFrame;
 }
 
@@ -989,7 +1031,26 @@ void DrawStageClear()
         g_stageClearFontId = g_Render.SetUpFont(L"BIZ UDGothic", 64, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    g_Render.DrawTextCenter(g_stageClearFontId, L"Stage Clear", 0, 330, NSRender::Common::BASE_W, 100);
+    if (g_stageClearHintFontId < 0)
+    {
+        g_stageClearHintFontId = g_Render.SetUpFont(L"BIZ UDGothic", 24, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    if (g_stageManager.IsLastStage())
+    {
+        g_Render.DrawTextCenter(g_stageClearFontId, L"All Clear", 0, 330, NSRender::Common::BASE_W, 100);
+        return;
+    }
+
+    const std::wstring clearText = L"Stage " + std::to_wstring(g_stageManager.GetCurrentStageNumber()) + L" Clear";
+    g_Render.DrawTextCenter(g_stageClearFontId, clearText, 0, 300, NSRender::Common::BASE_W, 100);
+    g_Render.DrawTextCenter(g_stageClearHintFontId,
+                            L"Space / Enter で次のステージへ",
+                            0,
+                            405,
+                            NSRender::Common::BASE_W,
+                            50,
+                            D3DCOLOR_RGBA(255, 255, 255, 220));
 }
 
 POINT ConvertMouseToBaseResolution(int clientX, int clientY)
