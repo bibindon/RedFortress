@@ -127,6 +127,7 @@ int g_stageClearFontId = -1;
 int g_stageClearHintFontId = -1;
 int g_stageTitleFrame = 0;
 const int kStageTitleFrameMax = 180;
+int g_goalMarkerMeshId = -1;
 
 class CommandFont : public NSCommand::IFont
 {
@@ -1114,9 +1115,21 @@ void LoadCurrentStageObjects()
 {
     const StageManager::StageData& stage = g_stageManager.GetCurrentStage();
 
+    if (g_goalMarkerMeshId >= 0)
+    {
+        g_Render.RemoveMesh(g_goalMarkerMeshId);
+        g_goalMarkerMeshId = -1;
+    }
+
     g_Render.ClearCsvLoadedMeshes();
     g_Render.LoadXFileListFromCsv(stage.renderCsvPath);
     g_Render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
+
+    const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 1.0f, stage.clearPosition.z);
+    g_goalMarkerMeshId = g_Render.AddMesh(L"res\\model\\cube_red.x",
+                                          goalPos,
+                                          D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                          1.0f);
 
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
