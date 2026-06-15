@@ -63,6 +63,7 @@ enum class GameState { Loading, Title, SlideShow, Playing };
 GameState g_gameState = GameState::Loading;
 NSSlideShow::SlideShow* g_slideShow = nullptr;
 int g_slideShowFontId = -1;
+int g_slideShowSkipHintFontId = -1;
 bool g_slideShowSkipRequested = false;
 const float kSlideShowSkipHoldSeconds = 1.0f;
 bool g_mouseCursorVisible = false;
@@ -74,6 +75,7 @@ static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
 static void UpdateSlideShow();
 static void UpdateTitleByInput();
+static void DrawSlideShowSkipHint();
 static void DrawTitleScreen();
 static void DrawStageTitle();
 static POINT ConvertMouseToBaseResolution(int clientX, int clientY);
@@ -899,7 +901,24 @@ void UpdateSlideShow()
     }
 
     g_slideShow->Render();
+    DrawSlideShowSkipHint();
     g_Render.Draw();
+}
+
+void DrawSlideShowSkipHint()
+{
+    if (g_slideShowSkipHintFontId < 0)
+    {
+        g_slideShowSkipHintFontId = g_Render.SetUpFont(L"BIZ UDGothic", 18, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    g_Render.DrawTextCenter(g_slideShowSkipHintFontId,
+                            L"Space長押しでスキップ",
+                            1190,
+                            820,
+                            360,
+                            40,
+                            D3DCOLOR_RGBA(255, 255, 255, 190));
 }
 
 void DrawTitleScreen()
