@@ -89,8 +89,9 @@ float g_hpDamageDelayFrame = 0.0f;
 float g_hpDamageAnimFrame = 0.0f;
 bool g_hpDamageWaiting = false;
 bool g_hpDamageAnimating = false;
-const float kHpBarAnimFrameMax = 60.0f;
-const float kHpBarDamageDelayFrameMax = 60.0f;
+bool g_hpDamageFollowFrontAfterHeal = false;
+const float kHpBarAnimFrameMax = 30.0f;
+const float kHpBarDamageDelayFrameMax = 30.0f;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -953,6 +954,7 @@ void ResetPlayerHp()
     g_hpDamageAnimFrame = 0.0f;
     g_hpDamageWaiting = false;
     g_hpDamageAnimating = false;
+    g_hpDamageFollowFrontAfterHeal = false;
 }
 
 void DamagePlayerHp(int amount)
@@ -984,9 +986,9 @@ void BeginHpIncreaseAnimation(int newHp)
     g_hpFrontTarget = newHpValue;
     g_hpFrontAnimFrame = 0.0f;
     g_hpFrontAnimating = true;
-    g_hpDamageDisplay = newHpValue;
     g_hpDamageWaiting = false;
     g_hpDamageAnimating = false;
+    g_hpDamageFollowFrontAfterHeal = true;
     g_hpDamageDelayFrame = 0.0f;
     g_hpDamageAnimFrame = 0.0f;
 }
@@ -1010,6 +1012,7 @@ void BeginHpDamageAnimation(int oldHp, int newHp)
     g_hpDamageAnimFrame = 0.0f;
     g_hpDamageWaiting = true;
     g_hpDamageAnimating = false;
+    g_hpDamageFollowFrontAfterHeal = false;
 }
 
 void UpdatePlayerHpBarAnimation()
@@ -1023,6 +1026,16 @@ void UpdatePlayerHpBarAnimation()
         {
             g_hpFrontDisplay = g_hpFrontTarget;
             g_hpFrontAnimating = false;
+            if (g_hpDamageFollowFrontAfterHeal)
+            {
+                if (g_hpDamageDisplay < g_hpFrontTarget)
+                {
+                    g_hpDamageDisplay = g_hpFrontTarget;
+                }
+                g_hpDamageStart = g_hpDamageDisplay;
+                g_hpDamageTarget = g_hpDamageDisplay;
+                g_hpDamageFollowFrontAfterHeal = false;
+            }
         }
     }
 
