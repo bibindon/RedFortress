@@ -20,6 +20,7 @@
 #include "../../SoundLib/SoundLib/SoundLib.h"
 #include "../../RedFortressCommand/Command/Command.h"
 #include "../../RedFortressSlideShow/SlideShow/SlideShow.h"
+#include "Player.h"
 #include "resource.h"
 #include "StageManager.h"
 
@@ -33,6 +34,9 @@ const std::wstring g_playerIdleAnimName = L"000";
 const std::wstring g_playerWalkAnimName = L"walk";
 const std::wstring g_playerRunAnimName = L"run";
 const std::wstring g_playerJumpAnimName = L"jump";
+const std::wstring g_hpBackImagePath = L"res\\2D_Image\\hp_back.png";
+const std::wstring g_hpFrontImagePath = L"res\\2D_Image\\hp_front.png";
+const std::wstring g_hpDamageImagePath = L"res\\2D_Image\\hp_damage.png";
 NSRender::Render g_Render;
 using PhysicsWorld = PhysicsLib::PhysicsLib;
 const float CAMERA_MOVE_SPEED = 0.08f;
@@ -44,6 +48,7 @@ bool g_remoteDesktopMode = []() {
     GetLocalTime(&st);
     return st.wDayOfWeek >= 1 && st.wDayOfWeek <= 5 && st.wHour >= 8 && st.wHour < 19;
 }();
+Player g_player;
 StageManager g_stageManager;
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
@@ -82,6 +87,7 @@ static bool IsStageClearReached();
 static bool StartNextStage();
 static void LoadCurrentStageObjects();
 static void DrawSlideShowSkipHint();
+static void DrawPlayerHpBar();
 static void DrawTitleScreen();
 static void DrawStageTitle();
 static void DrawStageClear();
@@ -504,6 +510,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
             // 描画（動く床の位置が更新される）
             DrawStageTitle();
+            DrawPlayerHpBar();
             g_Render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -775,6 +782,7 @@ void InitializePlayerPhysics()
     settings.airControlEnabled = true;
     settings.doubleJumpEnabled = true;
     g_playerMover.SetSettings(settings);
+    g_player.ResetHp();
     g_playerMover.Reset(g_stageManager.GetCurrentStage().playerStartPosition);
 
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
@@ -832,6 +840,14 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
         case IDC_BUTTON_RESET_MOVING:
             g_Render.ResetMovingPlatforms();
+            return TRUE;
+
+        case IDC_BUTTON_HP_MINUS:
+            g_player.Damage(10);
+            return TRUE;
+
+        case IDC_BUTTON_HP_PLUS:
+            g_player.Heal(10);
             return TRUE;
 
         case IDOK:
@@ -928,6 +944,7 @@ void LoadCurrentStageObjects()
     g_pendingJump = false;
     g_playerYaw = 0.0f;
     g_playerAnimState = PlayerAnimState::Idle;
+    g_player.ResetHp();
     g_playerMover.Reset(stage.playerStartPosition);
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
 }
@@ -993,6 +1010,31 @@ void DrawSlideShowSkipHint()
                             360,
                             40,
                             D3DCOLOR_RGBA(255, 255, 255, 190));
+}
+
+void DrawPlayerHpBar()
+{
+    const int x = 30;
+    const int y = 30;
+    const int imageWidth = 512;
+    const int imageHeight = 64;
+
+    const int hp = g_player.GetHp();
+    const int maxHp = g_player.GetMaxHp();
+    if (maxHp <= 0)
+    {
+        return;
+    }
+
+    int frontWidth = imageWidth * hp / maxHp;
+    if (frontWidth < 1 && hp > 0)
+    {
+        frontWidth = 1;
+    }
+
+    g_Render.DrawImageSized(g_hpBackImagePath, x, y, imageWidth, imageHeight, 255);
+    g_Render.DrawImageSized(g_hpDamageImagePath, x, y, imageWidth, imageHeight, 255);
+    g_Render.DrawImageSized(g_hpFrontImagePath, x, y, frontWidth, imageHeight, 255);
 }
 
 void DrawTitleScreen()
