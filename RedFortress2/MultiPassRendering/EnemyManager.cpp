@@ -95,11 +95,29 @@ void EnemyManager::LoadForStage(NSRender::Render& render, const std::wstring& cs
     }
 }
 
-void EnemyManager::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos)
+void EnemyManager::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible)
 {
     for (auto& enemy : m_enemies)
     {
-        enemy.Update(render, playerPos);
+        enemy.Update(render, playerPos, playerInvincible);
+    }
+
+    for (auto it = m_enemies.begin(); it != m_enemies.end();)
+    {
+        if (it->IsReadyToRemove())
+        {
+            const int meshId = it->GetMeshId();
+            if (meshId >= 0)
+            {
+                render.StopMeshMixSkinAnimBlink(meshId);
+                render.RemoveMeshMixSkinAnim(meshId);
+            }
+            it = m_enemies.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 

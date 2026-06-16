@@ -15,7 +15,7 @@ public:
     void Initialize();
     void Clear(NSRender::Render& render);
     void LoadForStage(NSRender::Render& render, const std::wstring& csvPath);
-    void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos);
+    void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
     void SyncMeshes(NSRender::Render& render);
     void DrawHpBars(NSRender::Render& render);
 

@@ -34,53 +34,90 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition, int meshId)
     m_state = State::Idle;
     m_animState = AnimState::Idle;
     m_yaw = 0.0f;
-    m_invincibleFrames = 0;
+    m_blinkFrames = 0;
+    m_removalFrames = 0;
 }
 
-void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos)
+void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible)
 {
     if (m_state == State::Dead)
     {
+        if (m_removalFrames > 0)
+        {
+            --m_removalFrames;
+        }
         return;
     }
 
-    if (m_invincibleFrames > 0)
+    if (m_blinkFrames > 0)
     {
-        --m_invincibleFrames;
+        --m_blinkFrames;
+        if (m_blinkFrames <= 0 && m_state != State::Dead && m_meshId >= 0)
+        {
+            render.StopMeshMixSkinAnimBlink(m_meshId);
+        }
     }
 
     const D3DXVECTOR3 diff = playerPos - m_position;
     const float distance = D3DXVec3Length(&diff);
 
-    if (distance <= m_viewDistance && IsPlayerInView(playerPos))
+    if (m_state == State::Retreat)
     {
-        m_state = State::Chase;
-    }
-    else
-    {
-        m_state = State::Idle;
-    }
-
-    if (m_state == State::Chase)
-    {
-        UpdateFacing(playerPos);
-
-        D3DXVECTOR3 moveDir = diff;
-        moveDir.y = 0.0f;
-        if (D3DXVec3LengthSq(&moveDir) > 0.0001f)
+        D3DXVECTOR3 awayDir = m_position - playerPos;
+        awayDir.y = 0.0f;
+        if (D3DXVec3LengthSq(&awayDir) > 0.0001f)
         {
-            D3DXVec3Normalize(&moveDir, &moveDir);
+            D3DXVec3Normalize(&awayDir, &awayDir);
         }
         else
         {
-            moveDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            awayDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
         }
 
+        UpdateFacing(m_position + awayDir);
+
         const float kTargetFrameSeconds = 1.0f / 60.0f;
-        m_position += moveDir * m_moveSpeed * kTargetFrameSeconds;
+        m_position += awayDir * m_moveSpeed * kTargetFrameSeconds;
+
+        if (distance >= m_retreatDistance)
+        {
+            m_state = State::Idle;
+        }
+    }
+    else if (m_state == State::Chase)
+    {
+        if (distance <= m_viewDistance && IsPlayerInView(playerPos))
+        {
+            UpdateFacing(playerPos);
+
+            D3DXVECTOR3 moveDir = diff;
+            moveDir.y = 0.0f;
+            if (D3DXVec3LengthSq(&moveDir) > 0.0001f)
+            {
+                D3DXVec3Normalize(&moveDir, &moveDir);
+            }
+            else
+            {
+                moveDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            }
+
+            const float kTargetFrameSeconds = 1.0f / 60.0f;
+            m_position += moveDir * m_moveSpeed * kTargetFrameSeconds;
+        }
+        else
+        {
+            m_state = State::Idle;
+        }
+    }
+    else // Idle
+    {
+        if (!playerInvincible && distance <= m_viewDistance && IsPlayerInView(playerPos))
+        {
+            m_state = State::Chase;
+        }
     }
 
-    const AnimState nextAnim = (m_state == State::Chase) ? AnimState::Run : AnimState::Idle;
+    const AnimState nextAnim = (m_state == State::Chase || m_state == State::Retreat) ? AnimState::Run : AnimState::Idle;
     if (nextAnim != m_animState)
     {
         m_animState = nextAnim;
@@ -119,16 +156,20 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount)
     }
 
     m_hp -= amount;
-    m_invincibleFrames = 10;
+    m_blinkFrames = 30;
+    if (m_meshId >= 0)
+    {
+        render.StartMeshMixSkinAnimBlink(m_meshId, m_blinkFrames, 4);
+    }
 
     if (m_hp <= 0)
     {
         m_hp = 0;
         m_state = State::Dead;
+        m_removalFrames = 60;
         if (m_meshId >= 0)
         {
-            render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
-            render.PlayMeshMixSkinAnimAnimation(m_meshId, L"seat");
+            render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 4);
         }
     }
 }
@@ -136,6 +177,19 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount)
 bool Enemy::IsDead() const
 {
     return m_state == State::Dead;
+}
+
+bool Enemy::IsReadyToRemove() const
+{
+    return m_state == State::Dead && m_removalFrames <= 0;
+}
+
+void Enemy::MarkAttackedPlayer()
+{
+    if (m_state != State::Dead)
+    {
+        m_state = State::Retreat;
+    }
 }
 
 int Enemy::GetHp() const

@@ -130,6 +130,7 @@ static void ResetPlayerHp();
 static void DamagePlayerHp(int amount);
 static void HealPlayerHp(int amount);
 static void AddDamagePopup(int amount, const D3DXCOLOR& color);
+static void AddDamagePopup(int amount, const D3DXVECTOR3& pos, const D3DXCOLOR& color);
 static void UpdateDamagePopups();
 static void DrawDamagePopups();
 static void BeginHpIncreaseAnimation(int newHp);
@@ -149,6 +150,7 @@ static void DrawEndingFin();
 static POINT ConvertMouseToBaseResolution(int clientX, int clientY);
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
+static Enemy* FindEnemyInSlashRange();
 static void InitializeCameraFromRenderSettings();
 static void InitializePlayerPhysics();
 static void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
@@ -486,7 +488,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             UpdatePlayerByInput();
 
             // 敵の更新
-            g_enemyManager.Update(g_Render, g_playerMover.GetPosition());
+            g_enemyManager.Update(g_Render, g_playerMover.GetPosition(), g_playerInvincibleFrames > 0);
             g_enemyManager.SyncMeshes(g_Render);
 
             // 描画（動く床の位置が更新される）
@@ -543,6 +545,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 if (enemy.IsStompedByPlayer(g_playerMover.GetPosition(), g_playerMover.IsJumping(), g_playerMover.GetVelocity().y))
                 {
                     enemy.TakeDamage(g_Render, 10);
+                    AddDamagePopup(10, enemy.GetPosition(), kDamagePopupDamageColor);
                     D3DXVECTOR3 playerPos = g_playerMover.GetPosition();
                     playerPos.y += 0.3f;
                     g_playerMover.SetPosition(playerPos);
@@ -552,6 +555,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 {
                     DamagePlayerHp(10);
                     g_playerInvincibleFrames = kPlayerInvincibleDuration;
+                    if (g_playerMeshId >= 0)
+                    {
+                        g_Render.StartMeshMixSkinAnimBlink(g_playerMeshId, kPlayerInvincibleDuration, 4);
+                    }
                     g_playerKnockbackFrames = kKnockbackDurationFrames;
                     D3DXVECTOR3 knockbackDir = g_playerMover.GetPosition() - enemy.GetPosition();
                     knockbackDir.y = 0.0f;
@@ -564,6 +571,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                         knockbackDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
                     }
                     g_playerKnockbackDir = knockbackDir;
+                    enemy.MarkAttackedPlayer();
                     break;
                 }
             }
@@ -716,6 +724,13 @@ void UpdatePlayerByInput()
             g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
             g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerSlashAnimName);
         }
+
+        Enemy* slashTarget = FindEnemyInSlashRange();
+        if (slashTarget != nullptr)
+        {
+            slashTarget->TakeDamage(g_Render, 5);
+            AddDamagePopup(5, slashTarget->GetPosition(), kDamagePopupDamageColor);
+        }
     }
 
     const D3DXVECTOR3 cameraForward = GetCameraPlanarForward();
@@ -742,7 +757,7 @@ void UpdatePlayerByInput()
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
     if (g_playerKnockbackFrames > 0)
     {
-        move = -g_playerKnockbackDir * kKnockbackSpeed;
+        move = g_playerKnockbackDir * kKnockbackSpeed;
         const float targetYaw = atan2f(-move.x, -move.z);
         g_playerYaw = MoveAngleToward(g_playerYaw,
                                       targetYaw,
@@ -837,6 +852,51 @@ D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward)
 
     D3DXVec3Normalize(&right, &right);
     return right;
+}
+
+Enemy* FindEnemyInSlashRange()
+{
+    const D3DXVECTOR3 playerPos = g_playerMover.GetPosition();
+    const D3DXVECTOR3 forward(-sinf(g_playerYaw), 0.0f, -cosf(g_playerYaw));
+    const float kSlashRange = 2.0f;
+    const float kSlashHalfAngle = D3DXToRadian(45.0f);
+
+    Enemy* bestEnemy = nullptr;
+    float bestDot = -1.0f;
+
+    for (auto& enemy : g_enemyManager.GetEnemies())
+    {
+        if (enemy.IsDead())
+        {
+            continue;
+        }
+
+        D3DXVECTOR3 dir = enemy.GetPosition() - playerPos;
+        dir.y = 0.0f;
+        const float dist = D3DXVec3Length(&dir);
+        if (dist > kSlashRange)
+        {
+            continue;
+        }
+
+        if (D3DXVec3LengthSq(&dir) > 0.0001f)
+        {
+            D3DXVec3Normalize(&dir, &dir);
+        }
+        else
+        {
+            dir = forward;
+        }
+
+        const float dot = D3DXVec3Dot(&forward, &dir);
+        if (dot > cosf(kSlashHalfAngle) && dot > bestDot)
+        {
+            bestDot = dot;
+            bestEnemy = &enemy;
+        }
+    }
+
+    return bestEnemy;
 }
 
 void InitializePlayerPhysics()
@@ -1098,10 +1158,14 @@ void ResetPlayerHp()
 
 void AddDamagePopup(int amount, const D3DXCOLOR& color)
 {
+    AddDamagePopup(amount, g_playerMover.GetPosition(), color);
+}
+
+void AddDamagePopup(int amount, const D3DXVECTOR3& pos, const D3DXCOLOR& color)
+{
     DamagePopup popup;
     popup.text = std::to_wstring(amount);
-    const D3DXVECTOR3 playerPos = g_playerMover.GetPosition();
-    popup.basePos = playerPos + D3DXVECTOR3(0.0f, 1.8f, 0.0f);
+    popup.basePos = pos + D3DXVECTOR3(0.0f, 1.5f, 0.0f);
     popup.riseOffset = 0.0f;
     popup.remainingFrames = kDamagePopupDuration;
     popup.fontSize = 24;
@@ -1322,6 +1386,10 @@ void LoadCurrentStageObjects()
     g_playerInvincibleFrames = 0;
     g_playerKnockbackFrames = 0;
     g_playerSlashFrames = 0;
+    if (g_playerMeshId >= 0)
+    {
+        g_Render.StopMeshMixSkinAnimBlink(g_playerMeshId);
+    }
     ResetPlayerHp();
     g_playerMover.Reset(stage.playerStartPosition);
     g_enemyManager.LoadForStage(g_Render, stage.enemyCsvPath);

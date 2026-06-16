@@ -15,6 +15,7 @@ public:
     {
         Idle,
         Chase,
+        Retreat,
         Dead
     };
 
@@ -27,11 +28,13 @@ public:
     Enemy();
 
     void Initialize(const D3DXVECTOR3& startPosition, int meshId);
-    void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos);
+    void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
     void SyncMesh(NSRender::Render& render);
 
     void TakeDamage(NSRender::Render& render, int amount);
     bool IsDead() const;
+    bool IsReadyToRemove() const;
+    void MarkAttackedPlayer();
     int GetHp() const;
     int GetMaxHp() const;
     D3DXVECTOR3 GetPosition() const;
@@ -54,7 +57,9 @@ private:
     float m_viewDistance = 5.0f;
     float m_viewHalfAngle = D3DXToRadian(90.0f);
     float m_moveSpeed = 2.5f;
+    float m_retreatDistance = 3.0f;
     float m_contactRadius = 0.5f;
     float m_height = 1.0f;
-    int m_invincibleFrames = 0;
+    int m_blinkFrames = 0;
+    int m_removalFrames = 0;
 };
