@@ -375,7 +375,6 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 g_Render.SetPostEffectMaskedGaussianFilter(true);
                 g_Render.SetPostEffectMaskedGaussianMaskPath(L"res\\2D_Image\\menu_mask.png");
                 g_Render.SetPostEffectMaskedGaussianSampleSize(25);
-                g_Render.SetPostEffectMaskedGaussianMaskScaleToBaseResolution(true);
                 g_mouseCursorVisible = true;
                 InputDevice::Mouse::SetVisible(true);
             }
