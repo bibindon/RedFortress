@@ -41,6 +41,7 @@ void StageManager::AddStage(int number,
     stage.renderCsvPath = basePath + L"XFileList_simple.csv";
     stage.physicsCsvPath = basePath + L"XFileListPhysics.csv";
     stage.moveCsvPath = basePath + L"XFileListMove.csv";
+    stage.enemyCsvPath = basePath + L"EnemyPositions.csv";
     stage.playerStartPosition = playerStartPosition;
     stage.clearPosition = clearPosition;
     stage.clearDistance = 1.0f;

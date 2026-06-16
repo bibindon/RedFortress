@@ -36,6 +36,7 @@ const std::wstring g_playerIdleAnimName = L"000";
 const std::wstring g_playerWalkAnimName = L"walk";
 const std::wstring g_playerRunAnimName = L"run";
 const std::wstring g_playerJumpAnimName = L"jump";
+const std::wstring g_playerSlashAnimName = L"slash";
 const std::wstring g_hpBackImagePath = L"res\\2D_Image\\hp_back.png";
 const std::wstring g_hpFrontImagePath = L"res\\2D_Image\\hp_front.png";
 const std::wstring g_hpDamageImagePath = L"res\\2D_Image\\hp_damage.png";
@@ -66,8 +67,10 @@ const float kTargetFrameSeconds = 1.0f / 60.0f;
 const float kMinCameraDistance = 1.5f;
 const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
-enum class PlayerAnimState { Idle, Walk, Run, Jump };
+enum class PlayerAnimState { Idle, Walk, Run, Jump, Slash };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
+int g_playerSlashFrames = 0;
+const int kSlashDurationFrames = 120;
 enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
 GameState g_gameState = GameState::Loading;
 SlideShowManager g_slideShowManager(g_Render);
@@ -111,6 +114,10 @@ EnemyManager g_enemyManager;
 int g_playerInvincibleFrames = 0;
 const int kPlayerInvincibleDuration = 180;
 const float kStompBounceVelocity = 3.0f;
+int g_playerKnockbackFrames = 0;
+const int kKnockbackDurationFrames = 60;
+const float kKnockbackSpeed = 3.0f;
+D3DXVECTOR3 g_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -310,7 +317,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
     InitializeCameraFromRenderSettings();
     UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
-    g_enemyManager.LoadForStage(g_Render, g_stageManager.GetCurrentStageNumber());
+    g_enemyManager.LoadForStage(g_Render, initialStage.enemyCsvPath);
 
     InputDevice::Initialize(hInstance, hWnd);
     InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
@@ -487,6 +494,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             DrawPlayerHpBar();
             UpdateDamagePopups();
             DrawDamagePopups();
+            g_enemyManager.DrawHpBars(g_Render);
             g_Render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -544,6 +552,18 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 {
                     DamagePlayerHp(10);
                     g_playerInvincibleFrames = kPlayerInvincibleDuration;
+                    g_playerKnockbackFrames = kKnockbackDurationFrames;
+                    D3DXVECTOR3 knockbackDir = g_playerMover.GetPosition() - enemy.GetPosition();
+                    knockbackDir.y = 0.0f;
+                    if (D3DXVec3LengthSq(&knockbackDir) > 0.0001f)
+                    {
+                        D3DXVec3Normalize(&knockbackDir, &knockbackDir);
+                    }
+                    else
+                    {
+                        knockbackDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+                    }
+                    g_playerKnockbackDir = knockbackDir;
                     break;
                 }
             }
@@ -673,14 +693,42 @@ void UpdateCameraByInput()
 void UpdatePlayerByInput()
 {
     const D3DXVECTOR3 previousRenderPosition = g_playerMover.GetPosition();
+
+    // slash カウントダウン
+    if (g_playerSlashFrames > 0)
+    {
+        --g_playerSlashFrames;
+    }
+
+    // ノックバックカウントダウン
+    if (g_playerKnockbackFrames > 0)
+    {
+        --g_playerKnockbackFrames;
+    }
+
+    // 左クリックで slash
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) && g_playerSlashFrames <= 0)
+    {
+        g_playerSlashFrames = kSlashDurationFrames;
+        g_playerAnimState = PlayerAnimState::Slash;
+        if (g_playerMeshId >= 0)
+        {
+            g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
+            g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerSlashAnimName);
+        }
+    }
+
     const D3DXVECTOR3 cameraForward = GetCameraPlanarForward();
     const D3DXVECTOR3 cameraRight   = GetCameraPlanarRight(cameraForward);
 
     D3DXVECTOR3 localMove(0.0f, 0.0f, 0.0f);
-    if (InputDevice::SKeyBoard::IsDown(DIK_W)) localMove.z += 1.0f;
-    if (InputDevice::SKeyBoard::IsDown(DIK_S)) localMove.z -= 1.0f;
-    if (InputDevice::SKeyBoard::IsDown(DIK_D)) localMove.x += 1.0f;
-    if (InputDevice::SKeyBoard::IsDown(DIK_A)) localMove.x -= 1.0f;
+    if (g_playerKnockbackFrames <= 0)
+    {
+        if (InputDevice::SKeyBoard::IsDown(DIK_W)) localMove.z += 1.0f;
+        if (InputDevice::SKeyBoard::IsDown(DIK_S)) localMove.z -= 1.0f;
+        if (InputDevice::SKeyBoard::IsDown(DIK_D)) localMove.x += 1.0f;
+        if (InputDevice::SKeyBoard::IsDown(DIK_A)) localMove.x -= 1.0f;
+    }
 
     const bool isMoving  = (localMove.x != 0.0f || localMove.z != 0.0f);
     const bool isRunning = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LSHIFT);
@@ -692,7 +740,15 @@ void UpdatePlayerByInput()
     g_playerMover.SetSettings(settings);
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
-    if (isMoving)
+    if (g_playerKnockbackFrames > 0)
+    {
+        move = -g_playerKnockbackDir * kKnockbackSpeed;
+        const float targetYaw = atan2f(-move.x, -move.z);
+        g_playerYaw = MoveAngleToward(g_playerYaw,
+                                      targetYaw,
+                                      kPlayerTurnRadiansPerSecond * kTargetFrameSeconds);
+    }
+    else if (isMoving)
     {
         const D3DXVECTOR3 desiredMove = cameraRight * localMove.x + cameraForward * localMove.z;
         const bool focusModeEnabled = PhysicsWorld::IsFocusModeEnabled();
@@ -716,7 +772,11 @@ void UpdatePlayerByInput()
         const bool isJumping = g_playerMover.IsJumping();
 
         PlayerAnimState nextState;
-        if (isJumping)
+        if (g_playerSlashFrames > 0)
+        {
+            nextState = PlayerAnimState::Slash;
+        }
+        else if (isJumping)
         {
             nextState = PlayerAnimState::Jump;
         }
@@ -1260,9 +1320,11 @@ void LoadCurrentStageObjects()
     g_playerAnimState = PlayerAnimState::Idle;
     g_damagePopups.clear();
     g_playerInvincibleFrames = 0;
+    g_playerKnockbackFrames = 0;
+    g_playerSlashFrames = 0;
     ResetPlayerHp();
     g_playerMover.Reset(stage.playerStartPosition);
-    g_enemyManager.LoadForStage(g_Render, g_stageManager.GetCurrentStageNumber());
+    g_enemyManager.LoadForStage(g_Render, stage.enemyCsvPath);
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
 }
 

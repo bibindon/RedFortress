@@ -14,6 +14,7 @@ public:
         std::wstring renderCsvPath;
         std::wstring physicsCsvPath;
         std::wstring moveCsvPath;
+        std::wstring enemyCsvPath;
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 clearPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         float clearDistance = 1.0f;

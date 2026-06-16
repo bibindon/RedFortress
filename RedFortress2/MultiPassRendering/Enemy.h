@@ -32,6 +32,8 @@ public:
 
     void TakeDamage(NSRender::Render& render, int amount);
     bool IsDead() const;
+    int GetHp() const;
+    int GetMaxHp() const;
     D3DXVECTOR3 GetPosition() const;
     int GetMeshId() const;
 

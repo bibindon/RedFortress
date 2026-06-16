@@ -138,6 +138,16 @@ bool Enemy::IsDead() const
     return m_state == State::Dead;
 }
 
+int Enemy::GetHp() const
+{
+    return m_hp;
+}
+
+int Enemy::GetMaxHp() const
+{
+    return 10;
+}
+
 D3DXVECTOR3 Enemy::GetPosition() const
 {
     return m_position;
@@ -192,7 +202,7 @@ void Enemy::UpdateFacing(const D3DXVECTOR3& targetPos)
 
 bool Enemy::IsPlayerInView(const D3DXVECTOR3& playerPos) const
 {
-    const D3DXVECTOR3 forward(-sinf(m_yaw), 0.0f, cosf(m_yaw));
+    const D3DXVECTOR3 forward(-sinf(m_yaw), 0.0f, -cosf(m_yaw));
     D3DXVECTOR3 toPlayer = playerPos - m_position;
     toPlayer.y = 0.0f;
 
