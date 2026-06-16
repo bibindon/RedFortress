@@ -12,6 +12,8 @@
 #include <cassert>
 #include <crtdbg.h>
 #include <unordered_map>
+#include <algorithm>
+#include <vector>
 
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
@@ -89,6 +91,21 @@ bool g_hpDamageFollowFrontAfterHeal = false;
 const float kHpBarAnimFrameMax = 30.0f;
 const float kHpBarDamageDelayFrameMax = 30.0f;
 
+struct DamagePopup
+{
+    std::wstring text;
+    D3DXVECTOR3 basePos;
+    float riseOffset = 0.0f;
+    int remainingFrames = 0;
+    int fontSize = 24;
+    D3DXCOLOR color;
+};
+std::vector<DamagePopup> g_damagePopups;
+const int kDamagePopupDuration = 60;
+const float kDamagePopupRiseSpeed = 0.02f;
+const D3DXCOLOR kDamagePopupDamageColor = D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f);
+const D3DXCOLOR kDamagePopupHealColor = D3DXCOLOR(0.2f, 1.0f, 0.2f, 1.0f);
+
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
 static void UpdateTitleByInput();
@@ -99,6 +116,9 @@ static void LoadCurrentStageObjects();
 static void ResetPlayerHp();
 static void DamagePlayerHp(int amount);
 static void HealPlayerHp(int amount);
+static void AddDamagePopup(int amount, const D3DXCOLOR& color);
+static void UpdateDamagePopups();
+static void DrawDamagePopups();
 static void BeginHpIncreaseAnimation(int newHp);
 static void BeginHpDamageAnimation(int oldHp, int newHp);
 static void UpdatePlayerHpBarAnimation();
@@ -454,6 +474,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             // 描画（動く床の位置が更新される）
             DrawStageTitle();
             DrawPlayerHpBar();
+            UpdateDamagePopups();
+            DrawDamagePopups();
             g_Render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -973,6 +995,19 @@ void ResetPlayerHp()
     g_hpDamageFollowFrontAfterHeal = false;
 }
 
+void AddDamagePopup(int amount, const D3DXCOLOR& color)
+{
+    DamagePopup popup;
+    popup.text = std::to_wstring(amount);
+    const D3DXVECTOR3 playerPos = g_playerMover.GetPosition();
+    popup.basePos = playerPos + D3DXVECTOR3(0.0f, 1.8f, 0.0f);
+    popup.riseOffset = 0.0f;
+    popup.remainingFrames = kDamagePopupDuration;
+    popup.fontSize = 24;
+    popup.color = color;
+    g_damagePopups.push_back(popup);
+}
+
 void DamagePlayerHp(int amount)
 {
     const int oldHp = g_player.GetHp();
@@ -981,6 +1016,7 @@ void DamagePlayerHp(int amount)
     if (newHp < oldHp)
     {
         BeginHpDamageAnimation(oldHp, newHp);
+        AddDamagePopup(oldHp - newHp, kDamagePopupDamageColor);
     }
 }
 
@@ -992,6 +1028,7 @@ void HealPlayerHp(int amount)
     if (oldHp < newHp)
     {
         BeginHpIncreaseAnimation(newHp);
+        AddDamagePopup(newHp - oldHp, kDamagePopupHealColor);
     }
 }
 
@@ -1029,6 +1066,33 @@ void BeginHpDamageAnimation(int oldHp, int newHp)
     g_hpDamageWaiting = true;
     g_hpDamageAnimating = false;
     g_hpDamageFollowFrontAfterHeal = false;
+}
+
+void UpdateDamagePopups()
+{
+    for (auto& popup : g_damagePopups)
+    {
+        popup.riseOffset += kDamagePopupRiseSpeed;
+        popup.remainingFrames -= 1;
+    }
+
+    g_damagePopups.erase(
+        std::remove_if(g_damagePopups.begin(),
+                       g_damagePopups.end(),
+                       [](const DamagePopup& popup) { return popup.remainingFrames <= 0; }),
+        g_damagePopups.end());
+}
+
+void DrawDamagePopups()
+{
+    for (const auto& popup : g_damagePopups)
+    {
+        const float alphaRate = static_cast<float>(popup.remainingFrames) / static_cast<float>(kDamagePopupDuration);
+        D3DXCOLOR color = popup.color;
+        color.a *= alphaRate;
+        const D3DXVECTOR3 drawPos = popup.basePos + D3DXVECTOR3(0.0f, popup.riseOffset, 0.0f);
+        g_Render.DrawWorldText(popup.text, drawPos, popup.fontSize, color, false);
+    }
 }
 
 void UpdatePlayerHpBarAnimation()
@@ -1153,6 +1217,7 @@ void LoadCurrentStageObjects()
     g_pendingJump = false;
     g_playerYaw = 0.0f;
     g_playerAnimState = PlayerAnimState::Idle;
+    g_damagePopups.clear();
     ResetPlayerHp();
     g_playerMover.Reset(stage.playerStartPosition);
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
