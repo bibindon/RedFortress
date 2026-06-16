@@ -1091,7 +1091,7 @@ void DrawDamagePopups()
         D3DXCOLOR color = popup.color;
         color.a *= alphaRate;
         const D3DXVECTOR3 drawPos = popup.basePos + D3DXVECTOR3(0.0f, popup.riseOffset, 0.0f);
-        g_Render.DrawWorldText(popup.text, drawPos, popup.fontSize, color, false);
+        g_Render.DrawWorldText(popup.text, drawPos, popup.fontSize, color, true);
     }
 }
 
