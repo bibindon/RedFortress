@@ -1165,7 +1165,7 @@ void DrawPlayerHpBar()
     const int x = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
     const int y = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
     const int sourceWidth = 1000;
-    const int sourceHeight = 32;
+    const int sourceHeight = 16;
     const int imageWidth = static_cast<int>((static_cast<float>(sourceWidth) * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
     const int imageHeight = static_cast<int>((static_cast<float>(sourceHeight) * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
 
