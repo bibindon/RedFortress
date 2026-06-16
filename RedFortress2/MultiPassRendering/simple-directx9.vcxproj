@@ -157,6 +157,7 @@
     <ClCompile Include="SlideShowManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="PauseMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -168,6 +169,7 @@
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="PauseMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">

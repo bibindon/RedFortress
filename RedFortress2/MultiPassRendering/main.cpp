@@ -26,6 +26,7 @@
 #include "resource.h"
 #include "StageManager.h"
 #include "EnemyManager.h"
+#include "PauseMenu.h"
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
@@ -76,6 +77,7 @@ const int kSlashAttackDelayFrames = 60;
 enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
 GameState g_gameState = GameState::Loading;
 SlideShowManager g_slideShowManager(g_Render);
+PauseMenu g_pauseMenu;
 bool g_mouseCursorVisible = false;
 HWND g_settingsDialog = NULL;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
@@ -116,7 +118,6 @@ EnemyManager g_enemyManager;
 int g_playerInvincibleFrames = 0;
 const int kPlayerInvincibleDuration = 180;
 const int kRespawnInvincibleFrames = 180;
-bool g_menuVisible = false;
 const float kStompBounceVelocity = 3.0f;
 int g_playerKnockbackFrames = 0;
 const int kKnockbackDurationFrames = 60;
@@ -333,6 +334,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     g_enemyManager.LoadForStage(g_Render, initialStage.enemyCsvPath);
 
     InputDevice::Initialize(hInstance, hWnd);
+    g_pauseMenu.Initialize(g_Render, g_mouseCursorVisible);
     InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
     g_Render.SetLoadingScreenProgress(70);
     g_Render.Draw();
@@ -367,24 +369,13 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
 
         InputDevice::Update();
-        if (g_gameState != GameState::EndingFin && InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+        if (g_gameState == GameState::Playing && InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
         {
-            g_menuVisible = !g_menuVisible;
-            if (g_menuVisible)
-            {
-                g_Render.SetPostEffectMaskedGaussianFilter(true);
-                g_Render.SetPostEffectMaskedGaussianMaskPath(L"res\\2D_Image\\menu_mask.png");
-                g_Render.SetPostEffectMaskedGaussianSampleSize(25);
-                g_mouseCursorVisible = true;
-                InputDevice::Mouse::SetVisible(true);
-            }
-            else
-            {
-                g_Render.SetPostEffectMaskedGaussianFilter(false);
-            }
+            g_pauseMenu.Toggle();
         }
 
         if (g_gameState != GameState::EndingFin &&
+            !g_pauseMenu.IsOpen() &&
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LCONTROL) ||
              InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RCONTROL)))
         {
@@ -487,6 +478,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 g_slideShowManager.ProcessInput();
                 if (g_slideShowManager.Update())
                 {
+                    g_pauseMenu.Close();
                     g_gameState = GameState::EndingFin;
                     DrawEndingFin();
                 }
@@ -498,6 +490,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             }
             else
             {
+                g_pauseMenu.Close();
                 g_gameState = GameState::EndingFin;
                 DrawEndingFin();
             }
@@ -508,6 +501,16 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
+            if (g_pauseMenu.BlocksGameInput())
+            {
+                DrawPlayerHpBar();
+                DrawDamagePopups();
+                g_enemyManager.DrawHpBars(g_Render);
+                g_pauseMenu.Render(g_stageManager.GetCurrentStageDisplayName());
+                g_Render.Draw();
+                continue;
+            }
+
             // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
             if (!g_mouseCursorVisible)
             {
