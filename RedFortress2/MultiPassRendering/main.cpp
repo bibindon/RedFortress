@@ -70,7 +70,9 @@ const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run, Jump, Slash };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
 int g_playerSlashFrames = 0;
+int g_playerSlashAttackFrames = -1;
 const int kSlashDurationFrames = 120;
+const int kSlashAttackDelayFrames = 60;
 enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
 GameState g_gameState = GameState::Loading;
 SlideShowManager g_slideShowManager(g_Render);
@@ -528,6 +530,18 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 DamagePlayerHp(g_player.GetHp());
             }
 
+            // slash 攻撃判定（左クリックから 1 秒後）
+            if (g_playerSlashAttackFrames == 0)
+            {
+                g_playerSlashAttackFrames = -1;
+                Enemy* slashTarget = FindEnemyInSlashRange();
+                if (slashTarget != nullptr)
+                {
+                    slashTarget->TakeDamage(g_Render, 5);
+                    AddDamagePopup(5, slashTarget->GetPosition(), kDamagePopupDamageColor);
+                }
+            }
+
             // プレイヤー無敵時間を更新
             if (g_playerInvincibleFrames > 0)
             {
@@ -708,6 +722,12 @@ void UpdatePlayerByInput()
         --g_playerSlashFrames;
     }
 
+    // slash 攻撃判定カウントダウン
+    if (g_playerSlashAttackFrames > 0)
+    {
+        --g_playerSlashAttackFrames;
+    }
+
     // ノックバックカウントダウン
     if (g_playerKnockbackFrames > 0)
     {
@@ -718,18 +738,12 @@ void UpdatePlayerByInput()
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) && g_playerSlashFrames <= 0)
     {
         g_playerSlashFrames = kSlashDurationFrames;
+        g_playerSlashAttackFrames = kSlashAttackDelayFrames;
         g_playerAnimState = PlayerAnimState::Slash;
         if (g_playerMeshId >= 0)
         {
             g_Render.SetMeshMixSkinAnimSpeed(g_playerMeshId, 1.0f);
             g_Render.PlayMeshMixSkinAnimAnimation(g_playerMeshId, g_playerSlashAnimName);
-        }
-
-        Enemy* slashTarget = FindEnemyInSlashRange();
-        if (slashTarget != nullptr)
-        {
-            slashTarget->TakeDamage(g_Render, 5);
-            AddDamagePopup(5, slashTarget->GetPosition(), kDamagePopupDamageColor);
         }
     }
 
@@ -1386,6 +1400,7 @@ void LoadCurrentStageObjects()
     g_playerInvincibleFrames = 0;
     g_playerKnockbackFrames = 0;
     g_playerSlashFrames = 0;
+    g_playerSlashAttackFrames = -1;
     if (g_playerMeshId >= 0)
     {
         g_Render.StopMeshMixSkinAnimBlink(g_playerMeshId);

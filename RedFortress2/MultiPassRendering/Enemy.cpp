@@ -82,6 +82,7 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
         if (distance >= m_retreatDistance)
         {
             m_state = State::Idle;
+            UpdateFacing(playerPos);
         }
     }
     else if (m_state == State::Chase)
