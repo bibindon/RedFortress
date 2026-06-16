@@ -123,8 +123,11 @@ int g_playerKnockbackFrames = 0;
 const int kKnockbackDurationFrames = 60;
 const float kKnockbackSpeed = 3.0f;
 D3DXVECTOR3 g_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+const int kRespawnCameraDelayFrames = 120;
 const int kRespawnCameraMoveFrames = 30;
+int g_respawnCameraDelayFrames = 0;
 int g_respawnCameraMoveFrames = 0;
+bool g_playerDeathPending = false;
 D3DXVECTOR3 g_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 D3DXVECTOR3 g_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 D3DXVECTOR3 g_respawnCameraToPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -141,6 +144,7 @@ static void ResetPlayerHp();
 static void DamagePlayerHp(int amount);
 static void HealPlayerHp(int amount);
 static void HandlePlayerDeath();
+static void CompletePlayerDeath();
 static void AddDamagePopup(int amount, const D3DXCOLOR& color);
 static void AddDamagePopup(int amount, const D3DXVECTOR3& pos, const D3DXCOLOR& color);
 static void UpdateDamagePopups();
@@ -369,13 +373,16 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
 
         InputDevice::Update();
-        if (g_gameState == GameState::Playing && InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+        if (g_gameState == GameState::Playing &&
+            !g_playerDeathPending &&
+            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
         {
             g_pauseMenu.Toggle();
         }
 
         if (g_gameState != GameState::EndingFin &&
             !g_pauseMenu.IsOpen() &&
+            !g_playerDeathPending &&
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LCONTROL) ||
              InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RCONTROL)))
         {
@@ -511,6 +518,26 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 continue;
             }
 
+            if (g_playerDeathPending)
+            {
+                if (g_respawnCameraDelayFrames > 0)
+                {
+                    --g_respawnCameraDelayFrames;
+                }
+
+                if (g_respawnCameraDelayFrames <= 0)
+                {
+                    CompletePlayerDeath();
+                    continue;
+                }
+
+                DrawPlayerHpBar();
+                DrawDamagePopups();
+                g_enemyManager.DrawHpBars(g_Render);
+                g_Render.Draw();
+                continue;
+            }
+
             // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
             if (!g_mouseCursorVisible)
             {
@@ -624,6 +651,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             if (g_player.IsHpZero())
             {
                 HandlePlayerDeath();
+                if (g_playerDeathPending)
+                {
+                    continue;
+                }
             }
 
             if (IsStageClearReached())
@@ -1264,11 +1295,30 @@ void HealPlayerHp(int amount)
 
 void HandlePlayerDeath()
 {
+    if (g_playerDeathPending)
+    {
+        return;
+    }
+
     // カメラ移動開始位置を保存（プレイヤー位置を変更する前に行う）
     g_respawnCameraFromPos = g_Render.GetCameraPos();
     g_respawnCameraFromTarget = g_Render.GetLookAtPos();
+    g_respawnCameraDelayFrames = kRespawnCameraDelayFrames;
+    g_playerDeathPending = true;
+    g_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    g_pendingJump = false;
+    g_playerKnockbackFrames = 0;
+    g_playerSlashFrames = 0;
+    g_playerSlashAttackFrames = -1;
+    g_Render.SetSceneUpdatePaused(true);
+}
 
+void CompletePlayerDeath()
+{
     g_player.Die();
+    g_playerDeathPending = false;
+    g_respawnCameraDelayFrames = 0;
+    g_Render.SetSceneUpdatePaused(false);
 
     if (g_player.IsGameOver())
     {
@@ -1511,6 +1561,10 @@ void LoadCurrentStageObjects()
     g_playerKnockbackFrames = 0;
     g_playerSlashFrames = 0;
     g_playerSlashAttackFrames = -1;
+    g_respawnCameraDelayFrames = 0;
+    g_respawnCameraMoveFrames = 0;
+    g_playerDeathPending = false;
+    g_Render.SetSceneUpdatePaused(false);
     if (g_playerMeshId >= 0)
     {
         g_Render.StopMeshMixSkinAnimBlink(g_playerMeshId);
