@@ -36,6 +36,7 @@ const std::wstring g_playerJumpAnimName = L"jump";
 const std::wstring g_hpBackImagePath = L"res\\2D_Image\\hp_back.png";
 const std::wstring g_hpFrontImagePath = L"res\\2D_Image\\hp_front.png";
 const std::wstring g_hpDamageImagePath = L"res\\2D_Image\\hp_damage.png";
+const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
 NSRender::Render g_Render;
 using PhysicsWorld = PhysicsLib::PhysicsLib;
 const float CAMERA_MOVE_SPEED = 0.08f;
@@ -64,7 +65,7 @@ const float kMaxCameraDistance = 20.0f;
 const float kCameraWheelZoomStep = 0.5f;
 enum class PlayerAnimState { Idle, Walk, Run, Jump };
 PlayerAnimState g_playerAnimState = PlayerAnimState::Idle;
-enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending };
+enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
 GameState g_gameState = GameState::Loading;
 SlideShowManager g_slideShowManager(g_Render);
 bool g_mouseCursorVisible = false;
@@ -111,6 +112,7 @@ static void DrawPlayerHpBar();
 static void DrawTitleScreen();
 static void DrawStageTitle();
 static void DrawStageClear();
+static void DrawEndingFin();
 static POINT ConvertMouseToBaseResolution(int clientX, int clientY);
 static D3DXVECTOR3 GetCameraPlanarForward();
 static D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
@@ -318,7 +320,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
 
         InputDevice::Update();
-        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+        if (g_gameState != GameState::EndingFin && InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
         {
             g_mouseCursorVisible = !g_mouseCursorVisible;
             InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
@@ -417,14 +419,26 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             if (g_slideShowManager.IsActive())
             {
                 g_slideShowManager.ProcessInput();
-                g_slideShowManager.Update();
-                g_Render.Draw();
-                g_slideShowManager.Render();
+                if (g_slideShowManager.Update())
+                {
+                    g_gameState = GameState::EndingFin;
+                    DrawEndingFin();
+                }
+                else
+                {
+                    g_Render.Draw();
+                    g_slideShowManager.Render();
+                }
             }
             else
             {
-                g_Render.Draw();
+                g_gameState = GameState::EndingFin;
+                DrawEndingFin();
             }
+        }
+        else if (g_gameState == GameState::EndingFin)
+        {
+            DrawEndingFin();
         }
         else
         {
@@ -917,7 +931,7 @@ void UpdateStageClear()
     if (g_stageManager.IsLastStage())
     {
         g_slideShowManager.Start(L"res\\script\\ending.csv");
-        g_slideShowManager.SetStopOnFinish(true);
+        g_slideShowManager.SetStopOnFinish(false);
         g_gameState = GameState::Ending;
         return;
     }
@@ -1229,6 +1243,12 @@ void DrawStageClear()
                             NSRender::Common::BASE_W,
                             50,
                             D3DCOLOR_RGBA(255, 255, 255, 220));
+}
+
+void DrawEndingFin()
+{
+    g_Render.DrawImageStretched(g_finImagePath, 255);
+    g_Render.Draw();
 }
 
 POINT ConvertMouseToBaseResolution(int clientX, int clientY)
