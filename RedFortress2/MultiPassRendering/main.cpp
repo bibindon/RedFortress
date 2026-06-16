@@ -102,7 +102,7 @@ struct DamagePopup
 };
 std::vector<DamagePopup> g_damagePopups;
 const int kDamagePopupDuration = 60;
-const float kDamagePopupRiseSpeed = 0.02f;
+const float kDamagePopupRiseSpeed = 0.01f;
 const D3DXCOLOR kDamagePopupDamageColor = D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f);
 const D3DXCOLOR kDamagePopupHealColor = D3DXCOLOR(0.2f, 1.0f, 0.2f, 1.0f);
 
