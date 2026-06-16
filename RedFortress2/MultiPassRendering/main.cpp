@@ -25,6 +25,7 @@
 #include "Player.h"
 #include "resource.h"
 #include "StageManager.h"
+#include "EnemyManager.h"
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
@@ -105,6 +106,11 @@ const int kDamagePopupDuration = 60;
 const float kDamagePopupRiseSpeed = 0.01f;
 const D3DXCOLOR kDamagePopupDamageColor = D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f);
 const D3DXCOLOR kDamagePopupHealColor = D3DXCOLOR(0.2f, 1.0f, 0.2f, 1.0f);
+
+EnemyManager g_enemyManager;
+int g_playerInvincibleFrames = 0;
+const int kPlayerInvincibleDuration = 180;
+const float kStompBounceVelocity = 3.0f;
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -304,6 +310,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
     InitializeCameraFromRenderSettings();
     UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
+    g_enemyManager.LoadForStage(g_Render, g_stageManager.GetCurrentStageNumber());
 
     InputDevice::Initialize(hInstance, hWnd);
     InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
@@ -471,6 +478,10 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
             UpdatePlayerByInput();
 
+            // 敵の更新
+            g_enemyManager.Update(g_Render, g_playerMover.GetPosition());
+            g_enemyManager.SyncMeshes(g_Render);
+
             // 描画（動く床の位置が更新される）
             DrawStageTitle();
             DrawPlayerHpBar();
@@ -505,6 +516,36 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             if (g_playerMover.IsCrushed())
             {
                 DamagePlayerHp(g_player.GetHp());
+            }
+
+            // プレイヤー無敵時間を更新
+            if (g_playerInvincibleFrames > 0)
+            {
+                --g_playerInvincibleFrames;
+            }
+
+            // 敵との接触・踏みつけ判定
+            for (auto& enemy : g_enemyManager.GetEnemies())
+            {
+                if (enemy.IsDead())
+                {
+                    continue;
+                }
+
+                if (enemy.IsStompedByPlayer(g_playerMover.GetPosition(), g_playerMover.IsJumping(), g_playerMover.GetVelocity().y))
+                {
+                    enemy.TakeDamage(g_Render, 10);
+                    D3DXVECTOR3 playerPos = g_playerMover.GetPosition();
+                    playerPos.y += 0.3f;
+                    g_playerMover.SetPosition(playerPos);
+                    break;
+                }
+                else if (g_playerInvincibleFrames <= 0 && enemy.IsTouchingPlayer(g_playerMover.GetPosition()))
+                {
+                    DamagePlayerHp(10);
+                    g_playerInvincibleFrames = kPlayerInvincibleDuration;
+                    break;
+                }
             }
 
             if (IsStageClearReached())
@@ -1218,8 +1259,10 @@ void LoadCurrentStageObjects()
     g_playerYaw = 0.0f;
     g_playerAnimState = PlayerAnimState::Idle;
     g_damagePopups.clear();
+    g_playerInvincibleFrames = 0;
     ResetPlayerHp();
     g_playerMover.Reset(stage.playerStartPosition);
+    g_enemyManager.LoadForStage(g_Render, g_stageManager.GetCurrentStageNumber());
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
 }
 

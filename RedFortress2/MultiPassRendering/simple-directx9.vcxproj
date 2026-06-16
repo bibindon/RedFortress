@@ -155,6 +155,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="SlideShowManager.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -164,6 +166,8 @@
     <ClInclude Include="SlideShowManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="StageManager.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
