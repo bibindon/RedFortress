@@ -115,11 +115,18 @@ const D3DXCOLOR kDamagePopupHealColor = D3DXCOLOR(0.2f, 1.0f, 0.2f, 1.0f);
 EnemyManager g_enemyManager;
 int g_playerInvincibleFrames = 0;
 const int kPlayerInvincibleDuration = 180;
+const int kRespawnInvincibleFrames = 180;
 const float kStompBounceVelocity = 3.0f;
 int g_playerKnockbackFrames = 0;
 const int kKnockbackDurationFrames = 60;
 const float kKnockbackSpeed = 3.0f;
 D3DXVECTOR3 g_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+const int kRespawnCameraMoveFrames = 30;
+int g_respawnCameraMoveFrames = 0;
+D3DXVECTOR3 g_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+D3DXVECTOR3 g_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+D3DXVECTOR3 g_respawnCameraToPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+D3DXVECTOR3 g_respawnCameraToTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 static void UpdateCameraByInput();
 static void UpdatePlayerByInput();
@@ -131,6 +138,7 @@ static void LoadCurrentStageObjects();
 static void ResetPlayerHp();
 static void DamagePlayerHp(int amount);
 static void HealPlayerHp(int amount);
+static void HandlePlayerDeath();
 static void AddDamagePopup(int amount, const D3DXCOLOR& color);
 static void AddDamagePopup(int amount, const D3DXVECTOR3& pos, const D3DXCOLOR& color);
 static void UpdateDamagePopups();
@@ -590,6 +598,11 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 }
             }
 
+            if (g_player.IsHpZero())
+            {
+                HandlePlayerDeath();
+            }
+
             if (IsStageClearReached())
             {
                 g_gameState = GameState::StageClear;
@@ -672,6 +685,11 @@ static float ClampFloat(float v, float lo, float hi)
     if (v < lo) return lo;
     if (v > hi) return hi;
     return v;
+}
+
+static D3DXVECTOR3 LerpVector3(const D3DXVECTOR3& a, const D3DXVECTOR3& b, float t)
+{
+    return a + (b - a) * t;
 }
 
 static float MoveAngleToward(float current, float target, float maxDelta)
@@ -960,6 +978,16 @@ void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition)
         }
     }
 
+    if (g_respawnCameraMoveFrames > 0)
+    {
+        const float t = 1.0f - (static_cast<float>(g_respawnCameraMoveFrames) / static_cast<float>(kRespawnCameraMoveFrames));
+        const D3DXVECTOR3 cameraPosition = LerpVector3(g_respawnCameraFromPos, g_respawnCameraToPos, t);
+        const D3DXVECTOR3 cameraTarget = LerpVector3(g_respawnCameraFromTarget, g_respawnCameraToTarget, t);
+        g_Render.SetCamera(cameraPosition, cameraTarget);
+        --g_respawnCameraMoveFrames;
+        return;
+    }
+
     // yaw/pitch/distanceから理想位置を作り、CameraMoverで壁めり込みを補正する。
     const D3DXVECTOR3 cameraTarget = currentRenderPosition + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
     const float horizontalDistance = g_cameraDistance * cosf(g_cameraPitch);
@@ -1209,6 +1237,65 @@ void HealPlayerHp(int amount)
         BeginHpIncreaseAnimation(newHp);
         AddDamagePopup(newHp - oldHp, kDamagePopupHealColor);
     }
+}
+
+void HandlePlayerDeath()
+{
+    // カメラ移動開始位置を保存（プレイヤー位置を変更する前に行う）
+    g_respawnCameraFromPos = g_Render.GetCameraPos();
+    g_respawnCameraFromTarget = g_Render.GetLookAtPos();
+
+    g_player.Die();
+
+    if (g_player.IsGameOver())
+    {
+        const int stageNumber = g_stageManager.GetCurrentStage().number;
+        if (stageNumber >= 1 && stageNumber <= 4)
+        {
+            g_gameState = GameState::Title;
+            g_player.ResetLives();
+            g_player.ResetHp();
+            g_enemyManager.Clear(g_Render);
+        }
+        else
+        {
+            StartStageByIndex(4);
+            g_player.ResetLives();
+        }
+        g_respawnCameraMoveFrames = 0;
+        return;
+    }
+
+    // 現在のステージ開始位置からリスポーン
+    const D3DXVECTOR3 respawnPos = g_stageManager.GetCurrentStage().playerStartPosition;
+    g_playerMover.Reset(respawnPos);
+    ResetPlayerHp();
+
+    // 無敵＋点滅
+    g_playerInvincibleFrames = kRespawnInvincibleFrames;
+    if (g_playerMeshId >= 0)
+    {
+        g_Render.StartMeshMixSkinAnimBlink(g_playerMeshId, kRespawnInvincibleFrames, 4);
+    }
+
+    // 敵を再配置
+    g_enemyManager.LoadForStage(g_Render, g_stageManager.GetCurrentStage().enemyCsvPath);
+
+    // リスポーン位置を向いたままカメラを高速移動
+    const D3DXVECTOR3 cameraTarget = respawnPos + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
+    const float horizontalDistance = g_cameraDistance * cosf(g_cameraPitch);
+    const D3DXVECTOR3 offset(sinf(g_cameraYaw) * horizontalDistance,
+                              sinf(g_cameraPitch) * g_cameraDistance,
+                              -cosf(g_cameraYaw) * horizontalDistance);
+    g_respawnCameraToPos = cameraTarget + offset;
+    g_respawnCameraToTarget = cameraTarget;
+    g_respawnCameraMoveFrames = kRespawnCameraMoveFrames;
+
+    // 各種状態リセット
+    g_playerKnockbackFrames = 0;
+    g_playerSlashFrames = 0;
+    g_playerSlashAttackFrames = -1;
+    g_damagePopups.clear();
 }
 
 void BeginHpIncreaseAnimation(int newHp)

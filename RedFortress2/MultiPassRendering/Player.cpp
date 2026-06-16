@@ -3,11 +3,36 @@
 Player::Player()
 {
     ResetHp();
+    ResetLives();
 }
 
 void Player::ResetHp()
 {
     m_hp = m_maxHp;
+}
+
+void Player::ResetLives()
+{
+    m_lives = m_maxLives;
+}
+
+void Player::Die()
+{
+    if (m_lives > 0)
+    {
+        --m_lives;
+    }
+    ResetHp();
+}
+
+bool Player::IsHpZero() const
+{
+    return m_hp <= 0;
+}
+
+bool Player::IsGameOver() const
+{
+    return m_lives <= 0;
 }
 
 int Player::GetHp() const
@@ -18,6 +43,16 @@ int Player::GetHp() const
 int Player::GetMaxHp() const
 {
     return m_maxHp;
+}
+
+int Player::GetLives() const
+{
+    return m_lives;
+}
+
+int Player::GetMaxLives() const
+{
+    return m_maxLives;
 }
 
 void Player::SetHp(int hp)
@@ -43,16 +78,6 @@ void Player::Heal(int amount)
     }
 
     SetHp(m_hp + amount);
-}
-
-bool Player::IsDead() const
-{
-    if (m_hp <= 0)
-    {
-        return true;
-    }
-
-    return false;
 }
 
 int Player::ClampHp(int hp) const
