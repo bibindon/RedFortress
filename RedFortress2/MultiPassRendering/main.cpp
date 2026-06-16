@@ -1162,12 +1162,12 @@ void DrawPlayerHpBar()
 {
     UpdatePlayerHpBarAnimation();
 
-    const int x = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
-    const int y = static_cast<int>((30.0f * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
+    const float kPosX = 0.03f;
+    const float kPosY = 0.05f;
     const int sourceWidth = 1000;
     const int sourceHeight = 16;
-    const int imageWidth = static_cast<int>((static_cast<float>(sourceWidth) * static_cast<float>(NSRender::Common::BASE_W) / 1920.0f) + 0.5f);
-    const int imageHeight = static_cast<int>((static_cast<float>(sourceHeight) * static_cast<float>(NSRender::Common::BASE_H) / 1080.0f) + 0.5f);
+    const float kScale = static_cast<float>(NSRender::Common::BASE_W) / 1920.0f;
+    const int fullBarWidth = static_cast<int>(static_cast<float>(sourceWidth) * kScale + 0.5f);
 
     const int maxHp = g_player.GetMaxHp();
     if (maxHp <= 0)
@@ -1175,12 +1175,14 @@ void DrawPlayerHpBar()
         return;
     }
 
-    const int damageWidth = HpToBarWidth(g_hpDamageDisplay, imageWidth, maxHp);
-    const int frontWidth = HpToBarWidth(g_hpFrontDisplay, imageWidth, maxHp);
+    const int damageWidth = HpToBarWidth(g_hpDamageDisplay, fullBarWidth, maxHp);
+    const int frontWidth = HpToBarWidth(g_hpFrontDisplay, fullBarWidth, maxHp);
+    const int damageSourceW = static_cast<int>(static_cast<float>(damageWidth) / kScale + 0.5f);
+    const int frontSourceW = static_cast<int>(static_cast<float>(frontWidth) / kScale + 0.5f);
 
-    g_Render.DrawImageSizedRect(g_hpBackImagePath, x, y, imageWidth, imageHeight, 0, 0, sourceWidth, sourceHeight, 255);
-    g_Render.DrawImageSizedRect(g_hpDamageImagePath, x, y, damageWidth, imageHeight, 0, 0, sourceWidth, sourceHeight, 255);
-    g_Render.DrawImageSizedRect(g_hpFrontImagePath, x, y, frontWidth, imageHeight, 0, 0, sourceWidth, sourceHeight, 255);
+    g_Render.DrawImageAutoResizeSizedRect(g_hpBackImagePath, kPosX, kPosY, 0, 0, sourceWidth, sourceHeight, kScale, 255);
+    g_Render.DrawImageAutoResizeSizedRect(g_hpDamageImagePath, kPosX, kPosY, 0, 0, damageSourceW, sourceHeight, kScale, 255);
+    g_Render.DrawImageAutoResizeSizedRect(g_hpFrontImagePath, kPosX, kPosY, 0, 0, frontSourceW, sourceHeight, kScale, 255);
 }
 
 void DrawTitleScreen()
