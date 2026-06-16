@@ -116,6 +116,7 @@ EnemyManager g_enemyManager;
 int g_playerInvincibleFrames = 0;
 const int kPlayerInvincibleDuration = 180;
 const int kRespawnInvincibleFrames = 180;
+bool g_menuVisible = false;
 const float kStompBounceVelocity = 3.0f;
 int g_playerKnockbackFrames = 0;
 const int kKnockbackDurationFrames = 60;
@@ -367,6 +368,26 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
         InputDevice::Update();
         if (g_gameState != GameState::EndingFin && InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+        {
+            g_menuVisible = !g_menuVisible;
+            if (g_menuVisible)
+            {
+                g_Render.SetPostEffectMaskedGaussianFilter(true);
+                g_Render.SetPostEffectMaskedGaussianMaskPath(L"res\\2D_Image\\menu_mask.png");
+                g_Render.SetPostEffectMaskedGaussianSampleSize(25);
+                g_Render.SetPostEffectMaskedGaussianMaskScaleToBaseResolution(true);
+                g_mouseCursorVisible = true;
+                InputDevice::Mouse::SetVisible(true);
+            }
+            else
+            {
+                g_Render.SetPostEffectMaskedGaussianFilter(false);
+            }
+        }
+
+        if (g_gameState != GameState::EndingFin &&
+            (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LCONTROL) ||
+             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RCONTROL)))
         {
             g_mouseCursorVisible = !g_mouseCursorVisible;
             InputDevice::Mouse::SetVisible(g_mouseCursorVisible);
