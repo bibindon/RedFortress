@@ -29,6 +29,8 @@
 #include "PauseMenu.h"
 #include "SaveDataManager.h"
 #include "StageEditor.h"
+#include "HpBar.h"
+#include "DamagePopupManager.h"
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
@@ -40,9 +42,6 @@ const std::wstring g_playerWalkAnimName = L"walk";
 const std::wstring g_playerRunAnimName = L"run";
 const std::wstring g_playerJumpAnimName = L"jump";
 const std::wstring g_playerSlashAnimName = L"slash";
-const std::wstring g_hpBackImagePath = L"res\\2D_Image\\hp_back.png";
-const std::wstring g_hpFrontImagePath = L"res\\2D_Image\\hp_front.png";
-const std::wstring g_hpDamageImagePath = L"res\\2D_Image\\hp_damage.png";
 const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
 NSRender::Render g_Render;
 using PhysicsWorld = PhysicsLib::PhysicsLib;
@@ -86,36 +85,8 @@ HWND g_settingsDialog = NULL;
 D3DXVECTOR3 g_pendingMove(0.0f, 0.0f, 0.0f);
 bool g_pendingJump = false;
 std::unordered_map<int, D3DXVECTOR3> g_prevMovingPlatformPositions;
-float g_hpFrontDisplay = 100.0f;
-float g_hpDamageDisplay = 100.0f;
-float g_hpFrontStart = 100.0f;
-float g_hpFrontTarget = 100.0f;
-float g_hpFrontAnimFrame = 0.0f;
-bool g_hpFrontAnimating = false;
-float g_hpDamageStart = 100.0f;
-float g_hpDamageTarget = 100.0f;
-float g_hpDamageDelayFrame = 0.0f;
-float g_hpDamageAnimFrame = 0.0f;
-bool g_hpDamageWaiting = false;
-bool g_hpDamageAnimating = false;
-bool g_hpDamageFollowFrontAfterHeal = false;
-const float kHpBarAnimFrameMax = 30.0f;
-const float kHpBarDamageDelayFrameMax = 30.0f;
-
-struct DamagePopup
-{
-    std::wstring text;
-    D3DXVECTOR3 basePos;
-    float riseOffset = 0.0f;
-    int remainingFrames = 0;
-    int fontSize = 24;
-    D3DXCOLOR color;
-};
-std::vector<DamagePopup> g_damagePopups;
-const int kDamagePopupDuration = 60;
-const float kDamagePopupRiseSpeed = 0.01f;
-const D3DXCOLOR kDamagePopupDamageColor = D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f);
-const D3DXCOLOR kDamagePopupHealColor = D3DXCOLOR(0.2f, 1.0f, 0.2f, 1.0f);
+HpBar g_hpBar;
+DamagePopupManager g_damagePopupManager;
 
 EnemyManager g_enemyManager;
 int g_playerInvincibleFrames = 0;
@@ -145,26 +116,15 @@ static void UpdateStageClear();
 static bool IsStageClearReached();
 static bool StartNextStage();
 static void LoadCurrentStageObjects();
-static void ResetPlayerHp();
 static void DamagePlayerHp(int amount);
 static void HealPlayerHp(int amount);
 static void HandlePlayerDeath();
 static void CompletePlayerDeath();
-static void AddDamagePopup(int amount, const D3DXCOLOR& color);
-static void AddDamagePopup(int amount, const D3DXVECTOR3& pos, const D3DXCOLOR& color);
-static void UpdateDamagePopups();
-static void DrawDamagePopups();
-static void BeginHpIncreaseAnimation(int newHp);
-static void BeginHpDamageAnimation(int oldHp, int newHp);
-static void UpdatePlayerHpBarAnimation();
-static float ClampFloatValue(float value, float minValue, float maxValue);
-static int HpToBarWidth(float hpValue, int imageWidth, int maxHp);
 static void PopulateStageCombo(HWND hDlg);
 static std::wstring BuildStageComboText(const StageManager::StageData& stage);
 static bool StartStageByIndex(std::size_t stageIndex);
 static void MoveToSelectedStage(HWND hDlg);
 static void RefreshTitleContinueCommand();
-static void DrawPlayerHpBar();
 static void DrawTitleScreen();
 static void DrawStageTitle();
 static void DrawStageClear();
@@ -357,6 +317,9 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     CommandSprite* pSpr = new CommandSprite();
     g_command.Init(pFont, pSE, pSpr, false, L"res\\commandName_title.csv");
 
+    g_hpBar.Initialize(&g_Render, &g_player);
+    g_damagePopupManager.Initialize(&g_Render);
+
     g_saveDataManager.Initialize(g_stageManager);
     g_saveDataManager.Load();
 
@@ -523,8 +486,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         {
             if (g_pauseMenu.BlocksGameInput())
             {
-                DrawPlayerHpBar();
-                DrawDamagePopups();
+                g_hpBar.Draw();
+                g_damagePopupManager.Draw();
                 g_enemyManager.DrawHpBars(g_Render);
                 g_pauseMenu.Render(g_stageManager.GetCurrentStageDisplayName());
                 g_Render.Draw();
@@ -544,8 +507,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                     continue;
                 }
 
-                DrawPlayerHpBar();
-                DrawDamagePopups();
+                g_hpBar.Draw();
+                g_damagePopupManager.Draw();
                 g_enemyManager.DrawHpBars(g_Render);
                 g_Render.Draw();
                 continue;
@@ -566,9 +529,9 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
 
             // 描画（動く床の位置が更新される）
             DrawStageTitle();
-            DrawPlayerHpBar();
-            UpdateDamagePopups();
-            DrawDamagePopups();
+            g_hpBar.Draw();
+            g_damagePopupManager.Update();
+            g_damagePopupManager.Draw();
             g_enemyManager.DrawHpBars(g_Render);
             g_Render.Draw();
 
@@ -609,7 +572,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 if (slashTarget != nullptr)
                 {
                     slashTarget->TakeDamage(g_Render, 5);
-                    AddDamagePopup(5, slashTarget->GetPosition(), kDamagePopupDamageColor);
+                    g_damagePopupManager.Add(5, slashTarget->GetPosition(), false);
                 }
             }
 
@@ -630,7 +593,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 if (enemy.IsStompedByPlayer(g_playerMover.GetPosition(), g_playerMover.IsJumping(), g_playerMover.GetVelocity().y))
                 {
                     enemy.TakeDamage(g_Render, 10);
-                    AddDamagePopup(10, enemy.GetPosition(), kDamagePopupDamageColor);
+                    g_damagePopupManager.Add(10, enemy.GetPosition(), false);
                     D3DXVECTOR3 playerPos = g_playerMover.GetPosition();
                     playerPos.y += 0.3f;
                     g_playerMover.SetPosition(playerPos);
@@ -1017,7 +980,8 @@ void InitializePlayerPhysics()
     settings.airControlEnabled = true;
     settings.doubleJumpEnabled = true;
     g_playerMover.SetSettings(settings);
-    ResetPlayerHp();
+    g_player.ResetHp();
+    g_hpBar.Reset();
     g_playerMover.Reset(g_stageManager.GetCurrentStage().playerStartPosition);
 
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
@@ -1274,42 +1238,6 @@ bool IsStageClearReached()
     return g_stageManager.IsClearReached(g_playerMover.GetPosition());
 }
 
-void ResetPlayerHp()
-{
-    g_player.ResetHp();
-    const float hp = static_cast<float>(g_player.GetHp());
-    g_hpFrontDisplay = hp;
-    g_hpDamageDisplay = hp;
-    g_hpFrontStart = hp;
-    g_hpFrontTarget = hp;
-    g_hpFrontAnimFrame = 0.0f;
-    g_hpFrontAnimating = false;
-    g_hpDamageStart = hp;
-    g_hpDamageTarget = hp;
-    g_hpDamageDelayFrame = 0.0f;
-    g_hpDamageAnimFrame = 0.0f;
-    g_hpDamageWaiting = false;
-    g_hpDamageAnimating = false;
-    g_hpDamageFollowFrontAfterHeal = false;
-}
-
-void AddDamagePopup(int amount, const D3DXCOLOR& color)
-{
-    AddDamagePopup(amount, g_playerMover.GetPosition(), color);
-}
-
-void AddDamagePopup(int amount, const D3DXVECTOR3& pos, const D3DXCOLOR& color)
-{
-    DamagePopup popup;
-    popup.text = std::to_wstring(amount);
-    popup.basePos = pos + D3DXVECTOR3(0.0f, 1.5f, 0.0f);
-    popup.riseOffset = 0.0f;
-    popup.remainingFrames = kDamagePopupDuration;
-    popup.fontSize = 24;
-    popup.color = color;
-    g_damagePopups.push_back(popup);
-}
-
 void DamagePlayerHp(int amount)
 {
     const int oldHp = g_player.GetHp();
@@ -1317,8 +1245,8 @@ void DamagePlayerHp(int amount)
     const int newHp = g_player.GetHp();
     if (newHp < oldHp)
     {
-        BeginHpDamageAnimation(oldHp, newHp);
-        AddDamagePopup(oldHp - newHp, kDamagePopupDamageColor);
+        g_hpBar.OnDamage(oldHp, newHp);
+        g_damagePopupManager.Add(oldHp - newHp, g_playerMover.GetPosition(), false);
     }
 }
 
@@ -1329,8 +1257,8 @@ void HealPlayerHp(int amount)
     const int newHp = g_player.GetHp();
     if (oldHp < newHp)
     {
-        BeginHpIncreaseAnimation(newHp);
-        AddDamagePopup(newHp - oldHp, kDamagePopupHealColor);
+        g_hpBar.OnHeal(oldHp, newHp);
+        g_damagePopupManager.Add(newHp - oldHp, g_playerMover.GetPosition(), true);
     }
 }
 
@@ -1383,7 +1311,8 @@ void CompletePlayerDeath()
     // 現在のステージ開始位置からリスポーン
     const D3DXVECTOR3 respawnPos = g_stageManager.GetCurrentStage().playerStartPosition;
     g_playerMover.Reset(respawnPos);
-    ResetPlayerHp();
+    g_player.ResetHp();
+    g_hpBar.Reset();
 
     // 無敵＋点滅
     g_playerInvincibleFrames = kRespawnInvincibleFrames;
@@ -1409,151 +1338,7 @@ void CompletePlayerDeath()
     g_playerKnockbackFrames = 0;
     g_playerSlashFrames = 0;
     g_playerSlashAttackFrames = -1;
-    g_damagePopups.clear();
-}
-
-void BeginHpIncreaseAnimation(int newHp)
-{
-    const float newHpValue = static_cast<float>(newHp);
-    g_hpFrontStart = g_hpFrontDisplay;
-    g_hpFrontTarget = newHpValue;
-    g_hpFrontAnimFrame = 0.0f;
-    g_hpFrontAnimating = true;
-    g_hpDamageWaiting = false;
-    g_hpDamageAnimating = false;
-    g_hpDamageFollowFrontAfterHeal = true;
-    g_hpDamageDelayFrame = 0.0f;
-    g_hpDamageAnimFrame = 0.0f;
-}
-
-void BeginHpDamageAnimation(int oldHp, int newHp)
-{
-    const float oldHpValue = static_cast<float>(oldHp);
-    const float newHpValue = static_cast<float>(newHp);
-    g_hpFrontDisplay = newHpValue;
-    g_hpFrontStart = newHpValue;
-    g_hpFrontTarget = newHpValue;
-    g_hpFrontAnimFrame = 0.0f;
-    g_hpFrontAnimating = false;
-    g_hpDamageStart = g_hpDamageDisplay;
-    if (g_hpDamageStart < oldHpValue)
-    {
-        g_hpDamageStart = oldHpValue;
-    }
-    g_hpDamageTarget = newHpValue;
-    g_hpDamageDelayFrame = 0.0f;
-    g_hpDamageAnimFrame = 0.0f;
-    g_hpDamageWaiting = true;
-    g_hpDamageAnimating = false;
-    g_hpDamageFollowFrontAfterHeal = false;
-}
-
-void UpdateDamagePopups()
-{
-    for (auto& popup : g_damagePopups)
-    {
-        popup.riseOffset += kDamagePopupRiseSpeed;
-        popup.remainingFrames -= 1;
-    }
-
-    g_damagePopups.erase(
-        std::remove_if(g_damagePopups.begin(),
-                       g_damagePopups.end(),
-                       [](const DamagePopup& popup) { return popup.remainingFrames <= 0; }),
-        g_damagePopups.end());
-}
-
-void DrawDamagePopups()
-{
-    for (const auto& popup : g_damagePopups)
-    {
-        const float alphaRate = static_cast<float>(popup.remainingFrames) / static_cast<float>(kDamagePopupDuration);
-        D3DXCOLOR color = popup.color;
-        color.a *= alphaRate;
-        const D3DXVECTOR3 drawPos = popup.basePos + D3DXVECTOR3(0.0f, popup.riseOffset, 0.0f);
-        g_Render.DrawWorldText(popup.text, drawPos, popup.fontSize, color, true);
-    }
-}
-
-void UpdatePlayerHpBarAnimation()
-{
-    if (g_hpFrontAnimating)
-    {
-        g_hpFrontAnimFrame += 1.0f;
-        const float rate = ClampFloatValue(g_hpFrontAnimFrame / kHpBarAnimFrameMax, 0.0f, 1.0f);
-        g_hpFrontDisplay = g_hpFrontStart + ((g_hpFrontTarget - g_hpFrontStart) * rate);
-        if (rate >= 1.0f)
-        {
-            g_hpFrontDisplay = g_hpFrontTarget;
-            g_hpFrontAnimating = false;
-            if (g_hpDamageFollowFrontAfterHeal)
-            {
-                if (g_hpDamageDisplay < g_hpFrontTarget)
-                {
-                    g_hpDamageDisplay = g_hpFrontTarget;
-                }
-                g_hpDamageStart = g_hpDamageDisplay;
-                g_hpDamageTarget = g_hpDamageDisplay;
-                g_hpDamageFollowFrontAfterHeal = false;
-            }
-        }
-    }
-
-    if (g_hpDamageWaiting)
-    {
-        g_hpDamageDelayFrame += 1.0f;
-        if (g_hpDamageDelayFrame >= kHpBarDamageDelayFrameMax)
-        {
-            g_hpDamageWaiting = false;
-            g_hpDamageAnimating = true;
-            g_hpDamageAnimFrame = 0.0f;
-            g_hpDamageStart = g_hpDamageDisplay;
-        }
-    }
-
-    if (g_hpDamageAnimating)
-    {
-        g_hpDamageAnimFrame += 1.0f;
-        const float rate = ClampFloatValue(g_hpDamageAnimFrame / kHpBarAnimFrameMax, 0.0f, 1.0f);
-        g_hpDamageDisplay = g_hpDamageStart + ((g_hpDamageTarget - g_hpDamageStart) * rate);
-        if (rate >= 1.0f)
-        {
-            g_hpDamageDisplay = g_hpDamageTarget;
-            g_hpDamageAnimating = false;
-        }
-    }
-}
-
-float ClampFloatValue(float value, float minValue, float maxValue)
-{
-    if (value < minValue)
-    {
-        return minValue;
-    }
-
-    if (maxValue < value)
-    {
-        return maxValue;
-    }
-
-    return value;
-}
-
-int HpToBarWidth(float hpValue, int imageWidth, int maxHp)
-{
-    if (maxHp <= 0)
-    {
-        return 0;
-    }
-
-    const float rate = ClampFloatValue(hpValue / static_cast<float>(maxHp), 0.0f, 1.0f);
-    int width = static_cast<int>(static_cast<float>(imageWidth) * rate);
-    if (width < 1 && hpValue > 0.0f)
-    {
-        width = 1;
-    }
-
-    return width;
+    g_damagePopupManager.Clear();
 }
 
 bool StartNextStage()
@@ -1597,7 +1382,7 @@ void LoadCurrentStageObjects()
     g_pendingJump = false;
     g_playerYaw = 0.0f;
     g_playerAnimState = PlayerAnimState::Idle;
-    g_damagePopups.clear();
+    g_damagePopupManager.Clear();
     g_playerInvincibleFrames = 0;
     g_playerKnockbackFrames = 0;
     g_playerSlashFrames = 0;
@@ -1610,37 +1395,11 @@ void LoadCurrentStageObjects()
     {
         g_Render.StopMeshMixSkinAnimBlink(g_playerMeshId);
     }
-    ResetPlayerHp();
+    g_player.ResetHp();
+    g_hpBar.Reset();
     g_playerMover.Reset(stage.playerStartPosition);
     g_enemyManager.LoadForStage(g_Render, stage.enemyCsvPath);
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
-}
-
-void DrawPlayerHpBar()
-{
-    UpdatePlayerHpBarAnimation();
-
-    const float kPosX = 0.03f;
-    const float kPosY = 0.05f;
-    const int sourceWidth = 1000;
-    const int sourceHeight = 16;
-    const float kScale = static_cast<float>(NSRender::Common::BASE_W) / 1920.0f;
-    const int fullBarWidth = static_cast<int>(static_cast<float>(sourceWidth) * kScale + 0.5f);
-
-    const int maxHp = g_player.GetMaxHp();
-    if (maxHp <= 0)
-    {
-        return;
-    }
-
-    const int damageWidth = HpToBarWidth(g_hpDamageDisplay, fullBarWidth, maxHp);
-    const int frontWidth = HpToBarWidth(g_hpFrontDisplay, fullBarWidth, maxHp);
-    const int damageSourceW = static_cast<int>(static_cast<float>(damageWidth) / kScale + 0.5f);
-    const int frontSourceW = static_cast<int>(static_cast<float>(frontWidth) / kScale + 0.5f);
-
-    g_Render.DrawImageAutoResizeSizedRect(g_hpBackImagePath, kPosX, kPosY, 0, 0, sourceWidth, sourceHeight, kScale, 255);
-    g_Render.DrawImageAutoResizeSizedRect(g_hpDamageImagePath, kPosX, kPosY, 0, 0, damageSourceW, sourceHeight, kScale, 255);
-    g_Render.DrawImageAutoResizeSizedRect(g_hpFrontImagePath, kPosX, kPosY, 0, 0, frontSourceW, sourceHeight, kScale, 255);
 }
 
 void DrawTitleScreen()

@@ -157,6 +157,8 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
+    <ClCompile Include="HpBar.cpp" />
+    <ClCompile Include="DamagePopupManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -171,6 +173,8 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="PauseMenu.h" />
+    <ClInclude Include="HpBar.h" />
+    <ClInclude Include="DamagePopupManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
