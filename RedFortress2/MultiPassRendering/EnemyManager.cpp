@@ -52,9 +52,9 @@ void EnemyManager::Initialize()
 
 void EnemyManager::Clear(NSRender::Render& render)
 {
-    for (const auto& enemy : m_enemies)
+    for (auto it = m_enemies.rbegin(); it != m_enemies.rend(); ++it)
     {
-        const int meshId = enemy.GetMeshId();
+        const int meshId = it->GetMeshId();
         if (meshId >= 0)
         {
             render.RemoveMeshMixSkinAnim(meshId);
