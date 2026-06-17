@@ -38,14 +38,15 @@ Enemy::Enemy()
 {
 }
 
-void Enemy::Initialize(const D3DXVECTOR3& startPosition, int meshId)
+void Enemy::Initialize(const D3DXVECTOR3& startPosition, int meshId, const std::wstring& type, float yaw)
 {
     m_position = startPosition;
     m_meshId = meshId;
+    m_type = type;
     m_hp = 10;
     m_state = State::Idle;
     m_animState = AnimState::Idle;
-    m_yaw = 0.0f;
+    m_yaw = yaw;
     m_blinkFrames = 0;
     m_removalFrames = 0;
     m_facePlayerTurnFrames = 0;
@@ -231,9 +232,34 @@ D3DXVECTOR3 Enemy::GetPosition() const
     return m_position;
 }
 
+void Enemy::SetPosition(const D3DXVECTOR3& pos)
+{
+    m_position = pos;
+}
+
+float Enemy::GetYaw() const
+{
+    return m_yaw;
+}
+
+void Enemy::SetYaw(float yaw)
+{
+    m_yaw = yaw;
+}
+
 int Enemy::GetMeshId() const
 {
     return m_meshId;
+}
+
+const std::wstring& Enemy::GetType() const
+{
+    return m_type;
+}
+
+void Enemy::SetType(const std::wstring& type)
+{
+    m_type = type;
 }
 
 bool Enemy::IsTouchingPlayer(const D3DXVECTOR3& playerPos) const

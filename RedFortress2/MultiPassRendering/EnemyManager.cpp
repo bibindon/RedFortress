@@ -2,6 +2,7 @@
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Camera.h"
+#include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -83,15 +84,23 @@ void EnemyManager::LoadForStage(NSRender::Render& render, const std::wstring& cs
         }
 
         const std::vector<std::wstring> cells = SplitCsvLine(line);
-        if (cells.size() < 3)
+        if (cells.size() == 3)
         {
-            continue;
+            const float posX = std::stof(cells[0]);
+            const float posY = std::stof(cells[1]);
+            const float posZ = std::stof(cells[2]);
+            Spawn(render, D3DXVECTOR3(posX, posY, posZ), L"wolf", 0.0f);
         }
-
-        const float posX = std::stof(cells[0]);
-        const float posY = std::stof(cells[1]);
-        const float posZ = std::stof(cells[2]);
-        Spawn(render, D3DXVECTOR3(posX, posY, posZ));
+        else if (cells.size() >= 5)
+        {
+            const std::wstring type = cells[0];
+            const float posX = std::stof(cells[1]);
+            const float posY = std::stof(cells[2]);
+            const float posZ = std::stof(cells[3]);
+            const float rotYDeg = std::stof(cells[4]);
+            const float rotY = D3DXToRadian(rotYDeg);
+            Spawn(render, D3DXVECTOR3(posX, posY, posZ), type, rotY);
+        }
     }
 }
 
@@ -196,10 +205,76 @@ const std::vector<Enemy>& EnemyManager::GetEnemies() const
     return m_enemies;
 }
 
-void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position)
+void EnemyManager::SpawnAt(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
 {
-    const int meshId = render.AddMeshMixSkinAnim(m_wolfMeshPath,
-                                                 m_wolfAnimCsvPath,
+    Spawn(render, position, type, yaw);
+}
+
+void EnemyManager::RemoveEnemy(NSRender::Render& render, std::size_t index)
+{
+    if (index >= m_enemies.size())
+    {
+        return;
+    }
+
+    const int meshId = m_enemies[index].GetMeshId();
+    if (meshId >= 0)
+    {
+        render.StopMeshMixSkinAnimBlink(meshId);
+        render.RemoveMeshMixSkinAnim(meshId);
+    }
+
+    m_enemies.erase(m_enemies.begin() + index);
+}
+
+void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
+{
+    std::vector<std::vector<std::wstring>> csvData;
+    std::vector<std::wstring> header;
+    header.push_back(L"Type");
+    header.push_back(L"PosX");
+    header.push_back(L"PosY");
+    header.push_back(L"PosZ");
+    header.push_back(L"RotY");
+    csvData.push_back(header);
+
+    for (const auto& enemy : m_enemies)
+    {
+        if (enemy.IsReadyToRemove())
+        {
+            continue;
+        }
+
+        std::vector<std::wstring> row;
+        row.push_back(enemy.GetType());
+        row.push_back(std::to_wstring(enemy.GetPosition().x));
+        row.push_back(std::to_wstring(enemy.GetPosition().y));
+        row.push_back(std::to_wstring(enemy.GetPosition().z));
+
+        const float rotYDeg = enemy.GetYaw() * 180.0f / D3DX_PI;
+        row.push_back(std::to_wstring(rotYDeg));
+
+        csvData.push_back(row);
+    }
+
+    csv::Write(csvPath, csvData);
+}
+
+EnemyManager::EnemyTypeInfo EnemyManager::GetTypeInfo(const std::wstring& type) const
+{
+    if (type == L"wolf")
+    {
+        return { m_wolfMeshPath, m_wolfAnimCsvPath };
+    }
+
+    return { m_wolfMeshPath, m_wolfAnimCsvPath };
+}
+
+void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
+{
+    const EnemyTypeInfo info = GetTypeInfo(type);
+    const int meshId = render.AddMeshMixSkinAnim(info.meshPath,
+                                                 info.animCsvPath,
                                                  position,
                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                                  1.0f,
@@ -214,6 +289,6 @@ void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position)
     }
 
     Enemy enemy;
-    enemy.Initialize(position, meshId);
+    enemy.Initialize(position, meshId, type, yaw);
     m_enemies.push_back(enemy);
 }

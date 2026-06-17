@@ -9,6 +9,8 @@
 
 #include "resource.h"
 #include "StageManager.h"
+#include "EnemyManager.h"
+#include "Enemy.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
@@ -16,8 +18,10 @@
 StageEditor::StageEditor()
     : m_render(nullptr)
     , m_stageManager(nullptr)
+    , m_enemyManager(nullptr)
     , m_playerMover(nullptr)
     , m_playerYaw(nullptr)
+    , m_editMode(EditMode::Mesh)
 {
 }
 
@@ -27,47 +31,103 @@ StageEditor::~StageEditor()
 
 void StageEditor::Initialize(NSRender::Render* render,
                              StageManager* stageManager,
+                             EnemyManager* enemyManager,
                              PhysicsLib::CharacterMover* playerMover,
                              float* playerYaw)
 {
     m_render = render;
     m_stageManager = stageManager;
+    m_enemyManager = enemyManager;
     m_playerMover = playerMover;
     m_playerYaw = playerYaw;
 }
 
 void StageEditor::OnInitDialog(HWND hDlg)
 {
-    InitListView(hDlg);
-    PopulateList(hDlg);
+    CheckDlgButton(hDlg, IDC_RADIO_EDIT_MESH, BST_CHECKED);
+    InitEnemyTypeCombo(hDlg);
+    SetEditMode(hDlg, EditMode::Mesh);
 }
 
 void StageEditor::OnNotify(HWND hDlg, LPNMHDR pnmh)
 {
     if (pnmh->code == LVN_ITEMCHANGED)
     {
-        OnListSelChange(hDlg);
+        if (m_editMode == EditMode::Mesh)
+        {
+            OnListSelChange(hDlg);
+        }
+        else
+        {
+            OnEnemyListSelChange(hDlg);
+        }
     }
 }
 
 void StageEditor::OnCommand(HWND hDlg, int controlId)
 {
-    if (controlId == IDC_BUTTON_SELECT_X)
+    if (controlId == IDC_RADIO_EDIT_MESH)
+    {
+        SetEditMode(hDlg, EditMode::Mesh);
+    }
+    else if (controlId == IDC_RADIO_EDIT_ENEMY)
+    {
+        SetEditMode(hDlg, EditMode::Enemy);
+    }
+    else if (controlId == IDC_BUTTON_SELECT_X)
     {
         OnSelectX(hDlg);
     }
     else if (controlId == IDC_BUTTON_PLACE_MESH)
     {
-        OnPlaceMesh(hDlg);
+        if (m_editMode == EditMode::Mesh)
+        {
+            OnPlaceMesh(hDlg);
+        }
+        else
+        {
+            OnPlaceEnemy(hDlg);
+        }
     }
     else if (controlId == IDC_BUTTON_DELETE_MESH)
     {
-        OnDeleteMesh(hDlg);
+        if (m_editMode == EditMode::Mesh)
+        {
+            OnDeleteMesh(hDlg);
+        }
+        else
+        {
+            OnDeleteEnemy(hDlg);
+        }
     }
     else if (controlId == IDC_BUTTON_SAVE_STAGE)
     {
         OnSave(hDlg);
     }
+}
+
+void StageEditor::SetEditMode(HWND hDlg, EditMode mode)
+{
+    m_editMode = mode;
+    InitListView(hDlg);
+    PopulateList(hDlg);
+
+    if (mode == EditMode::Mesh)
+    {
+        EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_SELECT_X), TRUE);
+        EnableWindow(GetDlgItem(hDlg, IDC_COMBO_ENEMY_TYPE), FALSE);
+    }
+    else
+    {
+        EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_SELECT_X), FALSE);
+        SetDlgItemText(hDlg, IDC_STATIC_X_PATH, L"");
+        EnableWindow(GetDlgItem(hDlg, IDC_COMBO_ENEMY_TYPE), TRUE);
+    }
+
+    SetDlgItemText(hDlg, IDC_EDIT_POS_X, L"");
+    SetDlgItemText(hDlg, IDC_EDIT_POS_Y, L"");
+    SetDlgItemText(hDlg, IDC_EDIT_POS_Z, L"");
+    SetDlgItemText(hDlg, IDC_EDIT_ROT_Y, L"");
 }
 
 void StageEditor::InitListView(HWND hDlg)
@@ -80,26 +140,36 @@ void StageEditor::InitListView(HWND hDlg)
 
     ListView_SetExtendedListViewStyle(hList, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
+    while (ListView_DeleteColumn(hList, 0))
+    {
+    }
+
     LVCOLUMN col = {};
     col.mask = LVCF_TEXT | LVCF_WIDTH;
 
-    col.cx = 120;
-    col.pszText = const_cast<LPWSTR>(L"FileName");
-    ListView_InsertColumn(hList, 0, &col);
+    if (m_editMode == EditMode::Mesh)
+    {
+        col.cx = 120;
+        col.pszText = const_cast<LPWSTR>(L"FileName");
+        ListView_InsertColumn(hList, 0, &col);
+    }
+    else
+    {
+        col.cx = 120;
+        col.pszText = const_cast<LPWSTR>(L"Type");
+        ListView_InsertColumn(hList, 0, &col);
+    }
 
     col.cx = 50;
     col.pszText = const_cast<LPWSTR>(L"PosX");
     ListView_InsertColumn(hList, 1, &col);
 
-    col.cx = 50;
     col.pszText = const_cast<LPWSTR>(L"PosY");
     ListView_InsertColumn(hList, 2, &col);
 
-    col.cx = 50;
     col.pszText = const_cast<LPWSTR>(L"PosZ");
     ListView_InsertColumn(hList, 3, &col);
 
-    col.cx = 50;
     col.pszText = const_cast<LPWSTR>(L"RotY");
     ListView_InsertColumn(hList, 4, &col);
 }
@@ -114,51 +184,86 @@ void StageEditor::PopulateList(HWND hDlg)
 
     ListView_DeleteAllItems(hList);
 
-    const std::wstring stageFolder = GetStageFolderPath();
-    if (stageFolder.empty())
+    if (m_editMode == EditMode::Mesh)
     {
-        return;
+        const std::wstring stageFolder = GetStageFolderPath();
+        if (stageFolder.empty())
+        {
+            return;
+        }
+
+        const std::vector<NSRender::RenderLoadedModelInfo> models = m_render->GetLoadedModelInfoList();
+        for (const auto& model : models)
+        {
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+            {
+                continue;
+            }
+
+            if (!IsPathUnderStageFolder(model.filePath, stageFolder))
+            {
+                continue;
+            }
+
+            std::wstring fileName = model.filePath;
+            const std::size_t slashPos = fileName.find_last_of(L"\\/");
+            if (slashPos != std::wstring::npos)
+            {
+                fileName = fileName.substr(slashPos + 1);
+            }
+
+            LVITEM lvi = {};
+            lvi.mask = LVIF_TEXT | LVIF_PARAM;
+            lvi.iItem = ListView_GetItemCount(hList);
+            lvi.lParam = static_cast<LPARAM>(model.renderId);
+            lvi.pszText = const_cast<LPWSTR>(fileName.c_str());
+            const int index = ListView_InsertItem(hList, &lvi);
+
+            std::wstring posX = std::to_wstring(model.pos.x);
+            std::wstring posY = std::to_wstring(model.pos.y);
+            std::wstring posZ = std::to_wstring(model.pos.z);
+
+            D3DXVECTOR3 rot = m_render->GetMeshMixRot(model.renderId);
+            const float rotYDeg = rot.y * 180.0f / D3DX_PI;
+            std::wstring rotY = std::to_wstring(rotYDeg);
+
+            ListView_SetItemText(hList, index, 1, const_cast<LPWSTR>(posX.c_str()));
+            ListView_SetItemText(hList, index, 2, const_cast<LPWSTR>(posY.c_str()));
+            ListView_SetItemText(hList, index, 3, const_cast<LPWSTR>(posZ.c_str()));
+            ListView_SetItemText(hList, index, 4, const_cast<LPWSTR>(rotY.c_str()));
+        }
     }
-
-    const std::vector<NSRender::RenderLoadedModelInfo> models = m_render->GetLoadedModelInfoList();
-    for (const auto& model : models)
+    else
     {
-        if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+        std::vector<Enemy>& enemies = m_enemyManager->GetEnemies();
+        for (std::size_t i = 0; i < enemies.size(); ++i)
         {
-            continue;
+            Enemy& enemy = enemies[i];
+            if (enemy.IsReadyToRemove())
+            {
+                continue;
+            }
+
+            LVITEM lvi = {};
+            lvi.mask = LVIF_TEXT | LVIF_PARAM;
+            lvi.iItem = ListView_GetItemCount(hList);
+            lvi.lParam = static_cast<LPARAM>(i);
+            lvi.pszText = const_cast<LPWSTR>(enemy.GetType().c_str());
+            const int index = ListView_InsertItem(hList, &lvi);
+
+            const D3DXVECTOR3 pos = enemy.GetPosition();
+            const float rotYDeg = enemy.GetYaw() * 180.0f / D3DX_PI;
+
+            std::wstring posX = std::to_wstring(pos.x);
+            std::wstring posY = std::to_wstring(pos.y);
+            std::wstring posZ = std::to_wstring(pos.z);
+            std::wstring rotY = std::to_wstring(rotYDeg);
+
+            ListView_SetItemText(hList, index, 1, const_cast<LPWSTR>(posX.c_str()));
+            ListView_SetItemText(hList, index, 2, const_cast<LPWSTR>(posY.c_str()));
+            ListView_SetItemText(hList, index, 3, const_cast<LPWSTR>(posZ.c_str()));
+            ListView_SetItemText(hList, index, 4, const_cast<LPWSTR>(rotY.c_str()));
         }
-
-        if (!IsPathUnderStageFolder(model.filePath, stageFolder))
-        {
-            continue;
-        }
-
-        std::wstring fileName = model.filePath;
-        const std::size_t slashPos = fileName.find_last_of(L"\\/");
-        if (slashPos != std::wstring::npos)
-        {
-            fileName = fileName.substr(slashPos + 1);
-        }
-
-        LVITEM lvi = {};
-        lvi.mask = LVIF_TEXT | LVIF_PARAM;
-        lvi.iItem = ListView_GetItemCount(hList);
-        lvi.lParam = static_cast<LPARAM>(model.renderId);
-        lvi.pszText = const_cast<LPWSTR>(fileName.c_str());
-        const int index = ListView_InsertItem(hList, &lvi);
-
-        std::wstring posX = std::to_wstring(model.pos.x);
-        std::wstring posY = std::to_wstring(model.pos.y);
-        std::wstring posZ = std::to_wstring(model.pos.z);
-
-        D3DXVECTOR3 rot = m_render->GetMeshMixRot(model.renderId);
-        const float rotYDeg = rot.y * 180.0f / D3DX_PI;
-        std::wstring rotY = std::to_wstring(rotYDeg);
-
-        ListView_SetItemText(hList, index, 1, const_cast<LPWSTR>(posX.c_str()));
-        ListView_SetItemText(hList, index, 2, const_cast<LPWSTR>(posY.c_str()));
-        ListView_SetItemText(hList, index, 3, const_cast<LPWSTR>(posZ.c_str()));
-        ListView_SetItemText(hList, index, 4, const_cast<LPWSTR>(rotY.c_str()));
     }
 }
 
@@ -275,6 +380,188 @@ void StageEditor::OnUpdateMesh(HWND hDlg)
     PopulateList(hDlg);
 }
 
+void StageEditor::InitEnemyTypeCombo(HWND hDlg)
+{
+    HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_ENEMY_TYPE);
+    if (hCombo == NULL)
+    {
+        return;
+    }
+
+    SendMessage(hCombo, CB_RESETCONTENT, 0, 0);
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"wolf"));
+    SendMessage(hCombo, CB_SETCURSEL, 0, 0);
+}
+
+void StageEditor::OnPlaceEnemy(HWND hDlg)
+{
+    HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_ENEMY_TYPE);
+    if (hCombo == NULL)
+    {
+        return;
+    }
+
+    const int sel = static_cast<int>(SendMessage(hCombo, CB_GETCURSEL, 0, 0));
+    if (sel < 0)
+    {
+        return;
+    }
+
+    wchar_t typeBuf[64] = {};
+    SendMessage(hCombo, CB_GETLBTEXT, sel, reinterpret_cast<LPARAM>(typeBuf));
+    const std::wstring type = typeBuf;
+
+    const D3DXVECTOR3 pos = m_playerMover->GetPosition();
+    const float yaw = *m_playerYaw;
+
+    m_enemyManager->SpawnAt(*m_render, pos, type, yaw);
+    PopulateList(hDlg);
+}
+
+void StageEditor::OnDeleteEnemy(HWND hDlg)
+{
+    HWND hList = GetDlgItem(hDlg, IDC_LIST_MESHES);
+    if (hList == NULL)
+    {
+        return;
+    }
+
+    const int selected = ListView_GetNextItem(hList, -1, LVNI_SELECTED);
+    if (selected < 0)
+    {
+        return;
+    }
+
+    LVITEM lvi = {};
+    lvi.mask = LVIF_PARAM;
+    lvi.iItem = selected;
+    if (!ListView_GetItem(hList, &lvi))
+    {
+        return;
+    }
+
+    const std::size_t index = static_cast<std::size_t>(lvi.lParam);
+    m_enemyManager->RemoveEnemy(*m_render, index);
+    PopulateList(hDlg);
+}
+
+void StageEditor::OnEnemyListSelChange(HWND hDlg)
+{
+    HWND hList = GetDlgItem(hDlg, IDC_LIST_MESHES);
+    if (hList == NULL)
+    {
+        return;
+    }
+
+    const int selected = ListView_GetNextItem(hList, -1, LVNI_SELECTED);
+    if (selected < 0)
+    {
+        return;
+    }
+
+    LVITEM lvi = {};
+    lvi.mask = LVIF_PARAM;
+    lvi.iItem = selected;
+    if (!ListView_GetItem(hList, &lvi))
+    {
+        return;
+    }
+
+    const std::size_t index = static_cast<std::size_t>(lvi.lParam);
+    std::vector<Enemy>& enemies = m_enemyManager->GetEnemies();
+    if (index >= enemies.size())
+    {
+        return;
+    }
+
+    const Enemy& enemy = enemies[index];
+    const D3DXVECTOR3 pos = enemy.GetPosition();
+    const float rotYDeg = enemy.GetYaw() * 180.0f / D3DX_PI;
+
+    SetDlgItemText(hDlg, IDC_EDIT_POS_X, std::to_wstring(pos.x).c_str());
+    SetDlgItemText(hDlg, IDC_EDIT_POS_Y, std::to_wstring(pos.y).c_str());
+    SetDlgItemText(hDlg, IDC_EDIT_POS_Z, std::to_wstring(pos.z).c_str());
+    SetDlgItemText(hDlg, IDC_EDIT_ROT_Y, std::to_wstring(rotYDeg).c_str());
+
+    HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_ENEMY_TYPE);
+    if (hCombo != NULL)
+    {
+        const int count = static_cast<int>(SendMessage(hCombo, CB_GETCOUNT, 0, 0));
+        for (int i = 0; i < count; ++i)
+        {
+            wchar_t buf[64] = {};
+            SendMessage(hCombo, CB_GETLBTEXT, i, reinterpret_cast<LPARAM>(buf));
+            if (enemy.GetType() == buf)
+            {
+                SendMessage(hCombo, CB_SETCURSEL, i, 0);
+                break;
+            }
+        }
+    }
+}
+
+void StageEditor::OnUpdateEnemy(HWND hDlg)
+{
+    HWND hList = GetDlgItem(hDlg, IDC_LIST_MESHES);
+    if (hList == NULL)
+    {
+        return;
+    }
+
+    const int selected = ListView_GetNextItem(hList, -1, LVNI_SELECTED);
+    if (selected < 0)
+    {
+        return;
+    }
+
+    LVITEM lvi = {};
+    lvi.mask = LVIF_PARAM;
+    lvi.iItem = selected;
+    if (!ListView_GetItem(hList, &lvi))
+    {
+        return;
+    }
+
+    const std::size_t index = static_cast<std::size_t>(lvi.lParam);
+    std::vector<Enemy>& enemies = m_enemyManager->GetEnemies();
+    if (index >= enemies.size())
+    {
+        return;
+    }
+
+    wchar_t buf[64] = {};
+    GetDlgItemText(hDlg, IDC_EDIT_POS_X, buf, 64);
+    const float posX = static_cast<float>(std::wcstod(buf, nullptr));
+
+    GetDlgItemText(hDlg, IDC_EDIT_POS_Y, buf, 64);
+    const float posY = static_cast<float>(std::wcstod(buf, nullptr));
+
+    GetDlgItemText(hDlg, IDC_EDIT_POS_Z, buf, 64);
+    const float posZ = static_cast<float>(std::wcstod(buf, nullptr));
+
+    GetDlgItemText(hDlg, IDC_EDIT_ROT_Y, buf, 64);
+    const float rotYDeg = static_cast<float>(std::wcstod(buf, nullptr));
+    const float rotY = D3DXToRadian(rotYDeg);
+
+    enemies[index].SetPosition(D3DXVECTOR3(posX, posY, posZ));
+    enemies[index].SetYaw(rotY);
+    enemies[index].SyncMesh(*m_render);
+
+    HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_ENEMY_TYPE);
+    if (hCombo != NULL)
+    {
+        const int sel = static_cast<int>(SendMessage(hCombo, CB_GETCURSEL, 0, 0));
+        if (sel >= 0)
+        {
+            wchar_t typeBuf[64] = {};
+            SendMessage(hCombo, CB_GETLBTEXT, sel, reinterpret_cast<LPARAM>(typeBuf));
+            enemies[index].SetType(typeBuf);
+        }
+    }
+
+    PopulateList(hDlg);
+}
+
 void StageEditor::OnSave(HWND hDlg)
 {
     const std::wstring stageFolder = GetStageFolderPath();
@@ -289,66 +576,74 @@ void StageEditor::OnSave(HWND hDlg)
     swprintf_s(timeStr, L"%04d%02d%02d%02d%02d%02d",
                st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 
-    const std::wstring filePath = stageFolder + L"\\XFileList." + timeStr + L".csv";
-
-    const std::vector<NSRender::RenderLoadedModelInfo> models = m_render->GetLoadedModelInfoList();
-
-    std::vector<std::vector<std::wstring>> csvData;
-    std::vector<std::wstring> header;
-    header.push_back(L"ID");
-    header.push_back(L"FileName");
-    header.push_back(L"PosX");
-    header.push_back(L"PosY");
-    header.push_back(L"PosZ");
-    header.push_back(L"RotX");
-    header.push_back(L"RotY");
-    header.push_back(L"RotZ");
-    header.push_back(L"Scale");
-    header.push_back(L"loadType");
-    csvData.push_back(header);
-
-    int id = 1;
-    for (const auto& model : models)
+    if (m_editMode == EditMode::Mesh)
     {
-        if (model.type != NSRender::RenderLoadedModelType::MeshMix)
-        {
-            continue;
-        }
+        const std::wstring filePath = stageFolder + L"\\XFileList." + timeStr + L".csv";
 
-        if (!IsPathUnderStageFolder(model.filePath, stageFolder))
-        {
-            continue;
-        }
+        const std::vector<NSRender::RenderLoadedModelInfo> models = m_render->GetLoadedModelInfoList();
 
-        std::wstring relativePath = model.filePath;
-        if (relativePath.find(stageFolder) == 0)
+        std::vector<std::vector<std::wstring>> csvData;
+        std::vector<std::wstring> header;
+        header.push_back(L"ID");
+        header.push_back(L"FileName");
+        header.push_back(L"PosX");
+        header.push_back(L"PosY");
+        header.push_back(L"PosZ");
+        header.push_back(L"RotX");
+        header.push_back(L"RotY");
+        header.push_back(L"RotZ");
+        header.push_back(L"Scale");
+        header.push_back(L"loadType");
+        csvData.push_back(header);
+
+        int id = 1;
+        for (const auto& model : models)
         {
-            relativePath = relativePath.substr(stageFolder.length());
-            if (!relativePath.empty() && (relativePath[0] == L'\\' || relativePath[0] == L'/'))
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
             {
-                relativePath = relativePath.substr(1);
+                continue;
             }
+
+            if (!IsPathUnderStageFolder(model.filePath, stageFolder))
+            {
+                continue;
+            }
+
+            std::wstring relativePath = model.filePath;
+            if (relativePath.find(stageFolder) == 0)
+            {
+                relativePath = relativePath.substr(stageFolder.length());
+                if (!relativePath.empty() && (relativePath[0] == L'\\' || relativePath[0] == L'/'))
+                {
+                    relativePath = relativePath.substr(1);
+                }
+            }
+
+            D3DXVECTOR3 rot = m_render->GetMeshMixRot(model.renderId);
+            const float rotYDeg = rot.y * 180.0f / D3DX_PI;
+
+            std::vector<std::wstring> row;
+            row.push_back(std::to_wstring(id));
+            row.push_back(relativePath);
+            row.push_back(std::to_wstring(model.pos.x));
+            row.push_back(std::to_wstring(model.pos.y));
+            row.push_back(std::to_wstring(model.pos.z));
+            row.push_back(L"0");
+            row.push_back(std::to_wstring(rotYDeg));
+            row.push_back(L"0");
+            row.push_back(std::to_wstring(model.scale));
+            row.push_back(L"normal");
+            csvData.push_back(row);
+            ++id;
         }
 
-        D3DXVECTOR3 rot = m_render->GetMeshMixRot(model.renderId);
-        const float rotYDeg = rot.y * 180.0f / D3DX_PI;
-
-        std::vector<std::wstring> row;
-        row.push_back(std::to_wstring(id));
-        row.push_back(relativePath);
-        row.push_back(std::to_wstring(model.pos.x));
-        row.push_back(std::to_wstring(model.pos.y));
-        row.push_back(std::to_wstring(model.pos.z));
-        row.push_back(L"0");
-        row.push_back(std::to_wstring(rotYDeg));
-        row.push_back(L"0");
-        row.push_back(std::to_wstring(model.scale));
-        row.push_back(L"normal");
-        csvData.push_back(row);
-        ++id;
+        csv::Write(filePath, csvData);
     }
-
-    csv::Write(filePath, csvData);
+    else
+    {
+        const std::wstring filePath = stageFolder + L"\\EnemyPositions." + timeStr + L".csv";
+        m_enemyManager->SaveToCsv(filePath);
+    }
 }
 
 void StageEditor::OnListSelChange(HWND hDlg)

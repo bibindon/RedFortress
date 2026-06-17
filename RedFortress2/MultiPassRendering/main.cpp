@@ -1158,7 +1158,7 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
         SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_SETCHECK,
                     g_remoteDesktopMode ? BST_CHECKED : BST_UNCHECKED, 0);
         PopulateStageCombo(hDlg);
-        g_stageEditor.Initialize(&g_Render, &g_stageManager, &g_playerMover, &g_playerYaw);
+        g_stageEditor.Initialize(&g_Render, &g_stageManager, &g_enemyManager, &g_playerMover, &g_playerYaw);
         g_stageEditor.OnInitDialog(hDlg);
         return TRUE;
 

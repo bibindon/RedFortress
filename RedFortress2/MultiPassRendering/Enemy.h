@@ -27,7 +27,7 @@ public:
 
     Enemy();
 
-    void Initialize(const D3DXVECTOR3& startPosition, int meshId);
+    void Initialize(const D3DXVECTOR3& startPosition, int meshId, const std::wstring& type, float yaw);
     void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
     void SyncMesh(NSRender::Render& render);
 
@@ -38,7 +38,12 @@ public:
     int GetHp() const;
     int GetMaxHp() const;
     D3DXVECTOR3 GetPosition() const;
+    void SetPosition(const D3DXVECTOR3& pos);
+    float GetYaw() const;
+    void SetYaw(float yaw);
     int GetMeshId() const;
+    const std::wstring& GetType() const;
+    void SetType(const std::wstring& type);
 
     bool IsTouchingPlayer(const D3DXVECTOR3& playerPos) const;
     bool IsStompedByPlayer(const D3DXVECTOR3& playerPos, bool playerIsJumping, float playerYVelocity) const;
@@ -54,6 +59,7 @@ private:
     float m_yaw = 0.0f;
     int m_hp = 10;
     int m_meshId = -1;
+    std::wstring m_type;
     State m_state = State::Idle;
     AnimState m_animState = AnimState::Idle;
 
