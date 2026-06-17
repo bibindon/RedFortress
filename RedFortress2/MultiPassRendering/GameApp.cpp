@@ -265,6 +265,11 @@ void GameApp::Run()
             }
         }
 
+        if (m_close)
+        {
+            break;
+        }
+
         InputDevice::Update();
         if (m_gameState == GameState::Playing &&
             !m_playerDeathPending &&
@@ -1106,6 +1111,13 @@ LRESULT WINAPI GameApp::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 {
     switch (msg)
     {
+    case WM_CLOSE:
+    {
+        Instance().m_close = true;
+        DestroyWindow(hWnd);
+        return 0;
+    }
+
     case WM_DESTROY:
     {
         PostQuitMessage(0);
