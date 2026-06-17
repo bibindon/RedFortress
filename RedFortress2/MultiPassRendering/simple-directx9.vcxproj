@@ -159,6 +159,7 @@
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="HpBar.cpp" />
     <ClCompile Include="DamagePopupManager.cpp" />
+    <ClCompile Include="GameApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -175,6 +176,7 @@
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="HpBar.h" />
     <ClInclude Include="DamagePopupManager.h" />
+    <ClInclude Include="GameApp.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\InputDevice\InputDevice\InputDevice.vcxproj">
