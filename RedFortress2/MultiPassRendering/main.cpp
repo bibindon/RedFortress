@@ -28,6 +28,7 @@
 #include "EnemyManager.h"
 #include "PauseMenu.h"
 #include "SaveDataManager.h"
+#include "StageEditor.h"
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
@@ -131,6 +132,7 @@ int g_respawnCameraDelayFrames = 0;
 int g_respawnCameraMoveFrames = 0;
 bool g_playerDeathPending = false;
 bool g_stageClearProcessed = false;
+StageEditor g_stageEditor;
 D3DXVECTOR3 g_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 D3DXVECTOR3 g_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 D3DXVECTOR3 g_respawnCameraToPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -1156,6 +1158,12 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
         SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_SETCHECK,
                     g_remoteDesktopMode ? BST_CHECKED : BST_UNCHECKED, 0);
         PopulateStageCombo(hDlg);
+        g_stageEditor.Initialize(&g_Render, &g_stageManager, &g_playerMover, &g_playerYaw);
+        g_stageEditor.OnInitDialog(hDlg);
+        return TRUE;
+
+    case WM_NOTIFY:
+        g_stageEditor.OnNotify(hDlg, reinterpret_cast<LPNMHDR>(lParam));
         return TRUE;
 
     case WM_COMMAND:
@@ -1179,6 +1187,13 @@ INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
         case IDC_BUTTON_STAGE_GO:
             MoveToSelectedStage(hDlg);
+            return TRUE;
+
+        case IDC_BUTTON_SELECT_X:
+        case IDC_BUTTON_PLACE_MESH:
+        case IDC_BUTTON_DELETE_MESH:
+        case IDC_BUTTON_SAVE_STAGE:
+            g_stageEditor.OnCommand(hDlg, LOWORD(wParam));
             return TRUE;
 
         case IDOK:

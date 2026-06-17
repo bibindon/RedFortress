@@ -11,14 +11,24 @@
 #define IDC_BUTTON_HP_PLUS              1005
 #define IDC_COMBO_STAGE                 1006
 #define IDC_BUTTON_STAGE_GO             1007
+#define IDC_LIST_MESHES                 1008
+#define IDC_BUTTON_SELECT_X             1009
+#define IDC_BUTTON_PLACE_MESH           1010
+#define IDC_BUTTON_DELETE_MESH          1011
+#define IDC_BUTTON_SAVE_STAGE           1012
+#define IDC_STATIC_X_PATH               1013
+#define IDC_EDIT_POS_X                  1014
+#define IDC_EDIT_POS_Y                  1015
+#define IDC_EDIT_POS_Z                  1016
+#define IDC_EDIT_ROT_Y                  1017
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        104
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1008
+#define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
