@@ -27,6 +27,7 @@
 #include "StageManager.h"
 #include "EnemyManager.h"
 #include "PauseMenu.h"
+#include "SaveDataManager.h"
 
 bool g_bClose = false;
 const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
@@ -55,6 +56,7 @@ bool g_remoteDesktopMode = []() {
 }();
 Player g_player;
 StageManager g_stageManager;
+SaveDataManager g_saveDataManager;
 int g_playerMeshId = -1;
 bool g_playerIsSkinAnim = true;
 PhysicsLib::CharacterMover g_playerMover;
@@ -128,6 +130,7 @@ const int kRespawnCameraMoveFrames = 30;
 int g_respawnCameraDelayFrames = 0;
 int g_respawnCameraMoveFrames = 0;
 bool g_playerDeathPending = false;
+bool g_stageClearProcessed = false;
 D3DXVECTOR3 g_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 D3DXVECTOR3 g_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 D3DXVECTOR3 g_respawnCameraToPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -158,6 +161,7 @@ static void PopulateStageCombo(HWND hDlg);
 static std::wstring BuildStageComboText(const StageManager::StageData& stage);
 static bool StartStageByIndex(std::size_t stageIndex);
 static void MoveToSelectedStage(HWND hDlg);
+static void RefreshTitleContinueCommand();
 static void DrawPlayerHpBar();
 static void DrawTitleScreen();
 static void DrawStageTitle();
@@ -350,8 +354,12 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     CommandSE* pSE = new CommandSE();
     CommandSprite* pSpr = new CommandSprite();
     g_command.Init(pFont, pSE, pSpr, false, L"res\\commandName_title.csv");
+
+    g_saveDataManager.Initialize(g_stageManager);
+    g_saveDataManager.Load();
+
     g_command.UpsertCommand(L"start", true);
-    g_command.UpsertCommand(L"continue", true);
+    g_command.UpsertCommand(L"continue", g_saveDataManager.IsStageCleared(L"1-4"));
     g_command.UpsertCommand(L"exit", true);
     g_Render.SetLoadingScreenProgress(85);
     g_Render.Draw();
@@ -402,6 +410,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
         }
         else if (g_gameState == GameState::Title)
         {
+            RefreshTitleContinueCommand();
             UpdateTitleByInput();
             DrawTitleScreen();
 
@@ -416,7 +425,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 }
                 else if (selectedId == L"continue")
                 {
-                    g_gameState = GameState::Playing;
+                    const std::size_t baseIndex = g_stageManager.FindStageIndexById(L"base");
+                    StartStageByIndex(baseIndex);
                 }
                 else if (selectedId == L"exit")
                 {
@@ -439,7 +449,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
                 }
                 else if (clickedId == L"continue")
                 {
-                    g_gameState = GameState::Playing;
+                    const std::size_t baseIndex = g_stageManager.FindStageIndexById(L"base");
+                    StartStageByIndex(baseIndex);
                 }
                 else if (clickedId == L"exit")
                 {
@@ -660,6 +671,7 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
             if (IsStageClearReached())
             {
                 g_gameState = GameState::StageClear;
+                g_stageClearProcessed = false;
             }
 
             if (g_playerMover.JustJumped() && g_playerAnimState == PlayerAnimState::Jump)
@@ -1106,6 +1118,12 @@ bool StartStageByIndex(std::size_t stageIndex)
     return true;
 }
 
+void RefreshTitleContinueCommand()
+{
+    const bool canContinue = g_saveDataManager.IsStageCleared(L"1-4");
+    g_command.UpsertCommand(L"continue", canContinue);
+}
+
 void MoveToSelectedStage(HWND hDlg)
 {
     HWND combo = GetDlgItem(hDlg, IDC_COMBO_STAGE);
@@ -1207,6 +1225,14 @@ void UpdateTitleByInput()
 
 void UpdateStageClear()
 {
+    if (!g_stageClearProcessed)
+    {
+        const std::wstring clearedStageId = g_stageManager.GetCurrentStage().id;
+        g_saveDataManager.MarkStageCleared(clearedStageId);
+        g_saveDataManager.Save();
+        g_stageClearProcessed = true;
+    }
+
     if (g_stageManager.IsLastStage())
     {
         g_slideShowManager.Start(L"res\\script\\ending.csv");

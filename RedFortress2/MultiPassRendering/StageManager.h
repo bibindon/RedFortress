@@ -9,6 +9,7 @@ class StageManager
 public:
     struct StageData
     {
+        std::wstring id;
         int number = 1;
         std::wstring displayName;
         std::wstring renderCsvPath;
@@ -25,6 +26,7 @@ public:
     const StageData& GetStage(std::size_t index) const;
     std::size_t GetStageCount() const;
     std::size_t GetCurrentStageIndex() const;
+    std::size_t FindStageIndexById(const std::wstring& id) const;
     bool MoveNextStage();
     bool MoveToStage(std::size_t index);
     bool IsLastStage() const;
@@ -33,7 +35,8 @@ public:
     const std::wstring& GetCurrentStageDisplayName() const;
 
 private:
-    void AddStage(int number,
+    void AddStage(const std::wstring& id,
+                  int number,
                   const std::wstring& displayName,
                   const std::wstring& folderName,
                   const D3DXVECTOR3& playerStartPosition,
