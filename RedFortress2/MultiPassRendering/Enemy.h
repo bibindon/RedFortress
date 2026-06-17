@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <d3dx9.h>
 #include <string>
@@ -44,6 +44,9 @@ public:
     bool IsStompedByPlayer(const D3DXVECTOR3& playerPos, bool playerIsJumping, float playerYVelocity) const;
 
 private:
+    void FaceTargetImmediately(const D3DXVECTOR3& targetPos);
+    void StartFacePlayerTurn();
+    void UpdateFacePlayerTurn(const D3DXVECTOR3& playerPos);
     void UpdateFacing(const D3DXVECTOR3& targetPos);
     bool IsPlayerInView(const D3DXVECTOR3& playerPos) const;
 
@@ -62,4 +65,5 @@ private:
     float m_height = 1.0f;
     int m_blinkFrames = 0;
     int m_removalFrames = 0;
+    int m_facePlayerTurnFrames = 0;
 };

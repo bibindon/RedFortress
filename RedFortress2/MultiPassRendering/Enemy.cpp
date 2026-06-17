@@ -1,4 +1,4 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 
@@ -17,8 +17,20 @@ namespace
         while (diff > D3DX_PI)  diff -= 2.0f * D3DX_PI;
         while (diff < -D3DX_PI) diff += 2.0f * D3DX_PI;
         if (fabsf(diff) <= maxDelta) return target;
-        return current + (diff > 0.0f ? maxDelta : -maxDelta);
+        if (diff > 0.0f)
+        {
+            return current + maxDelta;
+        }
+        return current - maxDelta;
     }
+
+    float GetYawToTarget(const D3DXVECTOR3& fromPos, const D3DXVECTOR3& targetPos)
+    {
+        const D3DXVECTOR3 diff = targetPos - fromPos;
+        return atan2f(-diff.x, -diff.z);
+    }
+
+    const int kFacePlayerTurnFrames = 30;
 }
 
 Enemy::Enemy()
@@ -36,6 +48,7 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition, int meshId)
     m_yaw = 0.0f;
     m_blinkFrames = 0;
     m_removalFrames = 0;
+    m_facePlayerTurnFrames = 0;
 }
 
 void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible)
@@ -82,7 +95,7 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
         if (distance >= m_retreatDistance)
         {
             m_state = State::Idle;
-            UpdateFacing(playerPos);
+            StartFacePlayerTurn();
         }
     }
     else if (m_state == State::Chase)
@@ -112,13 +125,21 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
     }
     else // Idle
     {
-        if (!playerInvincible && distance <= m_viewDistance && IsPlayerInView(playerPos))
+        if (m_facePlayerTurnFrames > 0)
+        {
+            UpdateFacePlayerTurn(playerPos);
+        }
+        else if (!playerInvincible && distance <= m_viewDistance && IsPlayerInView(playerPos))
         {
             m_state = State::Chase;
         }
     }
 
-    const AnimState nextAnim = (m_state == State::Chase || m_state == State::Retreat) ? AnimState::Run : AnimState::Idle;
+    AnimState nextAnim = AnimState::Idle;
+    if (m_state == State::Chase || m_state == State::Retreat)
+    {
+        nextAnim = AnimState::Run;
+    }
     if (nextAnim != m_animState)
     {
         m_animState = nextAnim;
@@ -167,6 +188,7 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount)
     {
         m_hp = 0;
         m_state = State::Dead;
+        m_facePlayerTurnFrames = 0;
         m_removalFrames = 60;
         if (m_meshId >= 0)
         {
@@ -190,6 +212,7 @@ void Enemy::MarkAttackedPlayer()
     if (m_state != State::Dead)
     {
         m_state = State::Retreat;
+        m_facePlayerTurnFrames = 0;
     }
 }
 
@@ -246,10 +269,43 @@ bool Enemy::IsStompedByPlayer(const D3DXVECTOR3& playerPos, bool playerIsJumping
     return horizontalDist <= m_contactRadius && verticalOffset >= 0.0f && playerYVelocity <= 0.0f;
 }
 
+void Enemy::FaceTargetImmediately(const D3DXVECTOR3& targetPos)
+{
+    m_yaw = GetYawToTarget(m_position, targetPos);
+}
+
+void Enemy::StartFacePlayerTurn()
+{
+    m_facePlayerTurnFrames = kFacePlayerTurnFrames;
+}
+
+void Enemy::UpdateFacePlayerTurn(const D3DXVECTOR3& playerPos)
+{
+    const float targetYaw = GetYawToTarget(m_position, playerPos);
+    float diff = targetYaw - m_yaw;
+    while (diff > D3DX_PI)
+    {
+        diff -= 2.0f * D3DX_PI;
+    }
+    while (diff < -D3DX_PI)
+    {
+        diff += 2.0f * D3DX_PI;
+    }
+
+    if (m_facePlayerTurnFrames <= 1)
+    {
+        FaceTargetImmediately(playerPos);
+        m_facePlayerTurnFrames = 0;
+        return;
+    }
+
+    m_yaw += diff / static_cast<float>(m_facePlayerTurnFrames);
+    --m_facePlayerTurnFrames;
+}
+
 void Enemy::UpdateFacing(const D3DXVECTOR3& targetPos)
 {
-    const D3DXVECTOR3 diff = targetPos - m_position;
-    const float targetYaw = atan2f(-diff.x, -diff.z);
+    const float targetYaw = GetYawToTarget(m_position, targetPos);
     const float kTurnRadiansPerSecond = 10.0f;
     const float kTargetFrameSeconds = 1.0f / 60.0f;
     m_yaw = MoveAngleToward(m_yaw, targetYaw, kTurnRadiansPerSecond * kTargetFrameSeconds);
