@@ -270,12 +270,12 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     wc.cbClsExtra = 0;
     wc.cbWndExtra = 0;
     wc.hInstance = GetModuleHandle(NULL);
-    wc.hIcon = NULL;
+    wc.hIcon = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
     wc.hCursor = NULL;
     wc.hbrBackground = NULL;
     wc.lpszMenuName = NULL;
     wc.lpszClassName = _T("Window1");
-    wc.hIconSm = NULL;
+    wc.hIconSm = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
     ATOM atom = RegisterClassEx(&wc);
     assert(atom != 0);
