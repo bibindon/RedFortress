@@ -1,2 +1,3 @@
-meshtype,none
-hugeObject,y
+meshtype,Emit
+EmitIntensity,1.0
+EmitColor,255,255,255
