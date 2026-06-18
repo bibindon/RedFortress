@@ -22,6 +22,7 @@
 #include "StageEditor.h"
 #include "HpBar.h"
 #include "DamagePopupManager.h"
+#include "PlayerAttackController.h"
 
 class GameApp
 {
@@ -80,7 +81,7 @@ private:
     POINT ConvertMouseToBaseResolution(int clientX, int clientY);
     D3DXVECTOR3 GetCameraPlanarForward();
     D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
-    Enemy* FindEnemyInSlashRange();
+    Enemy* FindEnemyInAttackRange(const PlayerAttackDefinition& attackDefinition);
     void InitializeCameraFromRenderSettings();
     void InitializePlayerPhysics();
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
@@ -105,8 +106,7 @@ private:
     float m_cameraDistance = 7.0f;
     float m_playerYaw = 0.0f;
     PlayerAnimState m_playerAnimState = PlayerAnimState::Idle;
-    int m_playerSlashFrames = 0;
-    int m_playerSlashAttackFrames = -1;
+    PlayerAttackController m_playerAttackController;
     GameState m_gameState = GameState::Loading;
     SlideShowManager m_slideShowManager;
     PauseMenu m_pauseMenu;

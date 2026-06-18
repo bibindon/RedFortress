@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerAttackController.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="SaveDataManager.cpp" />
     <ClCompile Include="StageEditor.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SlideShowManager.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerAttackController.h" />
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="SaveDataManager.h" />
     <ClInclude Include="StageEditor.h" />

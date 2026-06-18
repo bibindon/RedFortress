@@ -12,7 +12,6 @@ namespace
     const std::wstring g_playerWalkAnimName = L"walk";
     const std::wstring g_playerRunAnimName = L"run";
     const std::wstring g_playerJumpAnimName = L"jump";
-    const std::wstring g_playerSlashAnimName = L"slash";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
 
     const float CAMERA_MOVE_SPEED = 0.08f;
@@ -24,8 +23,6 @@ namespace
     const float kMinCameraDistance = 1.5f;
     const float kMaxCameraDistance = 20.0f;
     const float kCameraWheelZoomStep = 0.5f;
-    const int kSlashDurationFrames = 57;
-    const int kSlashAttackDelayFrames = 28;
     const int kPlayerInvincibleDuration = 180;
     const int kRespawnInvincibleFrames = 180;
     const float kStompBounceVelocity = 3.0f;
@@ -497,15 +494,14 @@ void GameApp::Run()
                 DamagePlayerHp(m_player.GetHp());
             }
 
-            // slash 攻撃判定（左クリックから 1 秒後）
-            if (m_playerSlashAttackFrames == 0)
+            if (m_playerAttackController.ConsumeHitRequested())
             {
-                m_playerSlashAttackFrames = -1;
-                Enemy* slashTarget = FindEnemyInSlashRange();
-                if (slashTarget != nullptr)
+                const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
+                Enemy* attackTarget = FindEnemyInAttackRange(attackDefinition);
+                if (attackTarget != nullptr)
                 {
-                    slashTarget->TakeDamage(m_render, 5);
-                    m_damagePopupManager.Add(5, slashTarget->GetPosition(), false);
+                    attackTarget->TakeDamage(m_render, attackDefinition.damage);
+                    m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
                 }
             }
 
@@ -700,17 +696,7 @@ void GameApp::UpdatePlayerByInput()
 {
     const D3DXVECTOR3 previousRenderPosition = m_playerMover.GetPosition();
 
-    // slash カウントダウン
-    if (m_playerSlashFrames > 0)
-    {
-        --m_playerSlashFrames;
-    }
-
-    // slash 攻撃判定カウントダウン
-    if (m_playerSlashAttackFrames > 0)
-    {
-        --m_playerSlashAttackFrames;
-    }
+    m_playerAttackController.Update();
 
     // ノックバックカウントダウン
     if (m_playerKnockbackFrames > 0)
@@ -718,16 +704,19 @@ void GameApp::UpdatePlayerByInput()
         --m_playerKnockbackFrames;
     }
 
-    // 左クリックで slash
-    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) && m_playerSlashFrames <= 0)
+    const bool shiftPressed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT)
+        || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT);
+    if (shiftPressed && InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        m_playerSlashFrames = kSlashDurationFrames;
-        m_playerSlashAttackFrames = kSlashAttackDelayFrames;
-        m_playerAnimState = PlayerAnimState::Slash;
-        if (m_playerMeshId >= 0)
+        if (m_playerAttackController.TryStart(PlayerAttackType::Slash))
         {
-            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 2.0f);
-            m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerSlashAnimName);
+            m_playerAnimState = PlayerAnimState::Slash;
+            if (m_playerMeshId >= 0)
+            {
+                const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
+                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, attackDefinition.animationSpeed);
+                m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, attackDefinition.animationName);
+            }
         }
     }
 
@@ -757,11 +746,12 @@ void GameApp::UpdatePlayerByInput()
     {
         move = m_playerKnockbackDir * kKnockbackSpeed;
     }
-    else if (m_playerSlashFrames >= 28 && m_playerSlashFrames <= 38)
+    else if (m_playerAttackController.IsMovementActive())
     {
+        const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
         const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
         move = forward;
-        settings.moveSpeed = 108.0f;
+        settings.moveSpeed = attackDefinition.moveSpeed;
         m_playerMover.SetSettings(settings);
     }
     else if (isMoving)
@@ -788,7 +778,7 @@ void GameApp::UpdatePlayerByInput()
         const bool isJumping = m_playerMover.IsJumping();
 
         PlayerAnimState nextState;
-        if (m_playerSlashFrames > 0)
+        if (m_playerAttackController.IsAttacking())
         {
             nextState = PlayerAnimState::Slash;
         }
@@ -855,12 +845,10 @@ D3DXVECTOR3 GameApp::GetCameraPlanarRight(const D3DXVECTOR3& forward)
     return right;
 }
 
-Enemy* GameApp::FindEnemyInSlashRange()
+Enemy* GameApp::FindEnemyInAttackRange(const PlayerAttackDefinition& attackDefinition)
 {
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
-    const float kSlashRange = 2.0f;
-    const float kSlashHalfAngle = D3DXToRadian(45.0f);
 
     Enemy* bestEnemy = nullptr;
     float bestDot = -1.0f;
@@ -875,7 +863,7 @@ Enemy* GameApp::FindEnemyInSlashRange()
         D3DXVECTOR3 dir = enemy.GetPosition() - playerPos;
         dir.y = 0.0f;
         const float dist = D3DXVec3Length(&dir);
-        if (dist > kSlashRange)
+        if (dist > attackDefinition.range)
         {
             continue;
         }
@@ -890,7 +878,7 @@ Enemy* GameApp::FindEnemyInSlashRange()
         }
 
         const float dot = D3DXVec3Dot(&forward, &dir);
-        if (dot > cosf(kSlashHalfAngle) && dot > bestDot)
+        if (dot > cosf(attackDefinition.halfAngleRadians) && dot > bestDot)
         {
             bestDot = dot;
             bestEnemy = &enemy;
@@ -1270,8 +1258,7 @@ void GameApp::HandlePlayerDeath()
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
-    m_playerSlashFrames = 0;
-    m_playerSlashAttackFrames = -1;
+    m_playerAttackController.Reset();
     m_render.SetSceneUpdatePaused(true);
 }
 
@@ -1329,8 +1316,7 @@ void GameApp::CompletePlayerDeath()
 
     // 各種状態リセット
     m_playerKnockbackFrames = 0;
-    m_playerSlashFrames = 0;
-    m_playerSlashAttackFrames = -1;
+    m_playerAttackController.Reset();
     m_damagePopupManager.Clear();
 }
 
@@ -1378,8 +1364,7 @@ void GameApp::LoadCurrentStageObjects()
     m_damagePopupManager.Clear();
     m_playerInvincibleFrames = 0;
     m_playerKnockbackFrames = 0;
-    m_playerSlashFrames = 0;
-    m_playerSlashAttackFrames = -1;
+    m_playerAttackController.Reset();
     m_respawnCameraDelayFrames = 0;
     m_respawnCameraMoveFrames = 0;
     m_playerDeathPending = false;
