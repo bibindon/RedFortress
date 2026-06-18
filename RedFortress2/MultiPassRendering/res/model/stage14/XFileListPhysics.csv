@@ -23,4 +23,3 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 1422,res/model/cube_white.x,3.5,1,-6,0,0,0,1,Collision,n
 1423,res/model/cube_white.x,6,1,-8.5,0,0,0,1,Collision,n
 1424,res/model/cube_white.x,13.5,1,-9,0,0,0,1,Collision,n
-1425,res/model/cube_white_big.x,10,10,13,0,0,0,1,Collision,n
