@@ -24,8 +24,8 @@ namespace
     const float kMinCameraDistance = 1.5f;
     const float kMaxCameraDistance = 20.0f;
     const float kCameraWheelZoomStep = 0.5f;
-    const int kSlashDurationFrames = 60;
-    const int kSlashAttackDelayFrames = 30;
+    const int kSlashDurationFrames = 57;
+    const int kSlashAttackDelayFrames = 28;
     const int kPlayerInvincibleDuration = 180;
     const int kRespawnInvincibleFrames = 180;
     const float kStompBounceVelocity = 3.0f;
@@ -757,11 +757,12 @@ void GameApp::UpdatePlayerByInput()
     {
         move = m_playerKnockbackDir * kKnockbackSpeed;
     }
-    else if (m_playerSlashFrames >= 30 && m_playerSlashFrames <= 40)
+    else if (m_playerSlashFrames >= 28 && m_playerSlashFrames <= 38)
     {
-        const float kSlashDashSpeed = 108.0f;
         const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
-        move = forward * kSlashDashSpeed;
+        move = forward;
+        settings.moveSpeed = 108.0f;
+        m_playerMover.SetSettings(settings);
     }
     else if (isMoving)
     {
