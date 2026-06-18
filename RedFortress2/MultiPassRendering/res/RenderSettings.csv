@@ -35,10 +35,10 @@ FogIntensity,1.0
 ,
 DepthBufferShadowEnable,0
 ShadowIntensity,0.25
-ShadowCoverage,0.05
+ShadowCoverage,0.1
 ShadowSaturationBoost,0.5
-ShadowPcfTapCount,1
-ShadowCompositeTapCount,1
+ShadowPcfTapCount,3
+ShadowCompositeTapCount,3
 ,
 SSAOEnable,0
 SSAOBlurEnable,1
@@ -83,8 +83,8 @@ StarBurstThreshold,0.6
 StarBurstDistanceFade,0.0
 ,
 DepthOfFieldMode,0
-DepthOfFieldFocalDistance,3.0
-DepthOfFieldStartNear,1.0
+DepthOfFieldFocalDistance,1.0
+DepthOfFieldStartNear,0.5
 DepthOfFieldMaxBlurDistance,8.0
 DepthOfFieldAutoActivationDistance,3.0
 ,
