@@ -24,8 +24,8 @@ namespace
     const float kMinCameraDistance = 1.5f;
     const float kMaxCameraDistance = 20.0f;
     const float kCameraWheelZoomStep = 0.5f;
-    const int kSlashDurationFrames = 120;
-    const int kSlashAttackDelayFrames = 60;
+    const int kSlashDurationFrames = 60;
+    const int kSlashAttackDelayFrames = 30;
     const int kPlayerInvincibleDuration = 180;
     const int kRespawnInvincibleFrames = 180;
     const float kStompBounceVelocity = 3.0f;
@@ -216,7 +216,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_enemyManager.LoadForStage(m_render, initialStage.enemyCsvPath);
 
     const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
-                               initialStage.clearPosition.y - 1.0f,
+                                initialStage.clearPosition.y - 0.5f,
                                initialStage.clearPosition.z);
     m_goalMarkerMeshId = m_render.AddMesh(L"res\\model\\cube_red.x",
                                            goalPos,
@@ -726,7 +726,7 @@ void GameApp::UpdatePlayerByInput()
         m_playerAnimState = PlayerAnimState::Slash;
         if (m_playerMeshId >= 0)
         {
-            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.0f);
+            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 2.0f);
             m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerSlashAnimName);
         }
     }
@@ -1354,7 +1354,7 @@ void GameApp::LoadCurrentStageObjects()
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
     m_render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
 
-    const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 1.0f, stage.clearPosition.z);
+    const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 0.5f, stage.clearPosition.z);
     m_goalMarkerMeshId = m_render.AddMesh(L"res\\model\\cube_red.x",
                                           goalPos,
                                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
