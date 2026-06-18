@@ -215,6 +215,14 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
     m_enemyManager.LoadForStage(m_render, initialStage.enemyCsvPath);
 
+    const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
+                               initialStage.clearPosition.y - 1.0f,
+                               initialStage.clearPosition.z);
+    m_goalMarkerMeshId = m_render.AddMesh(L"res\\model\\cube_red.x",
+                                           goalPos,
+                                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                           1.0f);
+
     InputDevice::Initialize(m_hInstance, m_hWnd);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible);
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);

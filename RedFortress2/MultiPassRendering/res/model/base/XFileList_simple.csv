@@ -17,5 +17,4 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 1717,../cube_white.x,0,1,-6,0,0,0,1,normal
 1718,../cube_white.x,5,1,-10,0,0,0,1,normal
 1719,../cube_white.x,10,1,-8,0,0,0,1,normal
-1720,../cube_white_big.x,0,10,0,0,0,0,1,normal
 1721,..\Skydome3D\Skydome.blend.x, 0, 0, 0, 0, 0, 0, 1, normal
