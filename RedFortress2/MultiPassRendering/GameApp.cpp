@@ -747,8 +747,8 @@ void GameApp::UpdatePlayerByInput()
     const bool isRunning = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LSHIFT);
 
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
-    const float walkSpeed = 1.5f;
-    const float runSpeed = 4.5f;
+    const float walkSpeed = 2.25f;
+    const float runSpeed = 6.75f;
     settings.moveSpeed = isRunning ? runSpeed : walkSpeed;
     m_playerMover.SetSettings(settings);
 
@@ -904,7 +904,7 @@ void GameApp::InitializePlayerPhysics()
     settings.radius = 0.3f;
     settings.height = 1.7f;
     settings.collisionCenterY = 0.85f;
-    settings.moveSpeed = 6.0f;
+    settings.moveSpeed = 9.0f;
     settings.groundAcceleration = 18.0f;
     settings.airAcceleration = 8.0f;
     settings.jumpVelocity = 5.0f;

@@ -102,7 +102,7 @@ private:
     PhysicsLib::CameraMover m_cameraMover;
     float m_cameraYaw = 0.0f;
     float m_cameraPitch = D3DXToRadian(18.0f);
-    float m_cameraDistance = 6.0f;
+    float m_cameraDistance = 7.0f;
     float m_playerYaw = 0.0f;
     PlayerAnimState m_playerAnimState = PlayerAnimState::Idle;
     int m_playerSlashFrames = 0;
