@@ -21,8 +21,6 @@ MotionBlurCameraSampleCount,13
 CameraNear,0.1
 CameraFar,30000.0
 RenderQuality,LOW
-GBufferNear,0.1
-GBufferFar,30000.0
 ,
 SSSEnable,0
 SSSIntensity,1.0
