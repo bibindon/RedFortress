@@ -744,18 +744,24 @@ void GameApp::UpdatePlayerByInput()
     }
 
     const bool isMoving  = (localMove.x != 0.0f || localMove.z != 0.0f);
-    const bool isRunning = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LSHIFT);
+    const bool isWalking = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LSHIFT);
 
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
     const float walkSpeed = 2.25f;
     const float runSpeed = 6.75f;
-    settings.moveSpeed = isRunning ? walkSpeed : runSpeed;
+    settings.moveSpeed = isWalking ? walkSpeed : runSpeed;
     m_playerMover.SetSettings(settings);
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
     if (m_playerKnockbackFrames > 0)
     {
         move = m_playerKnockbackDir * kKnockbackSpeed;
+    }
+    else if (m_playerSlashFrames >= 30 && m_playerSlashFrames <= 40)
+    {
+        const float kSlashDashSpeed = 108.0f;
+        const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+        move = forward * kSlashDashSpeed;
     }
     else if (isMoving)
     {
@@ -791,8 +797,8 @@ void GameApp::UpdatePlayerByInput()
         }
         else
         {
-            if (isRunning)      nextState = PlayerAnimState::Run;
-            else if (isMoving)  nextState = PlayerAnimState::Walk;
+            if (isWalking)       nextState = PlayerAnimState::Walk;
+            else if (isMoving)   nextState = PlayerAnimState::Run;
             else                nextState = PlayerAnimState::Idle;
         }
 
