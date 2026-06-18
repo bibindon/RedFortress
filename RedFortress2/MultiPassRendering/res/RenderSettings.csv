@@ -83,10 +83,10 @@ StarBurstThreshold,0.6
 StarBurstDistanceFade,0.0
 ,
 DepthOfFieldMode,0
-DepthOfFieldFocalDistance,1.0
+DepthOfFieldFocalDistance,3.0
 DepthOfFieldStartNear,0.5
 DepthOfFieldMaxBlurDistance,8.0
-DepthOfFieldAutoActivationDistance,3.0
+DepthOfFieldAutoActivationDistance,1.0
 ,
 ModelLoadScale,1.0
 ,
