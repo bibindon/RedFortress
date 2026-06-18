@@ -1057,6 +1057,7 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
     case WM_INITDIALOG:
         SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_SETCHECK,
                     m_remoteDesktopMode ? BST_CHECKED : BST_UNCHECKED, 0);
+        SetDlgItemText(hDlg, IDC_EDIT_CAMERA_DIST, std::to_wstring(m_cameraDistance).c_str());
         PopulateStageCombo(hDlg);
         m_stageEditor.Initialize(&m_render, &m_stageManager, &m_enemyManager, &m_playerMover, &m_playerYaw);
         m_stageEditor.OnInitDialog(hDlg);
@@ -1091,6 +1092,25 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
                 if (!enemy.IsDead())
                 {
                     enemy.TakeDamage(m_render, 999);
+                }
+            }
+            return TRUE;
+
+        case IDC_EDIT_CAMERA_DIST:
+            if (HIWORD(wParam) == EN_CHANGE)
+            {
+                wchar_t buf[32] = {};
+                GetDlgItemText(hDlg, IDC_EDIT_CAMERA_DIST, buf, 32);
+                float dist = static_cast<float>(_wtof(buf));
+                if (dist >= kMinCameraDistance && dist <= kMaxCameraDistance)
+                {
+                    m_cameraDistance = dist;
+                    D3DXVECTOR3 lookAt = m_render.GetLookAtPos();
+                    float hDist = m_cameraDistance * cosf(m_cameraPitch);
+                    D3DXVECTOR3 offset(sinf(m_cameraYaw) * hDist,
+                                        sinf(m_cameraPitch) * m_cameraDistance,
+                                        -cosf(m_cameraYaw) * hDist);
+                    m_render.SetCamera(lookAt + offset, lookAt);
                 }
             }
             return TRUE;
@@ -1360,6 +1380,7 @@ void GameApp::LoadCurrentStageObjects()
     if (m_playerMeshId >= 0)
     {
         m_render.StopMeshMixSkinAnimBlink(m_playerMeshId);
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerIdleAnimName);
     }
     m_player.ResetHp();
     m_hpBar.Reset();

@@ -34,6 +34,7 @@
 #define IDC_EDIT_END_Z                 1028
 #define IDC_EDIT_DURATION              1029
 #define IDC_BUTTON_KILL_ALL_ENEMIES    1030
+#define IDC_EDIT_CAMERA_DIST          1031
 
 // Next default values for new objects
 //
