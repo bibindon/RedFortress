@@ -163,7 +163,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     rect.left = 0;
 
     m_hWnd = CreateWindow(_T("Window1"),
-                          _T("Hello DirectX9 World !!"),
+                          _T("ホシガール"),
                           WS_OVERLAPPEDWINDOW,
                           CW_USEDEFAULT,
                           CW_USEDEFAULT,
