@@ -25,6 +25,7 @@
 #define IDC_RADIO_EDIT_ENEMY            1019
 #define IDC_COMBO_ENEMY_TYPE            1020
 #define IDC_STATIC_ENEMY_TYPE           1021
+#define IDC_CHECK_MOVING               1022
 
 // Next default values for new objects
 //

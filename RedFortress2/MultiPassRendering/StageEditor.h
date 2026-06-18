@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <string>
+#include <unordered_set>
 
 class StageManager;
 class EnemyManager;
@@ -66,4 +67,6 @@ private:
     void InitEnemyTypeCombo(HWND hDlg);
     std::wstring GetStageFolderPath() const;
     bool IsPathUnderStageFolder(const std::wstring& filePath, const std::wstring& stageFolder) const;
+
+    std::unordered_set<int> m_movingRenderIds;
 };

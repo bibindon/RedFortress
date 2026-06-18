@@ -317,6 +317,12 @@ void StageEditor::OnPlaceMesh(HWND hDlg)
             D3DXVECTOR3(1.0f, 1.0f, 1.0f));
     }
 
+    HWND hCheckMoving = GetDlgItem(hDlg, IDC_CHECK_MOVING);
+    if (hCheckMoving != NULL && SendMessage(hCheckMoving, BM_GETCHECK, 0, 0) == BST_CHECKED)
+    {
+        m_movingRenderIds.insert(renderId);
+    }
+
     PopulateList(hDlg);
 }
 
@@ -344,6 +350,7 @@ void StageEditor::OnDeleteMesh(HWND hDlg)
 
     const int renderId = static_cast<int>(lvi.lParam);
     m_render->RemoveMeshMix(renderId);
+    m_movingRenderIds.erase(renderId);
     PopulateList(hDlg);
 }
 
@@ -704,13 +711,81 @@ void StageEditor::OnSave(HWND hDlg)
             row.push_back(L"0");
             row.push_back(std::to_wstring(model.scale));
             row.push_back(L"Collision");
-            row.push_back(L"n");
+            row.push_back(m_movingRenderIds.count(model.renderId) ? L"y" : L"n");
             row.push_back(L"n");
             physicsCsv.push_back(row);
             ++physicsId;
         }
 
         csv::Write(physicsFilePath, physicsCsv);
+
+        const std::wstring moveFilePath = stageFolder + L"\\XFileListMove." + timeStr + L".csv";
+
+        std::vector<std::vector<std::wstring>> moveCsv;
+        std::vector<std::wstring> moveHeader;
+        moveHeader.push_back(L"ID");
+        moveHeader.push_back(L"RenderID");
+        moveHeader.push_back(L"PhysicsID");
+        moveHeader.push_back(L"PosX");
+        moveHeader.push_back(L"PosY");
+        moveHeader.push_back(L"PosZ");
+        moveHeader.push_back(L"RotX");
+        moveHeader.push_back(L"RotY");
+        moveHeader.push_back(L"RotZ");
+        moveHeader.push_back(L"Scale");
+        moveHeader.push_back(L"StartX");
+        moveHeader.push_back(L"StartY");
+        moveHeader.push_back(L"StartZ");
+        moveHeader.push_back(L"EndX");
+        moveHeader.push_back(L"EndY");
+        moveHeader.push_back(L"EndZ");
+        moveHeader.push_back(L"Duration");
+        moveCsv.push_back(moveHeader);
+
+        int moveId = 1;
+        for (const auto& model : models)
+        {
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+            {
+                continue;
+            }
+
+            if (!IsPathUnderStageFolder(model.filePath, stageFolder))
+            {
+                continue;
+            }
+
+            if (!m_movingRenderIds.count(model.renderId))
+            {
+                continue;
+            }
+
+            D3DXVECTOR3 rot = m_render->GetMeshMixRot(model.renderId);
+            const float rotYDeg = rot.y * 180.0f / D3DX_PI;
+
+            std::vector<std::wstring> row;
+            row.push_back(std::to_wstring(moveId));
+            row.push_back(std::to_wstring(moveId));
+            row.push_back(std::to_wstring(moveId));
+            row.push_back(std::to_wstring(model.pos.x));
+            row.push_back(std::to_wstring(model.pos.y));
+            row.push_back(std::to_wstring(model.pos.z));
+            row.push_back(L"0");
+            row.push_back(std::to_wstring(rotYDeg));
+            row.push_back(L"0");
+            row.push_back(std::to_wstring(model.scale));
+            row.push_back(std::to_wstring(model.pos.x));
+            row.push_back(std::to_wstring(model.pos.y));
+            row.push_back(std::to_wstring(model.pos.z));
+            row.push_back(std::to_wstring(model.pos.x));
+            row.push_back(std::to_wstring(model.pos.y));
+            row.push_back(std::to_wstring(model.pos.z));
+            row.push_back(L"5");
+            moveCsv.push_back(row);
+            ++moveId;
+        }
+
+        csv::Write(moveFilePath, moveCsv);
     }
     else
     {
