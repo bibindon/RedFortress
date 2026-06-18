@@ -307,6 +307,16 @@ void StageEditor::OnPlaceMesh(HWND hDlg)
         return;
     }
 
+    const int physicsId = PhysicsLib::PhysicsLib::Load(
+        m_selectedXFilePath.c_str(),
+        PhysicsLib::PhysicsLib::ObjectType::Slide,
+        0.5f);
+    if (physicsId >= 0)
+    {
+        PhysicsLib::PhysicsLib::SetTransform(physicsId, pos, rot,
+            D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+    }
+
     PopulateList(hDlg);
 }
 
@@ -638,6 +648,69 @@ void StageEditor::OnSave(HWND hDlg)
         }
 
         csv::Write(filePath, csvData);
+
+        const std::wstring physicsFilePath = stageFolder + L"\\XFileListPhysics." + timeStr + L".csv";
+
+        std::vector<std::vector<std::wstring>> physicsCsv;
+        std::vector<std::wstring> physicsHeader;
+        physicsHeader.push_back(L"ID");
+        physicsHeader.push_back(L"FileName");
+        physicsHeader.push_back(L"PosX");
+        physicsHeader.push_back(L"PosY");
+        physicsHeader.push_back(L"PosZ");
+        physicsHeader.push_back(L"RotX");
+        physicsHeader.push_back(L"RotY");
+        physicsHeader.push_back(L"RotZ");
+        physicsHeader.push_back(L"Scale");
+        physicsHeader.push_back(L"Type");
+        physicsHeader.push_back(L"Move");
+        physicsHeader.push_back(L"Instancing");
+        physicsCsv.push_back(physicsHeader);
+
+        int physicsId = 1;
+        for (const auto& model : models)
+        {
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+            {
+                continue;
+            }
+
+            if (!IsPathUnderStageFolder(model.filePath, stageFolder))
+            {
+                continue;
+            }
+
+            std::wstring relativePath = model.filePath;
+            if (relativePath.find(stageFolder) == 0)
+            {
+                relativePath = relativePath.substr(stageFolder.length());
+                if (!relativePath.empty() && (relativePath[0] == L'\\' || relativePath[0] == L'/'))
+                {
+                    relativePath = relativePath.substr(1);
+                }
+            }
+
+            D3DXVECTOR3 rot = m_render->GetMeshMixRot(model.renderId);
+            const float rotYDeg = rot.y * 180.0f / D3DX_PI;
+
+            std::vector<std::wstring> row;
+            row.push_back(std::to_wstring(physicsId));
+            row.push_back(relativePath);
+            row.push_back(std::to_wstring(model.pos.x));
+            row.push_back(std::to_wstring(model.pos.y));
+            row.push_back(std::to_wstring(model.pos.z));
+            row.push_back(L"0");
+            row.push_back(std::to_wstring(rotYDeg));
+            row.push_back(L"0");
+            row.push_back(std::to_wstring(model.scale));
+            row.push_back(L"Collision");
+            row.push_back(L"n");
+            row.push_back(L"n");
+            physicsCsv.push_back(row);
+            ++physicsId;
+        }
+
+        csv::Write(physicsFilePath, physicsCsv);
     }
     else
     {
