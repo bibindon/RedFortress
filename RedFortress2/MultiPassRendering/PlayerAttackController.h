@@ -4,7 +4,8 @@
 
 enum class PlayerAttackType
 {
-    Slash
+    WeakAttack,
+    StrongAttack
 };
 
 struct PlayerAttackDefinition
@@ -38,7 +39,7 @@ public:
 private:
     PlayerAttackDefinition GetDefinition(PlayerAttackType attackType) const;
 
-    PlayerAttackType m_currentAttackType = PlayerAttackType::Slash;
+    PlayerAttackType m_currentAttackType = PlayerAttackType::WeakAttack;
     PlayerAttackDefinition m_currentDefinition;
     int m_remainingFrames = 0;
     int m_hitDelayFrames = -1;

@@ -706,11 +706,17 @@ void GameApp::UpdatePlayerByInput()
 
     const bool shiftPressed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT)
         || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT);
-    if (shiftPressed && InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    PlayerAttackType requestedAttackType = PlayerAttackType::WeakAttack;
+    if (shiftPressed)
     {
-        if (m_playerAttackController.TryStart(PlayerAttackType::Slash))
+        requestedAttackType = PlayerAttackType::StrongAttack;
+    }
+
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        if (m_playerAttackController.TryStart(requestedAttackType))
         {
-            m_playerAnimState = PlayerAnimState::Slash;
+            m_playerAnimState = PlayerAnimState::Attack;
             if (m_playerMeshId >= 0)
             {
                 const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
@@ -780,7 +786,7 @@ void GameApp::UpdatePlayerByInput()
         PlayerAnimState nextState;
         if (m_playerAttackController.IsAttacking())
         {
-            nextState = PlayerAnimState::Slash;
+            nextState = PlayerAnimState::Attack;
         }
         else if (isJumping)
         {

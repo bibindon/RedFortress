@@ -3,7 +3,7 @@
 #include <d3dx9.h>
 
 PlayerAttackController::PlayerAttackController()
-    : m_currentDefinition(GetDefinition(PlayerAttackType::Slash))
+    : m_currentDefinition(GetDefinition(PlayerAttackType::WeakAttack))
 {
 }
 
@@ -90,7 +90,19 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
 
     switch (attackType)
     {
-    case PlayerAttackType::Slash:
+    case PlayerAttackType::WeakAttack:
+        definition.durationFrames = 57;
+        definition.hitDelayFrames = 28;
+        definition.damage = 5;
+        definition.range = 2.0f;
+        definition.halfAngleRadians = D3DXToRadian(45.0f);
+        definition.moveSpeed = 108.0f;
+        definition.moveStartRemainingFrames = 28;
+        definition.moveEndRemainingFrames = 38;
+        definition.animationName = L"slash";
+        definition.animationSpeed = 2.0f;
+        break;
+    case PlayerAttackType::StrongAttack:
         definition.durationFrames = 57;
         definition.hitDelayFrames = 28;
         definition.damage = 5;
