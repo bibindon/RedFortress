@@ -749,7 +749,7 @@ void GameApp::UpdatePlayerByInput()
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
     const float walkSpeed = 2.25f;
     const float runSpeed = 6.75f;
-    settings.moveSpeed = isRunning ? runSpeed : walkSpeed;
+    settings.moveSpeed = isRunning ? walkSpeed : runSpeed;
     m_playerMover.SetSettings(settings);
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
