@@ -1085,6 +1085,16 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
             HealPlayerHp(10);
             return TRUE;
 
+        case IDC_BUTTON_KILL_ALL_ENEMIES:
+            for (auto& enemy : m_enemyManager.GetEnemies())
+            {
+                if (!enemy.IsDead())
+                {
+                    enemy.TakeDamage(m_render, 999);
+                }
+            }
+            return TRUE;
+
         case IDC_BUTTON_STAGE_GO:
             MoveToSelectedStage(hDlg);
             return TRUE;
@@ -1178,7 +1188,20 @@ void GameApp::UpdateStageClear()
 
 bool GameApp::IsStageClearReached()
 {
-    return m_stageManager.IsClearReached(m_playerMover.GetPosition());
+    if (!m_stageManager.IsClearReached(m_playerMover.GetPosition()))
+    {
+        return false;
+    }
+
+    for (const auto& enemy : m_enemyManager.GetEnemies())
+    {
+        if (!enemy.IsDead())
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void GameApp::DamagePlayerHp(int amount)
