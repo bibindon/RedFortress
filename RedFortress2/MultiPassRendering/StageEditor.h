@@ -2,7 +2,8 @@
 
 #include <Windows.h>
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
+#include <d3dx9.h>
 
 class StageManager;
 class EnemyManager;
@@ -68,5 +69,11 @@ private:
     std::wstring GetStageFolderPath() const;
     bool IsPathUnderStageFolder(const std::wstring& filePath, const std::wstring& stageFolder) const;
 
-    std::unordered_set<int> m_movingRenderIds;
+    struct MovingPlatformInfo
+    {
+        D3DXVECTOR3 startPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        D3DXVECTOR3 endPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        float duration = 5.0f;
+    };
+    std::unordered_map<int, MovingPlatformInfo> m_movingPlatformInfos;
 };

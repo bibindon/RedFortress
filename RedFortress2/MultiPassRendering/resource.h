@@ -26,6 +26,13 @@
 #define IDC_COMBO_ENEMY_TYPE            1020
 #define IDC_STATIC_ENEMY_TYPE           1021
 #define IDC_CHECK_MOVING               1022
+#define IDC_EDIT_START_X               1023
+#define IDC_EDIT_START_Y               1024
+#define IDC_EDIT_START_Z               1025
+#define IDC_EDIT_END_X                 1026
+#define IDC_EDIT_END_Y                 1027
+#define IDC_EDIT_END_Z                 1028
+#define IDC_EDIT_DURATION              1029
 
 // Next default values for new objects
 //

@@ -320,7 +320,21 @@ void StageEditor::OnPlaceMesh(HWND hDlg)
     HWND hCheckMoving = GetDlgItem(hDlg, IDC_CHECK_MOVING);
     if (hCheckMoving != NULL && SendMessage(hCheckMoving, BM_GETCHECK, 0, 0) == BST_CHECKED)
     {
-        m_movingRenderIds.insert(renderId);
+        MovingPlatformInfo info;
+        info.startPos = pos;
+        info.endPos = pos;
+        info.duration = 5.0f;
+
+        wchar_t buf[32] = {};
+        if (GetDlgItemText(hDlg, IDC_EDIT_START_X, buf, 32) > 0) info.startPos.x = static_cast<float>(_wtof(buf));
+        if (GetDlgItemText(hDlg, IDC_EDIT_START_Y, buf, 32) > 0) info.startPos.y = static_cast<float>(_wtof(buf));
+        if (GetDlgItemText(hDlg, IDC_EDIT_START_Z, buf, 32) > 0) info.startPos.z = static_cast<float>(_wtof(buf));
+        if (GetDlgItemText(hDlg, IDC_EDIT_END_X, buf, 32) > 0) info.endPos.x = static_cast<float>(_wtof(buf));
+        if (GetDlgItemText(hDlg, IDC_EDIT_END_Y, buf, 32) > 0) info.endPos.y = static_cast<float>(_wtof(buf));
+        if (GetDlgItemText(hDlg, IDC_EDIT_END_Z, buf, 32) > 0) info.endPos.z = static_cast<float>(_wtof(buf));
+        if (GetDlgItemText(hDlg, IDC_EDIT_DURATION, buf, 32) > 0) info.duration = static_cast<float>(_wtof(buf));
+
+        m_movingPlatformInfos[renderId] = info;
     }
 
     PopulateList(hDlg);
@@ -350,7 +364,7 @@ void StageEditor::OnDeleteMesh(HWND hDlg)
 
     const int renderId = static_cast<int>(lvi.lParam);
     m_render->RemoveMeshMix(renderId);
-    m_movingRenderIds.erase(renderId);
+    m_movingPlatformInfos.erase(renderId);
     PopulateList(hDlg);
 }
 
@@ -711,7 +725,7 @@ void StageEditor::OnSave(HWND hDlg)
             row.push_back(L"0");
             row.push_back(std::to_wstring(model.scale));
             row.push_back(L"Collision");
-            row.push_back(m_movingRenderIds.count(model.renderId) ? L"y" : L"n");
+            row.push_back(m_movingPlatformInfos.count(model.renderId) ? L"y" : L"n");
             row.push_back(L"n");
             physicsCsv.push_back(row);
             ++physicsId;
@@ -755,11 +769,12 @@ void StageEditor::OnSave(HWND hDlg)
                 continue;
             }
 
-            if (!m_movingRenderIds.count(model.renderId))
+            if (!m_movingPlatformInfos.count(model.renderId))
             {
                 continue;
             }
 
+            const MovingPlatformInfo& moveInfo = m_movingPlatformInfos.at(model.renderId);
             D3DXVECTOR3 rot = m_render->GetMeshMixRot(model.renderId);
             const float rotYDeg = rot.y * 180.0f / D3DX_PI;
 
@@ -774,13 +789,13 @@ void StageEditor::OnSave(HWND hDlg)
             row.push_back(std::to_wstring(rotYDeg));
             row.push_back(L"0");
             row.push_back(std::to_wstring(model.scale));
-            row.push_back(std::to_wstring(model.pos.x));
-            row.push_back(std::to_wstring(model.pos.y));
-            row.push_back(std::to_wstring(model.pos.z));
-            row.push_back(std::to_wstring(model.pos.x));
-            row.push_back(std::to_wstring(model.pos.y));
-            row.push_back(std::to_wstring(model.pos.z));
-            row.push_back(L"5");
+            row.push_back(std::to_wstring(moveInfo.startPos.x));
+            row.push_back(std::to_wstring(moveInfo.startPos.y));
+            row.push_back(std::to_wstring(moveInfo.startPos.z));
+            row.push_back(std::to_wstring(moveInfo.endPos.x));
+            row.push_back(std::to_wstring(moveInfo.endPos.y));
+            row.push_back(std::to_wstring(moveInfo.endPos.z));
+            row.push_back(std::to_wstring(moveInfo.duration));
             moveCsv.push_back(row);
             ++moveId;
         }
@@ -825,6 +840,31 @@ void StageEditor::OnListSelChange(HWND hDlg)
     SetDlgItemText(hDlg, IDC_EDIT_POS_Y, std::to_wstring(pos.y).c_str());
     SetDlgItemText(hDlg, IDC_EDIT_POS_Z, std::to_wstring(pos.z).c_str());
     SetDlgItemText(hDlg, IDC_EDIT_ROT_Y, std::to_wstring(rotYDeg).c_str());
+
+    const auto moveIt = m_movingPlatformInfos.find(renderId);
+    if (moveIt != m_movingPlatformInfos.end())
+    {
+        const MovingPlatformInfo& info = moveIt->second;
+        SetDlgItemText(hDlg, IDC_EDIT_START_X, std::to_wstring(info.startPos.x).c_str());
+        SetDlgItemText(hDlg, IDC_EDIT_START_Y, std::to_wstring(info.startPos.y).c_str());
+        SetDlgItemText(hDlg, IDC_EDIT_START_Z, std::to_wstring(info.startPos.z).c_str());
+        SetDlgItemText(hDlg, IDC_EDIT_END_X, std::to_wstring(info.endPos.x).c_str());
+        SetDlgItemText(hDlg, IDC_EDIT_END_Y, std::to_wstring(info.endPos.y).c_str());
+        SetDlgItemText(hDlg, IDC_EDIT_END_Z, std::to_wstring(info.endPos.z).c_str());
+        SetDlgItemText(hDlg, IDC_EDIT_DURATION, std::to_wstring(info.duration).c_str());
+        SendMessage(GetDlgItem(hDlg, IDC_CHECK_MOVING), BM_SETCHECK, BST_CHECKED, 0);
+    }
+    else
+    {
+        SetDlgItemText(hDlg, IDC_EDIT_START_X, L"");
+        SetDlgItemText(hDlg, IDC_EDIT_START_Y, L"");
+        SetDlgItemText(hDlg, IDC_EDIT_START_Z, L"");
+        SetDlgItemText(hDlg, IDC_EDIT_END_X, L"");
+        SetDlgItemText(hDlg, IDC_EDIT_END_Y, L"");
+        SetDlgItemText(hDlg, IDC_EDIT_END_Z, L"");
+        SetDlgItemText(hDlg, IDC_EDIT_DURATION, L"");
+        SendMessage(GetDlgItem(hDlg, IDC_CHECK_MOVING), BM_SETCHECK, BST_UNCHECKED, 0);
+    }
 }
 
 std::wstring StageEditor::GetStageFolderPath() const
