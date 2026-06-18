@@ -748,10 +748,6 @@ void GameApp::UpdatePlayerByInput()
     if (m_playerKnockbackFrames > 0)
     {
         move = m_playerKnockbackDir * kKnockbackSpeed;
-        const float targetYaw = atan2f(-move.x, -move.z);
-        m_playerYaw = MoveAngleToward(m_playerYaw,
-                                      targetYaw,
-                                      kPlayerTurnRadiansPerSecond * kTargetFrameSeconds);
     }
     else if (isMoving)
     {
