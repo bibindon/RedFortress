@@ -110,7 +110,7 @@ GodRayEnable,0
 GodRayLightColorR,1.0
 GodRayLightColorG,0.9
 GodRayLightColorB,0.8
-GodRayIntensity,0.2
+GodRayIntensity,0.1
 GodRayVirtualProximityStrength,1.5
 GodRayLightPosX,100.0
 GodRayLightPosY,10.0
