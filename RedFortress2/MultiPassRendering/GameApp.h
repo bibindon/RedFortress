@@ -70,7 +70,8 @@ private:
     void UpdateStageClear();
     bool IsStageClearReached();
     bool StartNextStage();
-    std::wstring GetStageStoryScriptPath(const std::wstring& stageId) const;
+    std::wstring GetStageStoryScriptPath(const std::wstring& stageId,
+                                         const std::wstring& timing) const;
     bool StartStageAfterClear();
     void LoadCurrentStageObjects();
     void DamagePlayerHp(int amount);
@@ -80,6 +81,7 @@ private:
     void PopulateStageCombo(HWND hDlg);
     std::wstring BuildStageComboText(const StageManager::StageData& stage);
     bool StartStageByIndex(std::size_t stageIndex);
+    bool StartStageByIndexImmediate(std::size_t stageIndex);
     void MoveToSelectedStage(HWND hDlg);
     void RefreshTitleContinueCommand();
     void DrawTitleScreen();
@@ -145,6 +147,7 @@ private:
     bool m_playerDeathPending = false;
     bool m_stageClearProcessed = false;
     bool m_startStageAfterSlideShow = false;
+    std::size_t m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);
     StageEditor m_stageEditor;
     D3DXVECTOR3 m_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

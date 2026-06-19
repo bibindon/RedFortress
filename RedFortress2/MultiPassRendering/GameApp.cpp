@@ -2,6 +2,8 @@
 
 #include "resource.h"
 #include "GameAudio.h"
+#include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
+#include "../../RedFortressRender/Render/Util.h"
 
 namespace
 {
@@ -446,7 +448,13 @@ void GameApp::Run()
         {
             if (!m_slideShowManager.IsActive())
             {
-                if (m_startStageAfterSlideShow)
+                if (m_pendingStageIndexAfterSlideShow != static_cast<std::size_t>(-1))
+                {
+                    const std::size_t stageIndex = m_pendingStageIndexAfterSlideShow;
+                    m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);
+                    StartStageByIndexImmediate(stageIndex);
+                }
+                else if (m_startStageAfterSlideShow)
                 {
                     m_startStageAfterSlideShow = false;
                     StartStageAfterClear();
@@ -464,7 +472,13 @@ void GameApp::Run()
                 m_slideShowManager.ProcessInput();
                 if (m_slideShowManager.Update())
                 {
-                    if (m_startStageAfterSlideShow)
+                    if (m_pendingStageIndexAfterSlideShow != static_cast<std::size_t>(-1))
+                    {
+                        const std::size_t stageIndex = m_pendingStageIndexAfterSlideShow;
+                        m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);
+                        StartStageByIndexImmediate(stageIndex);
+                    }
+                    else if (m_startStageAfterSlideShow)
                     {
                         m_startStageAfterSlideShow = false;
                         StartStageAfterClear();
@@ -1254,6 +1268,27 @@ std::wstring GameApp::BuildStageComboText(const StageManager::StageData& stage)
 
 bool GameApp::StartStageByIndex(std::size_t stageIndex)
 {
+    if (stageIndex >= m_stageManager.GetStageCount())
+    {
+        return false;
+    }
+
+    const StageManager::StageData& stage = m_stageManager.GetStage(stageIndex);
+    const std::wstring storyScriptPath = GetStageStoryScriptPath(stage.id, L"Before");
+    if (!storyScriptPath.empty())
+    {
+        m_pendingStageIndexAfterSlideShow = stageIndex;
+        m_slideShowManager.Start(storyScriptPath);
+        m_slideShowManager.SetStopOnFinish(false);
+        m_gameState = GameState::SlideShow;
+        return true;
+    }
+
+    return StartStageByIndexImmediate(stageIndex);
+}
+
+bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
+{
     if (!m_stageManager.MoveToStage(stageIndex))
     {
         return false;
@@ -1448,7 +1483,7 @@ void GameApp::UpdateStageClear()
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
         InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
     {
-        const std::wstring storyScriptPath = GetStageStoryScriptPath(clearedStageId);
+        const std::wstring storyScriptPath = GetStageStoryScriptPath(clearedStageId, L"After");
         if (!storyScriptPath.empty())
         {
             m_slideShowManager.Start(storyScriptPath);
@@ -1467,27 +1502,29 @@ void GameApp::UpdateStageClear()
     m_render.Draw();
 }
 
-std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId) const
+std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId,
+                                               const std::wstring& timing) const
 {
-    if (stageId == L"1-4")
+    std::vector<std::vector<std::wstring>> csvData;
+    try
     {
-        return L"res\\script\\story_after_1_4.csv";
+        csvData = csv::Read(NSRender::Util::GetExeDir() + L"res\\script\\StoryEvents.csv");
     }
-    if (stageId == L"2-4")
+    catch (...)
     {
-        return L"res\\script\\story_after_2_4.csv";
+        return std::wstring();
     }
-    if (stageId == L"3-4")
+
+    for (const auto& row : csvData)
     {
-        return L"res\\script\\story_after_3_4.csv";
-    }
-    if (stageId == L"4-1")
-    {
-        return L"res\\script\\story_after_4_1.csv";
-    }
-    if (stageId == L"4-3")
-    {
-        return L"res\\script\\story_after_4_3.csv";
+        if (row.size() < 4 || row[0] == L"EventId")
+        {
+            continue;
+        }
+        if (row[1] == stageId && row[2] == timing)
+        {
+            return row[3];
+        }
     }
     return std::wstring();
 }

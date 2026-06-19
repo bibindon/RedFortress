@@ -1,4 +1,24 @@
 ﻿PageNo,Image,Resolution,Message,CharLeft,CharLeftResolution,CharLeftFlip,CharLeftScale,CharCenter,CharCenterResolution,CharCenterFlip,CharCenterScale,CharRight,CharRightResolution,CharRightFlip,CharRightScale
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　森の中は、昼間よりもずっと暗かった。
+
+　黒く染まったかなたが通った場所には、草が倒れ、木の幹に爪痕のようなものが残っていた。
+　白い亡霊の力を借り、マリンはその気配を追って進む。
+
+　やがて、森の奥の開けた場所に出た。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒いかなたが、そこに立っていた。
+　その背後に、ホシガールの影が重なっている。
+
+「観念しろ！」
+
+　マリンは黄金の十字架を構えた。
+
+　ホシガールが笑った。
+
+「この体、マリンさんより…その…動きやすいですね……」
+
+「ノンデリ発言だ！」
+
+　戦いが始まった。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 1,res\2D_Image\ending_bg_p01_forest_night.png,1600x900,"　ホシガールは速かった。
 　かなたの体の力を使い、木々を蹴って跳ぶ。
 　マリンは青い光をまとって追いかけ、黄金の十字架で攻撃を受け止める。",res\2D_Image\ending_chr_kanata_possessed_transparent.png,1600x900,false,1.00,,,,,,,,

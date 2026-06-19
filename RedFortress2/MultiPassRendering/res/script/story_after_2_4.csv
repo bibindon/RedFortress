@@ -1,17 +1,106 @@
-﻿PageNo,Image,Resolution,Message,CharLeft,CharLeftResolution,CharLeftFlip,CharLeftScale,CharCenter,CharCenterResolution,CharCenterFlip,CharCenterScale,CharRight,CharRightResolution,CharRightFlip,CharRightScale
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　洞窟の奥には、何者かに壊された古い祠があった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　そばの立札には、かすれた文字が残されている。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","『妖怪ホシガールをここに封――』『百年前、この祠が壊され――』","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","『人を喰らう妖怪は島民を襲い――』『討伐隊は山頂の祭壇に――』","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「百年前に、誰かが祠を壊して大変なことになったのね」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「あの～……」　祠の陰から、人の形をした影が現れた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「私は島の守護霊です。山頂の黄金の十字架を持ち帰ってください」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　新月になると十字架が現れ、それを狙う亡霊も現れるという。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「亡霊に襲われたら、船長はどうすればいいの？」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「そこは私が力を貸します」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　影はマリンの中へ入り、髪と服が黒く染まった。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　体の奥から、不思議な力が湧き上がってくる。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「その辺の棒を振れば、先からビームが出ます」","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「やった、魔法少女じゃん！」","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは木の棒を拾い、黒い光をまとわせた。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「なんか禍々しい姿になってない？」「それはマリンさんのせいでは……」「どういう意味！？」","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
+﻿"PageNo","Image","Resolution","Message","CharLeft","CharLeftResolution","CharLeftFlip","CharLeftScale","CharCenter","CharCenterResolution","CharCenterFlip","CharCenterScale","CharRight","CharRightResolution","CharRightFlip","CharRightScale"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　洞窟の中は、ひんやりとしていた。
+
+　外の空気が明るすぎたせいで、入り口から数歩進んだだけでも闇が濃く感じられる。
+　水滴が岩肌を伝い、奥の方でぽたり、ぽたりと音を立てていた。
+
+「ころさーん、これホラーゲームじゃない？」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ホラーゲームかもしれないね」
+
+「認めないで？」
+
+　マリンはライトを片手に、慎重に奥へ進んだ。
+
+　しばらく歩くと、空間が少し開けた。
+　そこには、小さな祠があった。
+
+　いや、正確には、祠だったものがあった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"3","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　木は腐り、石は欠け、しめ縄らしきものは千切れて地面に落ちている。
+　風化というより、何か大きな力で壊されたようにも見えた。
+
+「主人公に壊されるために用意されたかのような祠がある……」
+
+　マリンはライトを近づけた。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"4","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「でも、すでに壊れてるんだな」
+
+　祠の近くには、古い立札があった。
+　文字はかすれている。
+　ところどころ読めない部分もあったが、何とか意味は拾えた。
+
+『妖怪ホシガールをここに封――』
+
+『百年前、この祠が壊され――』","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"5","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","『人を喰らう妖怪は島民を襲い――』
+
+『討伐隊は山頂の祭壇に――』
+
+　マリンはゆっくりと読み上げ、それから腕を組んだ。
+
+「ここで百年前に、『お前、あの祠壊したんか』っていうお約束の出来事があったのね」
+
+　その時だった。
+
+「あの～……」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"6","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「うわぁああああ！　おばけ！」
+
+　マリンは飛び上がった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"7","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　祠の背後から、黒い人影が出てきた。
+　頭と胴体が丸くつながった、雪だるまのような形。
+　顔も服もなく、詳しい形状は分からない。
+　ただ、そこに人のようなものが立っている、ということだけが分かった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"8","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「お化けではありません……。私はこの島を守っている、守護霊です」
+
+「そ、そうなんすね」
+
+　マリンは一歩下がった。
+　相手の言い分を信じたわけではない。
+　だが、信じない場合どうすればいいのかも分からなかった。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"9","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「あの～、ちょっとお願い事があるのですが」
+
+「え……何ですか急に。初対面ですよね私たち」
+
+「この島の黄金が欲しくないですか？」
+
+　マリンは動きを止めた。
+
+「まあ、暇だから聞いてあげますよ」
+
+「この島の山頂に祭壇があるのは知っていると思います」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"10","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「うん」
+
+「新月の夜になると、祭壇に黄金の十字架が現れるのです」
+
+「おお！」
+
+　マリンの目がまた光った。
+
+「それを取りのぞいて欲しいのです」
+
+「え、いいんですか！？」
+
+「はい。むしろ、持って帰ってほしいです」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"11","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「なんと！　いや～、ちょうどそれを目当てにこの島に来てたんだよね～」
+
+「……」
+
+　黒い守護霊は、なぜか黙った。
+
+「いや……なんで？　理由を教えて？」
+
+「そ、その～……えっとぉ～」
+
+　黒い守護霊は、明らかに困っていた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"12","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「黄金の十字架が出現すると、黄金に惹かれて亡霊が現れるのです」
+
+「あ、それがホシガールってやつ？」
+
+「……あ、はい、そうなんです。よく分かりましたね」
+
+「だってここに書いてあるし」
+
+「そうでした……」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"13","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは少しだけ不安になった。
+　この守護霊、説明が下手である。
+　そして、ものすごく怪しい。
+
+　だが、黄金は欲しい。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
