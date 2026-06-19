@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "../../RedFortressRender/Render/Render.h"
 
+const std::wstring HpBar::kBackGaussImagePath = L"res\\2D_Image\\hp_back_gauss.png";
 const std::wstring HpBar::kBackImagePath = L"res\\2D_Image\\hp_back.png";
 const std::wstring HpBar::kFrontImagePath = L"res\\2D_Image\\hp_front.png";
 const std::wstring HpBar::kDamageImagePath = L"res\\2D_Image\\hp_damage.png";
@@ -152,6 +153,7 @@ void HpBar::Draw()
     const int damageSourceW = static_cast<int>(static_cast<float>(damageWidth) / scale + 0.5f);
     const int frontSourceW = static_cast<int>(static_cast<float>(frontWidth) / scale + 0.5f);
 
+    m_pRender->DrawImageAutoResizeSizedRect(kBackGaussImagePath, kPosX, kPosY, 0, 0, kSourceWidth, kSourceHeight, scale, 255);
     m_pRender->DrawImageAutoResizeSizedRect(kBackImagePath, kPosX, kPosY, 0, 0, kSourceWidth, kSourceHeight, scale, 255);
     m_pRender->DrawImageAutoResizeSizedRect(kDamageImagePath, kPosX, kPosY, 0, 0, damageSourceW, kSourceHeight, scale, 255);
     m_pRender->DrawImageAutoResizeSizedRect(kFrontImagePath, kPosX, kPosY, 0, 0, frontSourceW, kSourceHeight, scale, 255);

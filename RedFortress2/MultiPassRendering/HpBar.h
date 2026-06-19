@@ -42,6 +42,7 @@ private:
     bool m_damageAnimating = false;
     bool m_damageFollowFrontAfterHeal = false;
 
+    static const std::wstring kBackGaussImagePath;
     static const std::wstring kBackImagePath;
     static const std::wstring kFrontImagePath;
     static const std::wstring kDamageImagePath;
