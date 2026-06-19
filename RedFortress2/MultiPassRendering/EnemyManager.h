@@ -1,8 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "Enemy.h"
-#include <vector>
 #include <d3dx9.h>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace NSRender
 {
@@ -28,6 +30,10 @@ public:
 
 private:
     void Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw);
+    void RegisterEnemyTypes();
+    void RegisterEnemyType(const std::wstring& type,
+                           const std::wstring& folderName);
+    void AdjustMeshIdsAfterRemoval(int removedMeshId);
 
     std::vector<Enemy> m_enemies;
 
@@ -35,10 +41,14 @@ private:
     {
         std::wstring meshPath;
         std::wstring animCsvPath;
+        float scale = 1.0f;
+        int maxHp = 10;
+        float moveSpeed = 2.5f;
+        float viewDistance = 5.0f;
+        float contactRadius = 0.5f;
+        float height = 1.0f;
     };
 
-    EnemyTypeInfo GetTypeInfo(const std::wstring& type) const;
-
-    std::wstring m_wolfMeshPath = L"res\\model2\\separatedAnim\\wolfAnim.x";
-    std::wstring m_wolfAnimCsvPath = L"res\\model2\\separatedAnim\\wolfAnim.csv";
+    bool TryGetTypeInfo(const std::wstring& type, EnemyTypeInfo* typeInfo) const;
+    std::unordered_map<std::wstring, EnemyTypeInfo> m_typeInfoMap;
 };

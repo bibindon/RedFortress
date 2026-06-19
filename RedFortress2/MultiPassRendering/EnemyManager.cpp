@@ -1,4 +1,4 @@
-#include "EnemyManager.h"
+﻿#include "EnemyManager.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Camera.h"
@@ -48,6 +48,7 @@ namespace
 void EnemyManager::Initialize()
 {
     m_enemies.clear();
+    RegisterEnemyTypes();
 }
 
 void EnemyManager::Clear(NSRender::Render& render)
@@ -122,6 +123,7 @@ void EnemyManager::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos
                 render.RemoveMeshMixSkinAnim(meshId);
             }
             it = m_enemies.erase(it);
+            AdjustMeshIdsAfterRemoval(meshId);
         }
         else
         {
@@ -225,6 +227,7 @@ void EnemyManager::RemoveEnemy(NSRender::Render& render, std::size_t index)
     }
 
     m_enemies.erase(m_enemies.begin() + index);
+    AdjustMeshIdsAfterRemoval(meshId);
 }
 
 void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
@@ -260,24 +263,58 @@ void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
     csv::Write(csvPath, csvData);
 }
 
-EnemyManager::EnemyTypeInfo EnemyManager::GetTypeInfo(const std::wstring& type) const
+void EnemyManager::RegisterEnemyTypes()
 {
-    if (type == L"wolf")
+    m_typeInfoMap.clear();
+    RegisterEnemyType(L"wolf", L"separatedAnim");
+    RegisterEnemyType(L"enemy2", L"Enemy2");
+    RegisterEnemyType(L"enemy3", L"Enemy3");
+    RegisterEnemyType(L"enemy4", L"Enemy4");
+    RegisterEnemyType(L"enemy5", L"Enemy5");
+    RegisterEnemyType(L"enemy6", L"Enemy6");
+}
+
+void EnemyManager::RegisterEnemyType(const std::wstring& type,
+                                     const std::wstring& folderName)
+{
+    const std::wstring basePath = L"res\\model2\\" + folderName + L"\\";
+    EnemyTypeInfo info;
+    info.meshPath = basePath + L"wolfAnim.x";
+    info.animCsvPath = basePath + L"wolfAnim.csv";
+    m_typeInfoMap[type] = info;
+}
+
+bool EnemyManager::TryGetTypeInfo(const std::wstring& type,
+                                  EnemyTypeInfo* typeInfo) const
+{
+    if (typeInfo == nullptr)
     {
-        return { m_wolfMeshPath, m_wolfAnimCsvPath };
+        return false;
     }
 
-    return { m_wolfMeshPath, m_wolfAnimCsvPath };
+    const auto found = m_typeInfoMap.find(type);
+    if (found == m_typeInfoMap.end())
+    {
+        return false;
+    }
+
+    *typeInfo = found->second;
+    return true;
 }
 
 void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
 {
-    const EnemyTypeInfo info = GetTypeInfo(type);
+    EnemyTypeInfo info;
+    if (!TryGetTypeInfo(type, &info))
+    {
+        return;
+    }
+
     const int meshId = render.AddMeshMixSkinAnim(info.meshPath,
                                                  info.animCsvPath,
                                                  position,
                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                 1.0f,
+                                                 info.scale,
                                                  NSRender::AnimSetMap(),
                                                  -1.0f,
                                                  false,
@@ -289,6 +326,30 @@ void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, 
     }
 
     Enemy enemy;
-    enemy.Initialize(position, meshId, type, yaw);
+    enemy.Initialize(position,
+                     meshId,
+                     type,
+                     yaw,
+                     info.maxHp,
+                     info.moveSpeed,
+                     info.viewDistance,
+                     info.contactRadius,
+                     info.height);
     m_enemies.push_back(enemy);
+}
+
+void EnemyManager::AdjustMeshIdsAfterRemoval(const int removedMeshId)
+{
+    if (removedMeshId < 0)
+    {
+        return;
+    }
+
+    for (Enemy& enemy : m_enemies)
+    {
+        if (enemy.GetMeshId() > removedMeshId)
+        {
+            enemy.SetMeshId(enemy.GetMeshId() - 1);
+        }
+    }
 }

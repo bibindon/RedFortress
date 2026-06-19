@@ -1,2 +1,2 @@
-PosX,PosY,PosZ
--5.0,0.2,0.0
+﻿Type,PosX,PosY,PosZ,RotY
+enemy3,-5.0,0.2,0.0,0

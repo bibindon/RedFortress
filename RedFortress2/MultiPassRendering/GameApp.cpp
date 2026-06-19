@@ -249,6 +249,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
     InitializeCameraFromRenderSettings();
     UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
+    m_enemyManager.Initialize();
     m_enemyManager.LoadForStage(m_render, initialStage.enemyCsvPath);
 
     const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,

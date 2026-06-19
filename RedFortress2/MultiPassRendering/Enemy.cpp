@@ -38,12 +38,25 @@ Enemy::Enemy()
 {
 }
 
-void Enemy::Initialize(const D3DXVECTOR3& startPosition, int meshId, const std::wstring& type, float yaw)
+void Enemy::Initialize(const D3DXVECTOR3& startPosition,
+                       const int meshId,
+                       const std::wstring& type,
+                       const float yaw,
+                       const int maxHp,
+                       const float moveSpeed,
+                       const float viewDistance,
+                       const float contactRadius,
+                       const float height)
 {
     m_position = startPosition;
     m_meshId = meshId;
     m_type = type;
-    m_hp = 10;
+    m_maxHp = maxHp;
+    m_hp = m_maxHp;
+    m_moveSpeed = moveSpeed;
+    m_viewDistance = viewDistance;
+    m_contactRadius = contactRadius;
+    m_height = height;
     m_state = State::Idle;
     m_animState = AnimState::Idle;
     m_yaw = yaw;
@@ -224,7 +237,7 @@ int Enemy::GetHp() const
 
 int Enemy::GetMaxHp() const
 {
-    return 10;
+    return m_maxHp;
 }
 
 D3DXVECTOR3 Enemy::GetPosition() const
@@ -250,6 +263,11 @@ void Enemy::SetYaw(float yaw)
 int Enemy::GetMeshId() const
 {
     return m_meshId;
+}
+
+void Enemy::SetMeshId(const int meshId)
+{
+    m_meshId = meshId;
 }
 
 const std::wstring& Enemy::GetType() const

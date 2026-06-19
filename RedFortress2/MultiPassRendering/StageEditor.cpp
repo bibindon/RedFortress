@@ -421,6 +421,11 @@ void StageEditor::InitEnemyTypeCombo(HWND hDlg)
 
     SendMessage(hCombo, CB_RESETCONTENT, 0, 0);
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"wolf"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy2"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy3"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy4"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy5"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy6"));
     SendMessage(hCombo, CB_SETCURSEL, 0, 0);
 }
 

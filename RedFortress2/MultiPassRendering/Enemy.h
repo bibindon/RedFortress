@@ -27,7 +27,15 @@ public:
 
     Enemy();
 
-    void Initialize(const D3DXVECTOR3& startPosition, int meshId, const std::wstring& type, float yaw);
+    void Initialize(const D3DXVECTOR3& startPosition,
+                    int meshId,
+                    const std::wstring& type,
+                    float yaw,
+                    int maxHp,
+                    float moveSpeed,
+                    float viewDistance,
+                    float contactRadius,
+                    float height);
     void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
     void SyncMesh(NSRender::Render& render);
 
@@ -42,6 +50,7 @@ public:
     float GetYaw() const;
     void SetYaw(float yaw);
     int GetMeshId() const;
+    void SetMeshId(int meshId);
     const std::wstring& GetType() const;
     void SetType(const std::wstring& type);
 
@@ -58,6 +67,7 @@ private:
     D3DXVECTOR3 m_position;
     float m_yaw = 0.0f;
     int m_hp = 10;
+    int m_maxHp = 10;
     int m_meshId = -1;
     std::wstring m_type;
     State m_state = State::Idle;
