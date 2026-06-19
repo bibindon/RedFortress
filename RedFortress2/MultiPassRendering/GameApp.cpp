@@ -130,6 +130,45 @@ public:
     void Init() override {}
 };
 
+class GameApp::QteSprite : public NS_QTE_Module::ISprite
+{
+public:
+    GameApp* app = nullptr;
+    std::wstring m_filepath;
+
+    void DrawImage(const int x, const int y, const int transparency) override
+    {
+        if (app != nullptr && !m_filepath.empty())
+        {
+            app->m_render.DrawImage(m_filepath, x, y, transparency);
+        }
+    }
+
+    void DrawImageRect(const int x, const int y, const int srcWidth, const int srcHeight, const int transparency) override
+    {
+        if (app != nullptr && !m_filepath.empty())
+        {
+            app->m_render.DrawImageSizedRect(m_filepath, x, y, srcWidth, srcHeight, 0, 0, srcWidth, srcHeight, transparency);
+        }
+    }
+
+    void Load(const std::wstring& filepath) override
+    {
+        m_filepath = filepath;
+    }
+
+    ISprite* Create() override
+    {
+        QteSprite* instance = new QteSprite();
+        return instance;
+    }
+
+    ~QteSprite() {}
+
+    void OnDeviceLost() override {}
+    void OnDeviceReset() override {}
+};
+
 bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
 {
     m_hInstance = hInstance;
@@ -452,17 +491,63 @@ void GameApp::Run()
                 continue;
             }
 
-            // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
-            if (!m_mouseCursorVisible)
+            // QTE 中はプレイヤー/カメラ/敵/インタラクト入力を止める
+            if (m_qte == nullptr)
             {
-                UpdateCameraByInput();
+                // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
+                if (!m_mouseCursorVisible)
+                {
+                    UpdateCameraByInput();
+                }
+
+                // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
+                UpdatePlayerByInput();
+
+                // 敵の更新
+                m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
+
+                // インタラクト通知とQTE起動判定
+                m_interactionManager.Update(m_playerMover.GetPosition());
+                std::wstring interactionId;
+                if (m_interactionManager.ConsumeTriggeredInteraction(&interactionId) && !interactionId.empty())
+                {
+                    m_qte = new NS_QTE_Module::QTE_Module();
+                    QteSprite* sprWhiteBar = new QteSprite();
+                    sprWhiteBar->app = this;
+                    sprWhiteBar->Load(L"res\\2D_Image\\white_bar.bmp");
+                    QteSprite* sprBlackBar = new QteSprite();
+                    sprBlackBar->app = this;
+                    sprBlackBar->Load(L"res\\2D_Image\\black_bar.bmp");
+                    m_qte->SetBars(sprWhiteBar, sprBlackBar, 1600, 900);
+                    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                    m_pendingJump = false;
+                }
+            }
+            else
+            {
+                // QTE バー停止入力
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
+                {
+                    m_qte->StopBarAnimation();
+                }
+
+                // QTE 完了判定
+                if (m_qte->Update())
+                {
+                    const NS_QTE_Module::QTE_Module::BarResult result = m_qte->GetBarResult();
+                    if (result == NS_QTE_Module::QTE_Module::BarResult::Success ||
+                        result == NS_QTE_Module::QTE_Module::BarResult::Normal)
+                    {
+                        m_inventoryManager.AddItem(L"lemon", 1);
+                        m_inventoryManager.Save();
+                    }
+                    m_qte->Finalize();
+                    delete m_qte;
+                    m_qte = nullptr;
+                }
             }
 
-            // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
-            UpdatePlayerByInput();
-
-            // 敵の更新
-            m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
             m_enemyManager.SyncMeshes(m_render);
 
             // 描画（動く床の位置が更新される）
@@ -471,8 +556,14 @@ void GameApp::Run()
             m_damagePopupManager.Update();
             m_damagePopupManager.Draw();
             m_enemyManager.DrawHpBars(m_render);
-            m_interactionManager.Update(m_playerMover.GetPosition());
-            m_interactionManager.DrawPrompt();
+            if (m_qte == nullptr)
+            {
+                m_interactionManager.DrawPrompt();
+            }
+            if (m_qte != nullptr)
+            {
+                m_qte->Render();
+            }
             m_render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -505,7 +596,7 @@ void GameApp::Run()
                 DamagePlayerHp(m_player.GetHp());
             }
 
-            if (m_playerAttackController.ConsumeHitRequested())
+            if (m_qte == nullptr && m_playerAttackController.ConsumeHitRequested())
             {
                 const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
                 Enemy* attackTarget = FindEnemyInAttackRange(attackDefinition);
@@ -522,45 +613,48 @@ void GameApp::Run()
                 --m_playerInvincibleFrames;
             }
 
-            // 敵との接触・踏みつけ判定
-            for (auto& enemy : m_enemyManager.GetEnemies())
+            // 敵との接触・踏みつけ判定（QTE 中は無効）
+            if (m_qte == nullptr)
             {
-                if (enemy.IsDead())
+                for (auto& enemy : m_enemyManager.GetEnemies())
                 {
-                    continue;
-                }
+                    if (enemy.IsDead())
+                    {
+                        continue;
+                    }
 
-                if (enemy.IsStompedByPlayer(m_playerMover.GetPosition(), m_playerMover.IsJumping(), m_playerMover.GetVelocity().y))
-                {
-                    enemy.TakeDamage(m_render, 10);
-                    m_damagePopupManager.Add(10, enemy.GetPosition(), false);
-                    D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
-                    playerPos.y += 0.3f;
-                    m_playerMover.SetPosition(playerPos);
-                    break;
-                }
-                else if (m_playerInvincibleFrames <= 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
-                {
-                    DamagePlayerHp(10);
-                    m_playerInvincibleFrames = kPlayerInvincibleDuration;
-                    if (m_playerMeshId >= 0)
+                    if (enemy.IsStompedByPlayer(m_playerMover.GetPosition(), m_playerMover.IsJumping(), m_playerMover.GetVelocity().y))
                     {
-                        m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kPlayerInvincibleDuration, 4);
+                        enemy.TakeDamage(m_render, 10);
+                        m_damagePopupManager.Add(10, enemy.GetPosition(), false);
+                        D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
+                        playerPos.y += 0.3f;
+                        m_playerMover.SetPosition(playerPos);
+                        break;
                     }
-                    m_playerKnockbackFrames = kKnockbackDurationFrames;
-                    D3DXVECTOR3 knockbackDir = m_playerMover.GetPosition() - enemy.GetPosition();
-                    knockbackDir.y = 0.0f;
-                    if (D3DXVec3LengthSq(&knockbackDir) > 0.0001f)
+                    else if (m_playerInvincibleFrames <= 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
                     {
-                        D3DXVec3Normalize(&knockbackDir, &knockbackDir);
+                        DamagePlayerHp(10);
+                        m_playerInvincibleFrames = kPlayerInvincibleDuration;
+                        if (m_playerMeshId >= 0)
+                        {
+                            m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kPlayerInvincibleDuration, 4);
+                        }
+                        m_playerKnockbackFrames = kKnockbackDurationFrames;
+                        D3DXVECTOR3 knockbackDir = m_playerMover.GetPosition() - enemy.GetPosition();
+                        knockbackDir.y = 0.0f;
+                        if (D3DXVec3LengthSq(&knockbackDir) > 0.0001f)
+                        {
+                            D3DXVec3Normalize(&knockbackDir, &knockbackDir);
+                        }
+                        else
+                        {
+                            knockbackDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+                        }
+                        m_playerKnockbackDir = knockbackDir;
+                        enemy.MarkAttackedPlayer();
+                        break;
                     }
-                    else
-                    {
-                        knockbackDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-                    }
-                    m_playerKnockbackDir = knockbackDir;
-                    enemy.MarkAttackedPlayer();
-                    break;
                 }
             }
 
@@ -643,6 +737,13 @@ void GameApp::Finalize()
     {
         DestroyWindow(m_settingsDialog);
         m_settingsDialog = NULL;
+    }
+
+    if (m_qte != nullptr)
+    {
+        m_qte->Finalize();
+        delete m_qte;
+        m_qte = nullptr;
     }
 
     m_interactionManager.Clear();
@@ -1355,6 +1456,13 @@ bool GameApp::StartNextStage()
 void GameApp::LoadCurrentStageObjects()
 {
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+
+    if (m_qte != nullptr)
+    {
+        m_qte->Finalize();
+        delete m_qte;
+        m_qte = nullptr;
+    }
 
     if (m_goalMarkerMeshId >= 0)
     {
