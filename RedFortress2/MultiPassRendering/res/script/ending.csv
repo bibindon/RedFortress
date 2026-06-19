@@ -1,125 +1,135 @@
 ﻿"PageNo","Image","Resolution","Message","CharLeft","CharLeftResolution","CharLeftFlip","CharLeftScale","CharCenter","CharCenterResolution","CharCenterFlip","CharCenterScale","CharRight","CharRightResolution","CharRightFlip","CharRightScale"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　森の中は、昼間よりもずっと暗かった。
-
-　黒く染まったかなたが通った場所には、草が倒れ、木の幹に爪痕のようなものが残っていた。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+　黒く染まったかなたが通った場所には、草が倒れ、
+木の幹に爪痕のようなものが残っていた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　白い亡霊の力を借り、マリンはその気配を追って進む。
-
-　やがて、森の奥の開けた場所に出た。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒いかなたが、そこに立っていた。
-　その背後に、ホシガールの影が重なっている。
-","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「観念しろ！」
-
-　マリンは黄金の十字架を構えた。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","
-　ホシガールが笑った。
-","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「この体、マリンさんより…その…動きやすいですね……」
-
-「ノンデリ発言だ！」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","
-　戦いが始まった。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　ホシガールは速かった。
-　かなたの体の力を使い、木々を蹴って跳ぶ。
-　マリンは青い光をまとって追いかけ、黄金の十字架で攻撃を受け止める。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","","","",""
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　ただし、相手はかなたの体だ。
-　本気で攻撃するわけにはいかない。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","","","",""
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「どうすればホシガールをかなたんから追い出せる？」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","","","",""
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「黄金の十字架で、かなたんのケツをしばくのじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","","","",""
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「オラオラオラァ！　悪霊退散！」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは勢いよく十字架を振る。
-　青い光がかなたの体に触れるたび、黒い影がぶるぶると震えた。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ぐぬぬぬ！」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　だが、ホシガールは出てこない。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「なかなか出てこないです！　どうすればいいですか！？」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「奴はマリンに憑依するのを嫌がっていた。自分より強い負の感情は、自分が飲み込まれてしまうからじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ほ……ほう？」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「かなたの負の感情を爆発させれば、奴は出ていくはずじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「え……ふつう逆じゃね？　仲間を信じる心で追い出すみたいな……」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「時と場合によるのじゃ。臨機応変に対応するのじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「うーん、なるほど！　まぁそれなら……」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは大きく息を吸った。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「かなたーん！　聞こえる！？　思い出して！　五月十九日！」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒いかなたの動きが止まる。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「……？」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ガッキーの結婚発表日だよ！！」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　森に、かなたの叫びが響いた。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「う、うわぁあああ！」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　その瞬間、かなたの体から黒い影が弾き出された。
-　ホシガールは地面を転がり、黒い雪だるまのような姿で立ち上がる。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「きさま……人の心とかないんか？」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「人の体に入ったり、出たり、情けない奴だ」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「お前らも似たようなもんじゃろ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ぬ。あいつさっさとやっちゃおう」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　白い亡霊が、マリンの中で言った。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「よし、マリン。奴に強烈な煩悩をぶつけるのじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「なるほど」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは、ホシガールの方を怪しく見つめた。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「う、うわあああ！　ヤメロォ！」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「奴を使って、いかがわしいことを考えるといいぞ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「了解」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「こんな死に方いやだあああ！」","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　ホシガールの影が、じゅわっと音を立てて薄くなった。
-　黒い霧が空へ上がり、やがて完全に消える。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　森に、静寂が戻った。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンはしばらく黙っていた。","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　白い亡霊も、しばらく黙っていた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「おぬし、バケモンじゃな」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「今それ言う？」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　海岸に戻るころには、空が少し明るくなり始めていた。","","","","","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　かなたは無事に目を覚まし、ころねは焚火の近くでのんびり待っていた。
-　モーターボートも、今度はちゃんと桟橋につながれている。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　白い亡霊は、黄金の十字架をマリンに差し出した。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「これはお主にやる。もう要らないしな」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「いいんですか？」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「妖怪は消えた。ワシの役目も終わりじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　マリンは黄金の十字架を受け取った。
-　ずっしりと重い。
-　コンサート予算の重みである。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「では、さらばじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「え、行っちゃうんですか」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　白い亡霊は、少しだけ笑ったように見えた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「百二十年も亡霊をやってて、飽きちゃったよ。じゃあの」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+　やがて、森の奥の開けた場所に出た。
+　黒いかなたが、そこに立っていた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　その背後に、ホシガールの影が重なっている。
+「観念しろ！」
+　マリンは黄金の十字架を構えた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　ホシガールが笑った。
+「この体、マリンさんより…その…動きやすいですね……」
+「ノンデリ発言だ！」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　戦いが始まった。
+　ホシガールは速かった。
+　かなたの体の力を使い、木々を蹴って跳ぶ。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは青い光をまとって追いかけ、
+黄金の十字架で攻撃を受け止める。
+　ただし、相手はかなたの体だ。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　本気で攻撃するわけにはいかない。
+「どうすればホシガールをかなたんから追い出せる？」
+「黄金の十字架で、かなたんのケツをしばくのじゃ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「オラオラオラァ！
+　悪霊退散！」
+　マリンは勢いよく十字架を振る。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　青い光がかなたの体に触れるたび、
+黒い影がぶるぶると震えた。
+「ぐぬぬぬ！」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　だが、ホシガールは出てこない。
+「なかなか出てこないです！
+　どうすればいいですか！？」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「奴はマリンに憑依するのを嫌がっていた。
+自分より強い負の感情は、自分が飲み込まれてしまうからじゃ」
+「ほ……ほう？」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「かなたの負の感情を爆発させれば、奴は出ていくはずじゃ」
+「え……ふつう逆じゃね？
+　仲間を信じる心で追い出すみたいな……」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「時と場合によるのじゃ。臨機応変に対応するのじゃ」
+「うーん、なるほど！
+　まぁそれなら……」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは大きく息を吸った。
+「かなたーん！
+　聞こえる！？","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　思い出して！
+　五月十九日！」
+　黒いかなたの動きが止まる。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「……？」
+「ガッキーの結婚発表日だよ！！」
+　森に、かなたの叫びが響いた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「う、うわぁあああ！」
+　その瞬間、かなたの体から黒い影が弾き出された。
+　ホシガールは地面を転がり、黒い雪だるまのような姿で立ち","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","上がる。
+「きさま……人の心とかないんか？」
+「人の体に入ったり、出たり、情けない奴だ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「お前らも似たようなもんじゃろ」
+「ぬ。あいつさっさとやっちゃおう」
+　白い亡霊が、マリンの中で言った。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「よし、マリン。奴に強烈な煩悩をぶつけるのじゃ」
+「なるほど」
+　マリンは、ホシガールの方を怪しく見つめた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「う、うわあああ！
+　ヤメロォ！」
+「奴を使って、いかがわしいことを考えるといいぞ」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「了解」
+「こんな死に方いやだあああ！」
+　ホシガールの影が、じゅわっと音を立てて薄くなった。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒い霧が空へ上がり、やがて完全に消える。
+　森に、静寂が戻った。
+　マリンはしばらく黙っていた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　白い亡霊も、しばらく黙っていた。
+「おぬし、バケモンじゃな」
+「今それ言う？」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　海岸に戻るころには、空が少し明るくなり始めていた。
+　かなたは無事に目を覚まし、ころねは焚火の近くでのんびり
+待っていた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　モーターボートも、今度はちゃんと桟橋につながれている。
+　白い亡霊は、黄金の十字架をマリンに差し出した。
+「これはお主にやる。もう要らないしな」","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「いいんですか？」
+「妖怪は消えた。ワシの役目も終わりじゃ」
+　マリンは黄金の十字架を受け取った。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　ずっしりと重い。
+　コンサート予算の重みである。
+「では、さらばじゃ」","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「え、行っちゃうんですか」
+　白い亡霊は、少しだけ笑ったように見えた。
+「百二十年も亡霊をやってて、飽きちゃったよ。じゃあの」","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　白い影が、朝の光の中でゆっくりと薄くなっていく。
-　最後には、海風に溶けるように消えた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　マリンはしばらく、その場所を見つめていた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「……いい霊だったね」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　かなたが言った。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.95","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「最初、船長がぶっ飛ばしたけどね」","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　ころねが言った。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「それは言わないで」","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　マリンは黄金の十字架を抱え、空を見上げた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+　最後には、海風に溶けるように消えた。
+　マリンはしばらく、その場所を見つめていた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","「……いい霊だったね」
+　かなたが言った。
+「最初、船長がぶっ飛ばしたけどね」","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　ころねが言った。
+「それは言わないで」
+　マリンは黄金の十字架を抱え、空を見上げた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　こうして、無人島の妖怪騒動は幕を閉じた。
-　マリンは無事に帰還し、黄金の十字架はコンサート予算となった。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+　マリンは無事に帰還し、黄金の十字架はコンサート予算とな
+った。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　もちろん、報告書には細かいことは書かれなかった。
 　無人島。
 　遭難。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　妖怪。
 　憑依。
 　除霊。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　どれも、会社に提出するには少し説明が難しすぎたからである。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　そして、コンサート当日。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　会場は満員だった。
-　ライトが輝き、歓声が響く。
-　ステージの中央で、宝鐘マリンは笑っていた。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　いろいろあった。
-　本当にいろいろあった。
-　だが、こうしてコンサートは開かれた。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","「みんなー！　さいこーですかー！」","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　客席から、大きな声が返ってくる。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","「さいこーでーす！」","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","「しあわせですかー！」","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","「しあわせでーす！」","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　マリンは満足げに笑った。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　後日、そのライブ映像が公開された。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\ending_bg_p02_dawn_beach.png","1600x900","　どれも、会社に提出するには少し説明が難しすぎたからであ
+る。","res\2D_Image\novel_chr_korone_mystery_transparent.png","1600x900","false","1.00","","","","","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　そして、コンサート当日。
+　会場は満員だった。
+　ライトが輝き、歓声が響く。","","","","","","","","","","","",""
+"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　ステージの中央で、宝鐘マリンは笑っていた。
+　いろいろあった。
+　本当にいろいろあった。","","","","","","","","","","","",""
+"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　だが、こうしてコンサートは開かれた。
+「みんなー！
+　さいこーですかー！」","","","","","","","","","","","",""
+"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　客席から、大きな声が返ってくる。
+「さいこーでーす！」
+「しあわせですかー！」","","","","","","","","","","","",""
+"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","「しあわせでーす！」
+　マリンは満足げに笑った。
+　後日、そのライブ映像が公開された。","","","","","","","","","","","",""
 "3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　映像は大好評だった。
-　マリンの歌も、演出も、衣装も、すべて話題になった。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　ただし、ひとつだけ妙な噂が流れた。","","","","","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
+　マリンの歌も、演出も、衣装も、すべて話題になった。
+　ただし、ひとつだけ妙な噂が流れた。","","","","","","","","","","","",""
 "3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　最前列の端。
 　誰も座っていないはずの席。
-　そこに、白くぼんやりした少女の人影が映っている。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.88","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　しかも、その少女は、誰よりも楽しそうにコールしていた。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.88","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　それを見たマリンは、しばらく画面を見つめたあと、ぽつりと言った。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.88","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","「……最前列、ちゃんと開けておいてよかった」","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.88","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　めでたし、めでたし。","res\2D_Image\ending_chr_white_ghost_transparent.png","1600x900","false","0.88","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","1600x900","false","1.00"
-"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　　　　　Fin","","","","","","","","","","","",""
+　そこに、白くぼんやりした少女の人影が映っている。","","","","","","","","","","","",""
+"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","　しかも、その少女は、誰よりも楽しそうにコールしていた。
+　それを見たマリンは、しばらく画面を見つめたあと、
+ぽつりと言った。","","","","","","","","","","","",""
+"3","res\2D_Image\ending_bg_p03_concert_stage.png","1600x900","「……最前列、ちゃんと開けておいてよかった」
+　めでたし、めでたし。
+　Fin","","","","","","","","","","","",""

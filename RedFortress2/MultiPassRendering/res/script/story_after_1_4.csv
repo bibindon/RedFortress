@@ -1,61 +1,41 @@
 ﻿"PageNo","Image","Resolution","Message","CharLeft","CharLeftResolution","CharLeftFlip","CharLeftScale","CharCenter","CharCenterResolution","CharCenterFlip","CharCenterScale","CharRight","CharRightResolution","CharRightFlip","CharRightScale"
 "1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　山道は、思ったよりも長かった。
-
-　最初の一時間は、冒険気分だった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　二時間目は、まだなんとか笑えた。
-　三時間目には、マリンは無線機に向かって文句を言い始めた。
-","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「ころさーん、これ本当に黄金あるんですかぁ？」
-
-「あるって記事には書いてあるよ」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
+　最初の一時間は、冒険気分だった。
+　二時間目は、まだなんとか笑えた。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　三時間目には、マリンは無線機に向かって文句を言い始めた。
+「ころさーん、これ本当に黄金あるんですかぁ？」
+「あるって記事には書いてあるよ」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「記事って便利だなあ。何を書いても責任取らない感じがして」
-
-「船長、疲れてる？」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","
-「疲れてます！」
-","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
+「船長、疲れてる？」
+「疲れてます！」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　四時間ほど歩いたころ、ようやく視界が開けた。
-
-　山頂だった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　そこには、古い石造りの祭壇があった。
-　円形の台座。
-　風化した石柱。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　中央には、何かを置くためのくぼみがある。
-
-　いかにも何かありそうだった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　いかにも財宝が現れそうだった。
-
-　だが、何もなかった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","
-「……」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　マリンは祭壇の周りを一周した。
-　石柱の裏ものぞいた。
-　草むらも探した。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　ついでに、祭壇のくぼみに手を入れてみた。
-
+　山頂だった。
+　そこには、古い石造りの祭壇があった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　円形の台座。
+　風化した石柱。
+　中央には、何かを置くためのくぼみがある。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　いかにも何かありそうだった。
+　いかにも財宝が現れそうだった。
+　だが、何もなかった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「……」
+　マリンは祭壇の周りを一周した。
+　石柱の裏ものぞいた。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　草むらも探した。
+　ついでに、祭壇のくぼみに手を入れてみた。
 　何もない。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","
-「ころさーん。山頂に来てみたんですけど」
-","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「うん」
-
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「ころさーん。山頂に来てみたんですけど」
+「うん」
 「何もないんですが……」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","
-「え～……」
-","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「どうしよう……」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「もっとよく探してみたら？」
-
-「もう探したよ～」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「え～……」
+「どうしよう……」
+「もっとよく探してみたら？」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「もう探したよ～」
 「じゃ～、諦めましょう」
-","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「はーい」
-
-　マリンは素直に返事をした。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　黄金はなかった。
-　祭壇はあった。
-　記事の情報は半分だけ当たっていた。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　こういう時、いちばん腹が立つのは、完全な嘘ではないところである。
-
-　マリンは肩を落としながら、登ってきた山道を下っていった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+「はーい」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　マリンは素直に返事をした。
+　黄金はなかった。
+　祭壇はあった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　記事の情報は半分だけ当たっていた。
+　こういう時、いちばん腹が立つのは、
+完全な嘘ではないところである。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　マリンは肩を落としながら、登ってきた山道を下っていった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
