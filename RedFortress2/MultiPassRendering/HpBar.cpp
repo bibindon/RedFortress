@@ -153,7 +153,15 @@ void HpBar::Draw()
     const int damageSourceW = static_cast<int>(static_cast<float>(damageWidth) / scale + 0.5f);
     const int frontSourceW = static_cast<int>(static_cast<float>(frontWidth) / scale + 0.5f);
 
-    m_pRender->DrawImageAutoResizeSizedRect(kBackGaussImagePath, kPosX, kPosY, 0, 0, kSourceWidth, kSourceHeight, scale, 255);
+    m_pRender->DrawImageAutoResizeSizedRect(kBackGaussImagePath,
+                                            kPosX,
+                                            kPosY,
+                                            0,
+                                            0,
+                                            kBackGaussSourceWidth,
+                                            kBackGaussSourceHeight,
+                                            scale,
+                                            255);
     m_pRender->DrawImageAutoResizeSizedRect(kBackImagePath, kPosX, kPosY, 0, 0, kSourceWidth, kSourceHeight, scale, 255);
     m_pRender->DrawImageAutoResizeSizedRect(kDamageImagePath, kPosX, kPosY, 0, 0, damageSourceW, kSourceHeight, scale, 255);
     m_pRender->DrawImageAutoResizeSizedRect(kFrontImagePath, kPosX, kPosY, 0, 0, frontSourceW, kSourceHeight, scale, 255);

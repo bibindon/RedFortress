@@ -50,6 +50,8 @@ private:
     static constexpr float kPosY = 0.05f;
     static constexpr int kSourceWidth = 1000;
     static constexpr int kSourceHeight = 16;
+    static constexpr int kBackGaussSourceWidth = 1024;
+    static constexpr int kBackGaussSourceHeight = 64;
     static constexpr float kScaleBase = 1920.0f;
     static constexpr float kAnimFrameMax = 30.0f;
     static constexpr float kDamageDelayFrameMax = 30.0f;
