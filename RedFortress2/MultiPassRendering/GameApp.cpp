@@ -277,10 +277,11 @@ void GameApp::Run()
 
         InputDevice::Update();
         if (m_gameState == GameState::Playing &&
+            !m_pauseMenu.IsOpen() &&
             !m_playerDeathPending &&
             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
         {
-            m_pauseMenu.Toggle();
+            m_pauseMenu.Open();
         }
 
         if (m_gameState != GameState::EndingFin &&
@@ -416,6 +417,7 @@ void GameApp::Run()
         {
             if (m_pauseMenu.BlocksGameInput())
             {
+                m_pauseMenu.Update();
                 m_hpBar.Draw();
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
