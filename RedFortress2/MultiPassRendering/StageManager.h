@@ -21,6 +21,9 @@ public:
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 clearPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         float clearDistance = 1.0f;
+        bool useFixedCamera = false;
+        D3DXVECTOR3 fixedCameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        D3DXVECTOR3 fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     };
 
     void Initialize();
@@ -42,7 +45,10 @@ private:
                   const std::wstring& displayName,
                   const std::wstring& folderName,
                   const D3DXVECTOR3& playerStartPosition,
-                  const D3DXVECTOR3& clearPosition);
+                  const D3DXVECTOR3& clearPosition,
+                  bool useFixedCamera = false,
+                  const D3DXVECTOR3& fixedCameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                  const D3DXVECTOR3& fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
     std::vector<StageData> m_stages;
     std::size_t m_currentStageIndex = 0;

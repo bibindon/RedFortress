@@ -545,7 +545,8 @@ void GameApp::Run()
             if (m_qte == nullptr)
             {
                 // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
-                if (!m_mouseCursorVisible)
+                // 固定カメラ時もマウスによる回転を無効化する。
+                if (!m_mouseCursorVisible && !m_useFixedCamera)
                 {
                     UpdateCameraByInput();
                 }
@@ -1117,6 +1118,12 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         }
     }
 
+    if (m_useFixedCamera)
+    {
+        m_render.SetCamera(m_fixedCameraPos, m_fixedCameraLookAt);
+        return;
+    }
+
     if (m_respawnCameraMoveFrames > 0)
     {
         const float t = 1.0f - (static_cast<float>(m_respawnCameraMoveFrames) / static_cast<float>(kRespawnCameraMoveFrames));
@@ -1518,6 +1525,10 @@ bool GameApp::StartNextStage()
 void GameApp::LoadCurrentStageObjects()
 {
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+
+    m_useFixedCamera = stage.useFixedCamera;
+    m_fixedCameraPos = stage.fixedCameraPos;
+    m_fixedCameraLookAt = stage.fixedCameraLookAt;
 
     if (m_qte != nullptr)
     {

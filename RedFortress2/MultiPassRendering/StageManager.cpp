@@ -25,6 +25,21 @@ void StageManager::Initialize()
     AddStage(L"4-2", 14, L"Stage 4-2", L"stage14", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
     AddStage(L"4-3", 15, L"Stage 4-3", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
     AddStage(L"4-4", 16, L"Stage 4-4", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
+
+    const D3DXVECTOR3 kSelectCameraPos(0.0f, 15.0f, -15.0f);
+    const D3DXVECTOR3 kSelectCameraLookAt(0.0f, 0.0f, 0.0f);
+    AddStage(L"select1", 18, L"Stage Select 1", L"stage-select1",
+             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             true, kSelectCameraPos, kSelectCameraLookAt);
+    AddStage(L"select2", 19, L"Stage Select 2", L"stage-select2",
+             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             true, kSelectCameraPos, kSelectCameraLookAt);
+    AddStage(L"select3", 20, L"Stage Select 3", L"stage-select3",
+             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             true, kSelectCameraPos, kSelectCameraLookAt);
+    AddStage(L"select4", 21, L"Stage Select 4", L"stage-select4",
+             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             true, kSelectCameraPos, kSelectCameraLookAt);
 }
 
 void StageManager::AddStage(const std::wstring& id,
@@ -32,7 +47,10 @@ void StageManager::AddStage(const std::wstring& id,
                             const std::wstring& displayName,
                             const std::wstring& folderName,
                             const D3DXVECTOR3& playerStartPosition,
-                            const D3DXVECTOR3& clearPosition)
+                            const D3DXVECTOR3& clearPosition,
+                            bool useFixedCamera,
+                            const D3DXVECTOR3& fixedCameraPos,
+                            const D3DXVECTOR3& fixedCameraLookAt)
 {
     const std::wstring basePath = L"res\\model\\" + folderName + L"\\";
 
@@ -49,6 +67,9 @@ void StageManager::AddStage(const std::wstring& id,
     stage.playerStartPosition = playerStartPosition;
     stage.clearPosition = clearPosition;
     stage.clearDistance = 1.0f;
+    stage.useFixedCamera = useFixedCamera;
+    stage.fixedCameraPos = fixedCameraPos;
+    stage.fixedCameraLookAt = fixedCameraLookAt;
     m_stages.push_back(stage);
 }
 

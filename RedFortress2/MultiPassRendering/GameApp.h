@@ -115,6 +115,9 @@ private:
     float m_cameraYaw = 0.0f;
     float m_cameraPitch = D3DXToRadian(18.0f);
     float m_cameraDistance = 7.0f;
+    bool m_useFixedCamera = false;
+    D3DXVECTOR3 m_fixedCameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     float m_playerYaw = 0.0f;
     PlayerAnimState m_playerAnimState = PlayerAnimState::Idle;
     PlayerAttackController m_playerAttackController;
