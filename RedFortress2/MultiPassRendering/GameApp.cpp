@@ -1243,7 +1243,9 @@ bool GameApp::StartStageByIndex(std::size_t stageIndex)
         return false;
     }
 
+    m_render.StartFadeOut(0.3f);
     LoadCurrentStageObjects();
+    m_render.StartFadeIn(0.3f);
     m_gameState = GameState::Playing;
     m_stageTitleFrame = kStageTitleFrameMax;
     return true;
@@ -1593,7 +1595,9 @@ bool GameApp::StartStageAfterClear()
         }
     }
 
+    m_render.StartFadeOut(0.3f);
     LoadCurrentStageObjects();
+    m_render.StartFadeIn(0.3f);
     m_gameState = GameState::Playing;
     m_stageTitleFrame = kStageTitleFrameMax;
     return true;
