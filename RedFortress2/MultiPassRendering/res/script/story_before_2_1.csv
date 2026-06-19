@@ -1,47 +1,32 @@
 ﻿"PageNo","Image","Resolution","Message","CharLeft","CharLeftResolution","CharLeftFlip","CharLeftScale","CharCenter","CharCenterResolution","CharCenterFlip","CharCenterScale","CharRight","CharRightResolution","CharRightFlip","CharRightScale"
 "1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　海岸に戻った時、日は少し傾き始めていた。
 「いやあ、疲れた。帰ったら絶対寝る。あと肉食べる」
-　マリンはそんなことを言いながら桟橋へ向かった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　そして、足を止めた。
-「……」
-　桟橋には、波の音だけがあった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　モーターボートがない。
-「な、ない……」
-　マリンは桟橋の端まで走った。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　海を見た。
-　左右を見た。
-　もう一度、ロープを結んだはずの杭を見た。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　そこには、切れたわけでもない、ほどけたようなロープが、
-むなしく垂れていた。
-「ころさーん！","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　やばいよやばいよ！」
-「どうしたのマリリーン」
-「モーターボートがなくなってるッス！」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「それは大変！
-　運営に相談してみるよ」
-　無線の向こうで、ころねの声が少し遠くなった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+　マリンはそんなことを言いながら桟橋へ向かった。　そして、足を止めた。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「……」
+　桟橋には、波の音だけがあった。　モーターボートがない。
+「な、ない……」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　マリンは桟橋の端まで走った。　海を見た。　左右を見た。
+　もう一度、ロープを結んだはずの杭を見た。　そこには、切れたわけでもない、
+ほどけたようなロープが、むなしく垂れていた。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「ころさーん！
+　やばいよやばいよ！」
+「どうしたのマリリーン」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「モーターボートがなくなってるッス！」
+「それは大変！
+　運営に相談してみるよ」　無線の向こうで、ころねの声が少し遠くなった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　数分後、再び声が戻ってくる。
-「マリリーン。私が助けに行くことになったよ～。
-私もモーターボートで行くから一週間くらい待ってて」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
+「マリリーン。私が助けに行くことになったよ～。私もモーターボートで行くから一週間くらい待
+ってて」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「いや、社内で救助活動しようとしなくていいだろ」
 「大事になったらお蔵入りになるから社内で解決したいって」
 「ブラック企業過ぎるだろ……」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　マリンは砂浜に座り込んだ。
-　帰れない。
-　黄金もない。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　食べ物はポテチと酒。
-　そして、救助は一週間後。
-　どう考えても、企画の方向性がおかしい。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「それとマリリン。その無人島には洞窟があるんだって。
-もしかしたらそっちにお宝があるかも？」
-「え～、怖いから行きたくない」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「そっか～」
-　ころねはあっさり引いた。
-　そのあっさりさが、逆にマリンの心に刺さった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　何もしないで一週間待つ。
-　それはそれで怖い。
-　あと、撮れ高がない。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
-"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　マリンは遠くの山を見た。
-　その中腹あたりに、黒い口を開けたような洞窟が見えていた。
+"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　マリンは砂浜に座り込んだ。　帰れない。　黄金もない。　食べ物はポテチと酒。
+　そして、救助は一週間後。　どう考えても、企画の方向性がおかしい。
+「それとマリリン。その無人島には洞窟があるんだって。もしかしたらそっちにお宝があるかも？」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「え～、怖いから行きたくない」
+「そっか～」
+　ころねはあっさり引いた。　そのあっさりさが、逆にマリンの心に刺さった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
+"2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　何もしないで一週間待つ。　それはそれで怖い。　あと、撮れ高がない。
+　マリンは遠くの山を見た。　その中腹あたりに、黒い口を開けたような洞窟が見えていた。
 「……来てしまった」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"
 "2","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　しばらく後、マリンは洞窟の前に立っていた。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","1600x900","false","1.00"

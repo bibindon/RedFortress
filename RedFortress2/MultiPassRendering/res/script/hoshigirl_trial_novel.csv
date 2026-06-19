@@ -1,176 +1,116 @@
 ﻿"PageNo","Image","Resolution","Message","CharLeft","CharLeftResolution","CharLeftFlip","CharLeftScale","CharCenter","CharCenterResolution","CharCenterFlip","CharCenterScale","CharRight","CharRightResolution","CharRightFlip","CharRightScale"
 "1","res\2D_Image\novel_bg_p01_office.png","1600x900","　ホロライブ本社の会議室には、妙に真剣な空気が流れていた。
-　テーブルの上には、コンサート会場の資料、
-ステージ演出案、グッズの見積もり、","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
-"1","res\2D_Image\novel_bg_p01_office.png","1600x900","そして予算表が広げられている。
-　どれもこれも夢のある内容だった。
-　ただし、予算表だけは夢がなかった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
-"1","res\2D_Image\novel_bg_p01_office.png","1600x900","「あとは予算さえあれば……」
-　マネージャーが、遠い目をして言った。
-「う～ん」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
-"1","res\2D_Image\novel_bg_p01_office.png","1600x900","　宝鐘マリンは腕を組み、椅子の背もたれに体を預けた。
-　コンサートを開きたい。
-　派手にやりたい。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
-"1","res\2D_Image\novel_bg_p01_office.png","1600x900","　ライトも、映像も、衣装も、できるなら全部盛りたい。
-　ファンのみんなに
-「船長すげえ！」と思われたい。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
-"1","res\2D_Image\novel_bg_p01_office.png","1600x900","　しかし、現実というものはいつも冷たい。
-　夢とロマンだけでは、会場費も照明費も払えないのである。
-「どこかに落ちてないかなあ、予算……」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
+　テーブルの上には、コンサート会場の資料、ステージ演出案、グッズの見積もり、
+そして予算表が広げられている。　どれもこれも夢のある内容だった。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
+"1","res\2D_Image\novel_bg_p01_office.png","1600x900","　ただし、予算表だけは夢がなかった。
+「あとは予算さえあれば……」
+　マネージャーが、遠い目をして言った。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
+"1","res\2D_Image\novel_bg_p01_office.png","1600x900","「う～ん」
+　宝鐘マリンは腕を組み、椅子の背もたれに体を預けた。　コンサートを開きたい。
+　派手にやりたい。　ライトも、映像も、衣装も、できるなら全部盛りたい。　ファンのみんなに","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
+"1","res\2D_Image\novel_bg_p01_office.png","1600x900","「船長すげえ！」と思われたい。
+　しかし、現実というものはいつも冷たい。　夢とロマンだけでは、
+会場費も照明費も払えないのである。","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
+"1","res\2D_Image\novel_bg_p01_office.png","1600x900","「どこかに落ちてないかなあ、予算……」","","","","","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","false","1.00"
 "2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","　マリンがつぶやいた、その時だった。
 「ふっふっふ……」
 　会議室の隅から、不穏な笑い声が聞こえた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
 "2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","「だれ？！」
-　マリンが勢いよく振り向く。
-　そこには、戌神ころねがいた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
-"2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","　いつからいたのかは分からない。
-　だが、ころねはまるで最初からそこにいたかのように、
-腕を組み、意味ありげに立っていた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
-"2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","「困っているようだね、マリンくん」
-「え、えぇ……」
-　マリンは一瞬だけ返事をしてから、心の中でつぶやいた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
-"2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","　何のキャラ？
+　マリンが勢いよく振り向く。　そこには、戌神ころねがいた。
+　いつからいたのかは分からない。　だが、ころねはまるで最初からそこにいたかのように、","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
+"2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","腕を組み、意味ありげに立っていた。
+「困っているようだね、マリンくん」
+「え、えぇ……」","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
+"2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","　マリンは一瞬だけ返事をしてから、心の中でつぶやいた。　何のキャラ？
 「私は謎の女、コロネン＝イヌガーミ」
 「正体が隠れてないのよ」","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
-"2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","　ころねはマリンのツッコミを気にする様子もなく、
-すたすたとテーブルに近づいてきた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
-"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　そして、どこから取り出したのか、
-古びた記事の切り抜きを一枚、テーブルの上に置いた。
-「その謎を解くことができれば、予算が手に入るだろう……」","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
-"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　マリンとマネージャーは、同時に記事を覗き込んだ。
-　そこには、こう書かれていた。
-　――無人島に眠る黄金。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
-"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　――新月の夜、山頂の祭壇に現れる謎の宝。
+"2","res\2D_Image\novel_bg_p02_office_reveal.png","1600x900","　ころねはマリンのツッコミを気にする様子もなく、すたすたとテーブルに近づいてきた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","","","",""
+"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　そして、どこから取り出したのか、古びた記事の切り抜きを一枚、テーブルの上に置いた。
+「その謎を解くことができれば、予算が手に入るだろう……」
+　マリンとマネージャーは、同時に記事を覗き込んだ。　そこには、こう書かれていた。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
+"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　――無人島に眠る黄金。　――新月の夜、山頂の祭壇に現れる謎の宝。
 　――近づく者は、亡霊に追い払われる。
 「黄金……」","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
-"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　マリンの目が、きらりと光った。
-　マネージャーの目も、別の意味できらりと光った。
-「ではさらばだ……」","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
-"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　ころねは満足げにうなずくと、会議室の出口へ向かった。
-「スタタタタ……」
-　自分で効果音を言いながら、普通に歩いて出ていく。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
-"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　ドアが閉まったあと、会議室にはしばらく沈黙が残った。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
+"3","res\2D_Image\novel_bg_p03_article.png","1600x900","　マリンの目が、きらりと光った。　マネージャーの目も、別の意味できらりと光った。
+「ではさらばだ……」
+　ころねは満足げにうなずくと、会議室の出口へ向かった。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
+"3","res\2D_Image\novel_bg_p03_article.png","1600x900","「スタタタタ……」
+　自分で効果音を言いながら、普通に歩いて出ていく。
+　ドアが閉まったあと、会議室にはしばらく沈黙が残った。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
 "4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「……」
 「……」
-　マリンとマネージャーは、もう一度、","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
-"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","記事の切り抜きを見た。
-「行きます？」
-　マネージャーが言った。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
-"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「行くしかないでしょ」
-　マリンは即答した。
-　◇","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
-"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","　数日後。
-　マリンとマネージャーは、海辺の桟橋に立っていた。
-　潮風が髪を揺らし、カモメが鳴いている。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
-"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","　冒険の始まりとしては、なかなか悪くない。
-　ただし、桟橋に停まっていたのは海賊船ではなかった。
-　小さなモーターボートだった。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
+　マリンとマネージャーは、もう一度、記事の切り抜きを見た。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
+"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「行きます？」
+　マネージャーが言った。
+「行くしかないでしょ」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
+"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","　マリンは即答した。　◇　数日後。　マリンとマネージャーは、海辺の桟橋に立っていた。
+　潮風が髪を揺らし、カモメが鳴いている。　冒険の始まりとしては、なかなか悪くない。
+　ただし、桟橋に停まっていたのは海賊船ではなかった。　小さなモーターボートだった。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
 "4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「……」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
-"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","　マリンは無言でそれを見つめた。
-　白い船体。
-　コンパクトな座席。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
-"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","　釣りに行くには良さそうなサイズ。
-　だが、少なくとも海賊船ではない。
+"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","　マリンは無言でそれを見つめた。　白い船体。　コンパクトな座席。
+　釣りに行くには良さそうなサイズ。　だが、少なくとも海賊船ではない。
 「そこは海賊船じゃないんですか」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
 "5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","「そんなお金ないです」
 「……」
-　マリンは記事の黄金よりも先に、","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
-"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","現実という名の岩にぶつかった気がした。
-「じゃあ頑張ってください！
-　応援してます！」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
-"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","　マネージャーは笑顔で撮影機材を差し出してきた。
-「え？
-　マネちゃんは？」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
-"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","「忙しいので……」
-「忙しいので、で無人島に一人送り出されることある？」
-　マネージャーは聞こえなかったふりをして、","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
-"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","さらに黄色い無線機を渡した。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
-"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","　大きくて、ごつくて、いかにも映画に出てきそうなやつだっ
-た。
-「何かあったら、これで連絡してください。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
-"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","ころねさんが応答してくれます」
-　マリンは無線機を受け取った。
-「おも！","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
-"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","　映画で見る奴やん」
-「ころねさんがサポートしてくれます」
-「それは安心……なのか？」","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
-"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","　マリンはモーターボートを見た。
-　海を見た。
-　遠くにかすむ無人島を見た。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
-"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","　黄金。
-　コンサート予算。
-　無人島。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
-"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","　モーターボート。
-　ころねの無線サポート。
-　どこからどう見ても、まともな企画ではなかった。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
-"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　だが、宝鐘マリンは海賊である。
-　財宝があると言われて、引き返すわけにはいかない。
-「よし」","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
-"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　マリンは無線機を肩にかけ、モーターボートに足をかけた。
-「船長、黄金を取りに行ってきます！」
-　波が、ボートの側面を軽く叩いた。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
-"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　こうしてマリンは、コンサート予算を求めて、
-無人島へ向かうことになった。
-　なお、この時のマリンはまだ知らなかった。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
+　マリンは記事の黄金よりも先に、現実という名の岩にぶつかった気がした。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
+"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","「じゃあ頑張ってください！
+　応援してます！」　マネージャーは笑顔で撮影機材を差し出してきた。
+「え？","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
+"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","　マネちゃんは？」
+「忙しいので……」
+「忙しいので、で無人島に一人送り出されることある？」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
+"5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","　マネージャーは聞こえなかったふりをして、さらに黄色い無線機を渡した。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"
+"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","　大きくて、ごつくて、いかにも映画に出てきそうなやつだった。
+「何かあったら、これで連絡してください。ころねさんが応答してくれます」
+　マリンは無線機を受け取った。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
+"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","「おも！
+　映画で見る奴やん」
+「ころねさんがサポートしてくれます」","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
+"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","「それは安心……なのか？」
+　マリンはモーターボートを見た。　海を見た。　遠くにかすむ無人島を見た。　黄金。
+　コンサート予算。　無人島。　モーターボート。　ころねの無線サポート。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
+"6","res\2D_Image\novel_bg_p06_radio_pier.png","1600x900","　どこからどう見ても、まともな企画ではなかった。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.00","","","","","","","",""
+"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　だが、宝鐘マリンは海賊である。　財宝があると言われて、引き返すわけにはいかない。
+「よし」
+　マリンは無線機を肩にかけ、モーターボートに足をかけた。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
+"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","「船長、黄金を取りに行ってきます！」
+　波が、ボートの側面を軽く叩いた。　こうしてマリンは、コンサート予算を求めて、
+無人島へ向かうことになった。　なお、この時のマリンはまだ知らなかった。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
 "7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　その島に眠っているのが、ただの黄金ではないことを。
 　そして、自分がこれから、わりと大きめにやらかすことを。
-　◇","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
-"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　モーターボートは、思ったよりも快調に海を進んだ。
-　エンジン音が潮風に混じり、白い波が後ろへ流れていく。
-　海賊船ではない。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
-"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　大砲もない。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
-"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","　帆もない。
-　船員もいない。
-　それでも海の上にいると、マリンの気分は少し上がった。","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
-"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","「まあ、船長っていうのは船のサイズじゃないからね」
-　誰に言うでもなく、マリンはそうつぶやいた。
-　やがて、無人島が近づいてきた。","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
-"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","　緑に覆われた島だった。
-　中央には山がそびえ、その山頂付近だけが、
-木々の間から岩肌をのぞかせている。","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
-"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","　海岸には小さな桟橋があり、昔は誰かが使っていたような気
-配があった。
-　マリンは桟橋にボートを寄せると、ロープを取り出し、","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
-"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","杭に結びつけた。
+　◇　モーターボートは、思ったよりも快調に海を進んだ。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
+"7","res\2D_Image\novel_bg_p07_departure.png","1600x900","　エンジン音が潮風に混じり、白い波が後ろへ流れていく。　海賊船ではない。　大砲もない。","","","","","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","1.05"
+"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","　帆もない。　船員もいない。　それでも海の上にいると、マリンの気分は少し上がった。
+「まあ、船長っていうのは船のサイズじゃないからね」
+　誰に言うでもなく、マリンはそうつぶやいた。　やがて、無人島が近づいてきた。","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
+"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","　緑に覆われた島だった。　中央には山がそびえ、その山頂付近だけが、
+木々の間から岩肌をのぞかせている。　海岸には小さな桟橋があり、
+昔は誰かが使っていたような気配があった。　マリンは桟橋にボートを寄せると、","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
+"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","ロープを取り出し、杭に結びつけた。
 「これでよし、と」
 　何度か引っ張って、しっかり結べていることを確認する。","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
 "8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","　それからマリンは黄色い無線機を耳に当てた。
 「ころさーん？
-　聞こえるー？」","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
-"8","res\2D_Image\novel_bg_p08_island_arrival.png","1600x900","　しばらくノイズが走ったあと、明るい声が返ってきた。","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
+　聞こえるー？」　しばらくノイズが走ったあと、明るい声が返ってきた。","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","0.98","","","",""
 "9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「やっほー、マリリーン！
 　元気ー？」
 「元気でーす！」","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
 "9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「そういえば食べ物って持って行った？」
 「あ、どうしよう」
-　マリンは荷物の中をのぞいた。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
-"9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　撮影機材。
-　水。
-　ポテチ。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
-"9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　酒。
-　以上。
-「ポテチと酒しか持ってきてない。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
-"9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","まさか一人で行けって言われると思わないじゃん」
-「そこら中に果物があるらしいから、
-それ食べれば大丈夫じゃない？」","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
-"9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","　ころねの声は、いつも通りゆるかった。
-「どっかの軍人みたいなこと言ってる……。
-毒とかあるかもしれないじゃーん」","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
-"9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「齧ってみて苦かったら吐き出せばいいんじゃない？」","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
+　マリンは荷物の中をのぞいた。　撮影機材。　水。　ポテチ。　酒。　以上。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
+"9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「ポテチと酒しか持ってきてない。まさか一人で行けって言われると思わないじゃん」
+「そこら中に果物があるらしいから、それ食べれば大丈夫じゃない？」
+　ころねの声は、いつも通りゆるかった。","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
+"9","res\2D_Image\novel_bg_p09_radio_shore.png","1600x900","「どっかの軍人みたいなこと言ってる……。毒とかあるかもしれないじゃーん」
+「齧ってみて苦かったら吐き出せばいいんじゃない？」","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","true","1.00","","","","","","","",""
 "10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「ワイルドすぎるだろ……」
-　マリンは周囲を見回した。
-　確かに、海岸から少し入ったところには、","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
-"10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","見慣れない果物がいくつも実っていた。
-　南国っぽいもの。
-　リンゴっぽいもの。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
-"10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　バナナっぽいもの。
-　なんか妙に主張の強い色をしたもの。
-　最後のやつはやめておこう、とマリンは思った。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
-"10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「黄金とやらを探したいんだけど、
-どこを探せばいいんですかね～」
-「記事によると、山頂に祭壇があって、そこにあるらしいよ」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
-"10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　マリンが山の方を見ると、木々の間に細い道が続いていた。
-　山頂へ向かっているように見える。
-　数時間歩けば、たどり着けそうだった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
+　マリンは周囲を見回した。　確かに、海岸から少し入ったところには、
+見慣れない果物がいくつも実っていた。　南国っぽいもの。　リンゴっぽいもの。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
+"10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","　バナナっぽいもの。　なんか妙に主張の強い色をしたもの。
+　最後のやつはやめておこう、とマリンは思った。
+「黄金とやらを探したいんだけど、どこを探せばいいんですかね～」","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
+"10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「記事によると、山頂に祭壇があって、そこにあるらしいよ」
+　マリンが山の方を見ると、木々の間に細い道が続いていた。
+　山頂へ向かっているように見える。　数時間歩けば、たどり着けそうだった。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"
 "10","res\2D_Image\novel_bg_p10_jungle_path.png","1600x900","「よし、さっさと行って取ってきますか」
 　マリンは撮影機材を持ち直し、山道へ足を踏み入れた。","","","","","","","","","res\2D_Image\novel_chr_marine_radio_survival_transparent.png","","false","1.02"

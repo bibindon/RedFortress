@@ -1,140 +1,101 @@
 ﻿"PageNo","Image","Resolution","Message","CharLeft","CharLeftResolution","CharLeftFlip","CharLeftScale","CharCenter","CharCenterResolution","CharCenterFlip","CharCenterScale","CharRight","CharRightResolution","CharRightFlip","CharRightScale"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　その日、新月だった。
-　夜の山頂は、昼間とはまったく違う場所のようだった。
-　月のない空には星だけが散り、風が石柱の間を抜けていく。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　祭壇は闇の中に沈み、中央のくぼみだけが、
-わずかに光を帯びていた。
-　マリンは木の棒を握りしめ、祭壇から少し離れた場所で待機","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","していた。
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　その日、新月だった。　夜の山頂は、昼間とはまったく違う場所のようだった。
+　月のない空には星だけが散り、風が石柱の間を抜けていく。
+　祭壇は闇の中に沈み、中央のくぼみだけが、わずかに光を帯びていた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは木の棒を握りしめ、祭壇から少し離れた場所で待機していた。
 「あの～、マリンさん」
 　頭の中で黒い守護霊が言った。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「何？」
 「憑依しているときは、ムラムラは抑えて欲しいのですが……」
 「うっ……仕方ないでしょ！","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　なんか問題ある？！」
-「ムラムラと心霊現象は百八十度、逆のものなので、
-私が追い出されてしまいます……」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「もうちょっと気合を入れろ！
-　歯を食いしばれ！」
-「うぅ……」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　その時、祭壇が怪しく輝いた。
-　石のくぼみから、金色の光が漏れ出す。
-　光は少しずつ形を取り、やがて、一本の十字架となった。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　それは黄金でできていた。
-　古びているはずなのに、夜の闇の中で、
-まぶしいほど輝いている。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「出た……！」
-　マリンが一歩近づいた、その時。
-　祭壇の前に、白い人影が現れた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒い守護霊と同じように、雪だるまのような単純な形。
-　だが、こちらは白く、ぼんやりと光っていた。
-「とりあえずこいつをくらえ！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは木の棒を振った。
-　黒いビームが飛び、白い亡霊に直撃する。
+「ムラムラと心霊現象は百八十度、逆のものなので、私が追い出されてしまいます……」
+「もうちょっと気合を入れろ！","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　歯を食いしばれ！」
+「うぅ……」
+　その時、祭壇が怪しく輝いた。　石のくぼみから、金色の光が漏れ出す。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　光は少しずつ形を取り、やがて、一本の十字架となった。　それは黄金でできていた。
+　古びているはずなのに、夜の闇の中で、まぶしいほど輝いている。
+「出た……！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンが一歩近づいた、その時。　祭壇の前に、白い人影が現れた。
+　黒い守護霊と同じように、雪だるまのような単純な形。
+　だが、こちらは白く、ぼんやりと光っていた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「とりあえずこいつをくらえ！」
+　マリンは木の棒を振った。　黒いビームが飛び、白い亡霊に直撃する。
 　白い亡霊は、しりもちをついた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「やったか？」
-　言った瞬間、白い亡霊はむくりと起き上がった。
-　そして、黄金の十字架へ手を伸ばす。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「させるかぁ！」
-　マリンは走った。
-　白い亡霊が十字架を守るように立ちふさがる。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　亡霊の手から、白い光の刃が伸びた。
-　黒いビームと白い光が、山頂の闇を裂く。
-　マリンは棒を振り回した。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　棒の先から放たれる黒い光は、剣のようにも、
-ムチのようにも伸びた。
-　白い亡霊はそれを受け、かわし、","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","時にはマリンの足元を狙って光を放つ。
-「ちょ、強い！
-　聞いてたより強い！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「頑張ってください。亡霊ですから」
-「説明になってない！」
-　マリンは祭壇の石柱を盾にしながら、すきをうかがった。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　白い亡霊が大きく踏み込む。
+　言った瞬間、白い亡霊はむくりと起き上がった。　そして、黄金の十字架へ手を伸ばす。
+「させるかぁ！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは走った。　白い亡霊が十字架を守るように立ちふさがる。
+　亡霊の手から、白い光の刃が伸びた。　黒いビームと白い光が、山頂の闇を裂く。
+　マリンは棒を振り回した。　棒の先から放たれる黒い光は、剣のようにも、","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","ムチのようにも伸びた。　白い亡霊はそれを受け、かわし、
+時にはマリンの足元を狙って光を放つ。
+「ちょ、強い！","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　聞いてたより強い！」
+「頑張ってください。亡霊ですから」
+「説明になってない！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは祭壇の石柱を盾にしながら、すきをうかがった。　白い亡霊が大きく踏み込む。
 　その瞬間、マリンは横へ転がり、棒を振り上げた。
 「えいっ！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒い光が、白い亡霊の胴体を貫いた。
-　白い亡霊は声もなく揺らぎ、その姿を薄くしていく。
-　最後に、黄金の十字架へ手を伸ばした。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　だが、その手は届かず、白い影は夜風に溶けるように消えた。
-「……勝った？」
-　マリンは息を切らしながら、祭壇へ近づいた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黄金の十字架を、両手で持ち上げる。
-　重い。
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒い光が、白い亡霊の胴体を貫いた。　白い亡霊は声もなく揺らぎ、その姿を薄くしていく。
+　最後に、黄金の十字架へ手を伸ばした。　だが、その手は届かず、
+白い影は夜風に溶けるように消えた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「……勝った？」
+　マリンは息を切らしながら、祭壇へ近づいた。　黄金の十字架を、両手で持ち上げる。　重い。
 　だが、持てないほどではない。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「やった……！」
-　その時、マリンの体から黒い影が抜け出した。
-　守護霊はマリンの前に立ち、深々と頭を下げる。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+　その時、マリンの体から黒い影が抜け出した。　守護霊はマリンの前に立ち、
+深々と頭を下げる。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ありがとうございました。これで成仏できます」
 「いいってことよ。お宝も手に入ったし」
-　マリンは笑った。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　次の瞬間、黒い影が膨れ上がった。
-「……あれ？」
-　消えるどころか、黒い守護霊は濃く、重く、","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","実体を持ち始めていた。
-　丸い体の輪郭がゆがみ、黒い霧のようなものが周囲に広がる。
-「あれ？","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　なんか成仏できてないですけど」
-「封印が解けたので……」
-「あれ？","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　なんか違くない？
-　自分、なんかやっちゃいました？」
+　マリンは笑った。　次の瞬間、黒い影が膨れ上がった。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「……あれ？」
+　消えるどころか、黒い守護霊は濃く、重く、実体を持ち始めていた。
+　丸い体の輪郭がゆがみ、黒い霧のようなものが周囲に広がる。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「あれ？
+　なんか成仏できてないですけど」
+「封印が解けたので……」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「あれ？
+　なんか違くない？　自分、なんかやっちゃいました？」
 「そうなりますね……」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは黄金の十字架を抱えたまま、
-じりじりと後ずさった。
-「だましたな！","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　お前がホシガールか！」
-「はい……。祠でマリンさんと話してた時は、
-バレないかとヒヤヒヤしました……」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「今思うと、すごいキョドってた！」
-　黒い影――妖怪ホシガールは、ゆっくりとマリンに近づいて
-きた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　マリンは黄金の十字架を抱えたまま、じりじりと後ずさった。
+「だましたな！
+　お前がホシガールか！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「はい……。祠でマリンさんと話してた時は、バレないかとヒヤヒヤしました……」
+「今思うと、すごいキョドってた！」
+　黒い影――妖怪ホシガールは、ゆっくりとマリンに近づいてきた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「じゃあ、早速マリン船長をいただいちゃいますね」
 「え、ちょ」
-「正直なところを言うと、マリン船長を食べるのは少し怖いで","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","す……。でも他に食べるものがないので仕方ない……」
+「正直なところを言うと、マリン船長を食べるのは少し怖いです……。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","でも他に食べるものがないので仕方ない……」
 「言い方ひどくない？！」
-　ホシガールの影が、マリンを包み込もうとした。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　その瞬間。
-　ドォオオン！
-　山頂に衝撃音が響いた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　ホシガールの体が横へ吹き飛ぶ。
+　ホシガールの影が、マリンを包み込もうとした。　その瞬間。　ドォオオン！","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　山頂に衝撃音が響いた。　ホシガールの体が横へ吹き飛ぶ。
 「だれだ……！」
-　土煙の中に、一人の姿があった。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　天音かなた。
-　かなたは拳を握りしめ、堂々と立っていた。
-「死にゲーで覚えたバトルと握力五十キロの拳でボコボコにし","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","てやるよぉ！」
+　土煙の中に、一人の姿があった。　天音かなた。　かなたは拳を握りしめ、堂々と立っていた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「死にゲーで覚えたバトルと握力五十キロの拳でボコボコにしてやるよぉ！」
 「かなたん！」
 　マリンは思わず声を上げた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「本当にだれ？！
-　ま、まぁいいでしょう。食材は多い方がいいですし」
-　ホシガールが再び立ち上がる。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　かなたは一気に踏み込んだ。
-　拳が黒い影を打ち抜く。
-　だが、ホシガールの体は煙のように揺れ、衝撃を逃がした。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　逆に黒い腕が伸び、かなたを捕らえようとする。
-　かなたは身をひねってかわし、もう一度殴る。
-　マリンも黄金の十字架を抱えたまま、後ろから叫んだ。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+　ま、まぁいいでしょう。食材は多い方がいいですし」　ホシガールが再び立ち上がる。
+　かなたは一気に踏み込んだ。　拳が黒い影を打ち抜く。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　だが、ホシガールの体は煙のように揺れ、衝撃を逃がした。
+　逆に黒い腕が伸び、かなたを捕らえようとする。　かなたは身をひねってかわし、
+もう一度殴る。　マリンも黄金の十字架を抱えたまま、後ろから叫んだ。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「かなたん、いける？」
 「ごめん、無理、勝てないッス！」
 「え」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「船長！
-　逃げるから掴まって！」
-　かなたはマリンを抱きかかえ、そのまま崖へ走った。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ちょ、そっち崖！」
-「大丈夫！」
-「何が？！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　かなたは迷わず飛び降りた。
-　ホシガールが慌てて追いかける。
-「あ、ちょっと待って」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　黒いビームが、夜空を裂いた。
-　かなたは空中で体をひねり、なんとか避ける。
+　逃げるから掴まって！」　かなたはマリンを抱きかかえ、そのまま崖へ走った。
+「ちょ、そっち崖！」","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「大丈夫！」
+「何が？！」
+　かなたは迷わず飛び降りた。　ホシガールが慌てて追いかける。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「あ、ちょっと待って」
+　黒いビームが、夜空を裂いた。　かなたは空中で体をひねり、なんとか避ける。
 　だが、次の一撃がかなたの背をかすめた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
 "1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","「ぐっ……！」
-　二人はバランスを崩し、そのまま山腹を流れる川へ落ちた。
-　冷たい水が全身を包む。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　流れは速く、マリンは何度も水を飲みそうになりながら、
-必死に黄金の十字架を抱えた。
-　やがて川は海へ向かって下り、二人は最初の海岸近くへ流れ","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
-"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","着いた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+　二人はバランスを崩し、そのまま山腹を流れる川へ落ちた。　冷たい水が全身を包む。
+　流れは速く、マリンは何度も水を飲みそうになりながら、必死に黄金の十字架を抱えた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"
+"1","res\2D_Image\ending_bg_p01_forest_night.png","1600x900","　やがて川は海へ向かって下り、二人は最初の海岸近くへ流れ着いた。","","","","","res\2D_Image\ending_chr_kanata_possessed_transparent.png","1600x900","false","0.95","res\2D_Image\ending_chr_marine_cross_transparent.png","1600x900","false","1.00"

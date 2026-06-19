@@ -105,14 +105,14 @@ void SlideShowManager::FontAdapter::DrawText_(const std::wstring& msg, const int
 {
     if (m_fontIdRef >= 0)
     {
-        m_render.DrawText_(m_fontIdRef, msg, x, y, D3DCOLOR_RGBA(255, 255, 255, 255));
+        m_render.DrawTextEx(m_fontIdRef, msg, x, y, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 }
 
 void SlideShowManager::FontAdapter::Init(const bool bEnglish)
 {
     (void)bEnglish;
-    m_fontIdRef = m_render.SetUpFont(L"BIZ UDGothic", 22, D3DCOLOR_RGBA(255, 255, 255, 255));
+    m_fontIdRef = m_render.SetUpFontEx(L"BIZ UDGothic", 22, D3DCOLOR_RGBA(255, 255, 255, 255));
 }
 
 void SlideShowManager::FontAdapter::OnDeviceLost() {}
