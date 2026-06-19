@@ -81,6 +81,7 @@ void PauseMenu::Open()
     }
 
     m_isOpen = true;
+    m_skipInputFrame = true;
     m_focusArea = FocusArea::TopMenu;
     m_selectedTopMenuIndex = 0;
     m_activeTopMenuIndex = -1;
@@ -110,6 +111,12 @@ void PauseMenu::Update()
 {
     if (!m_isOpen)
     {
+        return;
+    }
+
+    if (m_skipInputFrame)
+    {
+        m_skipInputFrame = false;
         return;
     }
 

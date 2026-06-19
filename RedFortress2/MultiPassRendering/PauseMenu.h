@@ -71,6 +71,7 @@ private:
     InventoryManager* m_inventory = nullptr;
     bool* m_mouseCursorVisible = nullptr;
     bool m_isOpen = false;
+    bool m_skipInputFrame = false;
     FocusArea m_focusArea = FocusArea::TopMenu;
     int m_selectedTopMenuIndex = 0;
     int m_activeTopMenuIndex = -1;
