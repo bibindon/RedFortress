@@ -1,10 +1,9 @@
 ﻿#include "SlideShowManager.h"
 #include "../../InputDevice/InputDevice/InputDevice.h"
-#include "../../SoundLib/SoundLib/SoundLib.h"
+#include "GameAudio.h"
 
 const float SlideShowManager::kSkipHoldSeconds = 1.0f;
 
-static const std::wstring kCursorMoveSoundPath = L"res\\sound\\cursor_move.wav";
 static const std::wstring kTextBackPath = L"res\\2D_Image\\textBack.png";
 static const std::wstring kFadeImagePath = L"res\\2D_Image\\black2x2.bmp";
 
@@ -125,7 +124,7 @@ void SlideShowManager::FontAdapter::OnDeviceReset() {}
 
 void SlideShowManager::SoundAdapter::PlayMove()
 {
-    SoundLib::SoundLib::PlaySoundEffect(kCursorMoveSoundPath, 100);
+    GameAudio::PlayMenuMove();
 }
 
 void SlideShowManager::SoundAdapter::Init() {}
