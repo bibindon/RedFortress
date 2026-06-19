@@ -43,3 +43,6 @@
 [submodule "PhysicsLib"]
 	path = PhysicsLib
 	url = https://github.com/bibindon/PhysicsLib.git
+[submodule "QTE_Module"]
+	path = QTE_Module
+	url = https://github.com/bibindon/QTE_Module.git
