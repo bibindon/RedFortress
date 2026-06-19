@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Command", "..\RedFortressCo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlideShow", "..\RedFortressSlideShow\SlideShow\SlideShow.vcxproj", "{214FD1F0-38AC-4B1D-B8A7-C71FE78BE66F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QTE_Module", "..\QTE_Module\QTE_Module\QTE_Module.vcxproj", "{9BFE08CE-51BA-4014-9D4D-746762F66B7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -81,6 +83,14 @@ Global
 		{214FD1F0-38AC-4B1D-B8A7-C71FE78BE66F}.Release|x64.Build.0 = Release|x64
 		{214FD1F0-38AC-4B1D-B8A7-C71FE78BE66F}.Release|x86.ActiveCfg = Release|Win32
 		{214FD1F0-38AC-4B1D-B8A7-C71FE78BE66F}.Release|x86.Build.0 = Release|Win32
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Debug|x64.ActiveCfg = Debug|x64
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Debug|x64.Build.0 = Debug|x64
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Debug|x86.ActiveCfg = Debug|Win32
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Debug|x86.Build.0 = Debug|Win32
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Release|x64.ActiveCfg = Release|x64
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Release|x64.Build.0 = Release|x64
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Release|x86.ActiveCfg = Release|Win32
+		{9BFE08CE-51BA-4014-9D4D-746762F66B7F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

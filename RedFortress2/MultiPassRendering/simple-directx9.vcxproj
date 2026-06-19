@@ -191,6 +191,9 @@
     <ProjectReference Include="..\..\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj">
       <Project>{b3effbe0-0c53-40fa-a961-b2856809a23c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\QTE_Module\QTE_Module\QTE_Module.vcxproj">
+      <Project>{9bfe08ce-51ba-4014-9d4d-746762f66b7f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\RedFortressCommand\Command\Command.vcxproj">
       <Project>{adaa0e96-6763-43a7-9756-94c8b96fecd0}</Project>
     </ProjectReference>
