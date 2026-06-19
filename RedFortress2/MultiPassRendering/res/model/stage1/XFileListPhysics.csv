@@ -17,3 +17,4 @@
 22,res/model/cube_white.x,3,1.03,3,0,0,0,1,Collision,n
 23,res/model/cube_white.x,-3,1.04,9,0,0,0,1,Collision,n
 24,res/model/cube_white.x,3,1.05,13,0,0,0,1,Collision,n
+27,res/model/tree2Physics/lemonTree.x,6,0,10,0,0,0,1,Collision,n
