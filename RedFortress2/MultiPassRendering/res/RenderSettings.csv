@@ -110,11 +110,11 @@ GodRayEnable,0
 GodRayLightColorR,1.0
 GodRayLightColorG,0.9
 GodRayLightColorB,0.8
-GodRayIntensity,0.1
+GodRayIntensity,0.2
 GodRayVirtualProximityStrength,1.5
-GodRayLightPosX,1000.0
-GodRayLightPosY,100.0
-GodRayLightPosZ,1000.0
+GodRayLightPosX,100.0
+GodRayLightPosY,10.0
+GodRayLightPosZ,100.0
 ,
 CameraNear,0.1
 CameraFar,30000.0
