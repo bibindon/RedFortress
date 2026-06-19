@@ -1,4 +1,4 @@
-ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
+﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 1,res/model/cubeNormalInverse.x,0,0,0,0,0,0,1,Collision,n
 2,res/model/plateField.x,0,0.01,0,0,0,0,1,Collision,n
 1403,res/model/collision_wall.x,-12.5,1.5,7,0,1.5708,0,1,Collision,n
@@ -9,14 +9,8 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 1408,res/model/collision_wall.x,10.5,1.55,-6,0,1.5708,0,1,Collision,n
 1409,res/model/collision_wall.x,-2.5,1.56,9,0,1.5708,0,1,Collision,n
 1410,res/model/collision_wall.x,3.5,1.57,-9,0,0,0,1,Collision,n
-1411,res/model/collision_moving_platform.x,-10.5,0.8,7,0,0,0,1,Collision,y
-1412,res/model/collision_moving_platform.x,-3,0.81,5.5,0,0,0,1,Collision,y
 1413,res/model/collision_moving_platform.x,-1.5,0.82,-1,0,0,0,1,Collision,y
 1414,res/model/collision_moving_platform.x,1.5,0.83,1,0,0,0,1,Collision,y
-1415,res/model/collision_moving_platform.x,3,0.84,-5.5,0,0,0,1,Collision,y
-1416,res/model/collision_moving_platform.x,10.5,0.85,-7,0,0,0,1,Collision,y
-1417,res/model/collision_moving_platform.x,-0.5,0.86,10,0,0,0,1,Collision,y
-1418,res/model/collision_moving_platform.x,0.5,0.87,-10,0,0,0,1,Collision,y
 1419,res/model/cube_white.x,-13.5,1,9,0,0,0,1,Collision,n
 1420,res/model/cube_white.x,-4,1.01,8.5,0,0,0,1,Collision,n
 1421,res/model/cube_white.x,-0.5,1.02,6,0,0,0,1,Collision,n

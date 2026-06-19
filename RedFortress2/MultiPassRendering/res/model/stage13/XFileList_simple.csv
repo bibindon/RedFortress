@@ -1,4 +1,4 @@
-ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
+﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 2,../plateField.x,0,0,0,0,0,0,1,normal
 1303,../collision_wall.x,-13.5,1.5,7,0,0,0,1,normal
 1304,../collision_wall.x,13.5,1.51,5,0,0,0,1,normal
@@ -8,14 +8,8 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 1308,../collision_wall.x,11.5,1.55,-6,0,0,0,1,normal
 1309,../collision_wall.x,-1.5,1.56,9,0,1.5708,0,1,normal
 1310,../collision_wall.x,2.5,1.57,-9,0,0,0,1,normal
-1311,../collision_moving_platform.x,-11.5,0.8,7,0,0,0,1,normal
-1312,../collision_moving_platform.x,-3,0.81,4.5,0,0,0,1,normal
 1313,../collision_moving_platform.x,-0.5,0.82,-1,0,0,0,1,normal
 1314,../collision_moving_platform.x,0.5,0.83,1,0,0,0,1,normal
-1315,../collision_moving_platform.x,3,0.84,-4.5,0,0,0,1,normal
-1316,../collision_moving_platform.x,11.5,0.85,-7,0,0,0,1,normal
-1317,../collision_moving_platform.x,-1.5,0.86,10,0,0,0,1,normal
-1318,../collision_moving_platform.x,1.5,0.87,-10,0,0,0,1,normal
 1319,../cube_white.x,-14.5,1,9,0,0,0,1,normal
 1320,../cube_white.x,-4,1.01,9.5,0,0,0,1,normal
 1321,../cube_white.x,0.5,1.02,6,0,0,0,1,normal
