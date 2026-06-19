@@ -165,3 +165,36 @@ const std::wstring& StageManager::GetCurrentStageDisplayName() const
 {
     return GetCurrentStage().displayName;
 }
+
+std::size_t StageManager::GetClearDestinationIndex(int stageNumber) const
+{
+    if (stageNumber >= 1 && stageNumber <= 4)
+    {
+        return FindStageIndexById(L"select1");
+    }
+    if (stageNumber >= 5 && stageNumber <= 8)
+    {
+        return FindStageIndexById(L"select2");
+    }
+    if (stageNumber >= 9 && stageNumber <= 12)
+    {
+        return FindStageIndexById(L"select3");
+    }
+    if (stageNumber >= 13 && stageNumber <= 16)
+    {
+        return FindStageIndexById(L"select4");
+    }
+    return m_stages.size();
+}
+
+bool StageManager::MoveToStageById(const std::wstring& id)
+{
+    const std::size_t index = FindStageIndexById(id);
+    if (index >= m_stages.size())
+    {
+        return false;
+    }
+
+    m_currentStageIndex = index;
+    return true;
+}

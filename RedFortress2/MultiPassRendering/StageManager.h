@@ -38,6 +38,8 @@ public:
     bool IsClearReached(const D3DXVECTOR3& playerPosition) const;
     int GetCurrentStageNumber() const;
     const std::wstring& GetCurrentStageDisplayName() const;
+    std::size_t GetClearDestinationIndex(int stageNumber) const;
+    bool MoveToStageById(const std::wstring& id);
 
 private:
     void AddStage(const std::wstring& id,

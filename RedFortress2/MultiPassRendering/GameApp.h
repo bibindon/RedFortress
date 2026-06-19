@@ -70,6 +70,7 @@ private:
     void UpdateStageClear();
     bool IsStageClearReached();
     bool StartNextStage();
+    bool StartStageAfterClear();
     void LoadCurrentStageObjects();
     void DamagePlayerHp(int amount);
     void HealPlayerHp(int amount);
@@ -156,4 +157,6 @@ private:
     int m_stageClearHintFontId = -1;
     int m_stageTitleFrame = 0;
     int m_goalMarkerMeshId = -1;
+    int m_stagePortalCooldownFrames = 0;
+    std::wstring m_lastSelectId;
 };

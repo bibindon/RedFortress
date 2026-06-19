@@ -17,6 +17,7 @@ public:
     void Update(const D3DXVECTOR3& playerPosition);
     void DrawPrompt();
     bool ConsumeTriggeredInteraction(std::wstring* interactionId);
+    std::wstring GetNearestOfType(const D3DXVECTOR3& playerPosition, const std::wstring& type) const;
     void Clear();
 
 private:

@@ -580,6 +580,48 @@ void GameApp::Run()
                         m_pendingJump = false;
                     }
                 }
+
+                if (m_stagePortalCooldownFrames <= 0)
+                {
+                    const std::wstring portalId = m_interactionManager.GetNearestOfType(
+                        m_playerMover.GetPosition(), L"StagePortal");
+                    if (!portalId.empty())
+                    {
+                        const std::wstring prefix = L"portal-to-";
+                        const std::size_t prefixLen = prefix.length();
+                        if (portalId.length() > prefixLen && portalId.substr(0, prefixLen) == prefix)
+                        {
+                            const std::wstring destStageId = portalId.substr(prefixLen);
+                            if (destStageId == L"base")
+                            {
+                                const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
+                                if (currentId.length() >= 6 && currentId.substr(0, 6) == L"select")
+                                {
+                                    m_lastSelectId = currentId;
+                                }
+                            }
+                            const std::size_t targetIndex = m_stageManager.FindStageIndexById(destStageId);
+                            if (targetIndex < m_stageManager.GetStageCount())
+                            {
+                                StartStageByIndex(targetIndex);
+                                m_stagePortalCooldownFrames = 60;
+                            }
+                        }
+                    }
+
+                    const std::wstring returnId = m_interactionManager.GetNearestOfType(
+                        m_playerMover.GetPosition(), L"ReturnPortal");
+                    if (!returnId.empty())
+                    {
+                        const std::wstring destId = m_lastSelectId.empty() ? L"select1" : m_lastSelectId;
+                        const std::size_t targetIndex = m_stageManager.FindStageIndexById(destId);
+                        if (targetIndex < m_stageManager.GetStageCount())
+                        {
+                            StartStageByIndex(targetIndex);
+                            m_stagePortalCooldownFrames = 60;
+                        }
+                    }
+                }
             }
             else
             {
@@ -670,6 +712,11 @@ void GameApp::Run()
             if (m_playerInvincibleFrames > 0)
             {
                 --m_playerInvincibleFrames;
+            }
+
+            if (m_stagePortalCooldownFrames > 0)
+            {
+                --m_stagePortalCooldownFrames;
             }
 
             // 敵との接触・踏みつけ判定（QTE 中は無効）
@@ -1379,7 +1426,7 @@ void GameApp::UpdateStageClear()
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
         InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
     {
-        if (StartNextStage())
+        if (StartStageAfterClear())
         {
             return;
         }
@@ -1514,6 +1561,32 @@ bool GameApp::StartNextStage()
     if (!m_stageManager.MoveNextStage())
     {
         return false;
+    }
+
+    LoadCurrentStageObjects();
+    m_gameState = GameState::Playing;
+    m_stageTitleFrame = kStageTitleFrameMax;
+    return true;
+}
+
+bool GameApp::StartStageAfterClear()
+{
+    const int stageNumber = m_stageManager.GetCurrentStageNumber();
+    const std::size_t destinationIndex = m_stageManager.GetClearDestinationIndex(stageNumber);
+
+    if (destinationIndex >= m_stageManager.GetStageCount())
+    {
+        if (!m_stageManager.MoveNextStage())
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if (!m_stageManager.MoveToStage(destinationIndex))
+        {
+            return false;
+        }
     }
 
     LoadCurrentStageObjects();

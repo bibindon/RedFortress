@@ -130,6 +130,40 @@ bool InteractionManager::ConsumeTriggeredInteraction(std::wstring* interactionId
     return true;
 }
 
+std::wstring InteractionManager::GetNearestOfType(const D3DXVECTOR3& playerPosition, const std::wstring& type) const
+{
+    int nearestIndex = -1;
+    float nearestDistance = 0.0f;
+    for (std::size_t i = 0; i < m_interactables.size(); ++i)
+    {
+        const Interactable& interactable = m_interactables.at(i);
+        if (interactable.type != type)
+        {
+            continue;
+        }
+
+        const D3DXVECTOR3 difference = playerPosition - interactable.position;
+        const float distance = D3DXVec3Length(&difference);
+        if (distance > interactable.promptDistance)
+        {
+            continue;
+        }
+
+        if (nearestIndex < 0 || distance < nearestDistance)
+        {
+            nearestIndex = static_cast<int>(i);
+            nearestDistance = distance;
+        }
+    }
+
+    if (nearestIndex < 0)
+    {
+        return L"";
+    }
+
+    return m_interactables.at(nearestIndex).id;
+}
+
 void InteractionManager::Clear()
 {
     m_interactables.clear();
