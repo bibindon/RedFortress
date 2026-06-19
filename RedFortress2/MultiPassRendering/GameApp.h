@@ -19,6 +19,8 @@
 #include "EnemyManager.h"
 #include "PauseMenu.h"
 #include "SaveDataManager.h"
+#include "InventoryManager.h"
+#include "CollectibleManager.h"
 #include "StageEditor.h"
 #include "HpBar.h"
 #include "DamagePopupManager.h"
@@ -97,6 +99,8 @@ private:
     Player m_player;
     StageManager m_stageManager;
     SaveDataManager m_saveDataManager;
+    InventoryManager m_inventoryManager;
+    CollectibleManager m_collectibleManager;
     int m_playerMeshId = -1;
     bool m_playerIsSkinAnim = true;
     PhysicsLib::CharacterMover m_playerMover;

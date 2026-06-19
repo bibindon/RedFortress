@@ -221,7 +221,11 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
                                            1.0f);
 
     InputDevice::Initialize(m_hInstance, m_hWnd);
-    m_pauseMenu.Initialize(m_render, m_mouseCursorVisible);
+    m_inventoryManager.Initialize();
+    m_inventoryManager.Load();
+    m_collectibleManager.Initialize(m_render, m_inventoryManager);
+    m_collectibleManager.LoadForStage(initialStage.collectibleCsvPath);
+    m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
     m_render.SetLoadingScreenProgress(70);
     m_render.Draw();
@@ -491,6 +495,7 @@ void GameApp::Run()
 
             // 衝突判定（動く床の最新位置を反映）
             m_playerMover.Update(m_pendingMove, m_pendingJump);
+            m_collectibleManager.Update(m_playerMover.GetPosition());
             if (m_playerMover.IsCrushed())
             {
                 DamagePlayerHp(m_player.GetHp());
@@ -636,6 +641,7 @@ void GameApp::Finalize()
         m_settingsDialog = NULL;
     }
 
+    m_collectibleManager.Clear();
     m_render.Finalize();
     PhysicsWorld::Finalize();
     SoundLib::SoundLib::Finalize();
@@ -1360,6 +1366,8 @@ void GameApp::LoadCurrentStageObjects()
                                           goalPos,
                                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                           1.0f);
+
+    m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
 
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "InventoryManager.h"
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
@@ -41,19 +42,24 @@ const int kTopMenuFirstRowY = 180;
 const int kTopMenuSecondRowY = 230;
 const int kTopMenuCount = 9;
 const int kItemMenuIndex = 0;
+const int kWeaponMenuIndex = 1;
 const std::size_t kVisibleItemCount = 11;
 const int kItemListX = 205;
 const int kItemListY = 350;
 const int kItemListLineHeight = 34;
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
+const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
 }
 
 void PauseMenu::Initialize(NSRender::Render& render,
-                           bool& mouseCursorVisible)
+                           bool& mouseCursorVisible,
+                           InventoryManager& inventory)
 {
     m_render = &render;
     m_mouseCursorVisible = &mouseCursorVisible;
+    m_inventory = &inventory;
     LoadItems();
+    LoadWeapons();
 }
 
 void PauseMenu::Toggle()
@@ -80,6 +86,8 @@ void PauseMenu::Open()
     m_activeTopMenuIndex = -1;
     m_selectedItemIndex = 0;
     m_itemScrollOffset = 0;
+    m_selectedWeaponIndex = 0;
+    m_weaponScrollOffset = 0;
     m_render->SetSceneUpdatePaused(true);
     m_render->SetPostEffectMaskedGaussianFilter(true);
     m_render->SetPostEffectMaskedGaussianMaskPath(kMenuMaskPath);
@@ -108,6 +116,12 @@ void PauseMenu::Update()
     if (m_focusArea == FocusArea::ItemList)
     {
         UpdateItemList();
+        return;
+    }
+
+    if (m_focusArea == FocusArea::WeaponList)
+    {
+        UpdateWeaponList();
         return;
     }
 
@@ -147,6 +161,39 @@ void PauseMenu::LoadItems()
     }
 }
 
+void PauseMenu::LoadWeapons()
+{
+    m_weapons.clear();
+
+    std::vector<std::vector<std::wstring>> csvData;
+    try
+    {
+        csvData = csv::Read(NSRender::Util::GetExeDir() + kWeaponCsvPath);
+    }
+    catch (...)
+    {
+        return;
+    }
+
+    for (std::size_t i = 0; i < csvData.size(); ++i)
+    {
+        const std::vector<std::wstring>& row = csvData.at(i);
+        if (row.size() < 6 || row.at(0) == L"ID")
+        {
+            continue;
+        }
+
+        WeaponData weapon;
+        weapon.id = row.at(0);
+        weapon.name = row.at(1);
+        weapon.category = row.at(2);
+        weapon.acquisition = row.at(3);
+        weapon.feature = row.at(4);
+        weapon.description = row.at(5);
+        m_weapons.push_back(weapon);
+    }
+}
+
 void PauseMenu::UpdateTopMenu()
 {
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
@@ -176,6 +223,10 @@ void PauseMenu::UpdateTopMenu()
         {
             m_focusArea = FocusArea::ItemList;
         }
+        else if (m_activeTopMenuIndex == kWeaponMenuIndex)
+        {
+            m_focusArea = FocusArea::WeaponList;
+        }
     }
 
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
@@ -192,7 +243,8 @@ void PauseMenu::UpdateItemList()
         return;
     }
 
-    if (m_items.empty())
+    const std::vector<std::size_t> ownedItems = GetOwnedItemIndices();
+    if (ownedItems.empty())
     {
         return;
     }
@@ -207,7 +259,7 @@ void PauseMenu::UpdateItemList()
 
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
     {
-        if (m_selectedItemIndex + 1 < m_items.size())
+        if (m_selectedItemIndex + 1 < ownedItems.size())
         {
             ++m_selectedItemIndex;
         }
@@ -226,6 +278,52 @@ void PauseMenu::EnsureSelectedItemVisible()
     if (m_selectedItemIndex >= m_itemScrollOffset + kVisibleItemCount)
     {
         m_itemScrollOffset = m_selectedItemIndex - kVisibleItemCount + 1;
+    }
+}
+
+void PauseMenu::UpdateWeaponList()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    {
+        m_focusArea = FocusArea::TopMenu;
+        return;
+    }
+
+    const std::vector<std::size_t> ownedWeapons = GetOwnedWeaponIndices();
+    if (ownedWeapons.empty())
+    {
+        return;
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    {
+        if (m_selectedWeaponIndex > 0)
+        {
+            --m_selectedWeaponIndex;
+        }
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    {
+        if (m_selectedWeaponIndex + 1 < ownedWeapons.size())
+        {
+            ++m_selectedWeaponIndex;
+        }
+    }
+
+    EnsureSelectedWeaponVisible();
+}
+
+void PauseMenu::EnsureSelectedWeaponVisible()
+{
+    if (m_selectedWeaponIndex < m_weaponScrollOffset)
+    {
+        m_weaponScrollOffset = m_selectedWeaponIndex;
+    }
+
+    if (m_selectedWeaponIndex >= m_weaponScrollOffset + kVisibleItemCount)
+    {
+        m_weaponScrollOffset = m_selectedWeaponIndex - kVisibleItemCount + 1;
     }
 }
 
@@ -264,6 +362,12 @@ void PauseMenu::Render(const std::wstring& stageName)
     if (m_activeTopMenuIndex == kItemMenuIndex)
     {
         RenderItemPanel();
+        return;
+    }
+
+    if (m_activeTopMenuIndex == kWeaponMenuIndex)
+    {
+        RenderWeaponPanel();
         return;
     }
 
@@ -367,10 +471,11 @@ void PauseMenu::RenderItemPanel()
                                44,
                                kTextColor);
 
-    if (m_items.empty())
+    const std::vector<std::size_t> ownedItems = GetOwnedItemIndices();
+    if (ownedItems.empty())
     {
         m_render->DrawTextEx(m_qualityFontId,
-                             L"アイテムデータを読み込めませんでした。",
+                             L"所持しているアイテムはありません。",
                              kItemListX,
                              kItemListY,
                              kSubTextColor);
@@ -379,9 +484,9 @@ void PauseMenu::RenderItemPanel()
 
     const std::size_t visibleEnd = m_itemScrollOffset + kVisibleItemCount;
     std::size_t itemEnd = visibleEnd;
-    if (itemEnd > m_items.size())
+    if (itemEnd > ownedItems.size())
     {
-        itemEnd = m_items.size();
+        itemEnd = ownedItems.size();
     }
 
     for (std::size_t i = m_itemScrollOffset; i < itemEnd; ++i)
@@ -395,8 +500,9 @@ void PauseMenu::RenderItemPanel()
         }
 
         const int lineIndex = static_cast<int>(i - m_itemScrollOffset);
+        const ItemData& item = m_items.at(ownedItems.at(i));
         m_render->DrawTextEx(m_qualityFontId,
-                             prefix + m_items.at(i).name,
+                             prefix + item.name,
                              kItemListX,
                              kItemListY + lineIndex * kItemListLineHeight,
                              color);
@@ -404,7 +510,7 @@ void PauseMenu::RenderItemPanel()
 
     const std::wstring positionText = std::to_wstring(m_selectedItemIndex + 1) +
                                       L" / " +
-                                      std::to_wstring(m_items.size());
+                                      std::to_wstring(ownedItems.size());
     m_render->DrawTextExCenter(m_qualityFontId,
                                positionText,
                                170,
@@ -413,7 +519,7 @@ void PauseMenu::RenderItemPanel()
                                36,
                                kSubTextColor);
 
-    const ItemData& selectedItem = m_items.at(m_selectedItemIndex);
+    const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
     const int detailX = 850;
     m_render->DrawTextEx(m_menuItemFontId,
                          selectedItem.name,
@@ -436,15 +542,163 @@ void PauseMenu::RenderItemPanel()
                          520,
                          kSubTextColor);
     m_render->DrawTextEx(m_qualityFontId,
+                         L"所持数：" + std::to_wstring(m_inventory->GetItemCount(selectedItem.id)),
+                         detailX,
+                         565,
+                         kSubTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
                          L"説明",
                          detailX,
-                         585,
+                         620,
                          kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          selectedItem.description,
                          detailX,
-                         630,
+                         665,
                          kSubTextColor);
+}
+
+void PauseMenu::RenderWeaponPanel()
+{
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"武器一覧",
+                               170,
+                               300,
+                               560,
+                               44,
+                               kTextColor);
+
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"武器詳細",
+                               820,
+                               300,
+                               600,
+                               44,
+                               kTextColor);
+
+    const std::vector<std::size_t> ownedWeapons = GetOwnedWeaponIndices();
+    if (ownedWeapons.empty())
+    {
+        m_render->DrawTextEx(m_qualityFontId,
+                             L"所持している武器はありません。",
+                             kItemListX,
+                             kItemListY,
+                             kSubTextColor);
+        return;
+    }
+
+    const std::size_t visibleEnd = m_weaponScrollOffset + kVisibleItemCount;
+    std::size_t weaponEnd = visibleEnd;
+    if (weaponEnd > ownedWeapons.size())
+    {
+        weaponEnd = ownedWeapons.size();
+    }
+
+    for (std::size_t i = m_weaponScrollOffset; i < weaponEnd; ++i)
+    {
+        std::wstring prefix = L"  ";
+        UINT color = kSubTextColor;
+        if (i == m_selectedWeaponIndex)
+        {
+            prefix = L"> ";
+            color = kSelectedTextColor;
+        }
+
+        const int lineIndex = static_cast<int>(i - m_weaponScrollOffset);
+        const WeaponData& weapon = m_weapons.at(ownedWeapons.at(i));
+        m_render->DrawTextEx(m_qualityFontId,
+                             prefix + weapon.name,
+                             kItemListX,
+                             kItemListY + lineIndex * kItemListLineHeight,
+                             color);
+    }
+
+    const std::wstring positionText = std::to_wstring(m_selectedWeaponIndex + 1) +
+                                      L" / " +
+                                      std::to_wstring(ownedWeapons.size());
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               positionText,
+                               170,
+                               730,
+                               560,
+                               36,
+                               kSubTextColor);
+
+    const WeaponData& selectedWeapon = m_weapons.at(ownedWeapons.at(m_selectedWeaponIndex));
+    const int detailX = 850;
+    m_render->DrawTextEx(m_menuItemFontId,
+                         selectedWeapon.name,
+                         detailX,
+                         365,
+                         kSelectedTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
+                         L"分類：" + selectedWeapon.category,
+                         detailX,
+                         430,
+                         kSubTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
+                         L"入手方法：" + selectedWeapon.acquisition,
+                         detailX,
+                         475,
+                         kSubTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
+                         L"特徴：" + selectedWeapon.feature,
+                         detailX,
+                         520,
+                         kSubTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
+                         L"所持数：" + std::to_wstring(m_inventory->GetWeaponCount(selectedWeapon.id)),
+                         detailX,
+                         565,
+                         kSubTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
+                         L"説明",
+                         detailX,
+                         620,
+                         kTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
+                         selectedWeapon.description,
+                         detailX,
+                         665,
+                         kSubTextColor);
+}
+
+std::vector<std::size_t> PauseMenu::GetOwnedItemIndices() const
+{
+    std::vector<std::size_t> indices;
+    if (m_inventory == nullptr)
+    {
+        return indices;
+    }
+
+    for (std::size_t i = 0; i < m_items.size(); ++i)
+    {
+        if (m_inventory->GetItemCount(m_items.at(i).id) > 0)
+        {
+            indices.push_back(i);
+        }
+    }
+
+    return indices;
+}
+
+std::vector<std::size_t> PauseMenu::GetOwnedWeaponIndices() const
+{
+    std::vector<std::size_t> indices;
+    if (m_inventory == nullptr)
+    {
+        return indices;
+    }
+
+    for (std::size_t i = 0; i < m_weapons.size(); ++i)
+    {
+        if (m_inventory->GetWeaponCount(m_weapons.at(i).id) > 0)
+        {
+            indices.push_back(i);
+        }
+    }
+
+    return indices;
 }
 
 bool PauseMenu::IsOpen() const
