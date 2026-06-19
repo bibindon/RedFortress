@@ -70,6 +70,7 @@ private:
     void UpdateStageClear();
     bool IsStageClearReached();
     bool StartNextStage();
+    std::wstring GetStageStoryScriptPath(const std::wstring& stageId) const;
     bool StartStageAfterClear();
     void LoadCurrentStageObjects();
     void DamagePlayerHp(int amount);
@@ -143,6 +144,7 @@ private:
     int m_respawnCameraMoveFrames = 0;
     bool m_playerDeathPending = false;
     bool m_stageClearProcessed = false;
+    bool m_startStageAfterSlideShow = false;
     StageEditor m_stageEditor;
     D3DXVECTOR3 m_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

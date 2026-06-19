@@ -446,9 +446,17 @@ void GameApp::Run()
         {
             if (!m_slideShowManager.IsActive())
             {
-                m_gameState = GameState::Playing;
-                m_stageTitleFrame = kStageTitleFrameMax;
-                m_prevMovingPlatformPositions.clear();
+                if (m_startStageAfterSlideShow)
+                {
+                    m_startStageAfterSlideShow = false;
+                    StartStageAfterClear();
+                }
+                else
+                {
+                    m_gameState = GameState::Playing;
+                    m_stageTitleFrame = kStageTitleFrameMax;
+                    m_prevMovingPlatformPositions.clear();
+                }
                 m_render.Draw();
             }
             else
@@ -456,9 +464,17 @@ void GameApp::Run()
                 m_slideShowManager.ProcessInput();
                 if (m_slideShowManager.Update())
                 {
-                    m_gameState = GameState::Playing;
-                    m_stageTitleFrame = kStageTitleFrameMax;
-                    m_prevMovingPlatformPositions.clear();
+                    if (m_startStageAfterSlideShow)
+                    {
+                        m_startStageAfterSlideShow = false;
+                        StartStageAfterClear();
+                    }
+                    else
+                    {
+                        m_gameState = GameState::Playing;
+                        m_stageTitleFrame = kStageTitleFrameMax;
+                        m_prevMovingPlatformPositions.clear();
+                    }
                     m_render.Draw();
                 }
                 else
@@ -1413,15 +1429,15 @@ void GameApp::UpdateTitleByInput()
 
 void GameApp::UpdateStageClear()
 {
+    const std::wstring clearedStageId = m_stageManager.GetCurrentStage().id;
     if (!m_stageClearProcessed)
     {
-        const std::wstring clearedStageId = m_stageManager.GetCurrentStage().id;
         m_saveDataManager.MarkStageCleared(clearedStageId);
         m_saveDataManager.Save();
         m_stageClearProcessed = true;
     }
 
-    if (m_stageManager.IsLastStage())
+    if (m_stageManager.GetCurrentStage().id == L"4-4")
     {
         m_slideShowManager.Start(L"res\\script\\ending.csv");
         m_slideShowManager.SetStopOnFinish(false);
@@ -1432,6 +1448,15 @@ void GameApp::UpdateStageClear()
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
         InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
     {
+        const std::wstring storyScriptPath = GetStageStoryScriptPath(clearedStageId);
+        if (!storyScriptPath.empty())
+        {
+            m_slideShowManager.Start(storyScriptPath);
+            m_slideShowManager.SetStopOnFinish(false);
+            m_startStageAfterSlideShow = true;
+            m_gameState = GameState::SlideShow;
+            return;
+        }
         if (StartStageAfterClear())
         {
             return;
@@ -1440,6 +1465,31 @@ void GameApp::UpdateStageClear()
 
     DrawStageClear();
     m_render.Draw();
+}
+
+std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId) const
+{
+    if (stageId == L"1-4")
+    {
+        return L"res\\script\\story_after_1_4.csv";
+    }
+    if (stageId == L"2-4")
+    {
+        return L"res\\script\\story_after_2_4.csv";
+    }
+    if (stageId == L"3-4")
+    {
+        return L"res\\script\\story_after_3_4.csv";
+    }
+    if (stageId == L"4-1")
+    {
+        return L"res\\script\\story_after_4_1.csv";
+    }
+    if (stageId == L"4-3")
+    {
+        return L"res\\script\\story_after_4_3.csv";
+    }
+    return std::wstring();
 }
 
 bool GameApp::IsStageClearReached()
@@ -1710,7 +1760,7 @@ void GameApp::DrawStageClear()
         m_stageClearHintFontId = m_render.SetUpFont(L"BIZ UDGothic", 24, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    if (m_stageManager.IsLastStage())
+    if (m_stageManager.GetCurrentStage().id == L"4-4")
     {
         m_render.DrawTextCenter(m_stageClearFontId, L"All Clear", 0, 330, NSRender::Common::BASE_W, 100);
         return;
