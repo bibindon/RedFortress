@@ -225,6 +225,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_inventoryManager.Load();
     m_collectibleManager.Initialize(m_render, m_inventoryManager);
     m_collectibleManager.LoadForStage(initialStage.collectibleCsvPath);
+    m_interactionManager.Initialize(m_render);
+    m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
     m_render.SetLoadingScreenProgress(70);
@@ -469,6 +471,8 @@ void GameApp::Run()
             m_damagePopupManager.Update();
             m_damagePopupManager.Draw();
             m_enemyManager.DrawHpBars(m_render);
+            m_interactionManager.Update(m_playerMover.GetPosition());
+            m_interactionManager.DrawPrompt();
             m_render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -641,6 +645,7 @@ void GameApp::Finalize()
         m_settingsDialog = NULL;
     }
 
+    m_interactionManager.Clear();
     m_collectibleManager.Clear();
     m_render.Finalize();
     PhysicsWorld::Finalize();
@@ -1368,6 +1373,7 @@ void GameApp::LoadCurrentStageObjects()
                                           1.0f);
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
+    m_interactionManager.LoadForStage(stage.interactableCsvPath);
 
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);

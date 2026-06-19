@@ -21,6 +21,7 @@
 #include "SaveDataManager.h"
 #include "InventoryManager.h"
 #include "CollectibleManager.h"
+#include "InteractionManager.h"
 #include "StageEditor.h"
 #include "HpBar.h"
 #include "DamagePopupManager.h"
@@ -101,6 +102,7 @@ private:
     SaveDataManager m_saveDataManager;
     InventoryManager m_inventoryManager;
     CollectibleManager m_collectibleManager;
+    InteractionManager m_interactionManager;
     int m_playerMeshId = -1;
     bool m_playerIsSkinAnim = true;
     PhysicsLib::CharacterMover m_playerMover;

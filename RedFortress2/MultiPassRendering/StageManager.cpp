@@ -45,6 +45,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.moveCsvPath = basePath + L"XFileListMove.csv";
     stage.enemyCsvPath = basePath + L"EnemyPositions.csv";
     stage.collectibleCsvPath = basePath + L"Collectibles.csv";
+    stage.interactableCsvPath = basePath + L"Interactables.csv";
     stage.playerStartPosition = playerStartPosition;
     stage.clearPosition = clearPosition;
     stage.clearDistance = 1.0f;
