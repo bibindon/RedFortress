@@ -161,6 +161,78 @@ int InventoryManager::GetWeaponCount(const std::wstring& weaponId) const
     return GetCount(m_weaponCounts, weaponId);
 }
 
+bool InventoryManager::HasItems(const std::vector<std::pair<std::wstring, int>>& materials) const
+{
+    std::unordered_map<std::wstring, int> requiredCounts;
+    for (const auto& material : materials)
+    {
+        if (material.first.empty() || material.second <= 0)
+        {
+            return false;
+        }
+        requiredCounts[material.first] += material.second;
+    }
+
+    for (const auto& required : requiredCounts)
+    {
+        if (GetItemCount(required.first) < required.second)
+        {
+            return false;
+        }
+    }
+
+    return !materials.empty();
+}
+
+bool InventoryManager::TryCraft(const std::vector<std::pair<std::wstring, int>>& materials,
+                                const std::wstring& resultType,
+                                const std::wstring& resultId,
+                                const int resultCount)
+{
+    if (resultId.empty() || resultCount <= 0 || !HasItems(materials))
+    {
+        return false;
+    }
+
+    if (resultType != kItemType && resultType != kWeaponType)
+    {
+        return false;
+    }
+
+    std::unordered_map<std::wstring, int> requiredCounts;
+    for (const auto& material : materials)
+    {
+        requiredCounts[material.first] += material.second;
+    }
+
+    for (const auto& required : requiredCounts)
+    {
+        auto found = m_itemCounts.find(required.first);
+        if (found == m_itemCounts.end())
+        {
+            return false;
+        }
+
+        found->second -= required.second;
+        if (found->second <= 0)
+        {
+            m_itemCounts.erase(found);
+        }
+    }
+
+    if (resultType == kWeaponType)
+    {
+        AddWeapon(resultId, resultCount);
+    }
+    else
+    {
+        AddItem(resultId, resultCount);
+    }
+
+    Save();
+    return true;
+}
+
 int InventoryManager::GetCount(const std::unordered_map<std::wstring, int>& counts,
                                const std::wstring& id) const
 {

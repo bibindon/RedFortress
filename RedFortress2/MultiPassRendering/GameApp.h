@@ -22,6 +22,7 @@
 #include "InventoryManager.h"
 #include "CollectibleManager.h"
 #include "InteractionManager.h"
+#include "CraftMenu.h"
 #include "../../QTE_Module/QTE_Module/QTE_Module.h"
 #include "StageEditor.h"
 #include "HpBar.h"
@@ -105,6 +106,7 @@ private:
     InventoryManager m_inventoryManager;
     CollectibleManager m_collectibleManager;
     InteractionManager m_interactionManager;
+    CraftMenu m_craftMenu;
     NS_QTE_Module::QTE_Module* m_qte = nullptr;
     int m_playerMeshId = -1;
     bool m_playerIsSkinAnim = true;

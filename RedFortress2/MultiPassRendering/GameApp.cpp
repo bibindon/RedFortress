@@ -268,6 +268,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_interactionManager.Initialize(m_render);
     m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
+    m_craftMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
     m_render.SetLoadingScreenProgress(70);
     m_render.Draw();
@@ -324,6 +325,7 @@ void GameApp::Run()
         InputDevice::Update();
         if (m_gameState == GameState::Playing &&
             !m_pauseMenu.IsOpen() &&
+            !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
         {
@@ -332,6 +334,7 @@ void GameApp::Run()
 
         if (m_gameState != GameState::EndingFin &&
             !m_pauseMenu.IsOpen() &&
+            !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LCONTROL) ||
              InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RCONTROL)))
@@ -461,6 +464,17 @@ void GameApp::Run()
         }
         else
         {
+            if (m_craftMenu.BlocksGameInput())
+            {
+                m_craftMenu.Update();
+                m_hpBar.Draw();
+                m_damagePopupManager.Draw();
+                m_enemyManager.DrawHpBars(m_render);
+                m_craftMenu.Render();
+                m_render.Draw();
+                continue;
+            }
+
             if (m_pauseMenu.BlocksGameInput())
             {
                 m_pauseMenu.Update();
@@ -512,16 +526,23 @@ void GameApp::Run()
                 std::wstring interactionId;
                 if (m_interactionManager.ConsumeTriggeredInteraction(&interactionId) && !interactionId.empty())
                 {
-                    m_qte = new NS_QTE_Module::QTE_Module();
-                    QteSprite* sprWhiteBar = new QteSprite();
-                    sprWhiteBar->app = this;
-                    sprWhiteBar->Load(L"res\\2D_Image\\white_bar.bmp");
-                    QteSprite* sprBlackBar = new QteSprite();
-                    sprBlackBar->app = this;
-                    sprBlackBar->Load(L"res\\2D_Image\\black_bar.bmp");
-                    m_qte->SetBars(sprWhiteBar, sprBlackBar, 1600, 900);
-                    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-                    m_pendingJump = false;
+                    if (interactionId == L"base-crafting-station-01")
+                    {
+                        m_craftMenu.Open();
+                    }
+                    else
+                    {
+                        m_qte = new NS_QTE_Module::QTE_Module();
+                        QteSprite* sprWhiteBar = new QteSprite();
+                        sprWhiteBar->app = this;
+                        sprWhiteBar->Load(L"res\\2D_Image\\white_bar.bmp");
+                        QteSprite* sprBlackBar = new QteSprite();
+                        sprBlackBar->app = this;
+                        sprBlackBar->Load(L"res\\2D_Image\\black_bar.bmp");
+                        m_qte->SetBars(sprWhiteBar, sprBlackBar, 1600, 900);
+                        m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                        m_pendingJump = false;
+                    }
                 }
             }
             else
@@ -745,6 +766,11 @@ void GameApp::Finalize()
         m_qte->Finalize();
         delete m_qte;
         m_qte = nullptr;
+    }
+
+    if (m_craftMenu.IsOpen())
+    {
+        m_craftMenu.Close();
     }
 
     m_interactionManager.Clear();
