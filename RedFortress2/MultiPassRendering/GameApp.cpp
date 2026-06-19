@@ -222,6 +222,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetShowFPS(false);
     m_render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
     m_stageManager.Initialize();
+    m_stageManager.MoveToStage(m_stageManager.FindStageIndexById(L"select1"));
     const StageManager::StageData& initialStage = m_stageManager.GetCurrentStage();
     m_render.LoadXFileListFromCsv(initialStage.renderCsvPath);
     m_render.SetLoadingScreenProgress(15);
@@ -247,6 +248,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     PhysicsLib::SettingsState::SetCameraAutoMoveEnabled(true);
     PhysicsLib::SettingsState::SetFocusModeEnabled(false);
     PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
+    m_useFixedCamera = initialStage.useFixedCamera;
+    m_fixedCameraPos = initialStage.fixedCameraPos;
+    m_fixedCameraLookAt = initialStage.fixedCameraLookAt;
     InitializeCameraFromRenderSettings();
     UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
     m_enemyManager.Initialize();
