@@ -48,6 +48,8 @@ private:
     static const std::wstring kDamageImagePath;
     static constexpr float kPosX = 0.03f;
     static constexpr float kPosY = 0.05f;
+    static constexpr float kBackGaussPosX = 0.024f;
+    static constexpr float kBackGaussPosY = 0.028f;
     static constexpr int kSourceWidth = 1000;
     static constexpr int kSourceHeight = 16;
     static constexpr int kBackGaussSourceWidth = 1024;

@@ -154,8 +154,8 @@ void HpBar::Draw()
     const int frontSourceW = static_cast<int>(static_cast<float>(frontWidth) / scale + 0.5f);
 
     m_pRender->DrawImageAutoResizeSizedRect(kBackGaussImagePath,
-                                            kPosX,
-                                            kPosY,
+                                            kBackGaussPosX,
+                                            kBackGaussPosY,
                                             0,
                                             0,
                                             kBackGaussSourceWidth,
