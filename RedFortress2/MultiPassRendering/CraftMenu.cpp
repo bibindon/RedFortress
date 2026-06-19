@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "InventoryManager.h"
+#include "GameAudio.h"
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
@@ -89,6 +90,7 @@ void CraftMenu::Update()
                                InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A);
     if (cancelPressed)
     {
+        GameAudio::PlayMenuCancel();
         Close();
         return;
     }
@@ -115,6 +117,7 @@ void CraftMenu::Update()
     const Recipe& recipe = m_recipes.at(m_selectedIndex);
     if (!CanCraft(recipe))
     {
+        GameAudio::PlayMenuCancel();
         m_statusMessage = L"素材が不足しています";
         m_statusColor = kMissingTextColor;
         return;
@@ -125,6 +128,7 @@ void CraftMenu::Update()
                               recipe.resultId,
                               recipe.resultCount))
     {
+        GameAudio::PlayMenuConfirm();
         m_statusMessage = GetName(recipe.resultId) + L"を作成しました";
         m_statusColor = kEnoughTextColor;
     }
@@ -320,6 +324,7 @@ std::wstring CraftMenu::GetName(const std::wstring& id) const
 
 void CraftMenu::MoveSelection(const int direction)
 {
+    const std::size_t previousIndex = m_selectedIndex;
     if (direction < 0 && m_selectedIndex > 0)
     {
         --m_selectedIndex;
@@ -327,6 +332,10 @@ void CraftMenu::MoveSelection(const int direction)
     else if (direction > 0 && m_selectedIndex + 1 < m_recipes.size())
     {
         ++m_selectedIndex;
+    }
+    if (m_selectedIndex != previousIndex)
+    {
+        GameAudio::PlayMenuMove();
     }
     m_statusMessage.clear();
     EnsureSelectionVisible();

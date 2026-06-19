@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "InventoryManager.h"
+#include "GameAudio.h"
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
@@ -203,6 +204,7 @@ void PauseMenu::LoadWeapons()
 
 void PauseMenu::UpdateTopMenu()
 {
+    const int previousIndex = m_selectedTopMenuIndex;
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
     {
         --m_selectedTopMenuIndex;
@@ -223,8 +225,14 @@ void PauseMenu::UpdateTopMenu()
         m_activeTopMenuIndex = -1;
     }
 
+    if (m_selectedTopMenuIndex != previousIndex)
+    {
+        GameAudio::PlayMenuMove();
+    }
+
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
     {
+        GameAudio::PlayMenuConfirm();
         m_activeTopMenuIndex = m_selectedTopMenuIndex;
         if (m_activeTopMenuIndex == kItemMenuIndex)
         {
@@ -238,6 +246,7 @@ void PauseMenu::UpdateTopMenu()
 
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
     {
+        GameAudio::PlayMenuCancel();
         Close();
     }
 }
@@ -246,6 +255,7 @@ void PauseMenu::UpdateItemList()
 {
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
     {
+        GameAudio::PlayMenuCancel();
         m_focusArea = FocusArea::TopMenu;
         return;
     }
@@ -256,6 +266,7 @@ void PauseMenu::UpdateItemList()
         return;
     }
 
+    const std::size_t previousIndex = m_selectedItemIndex;
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
     {
         if (m_selectedItemIndex > 0)
@@ -270,6 +281,11 @@ void PauseMenu::UpdateItemList()
         {
             ++m_selectedItemIndex;
         }
+    }
+
+    if (m_selectedItemIndex != previousIndex)
+    {
+        GameAudio::PlayMenuMove();
     }
 
     EnsureSelectedItemVisible();
@@ -292,6 +308,7 @@ void PauseMenu::UpdateWeaponList()
 {
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
     {
+        GameAudio::PlayMenuCancel();
         m_focusArea = FocusArea::TopMenu;
         return;
     }
@@ -302,6 +319,7 @@ void PauseMenu::UpdateWeaponList()
         return;
     }
 
+    const std::size_t previousIndex = m_selectedWeaponIndex;
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
     {
         if (m_selectedWeaponIndex > 0)
@@ -316,6 +334,11 @@ void PauseMenu::UpdateWeaponList()
         {
             ++m_selectedWeaponIndex;
         }
+    }
+
+    if (m_selectedWeaponIndex != previousIndex)
+    {
+        GameAudio::PlayMenuMove();
     }
 
     EnsureSelectedWeaponVisible();

@@ -1,6 +1,7 @@
 ﻿#include "CollectibleManager.h"
 
 #include "InventoryManager.h"
+#include "GameAudio.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
@@ -119,6 +120,7 @@ void CollectibleManager::Collect(Collectible& collectible)
     }
 
     m_inventory->Save();
+    GameAudio::PlayItemGet();
     m_render->RemoveMesh(collectible.renderId);
     collectible.renderId = -1;
 }

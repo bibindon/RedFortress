@@ -1,11 +1,11 @@
 ﻿#include "GameApp.h"
 
 #include "resource.h"
+#include "GameAudio.h"
 
 namespace
 {
     const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
-    const std::wstring g_cursorMoveSoundPath = L"res\\sound\\cursor_move.wav";
     const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
     const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
     const std::wstring g_playerIdleAnimName = L"000";
@@ -120,12 +120,12 @@ public:
     {
         if (app != nullptr)
         {
-            SoundLib::SoundLib::PlaySoundEffect(g_cursorMoveSoundPath, 100);
+            GameAudio::PlayMenuMove();
         }
     }
 
-    void PlayClick() override {}
-    void PlayBack() override {}
+    void PlayClick() override { GameAudio::PlayMenuConfirm(); }
+    void PlayBack() override { GameAudio::PlayMenuCancel(); }
 
     void Init() override {}
 };
@@ -274,7 +274,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.Draw();
     SoundLib::SoundLib::Initialize(m_hWnd);
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
-    SoundLib::SoundLib::LoadSoundEffect(g_cursorMoveSoundPath);
+    GameAudio::Initialize();
 
     CommandFont* pFont = new CommandFont();
     pFont->app = this;
@@ -323,6 +323,41 @@ void GameApp::Run()
         }
 
         InputDevice::Update();
+
+        const D3DXVECTOR3 audioPlayerPosition = m_playerMover.GetPosition();
+        const D3DXVECTOR3 audioListenerForward = GetCameraPlanarForward();
+        SoundLib::Vector3 listenerPosition { audioPlayerPosition.x, audioPlayerPosition.y, audioPlayerPosition.z };
+        SoundLib::Vector3 listenerFront { audioListenerForward.x, audioListenerForward.y, audioListenerForward.z };
+        SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
+        SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
+
+        if (m_gameState == GameState::Title)
+        {
+            GameAudio::PlayTitleMusic();
+        }
+        else if (m_gameState == GameState::Playing)
+        {
+            bool combatActive = false;
+            for (const Enemy& enemy : m_enemyManager.GetEnemies())
+            {
+                if (enemy.IsDead())
+                {
+                    continue;
+                }
+                const D3DXVECTOR3 difference = enemy.GetPosition() - audioPlayerPosition;
+                if (D3DXVec3LengthSq(&difference) <= 144.0f)
+                {
+                    combatActive = true;
+                    break;
+                }
+            }
+            const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
+            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, combatActive);
+        }
+        else if (m_gameState == GameState::Ending || m_gameState == GameState::EndingFin)
+        {
+            GameAudio::PlayEndingMusic();
+        }
         if (m_gameState == GameState::Playing &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
@@ -626,6 +661,7 @@ void GameApp::Run()
                 {
                     attackTarget->TakeDamage(m_render, attackDefinition.damage);
                     m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
+                    GameAudio::PlayAttackHit();
                 }
             }
 
@@ -649,6 +685,7 @@ void GameApp::Run()
                     {
                         enemy.TakeDamage(m_render, 10);
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
+                        GameAudio::PlayAttackHit();
                         D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
                         playerPos.y += 0.3f;
                         m_playerMover.SetPosition(playerPos);
@@ -656,6 +693,7 @@ void GameApp::Run()
                     }
                     else if (m_playerInvincibleFrames <= 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
                     {
+                        GameAudio::PlayEnemyAttack();
                         DamagePlayerHp(10);
                         m_playerInvincibleFrames = kPlayerInvincibleDuration;
                         if (m_playerMeshId >= 0)
@@ -697,19 +735,13 @@ void GameApp::Run()
 
             if (m_playerMover.JustJumped() && m_playerAnimState == PlayerAnimState::Jump)
             {
+                GameAudio::PlayJump();
                 if (m_playerMeshId >= 0)
                 {
                     m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 0.1f);
                     m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
                 }
             }
-
-            const D3DXVECTOR3 playerRenderPosition = m_playerMover.GetPosition();
-            const D3DXVECTOR3 listenerForward = GetCameraPlanarForward();
-            SoundLib::Vector3 listenerPosition { playerRenderPosition.x, playerRenderPosition.y, playerRenderPosition.z };
-            SoundLib::Vector3 listenerFront { listenerForward.x, listenerForward.y, listenerForward.z };
-            SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
-            SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
 
             if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F2))
             {
@@ -777,6 +809,7 @@ void GameApp::Finalize()
     m_collectibleManager.Clear();
     m_render.Finalize();
     PhysicsWorld::Finalize();
+    GameAudio::Finalize();
     SoundLib::SoundLib::Finalize();
     InputDevice::Finalize();
 
@@ -857,6 +890,7 @@ void GameApp::UpdatePlayerByInput()
     {
         if (m_playerAttackController.TryStart(requestedAttackType))
         {
+            GameAudio::PlayPlayerAttack();
             m_playerAnimState = PlayerAnimState::Attack;
             if (m_playerMeshId >= 0)
             {
@@ -1373,6 +1407,7 @@ void GameApp::DamagePlayerHp(int amount)
     const int newHp = m_player.GetHp();
     if (newHp < oldHp)
     {
+        GameAudio::PlayPlayerDamage();
         m_hpBar.OnDamage(oldHp, newHp);
         m_damagePopupManager.Add(oldHp - newHp, m_playerMover.GetPosition(), false);
     }
