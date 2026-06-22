@@ -4,6 +4,8 @@
 #include "GameAudio.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Util.h"
+#include "../../RedFortressRender/Render/Camera.h"
+#include "../../RedFortressRender/Render/Common.h"
 
 namespace
 {
@@ -15,6 +17,8 @@ namespace
     const std::wstring g_playerRunAnimName = L"run";
     const std::wstring g_playerJumpAnimName = L"jump";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
+    const std::wstring g_stageCursorImagePath = L"res\\2D_Image\\stage-cursor.png";
+    const D3DXVECTOR3 kStageSelect1PortalPos(3.0f, 1.01f, -9.0f);
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -255,6 +259,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_fixedCameraLookAt = initialStage.fixedCameraLookAt;
     InitializeCameraFromRenderSettings();
     UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
+    UpdatePlayerMeshVisibility();
     m_enemyManager.Initialize();
     m_enemyManager.LoadForStage(m_render, initialStage.enemyCsvPath);
 
@@ -703,6 +708,7 @@ void GameApp::Run()
             {
                 m_qte->Render();
             }
+            DrawStageSelectCursor();
             m_render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -1231,6 +1237,40 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
     const D3DXVECTOR3 desiredCameraPosition = cameraTarget + offset;
     const D3DXVECTOR3 cameraPosition = m_cameraMover.ResolvePosition(cameraTarget, desiredCameraPosition);
     m_render.SetCamera(cameraPosition, cameraTarget);
+}
+
+void GameApp::UpdatePlayerMeshVisibility()
+{
+    if (m_playerMeshId < 0)
+    {
+        return;
+    }
+
+    const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
+    const bool isSelectStage = (currentId.length() >= 6 && currentId.substr(0, 6) == L"select");
+    m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, !isSelectStage);
+}
+
+void GameApp::DrawStageSelectCursor()
+{
+    const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
+    if (currentId != L"select1")
+    {
+        return;
+    }
+
+    const POINT screenPos = NSRender::Camera::GetScreenPos(kStageSelect1PortalPos);
+    if (screenPos.x < 0 || screenPos.y < 0)
+    {
+        return;
+    }
+
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) / static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) / static_cast<float>(NSRender::Common::ScreenH());
+    const int baseX = static_cast<int>(static_cast<float>(screenPos.x) * scaleX + 0.5f);
+    const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY + 0.5f);
+
+    m_render.DrawImageEx(g_stageCursorImagePath, baseX, baseY, 255, false, 0.5f);
 }
 
 void GameApp::PopulateStageCombo(HWND hDlg)
@@ -1783,6 +1823,7 @@ void GameApp::LoadCurrentStageObjects()
     m_playerMover.Reset(stage.playerStartPosition);
     m_enemyManager.LoadForStage(m_render, stage.enemyCsvPath);
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
+    UpdatePlayerMeshVisibility();
 }
 
 void GameApp::DrawTitleScreen()

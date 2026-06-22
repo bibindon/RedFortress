@@ -97,6 +97,8 @@ private:
     void InitializePlayerPhysics();
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
     void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
+    void UpdatePlayerMeshVisibility();
+    void DrawStageSelectCursor();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
