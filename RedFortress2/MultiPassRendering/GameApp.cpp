@@ -299,6 +299,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
 
     m_hpBar.Initialize(&m_render, &m_player);
     m_damagePopupManager.Initialize(&m_render);
+    m_damagePopupManager.SetEnabled(false);
 
     m_saveDataManager.Initialize(m_stageManager);
     m_saveDataManager.Load();

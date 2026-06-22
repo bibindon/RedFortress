@@ -14,8 +14,27 @@ void DamagePopupManager::Initialize(NSRender::Render* pRender)
     m_pRender = pRender;
 }
 
+void DamagePopupManager::SetEnabled(const bool enabled)
+{
+    m_enabled = enabled;
+    if (!m_enabled)
+    {
+        Clear();
+    }
+}
+
+bool DamagePopupManager::IsEnabled() const
+{
+    return m_enabled;
+}
+
 void DamagePopupManager::Add(int amount, const D3DXVECTOR3& pos, bool isHeal)
 {
+    if (!m_enabled)
+    {
+        return;
+    }
+
     Popup popup;
     popup.text = std::to_wstring(amount);
     popup.basePos = pos + D3DXVECTOR3(0.0f, 1.5f, 0.0f);
@@ -50,7 +69,7 @@ void DamagePopupManager::Update()
 
 void DamagePopupManager::Draw()
 {
-    if (m_pRender == nullptr)
+    if (!m_enabled || m_pRender == nullptr)
     {
         return;
     }
