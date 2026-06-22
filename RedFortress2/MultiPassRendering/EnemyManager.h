@@ -41,7 +41,7 @@ private:
     {
         std::wstring meshPath;
         std::wstring animCsvPath;
-        float scale = 1.0f;
+        float scale = 2.0f;
         int maxHp = 10;
         float moveSpeed = 2.5f;
         float viewDistance = 5.0f;
