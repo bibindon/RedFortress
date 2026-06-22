@@ -96,7 +96,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.damage = 2;
         definition.range = 2.0f;
         definition.halfAngleRadians = D3DXToRadian(45.0f);
-        definition.moveSpeed = 21.6f;
+        definition.moveSpeed = 0.0f;
         definition.moveStartRemainingFrames = 14;
         definition.moveEndRemainingFrames = 19;
         definition.animationName = L"slash";
@@ -108,7 +108,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.damage = 5;
         definition.range = 2.0f;
         definition.halfAngleRadians = D3DXToRadian(45.0f);
-        definition.moveSpeed = 21.6f;
+        definition.moveSpeed = 0.0909f;
         definition.moveStartRemainingFrames = 28;
         definition.moveEndRemainingFrames = 38;
         definition.animationName = L"slash";
