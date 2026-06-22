@@ -29,7 +29,7 @@ namespace
     const int kRespawnInvincibleFrames = 180;
     const float kStompBounceVelocity = 3.0f;
     const int kKnockbackDurationFrames = 60;
-    const float kKnockbackSpeed = 0.0048f;
+    const float kKnockbackSpeed = 1.0f;
     const int kRespawnCameraDelayFrames = 120;
     const int kRespawnCameraMoveFrames = 30;
     const int kStageTitleFrameMax = 180;
@@ -1007,7 +1007,9 @@ void GameApp::UpdatePlayerByInput()
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
     if (m_playerKnockbackFrames > 0)
     {
-        move = m_playerKnockbackDir * kKnockbackSpeed;
+        settings.moveSpeed = kKnockbackSpeed;
+        m_playerMover.SetSettings(settings);
+        move = m_playerKnockbackDir;
     }
     else if (m_playerAttackController.IsMovementActive())
     {
