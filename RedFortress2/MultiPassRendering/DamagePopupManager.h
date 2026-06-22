@@ -35,7 +35,7 @@ private:
     std::vector<Popup> m_popups;
 
     static constexpr int kDuration = 60;
-    static constexpr float kRiseSpeed = 0.01f;
+    static constexpr float kRiseSpeed = 0.002f;
     static const D3DXCOLOR kDamageColor;
     static const D3DXCOLOR kHealColor;
 };
