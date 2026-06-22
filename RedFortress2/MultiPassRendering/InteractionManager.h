@@ -12,15 +12,6 @@ class Render;
 class InteractionManager
 {
 public:
-    void Initialize(NSRender::Render& render);
-    void LoadForStage(const std::wstring& csvPath);
-    void Update(const D3DXVECTOR3& playerPosition);
-    void DrawPrompt();
-    bool ConsumeTriggeredInteraction(std::wstring* interactionId);
-    std::wstring GetNearestOfType(const D3DXVECTOR3& playerPosition, const std::wstring& type) const;
-    void Clear();
-
-private:
     struct Interactable
     {
         std::wstring id;
@@ -29,6 +20,16 @@ private:
         float promptDistance = 2.0f;
     };
 
+    void Initialize(NSRender::Render& render);
+    void LoadForStage(const std::wstring& csvPath);
+    void Update(const D3DXVECTOR3& playerPosition);
+    void DrawPrompt();
+    bool ConsumeTriggeredInteraction(std::wstring* interactionId);
+    std::wstring GetNearestOfType(const D3DXVECTOR3& playerPosition, const std::wstring& type) const;
+    const std::vector<Interactable>& GetInteractables() const;
+    void Clear();
+
+private:
     int FindNearestInteractable(const D3DXVECTOR3& playerPosition) const;
     bool IsWithinDistance(const Interactable& interactable,
                           const D3DXVECTOR3& playerPosition,

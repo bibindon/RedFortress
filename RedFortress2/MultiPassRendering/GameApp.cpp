@@ -18,7 +18,7 @@ namespace
     const std::wstring g_playerJumpAnimName = L"jump";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
     const std::wstring g_stageCursorImagePath = L"res\\2D_Image\\stage-cursor.png";
-    const D3DXVECTOR3 kStageSelect1PortalPos(-18.0f, 1.01f, 3.0f);
+    const float kStagePortalClickRadius = 48.0f;
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -300,6 +300,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
 
     m_saveDataManager.Initialize(m_stageManager);
     m_saveDataManager.Load();
+    InitializeStageSelectCursor();
+    m_mouseCursorVisible = true;
+    InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
 
     m_command.UpsertCommand(L"start", true);
     m_command.UpsertCommand(L"continue", m_saveDataManager.HasSaveFile());
@@ -379,6 +382,7 @@ void GameApp::Run()
         }
 
         if (m_gameState != GameState::EndingFin &&
+            !IsCurrentStageSelect() &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
@@ -594,31 +598,39 @@ void GameApp::Run()
                 // 敵の更新
                 m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
 
-                // インタラクト通知とQTE起動判定
-                m_interactionManager.Update(m_playerMover.GetPosition());
-                std::wstring interactionId;
-                if (m_interactionManager.ConsumeTriggeredInteraction(&interactionId) && !interactionId.empty())
+                const bool isStageSelect = IsCurrentStageSelect();
+                if (isStageSelect)
                 {
-                    if (interactionId == L"base-crafting-station-01")
+                    UpdateStageSelectCursorByInput();
+                }
+                else
+                {
+                    // インタラクト通知とQTE起動判定
+                    m_interactionManager.Update(m_playerMover.GetPosition());
+                    std::wstring interactionId;
+                    if (m_interactionManager.ConsumeTriggeredInteraction(&interactionId) && !interactionId.empty())
                     {
-                        m_craftMenu.Open();
-                    }
-                    else
-                    {
-                        m_qte = new NS_QTE_Module::QTE_Module();
-                        QteSprite* sprWhiteBar = new QteSprite();
-                        sprWhiteBar->app = this;
-                        sprWhiteBar->Load(L"res\\2D_Image\\white_bar.bmp");
-                        QteSprite* sprBlackBar = new QteSprite();
-                        sprBlackBar->app = this;
-                        sprBlackBar->Load(L"res\\2D_Image\\black_bar.bmp");
-                        m_qte->SetBars(sprWhiteBar, sprBlackBar, 1600, 900);
-                        m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-                        m_pendingJump = false;
+                        if (interactionId == L"base-crafting-station-01")
+                        {
+                            m_craftMenu.Open();
+                        }
+                        else
+                        {
+                            m_qte = new NS_QTE_Module::QTE_Module();
+                            QteSprite* sprWhiteBar = new QteSprite();
+                            sprWhiteBar->app = this;
+                            sprWhiteBar->Load(L"res\\2D_Image\\white_bar.bmp");
+                            QteSprite* sprBlackBar = new QteSprite();
+                            sprBlackBar->app = this;
+                            sprBlackBar->Load(L"res\\2D_Image\\black_bar.bmp");
+                            m_qte->SetBars(sprWhiteBar, sprBlackBar, 1600, 900);
+                            m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                            m_pendingJump = false;
+                        }
                     }
                 }
 
-                if (m_stagePortalCooldownFrames <= 0)
+                if (!isStageSelect && m_stagePortalCooldownFrames <= 0)
                 {
                     const std::wstring portalId = m_interactionManager.GetNearestOfType(
                         m_playerMover.GetPosition(), L"StagePortal");
@@ -700,7 +712,7 @@ void GameApp::Run()
             m_damagePopupManager.Update();
             m_damagePopupManager.Draw();
             m_enemyManager.DrawHpBars(m_render);
-            if (m_qte == nullptr)
+            if (m_qte == nullptr && !IsCurrentStageSelect())
             {
                 m_interactionManager.DrawPrompt();
             }
@@ -979,7 +991,7 @@ void GameApp::UpdatePlayerByInput()
         requestedAttackType = PlayerAttackType::StrongAttack;
     }
 
-    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    if (!IsCurrentStageSelect() && InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
         if (m_playerAttackController.TryStart(requestedAttackType))
         {
@@ -1251,15 +1263,162 @@ void GameApp::UpdatePlayerMeshVisibility()
     m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, !isSelectStage);
 }
 
-void GameApp::DrawStageSelectCursor()
+bool GameApp::IsCurrentStageSelect() const
 {
     const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
-    if (currentId != L"select1")
+    return currentId.length() >= 6 && currentId.substr(0, 6) == L"select";
+}
+
+bool GameApp::IsStagePortalSelectable(const std::wstring& portalId) const
+{
+    const std::wstring prefix = L"portal-to-";
+    if (portalId.length() <= prefix.length() || portalId.substr(0, prefix.length()) != prefix)
+    {
+        return false;
+    }
+
+    const std::wstring destinationId = portalId.substr(prefix.length());
+    if (destinationId == L"base")
+    {
+        return true;
+    }
+    if (destinationId.length() >= 6 && destinationId.substr(0, 6) == L"select")
+    {
+        return true;
+    }
+    return m_saveDataManager.IsStageUnlocked(destinationId);
+}
+
+void GameApp::InitializeStageSelectCursor()
+{
+    m_selectedStagePortalId.clear();
+    m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_hasSelectedStagePortal = false;
+
+    if (!IsCurrentStageSelect())
     {
         return;
     }
 
-    const POINT screenPos = NSRender::Camera::GetScreenPos(kStageSelect1PortalPos);
+    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+    for (const InteractionManager::Interactable& interactable : interactables)
+    {
+        if (interactable.type != L"StagePortal" || !IsStagePortalSelectable(interactable.id))
+        {
+            continue;
+        }
+
+        const std::wstring destinationId = interactable.id.substr(std::wstring(L"portal-to-").length());
+        const bool isNavigationPortal = destinationId == L"base" ||
+            (destinationId.length() >= 6 && destinationId.substr(0, 6) == L"select");
+        if (isNavigationPortal)
+        {
+            continue;
+        }
+
+        m_selectedStagePortalId = interactable.id;
+        m_selectedStagePortalPosition = interactable.position;
+        m_hasSelectedStagePortal = true;
+        return;
+    }
+
+    for (const InteractionManager::Interactable& interactable : interactables)
+    {
+        if (interactable.type == L"StagePortal" && IsStagePortalSelectable(interactable.id))
+        {
+            m_selectedStagePortalId = interactable.id;
+            m_selectedStagePortalPosition = interactable.position;
+            m_hasSelectedStagePortal = true;
+            return;
+        }
+    }
+}
+
+void GameApp::UpdateStageSelectCursorByInput()
+{
+    if (!IsCurrentStageSelect())
+    {
+        return;
+    }
+
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+        const POINT baseMousePosition = ConvertMouseToBaseResolution(mousePosition.x, mousePosition.y);
+        const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+        float nearestDistanceSquared = kStagePortalClickRadius * kStagePortalClickRadius;
+        const InteractionManager::Interactable* selectedInteractable = nullptr;
+
+        for (const InteractionManager::Interactable& interactable : interactables)
+        {
+            if (interactable.type != L"StagePortal" || !IsStagePortalSelectable(interactable.id))
+            {
+                continue;
+            }
+
+            const POINT screenPosition = NSRender::Camera::GetScreenPos(interactable.position);
+            if (screenPosition.x < 0 || screenPosition.y < 0)
+            {
+                continue;
+            }
+
+            const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                static_cast<float>(NSRender::Common::ScreenW());
+            const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                static_cast<float>(NSRender::Common::ScreenH());
+            const float portalX = static_cast<float>(screenPosition.x) * scaleX;
+            const float portalY = static_cast<float>(screenPosition.y) * scaleY;
+            const float differenceX = portalX - static_cast<float>(baseMousePosition.x);
+            const float differenceY = portalY - static_cast<float>(baseMousePosition.y);
+            const float distanceSquared = differenceX * differenceX + differenceY * differenceY;
+            if (distanceSquared <= nearestDistanceSquared)
+            {
+                nearestDistanceSquared = distanceSquared;
+                selectedInteractable = &interactable;
+            }
+        }
+
+        if (selectedInteractable != nullptr)
+        {
+            m_selectedStagePortalId = selectedInteractable->id;
+            m_selectedStagePortalPosition = selectedInteractable->position;
+            m_hasSelectedStagePortal = true;
+        }
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        MoveToSelectedStagePortal();
+    }
+}
+
+bool GameApp::MoveToSelectedStagePortal()
+{
+    if (!m_hasSelectedStagePortal || !IsStagePortalSelectable(m_selectedStagePortalId))
+    {
+        return false;
+    }
+
+    const std::wstring prefix = L"portal-to-";
+    const std::wstring destinationId = m_selectedStagePortalId.substr(prefix.length());
+    const std::size_t targetIndex = m_stageManager.FindStageIndexById(destinationId);
+    if (targetIndex >= m_stageManager.GetStageCount())
+    {
+        return false;
+    }
+
+    m_lastSelectId = m_stageManager.GetCurrentStage().id;
+    return StartStageByIndex(targetIndex);
+}
+
+void GameApp::DrawStageSelectCursor()
+{
+    if (!IsCurrentStageSelect() || !m_hasSelectedStagePortal)
+    {
+        return;
+    }
+
+    const POINT screenPos = NSRender::Camera::GetScreenPos(m_selectedStagePortalPosition);
     if (screenPos.x < 0 || screenPos.y < 0)
     {
         return;
@@ -1270,7 +1429,7 @@ void GameApp::DrawStageSelectCursor()
     const int baseX = static_cast<int>(static_cast<float>(screenPos.x) * scaleX + 0.5f);
     const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY + 0.5f);
 
-    m_render.DrawImageEx(g_stageCursorImagePath, baseX, baseY, 255, false, 0.5f);
+    m_render.DrawImageEx(g_stageCursorImagePath, baseX, baseY, 255, false, 0.25f);
 }
 
 void GameApp::PopulateStageCombo(HWND hDlg)
@@ -1863,6 +2022,10 @@ void GameApp::LoadCurrentStageObjects()
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
+    InitializeStageSelectCursor();
+
+    m_mouseCursorVisible = IsCurrentStageSelect();
+    InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
 
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);

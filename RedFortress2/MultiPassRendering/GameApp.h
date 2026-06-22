@@ -100,6 +100,11 @@ private:
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
     void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
     void UpdatePlayerMeshVisibility();
+    bool IsCurrentStageSelect() const;
+    bool IsStagePortalSelectable(const std::wstring& portalId) const;
+    void InitializeStageSelectCursor();
+    void UpdateStageSelectCursorByInput();
+    bool MoveToSelectedStagePortal();
     void DrawStageSelectCursor();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack };
@@ -169,4 +174,7 @@ private:
     int m_goalMarkerMeshId = -1;
     int m_stagePortalCooldownFrames = 0;
     std::wstring m_lastSelectId;
+    std::wstring m_selectedStagePortalId;
+    D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    bool m_hasSelectedStagePortal = false;
 };

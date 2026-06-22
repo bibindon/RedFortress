@@ -164,6 +164,11 @@ std::wstring InteractionManager::GetNearestOfType(const D3DXVECTOR3& playerPosit
     return m_interactables.at(nearestIndex).id;
 }
 
+const std::vector<InteractionManager::Interactable>& InteractionManager::GetInteractables() const
+{
+    return m_interactables;
+}
+
 void InteractionManager::Clear()
 {
     m_interactables.clear();
