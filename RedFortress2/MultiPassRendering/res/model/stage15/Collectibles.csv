@@ -1,5 +1,5 @@
 ﻿CollectibleID,Type,DataID,PosX,PosY,PosZ,Scale
-stage15-I01,Item,027,-5,0.45,10,1
-stage15-I02,Item,028,5,0.45,5,1
-stage15-I03,Item,029,-5,0.45,-2,1
-stage15-I04,Item,030,5,0.45,-8,1
+stage15-I01,Item,027,-5,0.45,20,1
+stage15-I02,Item,028,5,0.45,10,1
+stage15-I03,Item,029,-5,0.45,-4,1
+stage15-I04,Item,030,5,0.45,-16,1

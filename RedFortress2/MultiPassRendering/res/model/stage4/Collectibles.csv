@@ -1,6 +1,6 @@
 ﻿CollectibleID,Type,DataID,PosX,PosY,PosZ,Scale
-stage4-I01,Item,013,10,0.45,8,1
-stage4-I02,Item,014,5,0.45,3,1
-stage4-I03,Item,015,0,0.45,-3,1
-stage4-I04,Item,016,-8,0.45,-8,1
-stage4-W01,Weapon,W003,-3,0.45,-6,1
+stage4-I01,Item,013,10,0.45,16,1
+stage4-I02,Item,014,5,0.45,6,1
+stage4-I03,Item,015,0,0.45,-6,1
+stage4-I04,Item,016,-8,0.45,-16,1
+stage4-W01,Weapon,W003,-3,0.45,-12,1

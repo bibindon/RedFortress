@@ -5,40 +5,40 @@ void StageManager::Initialize()
     m_stages.clear();
     m_currentStageIndex = 0;
 
-    AddStage(L"1-1", 1, L"Stage 1-1", L"stage1", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(L"1-1", 1, L"Stage 1-1", L"stage1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
     AddStage(L"1-2", 2, L"Stage 1-2", L"stage2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"1-3", 3, L"Stage 1-3", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
-    AddStage(L"1-4", 4, L"Stage 1-4", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
-    AddStage(L"base", 17, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(L"1-3", 3, L"Stage 1-3", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"1-4", 4, L"Stage 1-4", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"base", 17, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
 
-    AddStage(L"2-1", 5, L"Stage 2-1", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(L"2-1", 5, L"Stage 2-1", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
     AddStage(L"2-2", 6, L"Stage 2-2", L"stage6", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"2-3", 7, L"Stage 2-3", L"stage7", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
-    AddStage(L"2-4", 8, L"Stage 2-4", L"stage8", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
+    AddStage(L"2-3", 7, L"Stage 2-3", L"stage7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"2-4", 8, L"Stage 2-4", L"stage8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    AddStage(L"3-1", 9, L"Stage 3-1", L"stage9", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(L"3-1", 9, L"Stage 3-1", L"stage9", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
     AddStage(L"3-2", 10, L"Stage 3-2", L"stage10", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"3-3", 11, L"Stage 3-3", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
-    AddStage(L"3-4", 12, L"Stage 3-4", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
+    AddStage(L"3-3", 11, L"Stage 3-3", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"3-4", 12, L"Stage 3-4", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    AddStage(L"4-1", 13, L"Stage 4-1", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f));
+    AddStage(L"4-1", 13, L"Stage 4-1", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
     AddStage(L"4-2", 14, L"Stage 4-2", L"stage14", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"4-3", 15, L"Stage 4-3", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
-    AddStage(L"4-4", 16, L"Stage 4-4", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
+    AddStage(L"4-3", 15, L"Stage 4-3", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"4-4", 16, L"Stage 4-4", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    const D3DXVECTOR3 kSelectCameraPos(0.0f, 10.0f, -30.0f);
+    const D3DXVECTOR3 kSelectCameraPos(0.0f, 10.0f, -60.0f);
     const D3DXVECTOR3 kSelectCameraLookAt(0.0f, 0.0f, 0.0f);
     AddStage(L"select1", 18, L"Stage Select 1", L"stage-select1",
-             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
     AddStage(L"select2", 19, L"Stage Select 2", L"stage-select2",
-             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
     AddStage(L"select3", 20, L"Stage Select 3", L"stage-select3",
-             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
     AddStage(L"select4", 21, L"Stage Select 4", L"stage-select4",
-             D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
+             D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
 }
 

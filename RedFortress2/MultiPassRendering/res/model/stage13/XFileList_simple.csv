@@ -1,19 +1,19 @@
 ﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 2,../plateField.x,0,0,0,0,0,0,1,normal
-1303,../collision_wall.x,-13.5,1.5,7,0,0,0,1,normal
-1304,../collision_wall.x,13.5,1.51,5,0,0,0,1,normal
-1305,../collision_wall.x,-5,1.52,0.5,0,1.5708,0,1,normal
-1306,../collision_wall.x,5,1.53,-0.5,0,1.5708,0,1,normal
-1307,../collision_wall.x,-11.5,1.54,-4,0,0,0,1,normal
-1308,../collision_wall.x,11.5,1.55,-6,0,0,0,1,normal
-1309,../collision_wall.x,-1.5,1.56,9,0,1.5708,0,1,normal
-1310,../collision_wall.x,2.5,1.57,-9,0,0,0,1,normal
-1313,../collision_moving_platform.x,-0.5,0.82,-1,0,0,0,1,normal
-1314,../collision_moving_platform.x,0.5,0.83,1,0,0,0,1,normal
-1319,../cube_white.x,-14.5,1,9,0,0,0,1,normal
-1320,../cube_white.x,-4,1.01,9.5,0,0,0,1,normal
-1321,../cube_white.x,0.5,1.02,6,0,0,0,1,normal
-1322,../cube_white.x,2.5,1.03,-6,0,0,0,1,normal
-1323,../cube_white.x,6,1.04,-9.5,0,0,0,1,normal
-1324,../cube_white.x,14.5,1.05,-9,0,0,0,1,normal
-1326,..\Skydome3D\Skydome.blend.x, 0,0.01, 0, 0, 0, 0, 1, normal
+1303,../collision_wall.x,-13.5,1.5,14,0,0,0,1,normal
+1304,../collision_wall.x,13.5,1.51,10,0,0,0,1,normal
+1305,../collision_wall.x,-5,1.52,1.0,0,1.5708,0,1,normal
+1306,../collision_wall.x,5,1.53,-1.0,0,1.5708,0,1,normal
+1307,../collision_wall.x,-11.5,1.54,-8,0,0,0,1,normal
+1308,../collision_wall.x,11.5,1.55,-12,0,0,0,1,normal
+1309,../collision_wall.x,-1.5,1.56,18,0,1.5708,0,1,normal
+1310,../collision_wall.x,2.5,1.57,-18,0,0,0,1,normal
+1313,../collision_moving_platform.x,-0.5,0.82,-2,0,0,0,1,normal
+1314,../collision_moving_platform.x,0.5,0.83,2,0,0,0,1,normal
+1319,../cube_white.x,-14.5,1,18,0,0,0,1,normal
+1320,../cube_white.x,-4,1.01,19.0,0,0,0,1,normal
+1321,../cube_white.x,0.5,1.02,12,0,0,0,1,normal
+1322,../cube_white.x,2.5,1.03,-12,0,0,0,1,normal
+1323,../cube_white.x,6,1.04,-19.0,0,0,0,1,normal
+1324,../cube_white.x,14.5,1.05,-18,0,0,0,1,normal
+1326,..\Skydome3D\Skydome.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
