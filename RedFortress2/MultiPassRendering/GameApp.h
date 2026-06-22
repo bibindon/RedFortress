@@ -103,6 +103,7 @@ private:
     bool IsCurrentStageSelect() const;
     bool IsStagePortalSelectable(const std::wstring& portalId) const;
     void InitializeStageSelectCursor();
+    void MoveStageSelectCursorByDirection(float directionX, float directionY);
     void UpdateStageSelectCursorByInput();
     bool MoveToSelectedStagePortal();
     void DrawStageSelectCursor();

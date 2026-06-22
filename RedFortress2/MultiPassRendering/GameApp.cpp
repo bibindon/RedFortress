@@ -1340,11 +1340,104 @@ void GameApp::InitializeStageSelectCursor()
     }
 }
 
+void GameApp::MoveStageSelectCursorByDirection(const float directionX, const float directionY)
+{
+    if (!m_hasSelectedStagePortal)
+    {
+        return;
+    }
+
+    const POINT currentScreenPosition = NSRender::Camera::GetScreenPos(m_selectedStagePortalPosition);
+    if (currentScreenPosition.x < 0 || currentScreenPosition.y < 0)
+    {
+        return;
+    }
+
+    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+    const InteractionManager::Interactable* bestInteractable = nullptr;
+    float bestScore = 100000000.0f;
+
+    for (const InteractionManager::Interactable& interactable : interactables)
+    {
+        if (interactable.type != L"StagePortal" ||
+            interactable.id == m_selectedStagePortalId ||
+            !IsStagePortalSelectable(interactable.id))
+        {
+            continue;
+        }
+
+        const POINT candidateScreenPosition = NSRender::Camera::GetScreenPos(interactable.position);
+        if (candidateScreenPosition.x < 0 || candidateScreenPosition.y < 0)
+        {
+            continue;
+        }
+
+        const float differenceX = static_cast<float>(candidateScreenPosition.x - currentScreenPosition.x);
+        const float differenceY = static_cast<float>(candidateScreenPosition.y - currentScreenPosition.y);
+        const float distance = sqrtf(differenceX * differenceX + differenceY * differenceY);
+        if (distance <= 0.0001f)
+        {
+            continue;
+        }
+
+        const float directionDistance = differenceX * directionX + differenceY * directionY;
+        const float alignment = directionDistance / distance;
+        if (alignment < 0.35f)
+        {
+            continue;
+        }
+
+        const float score = distance + (1.0f - alignment) * 500.0f;
+        if (score < bestScore)
+        {
+            bestScore = score;
+            bestInteractable = &interactable;
+        }
+    }
+
+    if (bestInteractable != nullptr)
+    {
+        m_selectedStagePortalId = bestInteractable->id;
+        m_selectedStagePortalPosition = bestInteractable->position;
+        m_hasSelectedStagePortal = true;
+    }
+}
+
 void GameApp::UpdateStageSelectCursorByInput()
 {
     if (!IsCurrentStageSelect())
     {
         return;
+    }
+
+    if (!m_mouseCursorVisible || !InputDevice::Mouse::IsVisible())
+    {
+        m_mouseCursorVisible = true;
+        InputDevice::Mouse::SetVisible(true);
+    }
+
+    float directionX = 0.0f;
+    float directionY = 0.0f;
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    {
+        directionX = -1.0f;
+    }
+    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    {
+        directionX = 1.0f;
+    }
+    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    {
+        directionY = -1.0f;
+    }
+    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    {
+        directionY = 1.0f;
+    }
+
+    if (directionX != 0.0f || directionY != 0.0f)
+    {
+        MoveStageSelectCursorByDirection(directionX, directionY);
     }
 
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
