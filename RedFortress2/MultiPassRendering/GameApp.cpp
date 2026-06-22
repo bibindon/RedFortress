@@ -29,7 +29,7 @@ namespace
     const int kRespawnInvincibleFrames = 180;
     const float kStompBounceVelocity = 3.0f;
     const int kKnockbackDurationFrames = 60;
-    const float kKnockbackSpeed = 0.6f;
+    const float kKnockbackSpeed = 0.12f;
     const int kRespawnCameraDelayFrames = 120;
     const int kRespawnCameraMoveFrames = 30;
     const int kStageTitleFrameMax = 180;
