@@ -2163,10 +2163,10 @@ void GameApp::DrawTitleScreen()
 {
     if (m_titleFontId < 0)
     {
-        m_titleFontId = m_render.SetUpFont(L"BIZ UDMincho", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
+        m_titleFontId = m_render.SetUpFontEx(L"BIZ UDMincho", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    m_render.DrawTextCenter(m_titleFontId, L"ホ  シ  ガ  ー  ル", 0, 220, NSRender::Common::BASE_W, 100);
+    m_render.DrawTextExCenter(m_titleFontId, L"ホ  シ  ガ  ー  ル", 0, 220, NSRender::Common::BASE_W, 100);
     m_command.Draw();
     m_render.Draw();
 }
