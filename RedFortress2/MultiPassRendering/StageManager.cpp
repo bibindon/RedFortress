@@ -26,7 +26,7 @@ void StageManager::Initialize()
     AddStage(L"4-3", 15, L"Stage 4-3", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 14.0f), D3DXVECTOR3(0.0f, 1.0f, -14.0f));
     AddStage(L"4-4", 16, L"Stage 4-4", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 14.0f), D3DXVECTOR3(-14.0f, 1.0f, -14.0f));
 
-    const D3DXVECTOR3 kSelectCameraPos(0.0f, 30.0f, -30.0f);
+    const D3DXVECTOR3 kSelectCameraPos(0.0f, 10.0f, -30.0f);
     const D3DXVECTOR3 kSelectCameraLookAt(0.0f, 0.0f, 0.0f);
     AddStage(L"select1", 18, L"Stage Select 1", L"stage-select1",
              D3DXVECTOR3(0.0f, 0.2f, -14.0f), D3DXVECTOR3(0.0f, 1.0f, 14.0f),
