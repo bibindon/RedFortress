@@ -47,6 +47,7 @@ public:
     int GetMaxHp() const;
     D3DXVECTOR3 GetPosition() const;
     void SetPosition(const D3DXVECTOR3& pos);
+    void MoveAwayFrom(const D3DXVECTOR3& sourcePosition, float distance);
     float GetYaw() const;
     void SetYaw(float yaw);
     int GetMeshId() const;

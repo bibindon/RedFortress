@@ -37,6 +37,7 @@ namespace
     const int kRespawnCameraDelayFrames = 120;
     const int kRespawnCameraMoveFrames = 30;
     const int kStageTitleFrameMax = 180;
+    const float kEnemyAttackKnockbackDistance = 0.2f;
 }
 
 GameApp& GameApp::Instance()
@@ -760,6 +761,7 @@ void GameApp::Run()
                 Enemy* attackTarget = FindEnemyInAttackRange(attackDefinition);
                 if (attackTarget != nullptr)
                 {
+                    attackTarget->MoveAwayFrom(m_playerMover.GetPosition(), kEnemyAttackKnockbackDistance);
                     attackTarget->TakeDamage(m_render, attackDefinition.damage);
                     m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
                     GameAudio::PlayAttackHit();

@@ -272,6 +272,24 @@ void Enemy::SetPosition(const D3DXVECTOR3& pos)
     m_position = pos;
 }
 
+void Enemy::MoveAwayFrom(const D3DXVECTOR3& sourcePosition, const float distance)
+{
+    if (distance <= 0.0f)
+    {
+        return;
+    }
+
+    D3DXVECTOR3 direction = m_position - sourcePosition;
+    direction.y = 0.0f;
+    if (D3DXVec3LengthSq(&direction) <= 0.0001f)
+    {
+        return;
+    }
+
+    D3DXVec3Normalize(&direction, &direction);
+    m_position += direction * distance;
+}
+
 float Enemy::GetYaw() const
 {
     return m_yaw;
