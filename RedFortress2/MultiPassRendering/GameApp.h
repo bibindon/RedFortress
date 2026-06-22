@@ -80,6 +80,8 @@ private:
     void CompletePlayerDeath();
     void PopulateStageCombo(HWND hDlg);
     std::wstring BuildStageComboText(const StageManager::StageData& stage);
+    void PopulateUnlockStageCombo(HWND hDlg);
+    void UnlockStagesUpToSelected(HWND hDlg);
     bool StartStageByIndex(std::size_t stageIndex);
     bool StartStageByIndexImmediate(std::size_t stageIndex);
     std::size_t GetContinueStartStageIndex() const;

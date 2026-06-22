@@ -35,6 +35,9 @@
 #define IDC_EDIT_DURATION              1029
 #define IDC_BUTTON_KILL_ALL_ENEMIES    1030
 #define IDC_EDIT_CAMERA_DIST          1031
+#define IDC_STATIC_UNLOCK             1032
+#define IDC_COMBO_UNLOCK_STAGE        1033
+#define IDC_BUTTON_UNLOCK_STAGES      1034
 
 // Next default values for new objects
 //
@@ -42,7 +45,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        104
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1022
+#define _APS_NEXT_CONTROL_VALUE         1035
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

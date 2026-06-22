@@ -1313,6 +1313,68 @@ std::wstring GameApp::BuildStageComboText(const StageManager::StageData& stage)
     return stage.displayName;
 }
 
+void GameApp::PopulateUnlockStageCombo(HWND hDlg)
+{
+    HWND combo = GetDlgItem(hDlg, IDC_COMBO_UNLOCK_STAGE);
+    if (combo == NULL)
+    {
+        return;
+    }
+
+    SendMessage(combo, CB_RESETCONTENT, 0, 0);
+
+    std::size_t lastUnlockedIndex = 0;
+    const std::size_t stageCount = m_stageManager.GetStageCount();
+    for (std::size_t i = 0; i < stageCount; ++i)
+    {
+        const StageManager::StageData& stage = m_stageManager.GetStage(i);
+        const std::wstring text = BuildStageComboText(stage);
+        const LRESULT itemIndex = SendMessage(combo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(text.c_str()));
+        if (itemIndex >= 0)
+        {
+            SendMessage(combo, CB_SETITEMDATA, static_cast<WPARAM>(itemIndex), static_cast<LPARAM>(i));
+        }
+
+        if (m_saveDataManager.IsStageUnlocked(stage.id))
+        {
+            lastUnlockedIndex = i;
+        }
+    }
+
+    SendMessage(combo, CB_SETCURSEL, static_cast<WPARAM>(lastUnlockedIndex), 0);
+}
+
+void GameApp::UnlockStagesUpToSelected(HWND hDlg)
+{
+    HWND combo = GetDlgItem(hDlg, IDC_COMBO_UNLOCK_STAGE);
+    if (combo == NULL)
+    {
+        return;
+    }
+
+    const LRESULT selectedIndex = SendMessage(combo, CB_GETCURSEL, 0, 0);
+    if (selectedIndex == CB_ERR)
+    {
+        return;
+    }
+
+    const LRESULT stageIndex = SendMessage(combo, CB_GETITEMDATA, static_cast<WPARAM>(selectedIndex), 0);
+    if (stageIndex == CB_ERR)
+    {
+        return;
+    }
+
+    const std::size_t targetIndex = static_cast<std::size_t>(stageIndex);
+    const std::size_t stageCount = m_stageManager.GetStageCount();
+    for (std::size_t i = 0; i < stageCount && i <= targetIndex; ++i)
+    {
+        const StageManager::StageData& stage = m_stageManager.GetStage(i);
+        m_saveDataManager.MarkStageUnlocked(stage.id);
+    }
+
+    m_saveDataManager.Save();
+}
+
 bool GameApp::StartStageByIndex(std::size_t stageIndex)
 {
     if (stageIndex >= m_stageManager.GetStageCount())
@@ -1410,6 +1472,7 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
                     m_remoteDesktopMode ? BST_CHECKED : BST_UNCHECKED, 0);
         SetDlgItemText(hDlg, IDC_EDIT_CAMERA_DIST, std::to_wstring(m_cameraDistance).c_str());
         PopulateStageCombo(hDlg);
+        PopulateUnlockStageCombo(hDlg);
         m_stageEditor.Initialize(&m_render, &m_stageManager, &m_enemyManager, &m_playerMover, &m_playerYaw);
         m_stageEditor.OnInitDialog(hDlg);
         return TRUE;
@@ -1468,6 +1531,10 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
 
         case IDC_BUTTON_STAGE_GO:
             MoveToSelectedStage(hDlg);
+            return TRUE;
+
+        case IDC_BUTTON_UNLOCK_STAGES:
+            UnlockStagesUpToSelected(hDlg);
             return TRUE;
 
         case IDC_BUTTON_SELECT_X:
