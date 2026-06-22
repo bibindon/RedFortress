@@ -32,7 +32,6 @@ namespace
     const float kCameraWheelZoomStep = 0.5f;
     const int kPlayerInvincibleDuration = 180;
     const int kRespawnInvincibleFrames = 180;
-    const float kStompBounceVelocity = 3.0f;
     const int kKnockbackDurationFrames = 60;
     const float kKnockbackSpeed = 1.0f;
     const int kRespawnCameraDelayFrames = 120;
@@ -795,6 +794,8 @@ void GameApp::Run()
                         D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
                         playerPos.y += 0.3f;
                         m_playerMover.SetPosition(playerPos);
+                        const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
+                        m_playerMover.ApplyUpwardVelocity(jumpVelocity);
                         break;
                     }
                     else if (m_playerInvincibleFrames <= 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
