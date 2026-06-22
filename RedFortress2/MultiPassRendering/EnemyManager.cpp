@@ -12,8 +12,8 @@ namespace
 {
     const std::wstring kHpBarBlackImagePath = L"res\\2D_Image\\hp_black_p.png";
     const std::wstring kHpBarGreenImagePath = L"res\\2D_Image\\hp_green_p.png";
-    const int kHpBarWidth = 48;
-    const int kHpBarHeight = 6;
+    const int kHpBarWidth = 96;
+    const int kHpBarHeight = 3;
 
     std::wstring Trim(const std::wstring& str)
     {
@@ -166,8 +166,8 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
             continue;
         }
 
-        const int baseX = static_cast<int>(static_cast<float>(screenPos.x) * scaleX);
-        const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY);
+        const int baseX = static_cast<int>(static_cast<float>(screenPos.x) * scaleX + 0.5f);
+        const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY + 0.5f);
         const int halfWidth = kHpBarWidth / 2;
 
         const int greenWidth = (kHpBarWidth * hp) / maxHp;
