@@ -19,6 +19,7 @@ namespace
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
     const std::wstring g_stageCursorImagePath = L"res\\2D_Image\\stage-cursor.png";
     const float kStagePortalClickRadius = 48.0f;
+    const int kStageCursorOffsetY = 96;
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -1427,7 +1428,7 @@ void GameApp::DrawStageSelectCursor()
     const float scaleX = static_cast<float>(NSRender::Common::BASE_W) / static_cast<float>(NSRender::Common::ScreenW());
     const float scaleY = static_cast<float>(NSRender::Common::BASE_H) / static_cast<float>(NSRender::Common::ScreenH());
     const int baseX = static_cast<int>(static_cast<float>(screenPos.x) * scaleX + 0.5f);
-    const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY + 0.5f);
+    const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY + 0.5f) - kStageCursorOffsetY;
 
     m_render.DrawImageEx(g_stageCursorImagePath, baseX, baseY, 255, false, 0.25f);
 }
