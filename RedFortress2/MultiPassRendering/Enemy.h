@@ -55,7 +55,10 @@ public:
     void SetType(const std::wstring& type);
 
     bool IsTouchingPlayer(const D3DXVECTOR3& playerPos) const;
-    bool IsStompedByPlayer(const D3DXVECTOR3& playerPos, bool playerIsJumping, float playerYVelocity) const;
+    bool IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
+                           const D3DXVECTOR3& playerPos,
+                           bool playerIsJumping,
+                           float playerYVelocity) const;
 
 private:
     void FaceTargetImmediately(const D3DXVECTOR3& targetPos);

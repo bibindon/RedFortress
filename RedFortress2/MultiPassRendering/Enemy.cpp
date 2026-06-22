@@ -31,6 +31,7 @@ namespace
     }
 
     const int kFacePlayerTurnFrames = 30;
+    const float kStompMaxDistanceAboveEnemy = 0.3f;
 }
 
 Enemy::Enemy()
@@ -294,7 +295,10 @@ bool Enemy::IsTouchingPlayer(const D3DXVECTOR3& playerPos) const
     return horizontalDist <= m_contactRadius && verticalDist <= m_height * 0.75f;
 }
 
-bool Enemy::IsStompedByPlayer(const D3DXVECTOR3& playerPos, bool playerIsJumping, float playerYVelocity) const
+bool Enemy::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
+                              const D3DXVECTOR3& playerPos,
+                              const bool playerIsJumping,
+                              const float playerYVelocity) const
 {
     if (m_state == State::Dead)
     {
@@ -308,9 +312,18 @@ bool Enemy::IsStompedByPlayer(const D3DXVECTOR3& playerPos, bool playerIsJumping
 
     const D3DXVECTOR3 diff = playerPos - m_position;
     const float horizontalDist = sqrtf(diff.x * diff.x + diff.z * diff.z);
-    const float verticalOffset = playerPos.y - (m_position.y + m_height * 0.5f);
+    if (horizontalDist > m_contactRadius || playerYVelocity > 0.0f)
+    {
+        return false;
+    }
 
-    return horizontalDist <= m_contactRadius && verticalOffset >= 0.0f && playerYVelocity <= 0.0f;
+    const float enemyTopY = m_position.y + m_height * 0.5f;
+    const float verticalOffset = playerPos.y - enemyTopY;
+    const bool isNearEnemyTop = verticalOffset >= 0.0f &&
+        verticalOffset <= kStompMaxDistanceAboveEnemy;
+    const bool crossedEnemyTop = previousPlayerPos.y >= enemyTopY && playerPos.y < enemyTopY;
+
+    return isNearEnemyTop || crossedEnemyTop;
 }
 
 void Enemy::FaceTargetImmediately(const D3DXVECTOR3& targetPos)

@@ -746,6 +746,7 @@ void GameApp::Run()
             }
 
             // 衝突判定（動く床の最新位置を反映）
+            const D3DXVECTOR3 playerPositionBeforePhysicsUpdate = m_playerMover.GetPosition();
             m_playerMover.Update(m_pendingMove, m_pendingJump);
             m_collectibleManager.Update(m_playerMover.GetPosition());
             if (m_playerMover.IsCrushed())
@@ -786,7 +787,10 @@ void GameApp::Run()
                         continue;
                     }
 
-                    if (enemy.IsStompedByPlayer(m_playerMover.GetPosition(), m_playerMover.IsJumping(), m_playerMover.GetVelocity().y))
+                    if (enemy.IsStompedByPlayer(playerPositionBeforePhysicsUpdate,
+                                                m_playerMover.GetPosition(),
+                                                m_playerMover.IsJumping(),
+                                                m_playerMover.GetVelocity().y))
                     {
                         enemy.TakeDamage(m_render, 10);
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
