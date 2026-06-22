@@ -1,6 +1,6 @@
 ﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 2,../plateField.x,0,0,0,0,0,0,1,normal
-26,../Skydome3D/Skydome.blend.x,0,0.01,0,0,0,0,1,normal
+26,../SkySphere/SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
 30,../cube_red.x,-3,1,-26,0,0,0,1,normal
 31,../cube_red.x,3,1.01,-18,0,0,0,1,normal
 32,../cube_red.x,-2,1.02,-6,0,0,0,1,normal

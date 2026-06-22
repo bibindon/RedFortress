@@ -22,4 +22,4 @@
 22,cube_white.x, 3,1.03,6, 0, 0, 0, 1, normal
 23,cube_white.x, -3,1.04,18, 0, 0, 0, 1, normal
 24,cube_white.x, 3,1.05,26, 0, 0, 0, 1, normal
-26,Skydome3D/Skydome.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
+26,SkySphere/SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal

@@ -16,4 +16,4 @@
 322,../cube_white.x, -4,1.03,-10, 0, 0, 0, 1, normal
 323,../cube_white.x, -9,1.04,-18, 0, 0, 0, 1, normal
 324,../cube_white.x, -13,1.05,-26, 0, 0, 0, 1, normal
-326,..\Skydome3D\Skydome.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
+326,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
