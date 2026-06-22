@@ -18,7 +18,7 @@ namespace
     const std::wstring g_playerJumpAnimName = L"jump";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
     const std::wstring g_stageCursorImagePath = L"res\\2D_Image\\stage-cursor.png";
-    const D3DXVECTOR3 kStageSelect1PortalPos(3.0f, 1.01f, -9.0f);
+    const D3DXVECTOR3 kStageSelect1PortalPos(-18.0f, 1.01f, 3.0f);
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
