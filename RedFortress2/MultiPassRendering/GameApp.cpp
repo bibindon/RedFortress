@@ -795,9 +795,6 @@ void GameApp::Run()
                         enemy.TakeDamage(m_render, 10);
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
                         GameAudio::PlayAttackHit();
-                        D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
-                        playerPos.y += 0.3f;
-                        m_playerMover.SetPosition(playerPos);
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
                         break;
