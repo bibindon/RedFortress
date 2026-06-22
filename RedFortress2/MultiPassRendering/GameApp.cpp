@@ -29,7 +29,7 @@ namespace
     const int kRespawnInvincibleFrames = 180;
     const float kStompBounceVelocity = 3.0f;
     const int kKnockbackDurationFrames = 60;
-    const float kKnockbackSpeed = 0.12f;
+    const float kKnockbackSpeed = 0.024f;
     const int kRespawnCameraDelayFrames = 120;
     const int kRespawnCameraMoveFrames = 30;
     const int kStageTitleFrameMax = 180;
@@ -1061,7 +1061,7 @@ void GameApp::UpdatePlayerByInput()
             m_playerAnimState = nextState;
             if (nextState == PlayerAnimState::Run)
             {
-                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.0f);
+                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.2f);
                 m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
             }
             else if (nextState == PlayerAnimState::Walk)
