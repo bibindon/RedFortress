@@ -64,12 +64,24 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition,
     m_yaw = yaw;
     m_blinkFrames = 0;
     m_hitStunFrames = 0;
+    m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_knockbackFrames = 0;
     m_removalFrames = 0;
     m_facePlayerTurnFrames = 0;
 }
 
 void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible)
 {
+    if (m_knockbackFrames > 0)
+    {
+        m_position += m_knockbackPerFrame;
+        --m_knockbackFrames;
+        if (m_knockbackFrames <= 0)
+        {
+            m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        }
+    }
+
     if (m_state == State::Dead)
     {
         if (m_removalFrames > 0)
@@ -272,9 +284,11 @@ void Enemy::SetPosition(const D3DXVECTOR3& pos)
     m_position = pos;
 }
 
-void Enemy::MoveAwayFrom(const D3DXVECTOR3& sourcePosition, const float distance)
+void Enemy::StartKnockbackFrom(const D3DXVECTOR3& sourcePosition,
+                               const float distance,
+                               const int durationFrames)
 {
-    if (distance <= 0.0f)
+    if (distance <= 0.0f || durationFrames <= 0)
     {
         return;
     }
@@ -287,7 +301,8 @@ void Enemy::MoveAwayFrom(const D3DXVECTOR3& sourcePosition, const float distance
     }
 
     D3DXVec3Normalize(&direction, &direction);
-    m_position += direction * distance;
+    m_knockbackPerFrame = direction * (distance / static_cast<float>(durationFrames));
+    m_knockbackFrames = durationFrames;
 }
 
 float Enemy::GetYaw() const

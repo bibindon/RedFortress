@@ -47,7 +47,7 @@ public:
     int GetMaxHp() const;
     D3DXVECTOR3 GetPosition() const;
     void SetPosition(const D3DXVECTOR3& pos);
-    void MoveAwayFrom(const D3DXVECTOR3& sourcePosition, float distance);
+    void StartKnockbackFrom(const D3DXVECTOR3& sourcePosition, float distance, int durationFrames);
     float GetYaw() const;
     void SetYaw(float yaw);
     int GetMeshId() const;
@@ -85,6 +85,8 @@ private:
     float m_height = 1.0f;
     int m_blinkFrames = 0;
     int m_hitStunFrames = 0;
+    D3DXVECTOR3 m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    int m_knockbackFrames = 0;
     int m_removalFrames = 0;
     int m_facePlayerTurnFrames = 0;
 };
