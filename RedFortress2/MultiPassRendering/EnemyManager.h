@@ -46,7 +46,7 @@ private:
         float moveSpeed = 2.5f;
         float viewDistance = 5.0f;
         float contactRadius = 0.5f;
-        float height = 1.0f;
+        float height = 0.1f;
     };
 
     bool TryGetTypeInfo(const std::wstring& type, EnemyTypeInfo* typeInfo) const;
