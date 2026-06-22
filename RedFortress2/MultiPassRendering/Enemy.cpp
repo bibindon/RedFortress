@@ -31,6 +31,7 @@ namespace
     }
 
     const int kFacePlayerTurnFrames = 30;
+    const int kHitStunFrames = 60;
     const float kStompMaxDistanceAboveEnemy = 0.3f;
 }
 
@@ -62,6 +63,7 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition,
     m_animState = AnimState::Idle;
     m_yaw = yaw;
     m_blinkFrames = 0;
+    m_hitStunFrames = 0;
     m_removalFrames = 0;
     m_facePlayerTurnFrames = 0;
 }
@@ -84,6 +86,16 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
         {
             render.StopMeshMixSkinAnimBlink(m_meshId);
         }
+    }
+
+    if (m_hitStunFrames > 0)
+    {
+        --m_hitStunFrames;
+        if (m_hitStunFrames <= 0 && m_meshId >= 0)
+        {
+            render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+        }
+        return;
     }
 
     const D3DXVECTOR3 diff = playerPos - m_position;
@@ -203,11 +215,20 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount)
     {
         m_hp = 0;
         m_state = State::Dead;
+        m_hitStunFrames = 0;
         m_facePlayerTurnFrames = 0;
         m_removalFrames = 60;
         if (m_meshId >= 0)
         {
             render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 4);
+        }
+    }
+    else
+    {
+        m_hitStunFrames = kHitStunFrames;
+        if (m_meshId >= 0)
+        {
+            render.SetMeshMixSkinAnimSpeed(m_meshId, 0.0f);
         }
     }
 }

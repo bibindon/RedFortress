@@ -83,6 +83,7 @@ private:
     float m_contactRadius = 0.5f;
     float m_height = 1.0f;
     int m_blinkFrames = 0;
+    int m_hitStunFrames = 0;
     int m_removalFrames = 0;
     int m_facePlayerTurnFrames = 0;
 };
