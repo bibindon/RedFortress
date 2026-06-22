@@ -56,6 +56,7 @@ bool SaveDataManager::EnsureDirectoryExists() const
 bool SaveDataManager::Load()
 {
     m_clearedStageIds.clear();
+    m_unlockedStageIds.clear();
     m_hasSaveFile = false;
 
     if (m_stageManager == nullptr)
@@ -70,14 +71,17 @@ bool SaveDataManager::Load()
     }
     catch (...)
     {
+        InitializeDefaultUnlocks();
         return false;
     }
 
     if (csvData.empty())
     {
+        InitializeDefaultUnlocks();
         return false;
     }
 
+    bool hasUnlockedColumn = false;
     for (std::size_t i = 0; i < csvData.size(); ++i)
     {
         const std::vector<std::wstring>& row = csvData.at(i);
@@ -88,6 +92,10 @@ bool SaveDataManager::Load()
 
         if (row.at(0) == L"StageId")
         {
+            if (row.size() >= 3 && row.at(2) == L"Unlocked")
+            {
+                hasUnlockedColumn = true;
+            }
             continue;
         }
 
@@ -101,6 +109,32 @@ bool SaveDataManager::Load()
         if (clearedText == L"1")
         {
             m_clearedStageIds.insert(stageId);
+            m_unlockedStageIds.insert(stageId);
+        }
+
+        if (hasUnlockedColumn && row.size() >= 3 && row.at(2) == L"1")
+        {
+            m_unlockedStageIds.insert(stageId);
+        }
+    }
+
+    InitializeDefaultUnlocks();
+
+    for (const std::wstring& stageId : m_clearedStageIds)
+    {
+        m_unlockedStageIds.insert(stageId);
+        for (std::size_t i = 0; i < m_stageManager->GetStageCount(); ++i)
+        {
+            const StageManager::StageData& stage = m_stageManager->GetStage(i);
+            if (stage.id == stageId)
+            {
+                const std::vector<std::wstring> unlockIds = m_stageManager->GetUnlockStageIds(stage.number);
+                for (const std::wstring& id : unlockIds)
+                {
+                    m_unlockedStageIds.insert(id);
+                }
+                break;
+            }
         }
     }
 
@@ -124,6 +158,7 @@ void SaveDataManager::Save()
     std::vector<std::wstring> header;
     header.push_back(L"StageId");
     header.push_back(L"Cleared");
+    header.push_back(L"Unlocked");
     csvData.push_back(header);
 
     const std::size_t stageCount = m_stageManager->GetStageCount();
@@ -135,6 +170,16 @@ void SaveDataManager::Save()
 
         const bool isCleared = IsStageCleared(stage.id);
         if (isCleared)
+        {
+            row.push_back(L"1");
+        }
+        else
+        {
+            row.push_back(L"0");
+        }
+
+        const bool isUnlocked = IsStageUnlocked(stage.id);
+        if (isUnlocked)
         {
             row.push_back(L"1");
         }
@@ -199,4 +244,28 @@ void SaveDataManager::MarkStageClearedByIndex(std::size_t stageIndex)
 bool SaveDataManager::HasSaveFile() const
 {
     return m_hasSaveFile;
+}
+
+void SaveDataManager::MarkStageUnlocked(const std::wstring& stageId)
+{
+    if (!stageId.empty())
+    {
+        m_unlockedStageIds.insert(stageId);
+    }
+}
+
+bool SaveDataManager::IsStageUnlocked(const std::wstring& stageId) const
+{
+    if (stageId.empty())
+    {
+        return false;
+    }
+
+    return m_unlockedStageIds.find(stageId) != m_unlockedStageIds.end();
+}
+
+void SaveDataManager::InitializeDefaultUnlocks()
+{
+    m_unlockedStageIds.insert(L"select1");
+    m_unlockedStageIds.insert(L"1-1");
 }

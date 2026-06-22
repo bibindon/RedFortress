@@ -297,7 +297,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_saveDataManager.Load();
 
     m_command.UpsertCommand(L"start", true);
-    m_command.UpsertCommand(L"continue", m_saveDataManager.IsStageCleared(L"1-4"));
+    m_command.UpsertCommand(L"continue", m_saveDataManager.HasSaveFile());
     m_command.UpsertCommand(L"exit", true);
     m_render.SetLoadingScreenProgress(85);
     m_render.Draw();
@@ -411,8 +411,7 @@ void GameApp::Run()
                 }
                 else if (selectedId == L"continue")
                 {
-                    const std::size_t baseIndex = m_stageManager.FindStageIndexById(L"base");
-                    StartStageByIndex(baseIndex);
+                    StartStageByIndex(GetContinueStartStageIndex());
                 }
                 else if (selectedId == L"exit")
                 {
@@ -435,8 +434,7 @@ void GameApp::Run()
                 }
                 else if (clickedId == L"continue")
                 {
-                    const std::size_t baseIndex = m_stageManager.FindStageIndexById(L"base");
-                    StartStageByIndex(baseIndex);
+                    StartStageByIndex(GetContinueStartStageIndex());
                 }
                 else if (clickedId == L"exit")
                 {
@@ -626,19 +624,26 @@ void GameApp::Run()
                         if (portalId.length() > prefixLen && portalId.substr(0, prefixLen) == prefix)
                         {
                             const std::wstring destStageId = portalId.substr(prefixLen);
-                            if (destStageId == L"base")
+                            if (destStageId != L"base" && !m_saveDataManager.IsStageUnlocked(destStageId))
                             {
-                                const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
-                                if (currentId.length() >= 6 && currentId.substr(0, 6) == L"select")
-                                {
-                                    m_lastSelectId = currentId;
-                                }
+                                // 未解放ステージ：表示はするが移動しない
                             }
-                            const std::size_t targetIndex = m_stageManager.FindStageIndexById(destStageId);
-                            if (targetIndex < m_stageManager.GetStageCount())
+                            else
                             {
-                                StartStageByIndex(targetIndex);
-                                m_stagePortalCooldownFrames = 60;
+                                if (destStageId == L"base")
+                                {
+                                    const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
+                                    if (currentId.length() >= 6 && currentId.substr(0, 6) == L"select")
+                                    {
+                                        m_lastSelectId = currentId;
+                                    }
+                                }
+                                const std::size_t targetIndex = m_stageManager.FindStageIndexById(destStageId);
+                                if (targetIndex < m_stageManager.GetStageCount())
+                                {
+                                    StartStageByIndex(targetIndex);
+                                    m_stagePortalCooldownFrames = 60;
+                                }
                             }
                         }
                     }
@@ -1306,8 +1311,25 @@ bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
 
 void GameApp::RefreshTitleContinueCommand()
 {
-    const bool canContinue = m_saveDataManager.IsStageCleared(L"1-4");
+    const bool canContinue = m_saveDataManager.HasSaveFile();
     m_command.UpsertCommand(L"continue", canContinue);
+}
+
+std::size_t GameApp::GetContinueStartStageIndex() const
+{
+    if (m_saveDataManager.IsStageUnlocked(L"select4"))
+    {
+        return m_stageManager.FindStageIndexById(L"select4");
+    }
+    if (m_saveDataManager.IsStageUnlocked(L"select3"))
+    {
+        return m_stageManager.FindStageIndexById(L"select3");
+    }
+    if (m_saveDataManager.IsStageUnlocked(L"select2"))
+    {
+        return m_stageManager.FindStageIndexById(L"select2");
+    }
+    return m_stageManager.FindStageIndexById(L"select1");
 }
 
 void GameApp::MoveToSelectedStage(HWND hDlg)
@@ -1470,6 +1492,15 @@ void GameApp::UpdateStageClear()
     if (!m_stageClearProcessed)
     {
         m_saveDataManager.MarkStageCleared(clearedStageId);
+        m_saveDataManager.MarkStageUnlocked(clearedStageId);
+
+        const int stageNumber = m_stageManager.GetCurrentStageNumber();
+        const std::vector<std::wstring> unlockIds = m_stageManager.GetUnlockStageIds(stageNumber);
+        for (const std::wstring& id : unlockIds)
+        {
+            m_saveDataManager.MarkStageUnlocked(id);
+        }
+
         m_saveDataManager.Save();
         m_stageClearProcessed = true;
     }

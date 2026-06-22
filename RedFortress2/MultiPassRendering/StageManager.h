@@ -40,6 +40,8 @@ public:
     const std::wstring& GetCurrentStageDisplayName() const;
     std::size_t GetClearDestinationIndex(int stageNumber) const;
     bool MoveToStageById(const std::wstring& id);
+    std::wstring GetStageIdByNumber(int number) const;
+    std::vector<std::wstring> GetUnlockStageIds(int stageNumber) const;
 
 private:
     void AddStage(const std::wstring& id,

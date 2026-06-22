@@ -19,10 +19,15 @@ public:
     void MarkStageCleared(const std::wstring& stageId);
     bool IsStageCleared(const std::wstring& stageId) const;
 
+    void MarkStageUnlocked(const std::wstring& stageId);
+    bool IsStageUnlocked(const std::wstring& stageId) const;
+
     bool IsStageClearedByIndex(std::size_t stageIndex) const;
     void MarkStageClearedByIndex(std::size_t stageIndex);
 
     bool HasSaveFile() const;
+
+    void InitializeDefaultUnlocks();
 
 private:
     SaveDataManager(const SaveDataManager&);
@@ -33,6 +38,7 @@ private:
 
     const StageManager* m_stageManager;
     std::unordered_set<std::wstring> m_clearedStageIds;
+    std::unordered_set<std::wstring> m_unlockedStageIds;
     std::wstring m_filePath;
     bool m_hasSaveFile;
 };

@@ -82,6 +82,7 @@ private:
     std::wstring BuildStageComboText(const StageManager::StageData& stage);
     bool StartStageByIndex(std::size_t stageIndex);
     bool StartStageByIndexImmediate(std::size_t stageIndex);
+    std::size_t GetContinueStartStageIndex() const;
     void MoveToSelectedStage(HWND hDlg);
     void RefreshTitleContinueCommand();
     void DrawTitleScreen();

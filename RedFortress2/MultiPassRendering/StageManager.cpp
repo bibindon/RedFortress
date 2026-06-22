@@ -198,3 +198,50 @@ bool StageManager::MoveToStageById(const std::wstring& id)
     m_currentStageIndex = index;
     return true;
 }
+
+std::wstring StageManager::GetStageIdByNumber(int number) const
+{
+    for (const StageData& stage : m_stages)
+    {
+        if (stage.number == number)
+        {
+            return stage.id;
+        }
+    }
+
+    return L"";
+}
+
+std::vector<std::wstring> StageManager::GetUnlockStageIds(int stageNumber) const
+{
+    std::vector<std::wstring> result;
+    if (stageNumber < 1 || stageNumber > 16)
+    {
+        return result;
+    }
+
+    if (stageNumber % 4 != 0)
+    {
+        const std::wstring nextId = GetStageIdByNumber(stageNumber + 1);
+        if (!nextId.empty())
+        {
+            result.push_back(nextId);
+        }
+    }
+    else if (stageNumber != 16)
+    {
+        const int nextWorld = stageNumber / 4 + 1;
+        const std::wstring selectId = L"select" + std::to_wstring(nextWorld);
+        const std::wstring nextId = GetStageIdByNumber(stageNumber + 1);
+        if (!selectId.empty())
+        {
+            result.push_back(selectId);
+        }
+        if (!nextId.empty())
+        {
+            result.push_back(nextId);
+        }
+    }
+
+    return result;
+}
