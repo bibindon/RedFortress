@@ -1,0 +1,19 @@
+﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
+2,../plateField.x,0,0,0,0,0,0,1,normal
+903,../collision_wall.x,-13.5,1.5,16,0,0,0,1,normal
+904,../collision_wall.x,13.5,1.51,12,0,0,0,1,normal
+905,../collision_wall.x,-6,1.52,1.0,0,1.5708,0,1,normal
+906,../collision_wall.x,6,1.53,-1.0,0,1.5708,0,1,normal
+907,../collision_wall.x,-11.5,1.54,-10,0,0,0,1,normal
+908,../collision_wall.x,11.5,1.55,-14,0,0,0,1,normal
+909,../collision_wall.x,-1.5,1.56,20,0,1.5708,0,1,normal
+910,../collision_wall.x,2.5,1.57,-20,0,0,0,1,normal
+913,../collision_moving_platform.x,-0.5,0.82,0,0,0,0,1,normal
+914,../collision_moving_platform.x,0.5,0.83,0,0,0,0,1,normal
+919,../cube_white.x,-14.5,1,20,0,0,0,1,normal
+920,../cube_white.x,-5,1.01,19.0,0,0,0,1,normal
+921,../cube_white.x,0.5,1.02,10,0,0,0,1,normal
+922,../cube_white.x,2.5,1.03,-10,0,0,0,1,normal
+923,../cube_white.x,7,1.04,-19.0,0,0,0,1,normal
+924,../cube_white.x,14.5,1.05,-20,0,0,0,1,normal
+926,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal

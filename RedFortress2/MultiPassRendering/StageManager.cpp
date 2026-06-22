@@ -9,35 +9,52 @@ void StageManager::Initialize()
     AddStage(L"1-2", 2, L"Stage 1-2", L"stage2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
     AddStage(L"1-3", 3, L"Stage 1-3", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
     AddStage(L"1-4", 4, L"Stage 1-4", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
-    AddStage(L"base", 17, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"1-5", 5, L"Stage 1-5", L"stage17", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"1-6", 6, L"Stage 1-6", L"stage18", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"1-7", 7, L"Stage 1-7", L"stage19", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"1-8", 8, L"Stage 1-8", L"stage20", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    AddStage(L"2-1", 5, L"Stage 2-1", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
-    AddStage(L"2-2", 6, L"Stage 2-2", L"stage6", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"2-3", 7, L"Stage 2-3", L"stage7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
-    AddStage(L"2-4", 8, L"Stage 2-4", L"stage8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"2-1", 9, L"Stage 2-1", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"2-2", 10, L"Stage 2-2", L"stage6", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"2-3", 11, L"Stage 2-3", L"stage7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"2-4", 12, L"Stage 2-4", L"stage8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"2-5", 13, L"Stage 2-5", L"stage21", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"2-6", 14, L"Stage 2-6", L"stage22", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"2-7", 15, L"Stage 2-7", L"stage23", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"2-8", 16, L"Stage 2-8", L"stage24", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    AddStage(L"3-1", 9, L"Stage 3-1", L"stage9", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
-    AddStage(L"3-2", 10, L"Stage 3-2", L"stage10", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"3-3", 11, L"Stage 3-3", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
-    AddStage(L"3-4", 12, L"Stage 3-4", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"3-1", 17, L"Stage 3-1", L"stage9", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"3-2", 18, L"Stage 3-2", L"stage10", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"3-3", 19, L"Stage 3-3", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"3-4", 20, L"Stage 3-4", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"3-5", 21, L"Stage 3-5", L"stage25", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"3-6", 22, L"Stage 3-6", L"stage26", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"3-7", 23, L"Stage 3-7", L"stage27", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"3-8", 24, L"Stage 3-8", L"stage28", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    AddStage(L"4-1", 13, L"Stage 4-1", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
-    AddStage(L"4-2", 14, L"Stage 4-2", L"stage14", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"4-3", 15, L"Stage 4-3", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
-    AddStage(L"4-4", 16, L"Stage 4-4", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"4-1", 25, L"Stage 4-1", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"4-2", 26, L"Stage 4-2", L"stage14", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"4-3", 27, L"Stage 4-3", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"4-4", 28, L"Stage 4-4", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"4-5", 29, L"Stage 4-5", L"stage29", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"4-6", 30, L"Stage 4-6", L"stage30", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"4-7", 31, L"Stage 4-7", L"stage31", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"4-8", 32, L"Stage 4-8", L"stage32", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+
+    AddStage(L"base", 33, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
 
     const D3DXVECTOR3 kSelectCameraPos(0.0f, 10.0f, -60.0f);
     const D3DXVECTOR3 kSelectCameraLookAt(0.0f, 0.0f, 0.0f);
-    AddStage(L"select1", 18, L"Stage Select 1", L"stage-select1",
+    AddStage(L"select1", 34, L"Stage Select 1", L"stage-select1",
              D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
-    AddStage(L"select2", 19, L"Stage Select 2", L"stage-select2",
+    AddStage(L"select2", 35, L"Stage Select 2", L"stage-select2",
              D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
-    AddStage(L"select3", 20, L"Stage Select 3", L"stage-select3",
+    AddStage(L"select3", 36, L"Stage Select 3", L"stage-select3",
              D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
-    AddStage(L"select4", 21, L"Stage Select 4", L"stage-select4",
+    AddStage(L"select4", 37, L"Stage Select 4", L"stage-select4",
              D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
 }
@@ -168,19 +185,19 @@ const std::wstring& StageManager::GetCurrentStageDisplayName() const
 
 std::size_t StageManager::GetClearDestinationIndex(int stageNumber) const
 {
-    if (stageNumber >= 1 && stageNumber <= 4)
+    if (stageNumber >= 1 && stageNumber <= 8)
     {
         return FindStageIndexById(L"select1");
     }
-    if (stageNumber >= 5 && stageNumber <= 8)
+    if (stageNumber >= 9 && stageNumber <= 16)
     {
         return FindStageIndexById(L"select2");
     }
-    if (stageNumber >= 9 && stageNumber <= 12)
+    if (stageNumber >= 17 && stageNumber <= 24)
     {
         return FindStageIndexById(L"select3");
     }
-    if (stageNumber >= 13 && stageNumber <= 16)
+    if (stageNumber >= 25 && stageNumber <= 32)
     {
         return FindStageIndexById(L"select4");
     }
@@ -215,12 +232,12 @@ std::wstring StageManager::GetStageIdByNumber(int number) const
 std::vector<std::wstring> StageManager::GetUnlockStageIds(int stageNumber) const
 {
     std::vector<std::wstring> result;
-    if (stageNumber < 1 || stageNumber > 16)
+    if (stageNumber < 1 || stageNumber > 32)
     {
         return result;
     }
 
-    if (stageNumber % 4 != 0)
+    if (stageNumber % 8 != 0)
     {
         const std::wstring nextId = GetStageIdByNumber(stageNumber + 1);
         if (!nextId.empty())
@@ -228,9 +245,9 @@ std::vector<std::wstring> StageManager::GetUnlockStageIds(int stageNumber) const
             result.push_back(nextId);
         }
     }
-    else if (stageNumber != 16)
+    else if (stageNumber != 32)
     {
-        const int nextWorld = stageNumber / 4 + 1;
+        const int nextWorld = stageNumber / 8 + 1;
         const std::wstring selectId = L"select" + std::to_wstring(nextWorld);
         const std::wstring nextId = GetStageIdByNumber(stageNumber + 1);
         if (!selectId.empty())

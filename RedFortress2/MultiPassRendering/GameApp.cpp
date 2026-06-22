@@ -1872,7 +1872,7 @@ void GameApp::UpdateStageClear()
         m_stageClearProcessed = true;
     }
 
-    if (m_stageManager.GetCurrentStage().id == L"4-4")
+    if (m_stageManager.GetCurrentStage().id == L"4-8")
     {
         m_slideShowManager.Start(L"res\\script\\ending.csv");
         m_slideShowManager.SetStopOnFinish(false);
@@ -2001,7 +2001,7 @@ void GameApp::CompletePlayerDeath()
     if (m_player.IsGameOver())
     {
         const int stageNumber = m_stageManager.GetCurrentStage().number;
-        if (stageNumber >= 1 && stageNumber <= 4)
+        if (stageNumber >= 1 && stageNumber <= 8)
         {
             m_gameState = GameState::Title;
             m_player.ResetLives();
@@ -2010,7 +2010,8 @@ void GameApp::CompletePlayerDeath()
         }
         else
         {
-            StartStageByIndex(4);
+            const std::size_t baseIndex = m_stageManager.FindStageIndexById(L"base");
+            StartStageByIndex(baseIndex);
             m_player.ResetLives();
         }
         m_respawnCameraMoveFrames = 0;
@@ -2202,7 +2203,7 @@ void GameApp::DrawStageClear()
         m_stageClearHintFontId = m_render.SetUpFont(L"BIZ UDGothic", 24, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    if (m_stageManager.GetCurrentStage().id == L"4-4")
+    if (m_stageManager.GetCurrentStage().id == L"4-8")
     {
         m_render.DrawTextCenter(m_stageClearFontId, L"All Clear", 0, 330, NSRender::Common::BASE_W, 100);
         return;

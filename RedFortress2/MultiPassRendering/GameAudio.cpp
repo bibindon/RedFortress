@@ -116,13 +116,13 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         environment = kSeaEnvironment;
         environmentVolume = 14;
     }
-    else if (stageNumber >= 5 && stageNumber <= 8)
+    else if (stageNumber >= 9 && stageNumber <= 16)
     {
         fieldBgm = kField2Bgm;
         environment = kRainEnvironment;
         environmentVolume = 15;
     }
-    else if (stageNumber >= 9)
+    else if (stageNumber >= 17)
     {
         fieldBgm = kField3Bgm;
         environment = kForestEnvironment;
