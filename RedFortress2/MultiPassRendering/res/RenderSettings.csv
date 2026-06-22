@@ -34,7 +34,8 @@ FogIntensity,1.0
 ,
 DepthBufferShadowEnable,0
 ShadowIntensity,0.25
-ShadowCoverage,0.2
+ShadowCoverage,0.05
+ShadowCoverageFar,0.40
 ShadowBias,0.0005
 ShadowSaturationBoost,0.5
 ShadowPcfTapCount,3
