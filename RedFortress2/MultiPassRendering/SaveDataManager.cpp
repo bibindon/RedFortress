@@ -243,7 +243,28 @@ void SaveDataManager::MarkStageClearedByIndex(std::size_t stageIndex)
 
 bool SaveDataManager::HasSaveFile() const
 {
-    return m_hasSaveFile;
+    if (m_hasSaveFile)
+    {
+        return true;
+    }
+
+    if (m_filePath.empty())
+    {
+        return false;
+    }
+
+    const DWORD attributes = GetFileAttributesW(m_filePath.c_str());
+    if (attributes == INVALID_FILE_ATTRIBUTES)
+    {
+        return false;
+    }
+
+    if ((attributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void SaveDataManager::MarkStageUnlocked(const std::wstring& stageId)
@@ -268,4 +289,12 @@ void SaveDataManager::InitializeDefaultUnlocks()
 {
     m_unlockedStageIds.insert(L"select1");
     m_unlockedStageIds.insert(L"1-1");
+}
+
+void SaveDataManager::ResetToDefaults()
+{
+    m_clearedStageIds.clear();
+    m_unlockedStageIds.clear();
+    m_hasSaveFile = false;
+    InitializeDefaultUnlocks();
 }

@@ -84,6 +84,7 @@ private:
     void UnlockStagesUpToSelected(HWND hDlg);
     bool StartStageByIndex(std::size_t stageIndex);
     bool StartStageByIndexImmediate(std::size_t stageIndex);
+    void StartNewGame();
     std::size_t GetContinueStartStageIndex() const;
     void MoveToSelectedStage(HWND hDlg);
     void RefreshTitleContinueCommand();

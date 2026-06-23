@@ -28,6 +28,7 @@ public:
     bool HasSaveFile() const;
 
     void InitializeDefaultUnlocks();
+    void ResetToDefaults();
 
 private:
     SaveDataManager(const SaveDataManager&);

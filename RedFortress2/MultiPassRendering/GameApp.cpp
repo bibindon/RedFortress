@@ -315,8 +315,10 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_damagePopupManager.SetEnabled(false);
 
     m_saveDataManager.Initialize(m_stageManager);
-    m_saveDataManager.Load();
+    m_saveDataManager.ResetToDefaults();
     InitializeStageSelectCursor();
+    CreateStageSelectCubes();
+    UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
     m_mouseCursorVisible = true;
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
 
@@ -417,12 +419,11 @@ void GameApp::Run()
                 const std::wstring selectedId = m_command.Into();
                 if (selectedId == L"start")
                 {
-                    m_slideShowManager.Start(L"res\\script\\hoshigirl_trial_novel.csv");
-                    m_slideShowManager.SetStopOnFinish(false);
-                    m_gameState = GameState::SlideShow;
+                    StartNewGame();
                 }
                 else if (selectedId == L"continue")
                 {
+                    m_saveDataManager.Load();
                     StartStageByIndex(GetContinueStartStageIndex());
                 }
                 else if (selectedId == L"exit")
@@ -440,12 +441,11 @@ void GameApp::Run()
                 const std::wstring clickedId = m_command.Click(baseMousePos.x, baseMousePos.y);
                 if (clickedId == L"start")
                 {
-                    m_slideShowManager.Start(L"res\\script\\hoshigirl_trial_novel.csv");
-                    m_slideShowManager.SetStopOnFinish(false);
-                    m_gameState = GameState::SlideShow;
+                    StartNewGame();
                 }
                 else if (clickedId == L"continue")
                 {
+                    m_saveDataManager.Load();
                     StartStageByIndex(GetContinueStartStageIndex());
                 }
                 else if (clickedId == L"exit")
@@ -2003,6 +2003,22 @@ bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
     return true;
 }
 
+void GameApp::StartNewGame()
+{
+    m_saveDataManager.ResetToDefaults();
+
+    const std::size_t select1Index = m_stageManager.FindStageIndexById(L"select1");
+    if (select1Index < m_stageManager.GetStageCount())
+    {
+        m_stageManager.MoveToStage(select1Index);
+        LoadCurrentStageObjects();
+    }
+
+    m_slideShowManager.Start(L"res\\script\\hoshigirl_trial_novel.csv");
+    m_slideShowManager.SetStopOnFinish(false);
+    m_gameState = GameState::SlideShow;
+}
+
 void GameApp::RefreshTitleContinueCommand()
 {
     const bool canContinue = m_saveDataManager.HasSaveFile();
@@ -2458,6 +2474,7 @@ void GameApp::LoadCurrentStageObjects()
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
     CreateStageSelectCubes();
+    m_playerMover.Reset(stage.playerStartPosition);
     InitializeStageSelectCursor();
 
     m_mouseCursorVisible = IsCurrentStageSelect();
@@ -2486,7 +2503,6 @@ void GameApp::LoadCurrentStageObjects()
     }
     m_player.ResetHp();
     m_hpBar.Reset();
-    m_playerMover.Reset(stage.playerStartPosition);
     m_enemyManager.LoadForStage(m_render, stage.enemyCsvPath);
     UpdatePlayerMeshVisibility();
     if (IsCurrentStageSelect() && m_hasSelectedStagePortal)
