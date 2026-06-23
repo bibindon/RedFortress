@@ -571,7 +571,7 @@ void GameApp::Run()
                 }
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
-                m_pauseMenu.Render(m_stageManager.GetCurrentStageDisplayName());
+                m_pauseMenu.Render(m_stageManager.GetCurrentStageDisplayName(), m_player.GetLives());
                 m_render.Draw();
                 continue;
             }

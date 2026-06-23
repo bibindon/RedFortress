@@ -21,7 +21,7 @@ public:
     void Open();
     void Close();
     void Update();
-    void Render(const std::wstring& stageName);
+    void Render(const std::wstring& stageName, int lives);
     bool IsOpen() const;
     bool BlocksGameInput() const;
 

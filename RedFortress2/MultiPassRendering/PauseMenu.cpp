@@ -357,7 +357,7 @@ void PauseMenu::EnsureSelectedWeaponVisible()
     }
 }
 
-void PauseMenu::Render(const std::wstring& stageName)
+void PauseMenu::Render(const std::wstring& stageName, const int lives)
 {
     if (!m_isOpen || m_render == nullptr)
     {
@@ -386,6 +386,15 @@ void PauseMenu::Render(const std::wstring& stageName)
                                560,
                                60,
                                kTextColor);
+
+    const std::wstring livesText = L"残機: " + std::to_wstring(lives);
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               livesText,
+                               960,
+                               150,
+                               320,
+                               40,
+                               kSubTextColor);
 
     RenderTopMenu();
 
