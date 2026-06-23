@@ -230,6 +230,21 @@ void EnemyManager::RemoveEnemy(NSRender::Render& render, std::size_t index)
     AdjustMeshIdsAfterRemoval(meshId);
 }
 
+void EnemyManager::RemoveAll(NSRender::Render& render)
+{
+    for (auto it = m_enemies.rbegin(); it != m_enemies.rend(); ++it)
+    {
+        const int meshId = it->GetMeshId();
+        if (meshId >= 0)
+        {
+            render.StopMeshMixSkinAnimBlink(meshId);
+            render.RemoveMeshMixSkinAnim(meshId);
+        }
+    }
+
+    m_enemies.clear();
+}
+
 void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
 {
     std::vector<std::vector<std::wstring>> csvData;

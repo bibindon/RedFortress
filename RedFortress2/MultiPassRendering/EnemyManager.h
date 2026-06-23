@@ -26,6 +26,7 @@ public:
 
     void SpawnAt(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw);
     void RemoveEnemy(NSRender::Render& render, std::size_t index);
+    void RemoveAll(NSRender::Render& render);
     void SaveToCsv(const std::wstring& csvPath) const;
 
 private:

@@ -23,7 +23,7 @@ namespace
     const float kStageSelectPlayerRightYaw = -D3DX_PI * 0.5f;
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
-    const float kStageSelectPlayerVisualScale = 2.0f;
+    const float kStageSelectPlayerVisualScale = 1.0f;
     const int kStageSelectStageNameY = 660;
     const int kStageSelectLivesY = 700;
     const int kStageSelectHint1Y = 760;
@@ -2132,13 +2132,7 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
             return TRUE;
 
         case IDC_BUTTON_KILL_ALL_ENEMIES:
-            for (auto& enemy : m_enemyManager.GetEnemies())
-            {
-                if (!enemy.IsDead())
-                {
-                    enemy.TakeDamage(m_render, 999, m_playerMover.GetPosition());
-                }
-            }
+            m_enemyManager.RemoveAll(m_render);
             return TRUE;
 
         case IDC_EDIT_CAMERA_DIST:
