@@ -19,31 +19,23 @@ const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(225, 235, 255, 230);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
 const UINT kInactiveTextColor = D3DCOLOR_RGBA(190, 200, 220, 210);
-const std::array<const wchar_t*, 5> kTopMenuFirstRow =
+const std::array<const wchar_t*, 4> kTopMenuItems =
 {
     L"アイテム",
     L"武器",
-    L"装備",
-    L"クラフト",
-    L"クエスト"
-};
-const std::array<const wchar_t*, 4> kTopMenuSecondRow =
-{
-    L"マップ",
-    L"図鑑",
-    L"セーブ",
-    L"設定"
+    L"設定",
+    L"終了"
 };
 const int kTopMenuItemWidth = 240;
 const int kTopMenuItemHeight = 44;
-const int kTopMenuItemInterval = 250;
-const int kTopMenuFirstRowX = 170;
-const int kTopMenuSecondRowX = 295;
-const int kTopMenuFirstRowY = 180;
-const int kTopMenuSecondRowY = 230;
-const int kTopMenuCount = 9;
+const int kTopMenuItemInterval = 290;
+const int kTopMenuX = 250;
+const int kTopMenuY = 200;
+const int kTopMenuCount = 4;
 const int kItemMenuIndex = 0;
 const int kWeaponMenuIndex = 1;
+const int kSettingsMenuIndex = 2;
+const int kExitMenuIndex = 3;
 const std::size_t kVisibleItemCount = 11;
 const int kItemListX = 205;
 const int kItemListY = 350;
@@ -410,53 +402,60 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
         return;
     }
 
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               L"グラフィック設定",
-                               1040,
-                               525,
-                               180,
-                               44,
-                               kSubTextColor);
+    if (m_activeTopMenuIndex == kSettingsMenuIndex)
+    {
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   L"グラフィック設定",
+                                   1040,
+                                   525,
+                                   180,
+                                   44,
+                                   kSubTextColor);
 
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               L"低",
-                               1235,
-                               525,
-                               70,
-                               44,
-                               kSubTextColor);
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   L"低",
+                                   1235,
+                                   525,
+                                   70,
+                                   44,
+                                   kSubTextColor);
 
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               L"中",
-                               1320,
-                               525,
-                               70,
-                               44,
-                               kSubTextColor);
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   L"中",
+                                   1320,
+                                   525,
+                                   70,
+                                   44,
+                                   kSubTextColor);
 
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               L"高",
-                               1405,
-                               525,
-                               70,
-                               44,
-                               kSubTextColor);
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   L"高",
+                                   1405,
+                                   525,
+                                   70,
+                                   44,
+                                   kSubTextColor);
+        return;
+    }
 
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"拠点に戻る",
-                               1180,
-                               760,
-                               330,
-                               56,
-                               kTextColor);
+    if (m_activeTopMenuIndex == kExitMenuIndex)
+    {
+        m_render->DrawTextExCenter(m_menuItemFontId,
+                                   L"拠点に戻る",
+                                   1180,
+                                   760,
+                                   330,
+                                   56,
+                                   kTextColor);
+    }
 }
 
 void PauseMenu::RenderTopMenu()
 {
-    for (std::size_t i = 0; i < kTopMenuFirstRow.size(); ++i)
+    for (std::size_t i = 0; i < kTopMenuItems.size(); ++i)
     {
         const int menuIndex = static_cast<int>(i);
-        const int x = kTopMenuFirstRowX + menuIndex * kTopMenuItemInterval;
+        const int x = kTopMenuX + menuIndex * kTopMenuItemInterval;
         UINT color = kInactiveTextColor;
         if (menuIndex == m_selectedTopMenuIndex)
         {
@@ -464,28 +463,9 @@ void PauseMenu::RenderTopMenu()
         }
 
         m_render->DrawTextExCenter(m_qualityFontId,
-                                   kTopMenuFirstRow[i],
+                                   kTopMenuItems[i],
                                    x,
-                                   kTopMenuFirstRowY,
-                                   kTopMenuItemWidth,
-                                   kTopMenuItemHeight,
-                                   color);
-    }
-
-    for (std::size_t i = 0; i < kTopMenuSecondRow.size(); ++i)
-    {
-        const int menuIndex = static_cast<int>(i) + static_cast<int>(kTopMenuFirstRow.size());
-        const int x = kTopMenuSecondRowX + static_cast<int>(i) * kTopMenuItemInterval;
-        UINT color = kInactiveTextColor;
-        if (menuIndex == m_selectedTopMenuIndex)
-        {
-            color = kSelectedTextColor;
-        }
-
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   kTopMenuSecondRow[i],
-                                   x,
-                                   kTopMenuSecondRowY,
+                                   kTopMenuY,
                                    kTopMenuItemWidth,
                                    kTopMenuItemHeight,
                                    color);
