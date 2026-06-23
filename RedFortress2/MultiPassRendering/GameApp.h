@@ -109,6 +109,8 @@ private:
     bool MoveToSelectedStagePortal();
     std::wstring GetSelectedStagePortalDisplayName() const;
     void DrawStageSelectCursor();
+    void CreateStageSelectCubes();
+    void RemoveStageSelectCubes();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
@@ -190,4 +192,5 @@ private:
     D3DXVECTOR3 m_stageSelectPlayerMoveTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     float m_stageSelectPlayerMoveElapsed = 0.0f;
     bool m_stageSelectPlayerMoveActive = false;
+    std::vector<int> m_stageSelectCubeMeshIds;
 };

@@ -30,6 +30,9 @@ namespace
     const int kStageSelectHint2Y = 792;
     const int kStageSelectStartButtonY = 832;
     const int kStageSelectStartButtonHeight = 48;
+    const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
+    const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
+    const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -1398,10 +1401,6 @@ bool GameApp::IsStagePortalSelectable(const std::wstring& portalId) const
     {
         return true;
     }
-    if (destinationId.length() >= 6 && destinationId.substr(0, 6) == L"select")
-    {
-        return true;
-    }
     return m_saveDataManager.IsStageUnlocked(destinationId);
 }
 
@@ -1790,6 +1789,80 @@ void GameApp::DrawStageSelectCursor()
                               NSRender::Common::BASE_W,
                               kStageSelectStartButtonHeight,
                               startButtonColor);
+}
+
+void GameApp::RemoveStageSelectCubes()
+{
+    for (auto it = m_stageSelectCubeMeshIds.rbegin(); it != m_stageSelectCubeMeshIds.rend(); ++it)
+    {
+        m_render.RemoveMeshMix(*it);
+    }
+    m_stageSelectCubeMeshIds.clear();
+}
+
+void GameApp::CreateStageSelectCubes()
+{
+    if (!IsCurrentStageSelect())
+    {
+        return;
+    }
+
+    RemoveStageSelectCubes();
+
+    const std::wstring portalPrefix = L"portal-to-";
+    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+    for (const InteractionManager::Interactable& interactable : interactables)
+    {
+        if (interactable.type != L"StagePortal")
+        {
+            continue;
+        }
+
+        if (interactable.id.length() <= portalPrefix.length() ||
+            interactable.id.substr(0, portalPrefix.length()) != portalPrefix)
+        {
+            continue;
+        }
+
+        const std::wstring destinationId = interactable.id.substr(portalPrefix.length());
+        std::wstring cubePath;
+        if (destinationId == L"base")
+        {
+            cubePath = kStageSelectCubeBluePath;
+        }
+        else
+        {
+            if (!m_saveDataManager.IsStageUnlocked(destinationId))
+            {
+                continue;
+            }
+
+            if (destinationId.length() >= 6 && destinationId.substr(0, 6) == L"select")
+            {
+                cubePath = kStageSelectCubeBluePath;
+            }
+            else
+            {
+                if (m_saveDataManager.IsStageCleared(destinationId))
+                {
+                    cubePath = kStageSelectCubeGreenPath;
+                }
+                else
+                {
+                    cubePath = kStageSelectCubeRedPath;
+                }
+            }
+        }
+
+        const int renderId = m_render.AddMeshMix(cubePath,
+                                                  interactable.position,
+                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                  1.0f);
+        if (renderId >= 0)
+        {
+            m_stageSelectCubeMeshIds.push_back(renderId);
+        }
+    }
 }
 
 void GameApp::PopulateStageCombo(HWND hDlg)
@@ -2371,6 +2444,7 @@ void GameApp::LoadCurrentStageObjects()
         m_goalMarkerMeshId = -1;
     }
 
+    RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
     m_render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
@@ -2383,6 +2457,7 @@ void GameApp::LoadCurrentStageObjects()
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
+    CreateStageSelectCubes();
     InitializeStageSelectCursor();
 
     m_mouseCursorVisible = IsCurrentStageSelect();
