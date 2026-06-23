@@ -18,9 +18,11 @@ namespace
     const std::wstring g_playerJumpAnimName = L"jump";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
     const float kStagePortalClickRadius = 48.0f;
-    const float kStageSelectPlayerMoveDuration = 1.0f;
+    const float kStageSelectPlayerMoveDuration = 0.5f;
     const float kStageSelectPlayerRightYaw = -D3DX_PI * 0.5f;
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
+    const float kStageSelectPlayerVisualOffsetY = 1.0f;
+    const float kStageSelectPlayerVisualScale = 2.0f;
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -1288,14 +1290,23 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
     const D3DXVECTOR3 currentRenderPosition = m_playerMover.GetPosition();
     if (m_playerMeshId >= 0)
     {
+        D3DXVECTOR3 displayPosition = currentRenderPosition;
+        float displayScale = 1.0f;
+        if (IsCurrentStageSelect())
+        {
+            displayPosition.y += kStageSelectPlayerVisualOffsetY;
+            displayScale = kStageSelectPlayerVisualScale;
+        }
+
         if (m_playerIsSkinAnim)
         {
-            m_render.SetMeshMixSkinAnimPos(m_playerMeshId, currentRenderPosition);
+            m_render.SetMeshMixSkinAnimPos(m_playerMeshId, displayPosition);
             m_render.SetMeshMixSkinAnimRotY(m_playerMeshId, m_playerYaw);
+            m_render.SetMeshMixSkinAnimScale(m_playerMeshId, displayScale);
         }
         else
         {
-            m_render.SetMeshMixPos(m_playerMeshId, currentRenderPosition);
+            m_render.SetMeshMixPos(m_playerMeshId, displayPosition);
         }
     }
 
