@@ -1420,10 +1420,31 @@ void GameApp::InitializeStageSelectCursor()
 
     if (!IsCurrentStageSelect())
     {
+        m_preferredStageSelectPortalId.clear();
         return;
     }
 
     const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+
+    if (!m_preferredStageSelectPortalId.empty())
+    {
+        for (const InteractionManager::Interactable& interactable : interactables)
+        {
+            if (interactable.id == m_preferredStageSelectPortalId &&
+                IsStagePortalSelectable(interactable.id))
+            {
+                m_selectedStagePortalId = interactable.id;
+                m_selectedStagePortalPosition = interactable.position;
+                m_hasSelectedStagePortal = true;
+                m_preferredStageSelectPortalId.clear();
+                SyncStageSelectPlayerToPortal(true);
+                return;
+            }
+        }
+
+        m_preferredStageSelectPortalId.clear();
+    }
+
     for (const InteractionManager::Interactable& interactable : interactables)
     {
         if (interactable.type != L"StagePortal" || !IsStagePortalSelectable(interactable.id))
@@ -2414,6 +2435,7 @@ bool GameApp::StartNextStage()
 
 bool GameApp::StartStageAfterClear()
 {
+    const std::wstring clearedStageId = m_stageManager.GetCurrentStage().id;
     const int stageNumber = m_stageManager.GetCurrentStageNumber();
     const std::size_t destinationIndex = m_stageManager.GetClearDestinationIndex(stageNumber);
 
@@ -2433,6 +2455,7 @@ bool GameApp::StartStageAfterClear()
     }
 
     m_render.StartFadeOut(0.3f);
+    m_preferredStageSelectPortalId = L"portal-to-" + clearedStageId;
     LoadCurrentStageObjects();
     m_render.StartFadeIn(0.3f);
     m_gameState = GameState::Playing;
