@@ -1193,7 +1193,20 @@ void GameApp::UpdatePlayerByInput()
     UpdatePlayerMeshAndCamera(previousRenderPosition);
 
     m_pendingMove = move;
-    m_pendingJump = InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE);
+
+    const bool dashModifierPressed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT)
+        || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT);
+    const bool jumpPressed = InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE);
+    if (jumpPressed && dashModifierPressed)
+    {
+        const D3DXVECTOR3 dashForward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+        m_playerMover.RequestDash(dashForward);
+        m_pendingJump = false;
+    }
+    else
+    {
+        m_pendingJump = jumpPressed;
+    }
 }
 
 D3DXVECTOR3 GameApp::GetCameraPlanarForward()
@@ -1283,6 +1296,10 @@ void GameApp::InitializePlayerPhysics()
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
     PhysicsLib::SettingsState::SetCylinderRadius(0.3f);
     PhysicsLib::SettingsState::SetCylinderHeight(1.7f);
+    PhysicsLib::SettingsState::SetGroundDashEnabled(true);
+    PhysicsLib::SettingsState::SetAirDashEnabled(true);
+    PhysicsLib::SettingsState::SetDashSpeed(18.0f);
+    PhysicsLib::SettingsState::SetDashDuration(0.2f);
 }
 
 void GameApp::LoadPhysicsObjectsFromCsv(const std::wstring& csvPath)
