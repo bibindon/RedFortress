@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "../../RedFortressRender/Render/WindowManager.h"
+
 namespace NSRender
 {
 class Render;
@@ -51,7 +53,15 @@ private:
     {
         TopMenu,
         ItemList,
-        WeaponList
+        WeaponList,
+        SettingsPanel
+    };
+
+    enum class SettingsRow
+    {
+        Resolution,
+        WindowMode,
+        Quality,
     };
 
     void LoadItems();
@@ -59,6 +69,7 @@ private:
     void UpdateTopMenu();
     void UpdateItemList();
     void UpdateWeaponList();
+    void UpdateSettingsPanel();
     void UpdateExitConfirm();
     void EnsureSelectedItemVisible();
     void EnsureSelectedWeaponVisible();
@@ -68,6 +79,15 @@ private:
     void RenderExitConfirm();
     void RenderSettingsPanel();
     std::wstring BuildResolutionComboText() const;
+    std::wstring BuildWindowModeComboText() const;
+    std::wstring BuildQualityComboText() const;
+    void RefreshSettingsOptions();
+    void ApplySelectedResolution();
+    void ApplySelectedWindowMode();
+    void ApplySelectedQuality();
+    static std::wstring WindowModeToLabel(NSRender::eWindowMode mode);
+    static std::wstring QualityToLabel(const std::wstring& quality);
+    static bool TryGetSettingsRowFromPoint(long x, long y, SettingsRow* outRow);
     static std::wstring FormatResolutionLabel(int width, int height);
     static bool IsSixteenByNine(int width, int height);
     std::vector<std::size_t> GetOwnedItemIndices() const;
@@ -84,15 +104,20 @@ private:
     bool m_showExitConfirm = false;
     bool m_skipInputFrame = false;
     FocusArea m_focusArea = FocusArea::TopMenu;
+    SettingsRow m_selectedSettingsRow = SettingsRow::Resolution;
     int m_selectedTopMenuIndex = 0;
     int m_activeTopMenuIndex = -1;
     int m_selectedExitConfirmIndex = 0;
+    int m_selectedResolutionIndex = 0;
+    int m_selectedWindowModeIndex = 0;
+    int m_selectedQualityIndex = 0;
     std::size_t m_selectedItemIndex = 0;
     std::size_t m_itemScrollOffset = 0;
     std::vector<ItemData> m_items;
     std::size_t m_selectedWeaponIndex = 0;
     std::size_t m_weaponScrollOffset = 0;
     std::vector<WeaponData> m_weapons;
+    std::vector<std::pair<int, int>> m_resolutionOptions;
     int m_stageNameFontId = -1;
     int m_menuItemFontId = -1;
     int m_qualityFontId = -1;
