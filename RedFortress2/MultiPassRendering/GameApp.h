@@ -176,6 +176,9 @@ private:
     int m_stageClearFontId = -1;
     int m_stageClearHintFontId = -1;
     int m_stageSelectFontId = -1;
+    int m_stageSelectStartButtonFontId = -1;
+    int m_stageSelectHintFontId = -1;
+    bool m_isMouseOverStartButton = false;
     int m_stageTitleFrame = 0;
     int m_goalMarkerMeshId = -1;
     int m_stagePortalCooldownFrames = 0;

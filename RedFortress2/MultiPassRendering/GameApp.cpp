@@ -24,6 +24,12 @@ namespace
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
     const float kStageSelectPlayerVisualScale = 2.0f;
+    const int kStageSelectStageNameY = 660;
+    const int kStageSelectLivesY = 700;
+    const int kStageSelectHint1Y = 760;
+    const int kStageSelectHint2Y = 792;
+    const int kStageSelectStartButtonY = 832;
+    const int kStageSelectStartButtonHeight = 48;
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -1601,49 +1607,67 @@ void GameApp::UpdateStageSelectCursorByInput()
         MoveStageSelectCursorByDirection(directionX, directionY);
     }
 
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const POINT baseMousePosition = ConvertMouseToBaseResolution(mousePosition.x, mousePosition.y);
+    if (baseMousePosition.x >= 0 && baseMousePosition.x < NSRender::Common::BASE_W &&
+        baseMousePosition.y >= kStageSelectStartButtonY &&
+        baseMousePosition.y < kStageSelectStartButtonY + kStageSelectStartButtonHeight)
+    {
+        m_isMouseOverStartButton = true;
+    }
+    else
+    {
+        m_isMouseOverStartButton = false;
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const POINT baseMousePosition = ConvertMouseToBaseResolution(mousePosition.x, mousePosition.y);
-        const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
-        float nearestDistanceSquared = kStagePortalClickRadius * kStagePortalClickRadius;
-        const InteractionManager::Interactable* selectedInteractable = nullptr;
-
-        for (const InteractionManager::Interactable& interactable : interactables)
+        if (m_isMouseOverStartButton)
         {
-            if (interactable.type != L"StagePortal" || !IsStagePortalSelectable(interactable.id))
-            {
-                continue;
-            }
-
-            const POINT screenPosition = NSRender::Camera::GetScreenPos(interactable.position);
-            if (screenPosition.x < 0 || screenPosition.y < 0)
-            {
-                continue;
-            }
-
-            const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                static_cast<float>(NSRender::Common::ScreenW());
-            const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                static_cast<float>(NSRender::Common::ScreenH());
-            const float portalX = static_cast<float>(screenPosition.x) * scaleX;
-            const float portalY = static_cast<float>(screenPosition.y) * scaleY;
-            const float differenceX = portalX - static_cast<float>(baseMousePosition.x);
-            const float differenceY = portalY - static_cast<float>(baseMousePosition.y);
-            const float distanceSquared = differenceX * differenceX + differenceY * differenceY;
-            if (distanceSquared <= nearestDistanceSquared)
-            {
-                nearestDistanceSquared = distanceSquared;
-                selectedInteractable = &interactable;
-            }
+            MoveToSelectedStagePortal();
         }
-
-        if (selectedInteractable != nullptr)
+        else
         {
-            m_selectedStagePortalId = selectedInteractable->id;
-            m_selectedStagePortalPosition = selectedInteractable->position;
-            m_hasSelectedStagePortal = true;
-            SyncStageSelectPlayerToPortal(false);
+            const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+            float nearestDistanceSquared = kStagePortalClickRadius * kStagePortalClickRadius;
+            const InteractionManager::Interactable* selectedInteractable = nullptr;
+
+            for (const InteractionManager::Interactable& interactable : interactables)
+            {
+                if (interactable.type != L"StagePortal" || !IsStagePortalSelectable(interactable.id))
+                {
+                    continue;
+                }
+
+                const POINT screenPosition = NSRender::Camera::GetScreenPos(interactable.position);
+                if (screenPosition.x < 0 || screenPosition.y < 0)
+                {
+                    continue;
+                }
+
+                const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                    static_cast<float>(NSRender::Common::ScreenW());
+                const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                    static_cast<float>(NSRender::Common::ScreenH());
+                const float portalX = static_cast<float>(screenPosition.x) * scaleX;
+                const float portalY = static_cast<float>(screenPosition.y) * scaleY;
+                const float differenceX = portalX - static_cast<float>(baseMousePosition.x);
+                const float differenceY = portalY - static_cast<float>(baseMousePosition.y);
+                const float distanceSquared = differenceX * differenceX + differenceY * differenceY;
+                if (distanceSquared <= nearestDistanceSquared)
+                {
+                    nearestDistanceSquared = distanceSquared;
+                    selectedInteractable = &interactable;
+                }
+            }
+
+            if (selectedInteractable != nullptr)
+            {
+                m_selectedStagePortalId = selectedInteractable->id;
+                m_selectedStagePortalPosition = selectedInteractable->position;
+                m_hasSelectedStagePortal = true;
+                SyncStageSelectPlayerToPortal(false);
+            }
         }
     }
 
@@ -1703,33 +1727,69 @@ void GameApp::DrawStageSelectCursor()
         return;
     }
 
-    const std::wstring stageName = GetSelectedStagePortalDisplayName();
-    if (stageName.empty())
-    {
-        return;
-    }
-
     if (m_stageSelectFontId < 0)
     {
         m_stageSelectFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 30, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
+    if (m_stageSelectHintFontId < 0)
+    {
+        m_stageSelectHintFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 24, D3DCOLOR_RGBA(255, 255, 255, 220));
+    }
+    if (m_stageSelectStartButtonFontId < 0)
+    {
+        m_stageSelectStartButtonFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 40, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
 
-    m_render.DrawTextExCenter(m_stageSelectFontId,
-                              stageName,
-                              0,
-                              812,
-                              NSRender::Common::BASE_W,
-                              48,
-                              D3DCOLOR_RGBA(255, 255, 255, 255));
+    const std::wstring stageName = GetSelectedStagePortalDisplayName();
+    if (!stageName.empty())
+    {
+        m_render.DrawTextExCenter(m_stageSelectFontId,
+                                  stageName,
+                                  0,
+                                  kStageSelectStageNameY,
+                                  NSRender::Common::BASE_W,
+                                  40,
+                                  D3DCOLOR_RGBA(255, 255, 255, 255));
 
-    const std::wstring livesText = L"残機: " + std::to_wstring(m_player.GetLives());
-    m_render.DrawTextExCenter(m_stageSelectFontId,
-                              livesText,
+        const std::wstring livesText = L"残機: " + std::to_wstring(m_player.GetLives());
+        m_render.DrawTextExCenter(m_stageSelectFontId,
+                                  livesText,
+                                  0,
+                                  kStageSelectLivesY,
+                                  NSRender::Common::BASE_W,
+                                  32,
+                                  D3DCOLOR_RGBA(255, 255, 255, 230));
+    }
+
+    m_render.DrawTextExCenter(m_stageSelectHintFontId,
+                              L"方向キー・マウス→ステージ選択",
                               0,
-                              846,
+                              kStageSelectHint1Y,
                               NSRender::Common::BASE_W,
-                              40,
-                              D3DCOLOR_RGBA(255, 255, 255, 230));
+                              28,
+                              D3DCOLOR_RGBA(255, 255, 255, 220));
+
+    m_render.DrawTextExCenter(m_stageSelectHintFontId,
+                              L"エンター→開始",
+                              0,
+                              kStageSelectHint2Y,
+                              NSRender::Common::BASE_W,
+                              28,
+                              D3DCOLOR_RGBA(255, 255, 255, 220));
+
+    UINT startButtonColor = D3DCOLOR_RGBA(255, 255, 255, 255);
+    if (m_isMouseOverStartButton)
+    {
+        startButtonColor = D3DCOLOR_RGBA(255, 255, 0, 255);
+    }
+
+    m_render.DrawTextExCenter(m_stageSelectStartButtonFontId,
+                              L"スタート",
+                              0,
+                              kStageSelectStartButtonY,
+                              NSRender::Common::BASE_W,
+                              kStageSelectStartButtonHeight,
+                              startButtonColor);
 }
 
 void GameApp::PopulateStageCombo(HWND hDlg)
