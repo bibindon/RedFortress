@@ -25,6 +25,7 @@ public:
     void Update();
     void Render(const std::wstring& stageName, int lives);
     bool ConsumeExitRequested();
+    bool ConsumeSaveRequested();
     bool IsOpen() const;
     bool BlocksGameInput() const;
 
@@ -71,12 +72,14 @@ private:
     void UpdateWeaponList();
     void UpdateSettingsPanel();
     void UpdateExitConfirm();
+    void UpdateSaveConfirm();
     void EnsureSelectedItemVisible();
     void EnsureSelectedWeaponVisible();
     void RenderTopMenu();
     void RenderItemPanel();
     void RenderWeaponPanel();
     void RenderExitConfirm();
+    void RenderSaveConfirm();
     void RenderSettingsPanel();
     std::wstring BuildResolutionComboText() const;
     std::wstring BuildWindowModeComboText() const;
@@ -103,6 +106,9 @@ private:
     bool m_exitRequested = false;
     bool m_showExitConfirm = false;
     bool m_skipInputFrame = false;
+    bool m_saveRequested = false;
+    bool m_showSaveConfirm = false;
+    int m_selectedSaveConfirmIndex = 0;
     FocusArea m_focusArea = FocusArea::TopMenu;
     SettingsRow m_selectedSettingsRow = SettingsRow::Resolution;
     int m_selectedTopMenuIndex = 0;

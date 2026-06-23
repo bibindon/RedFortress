@@ -20,25 +20,29 @@ const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(225, 235, 255, 230);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
 const UINT kInactiveTextColor = D3DCOLOR_RGBA(190, 200, 220, 210);
-const std::array<const wchar_t*, 4> kTopMenuItems =
+const std::array<const wchar_t*, 5> kTopMenuItems =
 {
     L"アイテム",
     L"武器",
     L"設定",
+    L"セーブ",
     L"終了"
 };
-const int kTopMenuItemWidth = 240;
+const int kTopMenuItemWidth = 220;
 const int kTopMenuItemHeight = 44;
-const int kTopMenuItemInterval = 290;
+const int kTopMenuItemInterval = 270;
 const int kTopMenuX = 250;
 const int kTopMenuY = 200;
-const int kTopMenuCount = 4;
+const int kTopMenuCount = 5;
 const int kItemMenuIndex = 0;
 const int kWeaponMenuIndex = 1;
 const int kSettingsMenuIndex = 2;
-const int kExitMenuIndex = 3;
+const int kSaveMenuIndex = 3;
+const int kExitMenuIndex = 4;
 const int kExitConfirmYesIndex = 0;
 const int kExitConfirmNoIndex = 1;
+const int kSaveConfirmYesIndex = 0;
+const int kSaveConfirmNoIndex = 1;
 const int kExitConfirmButtonWidth = 150;
 const int kExitConfirmButtonHeight = 44;
 const int kExitConfirmYesX = 70;
@@ -84,6 +88,8 @@ void PauseMenu::Open()
     m_isOpen = true;
     m_exitRequested = false;
     m_showExitConfirm = false;
+    m_showSaveConfirm = false;
+    m_saveRequested = false;
     m_skipInputFrame = true;
     m_focusArea = FocusArea::TopMenu;
     m_selectedSettingsRow = SettingsRow::Resolution;
@@ -115,6 +121,7 @@ void PauseMenu::Close()
 
     m_isOpen = false;
     m_showExitConfirm = false;
+    m_showSaveConfirm = false;
 }
 
 void PauseMenu::Update()
@@ -151,6 +158,12 @@ void PauseMenu::Update()
     if (m_showExitConfirm)
     {
         UpdateExitConfirm();
+        return;
+    }
+
+    if (m_showSaveConfirm)
+    {
+        UpdateSaveConfirm();
         return;
     }
 
@@ -287,6 +300,11 @@ void PauseMenu::UpdateTopMenu()
                     m_focusArea = FocusArea::SettingsPanel;
                     m_selectedSettingsRow = SettingsRow::Resolution;
                 }
+                else if (m_activeTopMenuIndex == kSaveMenuIndex)
+                {
+                    m_showSaveConfirm = true;
+                    m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
+                }
                 else if (m_activeTopMenuIndex == kExitMenuIndex)
                 {
                     m_showExitConfirm = true;
@@ -314,6 +332,11 @@ void PauseMenu::UpdateTopMenu()
             RefreshSettingsOptions();
             m_focusArea = FocusArea::SettingsPanel;
             m_selectedSettingsRow = SettingsRow::Resolution;
+        }
+        else if (m_activeTopMenuIndex == kSaveMenuIndex)
+        {
+            m_showSaveConfirm = true;
+            m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
         }
         else if (m_activeTopMenuIndex == kExitMenuIndex)
         {
@@ -718,6 +741,21 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
     {
         RenderSettingsPanel();
         return;
+    }
+
+    if (m_activeTopMenuIndex == kSaveMenuIndex)
+    {
+        m_render->DrawTextExCenter(m_menuItemFontId,
+                                   L"セーブしますか？",
+                                   1180,
+                                   760,
+                                   330,
+                                   56,
+                                   kTextColor);
+        if (m_showSaveConfirm)
+        {
+            RenderSaveConfirm();
+        }
     }
 
     if (m_activeTopMenuIndex == kExitMenuIndex)
@@ -1322,6 +1360,126 @@ bool PauseMenu::ConsumeExitRequested()
     const bool requested = m_exitRequested;
     m_exitRequested = false;
     return requested;
+}
+
+bool PauseMenu::ConsumeSaveRequested()
+{
+    const bool requested = m_saveRequested;
+    m_saveRequested = false;
+    return requested;
+}
+
+void PauseMenu::UpdateSaveConfirm()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    {
+        m_selectedSaveConfirmIndex = kSaveConfirmYesIndex;
+        GameAudio::PlayMenuMove();
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    {
+        m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
+        GameAudio::PlayMenuMove();
+    }
+
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                             static_cast<float>(NSRender::Common::ScreenW());
+        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                             static_cast<float>(NSRender::Common::ScreenH());
+        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitConfirmYesX,
+                          kExitConfirmY,
+                          kExitConfirmButtonWidth,
+                          kExitConfirmButtonHeight))
+        {
+            GameAudio::PlayMenuConfirm();
+            m_saveRequested = true;
+            m_showSaveConfirm = false;
+            m_activeTopMenuIndex = -1;
+            return;
+        }
+
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitConfirmNoX,
+                          kExitConfirmY,
+                          kExitConfirmButtonWidth,
+                          kExitConfirmButtonHeight))
+        {
+            GameAudio::PlayMenuCancel();
+            m_showSaveConfirm = false;
+            m_activeTopMenuIndex = -1;
+            return;
+        }
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        if (m_selectedSaveConfirmIndex == kSaveConfirmYesIndex)
+        {
+            GameAudio::PlayMenuConfirm();
+            m_saveRequested = true;
+            m_showSaveConfirm = false;
+            m_activeTopMenuIndex = -1;
+            return;
+        }
+
+        GameAudio::PlayMenuCancel();
+        m_showSaveConfirm = false;
+        m_activeTopMenuIndex = -1;
+        return;
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    {
+        GameAudio::PlayMenuCancel();
+        m_showSaveConfirm = false;
+        m_activeTopMenuIndex = -1;
+    }
+}
+
+void PauseMenu::RenderSaveConfirm()
+{
+    UINT yesColor = kInactiveTextColor;
+    if (m_selectedSaveConfirmIndex == kSaveConfirmYesIndex)
+    {
+        yesColor = kSelectedTextColor;
+    }
+
+    UINT noColor = kInactiveTextColor;
+    if (m_selectedSaveConfirmIndex == kSaveConfirmNoIndex)
+    {
+        noColor = kSelectedTextColor;
+    }
+
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               L"セーブしますか？",
+                               40,
+                               740,
+                               380,
+                               36,
+                               kSubTextColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"はい",
+                               kExitConfirmYesX,
+                               kExitConfirmY,
+                               kExitConfirmButtonWidth,
+                               kExitConfirmButtonHeight,
+                               yesColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"いいえ",
+                               kExitConfirmNoX,
+                               kExitConfirmY,
+                               kExitConfirmButtonWidth,
+                               kExitConfirmButtonHeight,
+                               noColor);
 }
 
 bool PauseMenu::IsOpen() const

@@ -565,6 +565,10 @@ void GameApp::Run()
                     m_close = true;
                     continue;
                 }
+                if (m_pauseMenu.ConsumeSaveRequested())
+                {
+                    m_saveDataManager.Save();
+                }
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
@@ -1963,8 +1967,6 @@ void GameApp::UnlockStagesUpToSelected(HWND hDlg)
         const StageManager::StageData& stage = m_stageManager.GetStage(i);
         m_saveDataManager.MarkStageUnlocked(stage.id);
     }
-
-    m_saveDataManager.Save();
 }
 
 bool GameApp::StartStageByIndex(std::size_t stageIndex)
@@ -2216,7 +2218,6 @@ void GameApp::UpdateStageClear()
             m_saveDataManager.MarkStageUnlocked(id);
         }
 
-        m_saveDataManager.Save();
         m_stageClearProcessed = true;
     }
 
