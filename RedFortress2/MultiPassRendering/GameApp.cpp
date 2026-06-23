@@ -565,6 +565,11 @@ void GameApp::Run()
             if (m_pauseMenu.BlocksGameInput())
             {
                 m_pauseMenu.Update();
+                if (m_pauseMenu.ConsumeExitRequested())
+                {
+                    m_close = true;
+                    continue;
+                }
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();

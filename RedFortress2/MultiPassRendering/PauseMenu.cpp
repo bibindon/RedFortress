@@ -8,6 +8,7 @@
 #include "GameAudio.h"
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
+#include "../../RedFortressRender/Render/Common.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
 
@@ -36,6 +37,13 @@ const int kItemMenuIndex = 0;
 const int kWeaponMenuIndex = 1;
 const int kSettingsMenuIndex = 2;
 const int kExitMenuIndex = 3;
+const int kExitConfirmYesIndex = 0;
+const int kExitConfirmNoIndex = 1;
+const int kExitConfirmButtonWidth = 150;
+const int kExitConfirmButtonHeight = 44;
+const int kExitConfirmYesX = 70;
+const int kExitConfirmNoX = 240;
+const int kExitConfirmY = 790;
 const std::size_t kVisibleItemCount = 11;
 const int kItemListX = 205;
 const int kItemListY = 350;
@@ -74,10 +82,13 @@ void PauseMenu::Open()
     }
 
     m_isOpen = true;
+    m_exitRequested = false;
+    m_showExitConfirm = false;
     m_skipInputFrame = true;
     m_focusArea = FocusArea::TopMenu;
     m_selectedTopMenuIndex = 0;
     m_activeTopMenuIndex = -1;
+    m_selectedExitConfirmIndex = kExitConfirmNoIndex;
     m_selectedItemIndex = 0;
     m_itemScrollOffset = 0;
     m_selectedWeaponIndex = 0;
@@ -98,6 +109,7 @@ void PauseMenu::Close()
     }
 
     m_isOpen = false;
+    m_showExitConfirm = false;
 }
 
 void PauseMenu::Update()
@@ -122,6 +134,12 @@ void PauseMenu::Update()
     if (m_focusArea == FocusArea::WeaponList)
     {
         UpdateWeaponList();
+        return;
+    }
+
+    if (m_showExitConfirm)
+    {
+        UpdateExitConfirm();
         return;
     }
 
@@ -222,6 +240,46 @@ void PauseMenu::UpdateTopMenu()
         GameAudio::PlayMenuMove();
     }
 
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                             static_cast<float>(NSRender::Common::ScreenW());
+        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                             static_cast<float>(NSRender::Common::ScreenH());
+        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+        int clickedMenuIndex = -1;
+        if (TryGetTopMenuIndexFromPoint(baseMouseX, baseMouseY, &clickedMenuIndex))
+        {
+            if (clickedMenuIndex != m_selectedTopMenuIndex)
+            {
+                m_selectedTopMenuIndex = clickedMenuIndex;
+                m_activeTopMenuIndex = -1;
+                GameAudio::PlayMenuMove();
+            }
+            else
+            {
+                GameAudio::PlayMenuConfirm();
+                m_activeTopMenuIndex = clickedMenuIndex;
+                if (m_activeTopMenuIndex == kItemMenuIndex)
+                {
+                    m_focusArea = FocusArea::ItemList;
+                }
+                else if (m_activeTopMenuIndex == kWeaponMenuIndex)
+                {
+                    m_focusArea = FocusArea::WeaponList;
+                }
+                else if (m_activeTopMenuIndex == kExitMenuIndex)
+                {
+                    m_showExitConfirm = true;
+                    m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+                }
+            }
+            return;
+        }
+    }
+
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
     {
         GameAudio::PlayMenuConfirm();
@@ -233,6 +291,11 @@ void PauseMenu::UpdateTopMenu()
         else if (m_activeTopMenuIndex == kWeaponMenuIndex)
         {
             m_focusArea = FocusArea::WeaponList;
+        }
+        else if (m_activeTopMenuIndex == kExitMenuIndex)
+        {
+            m_showExitConfirm = true;
+            m_selectedExitConfirmIndex = kExitConfirmNoIndex;
         }
     }
 
@@ -336,6 +399,79 @@ void PauseMenu::UpdateWeaponList()
     EnsureSelectedWeaponVisible();
 }
 
+void PauseMenu::UpdateExitConfirm()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    {
+        m_selectedExitConfirmIndex = kExitConfirmYesIndex;
+        GameAudio::PlayMenuMove();
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    {
+        m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+        GameAudio::PlayMenuMove();
+    }
+
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                             static_cast<float>(NSRender::Common::ScreenW());
+        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                             static_cast<float>(NSRender::Common::ScreenH());
+        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitConfirmYesX,
+                          kExitConfirmY,
+                          kExitConfirmButtonWidth,
+                          kExitConfirmButtonHeight))
+        {
+            GameAudio::PlayMenuConfirm();
+            m_exitRequested = true;
+            Close();
+            return;
+        }
+
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitConfirmNoX,
+                          kExitConfirmY,
+                          kExitConfirmButtonWidth,
+                          kExitConfirmButtonHeight))
+        {
+            GameAudio::PlayMenuCancel();
+            m_showExitConfirm = false;
+            m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+            return;
+        }
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        if (m_selectedExitConfirmIndex == kExitConfirmYesIndex)
+        {
+            GameAudio::PlayMenuConfirm();
+            m_exitRequested = true;
+            Close();
+            return;
+        }
+
+        GameAudio::PlayMenuCancel();
+        m_showExitConfirm = false;
+        return;
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    {
+        GameAudio::PlayMenuCancel();
+        m_showExitConfirm = false;
+        m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+    }
+}
+
 void PauseMenu::EnsureSelectedWeaponVisible()
 {
     if (m_selectedWeaponIndex < m_weaponScrollOffset)
@@ -404,37 +540,7 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
 
     if (m_activeTopMenuIndex == kSettingsMenuIndex)
     {
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"グラフィック設定",
-                                   1040,
-                                   525,
-                                   180,
-                                   44,
-                                   kSubTextColor);
-
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"低",
-                                   1235,
-                                   525,
-                                   70,
-                                   44,
-                                   kSubTextColor);
-
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"中",
-                                   1320,
-                                   525,
-                                   70,
-                                   44,
-                                   kSubTextColor);
-
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"高",
-                                   1405,
-                                   525,
-                                   70,
-                                   44,
-                                   kSubTextColor);
+        RenderSettingsPanel();
         return;
     }
 
@@ -447,6 +553,10 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
                                    330,
                                    56,
                                    kTextColor);
+        if (m_showExitConfirm)
+        {
+            RenderExitConfirm();
+        }
     }
 }
 
@@ -682,6 +792,172 @@ void PauseMenu::RenderWeaponPanel()
                          kSubTextColor);
 }
 
+void PauseMenu::RenderExitConfirm()
+{
+    UINT yesColor = kInactiveTextColor;
+    if (m_selectedExitConfirmIndex == kExitConfirmYesIndex)
+    {
+        yesColor = kSelectedTextColor;
+    }
+
+    UINT noColor = kInactiveTextColor;
+    if (m_selectedExitConfirmIndex == kExitConfirmNoIndex)
+    {
+        noColor = kSelectedTextColor;
+    }
+
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               L"ゲームを終了しますか？",
+                               40,
+                               740,
+                               380,
+                               36,
+                               kSubTextColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"はい",
+                               kExitConfirmYesX,
+                               kExitConfirmY,
+                               kExitConfirmButtonWidth,
+                               kExitConfirmButtonHeight,
+                               yesColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"いいえ",
+                               kExitConfirmNoX,
+                               kExitConfirmY,
+                               kExitConfirmButtonWidth,
+                               kExitConfirmButtonHeight,
+                               noColor);
+}
+
+void PauseMenu::RenderSettingsPanel()
+{
+    const int labelX = 860;
+    const int valueX = 1040;
+    const int comboWidth = 420;
+    const int comboHeight = 42;
+
+    m_render->DrawTextEx(m_menuItemFontId,
+                         L"解像度",
+                         labelX,
+                         360,
+                         kTextColor);
+    m_render->DrawTextEx(m_qualityFontId,
+                         L"16:9限定",
+                         labelX,
+                         396,
+                         kSubTextColor);
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               L"[ " + BuildResolutionComboText() + L" v ]",
+                               valueX,
+                               360,
+                               comboWidth,
+                               comboHeight,
+                               kSelectedTextColor);
+
+    m_render->DrawTextEx(m_menuItemFontId,
+                         L"表示モード",
+                         labelX,
+                         455,
+                         kTextColor);
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               L"[ ウィンドウモード / ボーダーレスウィンドウ v ]",
+                               valueX,
+                               455,
+                               comboWidth,
+                               comboHeight,
+                               kSubTextColor);
+
+    const std::wstring quality = m_render->GetRenderQuality();
+    std::wstring qualityText = L"低 / 中 / 高";
+    if (quality == L"MIDDLE")
+    {
+        qualityText = L"低 / [中] / 高";
+    }
+    else if (quality == L"HIGH")
+    {
+        qualityText = L"低 / 中 / [高]";
+    }
+    else
+    {
+        qualityText = L"[低] / 中 / 高";
+    }
+
+    m_render->DrawTextEx(m_menuItemFontId,
+                         L"描画品質",
+                         labelX,
+                         550,
+                         kTextColor);
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               L"[ " + qualityText + L" v ]",
+                               valueX,
+                               550,
+                               comboWidth,
+                               comboHeight,
+                               kSubTextColor);
+}
+
+std::wstring PauseMenu::BuildResolutionComboText() const
+{
+    if (m_render == nullptr)
+    {
+        return L"-";
+    }
+
+    const int currentWidth = NSRender::Common::ScreenW();
+    const int currentHeight = NSRender::Common::ScreenH();
+    std::vector<std::wstring> labels;
+    labels.push_back(FormatResolutionLabel(currentWidth, currentHeight));
+
+    const std::vector<std::pair<int, int>> resolutionList = m_render->GetResolutionList();
+    for (const auto& resolution : resolutionList)
+    {
+        if (!IsSixteenByNine(resolution.first, resolution.second))
+        {
+            continue;
+        }
+
+        if (resolution.first == currentWidth && resolution.second == currentHeight)
+        {
+            continue;
+        }
+
+        labels.push_back(FormatResolutionLabel(resolution.first, resolution.second));
+        if (labels.size() >= 4)
+        {
+            break;
+        }
+    }
+
+    std::wstring result;
+    for (std::size_t i = 0; i < labels.size(); ++i)
+    {
+        if (i > 0)
+        {
+            result += L" / ";
+        }
+        result += labels[i];
+    }
+
+    if (labels.size() >= 4)
+    {
+        result += L" / ...";
+    }
+
+    return result;
+}
+
+std::wstring PauseMenu::FormatResolutionLabel(const int width, const int height)
+{
+    return std::to_wstring(width) + L" x " + std::to_wstring(height);
+}
+
+bool PauseMenu::IsSixteenByNine(const int width, const int height)
+{
+    return width > 0 &&
+           height > 0 &&
+           width * 9 == height * 16;
+}
+
 std::vector<std::size_t> PauseMenu::GetOwnedItemIndices() const
 {
     std::vector<std::size_t> indices;
@@ -720,6 +996,13 @@ std::vector<std::size_t> PauseMenu::GetOwnedWeaponIndices() const
     return indices;
 }
 
+bool PauseMenu::ConsumeExitRequested()
+{
+    const bool requested = m_exitRequested;
+    m_exitRequested = false;
+    return requested;
+}
+
 bool PauseMenu::IsOpen() const
 {
     return m_isOpen;
@@ -738,4 +1021,38 @@ void PauseMenu::SetMouseCursorVisible(bool visible)
     }
 
     InputDevice::Mouse::SetVisible(visible);
+}
+
+bool PauseMenu::TryGetTopMenuIndexFromPoint(const long x, const long y, int* outMenuIndex) const
+{
+    if (outMenuIndex == nullptr)
+    {
+        return false;
+    }
+
+    for (std::size_t i = 0; i < kTopMenuItems.size(); ++i)
+    {
+        const int menuIndex = static_cast<int>(i);
+        const int itemX = kTopMenuX + menuIndex * kTopMenuItemInterval;
+        if (IsPointInRect(x, y, itemX, kTopMenuY, kTopMenuItemWidth, kTopMenuItemHeight))
+        {
+            *outMenuIndex = menuIndex;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool PauseMenu::IsPointInRect(const long x,
+                              const long y,
+                              const int left,
+                              const int top,
+                              const int width,
+                              const int height)
+{
+    return left <= x &&
+           x <= left + width &&
+           top <= y &&
+           y <= top + height;
 }
