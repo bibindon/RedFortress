@@ -2,7 +2,7 @@
 
 ## Project overview
 
-Multi-project C++ DirectX 9 game engine. Most directories are git submodules with their own repos. The main game entrypoint is `RedFortress2/MultiPassRendering/simple-directx9.vcxproj`.
+Multi-project C++ DirectX 9 game engine. Most directories are git submodules with their own repos. The main game entrypoint is `RedFortress2/MultiPassRendering/simple-directx9.vcxproj`. Solution file: `RedFortress2/MultiPassRendering.sln`.
 
 ### Key directories
 
@@ -19,15 +19,36 @@ Multi-project C++ DirectX 9 game engine. Most directories are git submodules wit
 ## Build
 
 - **Toolset**: v145 (Visual Studio 2022)
+- **Solution**: `RedFortress2/MultiPassRendering.sln`
+- **Platform**: x64 (64-bit) — always build for x64, not Win32/x86
 - **NuGet**: `packages.config` references `Microsoft.DXSDK.D3DX 9.29.952.8`
 - **Post-build**: `simple-directx9.vcxproj` copies `res/` to `$(OutDir)res/` via xcopy after every build. Resources are NOT embedded; they must be at `<exe-dir>\res\`.
 
+### MSBuild command line
+
+MSBuild is at `C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin`. Before running MSBuild, remove any `PATH` environment variable (keep only `Path`). Having both `Path` and `PATH` causes MSB6001 errors.
+
+```
+$env:PATH = $null  # remove duplicate if present
+& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" RedFortress2\MultiPassRendering.sln /p:Configuration=Debug /p:Platform=x64
+```
+
+## Code conventions
+
+- **Encoding**: Source files (`.cpp`, `.h`) must be **BOM UTF-8**. Shader files (`.fx`) and `.X` files must be **BOM-less UTF-8**.
+- **Line endings**: CRLF for all source files.
+- **Do not use the ternary operator** (`? :`). Use plain `if/else` instead.
+- **Units**: 1 unit in the game world = 1 meter. Player height = 1.7, cylinder radius = 0.3.
+- **DirectX coordinate system**: Y axis is **up** (not depth). Z is depth.
+- **Naming**: Classes/Methods use PascalCase. Members use `m_` prefix (e.g. `m_settings`). D3D pointer members use `m_p` prefix. File-scope constants use `k` prefix. File-scope globals use `g_` prefix.
+
 ## File loading: working directory matters
 
-`Render::LoadSettingsCsv()` at `Render.cpp:551` opens `RenderSettings.csv` with a bare relative `std::wifstream`. It does NOT resolve relative to the exe directory. If the process working directory differs from the exe location, the file silently fails to load and all settings fall back to hardcoded defaults with no error.
+`Render::LoadSettingsCsv()` at `Render.cpp:570` opens `RenderSettings.csv` with a bare relative `std::wifstream`. It does NOT resolve relative to the exe directory. If the process working directory differs from the exe location, the file silently fails to load and all settings fall back to hardcoded defaults with no error.
 
 - When launching from Visual Studio, check **Project Properties → Debugging → Working Directory**.
 - The `res/` xcopy ensures files exist near the exe, but only the working directory determines if relative paths resolve correctly.
+- `GameApp::Initialize()` passes `L"res\\RenderSettings.csv"` to `Render::Initialize()` at `GameApp.cpp:234`.
 
 ## Configuration system
 
@@ -47,7 +68,7 @@ Adding a moving platform requires entries in **3 CSV files** with the **same CSV
 | `XFileListPhysics.csv` | Collision body (uses `Move=y`) |
 | `XFileListMove.csv` | Animation: Start/End positions + Duration. `RenderID` and `PhysicsID` must match the CSV ID. |
 
-The game loop at `main.cpp:328-350` automatically syncs all platforms from `g_Render.GetMovingPlatforms()` to the physics engine. No code changes needed.
+The game loop at `GameApp.cpp:750-770` syncs all platforms: reads positions from `g_Render.GetMovingPlatforms()`, computes velocity from position delta, and pushes both position and velocity to the physics engine via `PhysicsWorld::UpdateCsvTransform()` and `PhysicsWorld::SetVelocity()`.
 
 ### Base resolution
 
@@ -59,7 +80,7 @@ The player uses a **Cylinder** collision shape. Two settings must stay consisten
 - `settings.height` = total cylinder height
 - `settings.collisionCenterY` = height / 2 (center from feet)
 
-`SettingsState::SetCylinderHeight(h)` should match `settings.height` in the mover.
+`SettingsState::SetCylinderHeight(h)` and `settings.height` in the mover's `Settings` struct are set together in `GameApp::InitializePlayerPhysics()` at `GameApp.cpp:1297-1315`. Both currently use `1.7f`. When `shapeType == Cylinder`, `SettingsState::GetCylinderHeight()` overrides `m_settings.height` inside `CharacterMover`, so both must match.
 
 ## Command library (UI system)
 
