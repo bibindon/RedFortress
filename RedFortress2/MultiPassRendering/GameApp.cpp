@@ -17,6 +17,7 @@ namespace
     const std::wstring g_playerRunAnimName = L"run";
     const std::wstring g_playerJumpAnimName = L"jump";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
+    const float kPlayerWalkAnimationSpeed = 1.3f;
     const float kStagePortalClickRadius = 48.0f;
     const float kStageSelectPlayerMoveDuration = 0.5f;
     const float kStageSelectPlayerRightYaw = -D3DX_PI * 0.5f;
@@ -1042,7 +1043,7 @@ void GameApp::UpdatePlayerByInput()
             if (!m_stageSelectPlayerMoveActive)
             {
                 m_playerYaw = kStageSelectPlayerRightYaw;
-                SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+                SetPlayerAnimationState(PlayerAnimState::Walk, kPlayerWalkAnimationSpeed);
             }
         }
         else if (m_hasSelectedStagePortal)
@@ -1052,7 +1053,7 @@ void GameApp::UpdatePlayerByInput()
             m_playerYaw = kStageSelectPlayerRightYaw;
             if (m_playerAnimState != PlayerAnimState::Walk)
             {
-                SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+                SetPlayerAnimationState(PlayerAnimState::Walk, kPlayerWalkAnimationSpeed);
             }
         }
 
@@ -1174,6 +1175,10 @@ void GameApp::UpdatePlayerByInput()
             if (nextState == PlayerAnimState::Run)
             {
                 animationSpeed = 1.2f;
+            }
+            else if (nextState == PlayerAnimState::Walk)
+            {
+                animationSpeed = kPlayerWalkAnimationSpeed;
             }
             else if (nextState == PlayerAnimState::Jump)
             {
@@ -1442,7 +1447,7 @@ void GameApp::SyncStageSelectPlayerToPortal(const bool immediate)
         m_stageSelectPlayerMoveTargetPosition = targetPosition;
         m_playerMover.SetPosition(targetPosition);
         m_playerYaw = kStageSelectPlayerRightYaw;
-        SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+        SetPlayerAnimationState(PlayerAnimState::Walk, kPlayerWalkAnimationSpeed);
         return;
     }
 
@@ -1455,7 +1460,7 @@ void GameApp::SyncStageSelectPlayerToPortal(const bool immediate)
         m_stageSelectPlayerMoveStartPosition = targetPosition;
         m_stageSelectPlayerMoveTargetPosition = targetPosition;
         m_playerYaw = kStageSelectPlayerRightYaw;
-        SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+        SetPlayerAnimationState(PlayerAnimState::Walk, kPlayerWalkAnimationSpeed);
         return;
     }
 
