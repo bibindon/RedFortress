@@ -17,9 +17,10 @@ namespace
     const std::wstring g_playerRunAnimName = L"run";
     const std::wstring g_playerJumpAnimName = L"jump";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
-    const std::wstring g_stageCursorImagePath = L"res\\2D_Image\\stage-cursor.png";
     const float kStagePortalClickRadius = 48.0f;
-    const int kStageCursorOffsetY = 96;
+    const float kStageSelectPlayerMoveDuration = 1.0f;
+    const float kStageSelectPlayerRightYaw = -D3DX_PI * 0.5f;
+    const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -749,26 +750,30 @@ void GameApp::Run()
             }
 
             // 衝突判定（動く床の最新位置を反映）
+            const bool isStageSelect = IsCurrentStageSelect();
             const D3DXVECTOR3 playerPositionBeforePhysicsUpdate = m_playerMover.GetPosition();
-            m_playerMover.Update(m_pendingMove, m_pendingJump);
-            m_collectibleManager.Update(m_playerMover.GetPosition());
-            if (m_playerMover.IsCrushed())
+            if (!isStageSelect)
             {
-                DamagePlayerHp(m_player.GetHp());
-            }
-
-            if (m_qte == nullptr && m_playerAttackController.ConsumeHitRequested())
-            {
-                const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
-                Enemy* attackTarget = FindEnemyInAttackRange(attackDefinition);
-                if (attackTarget != nullptr)
+                m_playerMover.Update(m_pendingMove, m_pendingJump);
+                m_collectibleManager.Update(m_playerMover.GetPosition());
+                if (m_playerMover.IsCrushed())
                 {
-                    attackTarget->StartKnockbackFrom(m_playerMover.GetPosition(),
-                                                     kEnemyAttackKnockbackDistance,
-                                                     kEnemyAttackKnockbackFrames);
-                    attackTarget->TakeDamage(m_render, attackDefinition.damage);
-                    m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
-                    GameAudio::PlayAttackHit();
+                    DamagePlayerHp(m_player.GetHp());
+                }
+
+                if (m_qte == nullptr && m_playerAttackController.ConsumeHitRequested())
+                {
+                    const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
+                    Enemy* attackTarget = FindEnemyInAttackRange(attackDefinition);
+                    if (attackTarget != nullptr)
+                    {
+                        attackTarget->StartKnockbackFrom(m_playerMover.GetPosition(),
+                                                         kEnemyAttackKnockbackDistance,
+                                                         kEnemyAttackKnockbackFrames);
+                        attackTarget->TakeDamage(m_render, attackDefinition.damage);
+                        m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
+                        GameAudio::PlayAttackHit();
+                    }
                 }
             }
 
@@ -951,6 +956,36 @@ static float MoveAngleToward(float current, float target, float maxDelta)
     return current + (diff > 0.0f ? maxDelta : -maxDelta);
 }
 
+void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const float animationSpeed)
+{
+    m_playerAnimState = nextState;
+    if (m_playerMeshId < 0)
+    {
+        return;
+    }
+
+    m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, animationSpeed);
+    if (nextState == PlayerAnimState::Run)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
+        return;
+    }
+
+    if (nextState == PlayerAnimState::Walk)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerWalkAnimName);
+        return;
+    }
+
+    if (nextState == PlayerAnimState::Jump)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
+        return;
+    }
+
+    m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerIdleAnimName);
+}
+
 void GameApp::InitializeCameraFromRenderSettings()
 {
     const D3DXVECTOR3 cameraPos = m_render.GetCameraPos();
@@ -983,6 +1018,47 @@ void GameApp::UpdateCameraByInput()
 void GameApp::UpdatePlayerByInput()
 {
     const D3DXVECTOR3 previousRenderPosition = m_playerMover.GetPosition();
+
+    if (IsCurrentStageSelect())
+    {
+        D3DXVECTOR3 nextPosition = m_playerMover.GetPosition();
+        if (m_stageSelectPlayerMoveActive)
+        {
+            m_stageSelectPlayerMoveElapsed += kTargetFrameSeconds;
+            float t = m_stageSelectPlayerMoveElapsed / kStageSelectPlayerMoveDuration;
+            if (t >= 1.0f)
+            {
+                t = 1.0f;
+                m_stageSelectPlayerMoveActive = false;
+            }
+
+            nextPosition = LerpVector3(m_stageSelectPlayerMoveStartPosition,
+                                       m_stageSelectPlayerMoveTargetPosition,
+                                       t);
+            m_playerMover.SetPosition(nextPosition);
+
+            if (!m_stageSelectPlayerMoveActive)
+            {
+                m_playerYaw = kStageSelectPlayerRightYaw;
+                SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+            }
+        }
+        else if (m_hasSelectedStagePortal)
+        {
+            nextPosition = m_selectedStagePortalPosition;
+            m_playerMover.SetPosition(nextPosition);
+            m_playerYaw = kStageSelectPlayerRightYaw;
+            if (m_playerAnimState != PlayerAnimState::Walk)
+            {
+                SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+            }
+        }
+
+        UpdatePlayerMeshAndCamera(previousRenderPosition);
+        m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        m_pendingJump = false;
+        return;
+    }
 
     m_playerAttackController.Update();
 
@@ -1092,27 +1168,17 @@ void GameApp::UpdatePlayerByInput()
 
         if (nextState != m_playerAnimState)
         {
-            m_playerAnimState = nextState;
+            float animationSpeed = 1.0f;
             if (nextState == PlayerAnimState::Run)
             {
-                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.2f);
-                m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
-            }
-            else if (nextState == PlayerAnimState::Walk)
-            {
-                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.0f);
-                m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerWalkAnimName);
+                animationSpeed = 1.2f;
             }
             else if (nextState == PlayerAnimState::Jump)
             {
-                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 0.1f);
-                m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
+                animationSpeed = 0.1f;
             }
-            else
-            {
-                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.0f);
-                m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerIdleAnimName);
-            }
+
+            SetPlayerAnimationState(nextState, animationSpeed);
         }
     }
 
@@ -1267,9 +1333,7 @@ void GameApp::UpdatePlayerMeshVisibility()
         return;
     }
 
-    const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
-    const bool isSelectStage = (currentId.length() >= 6 && currentId.substr(0, 6) == L"select");
-    m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, !isSelectStage);
+    m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
 }
 
 bool GameApp::IsCurrentStageSelect() const
@@ -1303,6 +1367,10 @@ void GameApp::InitializeStageSelectCursor()
     m_selectedStagePortalId.clear();
     m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_hasSelectedStagePortal = false;
+    m_stageSelectPlayerMoveStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_stageSelectPlayerMoveTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_stageSelectPlayerMoveElapsed = 0.0f;
+    m_stageSelectPlayerMoveActive = false;
 
     if (!IsCurrentStageSelect())
     {
@@ -1328,6 +1396,7 @@ void GameApp::InitializeStageSelectCursor()
         m_selectedStagePortalId = interactable.id;
         m_selectedStagePortalPosition = interactable.position;
         m_hasSelectedStagePortal = true;
+        SyncStageSelectPlayerToPortal(true);
         return;
     }
 
@@ -1338,9 +1407,60 @@ void GameApp::InitializeStageSelectCursor()
             m_selectedStagePortalId = interactable.id;
             m_selectedStagePortalPosition = interactable.position;
             m_hasSelectedStagePortal = true;
+            SyncStageSelectPlayerToPortal(true);
             return;
         }
     }
+}
+
+void GameApp::SyncStageSelectPlayerToPortal(const bool immediate)
+{
+    if (!IsCurrentStageSelect() || !m_hasSelectedStagePortal)
+    {
+        m_stageSelectPlayerMoveActive = false;
+        m_stageSelectPlayerMoveElapsed = 0.0f;
+        return;
+    }
+
+    const D3DXVECTOR3 targetPosition = m_selectedStagePortalPosition;
+    if (immediate)
+    {
+        m_stageSelectPlayerMoveActive = false;
+        m_stageSelectPlayerMoveElapsed = 0.0f;
+        m_stageSelectPlayerMoveStartPosition = targetPosition;
+        m_stageSelectPlayerMoveTargetPosition = targetPosition;
+        m_playerMover.SetPosition(targetPosition);
+        m_playerYaw = kStageSelectPlayerRightYaw;
+        SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+        return;
+    }
+
+    const D3DXVECTOR3 currentPosition = m_playerMover.GetPosition();
+    const D3DXVECTOR3 difference = targetPosition - currentPosition;
+    if (D3DXVec3LengthSq(&difference) <= 0.0001f)
+    {
+        m_stageSelectPlayerMoveActive = false;
+        m_stageSelectPlayerMoveElapsed = 0.0f;
+        m_stageSelectPlayerMoveStartPosition = targetPosition;
+        m_stageSelectPlayerMoveTargetPosition = targetPosition;
+        m_playerYaw = kStageSelectPlayerRightYaw;
+        SetPlayerAnimationState(PlayerAnimState::Walk, 1.0f);
+        return;
+    }
+
+    m_stageSelectPlayerMoveActive = true;
+    m_stageSelectPlayerMoveElapsed = 0.0f;
+    m_stageSelectPlayerMoveStartPosition = currentPosition;
+    m_stageSelectPlayerMoveTargetPosition = targetPosition;
+    if (targetPosition.x < currentPosition.x)
+    {
+        m_playerYaw = kStageSelectPlayerLeftYaw;
+    }
+    else
+    {
+        m_playerYaw = kStageSelectPlayerRightYaw;
+    }
+    SetPlayerAnimationState(PlayerAnimState::Run, 1.2f);
 }
 
 void GameApp::MoveStageSelectCursorByDirection(const float directionX, const float directionY)
@@ -1403,6 +1523,7 @@ void GameApp::MoveStageSelectCursorByDirection(const float directionX, const flo
         m_selectedStagePortalId = bestInteractable->id;
         m_selectedStagePortalPosition = bestInteractable->position;
         m_hasSelectedStagePortal = true;
+        SyncStageSelectPlayerToPortal(false);
     }
 }
 
@@ -1485,6 +1606,7 @@ void GameApp::UpdateStageSelectCursorByInput()
             m_selectedStagePortalId = selectedInteractable->id;
             m_selectedStagePortalPosition = selectedInteractable->position;
             m_hasSelectedStagePortal = true;
+            SyncStageSelectPlayerToPortal(false);
         }
     }
 
@@ -1515,23 +1637,6 @@ bool GameApp::MoveToSelectedStagePortal()
 
 void GameApp::DrawStageSelectCursor()
 {
-    if (!IsCurrentStageSelect() || !m_hasSelectedStagePortal)
-    {
-        return;
-    }
-
-    const POINT screenPos = NSRender::Camera::GetScreenPos(m_selectedStagePortalPosition);
-    if (screenPos.x < 0 || screenPos.y < 0)
-    {
-        return;
-    }
-
-    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) / static_cast<float>(NSRender::Common::ScreenW());
-    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) / static_cast<float>(NSRender::Common::ScreenH());
-    const int baseX = static_cast<int>(static_cast<float>(screenPos.x) * scaleX + 0.5f);
-    const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY + 0.5f) - kStageCursorOffsetY;
-
-    m_render.DrawImageEx(g_stageCursorImagePath, baseX, baseY, 255, false, 0.25f);
 }
 
 void GameApp::PopulateStageCombo(HWND hDlg)
@@ -2155,8 +2260,12 @@ void GameApp::LoadCurrentStageObjects()
     m_hpBar.Reset();
     m_playerMover.Reset(stage.playerStartPosition);
     m_enemyManager.LoadForStage(m_render, stage.enemyCsvPath);
-    UpdatePlayerMeshAndCamera(stage.playerStartPosition);
     UpdatePlayerMeshVisibility();
+    if (IsCurrentStageSelect() && m_hasSelectedStagePortal)
+    {
+        SyncStageSelectPlayerToPortal(true);
+    }
+    UpdatePlayerMeshAndCamera(stage.playerStartPosition);
 }
 
 void GameApp::DrawTitleScreen()

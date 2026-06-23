@@ -103,6 +103,7 @@ private:
     bool IsCurrentStageSelect() const;
     bool IsStagePortalSelectable(const std::wstring& portalId) const;
     void InitializeStageSelectCursor();
+    void SyncStageSelectPlayerToPortal(bool immediate);
     void MoveStageSelectCursorByDirection(float directionX, float directionY);
     void UpdateStageSelectCursorByInput();
     bool MoveToSelectedStagePortal();
@@ -110,6 +111,8 @@ private:
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
+
+    void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
 
     using PhysicsWorld = PhysicsLib::PhysicsLib;
 
@@ -178,4 +181,8 @@ private:
     std::wstring m_selectedStagePortalId;
     D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_hasSelectedStagePortal = false;
+    D3DXVECTOR3 m_stageSelectPlayerMoveStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_stageSelectPlayerMoveTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    float m_stageSelectPlayerMoveElapsed = 0.0f;
+    bool m_stageSelectPlayerMoveActive = false;
 };
