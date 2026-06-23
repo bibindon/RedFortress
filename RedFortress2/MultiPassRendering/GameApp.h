@@ -79,7 +79,7 @@ private:
     void HandlePlayerDeath();
     void CompletePlayerDeath();
     void PopulateStageCombo(HWND hDlg);
-    std::wstring BuildStageComboText(const StageManager::StageData& stage);
+    std::wstring BuildStageComboText(const StageManager::StageData& stage) const;
     void PopulateUnlockStageCombo(HWND hDlg);
     void UnlockStagesUpToSelected(HWND hDlg);
     bool StartStageByIndex(std::size_t stageIndex);
@@ -107,6 +107,7 @@ private:
     void MoveStageSelectCursorByDirection(float directionX, float directionY);
     void UpdateStageSelectCursorByInput();
     bool MoveToSelectedStagePortal();
+    std::wstring GetSelectedStagePortalDisplayName() const;
     void DrawStageSelectCursor();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack };
@@ -174,6 +175,7 @@ private:
     int m_stageTitleFontId = -1;
     int m_stageClearFontId = -1;
     int m_stageClearHintFontId = -1;
+    int m_stageSelectFontId = -1;
     int m_stageTitleFrame = 0;
     int m_goalMarkerMeshId = -1;
     int m_stagePortalCooldownFrames = 0;

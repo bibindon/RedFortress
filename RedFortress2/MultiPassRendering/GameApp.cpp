@@ -1646,8 +1646,55 @@ bool GameApp::MoveToSelectedStagePortal()
     return StartStageByIndex(targetIndex);
 }
 
+std::wstring GameApp::GetSelectedStagePortalDisplayName() const
+{
+    if (!m_hasSelectedStagePortal)
+    {
+        return L"";
+    }
+
+    const std::wstring prefix = L"portal-to-";
+    if (m_selectedStagePortalId.length() <= prefix.length() ||
+        m_selectedStagePortalId.substr(0, prefix.length()) != prefix)
+    {
+        return L"";
+    }
+
+    const std::wstring destinationId = m_selectedStagePortalId.substr(prefix.length());
+    const std::size_t targetIndex = m_stageManager.FindStageIndexById(destinationId);
+    if (targetIndex >= m_stageManager.GetStageCount())
+    {
+        return L"";
+    }
+
+    return BuildStageComboText(m_stageManager.GetStage(targetIndex));
+}
+
 void GameApp::DrawStageSelectCursor()
 {
+    if (!IsCurrentStageSelect())
+    {
+        return;
+    }
+
+    const std::wstring stageName = GetSelectedStagePortalDisplayName();
+    if (stageName.empty())
+    {
+        return;
+    }
+
+    if (m_stageSelectFontId < 0)
+    {
+        m_stageSelectFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 30, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    m_render.DrawTextExCenter(m_stageSelectFontId,
+                              stageName,
+                              0,
+                              812,
+                              NSRender::Common::BASE_W,
+                              48,
+                              D3DCOLOR_RGBA(255, 255, 255, 255));
 }
 
 void GameApp::PopulateStageCombo(HWND hDlg)
@@ -1674,7 +1721,7 @@ void GameApp::PopulateStageCombo(HWND hDlg)
     SendMessage(combo, CB_SETCURSEL, static_cast<WPARAM>(m_stageManager.GetCurrentStageIndex()), 0);
 }
 
-std::wstring GameApp::BuildStageComboText(const StageManager::StageData& stage)
+std::wstring GameApp::BuildStageComboText(const StageManager::StageData& stage) const
 {
     if (stage.displayName == L"拠点")
     {
