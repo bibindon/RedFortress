@@ -1,5 +1,5 @@
 ﻿InteractionID,Type,PosX,PosY,PosZ,PromptDistance
-portal-to-select3,StagePortal,-18,1,-15,1.5
+portal-to-select3,StagePortal,-12,1,-15,1.5
 portal-to-4-1,StagePortal,-10,1,-15,1.5
 portal-to-4-2,StagePortal,-2,1,-15,1.5
 portal-to-4-3,StagePortal,6,1,-15,1.5
