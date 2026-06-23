@@ -113,7 +113,7 @@ private:
     void CreateStageSelectCubes();
     void RemoveStageSelectCubes();
 
-    enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack };
+    enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);

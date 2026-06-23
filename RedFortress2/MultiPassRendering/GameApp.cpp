@@ -903,17 +903,26 @@ void GameApp::Run()
                     PopulateStageCombo(m_settingsDialog);
                 }
                 ShowWindow(m_settingsDialog, isVisible ? SW_HIDE : SW_SHOW);
+                if (!isVisible)
+                {
+                    m_mouseCursorVisible = true;
+                    InputDevice::Mouse::SetVisible(true);
+                }
             }
         }
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F8))
         {
             m_render.ShowSettingsDialog();
+            m_mouseCursorVisible = true;
+            InputDevice::Mouse::SetVisible(true);
         }
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F9))
         {
             PhysicsWorld::ShowSettingsDialog(m_hWnd);
+            m_mouseCursorVisible = true;
+            InputDevice::Mouse::SetVisible(true);
         }
 
         if (m_close)
@@ -998,6 +1007,12 @@ void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const flo
     }
 
     if (nextState == PlayerAnimState::Jump)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
+        return;
+    }
+
+    if (nextState == PlayerAnimState::Dash)
     {
         m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
         return;
@@ -1169,11 +1184,16 @@ void GameApp::UpdatePlayerByInput()
     if (m_playerMeshId >= 0)
     {
         const bool isJumping = m_playerMover.IsJumping();
+        const bool isDashing = m_playerMover.IsDashing();
 
         PlayerAnimState nextState;
         if (m_playerAttackController.IsAttacking())
         {
             nextState = PlayerAnimState::Attack;
+        }
+        else if (isDashing)
+        {
+            nextState = PlayerAnimState::Dash;
         }
         else if (isJumping)
         {
@@ -1198,6 +1218,10 @@ void GameApp::UpdatePlayerByInput()
                 animationSpeed = kPlayerWalkAnimationSpeed;
             }
             else if (nextState == PlayerAnimState::Jump)
+            {
+                animationSpeed = 0.1f;
+            }
+            else if (nextState == PlayerAnimState::Dash)
             {
                 animationSpeed = 0.1f;
             }
