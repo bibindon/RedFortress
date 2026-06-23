@@ -83,7 +83,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.interactableCsvPath = basePath + L"Interactables.csv";
     stage.playerStartPosition = playerStartPosition;
     stage.clearPosition = clearPosition;
-    stage.clearDistance = 1.0f;
+    stage.clearDistance = 2.0f;
     stage.useFixedCamera = useFixedCamera;
     stage.fixedCameraPos = fixedCameraPos;
     stage.fixedCameraLookAt = fixedCameraLookAt;
