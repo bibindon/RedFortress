@@ -380,6 +380,7 @@ void GameApp::Run()
             GameAudio::PlayEndingMusic();
         }
         if (m_gameState == GameState::Playing &&
+            !IsCurrentStageSelect() &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
@@ -550,7 +551,10 @@ void GameApp::Run()
             if (m_craftMenu.BlocksGameInput())
             {
                 m_craftMenu.Update();
-                m_hpBar.Draw();
+                if (!IsCurrentStageSelect())
+                {
+                    m_hpBar.Draw();
+                }
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
                 m_craftMenu.Render();
@@ -561,7 +565,10 @@ void GameApp::Run()
             if (m_pauseMenu.BlocksGameInput())
             {
                 m_pauseMenu.Update();
-                m_hpBar.Draw();
+                if (!IsCurrentStageSelect())
+                {
+                    m_hpBar.Draw();
+                }
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
                 m_pauseMenu.Render(m_stageManager.GetCurrentStageDisplayName());
@@ -582,7 +589,10 @@ void GameApp::Run()
                     continue;
                 }
 
-                m_hpBar.Draw();
+                if (!IsCurrentStageSelect())
+                {
+                    m_hpBar.Draw();
+                }
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
                 m_render.Draw();
@@ -715,7 +725,10 @@ void GameApp::Run()
 
             // 描画（動く床の位置が更新される）
             DrawStageTitle();
-            m_hpBar.Draw();
+            if (!IsCurrentStageSelect())
+            {
+                m_hpBar.Draw();
+            }
             m_damagePopupManager.Update();
             m_damagePopupManager.Draw();
             m_enemyManager.DrawHpBars(m_render);
