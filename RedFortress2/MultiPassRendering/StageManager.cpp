@@ -43,8 +43,8 @@ void StageManager::Initialize()
 
     AddStage(L"base", 33, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
 
-    const D3DXVECTOR3 kSelectCameraPos(0.0f, 10.0f, -60.0f);
-    const D3DXVECTOR3 kSelectCameraLookAt(0.0f, 0.0f, 0.0f);
+    const D3DXVECTOR3 kSelectCameraPos(0.0f, 8.0f, -32.0f);
+    const D3DXVECTOR3 kSelectCameraLookAt(0.0f, 2.5f, 6.0f);
     AddStage(L"select1", 34, L"Stage Select 1", L"stage-select1",
              D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              true, kSelectCameraPos, kSelectCameraLookAt);
