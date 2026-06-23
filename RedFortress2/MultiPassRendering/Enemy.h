@@ -14,6 +14,7 @@ public:
     enum class State
     {
         Idle,
+        Alert,
         Chase,
         Retreat,
         Dead
@@ -22,6 +23,8 @@ public:
     enum class AnimState
     {
         Idle,
+        Walk,
+        Creep,
         Run
     };
 
@@ -39,7 +42,7 @@ public:
     void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
     void SyncMesh(NSRender::Render& render);
 
-    void TakeDamage(NSRender::Render& render, int amount);
+    void TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& attackerPos);
     bool IsDead() const;
     bool IsReadyToRemove() const;
     void MarkAttackedPlayer();
@@ -62,13 +65,24 @@ public:
                            float playerYVelocity) const;
 
 private:
+    void StartIdleBehavior();
+    void UpdateIdleBehavior();
+    void BeginAlert(const D3DXVECTOR3& playerPos, bool faceImmediately);
+    void UpdateChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
+    void UpdateRetreatBehavior();
+    void ApplyAnimation(NSRender::Render& render, AnimState nextAnim);
     void FaceTargetImmediately(const D3DXVECTOR3& targetPos);
     void StartFacePlayerTurn();
     void UpdateFacePlayerTurn(const D3DXVECTOR3& playerPos);
     void UpdateFacing(const D3DXVECTOR3& targetPos);
     bool IsPlayerInView(const D3DXVECTOR3& playerPos) const;
+    float NextRandom01();
+    int NextRandomInt(int minValueInclusive, int maxValueInclusive);
 
     D3DXVECTOR3 m_position;
+    D3DXVECTOR3 m_homePosition;
+    D3DXVECTOR3 m_lastKnownPlayerPosition;
+    D3DXVECTOR3 m_retreatDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
     float m_yaw = 0.0f;
     int m_hp = 10;
     int m_maxHp = 10;
@@ -89,4 +103,14 @@ private:
     int m_knockbackFrames = 0;
     int m_removalFrames = 0;
     int m_facePlayerTurnFrames = 0;
+    int m_alertFrames = 0;
+    int m_idleWaitFrames = 0;
+    int m_idleMoveFrames = 0;
+    int m_lastKnownPlayerFrames = 0;
+    int m_chaseStrafeFrames = 0;
+    int m_retreatFrames = 0;
+    float m_idleMoveYaw = 0.0f;
+    float m_chaseStrafeDirection = 1.0f;
+    float m_personalityBias = 0.0f;
+    unsigned int m_behaviorSeed = 1;
 };

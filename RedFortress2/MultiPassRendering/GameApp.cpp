@@ -358,22 +358,8 @@ void GameApp::Run()
         }
         else if (m_gameState == GameState::Playing)
         {
-            bool combatActive = false;
-            for (const Enemy& enemy : m_enemyManager.GetEnemies())
-            {
-                if (enemy.IsDead())
-                {
-                    continue;
-                }
-                const D3DXVECTOR3 difference = enemy.GetPosition() - audioPlayerPosition;
-                if (D3DXVec3LengthSq(&difference) <= 144.0f)
-                {
-                    combatActive = true;
-                    break;
-                }
-            }
             const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
-            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, combatActive);
+            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number);
         }
         else if (m_gameState == GameState::Ending || m_gameState == GameState::EndingFin)
         {
@@ -791,7 +777,7 @@ void GameApp::Run()
                         attackTarget->StartKnockbackFrom(m_playerMover.GetPosition(),
                                                          kEnemyAttackKnockbackDistance,
                                                          kEnemyAttackKnockbackFrames);
-                        attackTarget->TakeDamage(m_render, attackDefinition.damage);
+                        attackTarget->TakeDamage(m_render, attackDefinition.damage, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
                         GameAudio::PlayAttackHit();
                     }
@@ -824,7 +810,7 @@ void GameApp::Run()
                                                 m_playerMover.IsJumping(),
                                                 m_playerMover.GetVelocity().y))
                     {
-                        enemy.TakeDamage(m_render, 10);
+                        enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
                         GameAudio::PlayAttackHit();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
@@ -1978,7 +1964,7 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
             {
                 if (!enemy.IsDead())
                 {
-                    enemy.TakeDamage(m_render, 999);
+                    enemy.TakeDamage(m_render, 999, m_playerMover.GetPosition());
                 }
             }
             return TRUE;

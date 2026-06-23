@@ -8,7 +8,7 @@ void Initialize();
 void Finalize();
 void PlayTitleMusic();
 void PlayEndingMusic();
-void UpdateStageMusic(const std::wstring& stageId, int stageNumber, bool combatActive);
+void UpdateStageMusic(const std::wstring& stageId, int stageNumber);
 void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();

@@ -10,7 +10,6 @@ const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
 const std::wstring kField1Bgm = L"res\\sound\\field1.wav";
 const std::wstring kField2Bgm = L"res\\sound\\field2.wav";
 const std::wstring kField3Bgm = L"res\\sound\\field3.wav";
-const std::wstring kBattleBgm = L"res\\sound\\battle1.wav";
 const std::wstring kForestEnvironment = L"res\\sound\\ENV_forest.wav";
 const std::wstring kSeaEnvironment = L"res\\sound\\ENV_sea.wav";
 const std::wstring kRainEnvironment = L"res\\sound\\ENV_rain.wav";
@@ -105,7 +104,7 @@ void PlayEndingMusic()
     PlayBgmIfChanged(kEndingBgm, 60);
 }
 
-void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool combatActive)
+void UpdateStageMusic(const std::wstring& stageId, const int stageNumber)
 {
     std::wstring fieldBgm = kField1Bgm;
     std::wstring environment = kForestEnvironment;
@@ -129,14 +128,7 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         environmentVolume = 16;
     }
     PlayEnvironmentIfChanged(environment, environmentVolume);
-    if (combatActive)
-    {
-        PlayBgmIfChanged(kBattleBgm, 62);
-    }
-    else
-    {
-        PlayBgmIfChanged(fieldBgm, 48);
-    }
+    PlayBgmIfChanged(fieldBgm, 48);
 }
 
 void PlayMenuMove() { PlayEffect(kMenuMove, 70); }

@@ -4,6 +4,8 @@
 
 namespace
 {
+    const float kTargetFrameSeconds = 1.0f / 60.0f;
+
     float ClampFloat(float v, float lo, float hi)
     {
         if (v < lo) return lo;
@@ -30,9 +32,17 @@ namespace
         return atan2f(-diff.x, -diff.z);
     }
 
+    unsigned int MixSeed(unsigned int seed, unsigned int value)
+    {
+        seed ^= value + 0x9e3779b9u + (seed << 6) + (seed >> 2);
+        return seed;
+    }
+
     const int kFacePlayerTurnFrames = 30;
+    const int kAlertFrames = 18;
     const int kHitStunFrames = 60;
     const float kStompMaxDistanceAboveEnemy = 0.3f;
+    const int kLastKnownPlayerFrames = 120;
 }
 
 Enemy::Enemy()
@@ -51,6 +61,8 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition,
                        const float height)
 {
     m_position = startPosition;
+    m_homePosition = startPosition;
+    m_lastKnownPlayerPosition = startPosition;
     m_meshId = meshId;
     m_type = type;
     m_maxHp = maxHp;
@@ -68,10 +80,36 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition,
     m_knockbackFrames = 0;
     m_removalFrames = 0;
     m_facePlayerTurnFrames = 0;
+    m_alertFrames = 0;
+    m_idleWaitFrames = 0;
+    m_idleMoveFrames = 0;
+    m_lastKnownPlayerFrames = 0;
+    m_chaseStrafeFrames = 0;
+    m_retreatFrames = 0;
+    m_idleMoveYaw = yaw;
+    m_chaseStrafeDirection = 1.0f;
+
+    unsigned int seed = 2166136261u;
+    const int xBits = static_cast<int>((startPosition.x + 1000.0f) * 100.0f);
+    const int yBits = static_cast<int>((startPosition.y + 1000.0f) * 100.0f);
+    const int zBits = static_cast<int>((startPosition.z + 1000.0f) * 100.0f);
+    seed = MixSeed(seed, static_cast<unsigned int>(xBits));
+    seed = MixSeed(seed, static_cast<unsigned int>(yBits));
+    seed = MixSeed(seed, static_cast<unsigned int>(zBits));
+    seed = MixSeed(seed, static_cast<unsigned int>(meshId + 1));
+    for (wchar_t ch : type)
+    {
+        seed = MixSeed(seed, static_cast<unsigned int>(ch));
+    }
+    m_behaviorSeed = seed;
+    m_personalityBias = NextRandom01() * 2.0f - 1.0f;
+    StartIdleBehavior();
 }
 
 void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible)
 {
+    AnimState nextAnim = AnimState::Idle;
+
     if (m_knockbackFrames > 0)
     {
         m_position += m_knockbackPerFrame;
@@ -100,6 +138,11 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
         }
     }
 
+    if (m_lastKnownPlayerFrames > 0)
+    {
+        --m_lastKnownPlayerFrames;
+    }
+
     if (m_hitStunFrames > 0)
     {
         --m_hitStunFrames;
@@ -110,92 +153,72 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
         return;
     }
 
-    const D3DXVECTOR3 diff = playerPos - m_position;
-    const float distance = D3DXVec3Length(&diff);
-
-    if (m_state == State::Retreat)
+    if (m_state == State::Alert)
     {
-        D3DXVECTOR3 awayDir = m_position - playerPos;
-        awayDir.y = 0.0f;
-        if (D3DXVec3LengthSq(&awayDir) > 0.0001f)
+        if (m_alertFrames > 0)
         {
-            D3DXVec3Normalize(&awayDir, &awayDir);
+            UpdateFacePlayerTurn(m_lastKnownPlayerPosition);
+            --m_alertFrames;
         }
-        else
+        if (m_alertFrames <= 0)
         {
-            awayDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+            m_state = State::Chase;
         }
-
-        UpdateFacing(m_position + awayDir);
-
-        const float kTargetFrameSeconds = 1.0f / 60.0f;
-        m_position += awayDir * m_moveSpeed * kTargetFrameSeconds;
-
-        if (distance >= m_retreatDistance)
-        {
-            m_state = State::Idle;
-            StartFacePlayerTurn();
-        }
+        nextAnim = AnimState::Idle;
+    }
+    else if (m_state == State::Retreat)
+    {
+        UpdateRetreatBehavior();
+        nextAnim = AnimState::Walk;
     }
     else if (m_state == State::Chase)
     {
-        if (distance <= m_viewDistance && IsPlayerInView(playerPos))
+        UpdateChaseBehavior(playerPos, playerInvincible);
+        const D3DXVECTOR3 chaseDiff = m_lastKnownPlayerPosition - m_position;
+        const float chaseDistance = D3DXVec3Length(&chaseDiff);
+        if (m_state == State::Chase)
         {
-            UpdateFacing(playerPos);
-
-            D3DXVECTOR3 moveDir = diff;
-            moveDir.y = 0.0f;
-            if (D3DXVec3LengthSq(&moveDir) > 0.0001f)
+            if (chaseDistance > 4.0f)
             {
-                D3DXVec3Normalize(&moveDir, &moveDir);
+                nextAnim = AnimState::Run;
+            }
+            else if (chaseDistance > 2.0f)
+            {
+                nextAnim = AnimState::Walk;
             }
             else
             {
-                moveDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                nextAnim = AnimState::Creep;
             }
-
-            const float kTargetFrameSeconds = 1.0f / 60.0f;
-            m_position += moveDir * m_moveSpeed * kTargetFrameSeconds;
-        }
-        else
-        {
-            m_state = State::Idle;
         }
     }
     else // Idle
     {
-        if (m_facePlayerTurnFrames > 0)
+        if (!playerInvincible)
         {
-            UpdateFacePlayerTurn(playerPos);
+            const D3DXVECTOR3 diff = playerPos - m_position;
+            const float distance = D3DXVec3Length(&diff);
+            if (distance <= m_viewDistance && IsPlayerInView(playerPos))
+            {
+                BeginAlert(playerPos, false);
+            }
         }
-        else if (!playerInvincible && distance <= m_viewDistance && IsPlayerInView(playerPos))
+
+        if (m_state == State::Idle)
         {
-            m_state = State::Chase;
+            if (m_facePlayerTurnFrames > 0)
+            {
+                UpdateFacePlayerTurn(playerPos);
+            }
+            UpdateIdleBehavior();
+            if (m_idleMoveFrames > 0)
+            {
+                nextAnim = AnimState::Walk;
+            }
         }
     }
 
-    AnimState nextAnim = AnimState::Idle;
-    if (m_state == State::Chase || m_state == State::Retreat)
-    {
-        nextAnim = AnimState::Run;
-    }
-    if (nextAnim != m_animState)
-    {
-        m_animState = nextAnim;
-        if (m_meshId >= 0)
-        {
-            if (m_animState == AnimState::Run)
-            {
-                render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
-                render.PlayMeshMixSkinAnimAnimation(m_meshId, L"run");
-            }
-            else
-            {
-                render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
-                render.PlayMeshMixSkinAnimAnimation(m_meshId, L"idle");
-            }
-        }
-    }
+    ApplyAnimation(render, nextAnim);
 }
 
 void Enemy::SyncMesh(NSRender::Render& render)
@@ -209,7 +232,7 @@ void Enemy::SyncMesh(NSRender::Render& render)
     render.SetMeshMixSkinAnimRotY(m_meshId, m_yaw);
 }
 
-void Enemy::TakeDamage(NSRender::Render& render, int amount)
+void Enemy::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& attackerPos)
 {
     if (m_state == State::Dead)
     {
@@ -222,6 +245,8 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount)
     {
         render.StartMeshMixSkinAnimBlink(m_meshId, m_blinkFrames, 4);
     }
+
+    BeginAlert(attackerPos, true);
 
     if (m_hp <= 0)
     {
@@ -261,6 +286,33 @@ void Enemy::MarkAttackedPlayer()
     {
         m_state = State::Retreat;
         m_facePlayerTurnFrames = 0;
+        m_alertFrames = 0;
+        m_retreatFrames = NextRandomInt(20, 36);
+
+        D3DXVECTOR3 awayDir = m_position - m_lastKnownPlayerPosition;
+        awayDir.y = 0.0f;
+        if (D3DXVec3LengthSq(&awayDir) > 0.0001f)
+        {
+            D3DXVec3Normalize(&awayDir, &awayDir);
+        }
+        else
+        {
+            awayDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+        }
+
+        D3DXVECTOR3 sideDir(-awayDir.z, 0.0f, awayDir.x);
+        float sideSign = 1.0f;
+        if (NextRandom01() < 0.5f)
+        {
+            sideSign = -1.0f;
+        }
+        D3DXVECTOR3 retreatDir = awayDir + sideDir * (0.35f * sideSign);
+        retreatDir.y = 0.0f;
+        if (D3DXVec3LengthSq(&retreatDir) > 0.0001f)
+        {
+            D3DXVec3Normalize(&retreatDir, &retreatDir);
+        }
+        m_retreatDirection = retreatDir;
     }
 }
 
@@ -303,6 +355,219 @@ void Enemy::StartKnockbackFrom(const D3DXVECTOR3& sourcePosition,
     D3DXVec3Normalize(&direction, &direction);
     m_knockbackPerFrame = direction * (distance / static_cast<float>(durationFrames));
     m_knockbackFrames = durationFrames;
+}
+
+void Enemy::StartIdleBehavior()
+{
+    m_idleWaitFrames = NextRandomInt(20, 70);
+    m_idleMoveFrames = 0;
+    m_idleMoveYaw = m_yaw;
+}
+
+void Enemy::UpdateIdleBehavior()
+{
+    if (m_idleWaitFrames > 0)
+    {
+        --m_idleWaitFrames;
+        if (m_idleWaitFrames <= 0)
+        {
+            m_idleMoveFrames = NextRandomInt(25, 55);
+            m_idleMoveYaw = m_yaw + (NextRandom01() * 1.2f - 0.6f);
+        }
+        return;
+    }
+
+    if (m_idleMoveFrames > 0)
+    {
+        --m_idleMoveFrames;
+        UpdateFacing(m_position + D3DXVECTOR3(-sinf(m_idleMoveYaw), 0.0f, -cosf(m_idleMoveYaw)));
+        D3DXVECTOR3 moveDir(-sinf(m_yaw), 0.0f, -cosf(m_yaw));
+        m_position += moveDir * (m_moveSpeed * 0.18f) * kTargetFrameSeconds;
+
+        D3DXVECTOR3 fromHome = m_position - m_homePosition;
+        fromHome.y = 0.0f;
+        if (D3DXVec3LengthSq(&fromHome) > 16.0f)
+        {
+            FaceTargetImmediately(m_homePosition);
+        }
+
+        if (m_idleMoveFrames <= 0)
+        {
+            StartIdleBehavior();
+        }
+        return;
+    }
+
+    StartIdleBehavior();
+}
+
+void Enemy::BeginAlert(const D3DXVECTOR3& playerPos, const bool faceImmediately)
+{
+    m_lastKnownPlayerPosition = playerPos;
+    m_lastKnownPlayerFrames = kLastKnownPlayerFrames;
+    m_state = State::Alert;
+    m_alertFrames = kAlertFrames;
+    m_idleWaitFrames = 0;
+    m_idleMoveFrames = 0;
+    m_chaseStrafeFrames = 0;
+    if (faceImmediately)
+    {
+        FaceTargetImmediately(playerPos);
+        m_facePlayerTurnFrames = 0;
+    }
+    else
+    {
+        StartFacePlayerTurn();
+    }
+}
+
+void Enemy::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool playerInvincible)
+{
+    bool canSeePlayer = false;
+    if (!playerInvincible)
+    {
+        const D3DXVECTOR3 diff = playerPos - m_position;
+        const float distance = D3DXVec3Length(&diff);
+        if (distance <= m_viewDistance && IsPlayerInView(playerPos))
+        {
+            canSeePlayer = true;
+        }
+    }
+
+    if (canSeePlayer)
+    {
+        m_lastKnownPlayerPosition = playerPos;
+        m_lastKnownPlayerFrames = kLastKnownPlayerFrames;
+    }
+    else if (m_lastKnownPlayerFrames <= 0)
+    {
+        m_state = State::Idle;
+        StartIdleBehavior();
+        return;
+    }
+
+    D3DXVECTOR3 moveTarget = m_lastKnownPlayerPosition;
+    D3DXVECTOR3 toTarget = moveTarget - m_position;
+    toTarget.y = 0.0f;
+    const float distance = D3DXVec3Length(&toTarget);
+    if (distance <= 0.0001f)
+    {
+        if (!canSeePlayer)
+        {
+            m_state = State::Idle;
+            StartIdleBehavior();
+        }
+        return;
+    }
+
+    D3DXVECTOR3 forwardDir = toTarget;
+    D3DXVec3Normalize(&forwardDir, &forwardDir);
+    D3DXVECTOR3 sideDir(-forwardDir.z, 0.0f, forwardDir.x);
+
+    if (m_chaseStrafeFrames > 0)
+    {
+        --m_chaseStrafeFrames;
+    }
+    else
+    {
+        m_chaseStrafeFrames = NextRandomInt(30, 75);
+        m_chaseStrafeDirection = 1.0f;
+        if (NextRandom01() < 0.5f)
+        {
+            m_chaseStrafeDirection = -1.0f;
+        }
+    }
+
+    float strafeWeight = 0.0f;
+    if (distance < 5.0f && distance > 1.0f)
+    {
+        strafeWeight = 0.18f + fabsf(m_personalityBias) * 0.12f;
+        if (distance < 2.4f)
+        {
+            strafeWeight += 0.12f;
+        }
+        strafeWeight *= m_chaseStrafeDirection;
+    }
+
+    D3DXVECTOR3 moveDir = forwardDir + sideDir * strafeWeight;
+    moveDir.y = 0.0f;
+    if (D3DXVec3LengthSq(&moveDir) > 0.0001f)
+    {
+        D3DXVec3Normalize(&moveDir, &moveDir);
+    }
+    else
+    {
+        moveDir = forwardDir;
+    }
+
+    UpdateFacing(m_position + moveDir);
+
+    float speedMultiplier = 1.0f;
+    if (distance > 4.0f)
+    {
+        speedMultiplier = 1.0f;
+    }
+    else if (distance > 2.0f)
+    {
+        speedMultiplier = 0.58f;
+    }
+    else
+    {
+        speedMultiplier = 0.32f;
+    }
+
+    m_position += moveDir * (m_moveSpeed * speedMultiplier) * kTargetFrameSeconds;
+}
+
+void Enemy::UpdateRetreatBehavior()
+{
+    UpdateFacing(m_position + m_retreatDirection);
+    m_position += m_retreatDirection * (m_moveSpeed * 0.42f) * kTargetFrameSeconds;
+
+    if (m_retreatFrames > 0)
+    {
+        --m_retreatFrames;
+    }
+
+    if (m_retreatFrames <= 0)
+    {
+        BeginAlert(m_lastKnownPlayerPosition, false);
+    }
+}
+
+void Enemy::ApplyAnimation(NSRender::Render& render, const AnimState nextAnim)
+{
+    if (nextAnim == m_animState)
+    {
+        return;
+    }
+
+    m_animState = nextAnim;
+    if (m_meshId < 0)
+    {
+        return;
+    }
+
+    render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+    if (m_animState == AnimState::Run)
+    {
+        render.PlayMeshMixSkinAnimAnimation(m_meshId, L"run");
+        return;
+    }
+
+    if (m_animState == AnimState::Walk)
+    {
+        render.PlayMeshMixSkinAnimAnimation(m_meshId, L"walk");
+        return;
+    }
+
+    if (m_animState == AnimState::Creep)
+    {
+        render.PlayMeshMixSkinAnimAnimation(m_meshId, L"creep");
+        return;
+    }
+
+    render.PlayMeshMixSkinAnimAnimation(m_meshId, L"idle");
 }
 
 float Enemy::GetYaw() const
@@ -437,4 +702,28 @@ bool Enemy::IsPlayerInView(const D3DXVECTOR3& playerPos) const
     const float dot = D3DXVec3Dot(&forward, &toPlayer);
     const float angle = acosf(ClampFloat(dot, -1.0f, 1.0f));
     return angle <= m_viewHalfAngle;
+}
+
+float Enemy::NextRandom01()
+{
+    m_behaviorSeed = m_behaviorSeed * 1664525u + 1013904223u;
+    const unsigned int value = (m_behaviorSeed >> 8) & 0x00ffffffu;
+    return static_cast<float>(value) / static_cast<float>(0x01000000u);
+}
+
+int Enemy::NextRandomInt(const int minValueInclusive, const int maxValueInclusive)
+{
+    if (maxValueInclusive <= minValueInclusive)
+    {
+        return minValueInclusive;
+    }
+
+    const int range = maxValueInclusive - minValueInclusive + 1;
+    const float scaled = NextRandom01() * static_cast<float>(range);
+    int value = minValueInclusive + static_cast<int>(scaled);
+    if (value > maxValueInclusive)
+    {
+        value = maxValueInclusive;
+    }
+    return value;
 }
