@@ -1717,6 +1717,15 @@ void GameApp::DrawStageSelectCursor()
                               NSRender::Common::BASE_W,
                               48,
                               D3DCOLOR_RGBA(255, 255, 255, 255));
+
+    const std::wstring livesText = L"残機: " + std::to_wstring(m_player.GetLives());
+    m_render.DrawTextExCenter(m_stageSelectFontId,
+                              livesText,
+                              0,
+                              846,
+                              NSRender::Common::BASE_W,
+                              40,
+                              D3DCOLOR_RGBA(255, 255, 255, 230));
 }
 
 void GameApp::PopulateStageCombo(HWND hDlg)
