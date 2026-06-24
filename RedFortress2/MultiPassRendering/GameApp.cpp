@@ -270,13 +270,15 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetLoadingScreenProgress(40);
     m_render.Draw();
 
-    m_stickMeshId = m_render.AddMesh(kStickModelPath,
-                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                      1.0f);
+    m_stickMeshId = m_render.AddMeshMix(kStickModelPath,
+                                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                        1.0f);
     if (m_stickMeshId >= 0 && m_playerMeshId >= 0)
     {
-        m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, "MarineV2_arm_wrist_R");
+        const float kStickLocalRotateX = -D3DX_PI * 0.5f;
+        m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, "MarineV2_arm_wrist_R",
+                                  D3DXVECTOR3(kStickLocalRotateX, 0.0f, 0.0f));
     }
 
     InitializePlayerPhysics();
