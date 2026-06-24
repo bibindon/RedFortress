@@ -123,7 +123,6 @@ void EnemyManager::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos
                 render.RemoveMeshMixSkinAnim(meshId);
             }
             it = m_enemies.erase(it);
-            AdjustMeshIdsAfterRemoval(meshId);
         }
         else
         {
@@ -227,7 +226,6 @@ void EnemyManager::RemoveEnemy(NSRender::Render& render, std::size_t index)
     }
 
     m_enemies.erase(m_enemies.begin() + index);
-    AdjustMeshIdsAfterRemoval(meshId);
 }
 
 void EnemyManager::RemoveAll(NSRender::Render& render)
@@ -351,20 +349,4 @@ void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, 
                      info.contactRadius,
                      info.height);
     m_enemies.push_back(enemy);
-}
-
-void EnemyManager::AdjustMeshIdsAfterRemoval(const int removedMeshId)
-{
-    if (removedMeshId < 0)
-    {
-        return;
-    }
-
-    for (Enemy& enemy : m_enemies)
-    {
-        if (enemy.GetMeshId() > removedMeshId)
-        {
-            enemy.SetMeshId(enemy.GetMeshId() - 1);
-        }
-    }
 }

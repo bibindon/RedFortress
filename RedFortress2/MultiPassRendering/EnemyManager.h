@@ -34,7 +34,6 @@ private:
     void RegisterEnemyTypes();
     void RegisterEnemyType(const std::wstring& type,
                            const std::wstring& folderName);
-    void AdjustMeshIdsAfterRemoval(int removedMeshId);
 
     std::vector<Enemy> m_enemies;
 
