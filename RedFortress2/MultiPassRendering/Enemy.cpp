@@ -243,7 +243,7 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& 
     m_blinkFrames = 30;
     if (m_meshId >= 0)
     {
-        render.StartMeshMixSkinAnimBlink(m_meshId, m_blinkFrames, 4);
+        render.StartMeshMixSkinAnimBlink(m_meshId, m_blinkFrames, 2);
     }
 
     BeginAlert(attackerPos, true);
@@ -257,7 +257,7 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& 
         m_removalFrames = 60;
         if (m_meshId >= 0)
         {
-            render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 4);
+            render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 2);
         }
     }
     else

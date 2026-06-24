@@ -837,7 +837,7 @@ void GameApp::Run()
                         m_playerInvincibleFrames = kPlayerInvincibleDuration;
                         if (m_playerMeshId >= 0)
                         {
-                            m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kPlayerInvincibleDuration, 4);
+                            m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kPlayerInvincibleDuration, 2);
                         }
                         m_playerKnockbackFrames = kKnockbackDurationFrames;
                         D3DXVECTOR3 knockbackDir = m_playerMover.GetPosition() - enemy.GetPosition();
