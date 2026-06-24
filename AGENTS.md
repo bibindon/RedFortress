@@ -26,12 +26,13 @@ Multi-project C++ DirectX 9 game engine. Most directories are git submodules wit
 
 ### MSBuild command line
 
-MSBuild is at `C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin`. Before running MSBuild, remove any `PATH` environment variable (keep only `Path`). Having both `Path` and `PATH` causes MSB6001 errors.
+MSBuild is at `C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin`.
 
 ```
-$env:PATH = $null  # remove duplicate if present
 & "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" RedFortress2\MultiPassRendering.sln /p:Configuration=Debug /p:Platform=x64
 ```
+
+Note: In PowerShell, `$env:PATH` and `$env:Path` are the same variable, so do NOT remove `PATH` — it would remove the actual `Path` and break the post-build xcopy step.
 
 ## Code conventions
 

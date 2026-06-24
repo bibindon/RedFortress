@@ -717,21 +717,6 @@ void GameApp::Run()
                 }
             }
 
-            // スター取得判定
-            if (m_starPowerupFrames <= 0 && m_starMeshId >= 0)
-            {
-                const D3DXVECTOR3 diff = m_playerMover.GetPosition() - m_starPosition;
-                if (D3DXVec3Length(&diff) <= kStarPickupDistance)
-                {
-                    m_render.RemoveMesh(m_starMeshId);
-                    m_starMeshId = -1;
-                    m_starPowerupFrames = kStarDurationFrames;
-                    if (m_playerMeshId >= 0)
-                    {
-                        m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kStarDurationFrames, 2, NSRender::BlinkMode::StarFlash);
-                    }
-                }
-            }
                                 const std::size_t targetIndex = m_stageManager.FindStageIndexById(destStageId);
                                 if (targetIndex < m_stageManager.GetStageCount())
                                 {
@@ -923,6 +908,22 @@ void GameApp::Run()
                     }
                 }
             }
+            // スター取得判定
+            if (m_starPowerupFrames <= 0 && m_starMeshId >= 0)
+            {
+                const D3DXVECTOR3 diff = m_playerMover.GetPosition() - m_starPosition;
+                if (D3DXVec3Length(&diff) <= kStarPickupDistance)
+                {
+                    m_render.RemoveMesh(m_starMeshId);
+                    m_starMeshId = -1;
+                    m_starPowerupFrames = kStarDurationFrames;
+                    if (m_playerMeshId >= 0)
+                    {
+                        m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kStarDurationFrames, 2, NSRender::BlinkMode::StarFlash);
+                    }
+                }
+            }
+
 
             if (m_player.IsHpZero())
             {
