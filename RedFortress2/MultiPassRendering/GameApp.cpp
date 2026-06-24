@@ -6,6 +6,8 @@
 #include "../../RedFortressRender/Render/Util.h"
 #include "../../RedFortressRender/Render/Camera.h"
 #include "../../RedFortressRender/Render/Common.h"
+#include <fstream>
+#include <sstream>
 
 namespace
 {
@@ -52,6 +54,9 @@ namespace
     const int kStageTitleFrameMax = 180;
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
+    const int kStarDurationFrames = 600;
+    const float kStarPickupDistance = 1.0f;
+    const std::wstring kStarModelPath = L"res\\model\\sphereOrange\\sphere_orange.x";
 }
 
 GameApp& GameApp::Instance()
@@ -709,8 +714,24 @@ void GameApp::Run()
                                     if (currentId.length() >= 6 && currentId.substr(0, 6) == L"select")
                                     {
                                         m_lastSelectId = currentId;
-                                    }
-                                }
+                }
+            }
+
+            // スター取得判定
+            if (m_starPowerupFrames <= 0 && m_starMeshId >= 0)
+            {
+                const D3DXVECTOR3 diff = m_playerMover.GetPosition() - m_starPosition;
+                if (D3DXVec3Length(&diff) <= kStarPickupDistance)
+                {
+                    m_render.RemoveMesh(m_starMeshId);
+                    m_starMeshId = -1;
+                    m_starPowerupFrames = kStarDurationFrames;
+                    if (m_playerMeshId >= 0)
+                    {
+                        m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kStarDurationFrames, 2, NSRender::BlinkMode::StarFlash);
+                    }
+                }
+            }
                                 const std::size_t targetIndex = m_stageManager.FindStageIndexById(destStageId);
                                 if (targetIndex < m_stageManager.GetStageCount())
                                 {
@@ -832,8 +853,12 @@ void GameApp::Run()
                 }
             }
 
-            // プレイヤー無敵時間を更新
-            if (m_playerInvincibleFrames > 0)
+            // プレイヤー無敵時間とスター時間を更新
+            if (m_starPowerupFrames > 0)
+            {
+                --m_starPowerupFrames;
+            }
+            else if (m_playerInvincibleFrames > 0)
             {
                 --m_playerInvincibleFrames;
             }
@@ -863,6 +888,13 @@ void GameApp::Run()
                         GameAudio::PlayAttackHit();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
+                        break;
+                    }
+                    else if (m_starPowerupFrames > 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
+                    {
+                        enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
+                        m_damagePopupManager.Add(10, enemy.GetPosition(), false);
+                        GameAudio::PlayAttackHit();
                         break;
                     }
                     else if (m_playerInvincibleFrames <= 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
@@ -2575,6 +2607,12 @@ void GameApp::LoadCurrentStageObjects()
         m_goalMarkerMeshId = -1;
     }
 
+    if (m_starMeshId >= 0)
+    {
+        m_render.RemoveMesh(m_starMeshId);
+        m_starMeshId = -1;
+    }
+
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
@@ -2588,6 +2626,30 @@ void GameApp::LoadCurrentStageObjects()
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
+
+    // スターCSV読み込み
+    {
+        std::wifstream file(NSRender::Util::GetExeDir() + stage.starCsvPath);
+        if (file.is_open())
+        {
+            std::wstring line;
+            std::getline(file, line); // skip header
+            if (std::getline(file, line))
+            {
+                std::wstringstream ss(line);
+                std::wstring cell;
+                float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
+                if (std::getline(ss, cell, L',')) posX = std::stof(cell);
+                if (std::getline(ss, cell, L',')) posY = std::stof(cell);
+                if (std::getline(ss, cell, L',')) posZ = std::stof(cell);
+                m_starPosition = D3DXVECTOR3(posX, posY, posZ);
+                m_starMeshId = m_render.AddMesh(kStarModelPath,
+                                                 m_starPosition,
+                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                 1.0f);
+            }
+        }
+    }
     CreateStageSelectCubes();
     m_playerMover.Reset(stage.playerStartPosition);
     InitializeStageSelectCursor();
@@ -2605,6 +2667,7 @@ void GameApp::LoadCurrentStageObjects()
     m_playerAnimState = PlayerAnimState::Idle;
     m_damagePopupManager.Clear();
     m_playerInvincibleFrames = 0;
+    m_starPowerupFrames = 0;
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
     m_respawnCameraDelayFrames = 0;
