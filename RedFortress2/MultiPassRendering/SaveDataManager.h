@@ -29,6 +29,7 @@ public:
 
     void InitializeDefaultUnlocks();
     void ResetToDefaults();
+    void DeleteSaveData();
 
 private:
     SaveDataManager(const SaveDataManager&);

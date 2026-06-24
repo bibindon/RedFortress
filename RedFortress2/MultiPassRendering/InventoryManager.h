@@ -26,6 +26,8 @@ public:
     void MarkWeaponCollectibleCollected(const std::wstring& collectibleId);
     bool IsWeaponCollectibleCollected(const std::wstring& collectibleId) const;
 
+    void Reset();
+
 private:
     void BuildFilePath();
     bool EnsureDirectoryExists() const;

@@ -258,3 +258,10 @@ bool InventoryManager::IsWeaponCollectibleCollected(const std::wstring& collecti
     return m_collectedWeaponCollectibleIds.find(collectibleId) !=
            m_collectedWeaponCollectibleIds.end();
 }
+
+void InventoryManager::Reset()
+{
+    m_itemCounts.clear();
+    m_weaponCounts.clear();
+    m_collectedWeaponCollectibleIds.clear();
+}

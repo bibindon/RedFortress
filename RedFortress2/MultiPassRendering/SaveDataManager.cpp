@@ -298,3 +298,9 @@ void SaveDataManager::ResetToDefaults()
     m_hasSaveFile = false;
     InitializeDefaultUnlocks();
 }
+
+void SaveDataManager::DeleteSaveData()
+{
+    DeleteFileW(m_filePath.c_str());
+    ResetToDefaults();
+}

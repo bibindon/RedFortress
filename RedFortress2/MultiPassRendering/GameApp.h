@@ -87,11 +87,16 @@ private:
     void StartNewGame();
     std::size_t GetContinueStartStageIndex() const;
     void MoveToSelectedStage(HWND hDlg);
-    void RefreshTitleContinueCommand();
+    void RefreshTitleCommands();
     void DrawTitleScreen();
     void DrawStageTitle();
     void DrawStageClear();
     void DrawEndingFin();
+    void BuildTitleMainCommands();
+    void BuildTitleConfirmCommands();
+    void EnterDeleteConfirmation();
+    void ExitDeleteConfirmation();
+    void ExecuteDeleteSaveData();
     POINT ConvertMouseToBaseResolution(int clientX, int clientY);
     D3DXVECTOR3 GetCameraPlanarForward();
     D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
@@ -195,4 +200,5 @@ private:
     float m_stageSelectPlayerMoveElapsed = 0.0f;
     bool m_stageSelectPlayerMoveActive = false;
     std::vector<int> m_stageSelectCubeMeshIds;
+    bool m_titleDeleteConfirmMode = false;
 };

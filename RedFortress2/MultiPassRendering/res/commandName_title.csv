@@ -1,4 +1,7 @@
 ID,Name
 start,はじめから
-continue,つづき
+continue,つづきから
+delete,セーブデータを削除
 exit,終了
+yes,はい
+no,いいえ
