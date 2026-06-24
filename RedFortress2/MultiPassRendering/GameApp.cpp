@@ -57,6 +57,7 @@ namespace
     const int kStarDurationFrames = 600;
     const float kStarPickupDistance = 1.0f;
     const std::wstring kStarModelPath = L"res\\model\\sphereOrange\\sphere_orange.x";
+    const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
 }
 
 GameApp& GameApp::Instance()
@@ -268,6 +269,16 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
                                                  NSRender::MeshMixSkinAnimLoadMode::Custom);
     m_render.SetLoadingScreenProgress(40);
     m_render.Draw();
+
+    m_stickMeshId = m_render.AddMesh(kStickModelPath,
+                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                      1.0f);
+    if (m_stickMeshId >= 0 && m_playerMeshId >= 0)
+    {
+        m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, "MarineV2_arm_wrist_R");
+    }
+
     InitializePlayerPhysics();
     m_render.SetLoadingScreenProgress(55);
     m_render.Draw();

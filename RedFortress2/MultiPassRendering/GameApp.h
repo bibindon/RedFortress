@@ -165,6 +165,7 @@ private:
     int m_playerInvincibleFrames = 0;
     int m_starPowerupFrames = 0;
     int m_starMeshId = -1;
+    int m_stickMeshId = -1;
     D3DXVECTOR3 m_starPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int m_playerKnockbackFrames = 0;
     D3DXVECTOR3 m_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
