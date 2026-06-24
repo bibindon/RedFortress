@@ -121,8 +121,8 @@ CameraNear,0.1
 CameraFar,30000.0
 CameraHorizontalFov,90.0
 CameraPosX,0.0
-CameraPosY,2.1
-CameraPosZ,-2.8
+CameraPosY,3.0
+CameraPosZ,-4.0
 CameraLookAtX,0.0
 CameraLookAtY,0.0
 CameraLookAtZ,0.0
