@@ -240,7 +240,7 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& 
     }
 
     m_hp -= amount;
-    m_blinkFrames = 30;
+    m_blinkFrames = 15;
     if (m_meshId >= 0)
     {
         render.StartMeshMixSkinAnimBlink(m_meshId, m_blinkFrames, 2);
@@ -254,7 +254,7 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& 
         m_state = State::Dead;
         m_hitStunFrames = 0;
         m_facePlayerTurnFrames = 0;
-        m_removalFrames = 60;
+        m_removalFrames = 30;
         if (m_meshId >= 0)
         {
             render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 2);
