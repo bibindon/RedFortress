@@ -58,6 +58,10 @@ namespace
     const float kStarPickupDistance = 1.0f;
     const std::wstring kStarModelPath = L"res\\model\\sphereOrange\\sphere_orange.x";
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
+    const std::wstring kSpeedUpModelPath = L"res\\model\\spherePink\\sphere_pink.x";
+    const float kSpeedUpPickupDistance = 1.0f;
+    const float kSpeedUpScale = 0.25f;
+    const int kMaxSpeedLevel = 8;
 }
 
 GameApp& GameApp::Instance()
@@ -927,6 +931,18 @@ void GameApp::Run()
             }
 
 
+            // スピードアップアイテム取得判定
+            if (m_speedLevel < kMaxSpeedLevel && m_speedUpMeshId >= 0)
+            {
+                const D3DXVECTOR3 diff = m_playerMover.GetPosition() - m_speedUpPosition;
+                if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
+                {
+                    m_render.RemoveMesh(m_speedUpMeshId);
+                    m_speedUpMeshId = -1;
+                    ++m_speedLevel;
+                }
+            }
+
             if (m_player.IsHpZero())
             {
                 HandlePlayerDeath();
@@ -1212,9 +1228,10 @@ void GameApp::UpdatePlayerByInput()
     const bool isWalking = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LCONTROL);
 
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
-    const float walkSpeed = 2.25f;
-    const float runSpeed = 6.75f;
-    settings.moveSpeed = isWalking ? walkSpeed : runSpeed;
+    const float walkSpeed = 1.125f;
+    const float runSpeed = 3.375f;
+    const float speedMultiplier = 0.5f + (1.5f / static_cast<float>(kMaxSpeedLevel)) * static_cast<float>(m_speedLevel);
+    settings.moveSpeed = (isWalking ? walkSpeed : runSpeed) * speedMultiplier;
     m_playerMover.SetSettings(settings);
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
@@ -2483,6 +2500,7 @@ void GameApp::HandlePlayerDeath()
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
+    m_speedLevel = 0;
     m_playerAttackController.Reset();
     m_render.SetSceneUpdatePaused(true);
 }
@@ -2616,6 +2634,12 @@ void GameApp::LoadCurrentStageObjects()
         m_starMeshId = -1;
     }
 
+    if (m_speedUpMeshId >= 0)
+    {
+        m_render.RemoveMesh(m_speedUpMeshId);
+        m_speedUpMeshId = -1;
+    }
+
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
@@ -2653,6 +2677,31 @@ void GameApp::LoadCurrentStageObjects()
             }
         }
     }
+
+    // スピードアップCSV読み込み
+    {
+        std::wifstream file(NSRender::Util::GetExeDir() + stage.speedUpCsvPath);
+        if (file.is_open())
+        {
+            std::wstring line;
+            std::getline(file, line);
+            if (std::getline(file, line))
+            {
+                std::wstringstream ss(line);
+                std::wstring cell;
+                float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
+                if (std::getline(ss, cell, L',')) posX = std::stof(cell);
+                if (std::getline(ss, cell, L',')) posY = std::stof(cell);
+                if (std::getline(ss, cell, L',')) posZ = std::stof(cell);
+                m_speedUpPosition = D3DXVECTOR3(posX, posY, posZ);
+                m_speedUpMeshId = m_render.AddMesh(kSpeedUpModelPath,
+                                                    m_speedUpPosition,
+                                                    D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                    kSpeedUpScale);
+            }
+        }
+    }
+
     CreateStageSelectCubes();
     m_playerMover.Reset(stage.playerStartPosition);
     InitializeStageSelectCursor();

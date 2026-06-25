@@ -19,6 +19,7 @@ public:
         std::wstring collectibleCsvPath;
         std::wstring interactableCsvPath;
         std::wstring starCsvPath;
+        std::wstring speedUpCsvPath;
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 clearPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         float clearDistance = 1.0f;
