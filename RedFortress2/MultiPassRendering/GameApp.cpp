@@ -1383,6 +1383,9 @@ void GameApp::UpdatePlayerByInput()
         const D3DXVECTOR3 dashForward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
         m_playerMover.RequestDash(dashForward);
         m_pendingJump = false;
+        m_render.SetCameraShakeDuration(0.15f);
+        m_render.SetCameraShakeIntensity(0.05f);
+        m_render.TriggerCameraShake();
     }
     else
     {
@@ -2523,6 +2526,9 @@ void GameApp::DamagePlayerHp(int amount)
         GameAudio::PlayPlayerDamage();
         m_hpBar.OnDamage(oldHp, newHp);
         m_damagePopupManager.Add(oldHp - newHp, m_playerMover.GetPosition(), false);
+        m_render.SetCameraShakeDuration(0.2f);
+        m_render.SetCameraShakeIntensity(0.08f);
+        m_render.TriggerCameraShake();
     }
 }
 
