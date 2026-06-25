@@ -17,6 +17,7 @@
 #include "Player.h"
 #include "StageManager.h"
 #include "EnemyManager.h"
+#include "DestructibleManager.h"
 #include "PauseMenu.h"
 #include "SaveDataManager.h"
 #include "InventoryManager.h"
@@ -162,6 +163,7 @@ private:
     HpBar m_hpBar;
     DamagePopupManager m_damagePopupManager;
     EnemyManager m_enemyManager;
+    DestructibleManager m_destructibleManager;
     int m_playerInvincibleFrames = 0;
     int m_starPowerupFrames = 0;
     int m_starMeshId = -1;

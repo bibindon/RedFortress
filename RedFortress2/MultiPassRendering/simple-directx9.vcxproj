@@ -164,6 +164,7 @@
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="HpBar.cpp" />
     <ClCompile Include="DamagePopupManager.cpp" />
+    <ClCompile Include="DestructibleManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameAudio.cpp" />
   </ItemGroup>

@@ -289,6 +289,25 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_enemyManager.Initialize();
     m_enemyManager.LoadForStage(m_render, initialStage.enemyCsvPath);
 
+    m_destructibleManager.Initialize(m_render);
+    m_destructibleManager.SetStarDropCallback([this]() {
+        if (m_starPowerupFrames <= 0)
+        {
+            m_starPowerupFrames = kStarDurationFrames;
+            if (m_playerMeshId >= 0)
+            {
+                m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kStarDurationFrames, 2, NSRender::BlinkMode::StarFlash);
+            }
+        }
+    });
+    m_destructibleManager.SetSpeedUpCallback([this]() {
+        if (m_speedLevel < kMaxSpeedLevel)
+        {
+            ++m_speedLevel;
+        }
+    });
+    m_destructibleManager.LoadForStage(m_render, initialStage.destructibleCsvPath);
+
     const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
                                 initialStage.clearPosition.y - 0.5f,
                                initialStage.clearPosition.z);
@@ -665,6 +684,8 @@ void GameApp::Run()
                 // 敵の更新
                 m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
 
+                m_destructibleManager.Update(m_render);
+
                 const bool isStageSelect = IsCurrentStageSelect();
                 if (isStageSelect)
                 {
@@ -841,6 +862,18 @@ void GameApp::Run()
                         m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
                         GameAudio::PlayAttackHit();
                     }
+                    else
+                    {
+                        const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
+                            m_playerMover.GetPosition(), m_playerYaw,
+                            attackDefinition.range, attackDefinition.halfAngleRadians);
+                        if (destructible != nullptr)
+                        {
+                            m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage);
+                            m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
+                            GameAudio::PlayAttackHit();
+                        }
+                    }
                 }
             }
 
@@ -940,6 +973,26 @@ void GameApp::Run()
                     m_render.RemoveMesh(m_speedUpMeshId);
                     m_speedUpMeshId = -1;
                     ++m_speedLevel;
+                }
+            }
+
+            // ドロップされた赤いキューブの取得判定
+            {
+                const std::vector<DroppedRedCube>& cubes = m_destructibleManager.GetDroppedRedCubes();
+                for (std::size_t i = 0; i < cubes.size(); ++i)
+                {
+                    if (cubes[i].meshId < 0)
+                    {
+                        continue;
+                    }
+                    const D3DXVECTOR3 diff = m_playerMover.GetPosition() - cubes[i].position;
+                    if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
+                    {
+                        m_destructibleManager.RemoveDroppedRedCube(m_render, i);
+                        m_inventoryManager.AddItem(L"001");
+                        m_inventoryManager.Save();
+                        GameAudio::PlayItemGet();
+                    }
                 }
             }
 
@@ -2734,6 +2787,8 @@ void GameApp::LoadCurrentStageObjects()
     m_player.ResetHp();
     m_hpBar.Reset();
     m_enemyManager.LoadForStage(m_render, stage.enemyCsvPath);
+
+    m_destructibleManager.LoadForStage(m_render, stage.destructibleCsvPath);
 
     if (m_playerMeshId >= 0)
     {
