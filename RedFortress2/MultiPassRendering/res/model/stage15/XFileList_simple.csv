@@ -10,10 +10,10 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 1510,../collision_wall.x,4.5,1.57,-18,0,0,0,1,normal
 1513,../collision_moving_platform.x,-2.5,0.82,-2,0,0,0,1,normal
 1514,../collision_moving_platform.x,2.5,0.83,2,0,0,0,1,normal
-1519,../cube_white.x,-12.5,1,18,0,0,0,1,normal
-1520,../cube_white.x,-4,1.01,15.0,0,0,0,1,normal
-1521,../cube_white.x,-1.5,1.02,12,0,0,0,1,normal
-1522,../cube_white.x,4.5,1.03,-12,0,0,0,1,normal
-1523,../cube_white.x,6,1.04,-15.0,0,0,0,1,normal
-1524,../cube_white.x,12.5,1.05,-18,0,0,0,1,normal
+1519,../cube_wood.x,-12.5,1,18,0,0,0,1,normal
+1520,../cube_wood.x,-4,1.01,15.0,0,0,0,1,normal
+1521,../cube_wood.x,-1.5,1.02,12,0,0,0,1,normal
+1522,../cube_wood.x,4.5,1.03,-12,0,0,0,1,normal
+1523,../cube_wood.x,6,1.04,-15.0,0,0,0,1,normal
+1524,../cube_wood.x,12.5,1.05,-18,0,0,0,1,normal
 1526,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal

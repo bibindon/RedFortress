@@ -11,10 +11,10 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 10,res/model/collision_wall.x,11,1.57,-8,0,0,0,1,Collision,n
 13,res/model/collision_moving_platform.x,5,0.82,-8,0,0,0,1,Collision,y
 14,res/model/collision_moving_platform.x,0,0.83,0,0,0,0,1,Collision,y
-19,res/model/cube_white.x,-3,1,-26,0,0,0,1,Collision,n
-20,res/model/cube_white.x,3,1.01,-18,0,0,0,1,Collision,n
-21,res/model/cube_white.x,-2,1.02,-6,0,0,0,1,Collision,n
-22,res/model/cube_white.x,3,1.03,6,0,0,0,1,Collision,n
-23,res/model/cube_white.x,-3,1.04,18,0,0,0,1,Collision,n
-24,res/model/cube_white.x,3,1.05,26,0,0,0,1,Collision,n
+19,res/model/cube_wood.x,-3,1,-26,0,0,0,1,Collision,n
+20,res/model/cube_wood.x,3,1.01,-18,0,0,0,1,Collision,n
+21,res/model/cube_wood.x,-2,1.02,-6,0,0,0,1,Collision,n
+22,res/model/cube_wood.x,3,1.03,6,0,0,0,1,Collision,n
+23,res/model/cube_wood.x,-3,1.04,18,0,0,0,1,Collision,n
+24,res/model/cube_wood.x,3,1.05,26,0,0,0,1,Collision,n
 27,res/model/tree2Physics/lemonTree.x,6,0,20,0,0,0,1,Collision,n
