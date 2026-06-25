@@ -18,6 +18,25 @@ const std::wstring kSpeedUpModelPath = L"res\\model\\spherePink\\sphere_pink.x";
 const float kSpeedUpPickupDistance = 1.0f;
 const float kSpeedUpScale = 0.25f;
 const int kMaxSpeedLevel = 8;
+
+bool TryParseFloat(const std::wstring& text, float* outValue)
+{
+    if (outValue == nullptr)
+    {
+        return false;
+    }
+
+    try
+    {
+        *outValue = std::stof(text);
+    }
+    catch (...)
+    {
+        return false;
+    }
+
+    return true;
+}
 }
 
 void PickupManager::Initialize(NSRender::Render& render, InventoryManager& inventory)
@@ -199,15 +218,38 @@ bool PickupManager::LoadPickupPosition(const std::wstring& csvPath, D3DXVECTOR3*
     float posZ = 0.0f;
     if (std::getline(ss, cell, L','))
     {
-        posX = std::stof(cell);
+        if (!TryParseFloat(cell, &posX))
+        {
+            return false;
+        }
     }
+    else
+    {
+        return false;
+    }
+
     if (std::getline(ss, cell, L','))
     {
-        posY = std::stof(cell);
+        if (!TryParseFloat(cell, &posY))
+        {
+            return false;
+        }
     }
+    else
+    {
+        return false;
+    }
+
     if (std::getline(ss, cell, L','))
     {
-        posZ = std::stof(cell);
+        if (!TryParseFloat(cell, &posZ))
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
     }
 
     *outPosition = D3DXVECTOR3(posX, posY, posZ);

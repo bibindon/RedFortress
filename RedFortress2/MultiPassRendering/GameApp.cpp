@@ -2629,6 +2629,13 @@ void GameApp::LoadCurrentStageObjects()
         m_goalMarkerMeshId = -1;
     }
 
+    if (m_stickMeshId >= 0)
+    {
+        m_render.DetachMeshFromBone(m_stickMeshId);
+        m_render.RemoveMeshMix(m_stickMeshId);
+        m_stickMeshId = -1;
+    }
+
     m_pickupManager.Clear();
 
     RemoveStageSelectCubes();
@@ -2684,13 +2691,6 @@ void GameApp::LoadCurrentStageObjects()
 
     if (m_playerMeshId >= 0)
     {
-        if (m_stickMeshId >= 0)
-        {
-            m_render.DetachMeshFromBone(m_stickMeshId);
-            m_render.RemoveMeshMix(m_stickMeshId);
-            m_stickMeshId = -1;
-        }
-
         m_stickMeshId = m_render.AddMeshMix(kStickModelPath,
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
