@@ -17,9 +17,9 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,Type,Move,Instancing
 16,res/model/collision_moving_platform.x,5,0.85,16,0,0,0,1,Collision,y
 17,res/model/collision_moving_platform.x,-2,0.86,22,0,0,0,1,Collision,y
 18,res/model/collision_moving_platform.x,2,0.87,28,0,0,0,1,Collision,y
-19,res/model/cube_wood.x,-3,1,-26,0,0,0,1,Collision,n
-20,res/model/cube_wood.x,3,1.01,-18,0,0,0,1,Collision,n
-21,res/model/cube_wood.x,-2,1.02,-6,0,0,0,1,Collision,n
-22,res/model/cube_wood.x,3,1.03,6,0,0,0,1,Collision,n
-23,res/model/cube_wood.x,-3,1.04,18,0,0,0,1,Collision,n
-24,res/model/cube_wood.x,3,1.05,26,0,0,0,1,Collision,n
+19,res/model/cubeWood/cube_wood.x,-3,1,-26,0,0,0,1,Collision,n
+20,res/model/cubeWood/cube_wood.x,3,1.01,-18,0,0,0,1,Collision,n
+21,res/model/cubeWood/cube_wood.x,-2,1.02,-6,0,0,0,1,Collision,n
+22,res/model/cubeWood/cube_wood.x,3,1.03,6,0,0,0,1,Collision,n
+23,res/model/cubeWood/cube_wood.x,-3,1.04,18,0,0,0,1,Collision,n
+24,res/model/cubeWood/cube_wood.x,3,1.05,26,0,0,0,1,Collision,n
