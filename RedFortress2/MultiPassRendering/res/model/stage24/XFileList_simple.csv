@@ -1,5 +1,5 @@
-﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
-2,../plateField.x,0,0,0,0,0,0,1,normal
+ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
+2,../plateField4.x,0,0,0,0,0,0,1,normal
 803,../collision_wall.x,-10.5,1.5,18,0,1.5708,0,1,normal
 804,../collision_wall.x,10.5,1.51,14,0,0,0,1,normal
 805,../collision_wall.x,-7,1.52,7.0,0,1.5708,0,1,normal

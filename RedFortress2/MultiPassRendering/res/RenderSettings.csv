@@ -73,7 +73,7 @@ FresnelIntensity,0.08
 PhongTreatTextureAsWhite,0
 ,
 BloomEnable,0
-BloomThreshold,0.80
+BloomThreshold,0.0
 BloomWeightSum,0.02
 HaloEnable,0
 HaloThreshold,1.0
