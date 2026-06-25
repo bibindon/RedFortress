@@ -1209,7 +1209,7 @@ void GameApp::UpdatePlayerByInput()
     }
 
     const bool isMoving  = (localMove.x != 0.0f || localMove.z != 0.0f);
-    const bool isWalking = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LSHIFT);
+    const bool isWalking = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LCONTROL);
 
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
     const float walkSpeed = 2.25f;
@@ -1281,7 +1281,7 @@ void GameApp::UpdatePlayerByInput()
             float animationSpeed = 1.0f;
             if (nextState == PlayerAnimState::Run)
             {
-                animationSpeed = 1.2f;
+                animationSpeed = 2.0f;
             }
             else if (nextState == PlayerAnimState::Walk)
             {
