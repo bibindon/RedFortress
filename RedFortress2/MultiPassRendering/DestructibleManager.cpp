@@ -1,4 +1,4 @@
-#include "DestructibleManager.h"
+﻿#include "DestructibleManager.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
@@ -165,6 +165,19 @@ void DestructibleManager::Update(NSRender::Render& render)
             }
         }
     }
+
+    for (auto& cube : m_droppedRedCubes)
+    {
+        if (cube.meshId < 0)
+        {
+            continue;
+        }
+
+        if (cube.pickupWaitFrames > 0)
+        {
+            --cube.pickupWaitFrames;
+        }
+    }
 }
 
 const DestructibleObject* DestructibleManager::FindInAttackRange(
@@ -293,6 +306,7 @@ void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR
 
     DroppedRedCube cube;
     cube.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
+    cube.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
     cube.meshId = render.AddMesh(kRedCubeModelPath,
                                   cube.position,
                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),

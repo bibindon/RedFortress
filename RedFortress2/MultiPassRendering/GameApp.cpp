@@ -985,6 +985,10 @@ void GameApp::Run()
                     {
                         continue;
                     }
+                    if (cubes[i].pickupWaitFrames > 0)
+                    {
+                        continue;
+                    }
                     const D3DXVECTOR3 diff = m_playerMover.GetPosition() - cubes[i].position;
                     if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
                     {

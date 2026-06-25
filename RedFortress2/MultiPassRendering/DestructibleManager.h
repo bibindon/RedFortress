@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <d3dx9.h>
 #include <string>
@@ -13,6 +13,7 @@ class Render;
 const int kDestructibleBlinkFrames = 15;
 const int kDestructibleBlinkInterval = 2;
 const int kDestructibleDefaultHp = 3;
+const int kDroppedRedCubePickupDelayFrames = 60;
 
 struct DestructibleObject
 {
@@ -36,6 +37,7 @@ struct DroppedRedCube
 {
     int meshId = -1;
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    int pickupWaitFrames = 0;
 };
 
 class DestructibleManager
