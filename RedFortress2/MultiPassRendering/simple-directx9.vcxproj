@@ -165,6 +165,7 @@
     <ClCompile Include="HpBar.cpp" />
     <ClCompile Include="DamagePopupManager.cpp" />
     <ClCompile Include="DestructibleManager.cpp" />
+    <ClCompile Include="PickupManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameAudio.cpp" />
   </ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="HpBar.h" />
     <ClInclude Include="DamagePopupManager.h" />
+    <ClInclude Include="PickupManager.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GameAudio.h" />
   </ItemGroup>

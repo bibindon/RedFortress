@@ -6,8 +6,6 @@
 #include "../../RedFortressRender/Render/Util.h"
 #include "../../RedFortressRender/Render/Camera.h"
 #include "../../RedFortressRender/Render/Common.h"
-#include <fstream>
-#include <sstream>
 
 namespace
 {
@@ -54,14 +52,7 @@ namespace
     const int kStageTitleFrameMax = 180;
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
-    const int kStarDurationFrames = 600;
-    const float kStarPickupDistance = 1.0f;
-    const std::wstring kStarModelPath = L"res\\model\\sphereOrange\\sphere_orange.x";
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
-    const std::wstring kSpeedUpModelPath = L"res\\model\\spherePink\\sphere_pink.x";
-    const float kSpeedUpPickupDistance = 1.0f;
-    const float kSpeedUpScale = 0.25f;
-    const int kMaxSpeedLevel = 8;
 }
 
 GameApp& GameApp::Instance()
@@ -291,20 +282,10 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
 
     m_destructibleManager.Initialize(m_render);
     m_destructibleManager.SetStarDropCallback([this]() {
-        if (m_starPowerupFrames <= 0)
-        {
-            m_starPowerupFrames = kStarDurationFrames;
-            if (m_playerMeshId >= 0)
-            {
-                m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kStarDurationFrames, 2, NSRender::BlinkMode::StarFlash);
-            }
-        }
+        m_pickupManager.ActivateStar(m_playerMeshId);
     });
     m_destructibleManager.SetSpeedUpCallback([this]() {
-        if (m_speedLevel < kMaxSpeedLevel)
-        {
-            ++m_speedLevel;
-        }
+        m_pickupManager.AddSpeedLevel();
     });
     m_destructibleManager.LoadForStage(m_render, initialStage.destructibleCsvPath);
 
@@ -331,6 +312,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     SoundLib::SoundLib::Initialize(m_hWnd);
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
     GameAudio::Initialize();
+    m_pickupManager.Initialize(m_render, m_inventoryManager);
+    m_pickupManager.LoadForStage(initialStage.starCsvPath, initialStage.speedUpCsvPath);
 
     CommandFont* pFont = new CommandFont();
     pFont->app = this;
@@ -878,11 +861,8 @@ void GameApp::Run()
             }
 
             // プレイヤー無敵時間とスター時間を更新
-            if (m_starPowerupFrames > 0)
-            {
-                --m_starPowerupFrames;
-            }
-            else if (m_playerInvincibleFrames > 0)
+            m_pickupManager.UpdateTimers();
+            if (!m_pickupManager.IsStarActive() && m_playerInvincibleFrames > 0)
             {
                 --m_playerInvincibleFrames;
             }
@@ -914,7 +894,7 @@ void GameApp::Run()
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
                         break;
                     }
-                    else if (m_starPowerupFrames > 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
+                    else if (m_pickupManager.IsStarActive() && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
                     {
                         enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
@@ -947,58 +927,9 @@ void GameApp::Run()
                     }
                 }
             }
-            // スター取得判定
-            if (m_starPowerupFrames <= 0 && m_starMeshId >= 0)
-            {
-                const D3DXVECTOR3 diff = m_playerMover.GetPosition() - m_starPosition;
-                if (D3DXVec3Length(&diff) <= kStarPickupDistance)
-                {
-                    m_render.RemoveMesh(m_starMeshId);
-                    m_starMeshId = -1;
-                    m_starPowerupFrames = kStarDurationFrames;
-                    if (m_playerMeshId >= 0)
-                    {
-                        m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kStarDurationFrames, 2, NSRender::BlinkMode::StarFlash);
-                    }
-                }
-            }
-
-
-            // スピードアップアイテム取得判定
-            if (m_speedLevel < kMaxSpeedLevel && m_speedUpMeshId >= 0)
-            {
-                const D3DXVECTOR3 diff = m_playerMover.GetPosition() - m_speedUpPosition;
-                if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
-                {
-                    m_render.RemoveMesh(m_speedUpMeshId);
-                    m_speedUpMeshId = -1;
-                    ++m_speedLevel;
-                }
-            }
-
-            // ドロップされた赤いキューブの取得判定
-            {
-                const std::vector<DroppedRedCube>& cubes = m_destructibleManager.GetDroppedRedCubes();
-                for (std::size_t i = 0; i < cubes.size(); ++i)
-                {
-                    if (cubes[i].meshId < 0)
-                    {
-                        continue;
-                    }
-                    if (cubes[i].pickupWaitFrames > 0)
-                    {
-                        continue;
-                    }
-                    const D3DXVECTOR3 diff = m_playerMover.GetPosition() - cubes[i].position;
-                    if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
-                    {
-                        m_destructibleManager.RemoveDroppedRedCube(m_render, i);
-                        m_inventoryManager.AddItem(L"001");
-                        m_inventoryManager.Save();
-                        GameAudio::PlayItemGet();
-                    }
-                }
-            }
+            m_pickupManager.UpdatePickups(m_playerMover.GetPosition(),
+                                          m_playerMeshId,
+                                          m_destructibleManager);
 
             if (m_player.IsHpZero())
             {
@@ -1287,8 +1218,15 @@ void GameApp::UpdatePlayerByInput()
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
     const float walkSpeed = 1.125f;
     const float runSpeed = 3.375f;
-    const float speedMultiplier = 0.5f + (1.5f / static_cast<float>(kMaxSpeedLevel)) * static_cast<float>(m_speedLevel);
-    settings.moveSpeed = (isWalking ? walkSpeed : runSpeed) * speedMultiplier;
+    const float speedMultiplier = m_pickupManager.GetSpeedMultiplier();
+    if (isWalking)
+    {
+        settings.moveSpeed = walkSpeed * speedMultiplier;
+    }
+    else
+    {
+        settings.moveSpeed = runSpeed * speedMultiplier;
+    }
     m_playerMover.SetSettings(settings);
 
     D3DXVECTOR3 move(0.0f, 0.0f, 0.0f);
@@ -2563,7 +2501,7 @@ void GameApp::HandlePlayerDeath()
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
-    m_speedLevel = 0;
+    m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
     m_render.SetSceneUpdatePaused(true);
 }
@@ -2691,17 +2629,7 @@ void GameApp::LoadCurrentStageObjects()
         m_goalMarkerMeshId = -1;
     }
 
-    if (m_starMeshId >= 0)
-    {
-        m_render.RemoveMesh(m_starMeshId);
-        m_starMeshId = -1;
-    }
-
-    if (m_speedUpMeshId >= 0)
-    {
-        m_render.RemoveMesh(m_speedUpMeshId);
-        m_speedUpMeshId = -1;
-    }
+    m_pickupManager.Clear();
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
@@ -2717,53 +2645,7 @@ void GameApp::LoadCurrentStageObjects()
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
 
-    // スターCSV読み込み
-    {
-        std::wifstream file(NSRender::Util::GetExeDir() + stage.starCsvPath);
-        if (file.is_open())
-        {
-            std::wstring line;
-            std::getline(file, line); // skip header
-            if (std::getline(file, line))
-            {
-                std::wstringstream ss(line);
-                std::wstring cell;
-                float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
-                if (std::getline(ss, cell, L',')) posX = std::stof(cell);
-                if (std::getline(ss, cell, L',')) posY = std::stof(cell);
-                if (std::getline(ss, cell, L',')) posZ = std::stof(cell);
-                m_starPosition = D3DXVECTOR3(posX, posY, posZ);
-                m_starMeshId = m_render.AddMesh(kStarModelPath,
-                                                 m_starPosition,
-                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                 1.0f);
-            }
-        }
-    }
-
-    // スピードアップCSV読み込み
-    {
-        std::wifstream file(NSRender::Util::GetExeDir() + stage.speedUpCsvPath);
-        if (file.is_open())
-        {
-            std::wstring line;
-            std::getline(file, line);
-            if (std::getline(file, line))
-            {
-                std::wstringstream ss(line);
-                std::wstring cell;
-                float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
-                if (std::getline(ss, cell, L',')) posX = std::stof(cell);
-                if (std::getline(ss, cell, L',')) posY = std::stof(cell);
-                if (std::getline(ss, cell, L',')) posZ = std::stof(cell);
-                m_speedUpPosition = D3DXVECTOR3(posX, posY, posZ);
-                m_speedUpMeshId = m_render.AddMesh(kSpeedUpModelPath,
-                                                    m_speedUpPosition,
-                                                    D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                    kSpeedUpScale);
-            }
-        }
-    }
+    m_pickupManager.LoadForStage(stage.starCsvPath, stage.speedUpCsvPath);
 
     CreateStageSelectCubes();
     m_playerMover.Reset(stage.playerStartPosition);
@@ -2782,7 +2664,7 @@ void GameApp::LoadCurrentStageObjects()
     m_playerAnimState = PlayerAnimState::Idle;
     m_damagePopupManager.Clear();
     m_playerInvincibleFrames = 0;
-    m_starPowerupFrames = 0;
+    m_pickupManager.ResetPlayerEffects();
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
     m_respawnCameraDelayFrames = 0;

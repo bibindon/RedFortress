@@ -1,0 +1,215 @@
+﻿#include "PickupManager.h"
+
+#include "DestructibleManager.h"
+#include "GameAudio.h"
+#include "InventoryManager.h"
+#include "../../RedFortressRender/Render/Render.h"
+#include "../../RedFortressRender/Render/Util.h"
+#include <fstream>
+#include <sstream>
+#include <vector>
+
+namespace
+{
+const int kStarDurationFrames = 600;
+const float kStarPickupDistance = 1.0f;
+const std::wstring kStarModelPath = L"res\\model\\sphereOrange\\sphere_orange.x";
+const std::wstring kSpeedUpModelPath = L"res\\model\\spherePink\\sphere_pink.x";
+const float kSpeedUpPickupDistance = 1.0f;
+const float kSpeedUpScale = 0.25f;
+const int kMaxSpeedLevel = 8;
+}
+
+void PickupManager::Initialize(NSRender::Render& render, InventoryManager& inventory)
+{
+    m_render = &render;
+    m_inventory = &inventory;
+}
+
+void PickupManager::Clear()
+{
+    if (m_render != nullptr)
+    {
+        if (m_starMeshId >= 0)
+        {
+            m_render->RemoveMesh(m_starMeshId);
+            m_starMeshId = -1;
+        }
+
+        if (m_speedUpMeshId >= 0)
+        {
+            m_render->RemoveMesh(m_speedUpMeshId);
+            m_speedUpMeshId = -1;
+        }
+    }
+}
+
+void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wstring& speedUpCsvPath)
+{
+    Clear();
+    if (m_render == nullptr)
+    {
+        return;
+    }
+
+    if (LoadPickupPosition(starCsvPath, &m_starPosition))
+    {
+        m_starMeshId = m_render->AddMesh(kStarModelPath,
+                                         m_starPosition,
+                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                         1.0f);
+    }
+
+    if (LoadPickupPosition(speedUpCsvPath, &m_speedUpPosition))
+    {
+        m_speedUpMeshId = m_render->AddMesh(kSpeedUpModelPath,
+                                            m_speedUpPosition,
+                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                            kSpeedUpScale);
+    }
+}
+
+void PickupManager::ResetPlayerEffects()
+{
+    m_starPowerupFrames = 0;
+    m_speedLevel = 0;
+}
+
+void PickupManager::UpdateTimers()
+{
+    if (m_starPowerupFrames > 0)
+    {
+        --m_starPowerupFrames;
+    }
+}
+
+void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
+                                  const int playerMeshId,
+                                  DestructibleManager& destructibleManager)
+{
+    if (m_render == nullptr || m_inventory == nullptr)
+    {
+        return;
+    }
+
+    if (m_starPowerupFrames <= 0 && m_starMeshId >= 0)
+    {
+        const D3DXVECTOR3 diff = playerPosition - m_starPosition;
+        if (D3DXVec3Length(&diff) <= kStarPickupDistance)
+        {
+            m_render->RemoveMesh(m_starMeshId);
+            m_starMeshId = -1;
+            ActivateStar(playerMeshId);
+        }
+    }
+
+    if (m_speedLevel < kMaxSpeedLevel && m_speedUpMeshId >= 0)
+    {
+        const D3DXVECTOR3 diff = playerPosition - m_speedUpPosition;
+        if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
+        {
+            m_render->RemoveMesh(m_speedUpMeshId);
+            m_speedUpMeshId = -1;
+            AddSpeedLevel();
+        }
+    }
+
+    const std::vector<DroppedRedCube>& cubes = destructibleManager.GetDroppedRedCubes();
+    for (std::size_t i = 0; i < cubes.size(); ++i)
+    {
+        if (cubes[i].meshId < 0)
+        {
+            continue;
+        }
+        if (cubes[i].pickupWaitFrames > 0)
+        {
+            continue;
+        }
+
+        const D3DXVECTOR3 diff = playerPosition - cubes[i].position;
+        if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
+        {
+            destructibleManager.RemoveDroppedRedCube(*m_render, i);
+            m_inventory->AddItem(L"001");
+            m_inventory->Save();
+            GameAudio::PlayItemGet();
+        }
+    }
+}
+
+void PickupManager::ActivateStar(const int playerMeshId)
+{
+    if (m_starPowerupFrames > 0)
+    {
+        return;
+    }
+
+    m_starPowerupFrames = kStarDurationFrames;
+    if (m_render != nullptr && playerMeshId >= 0)
+    {
+        m_render->StartMeshMixSkinAnimBlink(playerMeshId,
+                                            kStarDurationFrames,
+                                            2,
+                                            NSRender::BlinkMode::StarFlash);
+    }
+}
+
+void PickupManager::AddSpeedLevel()
+{
+    if (m_speedLevel < kMaxSpeedLevel)
+    {
+        ++m_speedLevel;
+    }
+}
+
+bool PickupManager::IsStarActive() const
+{
+    return m_starPowerupFrames > 0;
+}
+
+float PickupManager::GetSpeedMultiplier() const
+{
+    return 0.5f + (1.5f / static_cast<float>(kMaxSpeedLevel)) * static_cast<float>(m_speedLevel);
+}
+
+bool PickupManager::LoadPickupPosition(const std::wstring& csvPath, D3DXVECTOR3* outPosition) const
+{
+    if (outPosition == nullptr || csvPath.empty())
+    {
+        return false;
+    }
+
+    std::wifstream file(NSRender::Util::GetExeDir() + csvPath);
+    if (!file.is_open())
+    {
+        return false;
+    }
+
+    std::wstring line;
+    std::getline(file, line);
+    if (!std::getline(file, line))
+    {
+        return false;
+    }
+
+    std::wstringstream ss(line);
+    std::wstring cell;
+    float posX = 0.0f;
+    float posY = 0.0f;
+    float posZ = 0.0f;
+    if (std::getline(ss, cell, L','))
+    {
+        posX = std::stof(cell);
+    }
+    if (std::getline(ss, cell, L','))
+    {
+        posY = std::stof(cell);
+    }
+    if (std::getline(ss, cell, L','))
+    {
+        posZ = std::stof(cell);
+    }
+
+    *outPosition = D3DXVECTOR3(posX, posY, posZ);
+    return true;
+}
