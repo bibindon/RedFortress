@@ -1087,6 +1087,13 @@ void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const flo
         return;
     }
 
+    if (nextState == PlayerAnimState::Attack)
+    {
+        const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, attackDefinition.animationName);
+        return;
+    }
+
     if (nextState == PlayerAnimState::Dash)
     {
         m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
@@ -1191,13 +1198,8 @@ void GameApp::UpdatePlayerByInput()
         if (m_playerAttackController.TryStart(requestedAttackType))
         {
             GameAudio::PlayPlayerAttack();
-            m_playerAnimState = PlayerAnimState::Attack;
-            if (m_playerMeshId >= 0)
-            {
-                const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
-                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, attackDefinition.animationSpeed);
-                m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, attackDefinition.animationName);
-            }
+            const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
+            SetPlayerAnimationState(PlayerAnimState::Attack, attackDefinition.animationSpeed);
         }
     }
 
@@ -1305,6 +1307,10 @@ void GameApp::UpdatePlayerByInput()
             {
                 animationSpeed = 0.1f;
             }
+            else if (nextState == PlayerAnimState::Attack)
+            {
+                animationSpeed = m_playerAttackController.GetCurrentDefinition().animationSpeed;
+            }
             else if (nextState == PlayerAnimState::Dash)
             {
                 animationSpeed = 0.1f;
@@ -1331,9 +1337,6 @@ void GameApp::UpdatePlayerByInput()
         const D3DXVECTOR3 dashForward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
         m_playerMover.RequestDash(dashForward);
         m_pendingJump = false;
-        m_render.SetCameraShakeDuration(0.15f);
-        m_render.SetCameraShakeIntensity(0.05f);
-        m_render.TriggerCameraShake();
     }
     else
     {
