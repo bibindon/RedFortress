@@ -54,8 +54,7 @@ namespace
     const int kEnemyAttackKnockbackFrames = 60;
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
-    const float kGoalArrowCameraDistance = 3.0f;
-    const float kGoalArrowScreenTopOffset = 1.05f;
+    const float kGoalArrowHeadOffsetY = 2.3f;
     const float kGoalArrowScale = 0.42f;
     const std::wstring kBombModelPath = L"res\\model\\bomb\\bomb.x";
     const int kBombFrames = 120;
@@ -1732,9 +1731,7 @@ void GameApp::UpdateGoalArrow()
     D3DXVec3Normalize(&arrowForward, &arrowForward);
 
     const D3DXVECTOR3 arrowPosition =
-        cameraPosition +
-        cameraForward * kGoalArrowCameraDistance +
-        cameraUp * kGoalArrowScreenTopOffset;
+        m_playerMover.GetPosition() + worldUp * kGoalArrowHeadOffsetY;
 
     D3DXMATRIX arrowWorld;
     D3DXMatrixIdentity(&arrowWorld);
