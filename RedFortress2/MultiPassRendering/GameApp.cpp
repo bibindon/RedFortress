@@ -38,6 +38,10 @@ namespace
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
     const float MOUSE_CAMERA_SENSITIVITY_NORMAL = 0.005f;
     const float MOUSE_CAMERA_SENSITIVITY_REMOTE = 0.00025f;
+    const int kRemoteDesktopScreenWidth = 1600;
+    const int kRemoteDesktopScreenHeight = 900;
+    const int kNormalScreenWidth = 1920;
+    const int kNormalScreenHeight = 1080;
     const float kPlayerTurnRadiansPerSecond = 10.0f;
     const float kTargetFrameSeconds = 1.0f / 60.0f;
     const float kMinCameraDistance = 1.5f;
@@ -229,8 +233,16 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     ATOM atom = RegisterClassEx(&wc);
     assert(atom != 0);
 
+    int screenWidth = kNormalScreenWidth;
+    int screenHeight = kNormalScreenHeight;
+    if (m_remoteDesktopMode)
+    {
+        screenWidth = kRemoteDesktopScreenWidth;
+        screenHeight = kRemoteDesktopScreenHeight;
+    }
+
     RECT rect;
-    SetRect(&rect, 0, 0, 640, 480);
+    SetRect(&rect, 0, 0, screenWidth, screenHeight);
     AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
     rect.right = rect.right - rect.left;
     rect.bottom = rect.bottom - rect.top;
@@ -250,7 +262,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
                           NULL);
 
     m_render.Initialize(m_hWnd, L"res\\RenderSettings.csv");
-    m_render.ChangeResolution(1600, 900);
+    m_render.ChangeResolution(screenWidth, screenHeight);
     ShowWindow(m_hWnd, SW_SHOWDEFAULT);
     UpdateWindow(m_hWnd);
     m_render.SetLoadingScreenTitleFontPath(L"res\\font\\BIZUDMincho-Regular.ttf");
