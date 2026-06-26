@@ -1219,14 +1219,15 @@ void GameApp::UpdatePlayerByInput()
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
     const float walkSpeed = 1.125f;
     const float runSpeed = 3.375f;
-    const float speedMultiplier = m_pickupManager.GetSpeedMultiplier();
+    const float runSpeedMultiplier = m_pickupManager.GetRunSpeedMultiplier();
+    const float runAnimationSpeed = 2.0f * runSpeedMultiplier;
     if (isWalking)
     {
-        settings.moveSpeed = walkSpeed * speedMultiplier;
+        settings.moveSpeed = walkSpeed;
     }
     else
     {
-        settings.moveSpeed = runSpeed * speedMultiplier;
+        settings.moveSpeed = runSpeed * runSpeedMultiplier;
     }
     m_playerMover.SetSettings(settings);
 
@@ -1294,7 +1295,7 @@ void GameApp::UpdatePlayerByInput()
             float animationSpeed = 1.0f;
             if (nextState == PlayerAnimState::Run)
             {
-                animationSpeed = 2.0f;
+                animationSpeed = runAnimationSpeed;
             }
             else if (nextState == PlayerAnimState::Walk)
             {
@@ -1310,6 +1311,10 @@ void GameApp::UpdatePlayerByInput()
             }
 
             SetPlayerAnimationState(nextState, animationSpeed);
+        }
+        else if (nextState == PlayerAnimState::Run)
+        {
+            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, runAnimationSpeed);
         }
     }
 

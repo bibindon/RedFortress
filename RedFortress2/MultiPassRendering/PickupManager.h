@@ -29,7 +29,7 @@ public:
     int GetSpeedLevel() const;
     int GetMaxSpeedLevel() const;
     bool IsStarActive() const;
-    float GetSpeedMultiplier() const;
+    float GetRunSpeedMultiplier() const;
 
 private:
     bool LoadPickupPosition(const std::wstring& csvPath, D3DXVECTOR3* outPosition) const;
