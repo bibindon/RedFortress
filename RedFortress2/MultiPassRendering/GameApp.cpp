@@ -1638,14 +1638,14 @@ void GameApp::EnsureGoalArrow()
 {
     if (m_goalArrowMeshId >= 0)
     {
-        m_render.SetMeshEnabled(m_goalArrowMeshId, true);
+        m_render.SetMeshMixEnabled(m_goalArrowMeshId, true);
         return;
     }
 
-    m_goalArrowMeshId = m_render.AddMesh(kGoalArrowModelPath,
-                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                         1.0f);
+    m_goalArrowMeshId = m_render.AddMeshMix(kGoalArrowModelPath,
+                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                            1.0f);
 }
 
 void GameApp::RemoveGoalArrow()
@@ -1655,7 +1655,7 @@ void GameApp::RemoveGoalArrow()
         return;
     }
 
-    m_render.RemoveMesh(m_goalArrowMeshId);
+    m_render.RemoveMeshMix(m_goalArrowMeshId);
     m_goalArrowMeshId = -1;
 }
 
@@ -1665,7 +1665,7 @@ void GameApp::UpdateGoalArrow()
     {
         if (m_goalArrowMeshId >= 0)
         {
-            m_render.SetMeshEnabled(m_goalArrowMeshId, false);
+            m_render.SetMeshMixEnabled(m_goalArrowMeshId, false);
         }
         return;
     }
@@ -1748,8 +1748,8 @@ void GameApp::UpdateGoalArrow()
     arrowWorld._42 = arrowPosition.y;
     arrowWorld._43 = arrowPosition.z;
 
-    m_render.SetMeshWorldMatrix(m_goalArrowMeshId, arrowWorld);
-    m_render.SetMeshEnabled(m_goalArrowMeshId, true);
+    m_render.SetMeshMixWorldMatrix(m_goalArrowMeshId, arrowWorld);
+    m_render.SetMeshMixEnabled(m_goalArrowMeshId, true);
 }
 
 void GameApp::InitializeStageSelectCursor()
