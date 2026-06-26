@@ -1704,22 +1704,32 @@ void GameApp::UpdateGoalArrow()
     D3DXVec3Normalize(&cameraUp, &cameraUp);
 
     D3DXVECTOR3 toGoal = m_stageManager.GetCurrentStage().clearPosition - m_playerMover.GetPosition();
-    const float screenDirectionX = D3DXVec3Dot(&toGoal, &cameraRight);
-    const float screenDirectionY = D3DXVec3Dot(&toGoal, &cameraUp);
-    D3DXVECTOR3 arrowUp = cameraRight * screenDirectionX + cameraUp * screenDirectionY;
-    if (D3DXVec3LengthSq(&arrowUp) <= 0.0001f)
+    D3DXVECTOR3 arrowUp;
+    if (D3DXVec3LengthSq(&toGoal) <= 0.0001f)
     {
         arrowUp = cameraUp;
     }
-    D3DXVec3Normalize(&arrowUp, &arrowUp);
+    else
+    {
+        D3DXVec3Normalize(&arrowUp, &toGoal);
+    }
 
     D3DXVECTOR3 arrowRight;
-    D3DXVec3Cross(&arrowRight, &arrowUp, &cameraForward);
+    D3DXVec3Cross(&arrowRight, &worldUp, &arrowUp);
     if (D3DXVec3LengthSq(&arrowRight) <= 0.0001f)
     {
-        arrowRight = cameraRight;
+        const D3DXVECTOR3 referenceForward(0.0f, 0.0f, 1.0f);
+        D3DXVec3Cross(&arrowRight, &referenceForward, &arrowUp);
+        if (D3DXVec3LengthSq(&arrowRight) <= 0.0001f)
+        {
+            arrowRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+        }
     }
     D3DXVec3Normalize(&arrowRight, &arrowRight);
+
+    D3DXVECTOR3 arrowForward;
+    D3DXVec3Cross(&arrowForward, &arrowRight, &arrowUp);
+    D3DXVec3Normalize(&arrowForward, &arrowForward);
 
     const D3DXVECTOR3 arrowPosition =
         cameraPosition +
@@ -1734,9 +1744,9 @@ void GameApp::UpdateGoalArrow()
     arrowWorld._21 = arrowUp.x * kGoalArrowScale;
     arrowWorld._22 = arrowUp.y * kGoalArrowScale;
     arrowWorld._23 = arrowUp.z * kGoalArrowScale;
-    arrowWorld._31 = -cameraForward.x * kGoalArrowScale;
-    arrowWorld._32 = -cameraForward.y * kGoalArrowScale;
-    arrowWorld._33 = -cameraForward.z * kGoalArrowScale;
+    arrowWorld._31 = arrowForward.x * kGoalArrowScale;
+    arrowWorld._32 = arrowForward.y * kGoalArrowScale;
+    arrowWorld._33 = arrowForward.z * kGoalArrowScale;
     arrowWorld._41 = arrowPosition.x;
     arrowWorld._42 = arrowPosition.y;
     arrowWorld._43 = arrowPosition.z;
