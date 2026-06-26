@@ -2779,7 +2779,7 @@ void GameApp::LoadCurrentStageObjects()
             const float kStickLocalRotateX = -D3DX_PI * 0.5f;
             m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, "MarineV2_arm_wrist_R",
                                       D3DXVECTOR3(kStickLocalRotateX, 0.0f, 0.0f),
-                                      D3DXVECTOR3(0.0f, 0.5f, 0.0f));
+                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
     }
 
