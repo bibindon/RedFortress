@@ -61,7 +61,7 @@ namespace
     const int kBombKnockbackFrames = 20;
     const int kBombBlinkStartFrames = 60;
     const int kBombBlinkInterval = 4;
-    const std::wstring kBusterModelPath = L"res\\model\\sphereYellow\\sphere_yellow.x";
+    const std::wstring kBusterModelPath = L"res\\model\\Buster\\buster.x";
     const float kBusterSpeed = 10.0f;
     const float kBusterMaxDistance = 10.0f;
     const int kBusterDamage = 3;
@@ -2967,10 +2967,14 @@ void GameApp::PlaceBomb(const D3DXVECTOR3& position)
     ActiveBomb bomb;
     bomb.position = position;
     bomb.remainingFrames = kBombFrames;
-    bomb.meshId = m_render.AddMesh(kBombModelPath,
-                                    position,
-                                    D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                    1.0f);
+    bomb.meshId = m_render.AddMeshMix(kBombModelPath,
+                                      position,
+                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                      1.0f,
+                                      -1.0f,
+                                      false,
+                                      false,
+                                      false);
     m_activeBombs.push_back(bomb);
 }
 
@@ -2985,7 +2989,8 @@ void GameApp::UpdateBombs()
 
             if (it->meshId >= 0)
             {
-                m_render.RemoveMesh(it->meshId);
+                m_render.SetMeshMixDamageFlash(it->meshId, false);
+                m_render.RemoveMeshMix(it->meshId);
             }
 
             for (auto& enemy : m_enemyManager.GetEnemies())
@@ -3034,21 +3039,11 @@ void GameApp::UpdateBombs()
                 const int phase = it->blinkTimer % (kBombBlinkInterval * 2);
                 if (phase < kBombBlinkInterval)
                 {
-                    if (it->meshId < 0)
-                    {
-                        it->meshId = m_render.AddMesh(kBombModelPath,
-                                                       it->position,
-                                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                       1.0f);
-                    }
+                    m_render.SetMeshMixDamageFlash(it->meshId, true);
                 }
                 else
                 {
-                    if (it->meshId >= 0)
-                    {
-                        m_render.RemoveMesh(it->meshId);
-                        it->meshId = -1;
-                    }
+                    m_render.SetMeshMixDamageFlash(it->meshId, false);
                 }
             }
             ++it;
@@ -3062,7 +3057,8 @@ void GameApp::ClearBombs()
     {
         if (bomb.meshId >= 0)
         {
-            m_render.RemoveMesh(bomb.meshId);
+            m_render.SetMeshMixDamageFlash(bomb.meshId, false);
+            m_render.RemoveMeshMix(bomb.meshId);
         }
     }
     m_activeBombs.clear();
