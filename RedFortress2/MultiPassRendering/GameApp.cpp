@@ -785,6 +785,11 @@ void GameApp::Run()
             if (!IsCurrentStageSelect())
             {
                 m_hpBar.Draw();
+                const int kAttackTypeHudY = 800;
+                m_render.DrawTextExCenter(m_commandFontId,
+                                          m_playerAttackController.GetCurrentCategoryName(),
+                                          0, kAttackTypeHudY,
+                                          NSRender::Common::BASE_W, 34);
             }
             m_damagePopupManager.Update();
             m_damagePopupManager.Draw();
@@ -1190,11 +1195,17 @@ void GameApp::UpdatePlayerByInput()
 
     const bool shiftPressed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT)
         || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT);
-    PlayerAttackType requestedAttackType = PlayerAttackType::WeakAttack;
-    if (shiftPressed)
+
+    if (!IsCurrentStageSelect())
     {
-        requestedAttackType = PlayerAttackType::StrongAttack;
+        const long wheelDelta = InputDevice::Mouse::GetWheelDelta();
+        if (wheelDelta != 0)
+        {
+            m_playerAttackController.CycleAttackCategory();
+        }
     }
+
+    const PlayerAttackType requestedAttackType = m_playerAttackController.GetAttackType(shiftPressed);
 
     if (!IsCurrentStageSelect() && InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {

@@ -5,7 +5,9 @@
 enum class PlayerAttackType
 {
     WeakAttack,
-    StrongAttack
+    StrongAttack,
+    BombAttack,
+    BombStrongAttack
 };
 
 struct PlayerAttackDefinition
@@ -36,11 +38,16 @@ public:
     bool ConsumeHitRequested();
     const PlayerAttackDefinition& GetCurrentDefinition() const;
 
+    void CycleAttackCategory();
+    PlayerAttackType GetAttackType(bool isStrong) const;
+    const wchar_t* GetCurrentCategoryName() const;
+
 private:
     PlayerAttackDefinition GetDefinition(PlayerAttackType attackType) const;
 
     PlayerAttackType m_currentAttackType = PlayerAttackType::WeakAttack;
     PlayerAttackDefinition m_currentDefinition;
+    int m_selectedCategory = 0;
     int m_remainingFrames = 0;
     int m_hitDelayFrames = -1;
     bool m_hitRequested = false;

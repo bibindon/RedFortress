@@ -114,7 +114,68 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.animationName = L"slash";
         definition.animationSpeed = 2.0f;
         break;
+    case PlayerAttackType::BombAttack:
+        definition.durationFrames = 29;
+        definition.hitDelayFrames = 14;
+        definition.damage = 2;
+        definition.range = 2.0f;
+        definition.halfAngleRadians = D3DXToRadian(45.0f);
+        definition.moveSpeed = 5.5f;
+        definition.moveStartRemainingFrames = 14;
+        definition.moveEndRemainingFrames = 19;
+        definition.animationName = L"slash";
+        definition.animationSpeed = 4.0f;
+        break;
+    case PlayerAttackType::BombStrongAttack:
+        definition.durationFrames = 57;
+        definition.hitDelayFrames = 28;
+        definition.damage = 5;
+        definition.range = 2.0f;
+        definition.halfAngleRadians = D3DXToRadian(45.0f);
+        definition.moveSpeed = 0.0909f;
+        definition.moveStartRemainingFrames = 28;
+        definition.moveEndRemainingFrames = 38;
+        definition.animationName = L"slash";
+        definition.animationSpeed = 2.0f;
+        break;
     }
 
     return definition;
+}
+
+void PlayerAttackController::CycleAttackCategory()
+{
+    m_selectedCategory = (m_selectedCategory + 1) % 2;
+}
+
+PlayerAttackType PlayerAttackController::GetAttackType(bool isStrong) const
+{
+    if (m_selectedCategory == 0)
+    {
+        if (isStrong)
+        {
+            return PlayerAttackType::StrongAttack;
+        }
+        return PlayerAttackType::WeakAttack;
+    }
+    else
+    {
+        if (isStrong)
+        {
+            return PlayerAttackType::BombStrongAttack;
+        }
+        return PlayerAttackType::BombAttack;
+    }
+}
+
+const wchar_t* PlayerAttackController::GetCurrentCategoryName() const
+{
+    if (m_selectedCategory == 0)
+    {
+        return L"薙ぎ払い";
+    }
+    else
+    {
+        return L"爆弾設置";
+    }
 }
