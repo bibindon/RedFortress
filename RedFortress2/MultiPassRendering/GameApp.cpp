@@ -59,6 +59,8 @@ namespace
     const float kBombExplosionRadius = 2.0f;
     const int kBombExplosionDamage = 10;
     const int kBombKnockbackFrames = 20;
+    const int kBombBlinkStartFrames = 60;
+    const int kBombBlinkInterval = 4;
 }
 
 GameApp& GameApp::Instance()
@@ -2991,6 +2993,29 @@ void GameApp::UpdateBombs()
         }
         else
         {
+            if (it->remainingFrames <= kBombBlinkStartFrames)
+            {
+                ++it->blinkTimer;
+                const int phase = it->blinkTimer % (kBombBlinkInterval * 2);
+                if (phase < kBombBlinkInterval)
+                {
+                    if (it->meshId < 0)
+                    {
+                        it->meshId = m_render.AddMesh(kBombModelPath,
+                                                       it->position,
+                                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                       1.0f);
+                    }
+                }
+                else
+                {
+                    if (it->meshId >= 0)
+                    {
+                        m_render.RemoveMesh(it->meshId);
+                        it->meshId = -1;
+                    }
+                }
+            }
             ++it;
         }
     }

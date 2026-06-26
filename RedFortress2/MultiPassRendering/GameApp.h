@@ -37,6 +37,7 @@ struct ActiveBomb
     int meshId = -1;
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int remainingFrames = 0;
+    int blinkTimer = 0;
 };
 
 class GameApp
