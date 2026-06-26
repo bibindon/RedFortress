@@ -7,7 +7,9 @@ enum class PlayerAttackType
     WeakAttack,
     StrongAttack,
     BombAttack,
-    BombStrongAttack
+    BombStrongAttack,
+    BusterAttack,
+    BusterStrongAttack
 };
 
 struct PlayerAttackDefinition

@@ -61,6 +61,12 @@ namespace
     const int kBombKnockbackFrames = 20;
     const int kBombBlinkStartFrames = 60;
     const int kBombBlinkInterval = 4;
+    const std::wstring kBusterModelPath = L"res\\model\\sphereYellow\\sphere_yellow.x";
+    const float kBusterSpeed = 10.0f;
+    const float kBusterMaxDistance = 10.0f;
+    const int kBusterDamage = 3;
+    const float kBusterHitRadius = 0.5f;
+    const int kBusterCooldown = 5;
 }
 
 GameApp& GameApp::Instance()
@@ -851,6 +857,8 @@ void GameApp::Run()
                 if (m_qte == nullptr && m_playerAttackController.ConsumeHitRequested())
                 {
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
+                    if (attackDefinition.range > 0.0f)
+                    {
                     Enemy* attackTarget = FindEnemyInAttackRange(attackDefinition);
                     if (attackTarget != nullptr)
                     {
@@ -872,6 +880,7 @@ void GameApp::Run()
                             m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
                             GameAudio::PlayAttackHit();
                         }
+                    }
                     }
                 }
             }
@@ -945,6 +954,12 @@ void GameApp::Run()
             }
 
             UpdateBombs();
+            UpdateBusters();
+
+            if (m_busterCooldownFrames > 0)
+            {
+                --m_busterCooldownFrames;
+            }
 
             m_pickupManager.UpdatePickups(m_playerMover.GetPosition(),
                                           m_playerMeshId,
@@ -961,6 +976,7 @@ void GameApp::Run()
 
             if (IsStageClearReached())
             {
+                ClearBusters();
                 m_gameState = GameState::StageClear;
                 m_stageClearProcessed = false;
             }
@@ -1221,11 +1237,28 @@ void GameApp::UpdatePlayerByInput()
     if (!IsCurrentStageSelect() && InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
         const bool isBombCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"爆弾設置"));
+        const bool isBusterCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"バスター"));
         if (isBombCategory)
         {
             const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
             const D3DXVECTOR3 bombPos = m_playerMover.GetPosition() + forward * kBombPlaceDistance;
             PlaceBomb(bombPos);
+        }
+        else if (isBusterCategory)
+        {
+            if (m_busterCooldownFrames <= 0)
+            {
+                if (m_playerAttackController.TryStart(requestedAttackType))
+                {
+                    const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+                    const D3DXVECTOR3 spawnPos = m_playerMover.GetPosition() + forward * 1.0f;
+                    SpawnBuster(spawnPos, forward);
+                    m_busterCooldownFrames = kBusterCooldown;
+                    GameAudio::PlayPlayerAttack();
+                    const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
+                    SetPlayerAnimationState(PlayerAnimState::Attack, attackDefinition.animationSpeed);
+                }
+            }
         }
         else if (m_playerAttackController.TryStart(requestedAttackType))
         {
@@ -2610,6 +2643,7 @@ void GameApp::HandlePlayerDeath()
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
     ClearBombs();
+    ClearBusters();
     m_render.SetSceneUpdatePaused(true);
 }
 
@@ -2751,6 +2785,7 @@ void GameApp::LoadCurrentStageObjects()
     m_pickupManager.Clear();
     m_dashBoosterManager.Clear();
     ClearBombs();
+    ClearBusters();
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
@@ -3031,6 +3066,116 @@ void GameApp::ClearBombs()
         }
     }
     m_activeBombs.clear();
+}
+
+void GameApp::SpawnBuster(const D3DXVECTOR3& position, const D3DXVECTOR3& direction)
+{
+    ActiveBuster buster;
+    buster.position = position;
+    buster.direction = direction;
+    buster.traveledDistance = 0.0f;
+    buster.meshId = m_render.AddMeshMix(kBusterModelPath,
+                                         position,
+                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                         1.0f,
+                                         -1.f,
+                                         false,
+                                         false,
+                                         false);
+    m_activeBusters.push_back(buster);
+}
+
+void GameApp::UpdateBusters()
+{
+    for (auto it = m_activeBusters.begin(); it != m_activeBusters.end(); )
+    {
+        const float moveStep = kBusterSpeed * kTargetFrameSeconds;
+        it->position = it->position + it->direction * moveStep;
+        it->traveledDistance += moveStep;
+
+        if (it->meshId >= 0)
+        {
+            m_render.SetMeshMixPos(it->meshId, it->position);
+        }
+
+        bool destroyed = false;
+
+        if (it->traveledDistance >= kBusterMaxDistance)
+        {
+            destroyed = true;
+        }
+        else
+        {
+            for (auto& enemy : m_enemyManager.GetEnemies())
+            {
+                if (enemy.IsDead())
+                {
+                    continue;
+                }
+
+                D3DXVECTOR3 dir = enemy.GetPosition() - it->position;
+                dir.y = 0.0f;
+                const float dist = D3DXVec3Length(&dir);
+                if (dist <= kBusterHitRadius)
+                {
+                    enemy.TakeDamage(m_render, kBusterDamage, it->position);
+                    enemy.StartKnockbackFrom(it->position, 0.3f, 20);
+                    m_damagePopupManager.Add(kBusterDamage, enemy.GetPosition(), false);
+                    GameAudio::PlayAttackHit();
+                    destroyed = true;
+                    break;
+                }
+            }
+
+            if (!destroyed)
+            {
+                for (const auto& destructible : m_destructibleManager.GetObjects())
+                {
+                    if (destructible.isDead)
+                    {
+                        continue;
+                    }
+
+                    D3DXVECTOR3 dir = destructible.position - it->position;
+                    dir.y = 0.0f;
+                    const float dist = D3DXVec3Length(&dir);
+                    if (dist <= kBusterHitRadius)
+                    {
+                        m_destructibleManager.TryDamage(m_render, destructible, kBusterDamage);
+                        m_damagePopupManager.Add(kBusterDamage, destructible.position, false);
+                        GameAudio::PlayAttackHit();
+                        destroyed = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (destroyed)
+        {
+            if (it->meshId >= 0)
+            {
+                m_render.RemoveMeshMix(it->meshId);
+            }
+            it = m_activeBusters.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+void GameApp::ClearBusters()
+{
+    for (ActiveBuster& buster : m_activeBusters)
+    {
+        if (buster.meshId >= 0)
+        {
+            m_render.RemoveMeshMix(buster.meshId);
+        }
+    }
+    m_activeBusters.clear();
 }
 
 

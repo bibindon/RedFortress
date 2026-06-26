@@ -138,6 +138,30 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.animationName = L"slash";
         definition.animationSpeed = 2.0f;
         break;
+    case PlayerAttackType::BusterAttack:
+        definition.durationFrames = 10;
+        definition.hitDelayFrames = 5;
+        definition.damage = 3;
+        definition.range = 0.0f;
+        definition.halfAngleRadians = 0.0f;
+        definition.moveSpeed = 0.0f;
+        definition.moveStartRemainingFrames = 0;
+        definition.moveEndRemainingFrames = 0;
+        definition.animationName = L"slash";
+        definition.animationSpeed = 6.0f;
+        break;
+    case PlayerAttackType::BusterStrongAttack:
+        definition.durationFrames = 10;
+        definition.hitDelayFrames = 5;
+        definition.damage = 3;
+        definition.range = 0.0f;
+        definition.halfAngleRadians = 0.0f;
+        definition.moveSpeed = 0.0f;
+        definition.moveStartRemainingFrames = 0;
+        definition.moveEndRemainingFrames = 0;
+        definition.animationName = L"slash";
+        definition.animationSpeed = 6.0f;
+        break;
     }
 
     return definition;
@@ -145,7 +169,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
 
 void PlayerAttackController::CycleAttackCategory()
 {
-    m_selectedCategory = (m_selectedCategory + 1) % 2;
+    m_selectedCategory = (m_selectedCategory + 1) % 3;
 }
 
 PlayerAttackType PlayerAttackController::GetAttackType(bool isStrong) const
@@ -158,13 +182,21 @@ PlayerAttackType PlayerAttackController::GetAttackType(bool isStrong) const
         }
         return PlayerAttackType::WeakAttack;
     }
-    else
+    if (m_selectedCategory == 1)
     {
         if (isStrong)
         {
             return PlayerAttackType::BombStrongAttack;
         }
         return PlayerAttackType::BombAttack;
+    }
+    else
+    {
+        if (isStrong)
+        {
+            return PlayerAttackType::BusterStrongAttack;
+        }
+        return PlayerAttackType::BusterAttack;
     }
 }
 
@@ -174,8 +206,12 @@ const wchar_t* PlayerAttackController::GetCurrentCategoryName() const
     {
         return L"薙ぎ払い";
     }
-    else
+    if (m_selectedCategory == 1)
     {
         return L"爆弾設置";
+    }
+    else
+    {
+        return L"バスター";
     }
 }

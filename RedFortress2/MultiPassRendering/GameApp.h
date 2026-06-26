@@ -40,6 +40,14 @@ struct ActiveBomb
     int blinkTimer = 0;
 };
 
+struct ActiveBuster
+{
+    int meshId = -1;
+    D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 direction = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    float traveledDistance = 0.0f;
+};
+
 class GameApp
 {
 public:
@@ -133,6 +141,9 @@ private:
     void PlaceBomb(const D3DXVECTOR3& position);
     void UpdateBombs();
     void ClearBombs();
+    void SpawnBuster(const D3DXVECTOR3& position, const D3DXVECTOR3& direction);
+    void UpdateBusters();
+    void ClearBusters();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
@@ -223,4 +234,6 @@ private:
     bool m_titleDeleteConfirmMode = false;
     std::vector<ActiveBomb> m_activeBombs;
     static const int kMaxBombs = 8;
+    std::vector<ActiveBuster> m_activeBusters;
+    int m_busterCooldownFrames = 0;
 };
