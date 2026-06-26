@@ -19,6 +19,7 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType,PlacementCsv
 26,../SkySphere/SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 27,../tree2/lemonTree.x, 6,0,20, 0, 0, 0, 1, normal
 301,../grass/grass.x,0,0,0,0,0,0,1,instancing,../grass/grass1-1.csv
+302,../tree2/lemonTree.Instancing.x,0,0,0,0,0,0,1,instancing,../tree2/lemonTree.Instancing.1-1.csv
 201,../fence.x,-11,0.5,-30,0,0,0,1,normal
 202,../fence.x,-3,0.5,-30,0,0,0,1,normal
 203,../fence.x,5,0.5,-30,0,0,0,1,normal
