@@ -32,6 +32,13 @@
 #include "PickupManager.h"
 #include "DashBoosterManager.h"
 
+struct ActiveBomb
+{
+    int meshId = -1;
+    D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    int remainingFrames = 0;
+};
+
 class GameApp
 {
 public:
@@ -122,6 +129,9 @@ private:
     void DrawStageSelectCursor();
     void CreateStageSelectCubes();
     void RemoveStageSelectCubes();
+    void PlaceBomb(const D3DXVECTOR3& position);
+    void UpdateBombs();
+    void ClearBombs();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
@@ -210,4 +220,6 @@ private:
     bool m_stageSelectPlayerMoveActive = false;
     std::vector<int> m_stageSelectCubeMeshIds;
     bool m_titleDeleteConfirmMode = false;
+    std::vector<ActiveBomb> m_activeBombs;
+    static const int kMaxBombs = 8;
 };
