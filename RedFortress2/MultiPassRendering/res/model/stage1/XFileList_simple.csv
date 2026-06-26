@@ -1,4 +1,4 @@
-ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
+ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType,PlacementCsv
 2,../plateField4.x, 0, 0,0, 0, 0, 0, 1, normal
 3,../collision_wall.x, -7, 1.5,-20, 0, 0, 0, 1, normal
 4,../collision_wall.x, 7,1.51,-20, 0, 0, 0, 1, normal
@@ -18,6 +18,7 @@ ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 24,../cubeWood/cube_wood.x, 3,1.05,26, 0, 0, 0, 1, normal
 26,../SkySphere/SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 27,../tree2/lemonTree.x, 6,0,20, 0, 0, 0, 1, normal
+301,../grass/grass.x,0,0,0,0,0,0,1,instancing,../grass/grass1-1.csv
 201,../fence.x,-11,0.5,-30,0,0,0,1,normal
 202,../fence.x,-3,0.5,-30,0,0,0,1,normal
 203,../fence.x,5,0.5,-30,0,0,0,1,normal
