@@ -84,6 +84,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.starCsvPath = basePath + L"Stars.csv";
     stage.speedUpCsvPath = basePath + L"SpeedUps.csv";
     stage.destructibleCsvPath = basePath + L"Destructibles.csv";
+    stage.dashBoosterCsvPath = basePath + L"DashBoosters.csv";
     stage.playerStartPosition = playerStartPosition;
     stage.clearPosition = clearPosition;
     stage.clearDistance = 2.0f;

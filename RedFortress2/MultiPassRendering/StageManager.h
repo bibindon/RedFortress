@@ -21,6 +21,7 @@ public:
         std::wstring starCsvPath;
         std::wstring speedUpCsvPath;
         std::wstring destructibleCsvPath;
+        std::wstring dashBoosterCsvPath;
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 clearPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         float clearDistance = 1.0f;

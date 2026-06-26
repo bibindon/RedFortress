@@ -314,6 +314,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     GameAudio::Initialize();
     m_pickupManager.Initialize(m_render, m_inventoryManager);
     m_pickupManager.LoadForStage(initialStage.starCsvPath, initialStage.speedUpCsvPath);
+    m_dashBoosterManager.Initialize(m_render);
+    m_dashBoosterManager.LoadForStage(initialStage.dashBoosterCsvPath);
 
     CommandFont* pFont = new CommandFont();
     pFont->app = this;
@@ -826,6 +828,7 @@ void GameApp::Run()
             if (!isStageSelect)
             {
                 m_playerMover.Update(m_pendingMove, m_pendingJump);
+                m_dashBoosterManager.Update(m_playerMover.GetPosition(), m_playerMover);
                 m_collectibleManager.Update(m_playerMover.GetPosition());
                 if (m_playerMover.IsCrushed())
                 {
@@ -2711,6 +2714,7 @@ void GameApp::LoadCurrentStageObjects()
     }
 
     m_pickupManager.Clear();
+    m_dashBoosterManager.Clear();
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
@@ -2727,6 +2731,7 @@ void GameApp::LoadCurrentStageObjects()
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
 
     m_pickupManager.LoadForStage(stage.starCsvPath, stage.speedUpCsvPath);
+    m_dashBoosterManager.LoadForStage(stage.dashBoosterCsvPath);
 
     CreateStageSelectCubes();
     m_playerMover.Reset(stage.playerStartPosition);

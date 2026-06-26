@@ -30,6 +30,7 @@
 #include "DamagePopupManager.h"
 #include "PlayerAttackController.h"
 #include "PickupManager.h"
+#include "DashBoosterManager.h"
 
 class GameApp
 {
@@ -168,6 +169,7 @@ private:
     EnemyManager m_enemyManager;
     DestructibleManager m_destructibleManager;
     PickupManager m_pickupManager;
+    DashBoosterManager m_dashBoosterManager;
     int m_playerInvincibleFrames = 0;
     int m_stickMeshId = -1;
     int m_playerKnockbackFrames = 0;
