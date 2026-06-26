@@ -75,6 +75,7 @@ private:
     void StartFacePlayerTurn();
     void UpdateFacePlayerTurn(const D3DXVECTOR3& playerPos);
     void UpdateFacing(const D3DXVECTOR3& targetPos);
+    void MoveWithCollision(const D3DXVECTOR3& velocity);
     bool IsPlayerInView(const D3DXVECTOR3& playerPos) const;
     float NextRandom01();
     int NextRandomInt(int minValueInclusive, int maxValueInclusive);

@@ -1,6 +1,7 @@
 ﻿#include "Enemy.h"
 
 #include "../../RedFortressRender/Render/Render.h"
+#include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 
 namespace
 {
@@ -112,7 +113,7 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
 
     if (m_knockbackFrames > 0)
     {
-        m_position += m_knockbackPerFrame;
+        MoveWithCollision(m_knockbackPerFrame / kTargetFrameSeconds);
         --m_knockbackFrames;
         if (m_knockbackFrames <= 0)
         {
@@ -382,7 +383,7 @@ void Enemy::UpdateIdleBehavior()
         --m_idleMoveFrames;
         UpdateFacing(m_position + D3DXVECTOR3(-sinf(m_idleMoveYaw), 0.0f, -cosf(m_idleMoveYaw)));
         D3DXVECTOR3 moveDir(-sinf(m_yaw), 0.0f, -cosf(m_yaw));
-        m_position += moveDir * (m_moveSpeed * 0.18f) * kTargetFrameSeconds;
+        MoveWithCollision(moveDir * (m_moveSpeed * 0.18f));
 
         D3DXVECTOR3 fromHome = m_position - m_homePosition;
         fromHome.y = 0.0f;
@@ -516,13 +517,13 @@ void Enemy::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool playerI
         speedMultiplier = 0.32f;
     }
 
-    m_position += moveDir * (m_moveSpeed * speedMultiplier) * kTargetFrameSeconds;
+    MoveWithCollision(moveDir * (m_moveSpeed * speedMultiplier));
 }
 
 void Enemy::UpdateRetreatBehavior()
 {
     UpdateFacing(m_position + m_retreatDirection);
-    m_position += m_retreatDirection * (m_moveSpeed * 0.42f) * kTargetFrameSeconds;
+    MoveWithCollision(m_retreatDirection * (m_moveSpeed * 0.42f));
 
     if (m_retreatFrames > 0)
     {
@@ -685,6 +686,39 @@ void Enemy::UpdateFacing(const D3DXVECTOR3& targetPos)
     const float kTurnRadiansPerSecond = 10.0f;
     const float kTargetFrameSeconds = 1.0f / 60.0f;
     m_yaw = MoveAngleToward(m_yaw, targetYaw, kTurnRadiansPerSecond * kTargetFrameSeconds);
+}
+
+void Enemy::MoveWithCollision(const D3DXVECTOR3& velocity)
+{
+    if (D3DXVec3LengthSq(&velocity) <= 0.0001f)
+    {
+        return;
+    }
+
+    D3DXVECTOR3 resolvedPosition = m_position;
+    D3DXVECTOR3 resolvedVelocity = velocity;
+    const float radius = m_contactRadius;
+    const float height = m_height;
+
+    PhysicsLib::PhysicsLib::CheckCollide(m_position,
+                                         velocity,
+                                         PhysicsLib::PhysicsLib::ShapeType::Cylinder,
+                                         &resolvedPosition,
+                                         &resolvedVelocity,
+                                         nullptr,
+                                         nullptr,
+                                         radius,
+                                         height,
+                                         nullptr,
+                                         nullptr,
+                                         nullptr,
+                                         nullptr,
+                                         nullptr,
+                                         nullptr,
+                                         nullptr,
+                                         nullptr);
+
+    m_position = resolvedPosition;
 }
 
 bool Enemy::IsPlayerInView(const D3DXVECTOR3& playerPos) const
