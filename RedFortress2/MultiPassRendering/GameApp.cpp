@@ -1220,7 +1220,7 @@ void GameApp::UpdatePlayerByInput()
     const float walkSpeed = 1.125f;
     const float runSpeed = 3.375f;
     const float runSpeedMultiplier = m_pickupManager.GetRunSpeedMultiplier();
-    const float runAnimationSpeed = 2.0f * runSpeedMultiplier;
+    const float runAnimationSpeed = 1.5f * runSpeedMultiplier;
     if (isWalking)
     {
         settings.moveSpeed = walkSpeed;
