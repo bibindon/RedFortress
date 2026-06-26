@@ -53,6 +53,10 @@ namespace
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
+    const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
+    const float kGoalArrowCameraDistance = 3.0f;
+    const float kGoalArrowScreenTopOffset = 1.05f;
+    const float kGoalArrowScale = 0.42f;
     const std::wstring kBombModelPath = L"res\\model\\bomb\\bomb.x";
     const int kBombFrames = 120;
     const float kBombPlaceDistance = 1.5f;
@@ -793,6 +797,7 @@ void GameApp::Run()
             }
 
             m_enemyManager.SyncMeshes(m_render);
+            UpdateGoalArrow();
 
             // 描画（動く床の位置が更新される）
             DrawStageTitle();
@@ -1589,6 +1594,155 @@ bool GameApp::IsStagePortalSelectable(const std::wstring& portalId) const
         return true;
     }
     return m_saveDataManager.IsStageUnlocked(destinationId);
+}
+
+bool GameApp::AreAllStageEnemiesDefeated() const
+{
+    for (const auto& enemy : m_enemyManager.GetEnemies())
+    {
+        if (!enemy.IsDead())
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool GameApp::ShouldShowGoalArrow() const
+{
+    if (m_gameState != GameState::Playing)
+    {
+        return false;
+    }
+
+    if (IsCurrentStageSelect())
+    {
+        return false;
+    }
+
+    const int stageNumber = m_stageManager.GetCurrentStage().number;
+    if (stageNumber < 1 || stageNumber > 32)
+    {
+        return false;
+    }
+
+    if (!AreAllStageEnemiesDefeated())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void GameApp::EnsureGoalArrow()
+{
+    if (m_goalArrowMeshId >= 0)
+    {
+        m_render.SetMeshEnabled(m_goalArrowMeshId, true);
+        return;
+    }
+
+    m_goalArrowMeshId = m_render.AddMesh(kGoalArrowModelPath,
+                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                         1.0f);
+}
+
+void GameApp::RemoveGoalArrow()
+{
+    if (m_goalArrowMeshId < 0)
+    {
+        return;
+    }
+
+    m_render.RemoveMesh(m_goalArrowMeshId);
+    m_goalArrowMeshId = -1;
+}
+
+void GameApp::UpdateGoalArrow()
+{
+    if (!ShouldShowGoalArrow())
+    {
+        if (m_goalArrowMeshId >= 0)
+        {
+            m_render.SetMeshEnabled(m_goalArrowMeshId, false);
+        }
+        return;
+    }
+
+    EnsureGoalArrow();
+    if (m_goalArrowMeshId < 0)
+    {
+        return;
+    }
+
+    const D3DXVECTOR3 cameraPosition = m_render.GetCameraPos();
+    const D3DXVECTOR3 lookAtPosition = m_render.GetLookAtPos();
+    D3DXVECTOR3 cameraForward = lookAtPosition - cameraPosition;
+    if (D3DXVec3LengthSq(&cameraForward) <= 0.0001f)
+    {
+        cameraForward = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+    }
+    D3DXVec3Normalize(&cameraForward, &cameraForward);
+
+    const D3DXVECTOR3 worldUp(0.0f, 1.0f, 0.0f);
+    D3DXVECTOR3 cameraRight;
+    D3DXVec3Cross(&cameraRight, &worldUp, &cameraForward);
+    if (D3DXVec3LengthSq(&cameraRight) <= 0.0001f)
+    {
+        cameraRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+    }
+    D3DXVec3Normalize(&cameraRight, &cameraRight);
+
+    D3DXVECTOR3 cameraUp;
+    D3DXVec3Cross(&cameraUp, &cameraForward, &cameraRight);
+    if (D3DXVec3LengthSq(&cameraUp) <= 0.0001f)
+    {
+        cameraUp = worldUp;
+    }
+    D3DXVec3Normalize(&cameraUp, &cameraUp);
+
+    D3DXVECTOR3 toGoal = m_stageManager.GetCurrentStage().clearPosition - m_playerMover.GetPosition();
+    const float screenDirectionX = D3DXVec3Dot(&toGoal, &cameraRight);
+    const float screenDirectionY = D3DXVec3Dot(&toGoal, &cameraUp);
+    D3DXVECTOR3 arrowUp = cameraRight * screenDirectionX + cameraUp * screenDirectionY;
+    if (D3DXVec3LengthSq(&arrowUp) <= 0.0001f)
+    {
+        arrowUp = cameraUp;
+    }
+    D3DXVec3Normalize(&arrowUp, &arrowUp);
+
+    D3DXVECTOR3 arrowRight;
+    D3DXVec3Cross(&arrowRight, &arrowUp, &cameraForward);
+    if (D3DXVec3LengthSq(&arrowRight) <= 0.0001f)
+    {
+        arrowRight = cameraRight;
+    }
+    D3DXVec3Normalize(&arrowRight, &arrowRight);
+
+    const D3DXVECTOR3 arrowPosition =
+        cameraPosition +
+        cameraForward * kGoalArrowCameraDistance +
+        cameraUp * kGoalArrowScreenTopOffset;
+
+    D3DXMATRIX arrowWorld;
+    D3DXMatrixIdentity(&arrowWorld);
+    arrowWorld._11 = arrowRight.x * kGoalArrowScale;
+    arrowWorld._12 = arrowRight.y * kGoalArrowScale;
+    arrowWorld._13 = arrowRight.z * kGoalArrowScale;
+    arrowWorld._21 = arrowUp.x * kGoalArrowScale;
+    arrowWorld._22 = arrowUp.y * kGoalArrowScale;
+    arrowWorld._23 = arrowUp.z * kGoalArrowScale;
+    arrowWorld._31 = -cameraForward.x * kGoalArrowScale;
+    arrowWorld._32 = -cameraForward.y * kGoalArrowScale;
+    arrowWorld._33 = -cameraForward.z * kGoalArrowScale;
+    arrowWorld._41 = arrowPosition.x;
+    arrowWorld._42 = arrowPosition.y;
+    arrowWorld._43 = arrowPosition.z;
+
+    m_render.SetMeshWorldMatrix(m_goalArrowMeshId, arrowWorld);
+    m_render.SetMeshEnabled(m_goalArrowMeshId, true);
 }
 
 void GameApp::InitializeStageSelectCursor()
@@ -2775,17 +2929,18 @@ void GameApp::LoadCurrentStageObjects()
         m_goalMarkerMeshId = -1;
     }
 
+    m_pickupManager.Clear();
+    m_dashBoosterManager.Clear();
+    ClearBombs();
+    ClearBusters();
+    RemoveGoalArrow();
+
     if (m_stickMeshId >= 0)
     {
         m_render.DetachMeshFromBone(m_stickMeshId);
         m_render.RemoveMeshMix(m_stickMeshId);
         m_stickMeshId = -1;
     }
-
-    m_pickupManager.Clear();
-    m_dashBoosterManager.Clear();
-    ClearBombs();
-    ClearBusters();
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();

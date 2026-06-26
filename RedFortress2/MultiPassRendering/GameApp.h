@@ -129,6 +129,11 @@ private:
     void UpdatePlayerMeshVisibility();
     bool IsCurrentStageSelect() const;
     bool IsStagePortalSelectable(const std::wstring& portalId) const;
+    bool AreAllStageEnemiesDefeated() const;
+    bool ShouldShowGoalArrow() const;
+    void EnsureGoalArrow();
+    void RemoveGoalArrow();
+    void UpdateGoalArrow();
     void InitializeStageSelectCursor();
     void SyncStageSelectPlayerToPortal(bool immediate);
     void MoveStageSelectCursorByDirection(float directionX, float directionY);
@@ -220,6 +225,7 @@ private:
     bool m_isMouseOverStartButton = false;
     int m_stageTitleFrame = 0;
     int m_goalMarkerMeshId = -1;
+    int m_goalArrowMeshId = -1;
     int m_stagePortalCooldownFrames = 0;
     std::wstring m_lastSelectId;
     std::wstring m_selectedStagePortalId;
