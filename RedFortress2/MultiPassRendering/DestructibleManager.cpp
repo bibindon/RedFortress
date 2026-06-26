@@ -118,6 +118,7 @@ void DestructibleManager::Clear()
         {
             if (obj.meshId >= 0)
             {
+                m_render->SetMeshMixDamageFlash(obj.meshId, false);
                 m_render->SetMeshMixEnabled(obj.meshId, true);
                 m_render->RemoveMeshMix(obj.meshId);
             }
@@ -147,11 +148,13 @@ void DestructibleManager::Update(NSRender::Render& render)
         if (obj.blinkFrames > 0)
         {
             --obj.blinkFrames;
-            const bool visible = ((obj.blinkFrames / kDestructibleBlinkInterval) % 2) == 0;
-            render.SetMeshMixEnabled(obj.meshId, visible);
+            const bool flash = ((obj.blinkFrames / kDestructibleBlinkInterval) % 2) == 0;
+            render.SetMeshMixEnabled(obj.meshId, true);
+            render.SetMeshMixDamageFlash(obj.meshId, flash);
 
             if (obj.blinkFrames == 0)
             {
+                render.SetMeshMixDamageFlash(obj.meshId, false);
                 if (obj.hp <= 0)
                 {
                     obj.isDead = true;
@@ -235,6 +238,8 @@ bool DestructibleManager::TryDamage(NSRender::Render& render,
         {
             o.hp -= damage;
             o.blinkFrames = kDestructibleBlinkFrames;
+            render.SetMeshMixEnabled(o.meshId, true);
+            render.SetMeshMixDamageFlash(o.meshId, true);
             return true;
         }
     }
