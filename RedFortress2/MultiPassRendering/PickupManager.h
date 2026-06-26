@@ -25,6 +25,9 @@ public:
 
     void ActivateStar(int playerMeshId);
     void AddSpeedLevel();
+    void SetSpeedLevel(int speedLevel);
+    int GetSpeedLevel() const;
+    int GetMaxSpeedLevel() const;
     bool IsStarActive() const;
     float GetSpeedMultiplier() const;
 
@@ -36,7 +39,7 @@ private:
     int m_starPowerupFrames = 0;
     int m_starMeshId = -1;
     int m_speedUpMeshId = -1;
-    int m_speedLevel = 0;
+    int m_speedLevel = 1;
     D3DXVECTOR3 m_starPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_speedUpPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 };

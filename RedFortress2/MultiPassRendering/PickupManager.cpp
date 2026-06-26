@@ -91,7 +91,7 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
 void PickupManager::ResetPlayerEffects()
 {
     m_starPowerupFrames = 0;
-    m_speedLevel = 0;
+    m_speedLevel = 1;
 }
 
 void PickupManager::UpdateTimers()
@@ -181,6 +181,33 @@ void PickupManager::AddSpeedLevel()
     }
 }
 
+void PickupManager::SetSpeedLevel(const int speedLevel)
+{
+    if (speedLevel < 1)
+    {
+        m_speedLevel = 1;
+        return;
+    }
+
+    if (speedLevel > kMaxSpeedLevel)
+    {
+        m_speedLevel = kMaxSpeedLevel;
+        return;
+    }
+
+    m_speedLevel = speedLevel;
+}
+
+int PickupManager::GetSpeedLevel() const
+{
+    return m_speedLevel;
+}
+
+int PickupManager::GetMaxSpeedLevel() const
+{
+    return kMaxSpeedLevel;
+}
+
 bool PickupManager::IsStarActive() const
 {
     return m_starPowerupFrames > 0;
@@ -188,7 +215,11 @@ bool PickupManager::IsStarActive() const
 
 float PickupManager::GetSpeedMultiplier() const
 {
-    return 0.5f + (1.5f / static_cast<float>(kMaxSpeedLevel)) * static_cast<float>(m_speedLevel);
+    const float minMultiplier = 0.5f;
+    const float maxMultiplier = 2.0f;
+    const float levelRange = static_cast<float>(kMaxSpeedLevel - 1);
+    const float speedLevelOffset = static_cast<float>(m_speedLevel - 1);
+    return minMultiplier + ((maxMultiplier - minMultiplier) / levelRange) * speedLevelOffset;
 }
 
 bool PickupManager::LoadPickupPosition(const std::wstring& csvPath, D3DXVECTOR3* outPosition) const

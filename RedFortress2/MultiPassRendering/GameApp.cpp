@@ -975,6 +975,7 @@ void GameApp::Run()
                 if (!isVisible)
                 {
                     PopulateStageCombo(m_settingsDialog);
+                    PopulateSpeedLevelCombo(m_settingsDialog);
                 }
                 ShowWindow(m_settingsDialog, isVisible ? SW_HIDE : SW_SHOW);
                 if (!isVisible)
@@ -2070,6 +2071,63 @@ void GameApp::PopulateUnlockStageCombo(HWND hDlg)
     SendMessage(combo, CB_SETCURSEL, static_cast<WPARAM>(lastUnlockedIndex), 0);
 }
 
+void GameApp::PopulateSpeedLevelCombo(HWND hDlg)
+{
+    HWND combo = GetDlgItem(hDlg, IDC_COMBO_SPEED_LEVEL);
+    if (combo == NULL)
+    {
+        return;
+    }
+
+    SendMessage(combo, CB_RESETCONTENT, 0, 0);
+
+    const int maxSpeedLevel = m_pickupManager.GetMaxSpeedLevel();
+    for (int speedLevel = 1; speedLevel <= maxSpeedLevel; ++speedLevel)
+    {
+        const std::wstring text = L"Lv " + std::to_wstring(speedLevel);
+        const LRESULT itemIndex = SendMessage(combo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(text.c_str()));
+        if (itemIndex >= 0)
+        {
+            SendMessage(combo, CB_SETITEMDATA, static_cast<WPARAM>(itemIndex), static_cast<LPARAM>(speedLevel));
+        }
+    }
+
+    int currentSpeedLevel = m_pickupManager.GetSpeedLevel();
+    if (currentSpeedLevel < 1)
+    {
+        currentSpeedLevel = 1;
+    }
+    if (currentSpeedLevel > maxSpeedLevel)
+    {
+        currentSpeedLevel = maxSpeedLevel;
+    }
+
+    SendMessage(combo, CB_SETCURSEL, static_cast<WPARAM>(currentSpeedLevel - 1), 0);
+}
+
+void GameApp::ApplySelectedSpeedLevel(HWND hDlg)
+{
+    HWND combo = GetDlgItem(hDlg, IDC_COMBO_SPEED_LEVEL);
+    if (combo == NULL)
+    {
+        return;
+    }
+
+    const LRESULT selectedIndex = SendMessage(combo, CB_GETCURSEL, 0, 0);
+    if (selectedIndex == CB_ERR)
+    {
+        return;
+    }
+
+    const LRESULT speedLevel = SendMessage(combo, CB_GETITEMDATA, static_cast<WPARAM>(selectedIndex), 0);
+    if (speedLevel == CB_ERR)
+    {
+        return;
+    }
+
+    m_pickupManager.SetSpeedLevel(static_cast<int>(speedLevel));
+}
+
 void GameApp::UnlockStagesUpToSelected(HWND hDlg)
 {
     HWND combo = GetDlgItem(hDlg, IDC_COMBO_UNLOCK_STAGE);
@@ -2251,6 +2309,7 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
         SetDlgItemText(hDlg, IDC_EDIT_CAMERA_DIST, std::to_wstring(m_cameraDistance).c_str());
         PopulateStageCombo(hDlg);
         PopulateUnlockStageCombo(hDlg);
+        PopulateSpeedLevelCombo(hDlg);
         m_stageEditor.Initialize(&m_render, &m_stageManager, &m_enemyManager, &m_playerMover, &m_playerYaw);
         m_stageEditor.OnInitDialog(hDlg);
         return TRUE;
@@ -2307,6 +2366,13 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
 
         case IDC_BUTTON_UNLOCK_STAGES:
             UnlockStagesUpToSelected(hDlg);
+            return TRUE;
+
+        case IDC_COMBO_SPEED_LEVEL:
+            if (HIWORD(wParam) == CBN_SELCHANGE)
+            {
+                ApplySelectedSpeedLevel(hDlg);
+            }
             return TRUE;
 
         case IDC_BUTTON_SELECT_X:

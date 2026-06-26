@@ -83,6 +83,8 @@ private:
     void PopulateStageCombo(HWND hDlg);
     std::wstring BuildStageComboText(const StageManager::StageData& stage) const;
     void PopulateUnlockStageCombo(HWND hDlg);
+    void PopulateSpeedLevelCombo(HWND hDlg);
+    void ApplySelectedSpeedLevel(HWND hDlg);
     void UnlockStagesUpToSelected(HWND hDlg);
     bool StartStageByIndex(std::size_t stageIndex);
     bool StartStageByIndexImmediate(std::size_t stageIndex);
