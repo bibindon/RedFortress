@@ -6,8 +6,12 @@ void StageManager::Initialize()
     m_currentStageIndex = 0;
 
     AddStage(L"1-1", 1, L"Stage 1-1", L"stage1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
-    AddStage(L"1-2", 2, L"Stage 1-2", L"stage2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"1-3", 3, L"Stage 1-3", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"1-2", 2, L"Stage 1-2", L"stage2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.night.csv");
+    AddStage(L"1-3", 3, L"Stage 1-3", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.evening.csv");
     AddStage(L"1-4", 4, L"Stage 1-4", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
     AddStage(L"1-5", 5, L"Stage 1-5", L"stage17", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
     AddStage(L"1-6", 6, L"Stage 1-6", L"stage18", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
@@ -67,7 +71,8 @@ void StageManager::AddStage(const std::wstring& id,
                             const D3DXVECTOR3& clearPosition,
                             bool useFixedCamera,
                             const D3DXVECTOR3& fixedCameraPos,
-                            const D3DXVECTOR3& fixedCameraLookAt)
+                            const D3DXVECTOR3& fixedCameraLookAt,
+                            const std::wstring& renderSettingsCsvPath)
 {
     const std::wstring basePath = L"res\\model\\" + folderName + L"\\";
 
@@ -85,6 +90,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.speedUpCsvPath = basePath + L"SpeedUps.csv";
     stage.destructibleCsvPath = basePath + L"Destructibles.csv";
     stage.dashBoosterCsvPath = basePath + L"DashBoosters.csv";
+    stage.renderSettingsCsvPath = renderSettingsCsvPath;
     stage.playerStartPosition = playerStartPosition;
     stage.clearPosition = clearPosition;
     stage.clearDistance = 2.0f;

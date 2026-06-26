@@ -2689,6 +2689,11 @@ void GameApp::LoadCurrentStageObjects()
 {
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
 
+    const std::wstring renderSettingsPath = stage.renderSettingsCsvPath.empty()
+        ? L"res\\RenderSettings.csv"
+        : stage.renderSettingsCsvPath;
+    m_render.ReloadSettingsCsv(renderSettingsPath);
+
     m_useFixedCamera = stage.useFixedCamera;
     m_fixedCameraPos = stage.fixedCameraPos;
     m_fixedCameraLookAt = stage.fixedCameraLookAt;

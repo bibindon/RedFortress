@@ -22,6 +22,7 @@ public:
         std::wstring speedUpCsvPath;
         std::wstring destructibleCsvPath;
         std::wstring dashBoosterCsvPath;
+        std::wstring renderSettingsCsvPath;
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 clearPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         float clearDistance = 1.0f;
@@ -56,7 +57,8 @@ private:
                   const D3DXVECTOR3& clearPosition,
                   bool useFixedCamera = false,
                   const D3DXVECTOR3& fixedCameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                  const D3DXVECTOR3& fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+                  const D3DXVECTOR3& fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                  const std::wstring& renderSettingsCsvPath = L"");
 
     std::vector<StageData> m_stages;
     std::size_t m_currentStageIndex = 0;
