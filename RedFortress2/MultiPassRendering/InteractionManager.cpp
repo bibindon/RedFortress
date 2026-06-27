@@ -27,9 +27,17 @@ void InteractionManager::LoadForStage(const std::wstring& csvPath)
     }
 
     std::vector<std::vector<std::wstring>> csvData;
+    const std::wstring fullCsvPath = NSRender::Util::GetExeDir() + csvPath;
+    std::wifstream file(fullCsvPath);
+    if (!file.is_open())
+    {
+        return;
+    }
+    file.close();
+
     try
     {
-        csvData = csv::Read(NSRender::Util::GetExeDir() + csvPath);
+        csvData = csv::Read(fullCsvPath);
     }
     catch (...)
     {
