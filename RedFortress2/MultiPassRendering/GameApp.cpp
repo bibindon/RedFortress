@@ -82,6 +82,18 @@ namespace
     {
         return enemy.GetPosition() + D3DXVECTOR3(0.0f, kEnemyAttackTargetHeight, 0.0f);
     }
+
+    void PlaceStageWeather(NSRender::Render& render, StageManager::StageWeather weather, const D3DXVECTOR3& origin)
+    {
+        if (weather == StageManager::StageWeather::Rain)
+        {
+            render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Rain, origin);
+        }
+        else if (weather == StageManager::StageWeather::Fog)
+        {
+            render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Fog, origin);
+        }
+    }
 }
 
 GameApp& GameApp::Instance()
@@ -280,7 +292,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     SoundLib::SoundLib::Initialize(m_hWnd);
     SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
     GameAudio::Initialize();
-    GameAudio::PlayTitleMusic();
+    GameAudio::PlayLoadingEnvironment();
 
     m_render.SetShowFPS(false);
     m_render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
@@ -458,6 +470,7 @@ void GameApp::Run()
 
         if (m_gameState == GameState::Loading)
         {
+            GameAudio::PlayLoadingEnvironment();
             m_render.Draw();
 
             if (m_render.IsAllMeshLoaded())
@@ -3026,6 +3039,7 @@ void GameApp::LoadCurrentStageObjects()
         m_render.StopMeshMixSkinAnimBlink(m_playerMeshId);
         m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerIdleAnimName);
     }
+    m_render.ClearParticleEffect();
     m_player.ResetHp();
     m_hpBar.Reset();
     m_enemyManager.LoadForStage(m_render, stage.enemyCsvPath);
@@ -3053,6 +3067,7 @@ void GameApp::LoadCurrentStageObjects()
         SyncStageSelectPlayerToPortal(true);
     }
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
+    PlaceStageWeather(m_render, stage.weather, stage.playerStartPosition);
 }
 
 void GameApp::DrawTitleScreen()

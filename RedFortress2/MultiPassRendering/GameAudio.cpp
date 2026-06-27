@@ -7,6 +7,8 @@ namespace
 const std::wstring kTitleBgm = L"res\\sound\\title.wav";
 const std::wstring kEndingBgm = L"res\\sound\\ending.wav";
 const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
+const std::wstring kStageSelectBgm = L"res\\sound\\stageselect1.wav";
+const std::wstring kStageSelect2Bgm = L"res\\sound\\stageselect2.wav";
 const std::wstring kWorld1Bgm = L"res\\sound\\world1.wav";
 const std::wstring kField2Bgm = L"res\\sound\\field2.wav";
 const std::wstring kField3Bgm = L"res\\sound\\field3.wav";
@@ -52,6 +54,15 @@ void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
     g_currentEnvironment = path;
 }
 
+void StopBgmIfPlaying()
+{
+    if (!g_currentBgm.empty())
+    {
+        SoundLib::SoundLib::StopBgm();
+        g_currentBgm.clear();
+    }
+}
+
 void StopEnvironment()
 {
     if (g_environmentId >= 0)
@@ -89,8 +100,13 @@ void Initialize()
 void Finalize()
 {
     StopEnvironment();
-    SoundLib::SoundLib::StopBgm();
-    g_currentBgm.clear();
+    StopBgmIfPlaying();
+}
+
+void PlayLoadingEnvironment()
+{
+    StopBgmIfPlaying();
+    PlayEnvironmentIfChanged(kForestEnvironment, 14);
 }
 
 void PlayTitleMusic()
@@ -110,7 +126,17 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber)
     std::wstring fieldBgm = kWorld1Bgm;
     std::wstring environment = kForestEnvironment;
     int environmentVolume = 18;
-    if (stageId == L"base")
+    if (stageId == L"select2")
+    {
+        fieldBgm = kStageSelect2Bgm;
+        environmentVolume = 14;
+    }
+    else if (stageId.length() >= 6 && stageId.substr(0, 6) == L"select")
+    {
+        fieldBgm = kStageSelectBgm;
+        environmentVolume = 14;
+    }
+    else if (stageId == L"base")
     {
         fieldBgm = kBaseBgm;
         environmentVolume = 14;

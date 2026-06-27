@@ -6,6 +6,7 @@ namespace GameAudio
 {
 void Initialize();
 void Finalize();
+void PlayLoadingEnvironment();
 void PlayTitleMusic();
 void PlayEndingMusic();
 void UpdateStageMusic(const std::wstring& stageId, int stageNumber);

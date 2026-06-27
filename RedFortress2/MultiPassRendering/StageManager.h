@@ -7,6 +7,13 @@
 class StageManager
 {
 public:
+    enum class StageWeather
+    {
+        None,
+        Rain,
+        Fog
+    };
+
     struct StageData
     {
         std::wstring id;
@@ -23,6 +30,7 @@ public:
         std::wstring destructibleCsvPath;
         std::wstring dashBoosterCsvPath;
         std::wstring renderSettingsCsvPath;
+        StageWeather weather = StageWeather::None;
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 clearPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         float clearDistance = 1.0f;
@@ -58,7 +66,8 @@ private:
                   bool useFixedCamera = false,
                   const D3DXVECTOR3& fixedCameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                   const D3DXVECTOR3& fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                  const std::wstring& renderSettingsCsvPath = L"");
+                  const std::wstring& renderSettingsCsvPath = L"",
+                  StageWeather weather = StageWeather::None);
 
     std::vector<StageData> m_stages;
     std::size_t m_currentStageIndex = 0;
