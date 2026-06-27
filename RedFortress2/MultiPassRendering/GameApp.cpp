@@ -76,6 +76,12 @@ namespace
     const int kBusterDamage = 3;
     const float kBusterHitRadius = 0.5f;
     const int kBusterCooldown = 5;
+    const float kEnemyAttackTargetHeight = 1.0f;
+
+    D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
+    {
+        return enemy.GetPosition() + D3DXVECTOR3(0.0f, kEnemyAttackTargetHeight, 0.0f);
+    }
 }
 
 GameApp& GameApp::Instance()
@@ -1467,13 +1473,15 @@ Enemy* GameApp::FindEnemyInAttackRange(const PlayerAttackDefinition& attackDefin
             continue;
         }
 
-        D3DXVECTOR3 dir = enemy.GetPosition() - playerPos;
+        const D3DXVECTOR3 targetPos = GetEnemyAttackTargetPosition(enemy);
+        D3DXVECTOR3 dir = targetPos - playerPos;
         const float dist = D3DXVec3Length(&dir);
         if (dist > attackDefinition.range)
         {
             continue;
         }
 
+        dir.y = 0.0f;
         if (D3DXVec3LengthSq(&dir) > 0.0001f)
         {
             D3DXVec3Normalize(&dir, &dir);
@@ -3187,7 +3195,7 @@ void GameApp::UpdateBombs()
                     continue;
                 }
 
-                D3DXVECTOR3 dir = enemy.GetPosition() - bombPos;
+                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(enemy) - bombPos;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBombExplosionRadius)
                 {
@@ -3295,7 +3303,7 @@ void GameApp::UpdateBusters()
                     continue;
                 }
 
-                D3DXVECTOR3 dir = enemy.GetPosition() - it->position;
+                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(enemy) - it->position;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBusterHitRadius)
                 {
