@@ -9,7 +9,7 @@ void Finalize();
 void PlayLoadingEnvironment();
 void PlayTitleMusic();
 void PlayEndingMusic();
-void UpdateStageMusic(const std::wstring& stageId, int stageNumber);
+void UpdateStageMusic(const std::wstring& stageId, int stageNumber, bool useRainEnvironment);
 void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();

@@ -1,5 +1,5 @@
 SaturateEnable,1
-SaturateLevel,1.0
+SaturateLevel,0.7
 ,
 HalfLambertShadowSaturation,2.0
 HalfLambertShadowDarkness,0.75

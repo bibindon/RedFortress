@@ -14,19 +14,19 @@ void StageManager::Initialize()
              L"res\\RenderSettings.evening.csv");
     AddStage(L"1-4", 4, L"Stage 1-4", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"", StageWeather::Rain);
+             L"res\\RenderSettings.rain.csv", StageWeather::Rain);
     AddStage(L"1-5", 5, L"Stage 1-5", L"stage17", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.night-rain.csv", StageWeather::Rain);
     AddStage(L"1-6", 6, L"Stage 1-6", L"stage18", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"res\\RenderSettings.evening.csv", StageWeather::Rain);
+             L"res\\RenderSettings.evening-rain.csv", StageWeather::Rain);
     AddStage(L"1-7", 7, L"Stage 1-7", L"stage19", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog);
     AddStage(L"1-8", 8, L"Stage 1-8", L"stage20", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"res\\RenderSettings.night.csv", StageWeather::Fog);
+             L"res\\RenderSettings.night-fog.csv", StageWeather::Fog);
 
     AddStage(L"2-1", 9, L"Stage 2-1", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),

@@ -89,10 +89,6 @@ namespace
         {
             render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Rain, origin);
         }
-        else if (weather == StageManager::StageWeather::Fog)
-        {
-            render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Fog, origin);
-        }
     }
 }
 
@@ -440,7 +436,8 @@ void GameApp::Run()
         else if (m_gameState == GameState::Playing)
         {
             const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
-            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number);
+            const bool useRainEnvironment = audioStage.weather == StageManager::StageWeather::Rain;
+            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, useRainEnvironment);
         }
         else if (m_gameState == GameState::Ending || m_gameState == GameState::EndingFin)
         {

@@ -121,11 +121,17 @@ void PlayEndingMusic()
     PlayBgmIfChanged(kEndingBgm, 60);
 }
 
-void UpdateStageMusic(const std::wstring& stageId, const int stageNumber)
+void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment)
 {
     std::wstring fieldBgm = kWorld1Bgm;
     std::wstring environment = kForestEnvironment;
     int environmentVolume = 18;
+    if (useRainEnvironment)
+    {
+        environment = kRainEnvironment;
+        environmentVolume = 18;
+    }
+
     if (stageId == L"select2")
     {
         fieldBgm = kStageSelect2Bgm;
