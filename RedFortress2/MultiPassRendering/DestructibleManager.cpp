@@ -201,7 +201,6 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
         }
 
         D3DXVECTOR3 dir = obj.position - playerPos;
-        dir.y = 0.0f;
         const float dist = D3DXVec3Length(&dir);
         if (dist > range)
         {

@@ -1465,7 +1465,6 @@ Enemy* GameApp::FindEnemyInAttackRange(const PlayerAttackDefinition& attackDefin
         }
 
         D3DXVECTOR3 dir = enemy.GetPosition() - playerPos;
-        dir.y = 0.0f;
         const float dist = D3DXVec3Length(&dir);
         if (dist > attackDefinition.range)
         {
@@ -3186,7 +3185,6 @@ void GameApp::UpdateBombs()
                 }
 
                 D3DXVECTOR3 dir = enemy.GetPosition() - bombPos;
-                dir.y = 0.0f;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBombExplosionRadius)
                 {
@@ -3196,22 +3194,22 @@ void GameApp::UpdateBombs()
                 }
             }
 
-            D3DXVECTOR3 playerDir = m_playerMover.GetPosition() - bombPos;
-            playerDir.y = 0.0f;
+            const D3DXVECTOR3 playerDir = m_playerMover.GetPosition() - bombPos;
             const float playerDist = D3DXVec3Length(&playerDir);
             if (playerDist <= kBombExplosionRadius)
             {
                 DamagePlayerHp(kBombExplosionDamage);
-                if (D3DXVec3LengthSq(&playerDir) > 0.0001f)
+                D3DXVECTOR3 playerKnockbackDir(playerDir.x, 0.0f, playerDir.z);
+                if (D3DXVec3LengthSq(&playerKnockbackDir) > 0.0001f)
                 {
-                    D3DXVec3Normalize(&playerDir, &playerDir);
+                    D3DXVec3Normalize(&playerKnockbackDir, &playerKnockbackDir);
                 }
                 else
                 {
-                    playerDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+                    playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
                 }
                 m_playerKnockbackFrames = kBombKnockbackFrames;
-                m_playerKnockbackDir = playerDir;
+                m_playerKnockbackDir = playerKnockbackDir;
             }
 
             it = m_activeBombs.erase(it);
@@ -3295,7 +3293,6 @@ void GameApp::UpdateBusters()
                 }
 
                 D3DXVECTOR3 dir = enemy.GetPosition() - it->position;
-                dir.y = 0.0f;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBusterHitRadius)
                 {
@@ -3318,7 +3315,6 @@ void GameApp::UpdateBusters()
                     }
 
                     D3DXVECTOR3 dir = destructible.position - it->position;
-                    dir.y = 0.0f;
                     const float dist = D3DXVec3Length(&dir);
                     if (dist <= kBusterHitRadius)
                     {
