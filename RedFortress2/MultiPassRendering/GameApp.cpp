@@ -325,10 +325,10 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
                                 initialStage.clearPosition.y - 0.5f,
                                initialStage.clearPosition.z);
-    m_goalMarkerMeshId = m_render.AddMesh(L"res\\model\\cube_red.x",
-                                           goalPos,
-                                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                           1.0f);
+    m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
+                                              goalPos,
+                                              D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                              1.0f);
 
     InputDevice::Initialize(m_hInstance, m_hWnd);
     m_inventoryManager.Initialize();
@@ -2945,7 +2945,7 @@ void GameApp::LoadCurrentStageObjects()
 
     if (m_goalMarkerMeshId >= 0)
     {
-        m_render.RemoveMesh(m_goalMarkerMeshId);
+        m_render.RemoveMeshMix(m_goalMarkerMeshId);
         m_goalMarkerMeshId = -1;
     }
 
@@ -2968,10 +2968,10 @@ void GameApp::LoadCurrentStageObjects()
     m_render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
 
     const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 0.5f, stage.clearPosition.z);
-    m_goalMarkerMeshId = m_render.AddMesh(L"res\\model\\cube_red.x",
-                                          goalPos,
-                                          D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                          1.0f);
+    m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
+                                             goalPos,
+                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                             1.0f);
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);

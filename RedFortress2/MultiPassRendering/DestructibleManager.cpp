@@ -127,7 +127,7 @@ void DestructibleManager::Clear()
         {
             if (cube.meshId >= 0)
             {
-                m_render->RemoveMesh(cube.meshId);
+                m_render->RemoveMeshMix(cube.meshId);
             }
         }
     }
@@ -277,7 +277,7 @@ void DestructibleManager::RemoveDroppedRedCube(NSRender::Render& render, const s
     DroppedRedCube& cube = m_droppedRedCubes.at(index);
     if (cube.meshId >= 0)
     {
-        render.RemoveMesh(cube.meshId);
+        render.RemoveMeshMix(cube.meshId);
         cube.meshId = -1;
     }
 }
@@ -312,10 +312,10 @@ void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR
     DroppedRedCube cube;
     cube.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
     cube.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
-    cube.meshId = render.AddMesh(kRedCubeModelPath,
-                                  cube.position,
-                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                  0.5f);
+    cube.meshId = render.AddMeshMix(kRedCubeModelPath,
+                                     cube.position,
+                                     D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                     0.5f);
     if (cube.meshId >= 0)
     {
         m_droppedRedCubes.push_back(cube);
