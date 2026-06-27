@@ -94,6 +94,11 @@ void PickupManager::ResetPlayerEffects()
     m_speedLevel = 1;
 }
 
+void PickupManager::ResetTemporaryEffects()
+{
+    m_starPowerupFrames = 0;
+}
+
 void PickupManager::UpdateTimers()
 {
     if (m_starPowerupFrames > 0)

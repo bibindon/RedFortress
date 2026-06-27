@@ -17,6 +17,7 @@ public:
     void Initialize(NSRender::Render& render, InventoryManager& inventory);
     void Clear();
     void LoadForStage(const std::wstring& starCsvPath, const std::wstring& speedUpCsvPath);
+    void ResetTemporaryEffects();
     void ResetPlayerEffects();
     void UpdateTimers();
     void UpdatePickups(const D3DXVECTOR3& playerPosition,

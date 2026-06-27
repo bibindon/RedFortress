@@ -2995,7 +2995,7 @@ void GameApp::LoadCurrentStageObjects()
     m_playerAnimState = PlayerAnimState::Idle;
     m_damagePopupManager.Clear();
     m_playerInvincibleFrames = 0;
-    m_pickupManager.ResetPlayerEffects();
+    m_pickupManager.ResetTemporaryEffects();
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
     m_respawnCameraDelayFrames = 0;
