@@ -269,6 +269,10 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.StartLoadingScreen();
     m_render.SetLoadingScreenProgress(0);
     m_render.Draw();
+    SoundLib::SoundLib::Initialize(m_hWnd);
+    SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
+    GameAudio::Initialize();
+    GameAudio::PlayTitleMusic();
 
     m_render.SetShowFPS(false);
     m_render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
@@ -338,9 +342,6 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
     m_render.SetLoadingScreenProgress(70);
     m_render.Draw();
-    SoundLib::SoundLib::Initialize(m_hWnd);
-    SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
-    GameAudio::Initialize();
     m_pickupManager.Initialize(m_render, m_inventoryManager);
     m_pickupManager.LoadForStage(initialStage.starCsvPath, initialStage.speedUpCsvPath);
     m_dashBoosterManager.Initialize(m_render);
