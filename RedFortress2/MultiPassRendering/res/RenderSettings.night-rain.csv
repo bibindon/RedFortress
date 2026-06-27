@@ -38,7 +38,7 @@ ShadowIntensity,0.0
 ShadowCoverage,0.1
 ShadowCoverageFar,0.40
 ShadowBias,0.001
-ShadowSaturationBoost,0.5
+ShadowSaturationBoost,0.0
 ShadowPcfTapCount,3
 ShadowCompositeTapCount,3
 ,
