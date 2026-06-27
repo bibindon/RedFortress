@@ -76,7 +76,11 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
         m_starMeshId = m_render->AddMeshMix(kStarModelPath,
                                             m_starPosition,
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                            1.0f);
+                                            1.0f,
+                                            -1.0f,
+                                            false,
+                                            false,
+                                            false);
     }
 
     if (LoadPickupPosition(speedUpCsvPath, &m_speedUpPosition))
@@ -84,7 +88,11 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
         m_speedUpMeshId = m_render->AddMeshMix(kSpeedUpModelPath,
                                                m_speedUpPosition,
                                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                               kSpeedUpScale);
+                                               kSpeedUpScale,
+                                               -1.0f,
+                                               false,
+                                               false,
+                                               false);
     }
 }
 

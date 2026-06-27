@@ -315,7 +315,11 @@ void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR
     cube.meshId = render.AddMeshMix(kRedCubeModelPath,
                                      cube.position,
                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                     0.5f);
+                                     0.5f,
+                                     -1.0f,
+                                     false,
+                                     false,
+                                     false);
     if (cube.meshId >= 0)
     {
         m_droppedRedCubes.push_back(cube);

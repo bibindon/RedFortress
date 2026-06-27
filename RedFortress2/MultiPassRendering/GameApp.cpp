@@ -328,7 +328,11 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
                                               goalPos,
                                               D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                              1.0f);
+                                              1.0f,
+                                              -1.0f,
+                                              false,
+                                              false,
+                                              false);
 
     InputDevice::Initialize(m_hInstance, m_hWnd);
     m_inventoryManager.Initialize();
@@ -2971,7 +2975,11 @@ void GameApp::LoadCurrentStageObjects()
     m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
                                              goalPos,
                                              D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                             1.0f);
+                                             1.0f,
+                                             -1.0f,
+                                             false,
+                                             false,
+                                             false);
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);

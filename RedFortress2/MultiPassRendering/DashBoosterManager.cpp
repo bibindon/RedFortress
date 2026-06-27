@@ -79,7 +79,11 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
         booster.renderId = m_render->AddMeshMix(NSRender::Util::GetExeDir() + kDashBoosterModelPath,
                                                 booster.position,
                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                booster.scale);
+                                                booster.scale,
+                                                -1.0f,
+                                                false,
+                                                false,
+                                                false);
         m_boosters.push_back(booster);
     }
 }

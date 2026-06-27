@@ -89,7 +89,11 @@ void CollectibleManager::LoadForStage(const std::wstring& csvPath)
         collectible.renderId = m_render->AddMeshMix(NSRender::Util::GetExeDir() + kCollectibleModelPath,
                                                      collectible.position,
                                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                     collectible.scale);
+                                                     collectible.scale,
+                                                     -1.0f,
+                                                     false,
+                                                     false,
+                                                     false);
         m_collectibles.push_back(collectible);
     }
 }
