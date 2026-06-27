@@ -4,6 +4,7 @@
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
+#include <fstream>
 
 namespace
 {
@@ -25,9 +26,17 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
     }
 
     std::vector<std::vector<std::wstring>> csvData;
+    const std::wstring fullCsvPath = NSRender::Util::GetExeDir() + csvPath;
+    std::wifstream file(fullCsvPath);
+    if (!file.is_open())
+    {
+        return;
+    }
+    file.close();
+
     try
     {
-        csvData = csv::Read(NSRender::Util::GetExeDir() + csvPath);
+        csvData = csv::Read(fullCsvPath);
     }
     catch (...)
     {
