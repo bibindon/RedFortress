@@ -86,10 +86,10 @@ void CollectibleManager::LoadForStage(const std::wstring& csvPath)
             continue;
         }
 
-        collectible.renderId = m_render->AddMesh(NSRender::Util::GetExeDir() + kCollectibleModelPath,
-                                                  collectible.position,
-                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                  collectible.scale);
+        collectible.renderId = m_render->AddMeshMix(NSRender::Util::GetExeDir() + kCollectibleModelPath,
+                                                     collectible.position,
+                                                     D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                     collectible.scale);
         m_collectibles.push_back(collectible);
     }
 }
@@ -130,7 +130,7 @@ void CollectibleManager::Collect(Collectible& collectible)
 
     m_inventory->Save();
     GameAudio::PlayItemGet();
-    m_render->RemoveMesh(collectible.renderId);
+    m_render->RemoveMeshMix(collectible.renderId);
     collectible.renderId = -1;
 }
 
@@ -142,7 +142,7 @@ void CollectibleManager::Clear()
         {
             if (collectible.renderId >= 0)
             {
-                m_render->RemoveMesh(collectible.renderId);
+                m_render->RemoveMeshMix(collectible.renderId);
                 collectible.renderId = -1;
             }
         }

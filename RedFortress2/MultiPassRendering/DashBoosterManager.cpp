@@ -76,10 +76,10 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
             booster.direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
         }
 
-        booster.renderId = m_render->AddMesh(NSRender::Util::GetExeDir() + kDashBoosterModelPath,
-                                             booster.position,
-                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                             booster.scale);
+        booster.renderId = m_render->AddMeshMix(NSRender::Util::GetExeDir() + kDashBoosterModelPath,
+                                                booster.position,
+                                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                booster.scale);
         m_boosters.push_back(booster);
     }
 }
@@ -118,7 +118,7 @@ void DashBoosterManager::Clear()
         {
             if (booster.renderId >= 0)
             {
-                m_render->RemoveMesh(booster.renderId);
+                m_render->RemoveMeshMix(booster.renderId);
                 booster.renderId = -1;
             }
         }

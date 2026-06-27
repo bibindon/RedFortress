@@ -51,13 +51,13 @@ void PickupManager::Clear()
     {
         if (m_starMeshId >= 0)
         {
-            m_render->RemoveMesh(m_starMeshId);
+            m_render->RemoveMeshMix(m_starMeshId);
             m_starMeshId = -1;
         }
 
         if (m_speedUpMeshId >= 0)
         {
-            m_render->RemoveMesh(m_speedUpMeshId);
+            m_render->RemoveMeshMix(m_speedUpMeshId);
             m_speedUpMeshId = -1;
         }
     }
@@ -73,18 +73,18 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
 
     if (LoadPickupPosition(starCsvPath, &m_starPosition))
     {
-        m_starMeshId = m_render->AddMesh(kStarModelPath,
-                                         m_starPosition,
-                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                         1.0f);
+        m_starMeshId = m_render->AddMeshMix(kStarModelPath,
+                                            m_starPosition,
+                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                            1.0f);
     }
 
     if (LoadPickupPosition(speedUpCsvPath, &m_speedUpPosition))
     {
-        m_speedUpMeshId = m_render->AddMesh(kSpeedUpModelPath,
-                                            m_speedUpPosition,
-                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                            kSpeedUpScale);
+        m_speedUpMeshId = m_render->AddMeshMix(kSpeedUpModelPath,
+                                               m_speedUpPosition,
+                                               D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                               kSpeedUpScale);
     }
 }
 
@@ -121,7 +121,7 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         const D3DXVECTOR3 diff = playerPosition - m_starPosition;
         if (D3DXVec3Length(&diff) <= kStarPickupDistance)
         {
-            m_render->RemoveMesh(m_starMeshId);
+            m_render->RemoveMeshMix(m_starMeshId);
             m_starMeshId = -1;
             ActivateStar(playerMeshId);
         }
@@ -132,7 +132,7 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         const D3DXVECTOR3 diff = playerPosition - m_speedUpPosition;
         if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
         {
-            m_render->RemoveMesh(m_speedUpMeshId);
+            m_render->RemoveMeshMix(m_speedUpMeshId);
             m_speedUpMeshId = -1;
             AddSpeedLevel();
         }
