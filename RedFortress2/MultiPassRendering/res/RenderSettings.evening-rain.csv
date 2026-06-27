@@ -20,7 +20,7 @@ MotionBlurCameraQuality,4
 MotionBlurCameraMaxBlurPixels,24
 MotionBlurCameraSampleCount,13
 CameraNear,0.1
-CameraFar,30000.0
+CameraFar,300.0
 RenderQuality,MIDDLE
 ,
 SSSEnable,0
@@ -29,8 +29,9 @@ SSSColorR,1.0
 SSSColorG,1.0
 SSSColorB,0.5
 ,
-FogEnable,0
-FogIntensity,1.0
+FogEnable,1
+FogIntensity,5.0
+FogDensity,5.0
 ,
 DepthBufferShadowEnable,0
 ShadowIntensity,0.25
@@ -118,7 +119,7 @@ GodRayLightPosY,10.0
 GodRayLightPosZ,100.0
 ,
 CameraNear,0.1
-CameraFar,30000.0
+CameraFar,300.0
 CameraHorizontalFov,90.0
 CameraPosX,0.0
 CameraPosY,3.0
