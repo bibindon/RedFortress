@@ -7,7 +7,7 @@ namespace
 const std::wstring kTitleBgm = L"res\\sound\\title.wav";
 const std::wstring kEndingBgm = L"res\\sound\\ending.wav";
 const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
-const std::wstring kField1Bgm = L"res\\sound\\field1.wav";
+const std::wstring kWorld1Bgm = L"res\\sound\\world1.wav";
 const std::wstring kField2Bgm = L"res\\sound\\field2.wav";
 const std::wstring kField3Bgm = L"res\\sound\\field3.wav";
 const std::wstring kForestEnvironment = L"res\\sound\\ENV_forest.wav";
@@ -107,7 +107,7 @@ void PlayEndingMusic()
 
 void UpdateStageMusic(const std::wstring& stageId, const int stageNumber)
 {
-    std::wstring fieldBgm = kField1Bgm;
+    std::wstring fieldBgm = kWorld1Bgm;
     std::wstring environment = kForestEnvironment;
     int environmentVolume = 18;
     if (stageId == L"base")
