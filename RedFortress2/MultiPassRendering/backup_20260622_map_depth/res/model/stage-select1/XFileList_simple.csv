@@ -1,9 +1,0 @@
-ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
-2,../plateField.x,0,0,0,0,0,0,1,normal
-26,../Skydome3D/Skydome.blend.x,0,0.01,0,0,0,0,1,normal
-30,../cube_red.x,-3,1,-13,0,0,0,1,normal
-31,../cube_red.x,3,1.01,-9,0,0,0,1,normal
-32,../cube_red.x,-2,1.02,-3,0,0,0,1,normal
-33,../cube_red.x,3,1.03,3,0,0,0,1,normal
-34,../cube_red.x,-3,1.04,9,0,0,0,1,normal
-35,../cube_red.x,3,1.05,13,0,0,0,1,normal

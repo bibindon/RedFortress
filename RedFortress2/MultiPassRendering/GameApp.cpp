@@ -69,6 +69,8 @@ namespace
     const int kBombBlinkStartFrames = 60;
     const int kBombBlinkInterval = 4;
     const std::wstring kBusterModelPath = L"res\\model\\Buster\\buster.x";
+    const float kBusterSpawnHeight = 1.0f;
+    const float kBusterScale = 0.5f;
     const float kBusterSpeed = 10.0f;
     const float kBusterMaxDistance = 10.0f;
     const int kBusterDamage = 3;
@@ -1272,7 +1274,8 @@ void GameApp::UpdatePlayerByInput()
                 if (m_playerAttackController.TryStart(requestedAttackType))
                 {
                     const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
-                    const D3DXVECTOR3 spawnPos = m_playerMover.GetPosition() + forward * 1.0f;
+                    D3DXVECTOR3 spawnPos = m_playerMover.GetPosition() + forward * 1.0f;
+                    spawnPos.y += kBusterSpawnHeight;
                     SpawnBuster(spawnPos, forward);
                     m_busterCooldownFrames = kBusterCooldown;
                     GameAudio::PlayPlayerAttack();
@@ -3256,7 +3259,7 @@ void GameApp::SpawnBuster(const D3DXVECTOR3& position, const D3DXVECTOR3& direct
     buster.meshId = m_render.AddMeshMix(kBusterModelPath,
                                          position,
                                          D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                         1.0f,
+                                         kBusterScale,
                                          -1.f,
                                          false,
                                          false,
