@@ -215,8 +215,8 @@ bool PickupManager::IsStarActive() const
 
 float PickupManager::GetRunSpeedMultiplier() const
 {
-    const float minMultiplier = 0.8f;
-    const float maxMultiplier = 1.6f;
+    const float minMultiplier = 1.2f;
+    const float maxMultiplier = 2.0f;
     const float levelRange = static_cast<float>(kMaxSpeedLevel - 1);
     const float speedLevelOffset = static_cast<float>(m_speedLevel - 1);
     return minMultiplier + ((maxMultiplier - minMultiplier) / levelRange) * speedLevelOffset;
