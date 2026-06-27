@@ -3168,6 +3168,8 @@ void GameApp::UpdateBombs()
                 m_render.RemoveMeshMix(it->meshId);
             }
 
+            m_render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion, bombPos);
+
             for (auto& enemy : m_enemyManager.GetEnemies())
             {
                 if (enemy.IsDead())
