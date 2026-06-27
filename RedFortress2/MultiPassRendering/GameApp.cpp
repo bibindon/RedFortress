@@ -47,7 +47,7 @@ namespace
     const float kMinCameraDistance = 1.5f;
     const float kMaxCameraDistance = 20.0f;
     const float kCameraWheelZoomStep = 0.5f;
-    const int kPlayerInvincibleDuration = 15;
+    const int kPlayerInvincibleDuration = 60;
     const int kRespawnInvincibleFrames = 180;
     const int kKnockbackDurationFrames = 60;
     const float kKnockbackSpeed = 1.0f;
