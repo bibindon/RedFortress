@@ -33,8 +33,8 @@ FogEnable,1
 FogIntensity,10.0
 FogDensity,10.0
 ,
-DepthBufferShadowEnable,0
-ShadowIntensity,0.25
+DepthBufferShadowEnable,1
+ShadowIntensity,0.0
 ShadowCoverage,0.1
 ShadowCoverageFar,0.40
 ShadowBias,0.001
