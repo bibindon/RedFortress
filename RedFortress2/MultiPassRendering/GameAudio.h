@@ -13,6 +13,7 @@ void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();
 void PlayPlayerAttack();
+void PlaySlashHit();
 void PlayAttackHit();
 void PlayEnemyAttack();
 void PlayPlayerDamage();

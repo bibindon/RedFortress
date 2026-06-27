@@ -17,10 +17,11 @@ const std::wstring kMenuMove = L"res\\sound\\menu_cursor_move.wav";
 const std::wstring kMenuConfirm = L"res\\sound\\menu_cursor_confirm.wav";
 const std::wstring kMenuCancel = L"res\\sound\\menu_cursor_cancel.wav";
 const std::wstring kPlayerAttack = L"res\\sound\\attack01.wav";
+const std::wstring kSlashHit = L"res\\sound\\slashHit.wav";
 const std::wstring kAttackHit = L"res\\sound\\enemyHanen.wav";
 const std::wstring kEnemyAttack = L"res\\sound\\enemyAttack.wav";
 const std::wstring kPlayerDamage = L"res\\sound\\damage01.wav";
-const std::wstring kItemGet = L"res\\sound\\get_item.wav";
+const std::wstring kItemGet = L"res\\sound\\itemGet.wav";
 const std::wstring kJump = L"res\\sound\\jump.wav";
 
 std::wstring g_currentBgm;
@@ -73,7 +74,7 @@ void Initialize()
 {
     const std::wstring effects[] =
     {
-        kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kAttackHit,
+        kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSlashHit, kAttackHit,
         kEnemyAttack, kPlayerDamage, kItemGet, kJump
     };
     for (const std::wstring& effect : effects)
@@ -112,19 +113,16 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber)
     if (stageId == L"base")
     {
         fieldBgm = kBaseBgm;
-        environment = kSeaEnvironment;
         environmentVolume = 14;
     }
     else if (stageNumber >= 9 && stageNumber <= 16)
     {
         fieldBgm = kField2Bgm;
-        environment = kRainEnvironment;
         environmentVolume = 15;
     }
     else if (stageNumber >= 17)
     {
         fieldBgm = kField3Bgm;
-        environment = kForestEnvironment;
         environmentVolume = 16;
     }
     PlayEnvironmentIfChanged(environment, environmentVolume);
@@ -135,6 +133,7 @@ void PlayMenuMove() { PlayEffect(kMenuMove, 70); }
 void PlayMenuConfirm() { PlayEffect(kMenuConfirm, 78); }
 void PlayMenuCancel() { PlayEffect(kMenuCancel, 72); }
 void PlayPlayerAttack() { PlayEffect(kPlayerAttack, 82); }
+void PlaySlashHit() { PlayEffect(kSlashHit, 82); }
 void PlayAttackHit() { PlayEffect(kAttackHit, 82); }
 void PlayEnemyAttack() { PlayEffect(kEnemyAttack, 72); }
 void PlayPlayerDamage() { PlayEffect(kPlayerDamage, 88); }

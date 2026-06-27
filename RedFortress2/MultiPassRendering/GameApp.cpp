@@ -896,7 +896,7 @@ void GameApp::Run()
                                                          kEnemyAttackKnockbackFrames);
                         attackTarget->TakeDamage(m_render, attackDefinition.damage, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
-                        GameAudio::PlayAttackHit();
+                        GameAudio::PlaySlashHit();
                     }
                     else
                     {
@@ -907,7 +907,7 @@ void GameApp::Run()
                         {
                             m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage);
                             m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
-                            GameAudio::PlayAttackHit();
+                            GameAudio::PlaySlashHit();
                         }
                     }
                     }
