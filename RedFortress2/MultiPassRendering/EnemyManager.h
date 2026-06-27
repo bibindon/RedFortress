@@ -44,7 +44,7 @@ private:
         float scale = 2.0f;
         int maxHp = 10;
         float moveSpeed = 2.5f;
-        float viewDistance = 5.0f;
+        float viewDistance = 12.0f;
         float contactRadius = 0.5f;
         float height = 0.5f;
     };

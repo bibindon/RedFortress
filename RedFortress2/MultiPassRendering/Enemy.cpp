@@ -179,7 +179,7 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
         const float chaseDistance = D3DXVec3Length(&chaseDiff);
         if (m_state == State::Chase)
         {
-            if (chaseDistance > 4.0f)
+            if (chaseDistance > 3.0f)
             {
                 nextAnim = AnimState::Run;
             }
@@ -504,7 +504,7 @@ void Enemy::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool playerI
     UpdateFacing(m_position + moveDir);
 
     float speedMultiplier = 1.0f;
-    if (distance > 4.0f)
+    if (distance > 3.0f)
     {
         speedMultiplier = 1.0f;
     }
