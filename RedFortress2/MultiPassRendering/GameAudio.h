@@ -21,6 +21,8 @@ void PlayPlayerDamage();
 void PlayItemGet();
 void PlayJump();
 void PlayPowerUp();
+void StartHyperMode();
+void StopHyperMode();
 void PlayDash();
 void PlayDashBooster();
 void PlayExplosion();

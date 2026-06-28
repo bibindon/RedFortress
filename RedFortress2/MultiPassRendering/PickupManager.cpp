@@ -99,12 +99,14 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
 void PickupManager::ResetPlayerEffects()
 {
     m_starPowerupFrames = 0;
+    GameAudio::StopHyperMode();
     m_speedLevel = 1;
 }
 
 void PickupManager::ResetTemporaryEffects()
 {
     m_starPowerupFrames = 0;
+    GameAudio::StopHyperMode();
 }
 
 void PickupManager::UpdateTimers()
@@ -112,6 +114,10 @@ void PickupManager::UpdateTimers()
     if (m_starPowerupFrames > 0)
     {
         --m_starPowerupFrames;
+        if (m_starPowerupFrames <= 0)
+        {
+            GameAudio::StopHyperMode();
+        }
     }
 }
 
@@ -124,7 +130,7 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         return;
     }
 
-    if (m_starPowerupFrames <= 0 && m_starMeshId >= 0)
+    if (m_starMeshId >= 0)
     {
         const D3DXVECTOR3 diff = playerPosition - m_starPosition;
         if (D3DXVec3Length(&diff) <= kStarPickupDistance)
@@ -172,12 +178,8 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
 
 void PickupManager::ActivateStar(const int playerMeshId)
 {
-    if (m_starPowerupFrames > 0)
-    {
-        return;
-    }
-
     m_starPowerupFrames = kStarDurationFrames;
+    GameAudio::StartHyperMode();
     if (m_render != nullptr && playerMeshId >= 0)
     {
         m_render->StartMeshMixSkinAnimBlink(playerMeshId,

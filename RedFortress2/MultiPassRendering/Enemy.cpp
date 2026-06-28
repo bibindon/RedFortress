@@ -241,6 +241,11 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& 
     }
 
     ApplyDamage(render, amount);
+    if (m_state == State::Dead)
+    {
+        return;
+    }
+
     BeginAlert(attackerPos, true);
 }
 
@@ -252,6 +257,11 @@ void Enemy::TakeDamageWithoutFacing(NSRender::Render& render, const int amount)
     }
 
     ApplyDamage(render, amount);
+    if (m_state == State::Dead)
+    {
+        return;
+    }
+
     BeginAlert(m_lastKnownPlayerPosition, false);
 }
 
@@ -419,6 +429,11 @@ void Enemy::UpdateIdleBehavior()
 
 void Enemy::BeginAlert(const D3DXVECTOR3& playerPos, const bool faceImmediately)
 {
+    if (m_state == State::Dead)
+    {
+        return;
+    }
+
     m_lastKnownPlayerPosition = playerPos;
     m_lastKnownPlayerFrames = kLastKnownPlayerFrames;
     m_state = State::Alert;

@@ -4,7 +4,7 @@
 
 namespace
 {
-const std::wstring kTitleBgm = L"res\\sound\\title.wav";
+const std::wstring kTitleBgm = L"res\\sound\\title2.wav";
 const std::wstring kEndingBgm = L"res\\sound\\ending.wav";
 const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
 const std::wstring kStageSelectBgm = L"res\\sound\\stageselect1.wav";
@@ -26,27 +26,65 @@ const std::wstring kPlayerDamage = L"res\\sound\\damage01.wav";
 const std::wstring kItemGet = L"res\\sound\\itemGet.wav";
 const std::wstring kJump = L"res\\sound\\jump2.wav";
 const std::wstring kPowerUp = L"res\\sound\\powerup.wav";
+const std::wstring kHyperMode = L"res\\sound\\hyperMode.wav";
 const std::wstring kDash = L"res\\sound\\dash.wav";
 const std::wstring kDashBooster = L"res\\sound\\dashBooster2.wav";
 const std::wstring kExplosion = L"res\\sound\\explosion.wav";
 const std::wstring kStomp = L"res\\sound\\stomp.wav";
 const std::wstring kBuster = L"res\\sound\\buster.wav";
-const int kTitleBgmVolume = 45;
+const int kTitleBgmVolume = 22;
 const int kEndingBgmVolume = 50;
 const int kFieldBgmVolume = 40;
 
 std::wstring g_currentBgm;
 std::wstring g_currentEnvironment;
 int g_environmentId = -1;
+int g_hyperModeId = -1;
+int g_currentBgmVolume = 0;
+int g_effectiveBgmVolume = -1;
+
+int GetEffectiveBgmVolume(const int volume)
+{
+    if (g_hyperModeId >= 0)
+    {
+        return 0;
+    }
+
+    return volume;
+}
+
+void ApplyCurrentBgmVolume()
+{
+    if (g_currentBgm.empty())
+    {
+        g_effectiveBgmVolume = -1;
+        return;
+    }
+
+    const int effectiveVolume = GetEffectiveBgmVolume(g_currentBgmVolume);
+    if (g_effectiveBgmVolume == effectiveVolume)
+    {
+        return;
+    }
+
+    SoundLib::SoundLib::SetBgmVolume(effectiveVolume);
+    g_effectiveBgmVolume = effectiveVolume;
+}
 
 void PlayBgmIfChanged(const std::wstring& path, const int volume)
 {
     if (g_currentBgm == path)
     {
+        g_currentBgmVolume = volume;
+        ApplyCurrentBgmVolume();
         return;
     }
-    SoundLib::SoundLib::PlayBgm(path, volume);
+
+    const int effectiveVolume = GetEffectiveBgmVolume(volume);
+    SoundLib::SoundLib::PlayBgm(path, effectiveVolume);
     g_currentBgm = path;
+    g_currentBgmVolume = volume;
+    g_effectiveBgmVolume = effectiveVolume;
 }
 
 void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
@@ -69,6 +107,8 @@ void StopBgmIfPlaying()
     {
         SoundLib::SoundLib::StopBgm();
         g_currentBgm.clear();
+        g_currentBgmVolume = 0;
+        g_effectiveBgmVolume = -1;
     }
 }
 
@@ -105,10 +145,14 @@ void Initialize()
     g_currentBgm.clear();
     g_currentEnvironment.clear();
     g_environmentId = -1;
+    g_hyperModeId = -1;
+    g_currentBgmVolume = 0;
+    g_effectiveBgmVolume = -1;
 }
 
 void Finalize()
 {
+    StopHyperMode();
     StopEnvironment();
     StopBgmIfPlaying();
 }
@@ -182,6 +226,29 @@ void PlayPlayerDamage() { PlayEffect(kPlayerDamage, 88); }
 void PlayItemGet() { PlayEffect(kItemGet, 82); }
 void PlayJump() { PlayEffect(kJump, 62); }
 void PlayPowerUp() { PlayEffect(kPowerUp, 82); }
+void StartHyperMode()
+{
+    if (g_hyperModeId >= 0)
+    {
+        return;
+    }
+
+    g_hyperModeId = SoundLib::SoundLib::PlayEnvironmentSound(kHyperMode, 78);
+    ApplyCurrentBgmVolume();
+}
+
+void StopHyperMode()
+{
+    if (g_hyperModeId < 0)
+    {
+        return;
+    }
+
+    SoundLib::SoundLib::StopEnvironmentSound(g_hyperModeId);
+    g_hyperModeId = -1;
+    ApplyCurrentBgmVolume();
+}
+
 void PlayDash() { PlayEffect(kDash, 72); }
 void PlayDashBooster() { PlayEffect(kDashBooster, 78); }
 void PlayExplosion() { PlayEffect(kExplosion, 75); }
