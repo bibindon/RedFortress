@@ -5,6 +5,7 @@
 namespace
 {
 const std::wstring kTitleBgm = L"res\\sound\\title2.wav";
+const std::wstring kLoadingBgm = L"res\\sound\\loading.wav";
 const std::wstring kEndingBgm = L"res\\sound\\ending.wav";
 const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
 const std::wstring kStageSelectBgm = L"res\\sound\\stageselect1.wav";
@@ -160,7 +161,7 @@ void Finalize()
 void PlayLoadingEnvironment()
 {
     PlayEnvironmentIfChanged(kForestEnvironment, 14);
-    PlayBgmIfChanged(kTitleBgm, kTitleBgmVolume);
+    PlayBgmIfChanged(kLoadingBgm, kTitleBgmVolume);
 }
 
 void PlayTitleMusic()
