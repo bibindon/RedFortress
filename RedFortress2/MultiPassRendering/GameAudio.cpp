@@ -30,6 +30,9 @@ const std::wstring kDash = L"res\\sound\\dash.wav";
 const std::wstring kExplosion = L"res\\sound\\explosion.wav";
 const std::wstring kStomp = L"res\\sound\\stomp.wav";
 const std::wstring kBuster = L"res\\sound\\buster.wav";
+const int kTitleBgmVolume = 45;
+const int kEndingBgmVolume = 50;
+const int kFieldBgmVolume = 40;
 
 std::wstring g_currentBgm;
 std::wstring g_currentEnvironment;
@@ -110,20 +113,20 @@ void Finalize()
 
 void PlayLoadingEnvironment()
 {
-    StopBgmIfPlaying();
     PlayEnvironmentIfChanged(kForestEnvironment, 14);
+    PlayBgmIfChanged(kTitleBgm, kTitleBgmVolume);
 }
 
 void PlayTitleMusic()
 {
     StopEnvironment();
-    PlayBgmIfChanged(kTitleBgm, 55);
+    PlayBgmIfChanged(kTitleBgm, kTitleBgmVolume);
 }
 
 void PlayEndingMusic()
 {
     StopEnvironment();
-    PlayBgmIfChanged(kEndingBgm, 60);
+    PlayBgmIfChanged(kEndingBgm, kEndingBgmVolume);
 }
 
 void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment)
@@ -163,7 +166,7 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         environmentVolume = 16;
     }
     PlayEnvironmentIfChanged(environment, environmentVolume);
-    PlayBgmIfChanged(fieldBgm, 48);
+    PlayBgmIfChanged(fieldBgm, kFieldBgmVolume);
 }
 
 void PlayMenuMove() { PlayEffect(kMenuMove, 70); }
@@ -180,5 +183,5 @@ void PlayPowerUp() { PlayEffect(kPowerUp, 82); }
 void PlayDash() { PlayEffect(kDash, 72); }
 void PlayExplosion() { PlayEffect(kExplosion, 75); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
-void PlayBuster() { PlayEffect(kBuster, 82); }
+void PlayBuster() { PlayEffect(kBuster, 55); }
 }

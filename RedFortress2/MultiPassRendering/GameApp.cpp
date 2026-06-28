@@ -78,7 +78,7 @@ namespace
     const float kBusterMaxDistance = 10.0f;
     const int kBusterDamage = 3;
     const float kBusterHitRadius = 0.5f;
-    const int kBusterCooldown = 5;
+    const int kBusterCooldown = 3;
     const float kEnemyAttackTargetHeight = 1.0f;
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)

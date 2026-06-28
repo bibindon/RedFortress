@@ -91,14 +91,14 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
     switch (attackType)
     {
     case PlayerAttackType::WeakAttack:
-        definition.durationFrames = 29;
-        definition.hitDelayFrames = 14;
+        definition.durationFrames = 24;
+        definition.hitDelayFrames = 12;
         definition.damage = 2;
         definition.range = 2.0f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
         definition.moveSpeed = 5.5f;
-        definition.moveStartRemainingFrames = 14;
-        definition.moveEndRemainingFrames = 19;
+        definition.moveStartRemainingFrames = 12;
+        definition.moveEndRemainingFrames = 16;
         definition.animationName = L"slash";
         definition.animationSpeed = 4.0f;
         break;
@@ -115,14 +115,14 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.animationSpeed = 2.0f;
         break;
     case PlayerAttackType::BombAttack:
-        definition.durationFrames = 29;
-        definition.hitDelayFrames = 14;
+        definition.durationFrames = 24;
+        definition.hitDelayFrames = 12;
         definition.damage = 2;
         definition.range = 2.0f;
         definition.halfAngleRadians = D3DXToRadian(45.0f);
         definition.moveSpeed = 5.5f;
-        definition.moveStartRemainingFrames = 14;
-        definition.moveEndRemainingFrames = 19;
+        definition.moveStartRemainingFrames = 12;
+        definition.moveEndRemainingFrames = 16;
         definition.animationName = L"slash";
         definition.animationSpeed = 4.0f;
         break;
@@ -139,8 +139,8 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.animationSpeed = 2.0f;
         break;
     case PlayerAttackType::BusterAttack:
-        definition.durationFrames = 10;
-        definition.hitDelayFrames = 5;
+        definition.durationFrames = 6;
+        definition.hitDelayFrames = 3;
         definition.damage = 3;
         definition.range = 0.0f;
         definition.halfAngleRadians = 0.0f;
@@ -151,8 +151,8 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.animationSpeed = 6.0f;
         break;
     case PlayerAttackType::BusterStrongAttack:
-        definition.durationFrames = 10;
-        definition.hitDelayFrames = 5;
+        definition.durationFrames = 6;
+        definition.hitDelayFrames = 3;
         definition.damage = 3;
         definition.range = 0.0f;
         definition.halfAngleRadians = 0.0f;
