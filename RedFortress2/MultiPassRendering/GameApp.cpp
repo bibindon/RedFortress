@@ -1294,7 +1294,7 @@ void GameApp::UpdatePlayerByInput()
                     spawnPos.y += kBusterSpawnHeight;
                     SpawnBuster(spawnPos, forward);
                     m_busterCooldownFrames = kBusterCooldown;
-                    GameAudio::PlayPlayerAttack();
+                    GameAudio::PlayBuster();
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
                     SetPlayerAnimationState(PlayerAnimState::Attack, attackDefinition.animationSpeed);
                 }

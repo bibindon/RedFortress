@@ -24,4 +24,5 @@ void PlayPowerUp();
 void PlayDash();
 void PlayExplosion();
 void PlayStomp();
+void PlayBuster();
 }
