@@ -3219,6 +3219,38 @@ void GameApp::UpdateBombs()
                 }
             }
 
+            for (const auto& destructible : m_destructibleManager.GetObjects())
+            {
+                if (destructible.isDead)
+                {
+                    continue;
+                }
+
+                D3DXVECTOR3 dir = destructible.position - bombPos;
+                const float dist = D3DXVec3Length(&dir);
+                if (dist <= kBombExplosionRadius)
+                {
+                    m_destructibleManager.TryDamage(m_render, destructible, kBombExplosionDamage);
+                    m_damagePopupManager.Add(kBombExplosionDamage, destructible.position, false);
+                }
+            }
+
+            for (const auto& destructible : m_destructibleManager.GetObjects())
+            {
+                if (destructible.isDead)
+                {
+                    continue;
+                }
+
+                D3DXVECTOR3 dir = destructible.position - bombPos;
+                const float dist = D3DXVec3Length(&dir);
+                if (dist <= kBombExplosionRadius)
+                {
+                    m_destructibleManager.TryDamage(m_render, destructible, kBombExplosionDamage);
+                    m_damagePopupManager.Add(kBombExplosionDamage, destructible.position, false);
+                }
+            }
+
             const D3DXVECTOR3 playerDir = m_playerMover.GetPosition() - bombPos;
             const float playerDist = D3DXVec3Length(&playerDir);
             if (playerDist <= kBombExplosionRadius)
