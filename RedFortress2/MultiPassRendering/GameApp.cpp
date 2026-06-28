@@ -953,7 +953,6 @@ void GameApp::Run()
                     {
                         enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
-                        GameAudio::PlayAttackHit();
                         GameAudio::PlayStomp();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
@@ -1021,7 +1020,7 @@ void GameApp::Run()
                 m_stageClearProcessed = false;
             }
 
-            if (m_playerMover.JustJumped() && m_playerAnimState == PlayerAnimState::Jump)
+            if (m_playerMover.JustJumped())
             {
                 GameAudio::PlayJump();
                 if (m_playerMeshId >= 0)
