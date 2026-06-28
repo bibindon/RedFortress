@@ -27,6 +27,7 @@ const std::wstring kItemGet = L"res\\sound\\itemGet.wav";
 const std::wstring kJump = L"res\\sound\\jump2.wav";
 const std::wstring kPowerUp = L"res\\sound\\powerup.wav";
 const std::wstring kDash = L"res\\sound\\dash.wav";
+const std::wstring kDashBooster = L"res\\sound\\dashBooster2.wav";
 const std::wstring kExplosion = L"res\\sound\\explosion.wav";
 const std::wstring kStomp = L"res\\sound\\stomp.wav";
 const std::wstring kBuster = L"res\\sound\\buster.wav";
@@ -94,7 +95,8 @@ void Initialize()
     const std::wstring effects[] =
     {
         kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSlashHit, kAttackHit,
-        kEnemyAttack, kPlayerDamage, kItemGet, kJump, kPowerUp, kDash, kExplosion, kStomp, kBuster
+        kEnemyAttack, kPlayerDamage, kItemGet, kJump, kPowerUp, kDash, kDashBooster,
+        kExplosion, kStomp, kBuster
     };
     for (const std::wstring& effect : effects)
     {
@@ -181,6 +183,7 @@ void PlayItemGet() { PlayEffect(kItemGet, 82); }
 void PlayJump() { PlayEffect(kJump, 62); }
 void PlayPowerUp() { PlayEffect(kPowerUp, 82); }
 void PlayDash() { PlayEffect(kDash, 72); }
+void PlayDashBooster() { PlayEffect(kDashBooster, 78); }
 void PlayExplosion() { PlayEffect(kExplosion, 75); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }

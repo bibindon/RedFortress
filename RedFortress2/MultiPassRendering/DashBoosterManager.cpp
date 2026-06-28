@@ -1,5 +1,6 @@
 ﻿#include "DashBoosterManager.h"
 
+#include "GameAudio.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
@@ -110,6 +111,7 @@ void DashBoosterManager::Update(const D3DXVECTOR3& playerPosition,
         }
 
         playerMover.ApplyDashBooster(booster.direction, booster.speed, booster.duration);
+        GameAudio::PlayDashBooster();
         booster.cooldownFrames = kDashBoosterCooldownFrames;
     }
 }

@@ -22,6 +22,7 @@ void PlayItemGet();
 void PlayJump();
 void PlayPowerUp();
 void PlayDash();
+void PlayDashBooster();
 void PlayExplosion();
 void PlayStomp();
 void PlayBuster();
