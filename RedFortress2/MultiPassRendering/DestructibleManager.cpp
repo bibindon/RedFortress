@@ -221,7 +221,7 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
 
     for (const auto& obj : m_objects)
     {
-        if (obj.isDead)
+        if (obj.isDead || obj.hp <= 0)
         {
             continue;
         }
@@ -261,6 +261,11 @@ bool DestructibleManager::TryDamage(NSRender::Render& render,
     {
         if (&o == &obj)
         {
+            if (o.isDead || o.hp <= 0)
+            {
+                return false;
+            }
+
             o.hp -= damage;
             o.blinkFrames = kDestructibleBlinkFrames;
             render.SetMeshMixEnabled(o.meshId, true);

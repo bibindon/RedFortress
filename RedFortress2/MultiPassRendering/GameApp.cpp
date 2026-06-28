@@ -78,6 +78,7 @@ namespace
     const float kBusterMaxDistance = 10.0f;
     const int kBusterDamage = 3;
     const float kBusterHitRadius = 0.5f;
+    const float kDestructibleHitRadius = 0.9f;
     const int kBusterCooldown = 3;
     const float kEnemyAttackTargetHeight = 1.0f;
 
@@ -913,9 +914,11 @@ void GameApp::Run()
                                 attackDefinition.range, attackDefinition.halfAngleRadians);
                             if (destructible != nullptr)
                             {
-                                m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage);
-                                m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
-                                GameAudio::PlaySlashHit();
+                                if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
+                                {
+                                    m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
+                                    GameAudio::PlaySlashHit();
+                                }
                             }
                         }
                     }
@@ -3264,7 +3267,7 @@ void GameApp::UpdateBombs()
 
             for (const auto& destructible : m_destructibleManager.GetObjects())
             {
-                if (destructible.isDead)
+                if (destructible.isDead || destructible.hp <= 0)
                 {
                     continue;
                 }
@@ -3273,14 +3276,16 @@ void GameApp::UpdateBombs()
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBombExplosionRadius)
                 {
-                    m_destructibleManager.TryDamage(m_render, destructible, kBombExplosionDamage);
-                    m_damagePopupManager.Add(kBombExplosionDamage, destructible.position, false);
+                    if (m_destructibleManager.TryDamage(m_render, destructible, kBombExplosionDamage))
+                    {
+                        m_damagePopupManager.Add(kBombExplosionDamage, destructible.position, false);
+                    }
                 }
             }
 
             for (const auto& destructible : m_destructibleManager.GetObjects())
             {
-                if (destructible.isDead)
+                if (destructible.isDead || destructible.hp <= 0)
                 {
                     continue;
                 }
@@ -3289,8 +3294,10 @@ void GameApp::UpdateBombs()
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBombExplosionRadius)
                 {
-                    m_destructibleManager.TryDamage(m_render, destructible, kBombExplosionDamage);
-                    m_damagePopupManager.Add(kBombExplosionDamage, destructible.position, false);
+                    if (m_destructibleManager.TryDamage(m_render, destructible, kBombExplosionDamage))
+                    {
+                        m_damagePopupManager.Add(kBombExplosionDamage, destructible.position, false);
+                    }
                 }
             }
 
@@ -3409,20 +3416,22 @@ void GameApp::UpdateBusters()
             {
                 for (const auto& destructible : m_destructibleManager.GetObjects())
                 {
-                    if (destructible.isDead)
+                    if (destructible.isDead || destructible.hp <= 0)
                     {
                         continue;
                     }
 
                     D3DXVECTOR3 dir = destructible.position - it->position;
                     const float dist = D3DXVec3Length(&dir);
-                    if (dist <= kBusterHitRadius)
+                    if (dist <= kBusterHitRadius + kDestructibleHitRadius)
                     {
-                        m_destructibleManager.TryDamage(m_render, destructible, kBusterDamage);
-                        m_damagePopupManager.Add(kBusterDamage, destructible.position, false);
-                        GameAudio::PlayAttackHit();
-                        destroyed = true;
-                        break;
+                        if (m_destructibleManager.TryDamage(m_render, destructible, kBusterDamage))
+                        {
+                            m_damagePopupManager.Add(kBusterDamage, destructible.position, false);
+                            GameAudio::PlayAttackHit();
+                            destroyed = true;
+                            break;
+                        }
                     }
                 }
             }
