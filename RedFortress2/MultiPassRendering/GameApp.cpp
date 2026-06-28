@@ -63,7 +63,7 @@ namespace
     const std::wstring kBombModelPath = L"res\\model\\bomb\\bomb.x";
     const int kBombFrames = 120;
     const float kBombPlaceDistance = 1.5f;
-    const float kBombExplosionRadius = 2.0f;
+    const float kBombExplosionRadius = 3.0f;
     const int kBombExplosionDamage = 10;
     const int kBombKnockbackFrames = 20;
     const int kBombBlinkStartFrames = 60;
