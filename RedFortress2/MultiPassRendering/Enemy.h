@@ -43,6 +43,7 @@ public:
     void SyncMesh(NSRender::Render& render);
 
     void TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& attackerPos);
+    void TakeDamageWithoutFacing(NSRender::Render& render, int amount);
     bool IsDead() const;
     bool IsReadyToRemove() const;
     void MarkAttackedPlayer();
@@ -67,6 +68,7 @@ public:
 private:
     void StartIdleBehavior();
     void UpdateIdleBehavior();
+    void ApplyDamage(NSRender::Render& render, int amount);
     void BeginAlert(const D3DXVECTOR3& playerPos, bool faceImmediately);
     void UpdateChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
     void UpdateRetreatBehavior();

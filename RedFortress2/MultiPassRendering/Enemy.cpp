@@ -240,14 +240,29 @@ void Enemy::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& 
         return;
     }
 
+    ApplyDamage(render, amount);
+    BeginAlert(attackerPos, true);
+}
+
+void Enemy::TakeDamageWithoutFacing(NSRender::Render& render, const int amount)
+{
+    if (m_state == State::Dead)
+    {
+        return;
+    }
+
+    ApplyDamage(render, amount);
+    BeginAlert(m_lastKnownPlayerPosition, false);
+}
+
+void Enemy::ApplyDamage(NSRender::Render& render, const int amount)
+{
     m_hp -= amount;
     m_blinkFrames = 15;
     if (m_meshId >= 0)
     {
         render.StartMeshMixSkinAnimBlink(m_meshId, m_blinkFrames, 2);
     }
-
-    BeginAlert(attackerPos, true);
 
     if (m_hp <= 0)
     {

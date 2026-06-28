@@ -3256,7 +3256,7 @@ void GameApp::UpdateBombs()
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBombExplosionRadius)
                 {
-                    enemy.TakeDamage(m_render, kBombExplosionDamage, bombPos);
+                    enemy.TakeDamageWithoutFacing(m_render, kBombExplosionDamage);
                     enemy.StartKnockbackFrom(bombPos, 0.5f, 30);
                     m_damagePopupManager.Add(kBombExplosionDamage, enemy.GetPosition(), false);
                 }
