@@ -954,6 +954,7 @@ void GameApp::Run()
                         enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
                         GameAudio::PlayAttackHit();
+                        GameAudio::PlayStomp();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
                         break;
@@ -1419,6 +1420,7 @@ void GameApp::UpdatePlayerByInput()
             else if (nextState == PlayerAnimState::Dash)
             {
                 animationSpeed = 0.1f;
+                GameAudio::PlayDash();
             }
 
             SetPlayerAnimationState(nextState, animationSpeed);
@@ -3199,6 +3201,7 @@ void GameApp::UpdateBombs()
             }
 
             m_render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion, bombPos);
+            GameAudio::PlayExplosion();
 
             for (auto& enemy : m_enemyManager.GetEnemies())
             {

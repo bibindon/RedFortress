@@ -143,6 +143,7 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
             m_render->RemoveMeshMix(m_speedUpMeshId);
             m_speedUpMeshId = -1;
             AddSpeedLevel();
+            GameAudio::PlayPowerUp();
         }
     }
 

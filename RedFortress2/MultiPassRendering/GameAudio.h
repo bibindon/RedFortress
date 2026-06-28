@@ -20,4 +20,8 @@ void PlayEnemyAttack();
 void PlayPlayerDamage();
 void PlayItemGet();
 void PlayJump();
+void PlayPowerUp();
+void PlayDash();
+void PlayExplosion();
+void PlayStomp();
 }
