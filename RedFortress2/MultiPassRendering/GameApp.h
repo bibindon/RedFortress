@@ -36,6 +36,8 @@ struct ActiveBomb
 {
     int meshId = -1;
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    bool isGrounded = false;
     int remainingFrames = 0;
     int blinkTimer = 0;
 };
@@ -144,6 +146,7 @@ private:
     void CreateStageSelectCubes();
     void RemoveStageSelectCubes();
     void PlaceBomb(const D3DXVECTOR3& position);
+    void UpdateBombPhysics(ActiveBomb& bomb);
     void UpdateBombs();
     void ClearBombs();
     void SpawnBuster(const D3DXVECTOR3& position, const D3DXVECTOR3& direction);

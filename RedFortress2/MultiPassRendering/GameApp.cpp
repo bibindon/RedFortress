@@ -63,6 +63,9 @@ namespace
     const std::wstring kBombModelPath = L"res\\model\\bomb\\bomb.x";
     const int kBombFrames = 120;
     const float kBombPlaceDistance = 1.5f;
+    const float kBombRadius = 0.25f;
+    const float kBombCollisionCenterY = 0.25f;
+    const float kBombGravity = 9.8f;
     const float kBombExplosionRadius = 3.0f;
     const int kBombExplosionDamage = 10;
     const int kBombKnockbackFrames = 20;
@@ -3184,10 +3187,53 @@ void GameApp::PlaceBomb(const D3DXVECTOR3& position)
     m_activeBombs.push_back(bomb);
 }
 
+void GameApp::UpdateBombPhysics(ActiveBomb& bomb)
+{
+    if (bomb.isGrounded)
+    {
+        return;
+    }
+
+    bomb.velocity.y -= kBombGravity * kTargetFrameSeconds;
+
+    const D3DXVECTOR3 collisionPosition =
+        bomb.position + D3DXVECTOR3(0.0f, kBombCollisionCenterY, 0.0f);
+    D3DXVECTOR3 nextCollisionPosition = collisionPosition;
+    D3DXVECTOR3 nextVelocity = bomb.velocity;
+    D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
+
+    const bool collided = PhysicsWorld::CheckCollide(collisionPosition,
+                                                     bomb.velocity,
+                                                     PhysicsWorld::ShapeType::Sphere,
+                                                     &nextCollisionPosition,
+                                                     &nextVelocity,
+                                                     nullptr,
+                                                     nullptr,
+                                                     kBombRadius,
+                                                     0.0f,
+                                                     nullptr,
+                                                     &hitNormal);
+
+    bomb.position = nextCollisionPosition - D3DXVECTOR3(0.0f, kBombCollisionCenterY, 0.0f);
+    bomb.velocity = nextVelocity;
+
+    if (collided && hitNormal.y > 0.0f)
+    {
+        bomb.isGrounded = true;
+        bomb.velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
+
+    if (bomb.meshId >= 0)
+    {
+        m_render.SetMeshMixPos(bomb.meshId, bomb.position);
+    }
+}
+
 void GameApp::UpdateBombs()
 {
     for (auto it = m_activeBombs.begin(); it != m_activeBombs.end(); )
     {
+        UpdateBombPhysics(*it);
         --it->remainingFrames;
         if (it->remainingFrames <= 0)
         {
