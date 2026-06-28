@@ -901,28 +901,23 @@ void GameApp::Run()
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
                     if (attackDefinition.range > 0.0f)
                     {
-                    Enemy* attackTarget = FindEnemyInAttackRange(attackDefinition);
-                    if (attackTarget != nullptr)
-                    {
-                        attackTarget->StartKnockbackFrom(m_playerMover.GetPosition(),
-                                                         kEnemyAttackKnockbackDistance,
-                                                         kEnemyAttackKnockbackFrames);
-                        attackTarget->TakeDamage(m_render, attackDefinition.damage, m_playerMover.GetPosition());
-                        m_damagePopupManager.Add(attackDefinition.damage, attackTarget->GetPosition(), false);
-                        GameAudio::PlaySlashHit();
-                    }
-                    else
-                    {
-                        const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
-                            m_playerMover.GetPosition(), m_playerYaw,
-                            attackDefinition.range, attackDefinition.halfAngleRadians);
-                        if (destructible != nullptr)
+                        const int damagedEnemyCount = DamageEnemiesInAttackRange(attackDefinition);
+                        if (damagedEnemyCount > 0)
                         {
-                            m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage);
-                            m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
                             GameAudio::PlaySlashHit();
                         }
-                    }
+                        else
+                        {
+                            const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
+                                m_playerMover.GetPosition(), m_playerYaw,
+                                attackDefinition.range, attackDefinition.halfAngleRadians);
+                            if (destructible != nullptr)
+                            {
+                                m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage);
+                                m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
+                                GameAudio::PlaySlashHit();
+                            }
+                        }
                     }
                 }
             }
@@ -1472,13 +1467,11 @@ D3DXVECTOR3 GameApp::GetCameraPlanarRight(const D3DXVECTOR3& forward)
     return right;
 }
 
-Enemy* GameApp::FindEnemyInAttackRange(const PlayerAttackDefinition& attackDefinition)
+int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefinition)
 {
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
-
-    Enemy* bestEnemy = nullptr;
-    float bestDot = -1.0f;
+    int damagedCount = 0;
 
     for (auto& enemy : m_enemyManager.GetEnemies())
     {
@@ -1506,14 +1499,18 @@ Enemy* GameApp::FindEnemyInAttackRange(const PlayerAttackDefinition& attackDefin
         }
 
         const float dot = D3DXVec3Dot(&forward, &dir);
-        if (dot > cosf(attackDefinition.halfAngleRadians) && dot > bestDot)
+        if (dot > cosf(attackDefinition.halfAngleRadians))
         {
-            bestDot = dot;
-            bestEnemy = &enemy;
+            enemy.StartKnockbackFrom(playerPos,
+                                     kEnemyAttackKnockbackDistance,
+                                     kEnemyAttackKnockbackFrames);
+            enemy.TakeDamage(m_render, attackDefinition.damage, playerPos);
+            m_damagePopupManager.Add(attackDefinition.damage, enemy.GetPosition(), false);
+            ++damagedCount;
         }
     }
 
-    return bestEnemy;
+    return damagedCount;
 }
 
 void GameApp::InitializePlayerPhysics()

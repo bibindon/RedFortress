@@ -123,7 +123,7 @@ private:
     POINT ConvertMouseToBaseResolution(int clientX, int clientY);
     D3DXVECTOR3 GetCameraPlanarForward();
     D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
-    Enemy* FindEnemyInAttackRange(const PlayerAttackDefinition& attackDefinition);
+    int DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefinition);
     void InitializeCameraFromRenderSettings();
     void InitializePlayerPhysics();
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
