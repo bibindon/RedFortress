@@ -1,5 +1,6 @@
 ﻿#include "DestructibleManager.h"
 
+#include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
 #include <fstream>
@@ -11,6 +12,9 @@ namespace
 {
     const std::wstring kModelPath = L"res\\model\\cubeWoodSmall\\cube_wood_small.x";
     const std::wstring kRedCubeModelPath = L"res\\model\\cube_red.x";
+    const D3DXVECTOR3 kPhysicsDisabledPosition(0.0f, -10000.0f, 0.0f);
+    const D3DXVECTOR3 kDefaultRotation(0.0f, 0.0f, 0.0f);
+    const D3DXVECTOR3 kDefaultScale(1.0f, 1.0f, 1.0f);
 
     std::wstring Trim(const std::wstring& str)
     {
@@ -44,6 +48,19 @@ namespace
         static std::mt19937 rng(std::random_device{}());
         static std::uniform_int_distribution<int> dist(0, 99);
         return dist(rng);
+    }
+
+    void DisablePhysicsObject(const int physicsId)
+    {
+        if (physicsId < 0)
+        {
+            return;
+        }
+
+        PhysicsLib::PhysicsLib::SetTransform(physicsId,
+                                             kPhysicsDisabledPosition,
+                                             kDefaultRotation,
+                                             kDefaultScale);
     }
 }
 
@@ -101,10 +118,17 @@ void DestructibleManager::LoadForStage(NSRender::Render& render, const std::wstr
 
         obj.meshId = m_render->AddMeshMix(kModelPath,
                                            obj.position,
-                                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                           kDefaultRotation,
                                            1.0f);
         if (obj.meshId >= 0)
         {
+            obj.physicsId = PhysicsLib::PhysicsLib::Load(kModelPath.c_str(),
+                                                         PhysicsLib::PhysicsLib::ObjectType::Slide,
+                                                         0.0f);
+            PhysicsLib::PhysicsLib::SetTransform(obj.physicsId,
+                                                 obj.position,
+                                                 kDefaultRotation,
+                                                 kDefaultScale);
             m_objects.push_back(obj);
         }
     }
@@ -122,6 +146,7 @@ void DestructibleManager::Clear()
                 m_render->SetMeshMixEnabled(obj.meshId, true);
                 m_render->RemoveMeshMix(obj.meshId);
             }
+            DisablePhysicsObject(obj.physicsId);
         }
         for (auto& cube : m_droppedRedCubes)
         {
@@ -159,6 +184,7 @@ void DestructibleManager::Update(NSRender::Render& render)
                 {
                     obj.isDead = true;
                     render.RemoveMeshMix(obj.meshId);
+                    DisablePhysicsObject(obj.physicsId);
                     TryDropItem(render, obj.position);
                 }
                 else

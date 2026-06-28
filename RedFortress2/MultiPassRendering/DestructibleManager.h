@@ -18,6 +18,7 @@ const int kDroppedRedCubePickupDelayFrames = 60;
 struct DestructibleObject
 {
     int meshId = -1;
+    int physicsId = -1;
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int maxHp = kDestructibleDefaultHp;
     int hp = kDestructibleDefaultHp;
