@@ -9,7 +9,7 @@ PlayerAttackController::PlayerAttackController()
 
 bool PlayerAttackController::TryStart(PlayerAttackType attackType)
 {
-    if (IsAttacking())
+    if (IsAttacking() && (!m_hitResolved || m_hitRequested))
     {
         return false;
     }
@@ -94,7 +94,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.durationFrames = 24;
         definition.hitDelayFrames = 12;
         definition.damage = 2;
-        definition.range = 2.0f;
+        definition.range = 3.0f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
         definition.moveSpeed = 5.5f;
         definition.moveStartRemainingFrames = 12;
@@ -106,7 +106,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.durationFrames = 57;
         definition.hitDelayFrames = 28;
         definition.damage = 5;
-        definition.range = 2.0f;
+        definition.range = 3.0f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
         definition.moveSpeed = 0.0909f;
         definition.moveStartRemainingFrames = 28;
