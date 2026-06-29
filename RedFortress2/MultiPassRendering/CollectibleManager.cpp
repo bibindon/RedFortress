@@ -12,7 +12,23 @@ namespace
 {
 const std::wstring kCollectibleModelPath = L"res\\model\\smallCube\\small_cube.x";
 const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
+const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
 const float kCollectDistance = 0.9f;
+
+bool IsTemporaryPowerUpItem(const std::wstring& itemId)
+{
+    if (itemId == kBombCapacityUpItemId)
+    {
+        return true;
+    }
+
+    if (itemId == kBusterRapidUpItemId)
+    {
+        return true;
+    }
+
+    return false;
+}
 }
 
 void CollectibleManager::Initialize(NSRender::Render& render,
@@ -131,7 +147,7 @@ void CollectibleManager::Collect(Collectible& collectible)
     }
     else
     {
-        if (collectible.dataId != kBombCapacityUpItemId)
+        if (!IsTemporaryPowerUpItem(collectible.dataId))
         {
             m_inventory->AddItem(collectible.dataId);
             m_inventory->Save();

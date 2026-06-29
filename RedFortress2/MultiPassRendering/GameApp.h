@@ -261,4 +261,5 @@ private:
     int m_bombCapacity = 1;
     std::vector<ActiveBuster> m_activeBusters;
     int m_busterCooldownFrames = 0;
+    int m_busterRapidLevel = 1;
 };

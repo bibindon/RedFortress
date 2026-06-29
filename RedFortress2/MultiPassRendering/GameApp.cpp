@@ -42,6 +42,7 @@ namespace
     const std::wstring kAttackBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
+    const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
     const int kItemPickupMessageTotalFrames = 180;
     const int kItemPickupMessageFadeFrames = 24;
     const int kItemPickupMessageY = 780;
@@ -91,7 +92,8 @@ namespace
     const int kBusterDamage = 3;
     const float kBusterHitRadius = 0.5f;
     const float kDestructibleHitRadius = 0.9f;
-    const int kBusterCooldown = 3;
+    const int kBusterRapidLevelMax = 8;
+    const int kBusterCooldownByLevel[kBusterRapidLevelMax] = { 24, 20, 16, 12, 9, 6, 4, 3 };
     const float kEnemyAttackTargetHeight = 1.0f;
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
@@ -114,6 +116,21 @@ namespace
         }
 
         return kAttackSlashIconPath;
+    }
+
+    int GetBusterCooldownFrames(const int rapidLevel)
+    {
+        if (rapidLevel <= 1)
+        {
+            return kBusterCooldownByLevel[0];
+        }
+
+        if (rapidLevel >= kBusterRapidLevelMax)
+        {
+            return kBusterCooldownByLevel[kBusterRapidLevelMax - 1];
+        }
+
+        return kBusterCooldownByLevel[rapidLevel - 1];
     }
 
     void PlaceStageWeather(NSRender::Render& render, StageManager::StageWeather weather, const D3DXVECTOR3& origin)
@@ -1323,7 +1340,7 @@ void GameApp::UpdatePlayerByInput()
                     D3DXVECTOR3 spawnPos = m_playerMover.GetPosition() + forward * 1.0f;
                     spawnPos.y += kBusterSpawnHeight;
                     SpawnBuster(spawnPos, forward);
-                    m_busterCooldownFrames = kBusterCooldown;
+                    m_busterCooldownFrames = GetBusterCooldownFrames(m_busterRapidLevel);
                     GameAudio::PlayBuster();
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
                     SetPlayerAnimationState(PlayerAnimState::Attack, attackDefinition.animationSpeed);
@@ -2264,6 +2281,16 @@ void GameApp::HandleItemCollected(const std::wstring& itemId, const int count)
             }
         }
     }
+    else if (itemId == kBusterRapidUpItemId)
+    {
+        for (int i = 0; i < count; ++i)
+        {
+            if (m_busterRapidLevel < kBusterRapidLevelMax)
+            {
+                ++m_busterRapidLevel;
+            }
+        }
+    }
 
     ShowItemPickupMessage(itemId, count);
 }
@@ -2600,6 +2627,7 @@ void GameApp::StartNewGame()
 {
     m_saveDataManager.ResetToDefaults();
     m_bombCapacity = 1;
+    m_busterRapidLevel = 1;
 
     const std::size_t select1Index = m_stageManager.FindStageIndexById(L"select1");
     if (select1Index < m_stageManager.GetStageCount())
@@ -3029,6 +3057,8 @@ void GameApp::HandlePlayerDeath()
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
     m_bombCapacity = 1;
+    m_busterRapidLevel = 1;
+    m_busterCooldownFrames = 0;
     ClearBombs();
     ClearBusters();
     m_render.SetSceneUpdatePaused(true);
