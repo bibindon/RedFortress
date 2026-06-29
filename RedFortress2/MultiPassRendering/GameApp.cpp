@@ -33,6 +33,9 @@ namespace
     const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
     const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
+    const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
+    const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
+    const std::wstring kAttackBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -85,6 +88,23 @@ namespace
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
     {
         return enemy.GetPosition() + D3DXVECTOR3(0.0f, kEnemyAttackTargetHeight, 0.0f);
+    }
+
+    const std::wstring& GetAttackIconPath(const PlayerAttackType attackType)
+    {
+        if (attackType == PlayerAttackType::BombAttack ||
+            attackType == PlayerAttackType::BombStrongAttack)
+        {
+            return kAttackBombIconPath;
+        }
+
+        if (attackType == PlayerAttackType::BusterAttack ||
+            attackType == PlayerAttackType::BusterStrongAttack)
+        {
+            return kAttackBusterIconPath;
+        }
+
+        return kAttackSlashIconPath;
     }
 
     void PlaceStageWeather(NSRender::Render& render, StageManager::StageWeather weather, const D3DXVECTOR3& origin)
@@ -842,11 +862,14 @@ void GameApp::Run()
             if (!IsCurrentStageSelect())
             {
                 m_hpBar.Draw();
-                const int kAttackTypeHudY = 800;
-                m_render.DrawTextExCenter(m_commandFontId,
-                                          m_playerAttackController.GetCurrentCategoryName(),
-                                          0, kAttackTypeHudY,
-                                          NSRender::Common::BASE_W, 34);
+                const int kAttackTypeHudX = 48;
+                const int kAttackTypeHudY = 92;
+                const int kAttackTypeIconSize = 64;
+                m_render.DrawImageSized(GetAttackIconPath(m_playerAttackController.GetAttackType(false)),
+                                        kAttackTypeHudX,
+                                        kAttackTypeHudY,
+                                        kAttackTypeIconSize,
+                                        kAttackTypeIconSize);
             }
             m_damagePopupManager.Update();
             m_damagePopupManager.Draw();
