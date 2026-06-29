@@ -9,7 +9,7 @@
 
 namespace
 {
-const std::wstring kDashBoosterModelPath = L"res\\model\\cubeEmitYellow.x";
+const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooster.x";
 const int kDashBoosterCooldownFrames = 30;
 }
 
