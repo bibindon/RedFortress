@@ -35,6 +35,7 @@ public:
     void ActivateStar(int playerMeshId);
     void AddSpeedLevel();
     void SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback);
+    void SetStarActivatedCallback(std::function<void()> callback);
     void SetStarBlinkMode(StarBlinkMode mode);
     void SetSpeedLevel(int speedLevel);
     int GetSpeedLevel() const;
@@ -48,6 +49,7 @@ private:
     NSRender::Render* m_render = nullptr;
     InventoryManager* m_inventory = nullptr;
     std::function<void(const std::wstring&, int)> m_itemCollectedCallback;
+    std::function<void()> m_starActivatedCallback;
     int m_starPowerupFrames = 0;
     int m_starMeshId = -1;
     int m_speedUpMeshId = -1;

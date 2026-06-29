@@ -420,6 +420,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_pickupManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
         HandleItemCollected(itemId, count);
     });
+    m_pickupManager.SetStarActivatedCallback([this]() {
+        MaximizeTemporaryPowerUps();
+    });
     m_pickupManager.LoadForStage(initialStage.starCsvPath, initialStage.speedUpCsvPath);
     m_dashBoosterManager.Initialize(m_render);
     m_dashBoosterManager.LoadForStage(initialStage.dashBoosterCsvPath);
@@ -2293,6 +2296,12 @@ void GameApp::HandleItemCollected(const std::wstring& itemId, const int count)
     }
 
     ShowItemPickupMessage(itemId, count);
+}
+
+void GameApp::MaximizeTemporaryPowerUps()
+{
+    m_bombCapacity = kMaxBombs;
+    m_busterRapidLevel = kBusterRapidLevelMax;
 }
 
 void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)

@@ -200,6 +200,10 @@ void PickupManager::ActivateStar(const int playerMeshId)
 {
     m_starPowerupFrames = kStarDurationFrames;
     m_speedLevel = kMaxSpeedLevel;
+    if (m_starActivatedCallback)
+    {
+        m_starActivatedCallback();
+    }
     GameAudio::StartHyperMode();
     if (m_render != nullptr && playerMeshId >= 0)
     {
@@ -221,6 +225,11 @@ void PickupManager::AddSpeedLevel()
 void PickupManager::SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback)
 {
     m_itemCollectedCallback = std::move(callback);
+}
+
+void PickupManager::SetStarActivatedCallback(std::function<void()> callback)
+{
+    m_starActivatedCallback = std::move(callback);
 }
 
 void PickupManager::SetStarBlinkMode(const StarBlinkMode mode)
