@@ -11,6 +11,7 @@ namespace
 {
 const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooster.x";
 const int kDashBoosterCooldownFrames = 30;
+const int kDashBoosterSoundDelayFrames = 30;
 const float kDashBoosterVisualScale = 3.0f;
 
 bool ParseChargeEnabled(const std::wstring& value)
@@ -129,6 +130,15 @@ void DashBoosterManager::Update(const D3DXVECTOR3& playerPosition,
 {
     for (DashBoosterObject& booster : m_boosters)
     {
+        if (booster.soundDelayFrames > 0)
+        {
+            --booster.soundDelayFrames;
+            if (booster.soundDelayFrames <= 0)
+            {
+                GameAudio::PlayDashBooster();
+            }
+        }
+
         if (booster.cooldownFrames > 0)
         {
             --booster.cooldownFrames;
@@ -155,7 +165,7 @@ void DashBoosterManager::Update(const D3DXVECTOR3& playerPosition,
                                      booster.speed,
                                      booster.duration,
                                      booster.chargeEnabled);
-        GameAudio::PlayDashBooster();
+        booster.soundDelayFrames = kDashBoosterSoundDelayFrames;
         booster.cooldownFrames = kDashBoosterCooldownFrames;
     }
 }

@@ -35,6 +35,7 @@ private:
         bool chargeEnabled = true;
         int renderId = -1;
         int cooldownFrames = 0;
+        int soundDelayFrames = 0;
     };
 
     NSRender::Render* m_render = nullptr;
