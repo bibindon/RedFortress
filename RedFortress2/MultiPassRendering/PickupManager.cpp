@@ -12,7 +12,7 @@
 
 namespace
 {
-const int kStarDurationFrames = 600;
+const int kStarDurationFrames = 1200;
 const float kStarPickupDistance = 1.0f;
 const std::wstring kStarModelPath = L"res\\model\\itemIconStar\\itemIconStar.x";
 const std::wstring kSpeedUpModelPath = L"res\\model\\itemIconPowerUp\\itemIconPowerUp.x";
