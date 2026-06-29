@@ -11,6 +11,7 @@
 namespace
 {
 const std::wstring kCollectibleModelPath = L"res\\model\\smallCube\\small_cube.x";
+const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
 const float kCollectDistance = 0.9f;
 }
 
@@ -130,14 +131,23 @@ void CollectibleManager::Collect(Collectible& collectible)
     }
     else
     {
-        m_inventory->AddItem(collectible.dataId);
+        if (collectible.dataId != kBombCapacityUpItemId)
+        {
+            m_inventory->AddItem(collectible.dataId);
+            m_inventory->Save();
+        }
+
         if (m_itemCollectedCallback)
         {
             m_itemCollectedCallback(collectible.dataId, 1);
         }
     }
 
-    m_inventory->Save();
+    if (collectible.type == CollectibleType::Weapon)
+    {
+        m_inventory->Save();
+    }
+
     GameAudio::PlayItemGet();
     m_render->RemoveMeshMix(collectible.renderId);
     collectible.renderId = -1;

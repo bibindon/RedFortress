@@ -41,6 +41,7 @@ namespace
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
     const std::wstring kAttackBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
+    const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const int kItemPickupMessageTotalFrames = 180;
     const int kItemPickupMessageFadeFrames = 24;
     const int kItemPickupMessageY = 780;
@@ -388,7 +389,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     LoadItemNameCatalog();
     m_collectibleManager.Initialize(m_render, m_inventoryManager);
     m_collectibleManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
-        ShowItemPickupMessage(itemId, count);
+        HandleItemCollected(itemId, count);
     });
     m_collectibleManager.LoadForStage(initialStage.collectibleCsvPath);
     m_interactionManager.Initialize(m_render);
@@ -400,7 +401,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.Draw();
     m_pickupManager.Initialize(m_render, m_inventoryManager);
     m_pickupManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
-        ShowItemPickupMessage(itemId, count);
+        HandleItemCollected(itemId, count);
     });
     m_pickupManager.LoadForStage(initialStage.starCsvPath, initialStage.speedUpCsvPath);
     m_dashBoosterManager.Initialize(m_render);
@@ -2251,6 +2252,22 @@ std::wstring GameApp::GetItemDisplayName(const std::wstring& itemId) const
     return itemId;
 }
 
+void GameApp::HandleItemCollected(const std::wstring& itemId, const int count)
+{
+    if (itemId == kBombCapacityUpItemId)
+    {
+        for (int i = 0; i < count; ++i)
+        {
+            if (m_bombCapacity < kMaxBombs)
+            {
+                ++m_bombCapacity;
+            }
+        }
+    }
+
+    ShowItemPickupMessage(itemId, count);
+}
+
 void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)
 {
     std::wstring message = GetItemDisplayName(itemId) + L"を入手";
@@ -2582,6 +2599,7 @@ bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
 void GameApp::StartNewGame()
 {
     m_saveDataManager.ResetToDefaults();
+    m_bombCapacity = 1;
 
     const std::size_t select1Index = m_stageManager.FindStageIndexById(L"select1");
     if (select1Index < m_stageManager.GetStageCount())
@@ -3010,6 +3028,7 @@ void GameApp::HandlePlayerDeath()
     m_playerKnockbackFrames = 0;
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
+    m_bombCapacity = 1;
     ClearBombs();
     ClearBusters();
     m_render.SetSceneUpdatePaused(true);
@@ -3344,7 +3363,7 @@ POINT GameApp::ConvertMouseToBaseResolution(int clientX, int clientY)
 
 void GameApp::PlaceBomb(const D3DXVECTOR3& position)
 {
-    if (static_cast<int>(m_activeBombs.size()) >= kMaxBombs)
+    if (static_cast<int>(m_activeBombs.size()) >= m_bombCapacity)
     {
         return;
     }

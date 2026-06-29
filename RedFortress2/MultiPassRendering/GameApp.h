@@ -157,6 +157,7 @@ private:
     void ClearBusters();
     void LoadItemNameCatalog();
     std::wstring GetItemDisplayName(const std::wstring& itemId) const;
+    void HandleItemCollected(const std::wstring& itemId, int count);
     void ShowItemPickupMessage(const std::wstring& itemId, int count);
     void DrawItemPickupMessage();
 
@@ -257,6 +258,7 @@ private:
     TitleLanguage m_titleLanguage = TitleLanguage::Japanese;
     std::vector<ActiveBomb> m_activeBombs;
     static const int kMaxBombs = 8;
+    int m_bombCapacity = 1;
     std::vector<ActiveBuster> m_activeBusters;
     int m_busterCooldownFrames = 0;
 };
