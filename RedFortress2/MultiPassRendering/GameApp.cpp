@@ -24,12 +24,16 @@ namespace
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
     const float kStageSelectPlayerVisualScale = 1.0f;
-    const int kStageSelectStageNameY = 660;
-    const int kStageSelectLivesY = 700;
-    const int kStageSelectHint1Y = 760;
-    const int kStageSelectHint2Y = 792;
-    const int kStageSelectStartButtonY = 832;
-    const int kStageSelectStartButtonHeight = 48;
+    const int kStageSelectStageNameX = 48;
+    const int kStageSelectStageNameY = 42;
+    const int kStageSelectLivesX = 1190;
+    const int kStageSelectLivesY = 42;
+    const int kStageSelectLivesWidth = 360;
+    const int kStageSelectHintY = 852;
+    const int kStageSelectStartButtonX = 650;
+    const int kStageSelectStartButtonY = 790;
+    const int kStageSelectStartButtonWidth = 300;
+    const int kStageSelectStartButtonHeight = 54;
     const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
     const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
@@ -2041,7 +2045,8 @@ void GameApp::UpdateStageSelectCursorByInput()
 
     const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
     const POINT baseMousePosition = ConvertMouseToBaseResolution(mousePosition.x, mousePosition.y);
-    if (baseMousePosition.x >= 0 && baseMousePosition.x < NSRender::Common::BASE_W &&
+    if (baseMousePosition.x >= kStageSelectStartButtonX &&
+        baseMousePosition.x < kStageSelectStartButtonX + kStageSelectStartButtonWidth &&
         baseMousePosition.y >= kStageSelectStartButtonY &&
         baseMousePosition.y < kStageSelectStartButtonY + kStageSelectStartButtonHeight)
     {
@@ -2175,39 +2180,33 @@ void GameApp::DrawStageSelectCursor()
     const std::wstring stageName = GetSelectedStagePortalDisplayName();
     if (!stageName.empty())
     {
-        m_render.DrawTextExCenter(m_stageSelectFontId,
-                                  stageName,
-                                  0,
-                                  kStageSelectStageNameY,
-                                  NSRender::Common::BASE_W,
-                                  40,
-                                  D3DCOLOR_RGBA(255, 255, 255, 255));
+        m_render.DrawTextEx(m_stageSelectFontId,
+                            stageName,
+                            kStageSelectStageNameX,
+                            kStageSelectStageNameY,
+                            D3DCOLOR_RGBA(255, 255, 255, 255));
 
         const std::wstring livesText = L"残機: " + std::to_wstring(m_player.GetLives());
         m_render.DrawTextExCenter(m_stageSelectFontId,
                                   livesText,
-                                  0,
+                                  kStageSelectLivesX,
                                   kStageSelectLivesY,
-                                  NSRender::Common::BASE_W,
+                                  kStageSelectLivesWidth,
                                   32,
                                   D3DCOLOR_RGBA(255, 255, 255, 230));
     }
 
-    m_render.DrawTextExCenter(m_stageSelectHintFontId,
-                              L"方向キー・マウス→ステージ選択",
-                              0,
-                              kStageSelectHint1Y,
-                              NSRender::Common::BASE_W,
-                              28,
-                              D3DCOLOR_RGBA(255, 255, 255, 220));
+    m_render.DrawTextEx(m_stageSelectHintFontId,
+                        L"方向キー・マウス: ステージ選択",
+                        kStageSelectStageNameX,
+                        kStageSelectHintY,
+                        D3DCOLOR_RGBA(255, 255, 255, 220));
 
-    m_render.DrawTextExCenter(m_stageSelectHintFontId,
-                              L"エンター→開始",
-                              0,
-                              kStageSelectHint2Y,
-                              NSRender::Common::BASE_W,
-                              28,
-                              D3DCOLOR_RGBA(255, 255, 255, 220));
+    m_render.DrawTextEx(m_stageSelectHintFontId,
+                        L"エンター・クリック: 開始",
+                        1180,
+                        kStageSelectHintY,
+                        D3DCOLOR_RGBA(255, 255, 255, 220));
 
     UINT startButtonColor = D3DCOLOR_RGBA(255, 255, 255, 255);
     if (m_isMouseOverStartButton)
@@ -2217,9 +2216,9 @@ void GameApp::DrawStageSelectCursor()
 
     m_render.DrawTextExCenter(m_stageSelectStartButtonFontId,
                               L"スタート",
-                              0,
+                              kStageSelectStartButtonX,
                               kStageSelectStartButtonY,
-                              NSRender::Common::BASE_W,
+                              kStageSelectStartButtonWidth,
                               kStageSelectStartButtonHeight,
                               startButtonColor);
 }
