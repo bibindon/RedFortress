@@ -20,6 +20,21 @@ const float kSpeedUpPickupDistance = 1.0f;
 const float kSpeedUpScale = 0.25f;
 const int kMaxSpeedLevel = 8;
 
+NSRender::BlinkMode ToRenderBlinkMode(const StarBlinkMode mode)
+{
+    if (mode == StarBlinkMode::PinkWhite)
+    {
+        return NSRender::BlinkMode::PinkWhiteFlash;
+    }
+
+    if (mode == StarBlinkMode::CyanWhite)
+    {
+        return NSRender::BlinkMode::CyanWhiteFlash;
+    }
+
+    return NSRender::BlinkMode::StarFlash;
+}
+
 bool TryParseFloat(const std::wstring& text, float* outValue)
 {
     if (outValue == nullptr)
@@ -191,7 +206,7 @@ void PickupManager::ActivateStar(const int playerMeshId)
         m_render->StartMeshMixSkinAnimBlink(playerMeshId,
                                             kStarDurationFrames,
                                             2,
-                                            NSRender::BlinkMode::StarFlash);
+                                            ToRenderBlinkMode(m_starBlinkMode));
     }
 }
 
@@ -206,6 +221,11 @@ void PickupManager::AddSpeedLevel()
 void PickupManager::SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback)
 {
     m_itemCollectedCallback = std::move(callback);
+}
+
+void PickupManager::SetStarBlinkMode(const StarBlinkMode mode)
+{
+    m_starBlinkMode = mode;
 }
 
 void PickupManager::SetSpeedLevel(const int speedLevel)

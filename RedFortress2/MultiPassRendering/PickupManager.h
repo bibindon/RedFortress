@@ -12,6 +12,13 @@ class Render;
 class DestructibleManager;
 class InventoryManager;
 
+enum class StarBlinkMode
+{
+    YellowWhite,
+    PinkWhite,
+    CyanWhite
+};
+
 class PickupManager
 {
 public:
@@ -28,6 +35,7 @@ public:
     void ActivateStar(int playerMeshId);
     void AddSpeedLevel();
     void SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback);
+    void SetStarBlinkMode(StarBlinkMode mode);
     void SetSpeedLevel(int speedLevel);
     int GetSpeedLevel() const;
     int GetMaxSpeedLevel() const;
@@ -44,6 +52,7 @@ private:
     int m_starMeshId = -1;
     int m_speedUpMeshId = -1;
     int m_speedLevel = 1;
+    StarBlinkMode m_starBlinkMode = StarBlinkMode::YellowWhite;
     D3DXVECTOR3 m_starPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_speedUpPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 };
