@@ -14,10 +14,10 @@ namespace
 {
 const int kStarDurationFrames = 600;
 const float kStarPickupDistance = 1.0f;
-const std::wstring kStarModelPath = L"res\\model\\sphereOrange\\sphere_orange.x";
-const std::wstring kSpeedUpModelPath = L"res\\model\\spherePink\\sphere_pink.x";
+const std::wstring kStarModelPath = L"res\\model\\itemIconStar\\itemIconStar.x";
+const std::wstring kSpeedUpModelPath = L"res\\model\\itemIconPowerUp\\itemIconPowerUp.x";
 const float kSpeedUpPickupDistance = 1.0f;
-const float kSpeedUpScale = 0.25f;
+const float kPickupIconScale = 1.0f;
 const int kMaxSpeedLevel = 8;
 
 NSRender::BlinkMode ToRenderBlinkMode(const StarBlinkMode mode)
@@ -92,7 +92,7 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
         m_starMeshId = m_render->AddMeshMix(kStarModelPath,
                                             m_starPosition,
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                            1.0f,
+                                            kPickupIconScale,
                                             -1.0f,
                                             false,
                                             false,
@@ -104,7 +104,7 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
         m_speedUpMeshId = m_render->AddMeshMix(kSpeedUpModelPath,
                                                m_speedUpPosition,
                                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                               kSpeedUpScale,
+                                               kPickupIconScale,
                                                -1.0f,
                                                false,
                                                false,
