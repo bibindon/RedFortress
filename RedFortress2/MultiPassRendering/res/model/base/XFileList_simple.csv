@@ -18,3 +18,4 @@
 1721,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 1722,../cubeGreen/cube_green.x,0,1,-20,0,0,0,1,normal
 1723,../cube_red.x,0,1,26,0,0,0,1,normal
+1800,../plateLava.x,5,0,-10,0,0,0,1,normal

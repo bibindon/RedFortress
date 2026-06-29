@@ -411,6 +411,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_collectibleManager.LoadForStage(initialStage.collectibleCsvPath);
     m_interactionManager.Initialize(m_render);
     m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
+    m_lavaZoneManager.LoadForStage(initialStage.lavaCsvPath);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     m_craftMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
@@ -981,6 +982,21 @@ void GameApp::Run()
                 --m_playerInvincibleFrames;
             }
 
+            // 溶岩床によるダメージ（無敵モード中は歩ける）
+            if (m_playerInvincibleFrames <= 0)
+            {
+                const int lavaDamage = m_lavaZoneManager.GetContactDamage(m_playerMover.GetPosition());
+                if (lavaDamage > 0)
+                {
+                    DamagePlayerHp(lavaDamage);
+                    m_playerInvincibleFrames = kPlayerInvincibleDuration;
+                    if (m_playerMeshId >= 0)
+                    {
+                        m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kPlayerInvincibleDuration, 2);
+                    }
+                }
+            }
+
             if (m_stagePortalCooldownFrames > 0)
             {
                 --m_stagePortalCooldownFrames;
@@ -1153,6 +1169,7 @@ void GameApp::Finalize()
     }
 
     m_interactionManager.Clear();
+    m_lavaZoneManager.Clear();
     m_collectibleManager.Clear();
     m_render.Finalize();
     PhysicsWorld::Finalize();
@@ -3231,6 +3248,7 @@ void GameApp::LoadCurrentStageObjects()
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
+    m_lavaZoneManager.LoadForStage(stage.lavaCsvPath);
 
     m_pickupManager.LoadForStage(stage.starCsvPath, stage.speedUpCsvPath);
     m_dashBoosterManager.LoadForStage(stage.dashBoosterCsvPath);

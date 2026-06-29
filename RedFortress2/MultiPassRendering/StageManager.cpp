@@ -103,6 +103,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.speedUpCsvPath = basePath + L"SpeedUps.csv";
     stage.destructibleCsvPath = basePath + L"Destructibles.csv";
     stage.dashBoosterCsvPath = basePath + L"DashBoosters.csv";
+    stage.lavaCsvPath = basePath + L"LavaZones.csv";
     stage.renderSettingsCsvPath = renderSettingsCsvPath;
     stage.weather = weather;
     stage.playerStartPosition = playerStartPosition;

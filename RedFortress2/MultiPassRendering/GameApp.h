@@ -23,6 +23,7 @@
 #include "InventoryManager.h"
 #include "CollectibleManager.h"
 #include "InteractionManager.h"
+#include "LavaZoneManager.h"
 #include "CraftMenu.h"
 #include "../../QTE_Module/QTE_Module/QTE_Module.h"
 #include "StageEditor.h"
@@ -178,6 +179,7 @@ private:
     InventoryManager m_inventoryManager;
     CollectibleManager m_collectibleManager;
     InteractionManager m_interactionManager;
+    LavaZoneManager m_lavaZoneManager;
     CraftMenu m_craftMenu;
     NS_QTE_Module::QTE_Module* m_qte = nullptr;
     int m_playerMeshId = -1;

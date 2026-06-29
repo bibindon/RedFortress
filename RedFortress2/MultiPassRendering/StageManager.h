@@ -29,6 +29,7 @@ public:
         std::wstring speedUpCsvPath;
         std::wstring destructibleCsvPath;
         std::wstring dashBoosterCsvPath;
+        std::wstring lavaCsvPath;
         std::wstring renderSettingsCsvPath;
         StageWeather weather = StageWeather::None;
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

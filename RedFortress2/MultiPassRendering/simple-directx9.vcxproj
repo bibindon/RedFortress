@@ -157,6 +157,7 @@
     <ClCompile Include="CollectibleManager.cpp" />
     <ClCompile Include="CraftMenu.cpp" />
     <ClCompile Include="InteractionManager.cpp" />
+    <ClCompile Include="LavaZoneManager.cpp" />
     <ClCompile Include="StageEditor.cpp" />
     <ClCompile Include="SlideShowManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="CollectibleManager.h" />
     <ClInclude Include="CraftMenu.h" />
     <ClInclude Include="InteractionManager.h" />
+    <ClInclude Include="LavaZoneManager.h" />
     <ClInclude Include="StageEditor.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
