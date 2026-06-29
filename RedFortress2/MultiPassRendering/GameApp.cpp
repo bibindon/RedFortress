@@ -85,7 +85,7 @@ namespace
     const std::wstring kBusterModelPath = L"res\\model\\Buster\\buster.x";
     const float kBusterSpawnHeight = 1.0f;
     const float kBusterScale = 0.5f;
-    const float kBusterSpeed = 10.0f;
+    const float kBusterSpeed = 20.0f;
     const float kBusterMaxDistance = 10.0f;
     const int kBusterDamage = 3;
     const float kBusterHitRadius = 0.5f;
