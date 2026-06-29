@@ -429,6 +429,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_command.UpsertCommand(L"start", true);
     m_command.UpsertCommand(L"continue", m_saveDataManager.HasSaveFile());
     m_command.UpsertCommand(L"delete", m_saveDataManager.HasSaveFile());
+    m_command.UpsertCommand(L"language", true);
     m_command.UpsertCommand(L"exit", true);
     m_render.SetLoadingScreenProgress(85);
     m_render.Draw();
@@ -517,7 +518,7 @@ void GameApp::Run()
         }
         else if (m_gameState == GameState::Title)
         {
-            if (!m_titleDeleteConfirmMode)
+            if (!m_titleDeleteConfirmMode && !m_titleLanguageSelectionMode)
             {
                 RefreshTitleCommands();
             }
@@ -544,28 +545,16 @@ void GameApp::Run()
                     ExitDeleteConfirmation();
                 }
             }
-            else
+            else if (m_titleLanguageSelectionMode)
             {
                 if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
                 {
-                    const std::wstring selectedId = m_command.Into();
-                    if (selectedId == L"start")
-                    {
-                        StartNewGame();
-                    }
-                    else if (selectedId == L"continue")
-                    {
-                        m_saveDataManager.Load();
-                        StartStageByIndex(GetContinueStartStageIndex());
-                    }
-                    else if (selectedId == L"delete")
-                    {
-                        EnterDeleteConfirmation();
-                    }
-                    else if (selectedId == L"exit")
-                    {
-                        m_close = true;
-                    }
+                    ExecuteTitleCommand(m_command.Into());
+                }
+
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+                {
+                    ExitTitleLanguageSelection();
                 }
 
                 const InputDevice::MousePosition mousePos = InputDevice::Mouse::GetPosition();
@@ -574,24 +563,23 @@ void GameApp::Run()
 
                 if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
                 {
-                    const std::wstring clickedId = m_command.Click(baseMousePos.x, baseMousePos.y);
-                    if (clickedId == L"start")
-                    {
-                        StartNewGame();
-                    }
-                    else if (clickedId == L"continue")
-                    {
-                        m_saveDataManager.Load();
-                        StartStageByIndex(GetContinueStartStageIndex());
-                    }
-                    else if (clickedId == L"delete")
-                    {
-                        EnterDeleteConfirmation();
-                    }
-                    else if (clickedId == L"exit")
-                    {
-                        m_close = true;
-                    }
+                    ExecuteTitleCommand(m_command.Click(baseMousePos.x, baseMousePos.y));
+                }
+            }
+            else
+            {
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+                {
+                    ExecuteTitleCommand(m_command.Into());
+                }
+
+                const InputDevice::MousePosition mousePos = InputDevice::Mouse::GetPosition();
+                const POINT baseMousePos = ConvertMouseToBaseResolution(mousePos.x, mousePos.y);
+                m_command.MouseMove(baseMousePos.x, baseMousePos.y);
+
+                if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+                {
+                    ExecuteTitleCommand(m_command.Click(baseMousePos.x, baseMousePos.y));
                 }
             }
         }
@@ -2621,6 +2609,7 @@ void GameApp::BuildTitleMainCommands()
     m_command.UpsertCommand(L"start", true);
     m_command.UpsertCommand(L"continue", canContinue);
     m_command.UpsertCommand(L"delete", canContinue);
+    m_command.UpsertCommand(L"language", true);
     m_command.UpsertCommand(L"exit", true);
 }
 
@@ -2629,6 +2618,13 @@ void GameApp::BuildTitleConfirmCommands()
     m_command.RemoveAll();
     m_command.UpsertCommand(L"yes", true);
     m_command.UpsertCommand(L"no", true);
+}
+
+void GameApp::BuildTitleLanguageCommands()
+{
+    m_command.RemoveAll();
+    m_command.UpsertCommand(L"english", true);
+    m_command.UpsertCommand(L"japanese", true);
 }
 
 void GameApp::EnterDeleteConfirmation()
@@ -2643,12 +2639,59 @@ void GameApp::ExitDeleteConfirmation()
     m_titleDeleteConfirmMode = false;
 }
 
+void GameApp::ExitTitleLanguageSelection()
+{
+    BuildTitleMainCommands();
+    m_titleLanguageSelectionMode = false;
+}
+
 void GameApp::ExecuteDeleteSaveData()
 {
     m_saveDataManager.DeleteSaveData();
     m_inventoryManager.Reset();
     DeleteFileW((NSRender::Util::GetExeDir() + L"res\\savedata\\inventory.csv").c_str());
     ExitDeleteConfirmation();
+}
+
+void GameApp::ExecuteTitleCommand(const std::wstring& commandId)
+{
+    if (commandId.empty())
+    {
+        return;
+    }
+
+    if (commandId == L"start")
+    {
+        StartNewGame();
+    }
+    else if (commandId == L"continue")
+    {
+        m_saveDataManager.Load();
+        StartStageByIndex(GetContinueStartStageIndex());
+    }
+    else if (commandId == L"delete")
+    {
+        EnterDeleteConfirmation();
+    }
+    else if (commandId == L"language")
+    {
+        BuildTitleLanguageCommands();
+        m_titleLanguageSelectionMode = true;
+    }
+    else if (commandId == L"english")
+    {
+        m_titleLanguage = TitleLanguage::English;
+        ExitTitleLanguageSelection();
+    }
+    else if (commandId == L"japanese")
+    {
+        m_titleLanguage = TitleLanguage::Japanese;
+        ExitTitleLanguageSelection();
+    }
+    else if (commandId == L"exit")
+    {
+        m_close = true;
+    }
 }
 
 std::size_t GameApp::GetContinueStartStageIndex() const
@@ -3206,6 +3249,16 @@ void GameApp::DrawTitleScreen()
     if (m_titleDeleteConfirmMode)
     {
         m_render.DrawTextExCenter(m_titleFontId, L"セーブデータを削除しますか？", 0, 500, NSRender::Common::BASE_W, 100);
+    }
+    else if (m_titleLanguageSelectionMode)
+    {
+        std::wstring languageName = L"Japanese";
+        if (m_titleLanguage == TitleLanguage::English)
+        {
+            languageName = L"English";
+        }
+        m_render.DrawTextExCenter(m_titleFontId, L"Language", 0, 480, NSRender::Common::BASE_W, 80);
+        m_render.DrawTextExCenter(m_titleFontId, L"Current: " + languageName, 0, 560, NSRender::Common::BASE_W, 80);
     }
 
     m_command.Draw();

@@ -117,9 +117,12 @@ private:
     void DrawEndingFin();
     void BuildTitleMainCommands();
     void BuildTitleConfirmCommands();
+    void BuildTitleLanguageCommands();
     void EnterDeleteConfirmation();
     void ExitDeleteConfirmation();
+    void ExitTitleLanguageSelection();
     void ExecuteDeleteSaveData();
+    void ExecuteTitleCommand(const std::wstring& commandId);
     POINT ConvertMouseToBaseResolution(int clientX, int clientY);
     D3DXVECTOR3 GetCameraPlanarForward();
     D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
@@ -159,6 +162,7 @@ private:
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
+    enum class TitleLanguage { English, Japanese };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
 
@@ -249,6 +253,8 @@ private:
     bool m_stageSelectPlayerMoveActive = false;
     std::vector<int> m_stageSelectCubeMeshIds;
     bool m_titleDeleteConfirmMode = false;
+    bool m_titleLanguageSelectionMode = false;
+    TitleLanguage m_titleLanguage = TitleLanguage::Japanese;
     std::vector<ActiveBomb> m_activeBombs;
     static const int kMaxBombs = 8;
     std::vector<ActiveBuster> m_activeBusters;
