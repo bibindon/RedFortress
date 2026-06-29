@@ -16,6 +16,8 @@ const int kStarDurationFrames = 1200;
 const float kStarPickupDistance = 1.0f;
 const std::wstring kStarModelPath = L"res\\model\\itemIconStar\\itemIconStar.x";
 const std::wstring kSpeedUpModelPath = L"res\\model\\itemIconPowerUp\\itemIconPowerUp.x";
+const std::wstring kStarItemId = L"star_power_up";
+const std::wstring kSpeedUpItemId = L"speed_up";
 const float kSpeedUpPickupDistance = 1.0f;
 const float kPickupIconScale = 1.0f;
 const int kMaxSpeedLevel = 8;
@@ -167,8 +169,10 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         {
             m_render->RemoveMeshMix(m_speedUpMeshId);
             m_speedUpMeshId = -1;
-            AddSpeedLevel();
-            GameAudio::PlayPowerUp();
+            if (AddSpeedLevel())
+            {
+                GameAudio::PlayPowerUp();
+            }
         }
     }
 
@@ -207,6 +211,10 @@ void PickupManager::ActivateStar(const int playerMeshId)
     {
         m_starActivatedCallback();
     }
+    if (m_itemCollectedCallback)
+    {
+        m_itemCollectedCallback(kStarItemId, 1);
+    }
     GameAudio::StartHyperMode();
     if (m_render != nullptr && playerMeshId >= 0)
     {
@@ -217,13 +225,14 @@ void PickupManager::ActivateStar(const int playerMeshId)
     }
 }
 
-void PickupManager::AddSpeedLevel()
+bool PickupManager::AddSpeedLevel()
 {
-    if (m_baseSpeedLevel < kMaxSpeedLevel)
+    if (m_baseSpeedLevel >= kMaxSpeedLevel)
     {
-        ++m_baseSpeedLevel;
+        return false;
     }
 
+    ++m_baseSpeedLevel;
     if (IsStarActive())
     {
         m_speedLevel = kMaxSpeedLevel;
@@ -232,6 +241,13 @@ void PickupManager::AddSpeedLevel()
     {
         m_speedLevel = m_baseSpeedLevel;
     }
+
+    if (m_itemCollectedCallback)
+    {
+        m_itemCollectedCallback(kSpeedUpItemId, 1);
+    }
+
+    return true;
 }
 
 void PickupManager::SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback)

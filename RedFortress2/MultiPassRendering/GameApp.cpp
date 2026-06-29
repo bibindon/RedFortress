@@ -385,7 +385,10 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
         m_pickupManager.ActivateStar(m_playerMeshId);
     });
     m_destructibleManager.SetSpeedUpCallback([this]() {
-        m_pickupManager.AddSpeedLevel();
+        if (m_pickupManager.AddSpeedLevel())
+        {
+            GameAudio::PlayPowerUp();
+        }
     });
     m_destructibleManager.LoadForStage(m_render, initialStage.destructibleCsvPath);
 

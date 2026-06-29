@@ -33,7 +33,7 @@ public:
                        DestructibleManager& destructibleManager);
 
     void ActivateStar(int playerMeshId);
-    void AddSpeedLevel();
+    bool AddSpeedLevel();
     void SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback);
     void SetStarActivatedCallback(std::function<void()> callback);
     void SetStarBlinkMode(StarBlinkMode mode);
