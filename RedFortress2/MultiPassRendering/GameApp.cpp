@@ -1343,14 +1343,17 @@ void GameApp::UpdatePlayerByInput()
         if (wheelDelta != 0)
         {
             m_playerAttackController.CycleAttackCategory();
+            GameAudio::PlayWeaponChange();
         }
         else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
         {
             m_playerAttackController.CycleAttackCategory(-1);
+            GameAudio::PlayWeaponChange();
         }
         else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
         {
             m_playerAttackController.CycleAttackCategory(1);
+            GameAudio::PlayWeaponChange();
         }
     }
 

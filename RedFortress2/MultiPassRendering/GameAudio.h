@@ -28,4 +28,5 @@ void PlayDashBooster();
 void PlayExplosion();
 void PlayStomp();
 void PlayBuster();
+void PlayWeaponChange();
 }
