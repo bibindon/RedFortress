@@ -1620,6 +1620,7 @@ void GameApp::InitializePlayerPhysics()
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
     PhysicsLib::SettingsState::SetCylinderRadius(0.3f);
     PhysicsLib::SettingsState::SetCylinderHeight(1.7f);
+    PhysicsLib::SettingsState::SetInertiaMode(PhysicsLib::InertiaMode::Legacy);
     PhysicsLib::SettingsState::SetGroundDashEnabled(true);
     PhysicsLib::SettingsState::SetAirDashEnabled(true);
     PhysicsLib::SettingsState::SetDashSpeed(18.0f);
