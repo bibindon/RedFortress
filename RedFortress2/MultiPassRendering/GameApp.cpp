@@ -2652,6 +2652,15 @@ void GameApp::UnlockStagesUpToSelected(HWND hDlg)
     }
 }
 
+void GameApp::AllUnlockStages(HWND hDlg)
+{
+    m_saveDataManager.MarkAllStagesClearedAndUnlocked();
+    m_saveDataManager.Save();
+    PopulateUnlockStageCombo(hDlg);
+    PopulateStageCombo(hDlg);
+    RefreshTitleCommands();
+}
+
 bool GameApp::StartStageByIndex(std::size_t stageIndex)
 {
     if (stageIndex >= m_stageManager.GetStageCount())
@@ -2920,6 +2929,10 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
 
         case IDC_BUTTON_UNLOCK_STAGES:
             UnlockStagesUpToSelected(hDlg);
+            return TRUE;
+
+        case IDC_BUTTON_ALL_UNLOCK:
+            AllUnlockStages(hDlg);
             return TRUE;
 
         case IDC_COMBO_SPEED_LEVEL:

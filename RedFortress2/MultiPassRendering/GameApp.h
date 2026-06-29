@@ -106,6 +106,7 @@ private:
     void PopulateSpeedLevelCombo(HWND hDlg);
     void ApplySelectedSpeedLevel(HWND hDlg);
     void UnlockStagesUpToSelected(HWND hDlg);
+    void AllUnlockStages(HWND hDlg);
     bool StartStageByIndex(std::size_t stageIndex);
     bool StartStageByIndexImmediate(std::size_t stageIndex);
     void StartNewGame();

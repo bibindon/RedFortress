@@ -21,6 +21,7 @@ public:
 
     void MarkStageUnlocked(const std::wstring& stageId);
     bool IsStageUnlocked(const std::wstring& stageId) const;
+    void MarkAllStagesClearedAndUnlocked();
 
     bool IsStageClearedByIndex(std::size_t stageIndex) const;
     void MarkStageClearedByIndex(std::size_t stageIndex);

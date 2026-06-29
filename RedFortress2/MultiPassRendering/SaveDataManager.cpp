@@ -285,6 +285,22 @@ bool SaveDataManager::IsStageUnlocked(const std::wstring& stageId) const
     return m_unlockedStageIds.find(stageId) != m_unlockedStageIds.end();
 }
 
+void SaveDataManager::MarkAllStagesClearedAndUnlocked()
+{
+    if (m_stageManager == nullptr)
+    {
+        return;
+    }
+
+    const std::size_t stageCount = m_stageManager->GetStageCount();
+    for (std::size_t i = 0; i < stageCount; ++i)
+    {
+        const StageManager::StageData& stage = m_stageManager->GetStage(i);
+        MarkStageCleared(stage.id);
+        MarkStageUnlocked(stage.id);
+    }
+}
+
 void SaveDataManager::InitializeDefaultUnlocks()
 {
     m_unlockedStageIds.insert(L"select1");
