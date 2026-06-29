@@ -31,6 +31,9 @@ SSSColorB,0.5
 ,
 FogEnable,0
 FogIntensity,1.0
+FogColorR,0.58
+FogColorG,0.42
+FogColorB,0.30
 ,
 DepthBufferShadowEnable,0
 ShadowIntensity,0.25

@@ -1,4 +1,4 @@
-SaturateEnable,1
+﻿SaturateEnable,1
 SaturateLevel,0.7
 ,
 HalfLambertShadowSaturation,2.0
@@ -31,6 +31,9 @@ SSSColorB,0.5
 ,
 FogEnable,1
 FogIntensity,10.0
+FogColorR,0.58
+FogColorG,0.42
+FogColorB,0.30
 FogDensity,10.0
 ,
 DepthBufferShadowEnable,1
