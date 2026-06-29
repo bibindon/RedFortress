@@ -10,7 +10,7 @@
 
 namespace
 {
-const std::wstring kCollectibleModelPath = L"res\\model\\smallCube\\small_cube.x";
+const std::wstring kCollectibleModelPath = L"res\\model\\itemIconMaterial\\itemIconMaterial.x";
 const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
 const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
 const float kCollectDistance = 0.9f;
