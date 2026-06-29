@@ -32,6 +32,7 @@ private:
         float duration = 0.35f;
         float radius = 1.0f;
         float scale = 0.5f;
+        bool chargeEnabled = true;
         int renderId = -1;
         int cooldownFrames = 0;
     };

@@ -11,6 +11,36 @@ namespace
 {
 const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooster.x";
 const int kDashBoosterCooldownFrames = 30;
+
+bool ParseChargeEnabled(const std::wstring& value)
+{
+    if (value == L"0")
+    {
+        return false;
+    }
+    if (value == L"false" || value == L"False" || value == L"FALSE")
+    {
+        return false;
+    }
+    if (value == L"n" || value == L"N")
+    {
+        return false;
+    }
+    if (value == L"no" || value == L"No" || value == L"NO")
+    {
+        return false;
+    }
+    if (value == L"off" || value == L"Off" || value == L"OFF")
+    {
+        return false;
+    }
+    if (value == L"なし" || value == L"無し" || value == L"無")
+    {
+        return false;
+    }
+
+    return true;
+}
 }
 
 void DashBoosterManager::Initialize(NSRender::Render& render)
@@ -66,6 +96,10 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
             booster.duration = std::stof(row.at(8));
             booster.radius = std::stof(row.at(9));
             booster.scale = std::stof(row.at(10));
+            if (row.size() >= 12)
+            {
+                booster.chargeEnabled = ParseChargeEnabled(row.at(11));
+            }
         }
         catch (...)
         {
@@ -99,6 +133,11 @@ void DashBoosterManager::Update(const D3DXVECTOR3& playerPosition,
             --booster.cooldownFrames;
         }
 
+        if (playerMover.IsBoosted())
+        {
+            continue;
+        }
+
         const D3DXVECTOR3 difference = playerPosition - booster.position;
         if (D3DXVec3Length(&difference) > booster.radius)
         {
@@ -110,7 +149,10 @@ void DashBoosterManager::Update(const D3DXVECTOR3& playerPosition,
             continue;
         }
 
-        playerMover.ApplyDashBooster(booster.direction, booster.speed, booster.duration);
+        playerMover.ApplyDashBooster(booster.direction,
+                                     booster.speed,
+                                     booster.duration,
+                                     booster.chargeEnabled);
         GameAudio::PlayDashBooster();
         booster.cooldownFrames = kDashBoosterCooldownFrames;
     }
