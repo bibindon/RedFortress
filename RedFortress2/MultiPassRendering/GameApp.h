@@ -160,6 +160,7 @@ private:
     std::wstring GetItemDisplayName(const std::wstring& itemId) const;
     void HandleItemCollected(const std::wstring& itemId, int count);
     void MaximizeTemporaryPowerUps();
+    void RestoreTemporaryPowerUps();
     void ShowItemPickupMessage(const std::wstring& itemId, int count);
     void DrawItemPickupMessage();
 
@@ -262,7 +263,9 @@ private:
     std::vector<ActiveBomb> m_activeBombs;
     static const int kMaxBombs = 8;
     int m_bombCapacity = 1;
+    int m_baseBombCapacity = 1;
     std::vector<ActiveBuster> m_activeBusters;
     int m_busterCooldownFrames = 0;
     int m_busterRapidLevel = 1;
+    int m_baseBusterRapidLevel = 1;
 };

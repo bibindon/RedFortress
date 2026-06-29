@@ -976,7 +976,12 @@ void GameApp::Run()
             }
 
             // プレイヤー無敵時間とスター時間を更新
+            const bool wasStarActive = m_pickupManager.IsStarActive();
             m_pickupManager.UpdateTimers();
+            if (wasStarActive && !m_pickupManager.IsStarActive())
+            {
+                RestoreTemporaryPowerUps();
+            }
             if (!m_pickupManager.IsStarActive() && m_playerInvincibleFrames > 0)
             {
                 --m_playerInvincibleFrames;
@@ -2313,9 +2318,9 @@ void GameApp::HandleItemCollected(const std::wstring& itemId, const int count)
     {
         for (int i = 0; i < count; ++i)
         {
-            if (m_bombCapacity < kMaxBombs)
+            if (m_baseBombCapacity < kMaxBombs)
             {
-                ++m_bombCapacity;
+                ++m_baseBombCapacity;
             }
         }
     }
@@ -2323,11 +2328,20 @@ void GameApp::HandleItemCollected(const std::wstring& itemId, const int count)
     {
         for (int i = 0; i < count; ++i)
         {
-            if (m_busterRapidLevel < kBusterRapidLevelMax)
+            if (m_baseBusterRapidLevel < kBusterRapidLevelMax)
             {
-                ++m_busterRapidLevel;
+                ++m_baseBusterRapidLevel;
             }
         }
+    }
+
+    if (m_pickupManager.IsStarActive())
+    {
+        MaximizeTemporaryPowerUps();
+    }
+    else
+    {
+        RestoreTemporaryPowerUps();
     }
 
     ShowItemPickupMessage(itemId, count);
@@ -2337,6 +2351,12 @@ void GameApp::MaximizeTemporaryPowerUps()
 {
     m_bombCapacity = kMaxBombs;
     m_busterRapidLevel = kBusterRapidLevelMax;
+}
+
+void GameApp::RestoreTemporaryPowerUps()
+{
+    m_bombCapacity = m_baseBombCapacity;
+    m_busterRapidLevel = m_baseBusterRapidLevel;
 }
 
 void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)
@@ -2670,6 +2690,8 @@ bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
 void GameApp::StartNewGame()
 {
     m_saveDataManager.ResetToDefaults();
+    m_baseBombCapacity = 1;
+    m_baseBusterRapidLevel = 1;
     m_bombCapacity = 1;
     m_busterRapidLevel = 1;
 
@@ -3100,6 +3122,8 @@ void GameApp::HandlePlayerDeath()
     m_playerKnockbackFrames = 0;
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
+    m_baseBombCapacity = 1;
+    m_baseBusterRapidLevel = 1;
     m_bombCapacity = 1;
     m_busterRapidLevel = 1;
     m_busterCooldownFrames = 0;
@@ -3289,6 +3313,7 @@ void GameApp::LoadCurrentStageObjects()
     m_damagePopupManager.Clear();
     m_playerInvincibleFrames = 0;
     m_pickupManager.ResetTemporaryEffects();
+    RestoreTemporaryPowerUps();
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
     m_respawnCameraDelayFrames = 0;
