@@ -179,6 +179,7 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
 void PickupManager::ActivateStar(const int playerMeshId)
 {
     m_starPowerupFrames = kStarDurationFrames;
+    m_speedLevel = kMaxSpeedLevel;
     GameAudio::StartHyperMode();
     if (m_render != nullptr && playerMeshId >= 0)
     {
