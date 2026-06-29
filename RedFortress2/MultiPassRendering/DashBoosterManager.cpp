@@ -11,6 +11,7 @@ namespace
 {
 const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooster.x";
 const int kDashBoosterCooldownFrames = 30;
+const float kDashBoosterVisualScale = 3.0f;
 
 bool ParseChargeEnabled(const std::wstring& value)
 {
@@ -114,7 +115,7 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
         booster.renderId = m_render->AddMeshMix(NSRender::Util::GetExeDir() + kDashBoosterModelPath,
                                                 booster.position,
                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                booster.scale,
+                                                booster.scale * kDashBoosterVisualScale,
                                                 -1.0f,
                                                 false,
                                                 false,
@@ -149,6 +150,7 @@ void DashBoosterManager::Update(const D3DXVECTOR3& playerPosition,
             continue;
         }
 
+        playerMover.SetPosition(booster.position);
         playerMover.ApplyDashBooster(booster.direction,
                                      booster.speed,
                                      booster.duration,

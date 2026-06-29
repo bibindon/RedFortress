@@ -1631,6 +1631,7 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
     const D3DXVECTOR3 currentRenderPosition = m_playerMover.GetPosition();
     if (m_playerMeshId >= 0)
     {
+        const bool playerVisible = !m_playerMover.IsDashBoosterCharging();
         D3DXVECTOR3 displayPosition = currentRenderPosition;
         float displayScale = 1.0f;
         if (IsCurrentStageSelect())
@@ -1641,12 +1642,14 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
 
         if (m_playerIsSkinAnim)
         {
+            m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, playerVisible);
             m_render.SetMeshMixSkinAnimPos(m_playerMeshId, displayPosition);
             m_render.SetMeshMixSkinAnimRotY(m_playerMeshId, m_playerYaw);
             m_render.SetMeshMixSkinAnimScale(m_playerMeshId, displayScale);
         }
         else
         {
+            m_render.SetMeshMixEnabled(m_playerMeshId, playerVisible);
             m_render.SetMeshMixPos(m_playerMeshId, displayPosition);
         }
     }
@@ -1685,7 +1688,14 @@ void GameApp::UpdatePlayerMeshVisibility()
         return;
     }
 
-    m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
+    if (m_playerIsSkinAnim)
+    {
+        m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
+    }
+    else
+    {
+        m_render.SetMeshMixEnabled(m_playerMeshId, true);
+    }
 }
 
 bool GameApp::IsCurrentStageSelect() const
