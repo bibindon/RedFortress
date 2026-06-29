@@ -297,6 +297,24 @@ void DestructibleManager::SetSpeedUpCallback(std::function<void()> callback)
     m_speedUpCallback = std::move(callback);
 }
 
+bool DestructibleManager::TryDropRedCube(NSRender::Render& render,
+                                         const D3DXVECTOR3& pos,
+                                         const int dropPercent)
+{
+    if (dropPercent <= 0)
+    {
+        return false;
+    }
+
+    const int r = GetRandomPercent();
+    if (r >= dropPercent)
+    {
+        return false;
+    }
+
+    return DropRedCube(render, pos);
+}
+
 void DestructibleManager::RemoveDroppedRedCube(NSRender::Render& render, const std::size_t index)
 {
     if (index >= m_droppedRedCubes.size())
@@ -310,6 +328,28 @@ void DestructibleManager::RemoveDroppedRedCube(NSRender::Render& render, const s
         render.RemoveMeshMix(cube.meshId);
         cube.meshId = -1;
     }
+}
+
+bool DestructibleManager::DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos)
+{
+    DroppedRedCube cube;
+    cube.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
+    cube.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
+    cube.meshId = render.AddMeshMix(kRedCubeModelPath,
+                                     cube.position,
+                                     D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                     0.5f,
+                                     -1.0f,
+                                     false,
+                                     false,
+                                     false);
+    if (cube.meshId < 0)
+    {
+        return false;
+    }
+
+    m_droppedRedCubes.push_back(cube);
+    return true;
 }
 
 void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR3& pos)
@@ -339,19 +379,5 @@ void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR
         return;
     }
 
-    DroppedRedCube cube;
-    cube.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
-    cube.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
-    cube.meshId = render.AddMeshMix(kRedCubeModelPath,
-                                     cube.position,
-                                     D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                     0.5f,
-                                     -1.0f,
-                                     false,
-                                     false,
-                                     false);
-    if (cube.meshId >= 0)
-    {
-        m_droppedRedCubes.push_back(cube);
-    }
+    DropRedCube(render, pos);
 }

@@ -141,6 +141,7 @@ private:
     void EnsureGoalArrow();
     void RemoveGoalArrow();
     void UpdateGoalArrow();
+    void TryDropEnemyItem(const Enemy& enemy);
     void InitializeStageSelectCursor();
     void SyncStageSelectPlayerToPortal(bool immediate);
     void MoveStageSelectCursorByDirection(float directionX, float directionY);

@@ -92,6 +92,7 @@ namespace
     const int kBusterDamage = 3;
     const float kBusterHitRadius = 0.5f;
     const float kDestructibleHitRadius = 0.9f;
+    const int kEnemyItemDropPercent = 25;
     const int kBusterRapidLevelMax = 8;
     const int kBusterCooldownByLevel[kBusterRapidLevelMax] = { 24, 20, 16, 12, 9, 6, 4, 3 };
     const float kEnemyAttackTargetHeight = 1.0f;
@@ -1024,6 +1025,7 @@ void GameApp::Run()
                     {
                         enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
+                        TryDropEnemyItem(enemy);
                         GameAudio::PlayStomp();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
@@ -1033,6 +1035,7 @@ void GameApp::Run()
                     {
                         enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy.GetPosition(), false);
+                        TryDropEnemyItem(enemy);
                         GameAudio::PlayAttackHit();
                         break;
                     }
@@ -1588,11 +1591,22 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
                                      kEnemyAttackKnockbackFrames);
             enemy.TakeDamage(m_render, attackDefinition.damage, playerPos);
             m_damagePopupManager.Add(attackDefinition.damage, enemy.GetPosition(), false);
+            TryDropEnemyItem(enemy);
             ++damagedCount;
         }
     }
 
     return damagedCount;
+}
+
+void GameApp::TryDropEnemyItem(const Enemy& enemy)
+{
+    if (!enemy.IsDead())
+    {
+        return;
+    }
+
+    m_destructibleManager.TryDropRedCube(m_render, enemy.GetPosition(), kEnemyItemDropPercent);
 }
 
 void GameApp::InitializePlayerPhysics()
@@ -3571,6 +3585,7 @@ void GameApp::UpdateBombs()
                     enemy.TakeDamageWithoutFacing(m_render, kBombExplosionDamage);
                     enemy.StartKnockbackFrom(bombPos, 0.5f, 30);
                     m_damagePopupManager.Add(kBombExplosionDamage, enemy.GetPosition(), false);
+                    TryDropEnemyItem(enemy);
                 }
             }
 
@@ -3715,6 +3730,7 @@ void GameApp::UpdateBusters()
                     enemy.TakeDamage(m_render, kBusterDamage, it->position);
                     enemy.StartKnockbackFrom(it->position, 0.3f, 20);
                     m_damagePopupManager.Add(kBusterDamage, enemy.GetPosition(), false);
+                    TryDropEnemyItem(enemy);
                     GameAudio::PlayAttackHit();
                     destroyed = true;
                     break;

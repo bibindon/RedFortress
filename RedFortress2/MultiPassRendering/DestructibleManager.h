@@ -62,9 +62,11 @@ public:
     void SetStarDropCallback(std::function<void()> callback);
     void SetSpeedUpCallback(std::function<void()> callback);
 
+    bool TryDropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos, int dropPercent);
     void RemoveDroppedRedCube(NSRender::Render& render, std::size_t index);
 
 private:
+    bool DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos);
     void TryDropItem(NSRender::Render& render, const D3DXVECTOR3& pos);
 
     NSRender::Render* m_render = nullptr;
