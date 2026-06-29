@@ -116,6 +116,7 @@ void PickupManager::ResetPlayerEffects()
 {
     m_starPowerupFrames = 0;
     GameAudio::StopHyperMode();
+    m_baseSpeedLevel = 1;
     m_speedLevel = 1;
 }
 
@@ -123,6 +124,7 @@ void PickupManager::ResetTemporaryEffects()
 {
     m_starPowerupFrames = 0;
     GameAudio::StopHyperMode();
+    m_speedLevel = m_baseSpeedLevel;
 }
 
 void PickupManager::UpdateTimers()
@@ -133,6 +135,7 @@ void PickupManager::UpdateTimers()
         if (m_starPowerupFrames <= 0)
         {
             GameAudio::StopHyperMode();
+            m_speedLevel = m_baseSpeedLevel;
         }
     }
 }
@@ -157,7 +160,7 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         }
     }
 
-    if (m_speedLevel < kMaxSpeedLevel && m_speedUpMeshId >= 0)
+    if (m_baseSpeedLevel < kMaxSpeedLevel && m_speedUpMeshId >= 0)
     {
         const D3DXVECTOR3 diff = playerPosition - m_speedUpPosition;
         if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
@@ -216,9 +219,18 @@ void PickupManager::ActivateStar(const int playerMeshId)
 
 void PickupManager::AddSpeedLevel()
 {
-    if (m_speedLevel < kMaxSpeedLevel)
+    if (m_baseSpeedLevel < kMaxSpeedLevel)
     {
-        ++m_speedLevel;
+        ++m_baseSpeedLevel;
+    }
+
+    if (IsStarActive())
+    {
+        m_speedLevel = kMaxSpeedLevel;
+    }
+    else
+    {
+        m_speedLevel = m_baseSpeedLevel;
     }
 }
 
@@ -241,17 +253,27 @@ void PickupManager::SetSpeedLevel(const int speedLevel)
 {
     if (speedLevel < 1)
     {
+        m_baseSpeedLevel = 1;
         m_speedLevel = 1;
         return;
     }
 
     if (speedLevel > kMaxSpeedLevel)
     {
+        m_baseSpeedLevel = kMaxSpeedLevel;
         m_speedLevel = kMaxSpeedLevel;
         return;
     }
 
-    m_speedLevel = speedLevel;
+    m_baseSpeedLevel = speedLevel;
+    if (IsStarActive())
+    {
+        m_speedLevel = kMaxSpeedLevel;
+    }
+    else
+    {
+        m_speedLevel = m_baseSpeedLevel;
+    }
 }
 
 int PickupManager::GetSpeedLevel() const

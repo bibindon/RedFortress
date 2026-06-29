@@ -54,6 +54,7 @@ private:
     int m_starMeshId = -1;
     int m_speedUpMeshId = -1;
     int m_speedLevel = 1;
+    int m_baseSpeedLevel = 1;
     StarBlinkMode m_starBlinkMode = StarBlinkMode::YellowWhite;
     D3DXVECTOR3 m_starPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_speedUpPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
