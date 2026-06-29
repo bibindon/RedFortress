@@ -40,6 +40,10 @@ namespace
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
     const std::wstring kAttackBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
+    const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
+    const int kItemPickupMessageTotalFrames = 180;
+    const int kItemPickupMessageFadeFrames = 24;
+    const int kItemPickupMessageY = 780;
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -381,7 +385,11 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     InputDevice::Initialize(m_hInstance, m_hWnd);
     m_inventoryManager.Initialize();
     m_inventoryManager.Load();
+    LoadItemNameCatalog();
     m_collectibleManager.Initialize(m_render, m_inventoryManager);
+    m_collectibleManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
+        ShowItemPickupMessage(itemId, count);
+    });
     m_collectibleManager.LoadForStage(initialStage.collectibleCsvPath);
     m_interactionManager.Initialize(m_render);
     m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
@@ -391,6 +399,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetLoadingScreenProgress(70);
     m_render.Draw();
     m_pickupManager.Initialize(m_render, m_inventoryManager);
+    m_pickupManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
+        ShowItemPickupMessage(itemId, count);
+    });
     m_pickupManager.LoadForStage(initialStage.starCsvPath, initialStage.speedUpCsvPath);
     m_dashBoosterManager.Initialize(m_render);
     m_dashBoosterManager.LoadForStage(initialStage.dashBoosterCsvPath);
@@ -851,6 +862,7 @@ void GameApp::Run()
                     {
                         m_inventoryManager.AddItem(L"lemon", 1);
                         m_inventoryManager.Save();
+                        ShowItemPickupMessage(L"lemon", 1);
                     }
                     m_qte->Finalize();
                     delete m_qte;
@@ -887,6 +899,7 @@ void GameApp::Run()
                 m_qte->Render();
             }
             DrawStageSelectCursor();
+            DrawItemPickupMessage();
             m_render.Draw();
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
@@ -2221,6 +2234,94 @@ void GameApp::DrawStageSelectCursor()
                               kStageSelectStartButtonWidth,
                               kStageSelectStartButtonHeight,
                               startButtonColor);
+}
+
+void GameApp::LoadItemNameCatalog()
+{
+    m_itemDisplayNames.clear();
+
+    const std::vector<std::vector<std::wstring>> csvData =
+        csv::Read(NSRender::Util::GetExeDir() + kItemNameCsvPath);
+
+    for (const std::vector<std::wstring>& row : csvData)
+    {
+        if (row.size() >= 2 && row.at(0) != L"ID")
+        {
+            m_itemDisplayNames[row.at(0)] = row.at(1);
+        }
+    }
+}
+
+std::wstring GameApp::GetItemDisplayName(const std::wstring& itemId) const
+{
+    const auto found = m_itemDisplayNames.find(itemId);
+    if (found != m_itemDisplayNames.end())
+    {
+        return found->second;
+    }
+
+    return itemId;
+}
+
+void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)
+{
+    std::wstring message = GetItemDisplayName(itemId) + L"を入手";
+    if (count > 1)
+    {
+        message += L" x" + std::to_wstring(count);
+    }
+
+    m_itemPickupMessage = message;
+    m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+}
+
+void GameApp::DrawItemPickupMessage()
+{
+    if (m_itemPickupMessageFrames <= 0 || m_itemPickupMessage.empty())
+    {
+        return;
+    }
+
+    if (m_itemPickupMessageFontId < 0)
+    {
+        m_itemPickupMessageFontId = m_render.SetUpFontEx(L"BIZ UDGothic",
+                                                          28,
+                                                          D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+
+    const int elapsedFrames = kItemPickupMessageTotalFrames - m_itemPickupMessageFrames;
+    int alpha = 255;
+    if (elapsedFrames < kItemPickupMessageFadeFrames)
+    {
+        alpha = (elapsedFrames * 255) / kItemPickupMessageFadeFrames;
+    }
+    else if (m_itemPickupMessageFrames < kItemPickupMessageFadeFrames)
+    {
+        alpha = (m_itemPickupMessageFrames * 255) / kItemPickupMessageFadeFrames;
+    }
+
+    if (alpha < 0)
+    {
+        alpha = 0;
+    }
+    if (alpha > 255)
+    {
+        alpha = 255;
+    }
+
+    m_render.DrawTextExCenter(m_itemPickupMessageFontId,
+                              m_itemPickupMessage,
+                              0,
+                              kItemPickupMessageY,
+                              NSRender::Common::BASE_W,
+                              42,
+                              D3DCOLOR_RGBA(255, 255, 255, alpha));
+
+    --m_itemPickupMessageFrames;
+    if (m_itemPickupMessageFrames <= 0)
+    {
+        m_itemPickupMessage.clear();
+    }
 }
 
 void GameApp::RemoveStageSelectCubes()

@@ -6,6 +6,7 @@
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
 #include <fstream>
+#include <utility>
 
 namespace
 {
@@ -130,6 +131,10 @@ void CollectibleManager::Collect(Collectible& collectible)
     else
     {
         m_inventory->AddItem(collectible.dataId);
+        if (m_itemCollectedCallback)
+        {
+            m_itemCollectedCallback(collectible.dataId, 1);
+        }
     }
 
     m_inventory->Save();
@@ -153,4 +158,9 @@ void CollectibleManager::Clear()
     }
 
     m_collectibles.clear();
+}
+
+void CollectibleManager::SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback)
+{
+    m_itemCollectedCallback = std::move(callback);
 }

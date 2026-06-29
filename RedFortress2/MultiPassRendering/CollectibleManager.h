@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <d3dx9.h>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -18,6 +19,7 @@ public:
     void LoadForStage(const std::wstring& csvPath);
     void Update(const D3DXVECTOR3& playerPosition);
     void Clear();
+    void SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback);
 
 private:
     enum class CollectibleType
@@ -40,5 +42,6 @@ private:
 
     NSRender::Render* m_render = nullptr;
     InventoryManager* m_inventory = nullptr;
+    std::function<void(const std::wstring&, int)> m_itemCollectedCallback;
     std::vector<Collectible> m_collectibles;
 };

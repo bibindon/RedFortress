@@ -7,6 +7,7 @@
 #include "../../RedFortressRender/Render/Util.h"
 #include <fstream>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 namespace
@@ -170,6 +171,10 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         {
             destructibleManager.RemoveDroppedRedCube(*m_render, i);
             m_inventory->AddItem(L"001");
+            if (m_itemCollectedCallback)
+            {
+                m_itemCollectedCallback(L"001", 1);
+            }
             m_inventory->Save();
             GameAudio::PlayItemGet();
         }
@@ -196,6 +201,11 @@ void PickupManager::AddSpeedLevel()
     {
         ++m_speedLevel;
     }
+}
+
+void PickupManager::SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback)
+{
+    m_itemCollectedCallback = std::move(callback);
 }
 
 void PickupManager::SetSpeedLevel(const int speedLevel)

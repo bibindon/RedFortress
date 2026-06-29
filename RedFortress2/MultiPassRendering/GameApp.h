@@ -152,6 +152,10 @@ private:
     void SpawnBuster(const D3DXVECTOR3& position, const D3DXVECTOR3& direction);
     void UpdateBusters();
     void ClearBusters();
+    void LoadItemNameCatalog();
+    std::wstring GetItemDisplayName(const std::wstring& itemId) const;
+    void ShowItemPickupMessage(const std::wstring& itemId, int count);
+    void DrawItemPickupMessage();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
     enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
@@ -225,6 +229,10 @@ private:
     int m_stageSelectFontId = -1;
     int m_stageSelectStartButtonFontId = -1;
     int m_stageSelectHintFontId = -1;
+    int m_itemPickupMessageFontId = -1;
+    std::unordered_map<std::wstring, std::wstring> m_itemDisplayNames;
+    std::wstring m_itemPickupMessage;
+    int m_itemPickupMessageFrames = 0;
     bool m_isMouseOverStartButton = false;
     int m_stageTitleFrame = 0;
     int m_goalMarkerMeshId = -1;
