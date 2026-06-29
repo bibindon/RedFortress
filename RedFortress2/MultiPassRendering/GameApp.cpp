@@ -1336,6 +1336,14 @@ void GameApp::UpdatePlayerByInput()
         {
             m_playerAttackController.CycleAttackCategory();
         }
+        else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+        {
+            m_playerAttackController.CycleAttackCategory(-1);
+        }
+        else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+        {
+            m_playerAttackController.CycleAttackCategory(1);
+        }
     }
 
     const PlayerAttackType requestedAttackType = m_playerAttackController.GetAttackType(shiftPressed);

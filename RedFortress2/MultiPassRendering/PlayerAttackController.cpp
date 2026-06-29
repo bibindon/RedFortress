@@ -167,9 +167,16 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
     return definition;
 }
 
-void PlayerAttackController::CycleAttackCategory()
+void PlayerAttackController::CycleAttackCategory(int direction)
 {
-    m_selectedCategory = (m_selectedCategory + 1) % 3;
+    const int categoryCount = 3;
+    int next = m_selectedCategory + direction;
+    next %= categoryCount;
+    if (next < 0)
+    {
+        next += categoryCount;
+    }
+    m_selectedCategory = next;
 }
 
 PlayerAttackType PlayerAttackController::GetAttackType(bool isStrong) const

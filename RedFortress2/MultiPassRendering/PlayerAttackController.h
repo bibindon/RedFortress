@@ -40,7 +40,7 @@ public:
     bool ConsumeHitRequested();
     const PlayerAttackDefinition& GetCurrentDefinition() const;
 
-    void CycleAttackCategory();
+    void CycleAttackCategory(int direction = 1);
     PlayerAttackType GetAttackType(bool isStrong) const;
     const wchar_t* GetCurrentCategoryName() const;
 
