@@ -7,6 +7,7 @@
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <utility>
 
@@ -15,9 +16,26 @@ namespace
 const std::wstring kCollectibleModelPath = L"res\\model\\itemIconMaterial\\itemIconMaterial.x";
 const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
 const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
+const std::wstring kRedSpaghettiItemId = L"007";
+const std::wstring kPotatoChipsItemId = L"008";
 const float kCollectDistance = 0.55f;
 const float kBlockedByDestructibleHorizontalDistance = 0.75f;
 const float kBlockedByDestructibleVerticalDistance = 1.2f;
+
+bool IsCraftOnlyItem(const std::wstring& itemId)
+{
+    if (itemId == kRedSpaghettiItemId)
+    {
+        return true;
+    }
+
+    if (itemId == kPotatoChipsItemId)
+    {
+        return true;
+    }
+
+    return false;
+}
 
 bool IsTemporaryPowerUpItem(const std::wstring& itemId)
 {
@@ -98,6 +116,11 @@ void CollectibleManager::LoadForStage(const std::wstring& csvPath)
         try
         {
             collectible.dataId = row.at(2);
+            if (collectible.type == CollectibleType::Item && IsCraftOnlyItem(collectible.dataId))
+            {
+                std::abort();
+            }
+
             collectible.position.x = std::stof(row.at(3));
             collectible.position.y = std::stof(row.at(4));
             collectible.position.z = std::stof(row.at(5));
