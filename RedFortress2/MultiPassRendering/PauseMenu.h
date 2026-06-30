@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <cstddef>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -28,6 +29,7 @@ public:
     bool ConsumeSaveRequested();
     bool IsOpen() const;
     bool BlocksGameInput() const;
+    void SetItemUseCallback(std::function<bool(const std::wstring&)> callback);
 
 private:
     struct ItemData
@@ -73,6 +75,7 @@ private:
     void UpdateSettingsPanel();
     void UpdateExitConfirm();
     void UpdateSaveConfirm();
+    bool IsUsableItem(const std::wstring& itemId) const;
     void EnsureSelectedItemVisible();
     void EnsureSelectedWeaponVisible();
     void RenderTopMenu();
@@ -120,6 +123,9 @@ private:
     std::size_t m_selectedItemIndex = 0;
     std::size_t m_itemScrollOffset = 0;
     std::vector<ItemData> m_items;
+    std::function<bool(const std::wstring&)> m_itemUseCallback;
+    std::wstring m_itemStatusMessage;
+    unsigned int m_itemStatusColor = 0;
     std::size_t m_selectedWeaponIndex = 0;
     std::size_t m_weaponScrollOffset = 0;
     std::vector<WeaponData> m_weapons;

@@ -25,6 +25,7 @@ public:
     void Render();
     bool IsOpen() const;
     bool BlocksGameInput() const;
+    void SetCurrentWorld(int world);
 
 private:
     struct Recipe
@@ -38,6 +39,8 @@ private:
 
     void LoadCatalog(const std::wstring& csvPath);
     void LoadRecipes();
+    int GetRecipeRequiredWorld(const Recipe& recipe) const;
+    bool IsRecipeUnlocked(const Recipe& recipe) const;
     bool CanCraft(const Recipe& recipe) const;
     std::wstring GetName(const std::wstring& id) const;
     void MoveSelection(int direction);
@@ -52,6 +55,7 @@ private:
     bool m_skipInputFrame = false;
     std::size_t m_selectedIndex = 0;
     std::size_t m_scrollOffset = 0;
+    int m_currentWorld = 1;
     std::vector<Recipe> m_recipes;
     std::unordered_map<std::wstring, std::wstring> m_names;
     std::wstring m_statusMessage;

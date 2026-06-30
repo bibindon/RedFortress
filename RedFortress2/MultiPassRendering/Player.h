@@ -5,6 +5,7 @@ class Player
 public:
     static const int DEFAULT_MAX_HP = 100;
     static const int DEFAULT_MAX_LIVES = 3;
+    static const int MAX_LIVES = 99;
 
     Player();
 
@@ -19,6 +20,7 @@ public:
     int GetLives() const;
     int GetMaxLives() const;
     void SetHp(int hp);
+    bool AddLife();
     void Damage(int amount);
     void Heal(int amount);
 
@@ -27,6 +29,6 @@ private:
 
     int m_maxHp = DEFAULT_MAX_HP;
     int m_hp = DEFAULT_MAX_HP;
-    int m_maxLives = DEFAULT_MAX_LIVES;
+    int m_maxLives = MAX_LIVES;
     int m_lives = DEFAULT_MAX_LIVES;
 };

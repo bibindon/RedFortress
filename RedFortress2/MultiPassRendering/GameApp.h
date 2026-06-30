@@ -161,11 +161,13 @@ private:
     void DrawAmmoGauge();
     int GetCurrentAmmo() const;
     int GetCurrentAmmoMax() const;
+    int GetCurrentWorld() const;
     void RefillWeaponAmmo();
     bool RecoverWeaponAmmoFromPickup();
     void LoadItemNameCatalog();
     std::wstring GetItemDisplayName(const std::wstring& itemId) const;
     void HandleItemCollected(const std::wstring& itemId, int count);
+    bool HandleInventoryItemUse(const std::wstring& itemId);
     void MaximizeTemporaryPowerUps();
     void RestoreTemporaryPowerUps();
     void ShowItemPickupMessage(const std::wstring& itemId, int count);

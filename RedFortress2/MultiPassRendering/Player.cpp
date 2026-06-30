@@ -13,7 +13,7 @@ void Player::ResetHp()
 
 void Player::ResetLives()
 {
-    m_lives = m_maxLives;
+    m_lives = DEFAULT_MAX_LIVES;
 }
 
 void Player::Die()
@@ -58,6 +58,17 @@ int Player::GetMaxLives() const
 void Player::SetHp(int hp)
 {
     m_hp = ClampHp(hp);
+}
+
+bool Player::AddLife()
+{
+    if (m_lives >= m_maxLives)
+    {
+        return false;
+    }
+
+    ++m_lives;
+    return true;
 }
 
 void Player::Damage(int amount)

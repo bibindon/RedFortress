@@ -47,6 +47,9 @@ namespace
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
+    const std::wstring kInitialClubWeaponId = L"W001";
+    const std::wstring kRedSpaghettiItemId = L"007";
+    const std::wstring kPotatoChipsItemId = L"008";
     const int kItemPickupMessageTotalFrames = 180;
     const int kItemPickupMessageFadeFrames = 24;
     const int kItemPickupMessageY = 780;
@@ -452,6 +455,11 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     InputDevice::Initialize(m_hInstance, m_hWnd);
     m_inventoryManager.Initialize();
     m_inventoryManager.Load();
+    if (m_inventoryManager.GetWeaponCount(kInitialClubWeaponId) <= 0)
+    {
+        m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
+        m_inventoryManager.Save();
+    }
     LoadItemNameCatalog();
     m_collectibleManager.Initialize(m_render, m_inventoryManager);
     m_collectibleManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
@@ -462,6 +470,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
     m_lavaZoneManager.LoadForStage(initialStage.lavaCsvPath);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
+    m_pauseMenu.SetItemUseCallback([this](const std::wstring& itemId) {
+        return HandleInventoryItemUse(itemId);
+    });
     m_craftMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
     m_render.SetLoadingScreenProgress(70);
@@ -841,6 +852,7 @@ void GameApp::Run()
                     {
                         if (interactionId == L"base-crafting-station-01")
                         {
+                            m_craftMenu.SetCurrentWorld(GetCurrentWorld());
                             m_craftMenu.Open();
                         }
                         else
@@ -2467,10 +2479,77 @@ int GameApp::GetCurrentAmmoMax() const
     return 0;
 }
 
+int GameApp::GetCurrentWorld() const
+{
+    int currentWorld = 1;
+    const std::size_t stageCount = m_stageManager.GetStageCount();
+    for (std::size_t i = 0; i < stageCount; ++i)
+    {
+        const StageManager::StageData& stage = m_stageManager.GetStage(i);
+        if (!m_saveDataManager.IsStageUnlocked(stage.id))
+        {
+            continue;
+        }
+
+        int stageWorld = 1;
+        if (!stage.id.empty())
+        {
+            const wchar_t firstChar = stage.id.at(0);
+            if (firstChar >= L'1' && firstChar <= L'4')
+            {
+                stageWorld = static_cast<int>(firstChar - L'0');
+            }
+        }
+
+        if (stageWorld > currentWorld)
+        {
+            currentWorld = stageWorld;
+        }
+    }
+
+    return currentWorld;
+}
+
 void GameApp::RefillWeaponAmmo()
 {
     m_busterAmmo = kBusterAmmoMax;
     m_bombAmmo = kBombAmmoMax;
+}
+
+bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
+{
+    if (itemId == kRedSpaghettiItemId)
+    {
+        if (m_player.GetLives() >= m_player.GetMaxLives())
+        {
+            return false;
+        }
+
+        if (!m_inventoryManager.RemoveItem(itemId, 1))
+        {
+            return false;
+        }
+
+        return m_player.AddLife();
+    }
+
+    if (itemId == kPotatoChipsItemId)
+    {
+        if (m_player.GetHp() >= m_player.GetMaxHp())
+        {
+            return false;
+        }
+
+        if (!m_inventoryManager.RemoveItem(itemId, 1))
+        {
+            return false;
+        }
+
+        HealPlayerHp(m_player.GetMaxHp());
+        return true;
+    }
+
+    return false;
 }
 
 bool GameApp::RecoverWeaponAmmoFromPickup()
@@ -2924,6 +3003,9 @@ bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
 void GameApp::StartNewGame()
 {
     m_saveDataManager.ResetToDefaults();
+    m_inventoryManager.Reset();
+    m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
+    m_inventoryManager.Save();
     m_baseBombCapacity = 1;
     m_baseBusterRapidLevel = 1;
     m_bombCapacity = 1;

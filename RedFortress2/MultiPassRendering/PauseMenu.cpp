@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "InventoryManager.h"
@@ -20,6 +21,8 @@ const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(225, 235, 255, 230);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
 const UINT kInactiveTextColor = D3DCOLOR_RGBA(190, 200, 220, 210);
+const UINT kSuccessTextColor = D3DCOLOR_RGBA(160, 245, 175, 245);
+const UINT kErrorTextColor = D3DCOLOR_RGBA(245, 145, 145, 245);
 const std::array<const wchar_t*, 5> kTopMenuItems =
 {
     L"アイテム",
@@ -101,6 +104,7 @@ void PauseMenu::Open()
     m_selectedQualityIndex = 0;
     m_selectedItemIndex = 0;
     m_itemScrollOffset = 0;
+    m_itemStatusMessage.clear();
     m_selectedWeaponIndex = 0;
     m_weaponScrollOffset = 0;
     m_render->SetSceneUpdatePaused(true);
@@ -387,9 +391,47 @@ void PauseMenu::UpdateItemList()
     if (m_selectedItemIndex != previousIndex)
     {
         GameAudio::PlayMenuMove();
+        m_itemStatusMessage.clear();
     }
 
     EnsureSelectedItemVisible();
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE))
+    {
+        const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
+        if (!IsUsableItem(selectedItem.id) || !m_itemUseCallback)
+        {
+            GameAudio::PlayMenuCancel();
+            m_itemStatusMessage = L"このアイテムは使用できません";
+            m_itemStatusColor = kErrorTextColor;
+            return;
+        }
+
+        if (m_itemUseCallback(selectedItem.id))
+        {
+            GameAudio::PlayMenuConfirm();
+            m_itemStatusMessage = selectedItem.name + L"を使用しました";
+            m_itemStatusColor = kSuccessTextColor;
+            const std::vector<std::size_t> refreshedItems = GetOwnedItemIndices();
+            if (m_selectedItemIndex >= refreshedItems.size() && m_selectedItemIndex > 0)
+            {
+                --m_selectedItemIndex;
+            }
+            EnsureSelectedItemVisible();
+        }
+        else
+        {
+            GameAudio::PlayMenuCancel();
+            m_itemStatusMessage = L"今は使用できません";
+            m_itemStatusColor = kErrorTextColor;
+        }
+    }
+}
+
+bool PauseMenu::IsUsableItem(const std::wstring& itemId) const
+{
+    return itemId == L"007" || itemId == L"008";
 }
 
 void PauseMenu::EnsureSelectedItemVisible()
@@ -899,6 +941,23 @@ void PauseMenu::RenderItemPanel()
                          detailX,
                          665,
                          kSubTextColor);
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               L"Enter / Space  使用   Esc  戻る",
+                               820,
+                               730,
+                               640,
+                               36,
+                               kSubTextColor);
+    if (!m_itemStatusMessage.empty())
+    {
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   m_itemStatusMessage,
+                                   820,
+                                   775,
+                                   640,
+                                   36,
+                                   m_itemStatusColor);
+    }
 }
 
 void PauseMenu::RenderWeaponPanel()
@@ -1490,6 +1549,11 @@ bool PauseMenu::IsOpen() const
 bool PauseMenu::BlocksGameInput() const
 {
     return m_isOpen;
+}
+
+void PauseMenu::SetItemUseCallback(std::function<bool(const std::wstring&)> callback)
+{
+    m_itemUseCallback = std::move(callback);
 }
 
 void PauseMenu::SetMouseCursorVisible(bool visible)

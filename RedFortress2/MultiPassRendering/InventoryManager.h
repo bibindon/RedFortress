@@ -15,6 +15,7 @@ public:
 
     void AddItem(const std::wstring& itemId, int count = 1);
     void AddWeapon(const std::wstring& weaponId, int count = 1);
+    bool RemoveItem(const std::wstring& itemId, int count = 1);
     int GetItemCount(const std::wstring& itemId) const;
     int GetWeaponCount(const std::wstring& weaponId) const;
     bool HasItems(const std::vector<std::pair<std::wstring, int>>& materials) const;

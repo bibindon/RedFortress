@@ -151,6 +151,29 @@ void InventoryManager::AddWeapon(const std::wstring& weaponId, const int count)
     }
 }
 
+bool InventoryManager::RemoveItem(const std::wstring& itemId, const int count)
+{
+    if (itemId.empty() || count <= 0)
+    {
+        return false;
+    }
+
+    auto found = m_itemCounts.find(itemId);
+    if (found == m_itemCounts.end() || found->second < count)
+    {
+        return false;
+    }
+
+    found->second -= count;
+    if (found->second <= 0)
+    {
+        m_itemCounts.erase(found);
+    }
+
+    Save();
+    return true;
+}
+
 int InventoryManager::GetItemCount(const std::wstring& itemId) const
 {
     return GetCount(m_itemCounts, itemId);

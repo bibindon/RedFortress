@@ -115,6 +115,22 @@ void CraftMenu::Update()
     }
 
     const Recipe& recipe = m_recipes.at(m_selectedIndex);
+    if (!IsRecipeUnlocked(recipe))
+    {
+        GameAudio::PlayMenuCancel();
+        const int requiredWorld = GetRecipeRequiredWorld(recipe);
+        if (requiredWorld <= 2)
+        {
+            m_statusMessage = L"ワールド2になるまで武器はクラフトできない";
+        }
+        else
+        {
+            m_statusMessage = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
+        }
+        m_statusColor = kMissingTextColor;
+        return;
+    }
+
     if (!CanCraft(recipe))
     {
         GameAudio::PlayMenuCancel();
@@ -158,11 +174,11 @@ void CraftMenu::Render()
     {
         const Recipe& recipe = m_recipes.at(i);
         UINT color = kTextColor;
-        if (!CanCraft(recipe))
+        if (!IsRecipeUnlocked(recipe) || !CanCraft(recipe))
         {
             color = kDisabledTextColor;
         }
-        if (i == m_selectedIndex && CanCraft(recipe))
+        if (i == m_selectedIndex && IsRecipeUnlocked(recipe) && CanCraft(recipe))
         {
             color = kSelectedTextColor;
         }
@@ -205,12 +221,24 @@ void CraftMenu::Render()
     }
 
     std::wstring availability = L"素材不足";
-    if (CanCraft(selectedRecipe))
+    if (!IsRecipeUnlocked(selectedRecipe))
+    {
+        const int requiredWorld = GetRecipeRequiredWorld(selectedRecipe);
+        if (requiredWorld <= 2)
+        {
+            availability = L"ワールド2になるまで武器はクラフトできない";
+        }
+        else
+        {
+            availability = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
+        }
+    }
+    else if (CanCraft(selectedRecipe))
     {
         availability = L"作成できます";
     }
     UINT availabilityColor = kEnoughTextColor;
-    if (!CanCraft(selectedRecipe))
+    if (!IsRecipeUnlocked(selectedRecipe) || !CanCraft(selectedRecipe))
     {
         availabilityColor = kMissingTextColor;
     }
@@ -236,6 +264,17 @@ bool CraftMenu::IsOpen() const
 bool CraftMenu::BlocksGameInput() const
 {
     return m_isOpen;
+}
+
+void CraftMenu::SetCurrentWorld(const int world)
+{
+    if (world < 1)
+    {
+        m_currentWorld = 1;
+        return;
+    }
+
+    m_currentWorld = world;
 }
 
 void CraftMenu::LoadCatalog(const std::wstring& csvPath)
@@ -310,6 +349,36 @@ void CraftMenu::LoadRecipes()
 bool CraftMenu::CanCraft(const Recipe& recipe) const
 {
     return m_inventory != nullptr && m_inventory->HasItems(recipe.materials);
+}
+
+int CraftMenu::GetRecipeRequiredWorld(const Recipe& recipe) const
+{
+    if (recipe.resultType != L"Weapon")
+    {
+        return 1;
+    }
+
+    if (recipe.resultId == L"W002")
+    {
+        return 2;
+    }
+
+    if (recipe.resultId == L"W003")
+    {
+        return 3;
+    }
+
+    if (recipe.resultId == L"W004")
+    {
+        return 4;
+    }
+
+    return 1;
+}
+
+bool CraftMenu::IsRecipeUnlocked(const Recipe& recipe) const
+{
+    return m_currentWorld >= GetRecipeRequiredWorld(recipe);
 }
 
 std::wstring CraftMenu::GetName(const std::wstring& id) const
