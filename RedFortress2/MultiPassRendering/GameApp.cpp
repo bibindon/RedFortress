@@ -3718,7 +3718,7 @@ void GameApp::LoadCurrentStageObjects()
 
     if (m_playerMeshId >= 0)
     {
-        const D3DXVECTOR3 kHiddenHeldWeaponPosition(0.0f, -10000.0f, 0.0f);
+        const D3DXVECTOR3 kHiddenHeldWeaponPosition(0.0f, -100.0f, 0.0f);
         m_stickMeshId = m_render.AddMeshMix(kStickModelPath,
                                             kHiddenHeldWeaponPosition,
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
