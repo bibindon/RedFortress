@@ -3603,6 +3603,7 @@ void GameApp::LoadCurrentStageObjects()
     m_useFixedCamera = stage.useFixedCamera;
     m_fixedCameraPos = stage.fixedCameraPos;
     m_fixedCameraLookAt = stage.fixedCameraLookAt;
+    RefillWeaponAmmo();
 
     if (m_qte != nullptr)
     {
