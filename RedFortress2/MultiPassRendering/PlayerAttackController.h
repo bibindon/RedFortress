@@ -6,6 +6,8 @@ enum class PlayerAttackType
 {
     WeakAttack,
     StrongAttack,
+    SwordAttack,
+    SwordStrongAttack,
     BombAttack,
     BombStrongAttack,
     BusterAttack,

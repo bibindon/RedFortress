@@ -114,6 +114,30 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.animationName = L"slash";
         definition.animationSpeed = 2.0f;
         break;
+    case PlayerAttackType::SwordAttack:
+        definition.durationFrames = 24;
+        definition.hitDelayFrames = 12;
+        definition.damage = 2;
+        definition.range = 3.0f;
+        definition.halfAngleRadians = D3DXToRadian(90.0f);
+        definition.moveSpeed = 5.5f;
+        definition.moveStartRemainingFrames = 12;
+        definition.moveEndRemainingFrames = 16;
+        definition.animationName = L"slash";
+        definition.animationSpeed = 4.0f;
+        break;
+    case PlayerAttackType::SwordStrongAttack:
+        definition.durationFrames = 57;
+        definition.hitDelayFrames = 28;
+        definition.damage = 5;
+        definition.range = 3.0f;
+        definition.halfAngleRadians = D3DXToRadian(90.0f);
+        definition.moveSpeed = 0.0909f;
+        definition.moveStartRemainingFrames = 28;
+        definition.moveEndRemainingFrames = 38;
+        definition.animationName = L"slash";
+        definition.animationSpeed = 2.0f;
+        break;
     case PlayerAttackType::BombAttack:
         definition.durationFrames = 24;
         definition.hitDelayFrames = 12;
@@ -169,7 +193,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
 
 void PlayerAttackController::CycleAttackCategory(int direction)
 {
-    const int categoryCount = 3;
+    const int categoryCount = 4;
     int next = m_selectedCategory + direction;
     next %= categoryCount;
     if (next < 0)
@@ -193,17 +217,25 @@ PlayerAttackType PlayerAttackController::GetAttackType(bool isStrong) const
     {
         if (isStrong)
         {
-            return PlayerAttackType::BombStrongAttack;
+            return PlayerAttackType::SwordStrongAttack;
         }
-        return PlayerAttackType::BombAttack;
+        return PlayerAttackType::SwordAttack;
     }
-    else
+    if (m_selectedCategory == 2)
     {
         if (isStrong)
         {
             return PlayerAttackType::BusterStrongAttack;
         }
         return PlayerAttackType::BusterAttack;
+    }
+    else
+    {
+        if (isStrong)
+        {
+            return PlayerAttackType::BombStrongAttack;
+        }
+        return PlayerAttackType::BombAttack;
     }
 }
 
@@ -215,10 +247,14 @@ const wchar_t* PlayerAttackController::GetCurrentCategoryName() const
     }
     if (m_selectedCategory == 1)
     {
-        return L"爆弾設置";
+        return L"海賊剣";
+    }
+    if (m_selectedCategory == 2)
+    {
+        return L"バスター";
     }
     else
     {
-        return L"バスター";
+        return L"爆弾設置";
     }
 }

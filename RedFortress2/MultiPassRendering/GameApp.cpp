@@ -37,6 +37,7 @@ namespace
     const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
     const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
+    const std::wstring kAttackClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
     const std::wstring kAttackBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
@@ -104,6 +105,18 @@ namespace
 
     const std::wstring& GetAttackIconPath(const PlayerAttackType attackType)
     {
+        if (attackType == PlayerAttackType::WeakAttack ||
+            attackType == PlayerAttackType::StrongAttack)
+        {
+            return kAttackClubIconPath;
+        }
+
+        if (attackType == PlayerAttackType::SwordAttack ||
+            attackType == PlayerAttackType::SwordStrongAttack)
+        {
+            return kAttackSlashIconPath;
+        }
+
         if (attackType == PlayerAttackType::BombAttack ||
             attackType == PlayerAttackType::BombStrongAttack)
         {
@@ -116,7 +129,7 @@ namespace
             return kAttackBusterIconPath;
         }
 
-        return kAttackSlashIconPath;
+        return kAttackClubIconPath;
     }
 
     int GetBusterCooldownFrames(const int rapidLevel)
