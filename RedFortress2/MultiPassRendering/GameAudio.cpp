@@ -19,6 +19,8 @@ const std::wstring kRainEnvironment = L"res\\sound\\ENV_rain.wav";
 const std::wstring kMenuMove = L"res\\sound\\menu_cursor_move.wav";
 const std::wstring kMenuConfirm = L"res\\sound\\menu_cursor_confirm.wav";
 const std::wstring kMenuCancel = L"res\\sound\\menu_cursor_cancel.wav";
+const std::wstring kStageSelectMove = L"res\\sound\\cursor_move.wav";
+const std::wstring kStageSelectConfirm = L"res\\sound\\cursor_confirm.wav";
 const std::wstring kPlayerAttack = L"res\\sound\\attack01.wav";
 const std::wstring kSlashHit = L"res\\sound\\slashHit.wav";
 const std::wstring kAttackHit = L"res\\sound\\enemyHanen.wav";
@@ -138,7 +140,7 @@ void Initialize()
     {
         kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSlashHit, kAttackHit,
         kEnemyAttack, kPlayerDamage, kItemGet, kJump, kPowerUp, kDash, kDashBooster,
-        kExplosion, kStomp, kBuster, kWeaponChange
+        kExplosion, kStomp, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm
     };
     for (const std::wstring& effect : effects)
     {
@@ -220,6 +222,8 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
 void PlayMenuMove() { PlayEffect(kMenuMove, 70); }
 void PlayMenuConfirm() { PlayEffect(kMenuConfirm, 78); }
 void PlayMenuCancel() { PlayEffect(kMenuCancel, 72); }
+void PlayStageSelectMove() { PlayEffect(kStageSelectMove, 72); }
+void PlayStageSelectConfirm() { PlayEffect(kStageSelectConfirm, 78); }
 void PlayPlayerAttack() { PlayEffect(kPlayerAttack, 82); }
 void PlaySlashHit() { PlayEffect(kSlashHit, 82); }
 void PlayAttackHit() { PlayEffect(kAttackHit, 82); }

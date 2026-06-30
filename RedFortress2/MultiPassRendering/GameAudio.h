@@ -13,6 +13,8 @@ void UpdateStageMusic(const std::wstring& stageId, int stageNumber, bool useRain
 void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();
+void PlayStageSelectMove();
+void PlayStageSelectConfirm();
 void PlayPlayerAttack();
 void PlaySlashHit();
 void PlayAttackHit();

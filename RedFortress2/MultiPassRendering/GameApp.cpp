@@ -1377,6 +1377,7 @@ void GameApp::UpdatePlayerByInput()
             {
                 m_playerYaw = kStageSelectPlayerRightYaw;
                 SetPlayerAnimationState(PlayerAnimState::Walk, kPlayerWalkAnimationSpeed);
+                GameAudio::PlayStageSelectMove();
             }
         }
         else if (m_hasSelectedStagePortal)
@@ -2315,6 +2316,11 @@ void GameApp::UpdateStageSelectCursorByInput()
 
 bool GameApp::MoveToSelectedStagePortal()
 {
+    if (m_stageSelectPlayerMoveActive)
+    {
+        return false;
+    }
+
     if (!m_hasSelectedStagePortal || !IsStagePortalSelectable(m_selectedStagePortalId))
     {
         return false;
@@ -2329,7 +2335,13 @@ bool GameApp::MoveToSelectedStagePortal()
     }
 
     m_lastSelectId = m_stageManager.GetCurrentStage().id;
-    return StartStageByIndex(targetIndex);
+    if (!StartStageByIndex(targetIndex))
+    {
+        return false;
+    }
+
+    GameAudio::PlayStageSelectConfirm();
+    return true;
 }
 
 std::wstring GameApp::GetSelectedStagePortalDisplayName() const
@@ -2408,7 +2420,11 @@ void GameApp::DrawStageSelectCursor()
                         D3DCOLOR_RGBA(255, 255, 255, 220));
 
     UINT startButtonColor = D3DCOLOR_RGBA(255, 255, 255, 255);
-    if (m_isMouseOverStartButton)
+    if (m_stageSelectPlayerMoveActive)
+    {
+        startButtonColor = D3DCOLOR_RGBA(160, 160, 160, 220);
+    }
+    else if (m_isMouseOverStartButton)
     {
         startButtonColor = D3DCOLOR_RGBA(255, 255, 0, 255);
     }
