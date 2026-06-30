@@ -1418,21 +1418,25 @@ void GameApp::UpdatePlayerByInput()
     {
         const bool isBombCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"爆弾設置"));
         const bool isBusterCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"バスター"));
+        const bool isStarActive = m_pickupManager.IsStarActive();
         if (isBombCategory)
         {
-            if (m_bombAmmo > 0)
+            if (isStarActive || m_bombAmmo > 0)
             {
                 const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
                 const D3DXVECTOR3 bombPos = m_playerMover.GetPosition() + forward * kBombPlaceDistance;
                 if (PlaceBomb(bombPos))
                 {
-                    --m_bombAmmo;
+                    if (!isStarActive)
+                    {
+                        --m_bombAmmo;
+                    }
                 }
             }
         }
         else if (isBusterCategory)
         {
-            if (m_busterCooldownFrames <= 0 && m_busterAmmo > 0)
+            if (m_busterCooldownFrames <= 0 && (isStarActive || m_busterAmmo > 0))
             {
                 if (m_playerAttackController.TryStart(requestedAttackType))
                 {
@@ -1440,7 +1444,10 @@ void GameApp::UpdatePlayerByInput()
                     D3DXVECTOR3 spawnPos = m_playerMover.GetPosition() + forward * 1.0f;
                     spawnPos.y += kBusterSpawnHeight;
                     SpawnBuster(spawnPos, forward);
-                    --m_busterAmmo;
+                    if (!isStarActive)
+                    {
+                        --m_busterAmmo;
+                    }
                     m_busterCooldownFrames = GetBusterCooldownFrames(m_busterRapidLevel);
                     GameAudio::PlayBuster();
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
@@ -2568,6 +2575,7 @@ void GameApp::MaximizeTemporaryPowerUps()
 {
     m_bombCapacity = kMaxBombs;
     m_busterRapidLevel = kBusterRapidLevelMax;
+    RefillWeaponAmmo();
 }
 
 void GameApp::RestoreTemporaryPowerUps()
