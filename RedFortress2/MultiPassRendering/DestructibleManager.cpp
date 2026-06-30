@@ -430,7 +430,7 @@ bool DestructibleManager::DropAmmoHeart(NSRender::Render& render, const D3DXVECT
     heart.meshId = render.AddMeshMix(kAmmoHeartModelPath,
                                      heart.position,
                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                     0.5f,
+                                     1.0f,
                                      -1.0f,
                                      false,
                                      false,

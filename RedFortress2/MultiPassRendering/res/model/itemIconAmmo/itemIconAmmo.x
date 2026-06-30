@@ -120,7 +120,7 @@ Frame Root {
           20.000000;
           0.120000; 0.100000; 0.080000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconPowerUp.png";}
+          TextureFilename {"itemIconAmmo.png";}
         }
       }
     }
