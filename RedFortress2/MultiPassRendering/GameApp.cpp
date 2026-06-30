@@ -41,6 +41,9 @@ namespace
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
     const std::wstring kAttackBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
+    const std::wstring kAmmoRailImagePath = L"res\\2D_Image\\ammo_rail.png";
+    const std::wstring kAmmoBeadFullImagePath = L"res\\2D_Image\\ammo_bead_full.png";
+    const std::wstring kAmmoBeadEmptyImagePath = L"res\\2D_Image\\ammo_bead_empty.png";
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
@@ -94,13 +97,41 @@ namespace
     const float kBusterHitRadius = 0.5f;
     const float kDestructibleHitRadius = 0.9f;
     const int kEnemyItemDropPercent = 25;
+    const int kBombAmmoMax = 10;
+    const int kBusterAmmoMax = 30;
     const int kBusterRapidLevelMax = 8;
     const int kBusterCooldownByLevel[kBusterRapidLevelMax] = { 24, 20, 16, 12, 9, 6, 4, 3 };
     const float kEnemyAttackTargetHeight = 1.0f;
+    const int kAmmoGaugeX = 54;
+    const int kAmmoGaugeY = 78;
+    const int kAmmoRailHeight = 5;
+    const int kAmmoRailOffsetY = 11;
+    const int kAmmoBeadSize = 14;
+    const int kAmmoBeadStep = 17;
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
     {
         return enemy.GetPosition() + D3DXVECTOR3(0.0f, kEnemyAttackTargetHeight, 0.0f);
+    }
+
+    bool IsBombAttackType(const PlayerAttackType attackType)
+    {
+        if (attackType == PlayerAttackType::BombAttack)
+        {
+            return true;
+        }
+
+        return attackType == PlayerAttackType::BombStrongAttack;
+    }
+
+    bool IsBusterAttackType(const PlayerAttackType attackType)
+    {
+        if (attackType == PlayerAttackType::BusterAttack)
+        {
+            return true;
+        }
+
+        return attackType == PlayerAttackType::BusterStrongAttack;
     }
 
     const std::wstring& GetAttackIconPath(const PlayerAttackType attackType)
@@ -117,14 +148,12 @@ namespace
             return kAttackSlashIconPath;
         }
 
-        if (attackType == PlayerAttackType::BombAttack ||
-            attackType == PlayerAttackType::BombStrongAttack)
+        if (IsBombAttackType(attackType))
         {
             return kAttackBombIconPath;
         }
 
-        if (attackType == PlayerAttackType::BusterAttack ||
-            attackType == PlayerAttackType::BusterStrongAttack)
+        if (IsBusterAttackType(attackType))
         {
             return kAttackBusterIconPath;
         }
@@ -717,6 +746,7 @@ void GameApp::Run()
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
+                    DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
@@ -740,6 +770,7 @@ void GameApp::Run()
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
+                    DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
@@ -764,6 +795,7 @@ void GameApp::Run()
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
+                    DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
@@ -905,6 +937,7 @@ void GameApp::Run()
             if (!IsCurrentStageSelect())
             {
                 m_hpBar.Draw();
+                DrawAmmoGauge();
                 const int kAttackTypeHudX = 48;
                 const int kAttackTypeHudY = 92;
                 const int kAttackTypeIconSize = 64;
@@ -1381,13 +1414,19 @@ void GameApp::UpdatePlayerByInput()
         const bool isBusterCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"バスター"));
         if (isBombCategory)
         {
-            const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
-            const D3DXVECTOR3 bombPos = m_playerMover.GetPosition() + forward * kBombPlaceDistance;
-            PlaceBomb(bombPos);
+            if (m_bombAmmo > 0)
+            {
+                const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+                const D3DXVECTOR3 bombPos = m_playerMover.GetPosition() + forward * kBombPlaceDistance;
+                if (PlaceBomb(bombPos))
+                {
+                    --m_bombAmmo;
+                }
+            }
         }
         else if (isBusterCategory)
         {
-            if (m_busterCooldownFrames <= 0)
+            if (m_busterCooldownFrames <= 0 && m_busterAmmo > 0)
             {
                 if (m_playerAttackController.TryStart(requestedAttackType))
                 {
@@ -1395,6 +1434,7 @@ void GameApp::UpdatePlayerByInput()
                     D3DXVECTOR3 spawnPos = m_playerMover.GetPosition() + forward * 1.0f;
                     spawnPos.y += kBusterSpawnHeight;
                     SpawnBuster(spawnPos, forward);
+                    --m_busterAmmo;
                     m_busterCooldownFrames = GetBusterCooldownFrames(m_busterRapidLevel);
                     GameAudio::PlayBuster();
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
@@ -2381,6 +2421,86 @@ void GameApp::HandleItemCollected(const std::wstring& itemId, const int count)
     ShowItemPickupMessage(itemId, count);
 }
 
+int GameApp::GetCurrentAmmo() const
+{
+    const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
+    if (IsBusterAttackType(attackType))
+    {
+        return m_busterAmmo;
+    }
+
+    if (IsBombAttackType(attackType))
+    {
+        return m_bombAmmo;
+    }
+
+    return 0;
+}
+
+int GameApp::GetCurrentAmmoMax() const
+{
+    const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
+    if (IsBusterAttackType(attackType))
+    {
+        return kBusterAmmoMax;
+    }
+
+    if (IsBombAttackType(attackType))
+    {
+        return kBombAmmoMax;
+    }
+
+    return 0;
+}
+
+void GameApp::RefillWeaponAmmo()
+{
+    m_busterAmmo = kBusterAmmoMax;
+    m_bombAmmo = kBombAmmoMax;
+}
+
+void GameApp::DrawAmmoGauge()
+{
+    const int ammoMax = GetCurrentAmmoMax();
+    if (ammoMax <= 0)
+    {
+        return;
+    }
+
+    int ammo = GetCurrentAmmo();
+    if (ammo < 0)
+    {
+        ammo = 0;
+    }
+    if (ammo > ammoMax)
+    {
+        ammo = ammoMax;
+    }
+
+    const int railTotalWidth = ((ammoMax - 1) * kAmmoBeadStep) + kAmmoBeadSize;
+    m_render.DrawImageSized(kAmmoRailImagePath,
+                            kAmmoGaugeX,
+                            kAmmoGaugeY + kAmmoRailOffsetY,
+                            railTotalWidth,
+                            kAmmoRailHeight,
+                            220);
+
+    for (int i = 0; i < ammoMax; ++i)
+    {
+        const std::wstring* beadPath = &kAmmoBeadEmptyImagePath;
+        if (i < ammo)
+        {
+            beadPath = &kAmmoBeadFullImagePath;
+        }
+        m_render.DrawImageSized(*beadPath,
+                                kAmmoGaugeX + (i * kAmmoBeadStep),
+                                kAmmoGaugeY,
+                                kAmmoBeadSize,
+                                kAmmoBeadSize,
+                                255);
+    }
+}
+
 void GameApp::MaximizeTemporaryPowerUps()
 {
     m_bombCapacity = kMaxBombs;
@@ -2737,6 +2857,7 @@ void GameApp::StartNewGame()
     m_baseBusterRapidLevel = 1;
     m_bombCapacity = 1;
     m_busterRapidLevel = 1;
+    RefillWeaponAmmo();
 
     const std::size_t select1Index = m_stageManager.FindStageIndexById(L"select1");
     if (select1Index < m_stageManager.GetStageCount())
@@ -3174,6 +3295,7 @@ void GameApp::HandlePlayerDeath()
     m_bombCapacity = 1;
     m_busterRapidLevel = 1;
     m_busterCooldownFrames = 0;
+    RefillWeaponAmmo();
     ClearBombs();
     ClearBusters();
     m_render.SetSceneUpdatePaused(true);
@@ -3508,11 +3630,11 @@ POINT GameApp::ConvertMouseToBaseResolution(int clientX, int clientY)
     return result;
 }
 
-void GameApp::PlaceBomb(const D3DXVECTOR3& position)
+bool GameApp::PlaceBomb(const D3DXVECTOR3& position)
 {
     if (static_cast<int>(m_activeBombs.size()) >= m_bombCapacity)
     {
-        return;
+        return false;
     }
 
     ActiveBomb bomb;
@@ -3527,6 +3649,7 @@ void GameApp::PlaceBomb(const D3DXVECTOR3& position)
                                       false,
                                       false);
     m_activeBombs.push_back(bomb);
+    return true;
 }
 
 void GameApp::UpdateBombPhysics(ActiveBomb& bomb)
