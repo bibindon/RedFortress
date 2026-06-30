@@ -1012,7 +1012,7 @@ void GameApp::Run()
             {
                 m_playerMover.Update(m_pendingMove, m_pendingJump);
                 m_dashBoosterManager.Update(m_playerMover.GetPosition(), m_playerMover);
-                m_collectibleManager.Update(m_playerMover.GetPosition());
+                m_collectibleManager.Update(m_playerMover.GetPosition(), m_destructibleManager);
                 if (m_playerMover.IsCrushed())
                 {
                     DamagePlayerHp(m_player.GetHp());

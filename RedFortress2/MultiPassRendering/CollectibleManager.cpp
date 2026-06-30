@@ -1,10 +1,12 @@
 ﻿#include "CollectibleManager.h"
 
+#include "DestructibleManager.h"
 #include "InventoryManager.h"
 #include "GameAudio.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
+#include <cmath>
 #include <fstream>
 #include <utility>
 
@@ -13,7 +15,9 @@ namespace
 const std::wstring kCollectibleModelPath = L"res\\model\\itemIconMaterial\\itemIconMaterial.x";
 const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
 const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
-const float kCollectDistance = 0.9f;
+const float kCollectDistance = 0.55f;
+const float kBlockedByDestructibleHorizontalDistance = 0.75f;
+const float kBlockedByDestructibleVerticalDistance = 1.2f;
 
 bool IsTemporaryPowerUpItem(const std::wstring& itemId)
 {
@@ -116,11 +120,17 @@ void CollectibleManager::LoadForStage(const std::wstring& csvPath)
     }
 }
 
-void CollectibleManager::Update(const D3DXVECTOR3& playerPosition)
+void CollectibleManager::Update(const D3DXVECTOR3& playerPosition,
+                                const DestructibleManager& destructibleManager)
 {
     for (Collectible& collectible : m_collectibles)
     {
         if (collectible.renderId < 0)
+        {
+            continue;
+        }
+
+        if (IsBlockedByAliveDestructible(collectible.position, destructibleManager))
         {
             continue;
         }
@@ -131,6 +141,37 @@ void CollectibleManager::Update(const D3DXVECTOR3& playerPosition)
             Collect(collectible);
         }
     }
+}
+
+bool CollectibleManager::IsBlockedByAliveDestructible(const D3DXVECTOR3& position,
+                                                      const DestructibleManager& destructibleManager) const
+{
+    const std::vector<DestructibleObject>& objects = destructibleManager.GetObjects();
+    for (const DestructibleObject& object : objects)
+    {
+        if (object.isDead || object.hp <= 0)
+        {
+            continue;
+        }
+
+        const float dx = position.x - object.position.x;
+        const float dz = position.z - object.position.z;
+        const float horizontalDistanceSq = (dx * dx) + (dz * dz);
+        const float blockedDistanceSq = kBlockedByDestructibleHorizontalDistance *
+                                        kBlockedByDestructibleHorizontalDistance;
+        if (horizontalDistanceSq > blockedDistanceSq)
+        {
+            continue;
+        }
+
+        const float dy = position.y - object.position.y;
+        if (fabsf(dy) <= kBlockedByDestructibleVerticalDistance)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void CollectibleManager::Collect(Collectible& collectible)

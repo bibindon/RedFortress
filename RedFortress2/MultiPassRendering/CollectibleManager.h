@@ -11,13 +11,14 @@ class Render;
 }
 
 class InventoryManager;
+class DestructibleManager;
 
 class CollectibleManager
 {
 public:
     void Initialize(NSRender::Render& render, InventoryManager& inventory);
     void LoadForStage(const std::wstring& csvPath);
-    void Update(const D3DXVECTOR3& playerPosition);
+    void Update(const D3DXVECTOR3& playerPosition, const DestructibleManager& destructibleManager);
     void Clear();
     void SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback);
 
@@ -38,6 +39,8 @@ private:
         int renderId = -1;
     };
 
+    bool IsBlockedByAliveDestructible(const D3DXVECTOR3& position,
+                                      const DestructibleManager& destructibleManager) const;
     void Collect(Collectible& collectible);
 
     NSRender::Render* m_render = nullptr;
