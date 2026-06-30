@@ -134,6 +134,7 @@ private:
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
     void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
     void UpdatePlayerMeshVisibility();
+    void UpdateHeldWeaponVisibility();
     bool IsCurrentStageSelect() const;
     bool IsStagePortalSelectable(const std::wstring& portalId) const;
     bool AreAllStageEnemiesDefeated() const;
@@ -224,6 +225,7 @@ private:
     DashBoosterManager m_dashBoosterManager;
     int m_playerInvincibleFrames = 0;
     int m_stickMeshId = -1;
+    int m_saberMeshId = -1;
     int m_playerKnockbackFrames = 0;
     D3DXVECTOR3 m_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int m_respawnCameraDelayFrames = 0;

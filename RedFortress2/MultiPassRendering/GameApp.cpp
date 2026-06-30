@@ -45,6 +45,8 @@ namespace
     const std::wstring kAmmoBeadFullImagePath = L"res\\2D_Image\\ammo_bead_full.png";
     const std::wstring kAmmoBeadEmptyImagePath = L"res\\2D_Image\\ammo_bead_empty.png";
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
+    const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
+    const std::wstring kSaberModelPath = L"res\\model\\saber\\saber.x";
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
     const std::wstring kInitialClubWeaponId = L"W001";
@@ -76,7 +78,6 @@ namespace
     const int kStageTitleFrameMax = 180;
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
-    const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
     const float kGoalArrowHeadOffsetY = 2.3f;
     const float kGoalArrowScale = 0.42f;
@@ -1422,6 +1423,7 @@ void GameApp::UpdatePlayerByInput()
             m_playerAttackController.CycleAttackCategory(1);
             GameAudio::PlayWeaponChange();
         }
+        UpdateHeldWeaponVisibility();
     }
 
     const PlayerAttackType requestedAttackType = m_playerAttackController.GetAttackType(shiftPressed);
@@ -1800,6 +1802,35 @@ void GameApp::UpdatePlayerMeshVisibility()
     else
     {
         m_render.SetMeshMixEnabled(m_playerMeshId, true);
+    }
+}
+
+void GameApp::UpdateHeldWeaponVisibility()
+{
+    bool stickVisible = false;
+    bool saberVisible = false;
+
+    if (!IsCurrentStageSelect())
+    {
+        const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
+        if (attackType == PlayerAttackType::WeakAttack)
+        {
+            stickVisible = true;
+        }
+        else if (attackType == PlayerAttackType::SwordAttack)
+        {
+            saberVisible = true;
+        }
+    }
+
+    if (m_stickMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_stickMeshId, stickVisible);
+    }
+
+    if (m_saberMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_saberMeshId, saberVisible);
     }
 }
 
@@ -3594,6 +3625,12 @@ void GameApp::LoadCurrentStageObjects()
         m_render.RemoveMeshMix(m_stickMeshId);
         m_stickMeshId = -1;
     }
+    if (m_saberMeshId >= 0)
+    {
+        m_render.DetachMeshFromBone(m_saberMeshId);
+        m_render.RemoveMeshMix(m_saberMeshId);
+        m_saberMeshId = -1;
+    }
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
@@ -3667,9 +3704,22 @@ void GameApp::LoadCurrentStageObjects()
                                       D3DXVECTOR3(kStickLocalRotateX, 0.0f, 0.0f),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
+
+        m_saberMeshId = m_render.AddMeshMix(kSaberModelPath,
+                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                            1.0f);
+        if (m_saberMeshId >= 0)
+        {
+            const float kSaberLocalRotateX = D3DX_PI * 0.5f;
+            m_render.AttachMeshToBone(m_saberMeshId, m_playerMeshId, "MarineV2_arm_wrist_R",
+                                      D3DXVECTOR3(kSaberLocalRotateX, 0.0f, 0.0f),
+                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+        }
     }
 
     UpdatePlayerMeshVisibility();
+    UpdateHeldWeaponVisibility();
     if (IsCurrentStageSelect() && m_hasSelectedStagePortal)
     {
         SyncStageSelectPlayerToPortal(true);
