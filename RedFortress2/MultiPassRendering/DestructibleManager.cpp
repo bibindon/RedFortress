@@ -12,6 +12,7 @@ namespace
 {
     const std::wstring kModelPath = L"res\\model\\cubeWoodSmall\\cube_wood_small.x";
     const std::wstring kRedCubeModelPath = L"res\\model\\cube_red.x";
+    const std::wstring kAmmoHeartModelPath = L"res\\model\\sphereBlue\\sphere_blue.x";
     const D3DXVECTOR3 kPhysicsDisabledPosition(0.0f, -10000.0f, 0.0f);
     const D3DXVECTOR3 kDefaultRotation(0.0f, 0.0f, 0.0f);
     const D3DXVECTOR3 kDefaultScale(1.0f, 1.0f, 1.0f);
@@ -315,6 +316,24 @@ bool DestructibleManager::TryDropRedCube(NSRender::Render& render,
     return DropRedCube(render, pos);
 }
 
+bool DestructibleManager::TryDropAmmoHeart(NSRender::Render& render,
+                                           const D3DXVECTOR3& pos,
+                                           const int dropPercent)
+{
+    if (dropPercent <= 0)
+    {
+        return false;
+    }
+
+    const int r = GetRandomPercent();
+    if (r >= dropPercent)
+    {
+        return false;
+    }
+
+    return DropAmmoHeart(render, pos);
+}
+
 void DestructibleManager::RemoveDroppedRedCube(NSRender::Render& render, const std::size_t index)
 {
     if (index >= m_droppedRedCubes.size())
@@ -335,6 +354,7 @@ bool DestructibleManager::DropRedCube(NSRender::Render& render, const D3DXVECTOR
     DroppedRedCube cube;
     cube.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
     cube.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
+    cube.type = DestructibleDropType::RedCube;
     cube.meshId = render.AddMeshMix(kRedCubeModelPath,
                                      cube.position,
                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
@@ -349,6 +369,29 @@ bool DestructibleManager::DropRedCube(NSRender::Render& render, const D3DXVECTOR
     }
 
     m_droppedRedCubes.push_back(cube);
+    return true;
+}
+
+bool DestructibleManager::DropAmmoHeart(NSRender::Render& render, const D3DXVECTOR3& pos)
+{
+    DroppedRedCube heart;
+    heart.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
+    heart.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
+    heart.type = DestructibleDropType::AmmoHeart;
+    heart.meshId = render.AddMeshMix(kAmmoHeartModelPath,
+                                     heart.position,
+                                     D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                     0.5f,
+                                     -1.0f,
+                                     false,
+                                     false,
+                                     false);
+    if (heart.meshId < 0)
+    {
+        return false;
+    }
+
+    m_droppedRedCubes.push_back(heart);
     return true;
 }
 

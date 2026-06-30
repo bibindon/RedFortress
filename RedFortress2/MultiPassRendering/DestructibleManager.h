@@ -31,7 +31,8 @@ enum class DestructibleDropType
     None,
     Star,
     SpeedUp,
-    RedCube
+    RedCube,
+    AmmoHeart
 };
 
 struct DroppedRedCube
@@ -39,6 +40,7 @@ struct DroppedRedCube
     int meshId = -1;
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int pickupWaitFrames = 0;
+    DestructibleDropType type = DestructibleDropType::RedCube;
 };
 
 class DestructibleManager
@@ -63,10 +65,12 @@ public:
     void SetSpeedUpCallback(std::function<void()> callback);
 
     bool TryDropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos, int dropPercent);
+    bool TryDropAmmoHeart(NSRender::Render& render, const D3DXVECTOR3& pos, int dropPercent);
     void RemoveDroppedRedCube(NSRender::Render& render, std::size_t index);
 
 private:
     bool DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos);
+    bool DropAmmoHeart(NSRender::Render& render, const D3DXVECTOR3& pos);
     void TryDropItem(NSRender::Render& render, const D3DXVECTOR3& pos);
 
     NSRender::Render* m_render = nullptr;

@@ -97,8 +97,11 @@ namespace
     const float kBusterHitRadius = 0.5f;
     const float kDestructibleHitRadius = 0.9f;
     const int kEnemyItemDropPercent = 25;
+    const int kEnemyAmmoHeartDropPercent = 25;
     const int kBombAmmoMax = 10;
     const int kBusterAmmoMax = 30;
+    const int kBombAmmoRecoverAmount = 1;
+    const int kBusterAmmoRecoverAmount = 3;
     const int kBusterRapidLevelMax = 8;
     const int kBusterCooldownByLevel[kBusterRapidLevelMax] = { 24, 20, 16, 12, 9, 6, 4, 3 };
     const float kEnemyAttackTargetHeight = 1.0f;
@@ -466,6 +469,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_pickupManager.Initialize(m_render, m_inventoryManager);
     m_pickupManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
         HandleItemCollected(itemId, count);
+    });
+    m_pickupManager.SetAmmoRecoveredCallback([this]() {
+        RecoverWeaponAmmoFromPickup();
     });
     m_pickupManager.SetStarActivatedCallback([this]() {
         MaximizeTemporaryPowerUps();
@@ -1665,6 +1671,7 @@ void GameApp::TryDropEnemyItem(const Enemy& enemy)
         return;
     }
 
+    m_destructibleManager.TryDropAmmoHeart(m_render, enemy.GetPosition(), kEnemyAmmoHeartDropPercent);
     m_destructibleManager.TryDropRedCube(m_render, enemy.GetPosition(), kEnemyItemDropPercent);
 }
 
@@ -2457,6 +2464,62 @@ void GameApp::RefillWeaponAmmo()
 {
     m_busterAmmo = kBusterAmmoMax;
     m_bombAmmo = kBombAmmoMax;
+}
+
+bool GameApp::RecoverWeaponAmmoFromPickup()
+{
+    const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
+    if (IsBusterAttackType(attackType) && m_busterAmmo < kBusterAmmoMax)
+    {
+        m_busterAmmo += kBusterAmmoRecoverAmount;
+        if (m_busterAmmo > kBusterAmmoMax)
+        {
+            m_busterAmmo = kBusterAmmoMax;
+        }
+        m_itemPickupMessage = L"バスター弾を回復";
+        m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        return true;
+    }
+
+    if (IsBombAttackType(attackType) && m_bombAmmo < kBombAmmoMax)
+    {
+        m_bombAmmo += kBombAmmoRecoverAmount;
+        if (m_bombAmmo > kBombAmmoMax)
+        {
+            m_bombAmmo = kBombAmmoMax;
+        }
+        m_itemPickupMessage = L"爆弾を回復";
+        m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        return true;
+    }
+
+    if (m_busterAmmo < kBusterAmmoMax)
+    {
+        m_busterAmmo += kBusterAmmoRecoverAmount;
+        if (m_busterAmmo > kBusterAmmoMax)
+        {
+            m_busterAmmo = kBusterAmmoMax;
+        }
+        m_itemPickupMessage = L"バスター弾を回復";
+        m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        return true;
+    }
+
+    if (m_bombAmmo < kBombAmmoMax)
+    {
+        m_bombAmmo += kBombAmmoRecoverAmount;
+        if (m_bombAmmo > kBombAmmoMax)
+        {
+            m_bombAmmo = kBombAmmoMax;
+        }
+        m_itemPickupMessage = L"爆弾を回復";
+        m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        return true;
+    }
+
+    m_itemPickupMessage = L"弾は満タン";
+    m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+    return false;
 }
 
 void GameApp::DrawAmmoGauge()

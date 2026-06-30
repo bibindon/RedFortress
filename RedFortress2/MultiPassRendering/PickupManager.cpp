@@ -192,12 +192,22 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         if (D3DXVec3Length(&diff) <= kSpeedUpPickupDistance)
         {
             destructibleManager.RemoveDroppedRedCube(*m_render, i);
-            m_inventory->AddItem(L"001");
-            if (m_itemCollectedCallback)
+            if (cubes[i].type == DestructibleDropType::AmmoHeart)
             {
-                m_itemCollectedCallback(L"001", 1);
+                if (m_ammoRecoveredCallback)
+                {
+                    m_ammoRecoveredCallback();
+                }
             }
-            m_inventory->Save();
+            else
+            {
+                m_inventory->AddItem(L"001");
+                if (m_itemCollectedCallback)
+                {
+                    m_itemCollectedCallback(L"001", 1);
+                }
+                m_inventory->Save();
+            }
             GameAudio::PlayItemGet();
         }
     }
@@ -253,6 +263,11 @@ bool PickupManager::AddSpeedLevel()
 void PickupManager::SetItemCollectedCallback(std::function<void(const std::wstring&, int)> callback)
 {
     m_itemCollectedCallback = std::move(callback);
+}
+
+void PickupManager::SetAmmoRecoveredCallback(std::function<void()> callback)
+{
+    m_ammoRecoveredCallback = std::move(callback);
 }
 
 void PickupManager::SetStarActivatedCallback(std::function<void()> callback)

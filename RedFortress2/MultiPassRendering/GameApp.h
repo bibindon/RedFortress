@@ -162,6 +162,7 @@ private:
     int GetCurrentAmmo() const;
     int GetCurrentAmmoMax() const;
     void RefillWeaponAmmo();
+    bool RecoverWeaponAmmoFromPickup();
     void LoadItemNameCatalog();
     std::wstring GetItemDisplayName(const std::wstring& itemId) const;
     void HandleItemCollected(const std::wstring& itemId, int count);
