@@ -12,7 +12,7 @@ namespace
 {
     const std::wstring kModelPath = L"res\\model\\cubeWoodSmall\\cube_wood_small.x";
     const std::wstring kRedCubeModelPath = L"res\\model\\cube_red.x";
-    const std::wstring kAmmoHeartModelPath = L"res\\model\\sphereBlue\\sphere_blue.x";
+    const std::wstring kAmmoHeartModelPath = L"res\\model\\itemIconAmmo\\itemIconAmmo.x";
     const D3DXVECTOR3 kPhysicsDisabledPosition(0.0f, -10000.0f, 0.0f);
     const D3DXVECTOR3 kDefaultRotation(0.0f, 0.0f, 0.0f);
     const D3DXVECTOR3 kDefaultScale(1.0f, 1.0f, 1.0f);
