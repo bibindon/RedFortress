@@ -2,6 +2,7 @@
 
 #include "resource.h"
 #include "GameAudio.h"
+#include <cstdlib>
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Util.h"
 #include "../../RedFortressRender/Render/Camera.h"
@@ -45,6 +46,7 @@ namespace
     const std::wstring kAmmoBeadFullImagePath = L"res\\2D_Image\\ammo_bead_full.png";
     const std::wstring kAmmoBeadEmptyImagePath = L"res\\2D_Image\\ammo_bead_empty.png";
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
+    const std::wstring kQteRewardItemId = L"001";
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
     const std::wstring kSaberModelPath = L"res\\model\\saber\\saber.x";
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
@@ -938,9 +940,9 @@ void GameApp::Run()
                     if (result == NS_QTE_Module::QTE_Module::BarResult::Success ||
                         result == NS_QTE_Module::QTE_Module::BarResult::Normal)
                     {
-                        m_inventoryManager.AddItem(L"lemon", 1);
+                        m_inventoryManager.AddItem(kQteRewardItemId, 1);
                         m_inventoryManager.Save();
-                        ShowItemPickupMessage(L"lemon", 1);
+                        ShowItemPickupMessage(kQteRewardItemId, 1);
                     }
                     m_qte->Finalize();
                     delete m_qte;
@@ -2440,7 +2442,9 @@ std::wstring GameApp::GetItemDisplayName(const std::wstring& itemId) const
         return found->second;
     }
 
-    return itemId;
+    const std::wstring message = L"Undefined item id: " + itemId + L"\n";
+    OutputDebugStringW(message.c_str());
+    std::abort();
 }
 
 void GameApp::HandleItemCollected(const std::wstring& itemId, const int count)
