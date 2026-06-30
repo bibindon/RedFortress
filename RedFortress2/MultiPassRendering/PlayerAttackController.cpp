@@ -243,7 +243,7 @@ const wchar_t* PlayerAttackController::GetCurrentCategoryName() const
 {
     if (m_selectedCategory == 0)
     {
-        return L"薙ぎ払い";
+        return L"海賊こん棒";
     }
     if (m_selectedCategory == 1)
     {
@@ -251,10 +251,10 @@ const wchar_t* PlayerAttackController::GetCurrentCategoryName() const
     }
     if (m_selectedCategory == 2)
     {
-        return L"バスター";
+        return L"海賊銃";
     }
     else
     {
-        return L"爆弾設置";
+        return L"海賊爆弾";
     }
 }

@@ -1428,8 +1428,8 @@ void GameApp::UpdatePlayerByInput()
 
     if (!IsCurrentStageSelect() && InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const bool isBombCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"爆弾設置"));
-        const bool isBusterCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"バスター"));
+        const bool isBombCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"海賊爆弾"));
+        const bool isBusterCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"海賊銃"));
         const bool isStarActive = m_pickupManager.IsStarActive();
         if (isBombCategory)
         {

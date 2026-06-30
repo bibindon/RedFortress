@@ -1398,17 +1398,9 @@ std::vector<std::size_t> PauseMenu::GetOwnedItemIndices() const
 std::vector<std::size_t> PauseMenu::GetOwnedWeaponIndices() const
 {
     std::vector<std::size_t> indices;
-    if (m_inventory == nullptr)
-    {
-        return indices;
-    }
-
     for (std::size_t i = 0; i < m_weapons.size(); ++i)
     {
-        if (m_inventory->GetWeaponCount(m_weapons.at(i).id) > 0)
-        {
-            indices.push_back(i);
-        }
+        indices.push_back(i);
     }
 
     return indices;
