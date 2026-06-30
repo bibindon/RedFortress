@@ -39,8 +39,10 @@ struct DroppedRedCube
 {
     int meshId = -1;
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int pickupWaitFrames = 0;
     DestructibleDropType type = DestructibleDropType::RedCube;
+    bool isGrounded = false;
 };
 
 class DestructibleManager

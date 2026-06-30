@@ -16,6 +16,11 @@ namespace
     const D3DXVECTOR3 kPhysicsDisabledPosition(0.0f, -10000.0f, 0.0f);
     const D3DXVECTOR3 kDefaultRotation(0.0f, 0.0f, 0.0f);
     const D3DXVECTOR3 kDefaultScale(1.0f, 1.0f, 1.0f);
+    const float kTargetFrameSeconds = 1.0f / 60.0f;
+    const float kDroppedItemGravity = 18.0f;
+    const float kDroppedItemRadius = 0.25f;
+    const float kDroppedItemCollisionCenterY = 0.25f;
+    const float kDroppedItemSpawnHeight = 1.0f;
 
     std::wstring Trim(const std::wstring& str)
     {
@@ -62,6 +67,48 @@ namespace
                                              kPhysicsDisabledPosition,
                                              kDefaultRotation,
                                              kDefaultScale);
+    }
+
+    void UpdateDroppedItemPhysics(NSRender::Render& render, DroppedRedCube& item)
+    {
+        if (item.isGrounded)
+        {
+            return;
+        }
+
+        item.velocity.y -= kDroppedItemGravity * kTargetFrameSeconds;
+
+        const D3DXVECTOR3 collisionPosition =
+            item.position + D3DXVECTOR3(0.0f, kDroppedItemCollisionCenterY, 0.0f);
+        D3DXVECTOR3 nextCollisionPosition = collisionPosition;
+        D3DXVECTOR3 nextVelocity = item.velocity;
+        D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
+
+        const bool collided = PhysicsLib::PhysicsLib::CheckCollide(collisionPosition,
+                                                                    item.velocity,
+                                                                    PhysicsLib::PhysicsLib::ShapeType::Sphere,
+                                                                    &nextCollisionPosition,
+                                                                    &nextVelocity,
+                                                                    nullptr,
+                                                                    nullptr,
+                                                                    kDroppedItemRadius,
+                                                                    0.0f,
+                                                                    nullptr,
+                                                                    &hitNormal);
+
+        item.position = nextCollisionPosition - D3DXVECTOR3(0.0f, kDroppedItemCollisionCenterY, 0.0f);
+        item.velocity = nextVelocity;
+
+        if (collided && hitNormal.y > 0.0f)
+        {
+            item.isGrounded = true;
+            item.velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        }
+
+        if (item.meshId >= 0)
+        {
+            render.SetMeshMixPos(item.meshId, item.position);
+        }
     }
 }
 
@@ -207,6 +254,8 @@ void DestructibleManager::Update(NSRender::Render& render)
         {
             --cube.pickupWaitFrames;
         }
+
+        UpdateDroppedItemPhysics(render, cube);
     }
 }
 
@@ -352,7 +401,7 @@ void DestructibleManager::RemoveDroppedRedCube(NSRender::Render& render, const s
 bool DestructibleManager::DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos)
 {
     DroppedRedCube cube;
-    cube.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
+    cube.position = D3DXVECTOR3(pos.x, pos.y + kDroppedItemSpawnHeight, pos.z);
     cube.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
     cube.type = DestructibleDropType::RedCube;
     cube.meshId = render.AddMeshMix(kRedCubeModelPath,
@@ -375,7 +424,7 @@ bool DestructibleManager::DropRedCube(NSRender::Render& render, const D3DXVECTOR
 bool DestructibleManager::DropAmmoHeart(NSRender::Render& render, const D3DXVECTOR3& pos)
 {
     DroppedRedCube heart;
-    heart.position = D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z);
+    heart.position = D3DXVECTOR3(pos.x, pos.y + kDroppedItemSpawnHeight, pos.z);
     heart.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
     heart.type = DestructibleDropType::AmmoHeart;
     heart.meshId = render.AddMeshMix(kAmmoHeartModelPath,
