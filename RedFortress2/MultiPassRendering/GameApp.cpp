@@ -1694,7 +1694,11 @@ void GameApp::TryDropEnemyItem(const Enemy& enemy)
         return;
     }
 
-    m_destructibleManager.TryDropAmmoHeart(m_render, enemy.GetPosition(), kEnemyAmmoHeartDropPercent);
+    if (m_destructibleManager.TryDropAmmoHeart(m_render, enemy.GetPosition(), kEnemyAmmoHeartDropPercent))
+    {
+        return;
+    }
+
     m_destructibleManager.TryDropRedCube(m_render, enemy.GetPosition(), kEnemyItemDropPercent);
 }
 
