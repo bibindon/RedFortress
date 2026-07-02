@@ -18,6 +18,7 @@ namespace
     const std::wstring g_playerRunAnimName = L"run";
     const std::wstring g_playerJumpAnimName = L"jump";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
+    const std::wstring g_gameOverImagePath = L"res\\2D_Image\\gameover.png";
     const float kPlayerWalkAnimationSpeed = 1.3f;
     const float kStagePortalClickRadius = 48.0f;
     const float kStageSelectPlayerMoveDuration = 0.5f;
@@ -78,6 +79,7 @@ namespace
     const int kRespawnCameraDelayFrames = 120;
     const int kRespawnCameraMoveFrames = 30;
     const int kStageTitleFrameMax = 180;
+    const int kGameOverFadeFrames = 18;
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
@@ -730,6 +732,10 @@ void GameApp::Run()
         else if (m_gameState == GameState::StageClear)
         {
             UpdateStageClear();
+        }
+        else if (m_gameState == GameState::GameOver)
+        {
+            UpdateGameOver();
         }
         else if (m_gameState == GameState::Ending)
         {
@@ -3521,20 +3527,7 @@ void GameApp::CompletePlayerDeath()
 
     if (m_player.IsGameOver())
     {
-        const int stageNumber = m_stageManager.GetCurrentStage().number;
-        if (stageNumber >= 1 && stageNumber <= 8)
-        {
-            m_gameState = GameState::Title;
-            m_player.ResetLives();
-            m_player.ResetHp();
-            m_enemyManager.Clear(m_render);
-        }
-        else
-        {
-            const std::size_t baseIndex = m_stageManager.FindStageIndexById(L"base");
-            StartStageByIndex(baseIndex);
-            m_player.ResetLives();
-        }
+        StartGameOverSequence();
         m_respawnCameraMoveFrames = 0;
         return;
     }
@@ -3569,6 +3562,167 @@ void GameApp::CompletePlayerDeath()
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
     m_damagePopupManager.Clear();
+}
+
+void GameApp::StartGameOverSequence()
+{
+    if (m_qte != nullptr)
+    {
+        m_qte->Finalize();
+        delete m_qte;
+        m_qte = nullptr;
+    }
+
+    m_pauseMenu.Close();
+    m_craftMenu.Close();
+    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_pendingJump = false;
+    m_playerKnockbackFrames = 0;
+    m_playerInvincibleFrames = 0;
+    m_respawnCameraDelayFrames = 0;
+    m_respawnCameraMoveFrames = 0;
+    m_playerAttackController.Reset();
+    m_damagePopupManager.Clear();
+    ClearBombs();
+    ClearBusters();
+    m_render.SetSceneUpdatePaused(false);
+    m_render.StartFadeOut(0.3f);
+    m_gameOverPhase = GameOverPhase::FadeOutToScreen;
+    m_gameOverFadeFrames = kGameOverFadeFrames;
+    m_gameState = GameState::GameOver;
+}
+
+void GameApp::UpdateGameOver()
+{
+    if (m_gameOverPhase == GameOverPhase::FadeOutToScreen)
+    {
+        m_render.Draw();
+        --m_gameOverFadeFrames;
+        if (m_gameOverFadeFrames <= 0)
+        {
+            m_render.StartFadeIn(0.3f);
+            m_gameOverPhase = GameOverPhase::FadeInScreen;
+            m_gameOverFadeFrames = kGameOverFadeFrames;
+        }
+        return;
+    }
+
+    DrawGameOverScreen();
+
+    if (m_gameOverPhase == GameOverPhase::FadeInScreen)
+    {
+        --m_gameOverFadeFrames;
+        if (m_gameOverFadeFrames <= 0)
+        {
+            m_gameOverPhase = GameOverPhase::WaitingInput;
+        }
+        return;
+    }
+
+    if (m_gameOverPhase == GameOverPhase::WaitingInput)
+    {
+        if (IsGameOverActionTriggered())
+        {
+            m_render.StartFadeOut(0.3f);
+            m_gameOverPhase = GameOverPhase::FadeOutToTitle;
+            m_gameOverFadeFrames = kGameOverFadeFrames;
+        }
+        return;
+    }
+
+    if (m_gameOverPhase == GameOverPhase::FadeOutToTitle)
+    {
+        --m_gameOverFadeFrames;
+        if (m_gameOverFadeFrames <= 0)
+        {
+            ReturnToTitleFromGameOver();
+        }
+    }
+}
+
+void GameApp::DrawGameOverScreen()
+{
+    m_render.DrawImageStretched(g_gameOverImagePath, 255);
+    m_render.Draw();
+}
+
+bool GameApp::IsGameOverActionTriggered() const
+{
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        return true;
+    }
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_RIGHT))
+    {
+        return true;
+    }
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_MIDDLE))
+    {
+        return true;
+    }
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_SIDE1))
+    {
+        return true;
+    }
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_SIDE2))
+    {
+        return true;
+    }
+
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE))
+    {
+        return true;
+    }
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        return true;
+    }
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    {
+        return true;
+    }
+
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_X))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_Y))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+void GameApp::ReturnToTitleFromGameOver()
+{
+    m_gameOverPhase = GameOverPhase::None;
+    m_gameOverFadeFrames = 0;
+    m_player.ResetLives();
+    m_player.ResetHp();
+    m_hpBar.Reset();
+    m_enemyManager.Clear(m_render);
+    m_damagePopupManager.Clear();
+    m_pickupManager.ResetPlayerEffects();
+    m_playerAttackController.Reset();
+    m_titleDeleteConfirmMode = false;
+    m_titleLanguageSelectionMode = false;
+    BuildTitleMainCommands();
+    RefreshTitleCommands();
+    m_render.StartFadeIn(0.3f);
+    m_gameState = GameState::Title;
 }
 
 bool GameApp::StartNextStage()

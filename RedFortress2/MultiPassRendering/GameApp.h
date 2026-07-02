@@ -100,6 +100,11 @@ private:
     void HealPlayerHp(int amount);
     void HandlePlayerDeath();
     void CompletePlayerDeath();
+    void StartGameOverSequence();
+    void UpdateGameOver();
+    void DrawGameOverScreen();
+    bool IsGameOverActionTriggered() const;
+    void ReturnToTitleFromGameOver();
     void PopulateStageCombo(HWND hDlg);
     std::wstring BuildStageComboText(const StageManager::StageData& stage) const;
     void PopulateUnlockStageCombo(HWND hDlg);
@@ -175,7 +180,8 @@ private:
     void DrawItemPickupMessage();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
-    enum class GameState { Loading, Title, SlideShow, Playing, StageClear, Ending, EndingFin };
+    enum class GameState { Loading, Title, SlideShow, Playing, StageClear, GameOver, Ending, EndingFin };
+    enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
     enum class TitleLanguage { English, Japanese };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
@@ -207,6 +213,8 @@ private:
     PlayerAnimState m_playerAnimState = PlayerAnimState::Idle;
     PlayerAttackController m_playerAttackController;
     GameState m_gameState = GameState::Loading;
+    GameOverPhase m_gameOverPhase = GameOverPhase::None;
+    int m_gameOverFadeFrames = 0;
     SlideShowManager m_slideShowManager;
     PauseMenu m_pauseMenu;
     bool m_mouseCursorVisible = false;
