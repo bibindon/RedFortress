@@ -57,6 +57,7 @@ namespace
     const std::wstring kInitialClubWeaponId = L"W001";
     const std::wstring kRedSpaghettiItemId = L"007";
     const std::wstring kPotatoChipsItemId = L"008";
+    const std::wstring kChuageJuiceItemId = L"017";
     const int kItemPickupMessageTotalFrames = 180;
     const int kItemPickupMessageFadeFrames = 24;
     const int kItemPickupMessageY = 780;
@@ -606,6 +607,16 @@ void GameApp::Run()
             InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
         }
 
+        if (m_gameState == GameState::Playing &&
+            !IsCurrentStageSelect() &&
+            !m_pauseMenu.IsOpen() &&
+            !m_craftMenu.IsOpen() &&
+            !m_playerDeathPending &&
+            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_R))
+        {
+            TryUseRecoveryItemFromKey();
+        }
+
         if (m_gameState == GameState::Loading)
         {
             GameAudio::PlayLoadingEnvironment();
@@ -1136,6 +1147,11 @@ void GameApp::Run()
             if (m_stagePortalCooldownFrames > 0)
             {
                 --m_stagePortalCooldownFrames;
+            }
+
+            if (m_itemUseCooldownFrames > 0)
+            {
+                --m_itemUseCooldownFrames;
             }
 
             // 敵との接触・踏みつけ判定（QTE 中は無効）
@@ -2654,7 +2670,7 @@ bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
         return m_player.AddLife();
     }
 
-    if (itemId == kPotatoChipsItemId)
+    if (itemId == kPotatoChipsItemId || itemId == kChuageJuiceItemId)
     {
         if (m_player.GetHp() >= m_player.GetMaxHp())
         {
@@ -2667,6 +2683,41 @@ bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
         }
 
         HealPlayerHp(m_player.GetMaxHp());
+        return true;
+    }
+
+    return false;
+}
+
+bool GameApp::TryUseRecoveryItemFromKey()
+{
+    if (m_itemUseCooldownFrames > 0)
+    {
+        return false;
+    }
+
+    const int chipsCount = m_inventoryManager.GetItemCount(kPotatoChipsItemId);
+    const int juiceCount = m_inventoryManager.GetItemCount(kChuageJuiceItemId);
+
+    if (chipsCount > 0)
+    {
+        if (!HandleInventoryItemUse(kPotatoChipsItemId))
+        {
+            return false;
+        }
+
+        m_itemUseCooldownFrames = 60;
+        return true;
+    }
+
+    if (juiceCount > 0)
+    {
+        if (!HandleInventoryItemUse(kChuageJuiceItemId))
+        {
+            return false;
+        }
+
+        m_itemUseCooldownFrames = 60;
         return true;
     }
 
@@ -4541,5 +4592,6 @@ void GameApp::ClearBusters()
     }
     m_activeBusters.clear();
 }
+
 
 

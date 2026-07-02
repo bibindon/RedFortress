@@ -176,6 +176,7 @@ private:
     std::wstring GetItemDisplayName(const std::wstring& itemId) const;
     void HandleItemCollected(const std::wstring& itemId, int count);
     bool HandleInventoryItemUse(const std::wstring& itemId);
+    bool TryUseRecoveryItemFromKey();
     void MaximizeTemporaryPowerUps();
     void RestoreTemporaryPowerUps();
     void ShowItemPickupMessage(const std::wstring& itemId, int count);
@@ -218,6 +219,7 @@ private:
     GameState m_gameState = GameState::Loading;
     GameOverPhase m_gameOverPhase = GameOverPhase::None;
     int m_gameOverFadeFrames = 0;
+    int m_itemUseCooldownFrames = 0;
     SlideShowManager m_slideShowManager;
     PauseMenu m_pauseMenu;
     bool m_mouseCursorVisible = false;
@@ -299,3 +301,4 @@ private:
     int m_baseBusterRapidLevel = 1;
     int m_busterAmmo = 30;
 };
+
