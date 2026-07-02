@@ -21,6 +21,9 @@ const std::wstring kPotatoChipsItemId = L"008";
 const float kCollectDistance = 0.55f;
 const float kBlockedByDestructibleHorizontalDistance = 0.75f;
 const float kBlockedByDestructibleVerticalDistance = 1.2f;
+const float kRevealInitialVelocityY = 3.0f;
+const float kRevealGravity = 18.0f;
+const float kTargetFrameSeconds = 1.0f / 60.0f;
 
 bool IsCraftOnlyItem(const std::wstring& itemId)
 {
@@ -124,6 +127,7 @@ void CollectibleManager::LoadForStage(const std::wstring& csvPath)
             collectible.position.x = std::stof(row.at(3));
             collectible.position.y = std::stof(row.at(4));
             collectible.position.z = std::stof(row.at(5));
+            collectible.basePosition = collectible.position;
             collectible.scale = std::stof(row.at(6));
         }
         catch (...)
@@ -153,16 +157,32 @@ void CollectibleManager::Update(const D3DXVECTOR3& playerPosition,
             continue;
         }
 
-        if (IsBlockedByAliveDestructible(collectible.position, destructibleManager))
+        UpdateVisibility(collectible, destructibleManager);
+        if (!collectible.isVisible)
         {
             continue;
         }
+
+        UpdateRevealMotion(collectible);
 
         const D3DXVECTOR3 difference = playerPosition - collectible.position;
         if (D3DXVec3Length(&difference) <= kCollectDistance)
         {
             Collect(collectible);
         }
+    }
+}
+
+void CollectibleManager::RefreshVisibility(const DestructibleManager& destructibleManager)
+{
+    for (Collectible& collectible : m_collectibles)
+    {
+        if (collectible.renderId < 0)
+        {
+            continue;
+        }
+
+        UpdateVisibility(collectible, destructibleManager);
     }
 }
 
@@ -195,6 +215,63 @@ bool CollectibleManager::IsBlockedByAliveDestructible(const D3DXVECTOR3& positio
     }
 
     return false;
+}
+
+void CollectibleManager::UpdateVisibility(Collectible& collectible,
+                                          const DestructibleManager& destructibleManager)
+{
+    if (m_render == nullptr)
+    {
+        return;
+    }
+
+    if (IsBlockedByAliveDestructible(collectible.basePosition, destructibleManager))
+    {
+        if (collectible.isVisible)
+        {
+            collectible.isVisible = false;
+            collectible.position = collectible.basePosition;
+            collectible.velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            m_render->SetMeshMixPos(collectible.renderId, collectible.position);
+            m_render->SetMeshMixEnabled(collectible.renderId, false);
+        }
+        return;
+    }
+
+    if (!collectible.isVisible)
+    {
+        collectible.isVisible = true;
+        collectible.position = collectible.basePosition;
+        collectible.velocity = D3DXVECTOR3(0.0f, kRevealInitialVelocityY, 0.0f);
+        m_render->SetMeshMixPos(collectible.renderId, collectible.position);
+        m_render->SetMeshMixEnabled(collectible.renderId, true);
+    }
+}
+
+void CollectibleManager::UpdateRevealMotion(Collectible& collectible)
+{
+    if (m_render == nullptr)
+    {
+        return;
+    }
+
+    if (collectible.position.y <= collectible.basePosition.y && collectible.velocity.y <= 0.0f)
+    {
+        collectible.position = collectible.basePosition;
+        collectible.velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        m_render->SetMeshMixPos(collectible.renderId, collectible.position);
+        return;
+    }
+
+    collectible.velocity.y -= kRevealGravity * kTargetFrameSeconds;
+    collectible.position += collectible.velocity * kTargetFrameSeconds;
+    if (collectible.position.y < collectible.basePosition.y)
+    {
+        collectible.position = collectible.basePosition;
+        collectible.velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
+
+    m_render->SetMeshMixPos(collectible.renderId, collectible.position);
 }
 
 void CollectibleManager::Collect(Collectible& collectible)

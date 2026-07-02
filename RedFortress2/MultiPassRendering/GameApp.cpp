@@ -481,6 +481,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
         HandleItemCollected(itemId, count);
     });
     m_collectibleManager.LoadForStage(initialStage.collectibleCsvPath);
+    m_collectibleManager.RefreshVisibility(m_destructibleManager);
     m_interactionManager.Initialize(m_render);
     m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
     m_lavaZoneManager.LoadForStage(initialStage.lavaCsvPath);
@@ -3960,6 +3961,7 @@ void GameApp::LoadCurrentStageObjects()
     m_enemyManager.LoadForStage(m_render, stage.enemyCsvPath);
 
     m_destructibleManager.LoadForStage(m_render, stage.destructibleCsvPath);
+    m_collectibleManager.RefreshVisibility(m_destructibleManager);
 
     if (m_playerMeshId >= 0)
     {
