@@ -8,6 +8,8 @@ const std::wstring kTitleBgm = L"res\\sound\\title2.wav";
 const std::wstring kLoadingBgm = L"res\\sound\\loading.wav";
 const std::wstring kEndingBgm = L"res\\sound\\ending.wav";
 const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
+const std::wstring kKaiganDoukutsuBgm = L"res\\sound\\kaiganDoukutsu.wav";
+const std::wstring kNightBgm = L"res\\sound\\night.wav";
 const std::wstring kStageSelectBgm = L"res\\sound\\stageselect1.wav";
 const std::wstring kStageSelect2Bgm = L"res\\sound\\stageselect2.wav";
 const std::wstring kWorld1Bgm = L"res\\sound\\world1.wav";
@@ -29,10 +31,12 @@ const std::wstring kPlayerDamage = L"res\\sound\\damage01.wav";
 const std::wstring kItemGet = L"res\\sound\\itemGet.wav";
 const std::wstring kJump = L"res\\sound\\jump2.wav";
 const std::wstring kPowerUp = L"res\\sound\\powerup.wav";
+const std::wstring kDrink = L"res\\sound\\drink.wav";
 const std::wstring kHyperMode = L"res\\sound\\hyperMode.wav";
 const std::wstring kDash = L"res\\sound\\dash.wav";
 const std::wstring kDashBooster = L"res\\sound\\dashBooster2.wav";
 const std::wstring kExplosion = L"res\\sound\\explosion.wav";
+const std::wstring kBombPlace = L"res\\sound\\bombDrop.wav";
 const std::wstring kStomp = L"res\\sound\\stomp.wav";
 const std::wstring kBuster = L"res\\sound\\buster.wav";
 const std::wstring kWeaponChange = L"res\\sound\\weaponChange.wav";
@@ -179,7 +183,7 @@ void PlayEndingMusic()
     PlayBgmIfChanged(kEndingBgm, kEndingBgmVolume);
 }
 
-void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment)
+void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world)
 {
     std::wstring fieldBgm = kWorld1Bgm;
     std::wstring environment = kForestEnvironment;
@@ -202,7 +206,18 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
     }
     else if (stageId == L"base")
     {
-        fieldBgm = kBaseBgm;
+        if (world >= 3)
+        {
+            fieldBgm = kNightBgm;
+        }
+        else if (world == 2)
+        {
+            fieldBgm = kKaiganDoukutsuBgm;
+        }
+        else
+        {
+            fieldBgm = kBaseBgm;
+        }
         environmentVolume = 14;
     }
     else if (stageNumber >= 9 && stageNumber <= 16)
@@ -232,6 +247,7 @@ void PlayPlayerDamage() { PlayEffect(kPlayerDamage, 88); }
 void PlayItemGet() { PlayEffect(kItemGet, 82); }
 void PlayJump() { PlayEffect(kJump, 62); }
 void PlayPowerUp() { PlayEffect(kPowerUp, 82); }
+void PlayDrink() { PlayEffect(kDrink, 80); }
 void StartHyperMode()
 {
     if (g_hyperModeId >= 0)
@@ -258,6 +274,7 @@ void StopHyperMode()
 void PlayDash() { PlayEffect(kDash, 72); }
 void PlayDashBooster() { PlayEffect(kDashBooster, 78); }
 void PlayExplosion() { PlayEffect(kExplosion, 75); }
+void PlayBombPlace() { PlayEffect(kBombPlace, 78); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }
 void PlayWeaponChange() { PlayEffect(kWeaponChange, 72); }

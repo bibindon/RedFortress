@@ -578,7 +578,7 @@ void GameApp::Run()
         {
             const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
             const bool useRainEnvironment = audioStage.weather == StageManager::StageWeather::Rain;
-            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, useRainEnvironment);
+            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, useRainEnvironment, GetCurrentWorld());
         }
         else if (m_gameState == GameState::Ending || m_gameState == GameState::EndingFin)
         {
@@ -4254,6 +4254,7 @@ bool GameApp::PlaceBomb(const D3DXVECTOR3& position)
                                       false,
                                       false);
     m_activeBombs.push_back(bomb);
+    GameAudio::PlayBombPlace();
     return true;
 }
 

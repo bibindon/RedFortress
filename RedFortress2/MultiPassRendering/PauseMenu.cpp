@@ -414,6 +414,7 @@ void PauseMenu::UpdateItemList()
         if (m_itemUseCallback(selectedItem.id))
         {
             GameAudio::PlayMenuConfirm();
+            GameAudio::PlayDrink();
             m_itemStatusMessage = selectedItem.name + L"を使用しました";
             m_itemStatusColor = kSuccessTextColor;
             const std::vector<std::size_t> refreshedItems = GetOwnedItemIndices();
