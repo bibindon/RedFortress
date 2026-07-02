@@ -4503,7 +4503,7 @@ void GameApp::UpdateBusters()
                             break;
                         }
                     }
-                }
+                } 
             }
         }
 
