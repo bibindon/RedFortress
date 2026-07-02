@@ -456,6 +456,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
                                               false);
 
     InputDevice::Initialize(m_hInstance, m_hWnd);
+    InputDevice::SetRemoteDesktopMode(m_remoteDesktopMode);
     m_inventoryManager.Initialize();
     m_inventoryManager.Load();
     if (m_inventoryManager.GetWeaponCount(kInitialClubWeaponId) <= 0)
@@ -3248,6 +3249,7 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
         {
         case IDC_CHECK1:
             m_remoteDesktopMode = (SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_GETCHECK, 0, 0) == BST_CHECKED);
+            InputDevice::SetRemoteDesktopMode(m_remoteDesktopMode);
             return TRUE;
 
         case IDC_BUTTON_RESET_MOVING:
