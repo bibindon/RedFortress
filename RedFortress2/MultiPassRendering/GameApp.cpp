@@ -1779,7 +1779,7 @@ void GameApp::InitializePlayerPhysics()
     settings.airAcceleration = 8.0f;
     settings.jumpVelocity = 5.0f;
     settings.airControlEnabled = true;
-    settings.doubleJumpEnabled = true;
+    settings.doubleJumpEnabled = m_inventoryManager.IsAbilityUnlocked(L"DoubleJump");
     m_playerMover.SetSettings(settings);
     m_player.ResetHp();
     m_hpBar.Reset();
@@ -1789,8 +1789,8 @@ void GameApp::InitializePlayerPhysics()
     PhysicsLib::SettingsState::SetCylinderRadius(0.3f);
     PhysicsLib::SettingsState::SetCylinderHeight(1.7f);
     PhysicsLib::SettingsState::SetInertiaMode(PhysicsLib::InertiaMode::Legacy);
-    PhysicsLib::SettingsState::SetGroundDashEnabled(true);
-    PhysicsLib::SettingsState::SetAirDashEnabled(true);
+    PhysicsLib::SettingsState::SetGroundDashEnabled(m_inventoryManager.IsAbilityUnlocked(L"GroundDash"));
+    PhysicsLib::SettingsState::SetAirDashEnabled(m_inventoryManager.IsAbilityUnlocked(L"AirDash"));
     PhysicsLib::SettingsState::SetDashSpeed(18.0f);
     PhysicsLib::SettingsState::SetDashDuration(0.2f);
 }

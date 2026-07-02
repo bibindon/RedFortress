@@ -147,6 +147,7 @@ void CraftMenu::Update()
         GameAudio::PlayMenuConfirm();
         m_statusMessage = GetName(recipe.resultId) + L"を作成しました";
         m_statusColor = kEnoughTextColor;
+        m_inventory->UnlockAbility(recipe.resultId);
     }
 }
 
@@ -353,7 +354,7 @@ bool CraftMenu::CanCraft(const Recipe& recipe) const
 
 int CraftMenu::GetRecipeRequiredWorld(const Recipe& recipe) const
 {
-    if (recipe.resultType != L"Weapon")
+    if (recipe.resultType != L"Weapon" && recipe.resultType != L"Item")
     {
         return 1;
     }
@@ -369,6 +370,21 @@ int CraftMenu::GetRecipeRequiredWorld(const Recipe& recipe) const
     }
 
     if (recipe.resultId == L"W004")
+    {
+        return 4;
+    }
+
+    if (recipe.resultId == L"GroundDash")
+    {
+        return 2;
+    }
+
+    if (recipe.resultId == L"AirDash")
+    {
+        return 3;
+    }
+
+    if (recipe.resultId == L"DoubleJump")
     {
         return 4;
     }

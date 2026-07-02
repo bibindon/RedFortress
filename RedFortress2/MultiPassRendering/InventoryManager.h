@@ -15,6 +15,8 @@ public:
 
     void AddItem(const std::wstring& itemId, int count = 1);
     void AddWeapon(const std::wstring& weaponId, int count = 1);
+    void UnlockAbility(const std::wstring& abilityId);
+    bool IsAbilityUnlocked(const std::wstring& abilityId) const;
     bool RemoveItem(const std::wstring& itemId, int count = 1);
     int GetItemCount(const std::wstring& itemId) const;
     int GetWeaponCount(const std::wstring& weaponId) const;
@@ -38,5 +40,6 @@ private:
     std::unordered_map<std::wstring, int> m_itemCounts;
     std::unordered_map<std::wstring, int> m_weaponCounts;
     std::unordered_set<std::wstring> m_collectedWeaponCollectibleIds;
+    std::unordered_set<std::wstring> m_unlockedAbilityIds;
     std::wstring m_filePath;
 };

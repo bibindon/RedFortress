@@ -47,6 +47,7 @@ bool InventoryManager::Load()
     m_itemCounts.clear();
     m_weaponCounts.clear();
     m_collectedWeaponCollectibleIds.clear();
+    m_unlockedAbilityIds.clear();
 
     std::vector<std::vector<std::wstring>> csvData;
     try
@@ -87,6 +88,10 @@ bool InventoryManager::Load()
         else if (row.at(0) == kCollectedWeaponType && count > 0)
         {
             m_collectedWeaponCollectibleIds.insert(row.at(1));
+        }
+        else if (row.at(0) == L"Ability" && !row.at(1).empty())
+        {
+            m_unlockedAbilityIds.insert(row.at(1));
         }
     }
 
@@ -133,6 +138,22 @@ void InventoryManager::Save() const
     }
 
     csv::Write(m_filePath, csvData);
+}
+
+void InventoryManager::UnlockAbility(const std::wstring& abilityId)
+{
+    if (!abilityId.empty())
+    {
+        if (m_unlockedAbilityIds.insert(abilityId).second)
+        {
+            Save();
+        }
+    }
+}
+
+bool InventoryManager::IsAbilityUnlocked(const std::wstring& abilityId) const
+{
+    return m_unlockedAbilityIds.find(abilityId) != m_unlockedAbilityIds.end();
 }
 
 void InventoryManager::AddItem(const std::wstring& itemId, const int count)
