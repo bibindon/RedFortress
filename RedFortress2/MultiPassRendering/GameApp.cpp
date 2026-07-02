@@ -87,6 +87,11 @@ namespace
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
     const float kGoalArrowHeadOffsetY = 2.3f;
     const float kGoalArrowScale = 0.42f;
+    const int kStageIntroLetterboxFrames = 25;
+    const int kStageIntroHoldFrames = 80;
+    const int kStageIntroOutFrames = 25;
+    const int kLetterboxBarHeight = 130;
+    const std::wstring kLetterboxBarImagePath = L"res\\2D_Image\\black2x2.bmp";
     const std::wstring kBombModelPath = L"res\\model\\bomb\\bomb.x";
     const int kBombFrames = 120;
     const float kBombPlaceDistance = 1.5f;
@@ -693,8 +698,15 @@ void GameApp::Run()
                 }
                 else
                 {
-                    m_gameState = GameState::Playing;
-                    m_stageTitleFrame = kStageTitleFrameMax;
+                    if (IsCurrentStageSelect())
+                    {
+                        m_gameState = GameState::Playing;
+                    }
+                    else
+                    {
+                        m_gameState = GameState::StageIntro;
+                        BeginStageIntro();
+                    }
                     m_prevMovingPlatformPositions.clear();
                 }
                 m_render.Draw();
@@ -717,8 +729,15 @@ void GameApp::Run()
                     }
                     else
                     {
-                        m_gameState = GameState::Playing;
-                        m_stageTitleFrame = kStageTitleFrameMax;
+                        if (IsCurrentStageSelect())
+                        {
+                            m_gameState = GameState::Playing;
+                        }
+                        else
+                        {
+                            m_gameState = GameState::StageIntro;
+                            BeginStageIntro();
+                        }
                         m_prevMovingPlatformPositions.clear();
                     }
                     m_render.Draw();
@@ -766,6 +785,10 @@ void GameApp::Run()
         else if (m_gameState == GameState::EndingFin)
         {
             DrawEndingFin();
+        }
+        else if (m_gameState == GameState::StageIntro)
+        {
+            UpdateStageIntro();
         }
         else
         {
@@ -963,7 +986,6 @@ void GameApp::Run()
             UpdateGoalArrow();
 
             // 描画（動く床の位置が更新される）
-            DrawStageTitle();
             if (!IsCurrentStageSelect())
             {
                 m_hpBar.Draw();
@@ -3090,9 +3112,17 @@ bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
 
     m_render.StartFadeOut(0.3f);
     LoadCurrentStageObjects();
-    m_render.StartFadeIn(0.3f);
-    m_gameState = GameState::Playing;
-    m_stageTitleFrame = kStageTitleFrameMax;
+    if (IsCurrentStageSelect())
+    {
+        m_render.StartFadeIn(0.3f);
+        m_gameState = GameState::Playing;
+    }
+    else
+    {
+        m_render.SetFadeAlpha(1.0f);
+        m_gameState = GameState::StageIntro;
+        BeginStageIntro();
+    }
     return true;
 }
 
@@ -3771,8 +3801,16 @@ bool GameApp::StartNextStage()
     }
 
     LoadCurrentStageObjects();
-    m_gameState = GameState::Playing;
-    m_stageTitleFrame = kStageTitleFrameMax;
+    if (IsCurrentStageSelect())
+    {
+        m_gameState = GameState::Playing;
+    }
+    else
+    {
+        m_render.SetFadeAlpha(1.0f);
+        m_gameState = GameState::StageIntro;
+        BeginStageIntro();
+    }
     return true;
 }
 
@@ -3800,9 +3838,17 @@ bool GameApp::StartStageAfterClear()
     m_render.StartFadeOut(0.3f);
     m_preferredStageSelectPortalId = L"portal-to-" + clearedStageId;
     LoadCurrentStageObjects();
-    m_render.StartFadeIn(0.3f);
-    m_gameState = GameState::Playing;
-    m_stageTitleFrame = kStageTitleFrameMax;
+    if (IsCurrentStageSelect())
+    {
+        m_render.StartFadeIn(0.3f);
+        m_gameState = GameState::Playing;
+    }
+    else
+    {
+        m_render.SetFadeAlpha(1.0f);
+        m_gameState = GameState::StageIntro;
+        BeginStageIntro();
+    }
     return true;
 }
 
@@ -3979,6 +4025,133 @@ void GameApp::DrawTitleScreen()
 
     m_command.Draw();
     m_render.Draw();
+}
+
+void GameApp::BeginStageIntro()
+{
+    m_stageIntroPhase = StageIntroPhase::LetterboxIn;
+    m_stageIntroFrame = 0;
+    m_stageIntroStartFadeAlpha = m_render.GetFadeAlpha();
+    if (m_stageIntroFontId < 0)
+    {
+        m_stageIntroFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 56, D3DCOLOR_RGBA(255, 255, 255, 255));
+    }
+}
+
+void GameApp::UpdateStageIntro()
+{
+    // 現在フェーズのフレーム数
+    int phaseFrames = kStageIntroLetterboxFrames;
+    if (m_stageIntroPhase == StageIntroPhase::Hold)
+    {
+        phaseFrames = kStageIntroHoldFrames;
+    }
+    else if (m_stageIntroPhase == StageIntroPhase::LetterboxOut)
+    {
+        phaseFrames = kStageIntroOutFrames;
+    }
+
+    float t = 1.0f;
+    if (phaseFrames > 0)
+    {
+        t = static_cast<float>(m_stageIntroFrame) / static_cast<float>(phaseFrames);
+        if (t > 1.0f)
+        {
+            t = 1.0f;
+        }
+    }
+
+    // スキップ（Space/Enter で閉幕へ）
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        if (m_stageIntroPhase != StageIntroPhase::LetterboxOut)
+        {
+            m_stageIntroPhase = StageIntroPhase::LetterboxOut;
+            m_stageIntroFrame = 0;
+            phaseFrames = kStageIntroOutFrames;
+            t = 0.0f;
+        }
+    }
+
+    // フェーズごとのアニメ値
+    float barHeight = static_cast<float>(kLetterboxBarHeight);
+    float titleAlpha = 1.0f;
+    float titleOffsetY = 0.0f;
+    float fadeAlpha = 0.0f;
+    if (m_stageIntroPhase == StageIntroPhase::LetterboxIn)
+    {
+        barHeight = static_cast<float>(kLetterboxBarHeight) * t;
+        titleAlpha = t;
+        titleOffsetY = (1.0f - t) * 20.0f;
+        fadeAlpha = m_stageIntroStartFadeAlpha + (0.0f - m_stageIntroStartFadeAlpha) * t;
+    }
+    else if (m_stageIntroPhase == StageIntroPhase::Hold)
+    {
+        barHeight = static_cast<float>(kLetterboxBarHeight);
+        titleAlpha = 1.0f;
+        titleOffsetY = 0.0f;
+        fadeAlpha = 0.0f;
+    }
+    else
+    {
+        barHeight = static_cast<float>(kLetterboxBarHeight) * (1.0f - t);
+        titleAlpha = 1.0f - t;
+        titleOffsetY = 0.0f;
+        fadeAlpha = 0.0f;
+    }
+
+    m_render.SetFadeAlpha(fadeAlpha);
+
+    // シーン描画用のカメラとプレイヤーメッシュを更新
+    UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+
+    // シネマティック黒帯
+    const int barH = static_cast<int>(barHeight + 0.5f);
+    if (barH > 0)
+    {
+        m_render.DrawImageSized(kLetterboxBarImagePath,
+                                0, 0,
+                                NSRender::Common::BASE_W, barH, 255);
+        m_render.DrawImageSized(kLetterboxBarImagePath,
+                                0, NSRender::Common::BASE_H - barH,
+                                NSRender::Common::BASE_W, barH, 255);
+    }
+
+    // ステージ名
+    const int alpha = static_cast<int>(255.0f * titleAlpha + 0.5f);
+    if (alpha > 0)
+    {
+        const int titleY = static_cast<int>(260.0f + titleOffsetY);
+        m_render.DrawTextExCenter(m_stageIntroFontId,
+                                  m_stageManager.GetCurrentStageDisplayName(),
+                                  0, titleY,
+                                  NSRender::Common::BASE_W, 90,
+                                  D3DCOLOR_RGBA(255, 255, 255, alpha));
+    }
+
+    m_render.Draw();
+
+    // フレーム進行とフェーズ遷移
+    ++m_stageIntroFrame;
+    if (m_stageIntroFrame >= phaseFrames)
+    {
+        m_stageIntroFrame = 0;
+        if (m_stageIntroPhase == StageIntroPhase::LetterboxIn)
+        {
+            m_stageIntroPhase = StageIntroPhase::Hold;
+        }
+        else if (m_stageIntroPhase == StageIntroPhase::Hold)
+        {
+            m_stageIntroPhase = StageIntroPhase::LetterboxOut;
+        }
+        else
+        {
+            m_render.SetFadeAlpha(0.0f);
+            m_gameState = GameState::Playing;
+            m_prevMovingPlatformPositions.clear();
+        }
+    }
 }
 
 void GameApp::DrawStageTitle()

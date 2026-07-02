@@ -96,6 +96,8 @@ private:
                                          const std::wstring& timing) const;
     bool StartStageAfterClear();
     void LoadCurrentStageObjects();
+    void BeginStageIntro();
+    void UpdateStageIntro();
     void DamagePlayerHp(int amount);
     void HealPlayerHp(int amount);
     void HandlePlayerDeath();
@@ -180,8 +182,9 @@ private:
     void DrawItemPickupMessage();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
-    enum class GameState { Loading, Title, SlideShow, Playing, StageClear, GameOver, Ending, EndingFin };
+    enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageClear, GameOver, Ending, EndingFin };
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
+    enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
@@ -265,6 +268,10 @@ private:
     int m_itemPickupMessageFrames = 0;
     bool m_isMouseOverStartButton = false;
     int m_stageTitleFrame = 0;
+    int m_stageIntroFontId = -1;
+    StageIntroPhase m_stageIntroPhase = StageIntroPhase::LetterboxIn;
+    int m_stageIntroFrame = 0;
+    float m_stageIntroStartFadeAlpha = 0.0f;
     int m_goalMarkerMeshId = -1;
     int m_goalArrowMeshId = -1;
     int m_stagePortalCooldownFrames = 0;
