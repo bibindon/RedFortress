@@ -281,14 +281,7 @@ void CraftMenu::SetCurrentWorld(const int world)
 void CraftMenu::LoadCatalog(const std::wstring& csvPath)
 {
     std::vector<std::vector<std::wstring>> csvData;
-    try
-    {
-        csvData = csv::Read(NSRender::Util::GetExeDir() + csvPath);
-    }
-    catch (...)
-    {
-        return;
-    }
+    csvData = csv::Read(NSRender::Util::GetExeDir() + csvPath);
 
     for (const auto& row : csvData)
     {
@@ -303,14 +296,7 @@ void CraftMenu::LoadRecipes()
 {
     m_recipes.clear();
     std::vector<std::vector<std::wstring>> csvData;
-    try
-    {
-        csvData = csv::Read(NSRender::Util::GetExeDir() + kRecipeCsvPath);
-    }
-    catch (...)
-    {
-        return;
-    }
+    csvData = csv::Read(NSRender::Util::GetExeDir() + kRecipeCsvPath);
 
     for (const auto& row : csvData)
     {
@@ -320,23 +306,16 @@ void CraftMenu::LoadRecipes()
         }
 
         Recipe recipe;
-        try
+        recipe.id = row.at(0);
+        recipe.resultType = row.at(1);
+        recipe.resultId = row.at(2);
+        recipe.resultCount = std::stoi(row.at(3));
+        for (std::size_t i = 4; i + 1 < row.size(); i += 2)
         {
-            recipe.id = row.at(0);
-            recipe.resultType = row.at(1);
-            recipe.resultId = row.at(2);
-            recipe.resultCount = std::stoi(row.at(3));
-            for (std::size_t i = 4; i + 1 < row.size(); i += 2)
+            if (!row.at(i).empty())
             {
-                if (!row.at(i).empty())
-                {
-                    recipe.materials.push_back({ row.at(i), std::stoi(row.at(i + 1)) });
-                }
+                recipe.materials.push_back({ row.at(i), std::stoi(row.at(i + 1)) });
             }
-        }
-        catch (...)
-        {
-            continue;
         }
 
         if (!recipe.id.empty() && !recipe.resultId.empty() &&

@@ -50,14 +50,7 @@ bool InventoryManager::Load()
     m_unlockedAbilityIds.clear();
 
     std::vector<std::vector<std::wstring>> csvData;
-    try
-    {
-        csvData = csv::Read(m_filePath);
-    }
-    catch (...)
-    {
-        return false;
-    }
+    csvData = csv::Read(m_filePath);
 
     for (std::size_t i = 0; i < csvData.size(); ++i)
     {
@@ -67,15 +60,7 @@ bool InventoryManager::Load()
             continue;
         }
 
-        int count = 0;
-        try
-        {
-            count = std::stoi(row.at(2));
-        }
-        catch (...)
-        {
-            continue;
-        }
+        int count = std::stoi(row.at(2));
 
         if (row.at(0) == kItemType && count > 0)
         {
