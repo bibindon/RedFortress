@@ -144,7 +144,8 @@ void Initialize()
     {
         kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSlashHit, kAttackHit,
         kEnemyAttack, kPlayerDamage, kItemGet, kJump, kPowerUp, kDash, kDashBooster,
-        kExplosion, kStomp, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm
+        kExplosion, kBombPlace, kStomp, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
+        kDrink
     };
     for (const std::wstring& effect : effects)
     {
