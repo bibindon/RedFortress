@@ -50,6 +50,7 @@ namespace
     const std::wstring kQteRewardItemId = L"001";
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
     const std::wstring kSaberModelPath = L"res\\model\\saber\\saber.x";
+    const float kSaberModelScale = 0.5f;
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
     const std::wstring kInitialClubWeaponId = L"W001";
@@ -3978,7 +3979,7 @@ void GameApp::LoadCurrentStageObjects()
         m_saberMeshId = m_render.AddMeshMix(kSaberModelPath,
                                             kHiddenHeldWeaponPosition,
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                            1.0f);
+                                            kSaberModelScale);
         if (m_saberMeshId >= 0)
         {
             m_render.SetMeshMixEnabled(m_saberMeshId, false);
