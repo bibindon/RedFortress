@@ -268,6 +268,7 @@ void Enemy::TakeDamageWithoutFacing(NSRender::Render& render, const int amount)
 void Enemy::ApplyDamage(NSRender::Render& render, const int amount)
 {
     m_hp -= amount;
+    render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Damage, m_position);
     m_blinkFrames = 15;
     if (m_meshId >= 0)
     {

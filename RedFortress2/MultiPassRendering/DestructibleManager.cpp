@@ -317,6 +317,7 @@ bool DestructibleManager::TryDamage(NSRender::Render& render,
             }
 
             o.hp -= damage;
+            render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Damage, o.position);
             o.blinkFrames = kDestructibleBlinkFrames;
             render.SetMeshMixEnabled(o.meshId, true);
             render.SetMeshMixDamageFlash(o.meshId, true);

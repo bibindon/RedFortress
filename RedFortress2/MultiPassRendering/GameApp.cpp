@@ -3461,6 +3461,7 @@ void GameApp::DamagePlayerHp(int amount)
     if (newHp < oldHp)
     {
         GameAudio::PlayPlayerDamage();
+        m_render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Damage, m_playerMover.GetPosition());
         m_hpBar.OnDamage(oldHp, newHp);
         m_damagePopupManager.Add(oldHp - newHp, m_playerMover.GetPosition(), false);
         m_render.SetCameraShakeDuration(0.2f);
