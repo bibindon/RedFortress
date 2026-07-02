@@ -239,6 +239,8 @@ private:
     int m_respawnCameraDelayFrames = 0;
     int m_respawnCameraMoveFrames = 0;
     bool m_playerDeathPending = false;
+    bool m_playerFallingDead = false;
+    int m_fallDeathFrames = 0;
     bool m_stageClearProcessed = false;
     bool m_startStageAfterSlideShow = false;
     std::size_t m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);

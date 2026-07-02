@@ -80,6 +80,8 @@ namespace
     const int kRespawnCameraMoveFrames = 30;
     const int kStageTitleFrameMax = 180;
     const int kGameOverFadeFrames = 18;
+    const float kFallDeathY = -10.0f;
+    const int kFallDeathFrames = 90;
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
@@ -1017,12 +1019,38 @@ void GameApp::Run()
             const D3DXVECTOR3 playerPositionBeforePhysicsUpdate = m_playerMover.GetPosition();
             if (!isStageSelect)
             {
+                // 落下死演出中は入力を無効化し自由落下させる
+                if (m_playerFallingDead)
+                {
+                    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                    m_pendingJump = false;
+                }
                 m_playerMover.Update(m_pendingMove, m_pendingJump);
                 m_dashBoosterManager.Update(m_playerMover.GetPosition(), m_playerMover);
                 m_collectibleManager.Update(m_playerMover.GetPosition(), m_destructibleManager);
                 if (m_playerMover.IsCrushed())
                 {
                     DamagePlayerHp(m_player.GetHp());
+                }
+
+                // 落下死判定: Y座標が閾値以下で落下死。
+                // カメラ追従を止め、プレイヤーはそのまま落下させ、指定フレーム後にリスポーンへ接続する。
+                if (!m_playerFallingDead)
+                {
+                    if (m_playerMover.GetPosition().y <= kFallDeathY)
+                    {
+                        m_playerFallingDead = true;
+                        m_fallDeathFrames = 0;
+                    }
+                }
+                else
+                {
+                    ++m_fallDeathFrames;
+                    if (m_fallDeathFrames >= kFallDeathFrames)
+                    {
+                        HandlePlayerDeath();
+                        m_respawnCameraDelayFrames = 0;
+                    }
                 }
 
                 if (m_qte == nullptr && m_playerAttackController.ConsumeHitRequested())
@@ -1773,6 +1801,12 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
             m_render.SetMeshMixEnabled(m_playerMeshId, playerVisible);
             m_render.SetMeshMixPos(m_playerMeshId, displayPosition);
         }
+    }
+
+    // 落下死演出中はメッシュ更新のみ行い、カメラ追従を止めてプレイヤーが落ちていく様を見せる
+    if (m_playerFallingDead)
+    {
+        return;
     }
 
     if (m_useFixedCamera)
@@ -3524,6 +3558,8 @@ void GameApp::CompletePlayerDeath()
 {
     m_player.Die();
     m_playerDeathPending = false;
+    m_playerFallingDead = false;
+    m_fallDeathFrames = 0;
     m_respawnCameraDelayFrames = 0;
     m_render.SetSceneUpdatePaused(false);
 
@@ -3862,6 +3898,8 @@ void GameApp::LoadCurrentStageObjects()
     m_respawnCameraDelayFrames = 0;
     m_respawnCameraMoveFrames = 0;
     m_playerDeathPending = false;
+    m_playerFallingDead = false;
+    m_fallDeathFrames = 0;
     m_render.SetSceneUpdatePaused(false);
     if (m_playerMeshId >= 0)
     {
