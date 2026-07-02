@@ -12,6 +12,7 @@ namespace
 const std::wstring kItemType = L"Item";
 const std::wstring kWeaponType = L"Weapon";
 const std::wstring kCollectedWeaponType = L"CollectedWeapon";
+const std::wstring kAbilityType = L"Ability";
 }
 
 void InventoryManager::Initialize()
@@ -122,6 +123,13 @@ void InventoryManager::Save() const
         csvData.push_back({ kCollectedWeaponType, id, L"1" });
     }
 
+    ids.assign(m_unlockedAbilityIds.begin(), m_unlockedAbilityIds.end());
+    std::sort(ids.begin(), ids.end());
+    for (const std::wstring& id : ids)
+    {
+        csvData.push_back({ kAbilityType, id, L"1" });
+    }
+
     csv::Write(m_filePath, csvData);
 }
 
@@ -223,7 +231,17 @@ bool InventoryManager::TryCraft(const std::vector<std::pair<std::wstring, int>>&
         return false;
     }
 
-    if (resultType != kItemType && resultType != kWeaponType)
+    if (resultType != kItemType && resultType != kWeaponType && resultType != kAbilityType)
+    {
+        return false;
+    }
+
+    if (resultType == kWeaponType && GetWeaponCount(resultId) > 0)
+    {
+        return false;
+    }
+
+    if (resultType == kAbilityType && IsAbilityUnlocked(resultId))
     {
         return false;
     }
@@ -253,9 +271,13 @@ bool InventoryManager::TryCraft(const std::vector<std::pair<std::wstring, int>>&
     {
         AddWeapon(resultId, resultCount);
     }
-    else
+    else if (resultType == kItemType)
     {
         AddItem(resultId, resultCount);
+    }
+    else if (resultType == kAbilityType)
+    {
+        UnlockAbility(resultId);
     }
 
     Save();

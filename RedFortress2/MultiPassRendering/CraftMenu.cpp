@@ -147,7 +147,6 @@ void CraftMenu::Update()
         GameAudio::PlayMenuConfirm();
         m_statusMessage = GetName(recipe.resultId) + L"を作成しました";
         m_statusColor = kEnoughTextColor;
-        m_inventory->UnlockAbility(recipe.resultId);
     }
 }
 
