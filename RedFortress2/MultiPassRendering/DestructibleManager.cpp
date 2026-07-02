@@ -11,6 +11,7 @@
 namespace
 {
     const std::wstring kModelPath = L"res\\model\\cubeWoodSmall\\cube_wood_small.x";
+    const std::wstring kCollisionModelPath = L"res\\model\\cubeWoodSmall\\cube_wood_small_collision.x";
     const std::wstring kRedCubeModelPath = L"res\\model\\itemIconMaterial\\itemIconMaterial.x";
     const std::wstring kAmmoHeartModelPath = L"res\\model\\itemIconAmmo\\itemIconAmmo.x";
     const D3DXVECTOR3 kPhysicsDisabledPosition(0.0f, -10000.0f, 0.0f);
@@ -170,7 +171,7 @@ void DestructibleManager::LoadForStage(NSRender::Render& render, const std::wstr
                                            1.0f);
         if (obj.meshId >= 0)
         {
-            obj.physicsId = PhysicsLib::PhysicsLib::Load(kModelPath.c_str(),
+            obj.physicsId = PhysicsLib::PhysicsLib::Load(kCollisionModelPath.c_str(),
                                                          PhysicsLib::PhysicsLib::ObjectType::Slide,
                                                          0.0f);
             PhysicsLib::PhysicsLib::SetTransform(obj.physicsId,

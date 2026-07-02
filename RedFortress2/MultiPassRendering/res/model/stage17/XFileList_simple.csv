@@ -10,12 +10,12 @@
 10,../collision_wall.x, 11,1.57,-8, 0, 0, 0, 1, normal
 13,../collision_moving_platform.x, 5,0.82,-8, 0, 0, 0, 1, normal
 14,../collision_moving_platform.x, 0,0.83,0, 0, 0, 0, 1, normal
-19,../cubeWood/cube_wood.x, -3, 1,-26, 0, 0, 0, 1, normal
-20,../cubeWood/cube_wood.x, 3,1.01,-18, 0, 0, 0, 1, normal
-21,../cubeWood/cube_wood.x, -2,1.02,-6, 0, 0, 0, 1, normal
-22,../cubeWood/cube_wood.x, 3,1.03,6, 0, 0, 0, 1, normal
-23,../cubeWood/cube_wood.x, -3,1.04,18, 0, 0, 0, 1, normal
-24,../cubeWood/cube_wood.x, 3,1.05,26, 0, 0, 0, 1, normal
+19,../cubeWood/cube_wood.x, -3,0,-26, 0, 0, 0, 1, normal
+20,../cubeWood/cube_wood.x, 3,0.01,-18, 0, 0, 0, 1, normal
+21,../cubeWood/cube_wood.x, -2,0.02,-6, 0, 0, 0, 1, normal
+22,../cubeWood/cube_wood.x, 3,0.03,6, 0, 0, 0, 1, normal
+23,../cubeWood/cube_wood.x, -3,0.04,18, 0, 0, 0, 1, normal
+24,../cubeWood/cube_wood.x, 3,0.05,26, 0, 0, 0, 1, normal
 26,../SkySphere/SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 27,../tree2/lemonTree.x, 6,0,20, 0, 0, 0, 1, normal
 201,../fence.x,-11,0.5,-30,0,0,0,1,normal

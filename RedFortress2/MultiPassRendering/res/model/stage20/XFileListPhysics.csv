@@ -11,9 +11,9 @@
 310,res/model/collision_wall.x,-11,1.57,-24,0,1.5708,0,1,Collision,n
 313,res/model/collision_moving_platform.x,3,0.82,8,0,0,0,1,Collision,y
 314,res/model/collision_moving_platform.x,-1,0.83,2,0,0,0,1,Collision,y
-319,res/model/cubeWood/cube_wood_collision.x,12,1,16,0,0,0,1,Collision,n
-320,res/model/cubeWood/cube_wood_collision.x,6,1.01,8,0,0,0,1,Collision,n
-321,res/model/cubeWood/cube_wood_collision.x,0,1.02,0,0,0,0,1,Collision,n
-322,res/model/cubeWood/cube_wood_collision.x,-4,1.03,-10,0,0,0,1,Collision,n
-323,res/model/cubeWood/cube_wood_collision.x,-9,1.04,-18,0,0,0,1,Collision,n
-324,res/model/cubeWood/cube_wood_collision.x,-13,1.05,-26,0,0,0,1,Collision,n
+319,res/model/cubeWood/cube_wood_collision.x,12,0,16,0,0,0,1,Collision,n
+320,res/model/cubeWood/cube_wood_collision.x,6,0.01,8,0,0,0,1,Collision,n
+321,res/model/cubeWood/cube_wood_collision.x,0,0.02,0,0,0,0,1,Collision,n
+322,res/model/cubeWood/cube_wood_collision.x,-4,0.03,-10,0,0,0,1,Collision,n
+323,res/model/cubeWood/cube_wood_collision.x,-9,0.04,-18,0,0,0,1,Collision,n
+324,res/model/cubeWood/cube_wood_collision.x,-13,0.05,-26,0,0,0,1,Collision,n

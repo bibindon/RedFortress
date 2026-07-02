@@ -10,12 +10,12 @@
 510,../collision_wall.x,2.5,1.57,-22,0,0,0,1,normal
 513,../collision_moving_platform.x,-0.5,0.82,2,0,0,0,1,normal
 514,../collision_moving_platform.x,0.5,0.83,-2,0,0,0,1,normal
-519,../cubeWood/cube_wood.x,-14.5,1,22,0,0,0,1,normal
-520,../cubeWood/cube_wood.x,-6,1.01,19.0,0,0,0,1,normal
-521,../cubeWood/cube_wood.x,0.5,1.02,8,0,0,0,1,normal
-522,../cubeWood/cube_wood.x,2.5,1.03,-8,0,0,0,1,normal
-523,../cubeWood/cube_wood.x,8,1.04,-19.0,0,0,0,1,normal
-524,../cubeWood/cube_wood.x,14.5,1.05,-22,0,0,0,1,normal
+519,../cubeWood/cube_wood.x,-14.5,0,22,0,0,0,1,normal
+520,../cubeWood/cube_wood.x,-6,0.01,19.0,0,0,0,1,normal
+521,../cubeWood/cube_wood.x,0.5,0.02,8,0,0,0,1,normal
+522,../cubeWood/cube_wood.x,2.5,0.03,-8,0,0,0,1,normal
+523,../cubeWood/cube_wood.x,8,0.04,-19.0,0,0,0,1,normal
+524,../cubeWood/cube_wood.x,14.5,0.05,-22,0,0,0,1,normal
 526,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 201,../fence.x,-56,0.5,-60,0,0,0,1,normal
 202,../fence.x,-48,0.5,-60,0,0,0,1,normal
