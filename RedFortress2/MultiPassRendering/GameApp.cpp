@@ -3093,6 +3093,11 @@ bool GameApp::StartStageByIndex(std::size_t stageIndex)
     }
 
     const StageManager::StageData& stage = m_stageManager.GetStage(stageIndex);
+    if (stage.id == L"base")
+    {
+        return StartStageByIndexImmediate(stageIndex);
+    }
+
     const std::wstring storyScriptPath = GetStageStoryScriptPath(stage.id, L"Before");
     if (!storyScriptPath.empty())
     {
@@ -3115,7 +3120,7 @@ bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
 
     m_render.StartFadeOut(0.3f);
     LoadCurrentStageObjects();
-    if (IsCurrentStageSelect())
+    if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
         m_render.StartFadeIn(0.3f);
         m_gameState = GameState::Playing;
