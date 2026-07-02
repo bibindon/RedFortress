@@ -354,17 +354,17 @@ int CraftMenu::GetRecipeRequiredWorld(const Recipe& recipe) const
 
     if (recipe.resultId == L"GroundDash")
     {
-        return 2;
+        return 1;
     }
 
     if (recipe.resultId == L"AirDash")
     {
-        return 3;
+        return 2;
     }
 
     if (recipe.resultId == L"DoubleJump")
     {
-        return 4;
+        return 3;
     }
 
     return 1;
