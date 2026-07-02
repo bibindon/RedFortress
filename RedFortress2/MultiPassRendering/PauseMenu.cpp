@@ -435,7 +435,7 @@ void PauseMenu::UpdateItemList()
 
 bool PauseMenu::IsUsableItem(const std::wstring& itemId) const
 {
-    return itemId == L"007" || itemId == L"008";
+    return itemId == L"007" || itemId == L"008" || itemId == L"017";
 }
 
 void PauseMenu::EnsureSelectedItemVisible()
