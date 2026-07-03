@@ -936,6 +936,7 @@ void GameApp::Run()
                             sprButton->app = this;
                             sprButton->Load(L"res\\2D_Image\\qte_button.png");
                             m_qte->SetCircleSprites(sprGrowingCircle, sprTargetCircle, sprButton, 1600, 900);
+                            GameAudio::PlayQteStart();
                             BeginQteVisualEffect();
                             m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
                             m_pendingJump = false;
@@ -999,7 +1000,11 @@ void GameApp::Run()
                 if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
                     InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
                 {
-                    m_qte->StopBarAnimation();
+                    if (m_qte->GetBarResult() == NS_QTE_Module::QTE_Module::BarResult::None)
+                    {
+                        m_qte->StopBarAnimation();
+                        GameAudio::PlayQteStop();
+                    }
                 }
 
                 // QTE 完了判定
@@ -1009,9 +1014,21 @@ void GameApp::Run()
                     if (result == NS_QTE_Module::QTE_Module::BarResult::Success ||
                         result == NS_QTE_Module::QTE_Module::BarResult::Normal)
                     {
+                        if (result == NS_QTE_Module::QTE_Module::BarResult::Success)
+                        {
+                            GameAudio::PlayQteSuccess();
+                        }
+                        else
+                        {
+                            GameAudio::PlayQteNormal();
+                        }
                         m_inventoryManager.AddItem(kQteRewardItemId, 1);
                         m_inventoryManager.Save();
                         ShowItemPickupMessage(kQteRewardItemId, 1);
+                    }
+                    else
+                    {
+                        GameAudio::PlayQteFailure();
                     }
                     m_qte->Finalize();
                     delete m_qte;
