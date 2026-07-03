@@ -4009,6 +4009,7 @@ void GameApp::LoadCurrentStageObjects()
     RestoreTemporaryPowerUps();
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
+    m_playerAttackController.SelectClubCategory();
     m_respawnCameraDelayFrames = 0;
     m_respawnCameraMoveFrames = 0;
     m_playerDeathPending = false;

@@ -84,6 +84,11 @@ const PlayerAttackDefinition& PlayerAttackController::GetCurrentDefinition() con
     return m_currentDefinition;
 }
 
+void PlayerAttackController::SelectClubCategory()
+{
+    m_selectedCategory = 0;
+}
+
 PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType attackType) const
 {
     PlayerAttackDefinition definition;

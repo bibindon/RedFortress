@@ -42,6 +42,7 @@ public:
     bool ConsumeHitRequested();
     const PlayerAttackDefinition& GetCurrentDefinition() const;
 
+    void SelectClubCategory();
     void CycleAttackCategory(int direction = 1);
     PlayerAttackType GetAttackType(bool isStrong) const;
     const wchar_t* GetCurrentCategoryName() const;
