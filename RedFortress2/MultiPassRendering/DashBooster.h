@@ -49,6 +49,7 @@ private:
     int m_renderId = -1;
     int m_cooldownFrames = 0;
     int m_launchEffectDelayFrames = 0;
+    int m_contactScaleFrames = 0;
     int m_damageFlashFrames = 0;
     bool m_waitingForLaunchEffect = false;
 };

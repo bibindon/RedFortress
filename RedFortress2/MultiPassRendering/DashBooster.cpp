@@ -12,9 +12,10 @@ const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooste
 const int kDashBoosterCooldownFrames = 30;
 const int kDashBoosterChargeFrames = 30;
 const int kDashBoosterDamageFlashFrames = 10;
+const int kDashBoosterContactGrowFrames = 24;
 const float kDashBoosterVisualScale = 3.0f;
 const float kDashBoosterModelYawOffset = D3DX_PI / 6.0f;
-const float kDashBoosterContactScale = 1.24f;
+const float kDashBoosterContactScale = 1.35f;
 
 D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
 {
@@ -68,6 +69,7 @@ void DashBooster::Initialize(NSRender::Render& render,
     m_visualRotation = CalculateDashBoosterVisualRotation(m_direction);
     m_cooldownFrames = 0;
     m_launchEffectDelayFrames = 0;
+    m_contactScaleFrames = 0;
     m_damageFlashFrames = 0;
     m_waitingForLaunchEffect = false;
 
@@ -138,7 +140,22 @@ void DashBooster::UpdateVisual(NSRender::Render& render)
     float contactScale = 1.0f;
     if (m_waitingForLaunchEffect)
     {
-        contactScale = kDashBoosterContactScale;
+        if (m_contactScaleFrames < kDashBoosterContactGrowFrames)
+        {
+            ++m_contactScaleFrames;
+        }
+
+        float contactProgress = static_cast<float>(m_contactScaleFrames) /
+                                static_cast<float>(kDashBoosterContactGrowFrames);
+        if (contactProgress > 1.0f)
+        {
+            contactProgress = 1.0f;
+        }
+
+        const float smoothProgress =
+            contactProgress * contactProgress * (3.0f - 2.0f * contactProgress);
+        contactScale =
+            1.0f + (kDashBoosterContactScale - 1.0f) * smoothProgress;
     }
 
     const float visualScale = m_scale * kDashBoosterVisualScale * contactScale;
@@ -174,6 +191,7 @@ void DashBooster::Trigger(NSRender::Render& render, PhysicsLib::CharacterMover& 
         m_launchEffectDelayFrames = 0;
     }
     m_waitingForLaunchEffect = true;
+    m_contactScaleFrames = 0;
     m_cooldownFrames = kDashBoosterCooldownFrames;
 
     if (m_launchEffectDelayFrames <= 0)
@@ -194,6 +212,7 @@ void DashBooster::PlayLaunchEffects(NSRender::Render& render)
 
     m_damageFlashFrames = kDashBoosterDamageFlashFrames;
     m_launchEffectDelayFrames = 0;
+    m_contactScaleFrames = 0;
     m_waitingForLaunchEffect = false;
 }
 
