@@ -1147,7 +1147,8 @@ void GameApp::Run()
                         {
                             const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
                                 m_playerMover.GetPosition(), m_playerYaw,
-                                attackDefinition.range, attackDefinition.halfAngleRadians);
+                                attackDefinition.range, attackDefinition.verticalRange,
+                                attackDefinition.halfAngleRadians);
                             if (destructible != nullptr)
                             {
                                 if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
@@ -1911,6 +1912,7 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
 {
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+    const float attackCenterY = playerPos.y + kEnemyAttackTargetHeight;
     int damagedCount = 0;
 
     for (auto& enemy : m_enemyManager.GetEnemies())
@@ -1921,6 +1923,11 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
         }
 
         const D3DXVECTOR3 targetPos = GetEnemyAttackTargetPosition(enemy);
+        if (fabsf(targetPos.y - attackCenterY) > attackDefinition.verticalRange)
+        {
+            continue;
+        }
+
         D3DXVECTOR3 dir = targetPos - playerPos;
         const float dist = D3DXVec3Length(&dir);
         if (dist > attackDefinition.range)

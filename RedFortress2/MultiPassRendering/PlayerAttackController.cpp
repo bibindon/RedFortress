@@ -100,6 +100,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.hitDelayFrames = 12;
         definition.damage = 2;
         definition.range = 3.0f;
+        definition.verticalRange = 1.2f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
         definition.moveSpeed = 5.5f;
         definition.moveStartRemainingFrames = 12;
@@ -112,6 +113,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.hitDelayFrames = 28;
         definition.damage = 5;
         definition.range = 3.0f;
+        definition.verticalRange = 1.2f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
         definition.moveSpeed = 0.0909f;
         definition.moveStartRemainingFrames = 28;
@@ -124,6 +126,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.hitDelayFrames = 12;
         definition.damage = 2;
         definition.range = 3.0f;
+        definition.verticalRange = 1.2f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
         definition.moveSpeed = 5.5f;
         definition.moveStartRemainingFrames = 12;
@@ -136,6 +139,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.hitDelayFrames = 28;
         definition.damage = 5;
         definition.range = 3.0f;
+        definition.verticalRange = 1.2f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
         definition.moveSpeed = 0.0909f;
         definition.moveStartRemainingFrames = 28;
@@ -148,6 +152,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.hitDelayFrames = 12;
         definition.damage = 2;
         definition.range = 2.0f;
+        definition.verticalRange = 1.2f;
         definition.halfAngleRadians = D3DXToRadian(45.0f);
         definition.moveSpeed = 5.5f;
         definition.moveStartRemainingFrames = 12;
@@ -160,6 +165,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.hitDelayFrames = 28;
         definition.damage = 5;
         definition.range = 2.0f;
+        definition.verticalRange = 1.2f;
         definition.halfAngleRadians = D3DXToRadian(45.0f);
         definition.moveSpeed = 0.0909f;
         definition.moveStartRemainingFrames = 28;

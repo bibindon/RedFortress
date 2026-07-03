@@ -22,6 +22,8 @@ namespace
     const float kDroppedItemRadius = 0.25f;
     const float kDroppedItemCollisionCenterY = 0.25f;
     const float kDroppedItemSpawnHeight = 1.0f;
+    const float kPlayerAttackCenterHeight = 1.0f;
+    const float kDestructibleAttackTargetHeight = 0.5f;
 
     std::wstring Trim(const std::wstring& str)
     {
@@ -264,15 +266,23 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
     const D3DXVECTOR3& playerPos,
     const float playerYaw,
     const float range,
+    const float verticalRange,
     const float halfAngleRadians) const
 {
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
+    const float attackCenterY = playerPos.y + kPlayerAttackCenterHeight;
     const DestructibleObject* bestObj = nullptr;
     float bestDot = -1.0f;
 
     for (const auto& obj : m_objects)
     {
         if (obj.isDead || obj.hp <= 0)
+        {
+            continue;
+        }
+
+        const float targetCenterY = obj.position.y + kDestructibleAttackTargetHeight;
+        if (fabsf(targetCenterY - attackCenterY) > verticalRange)
         {
             continue;
         }
