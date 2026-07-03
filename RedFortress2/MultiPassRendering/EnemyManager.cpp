@@ -141,8 +141,7 @@ void EnemyManager::SyncMeshes(NSRender::Render& render)
 
 void EnemyManager::DrawHpBars(NSRender::Render& render)
 {
-    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) / static_cast<float>(NSRender::Common::ScreenW());
-    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) / static_cast<float>(NSRender::Common::ScreenH());
+    const float scale = static_cast<float>(NSRender::Common::ScreenW()) / static_cast<float>(NSRender::Common::BASE_W);
 
     for (const auto& enemy : m_enemies)
     {
@@ -165,33 +164,33 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
             continue;
         }
 
-        const int baseX = static_cast<int>(static_cast<float>(screenPos.x) * scaleX + 0.5f);
-        const int baseY = static_cast<int>(static_cast<float>(screenPos.y) * scaleY + 0.5f);
-        const int halfWidth = kHpBarWidth / 2;
+        const int barWidthScaled = static_cast<int>(kHpBarWidth * scale);
+        const float normalizedX = (static_cast<float>(screenPos.x) - barWidthScaled / 2.0f) / static_cast<float>(NSRender::Common::ScreenW());
+        const float normalizedY = static_cast<float>(screenPos.y) / static_cast<float>(NSRender::Common::ScreenH());
 
         const int greenWidth = (kHpBarWidth * hp) / maxHp;
 
-        render.DrawImageSizedRect(kHpBarBlackImagePath,
-                                  baseX - halfWidth,
-                                  baseY - kHpBarHeight / 2,
-                                  kHpBarWidth,
-                                  kHpBarHeight,
-                                  0,
-                                  0,
-                                  kHpBarWidth,
-                                  kHpBarHeight);
+        render.DrawImageAutoResizeSizedRect(kHpBarBlackImagePath,
+                                            normalizedX,
+                                            normalizedY,
+                                            0,
+                                            0,
+                                            kHpBarWidth,
+                                            kHpBarHeight,
+                                            scale,
+                                            255);
 
         if (greenWidth > 0)
         {
-            render.DrawImageSizedRect(kHpBarGreenImagePath,
-                                      baseX - halfWidth,
-                                      baseY - kHpBarHeight / 2,
-                                      greenWidth,
-                                      kHpBarHeight,
-                                      0,
-                                      0,
-                                      greenWidth,
-                                      kHpBarHeight);
+            render.DrawImageAutoResizeSizedRect(kHpBarGreenImagePath,
+                                                normalizedX,
+                                                normalizedY,
+                                                0,
+                                                0,
+                                                greenWidth,
+                                                kHpBarHeight,
+                                                scale,
+                                                255);
         }
     }
 }
