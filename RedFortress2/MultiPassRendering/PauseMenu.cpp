@@ -62,6 +62,92 @@ const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\"
 const int kItemIllustrationX = 800;
 const int kItemIllustrationY = 365;
 const int kItemIllustrationSize = 300;
+
+bool IsMenuLeftPressed()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_LEFT))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool IsMenuRightPressed()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_RIGHT))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool IsMenuUpPressed()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_UP))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool IsMenuDownPressed()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_DOWN))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool IsMenuConfirmPressed()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    {
+        return true;
+    }
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool IsMenuCancelPressed()
+{
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
+    {
+        return true;
+    }
+    if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START))
+    {
+        return true;
+    }
+    return false;
+}
 }
 
 void PauseMenu::Initialize(NSRender::Render& render,
@@ -249,7 +335,7 @@ void PauseMenu::LoadWeapons()
 void PauseMenu::UpdateTopMenu()
 {
     const int previousIndex = m_selectedTopMenuIndex;
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    if (IsMenuLeftPressed())
     {
         --m_selectedTopMenuIndex;
         if (m_selectedTopMenuIndex < 0)
@@ -259,7 +345,7 @@ void PauseMenu::UpdateTopMenu()
         m_activeTopMenuIndex = -1;
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    if (IsMenuRightPressed())
     {
         ++m_selectedTopMenuIndex;
         if (m_selectedTopMenuIndex >= kTopMenuCount)
@@ -323,7 +409,7 @@ void PauseMenu::UpdateTopMenu()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    if (IsMenuConfirmPressed())
     {
         GameAudio::PlayMenuConfirm();
         m_activeTopMenuIndex = m_selectedTopMenuIndex;
@@ -354,7 +440,7 @@ void PauseMenu::UpdateTopMenu()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    if (IsMenuCancelPressed())
     {
         GameAudio::PlayMenuCancel();
         Close();
@@ -363,7 +449,7 @@ void PauseMenu::UpdateTopMenu()
 
 void PauseMenu::UpdateItemList()
 {
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    if (IsMenuCancelPressed())
     {
         GameAudio::PlayMenuCancel();
         m_focusArea = FocusArea::TopMenu;
@@ -377,7 +463,7 @@ void PauseMenu::UpdateItemList()
     }
 
     const std::size_t previousIndex = m_selectedItemIndex;
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    if (IsMenuUpPressed())
     {
         if (m_selectedItemIndex > 0)
         {
@@ -385,7 +471,7 @@ void PauseMenu::UpdateItemList()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    if (IsMenuDownPressed())
     {
         if (m_selectedItemIndex + 1 < ownedItems.size())
         {
@@ -433,8 +519,7 @@ void PauseMenu::UpdateItemList()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
-        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE))
+    if (IsMenuConfirmPressed())
     {
         const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
         if (!IsUsableItem(selectedItem.id) || !m_itemUseCallback)
@@ -523,7 +608,7 @@ std::wstring PauseMenu::GetItemIllustrationPath(const std::wstring& itemId) cons
 
 void PauseMenu::UpdateWeaponList()
 {
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    if (IsMenuCancelPressed())
     {
         GameAudio::PlayMenuCancel();
         m_focusArea = FocusArea::TopMenu;
@@ -537,7 +622,7 @@ void PauseMenu::UpdateWeaponList()
     }
 
     const std::size_t previousIndex = m_selectedWeaponIndex;
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    if (IsMenuUpPressed())
     {
         if (m_selectedWeaponIndex > 0)
         {
@@ -545,7 +630,7 @@ void PauseMenu::UpdateWeaponList()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    if (IsMenuDownPressed())
     {
         if (m_selectedWeaponIndex + 1 < ownedWeapons.size())
         {
@@ -594,7 +679,7 @@ void PauseMenu::UpdateWeaponList()
 
 void PauseMenu::UpdateSettingsPanel()
 {
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    if (IsMenuUpPressed())
     {
         if (m_selectedSettingsRow == SettingsRow::Resolution)
         {
@@ -612,7 +697,7 @@ void PauseMenu::UpdateSettingsPanel()
         GameAudio::PlayMenuMove();
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    if (IsMenuDownPressed())
     {
         if (m_selectedSettingsRow == SettingsRow::Resolution)
         {
@@ -630,12 +715,11 @@ void PauseMenu::UpdateSettingsPanel()
         GameAudio::PlayMenuMove();
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    if (IsMenuLeftPressed())
     {
         MoveSelectedSettingsOption(-1);
     }
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT) ||
-        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    if (IsMenuRightPressed() || IsMenuConfirmPressed())
     {
         MoveSelectedSettingsOption(1);
     }
@@ -686,7 +770,7 @@ void PauseMenu::UpdateSettingsPanel()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    if (IsMenuCancelPressed())
     {
         GameAudio::PlayMenuCancel();
         m_focusArea = FocusArea::TopMenu;
@@ -695,13 +779,13 @@ void PauseMenu::UpdateSettingsPanel()
 
 void PauseMenu::UpdateExitConfirm()
 {
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    if (IsMenuLeftPressed())
     {
         m_selectedExitConfirmIndex = kExitConfirmYesIndex;
         GameAudio::PlayMenuMove();
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    if (IsMenuRightPressed())
     {
         m_selectedExitConfirmIndex = kExitConfirmNoIndex;
         GameAudio::PlayMenuMove();
@@ -743,7 +827,7 @@ void PauseMenu::UpdateExitConfirm()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    if (IsMenuConfirmPressed())
     {
         if (m_selectedExitConfirmIndex == kExitConfirmYesIndex)
         {
@@ -758,7 +842,7 @@ void PauseMenu::UpdateExitConfirm()
         return;
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    if (IsMenuCancelPressed())
     {
         GameAudio::PlayMenuCancel();
         m_showExitConfirm = false;
@@ -1684,13 +1768,13 @@ bool PauseMenu::ConsumeSaveRequested()
 
 void PauseMenu::UpdateSaveConfirm()
 {
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    if (IsMenuLeftPressed())
     {
         m_selectedSaveConfirmIndex = kSaveConfirmYesIndex;
         GameAudio::PlayMenuMove();
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    if (IsMenuRightPressed())
     {
         m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
         GameAudio::PlayMenuMove();
@@ -1733,7 +1817,7 @@ void PauseMenu::UpdateSaveConfirm()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    if (IsMenuConfirmPressed())
     {
         if (m_selectedSaveConfirmIndex == kSaveConfirmYesIndex)
         {
@@ -1750,7 +1834,7 @@ void PauseMenu::UpdateSaveConfirm()
         return;
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    if (IsMenuCancelPressed())
     {
         GameAudio::PlayMenuCancel();
         m_showSaveConfirm = false;

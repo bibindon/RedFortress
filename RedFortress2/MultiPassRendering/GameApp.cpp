@@ -602,7 +602,8 @@ void GameApp::Run()
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
-            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+            (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
+             InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START)))
         {
             m_pauseMenu.Open();
         }
