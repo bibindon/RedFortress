@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -57,6 +58,10 @@ const int kItemListY = 350;
 const int kItemListLineHeight = 34;
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
+const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
+const int kItemIllustrationX = 800;
+const int kItemIllustrationY = 365;
+const int kItemIllustrationSize = 300;
 }
 
 void PauseMenu::Initialize(NSRender::Render& render,
@@ -449,6 +454,42 @@ void PauseMenu::EnsureSelectedItemVisible()
     {
         m_itemScrollOffset = m_selectedItemIndex - kVisibleItemCount + 1;
     }
+}
+
+std::wstring PauseMenu::GetItemIllustrationPath(const std::wstring& itemId) const
+{
+    static const std::unordered_map<std::wstring, std::wstring> kItemIllustrationFiles =
+    {
+        { L"001", L"item_001_branch.png" },
+        { L"002", L"item_002_vine.png" },
+        { L"003", L"item_003_scrap_iron.png" },
+        { L"004", L"item_004_suspicious_book.png" },
+        { L"005", L"item_005_surprise_mushroom.png" },
+        { L"006", L"item_006_lighter.png" },
+        { L"007", L"item_007_red_spaghetti.png" },
+        { L"008", L"item_008_potato_chips.png" },
+        { L"009", L"item_009_canned_tomato.png" },
+        { L"010", L"item_010_dried_noodles.png" },
+        { L"011", L"item_011_potato.png" },
+        { L"012", L"item_012_salt.png" },
+        { L"013", L"item_013_sturdy_cord.png" },
+        { L"014", L"item_014_wind_crystal.png" },
+        { L"015", L"item_015_jump_seed.png" },
+        { L"016", L"item_016_mysterious_spring.png" },
+        { L"017", L"item_017_launch_juice.png" },
+        { L"bomb_capacity_up", L"item_bomb_capacity_up.png" },
+        { L"buster_rapid_up", L"item_buster_rapid_up.png" },
+        { L"star_power_up", L"item_star_power_up.png" },
+        { L"speed_up", L"item_speed_up.png" }
+    };
+
+    const auto found = kItemIllustrationFiles.find(itemId);
+    if (found == kItemIllustrationFiles.end())
+    {
+        return L"";
+    }
+
+    return kItemIllustrationDir + found->second;
 }
 
 void PauseMenu::UpdateWeaponList()
@@ -857,7 +898,18 @@ void PauseMenu::RenderItemPanel()
                                kSubTextColor);
 
     const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
-    const int detailX = 850;
+    const std::wstring illustrationPath = GetItemIllustrationPath(selectedItem.id);
+    if (!illustrationPath.empty())
+    {
+        m_render->DrawImageSized(illustrationPath,
+                                 kItemIllustrationX,
+                                 kItemIllustrationY,
+                                 kItemIllustrationSize,
+                                 kItemIllustrationSize,
+                                 245);
+    }
+
+    const int detailX = 1140;
     m_render->DrawTextEx(m_menuItemFontId,
                          selectedItem.name,
                          detailX,
@@ -885,13 +937,13 @@ void PauseMenu::RenderItemPanel()
                          kSubTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"説明",
-                         detailX,
-                         620,
+                         800,
+                         685,
                          kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          selectedItem.description,
-                         detailX,
-                         665,
+                         800,
+                         725,
                          kSubTextColor);
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"Enter / Space  使用   Esc  戻る",

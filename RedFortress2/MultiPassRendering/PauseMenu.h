@@ -78,6 +78,7 @@ private:
     bool IsUsableItem(const std::wstring& itemId) const;
     void EnsureSelectedItemVisible();
     void EnsureSelectedWeaponVisible();
+    std::wstring GetItemIllustrationPath(const std::wstring& itemId) const;
     void RenderTopMenu();
     void RenderItemPanel();
     void RenderWeaponPanel();
