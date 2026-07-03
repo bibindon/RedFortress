@@ -193,7 +193,7 @@ private:
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
-    enum class QteVisualPhase { None, Entering, Active, Restoring };
+    enum class QteVisualPhase { None, Active, Restoring };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
 
@@ -212,7 +212,6 @@ private:
     NS_QTE_Module::QTE_Module* m_qte = nullptr;
     QteVisualPhase m_qteVisualPhase = QteVisualPhase::None;
     int m_qteVisualFrame = 0;
-    int m_qteVisualActiveFrame = 0;
     bool m_qteStoredSaturateEnabled = false;
     float m_qteStoredSaturate = 1.0f;
     float m_qteStoredFovDegrees = 90.0f;

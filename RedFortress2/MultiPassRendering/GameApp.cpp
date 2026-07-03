@@ -95,13 +95,9 @@ namespace
     const int kStageIntroOutFrames = 25;
     const int kLetterboxBarHeight = 130;
     const std::wstring kLetterboxBarImagePath = L"res\\2D_Image\\black2x2.bmp";
-    const int kQteVisualEnterFrames = 18;
     const int kQteVisualRestoreFrames = 24;
-    const int kQteVisualPulseFrames = 60;
-    const float kQteVisualTargetSaturate = 0.22f;
-    const float kQteVisualPulseSaturate = 0.08f;
-    const float kQteVisualTargetFovOffset = -14.0f;
-    const float kQteVisualPulseFov = 2.5f;
+    const float kQteVisualMinSaturate = 0.10f;
+    const float kQteVisualMaxFovReduction = 18.0f;
     const std::wstring kBombModelPath = L"res\\model\\bomb\\bomb.x";
     const int kBombFrames = 120;
     const float kBombPlaceDistance = 1.5f;
@@ -1404,8 +1400,7 @@ void GameApp::BeginQteVisualEffect()
     m_qteVisualStartSaturate = m_render.GetPostEffectSaturate();
     m_qteVisualStartFovDegrees = m_render.GetCameraHorizontalFovDegrees();
     m_qteVisualFrame = 0;
-    m_qteVisualActiveFrame = 0;
-    m_qteVisualPhase = QteVisualPhase::Entering;
+    m_qteVisualPhase = QteVisualPhase::Active;
     m_render.SetPostEffectSaturateEnable(true);
 }
 
@@ -1447,7 +1442,6 @@ void GameApp::RestoreQteVisualEffectImmediate()
 
     m_qteVisualPhase = QteVisualPhase::None;
     m_qteVisualFrame = 0;
-    m_qteVisualActiveFrame = 0;
 }
 
 void GameApp::UpdateQteVisualEffect()
@@ -1457,45 +1451,20 @@ void GameApp::UpdateQteVisualEffect()
         return;
     }
 
-    float targetFov = m_qteStoredFovDegrees + kQteVisualTargetFovOffset;
+    float targetFov = m_qteStoredFovDegrees - kQteVisualMaxFovReduction;
     targetFov = ClampFloat(targetFov, 45.0f, 120.0f);
-
-    if (m_qteVisualPhase == QteVisualPhase::Entering)
-    {
-        ++m_qteVisualFrame;
-        const float rawT = static_cast<float>(m_qteVisualFrame) / static_cast<float>(kQteVisualEnterFrames);
-        const float t = SmoothStep01(rawT);
-        const float saturation = LerpFloat(m_qteVisualStartSaturate, kQteVisualTargetSaturate, t);
-        const float fov = LerpFloat(m_qteVisualStartFovDegrees, targetFov, t);
-        ApplyQteVisualEffect(saturation, fov);
-
-        if (m_qteVisualFrame >= kQteVisualEnterFrames)
-        {
-            m_qteVisualPhase = QteVisualPhase::Active;
-            m_qteVisualFrame = 0;
-            m_qteVisualActiveFrame = 0;
-        }
-        return;
-    }
 
     if (m_qteVisualPhase == QteVisualPhase::Active)
     {
-        ++m_qteVisualActiveFrame;
-        const int halfPulseFrames = kQteVisualPulseFrames / 2;
-        const int pulseFrame = m_qteVisualActiveFrame % kQteVisualPulseFrames;
-        float pulseT = 0.0f;
-        if (pulseFrame <= halfPulseFrames)
+        float timingCloseness = 0.0f;
+        if (m_qte != nullptr)
         {
-            pulseT = static_cast<float>(pulseFrame) / static_cast<float>(halfPulseFrames);
+            timingCloseness = m_qte->GetTimingCloseness();
         }
-        else
-        {
-            pulseT = static_cast<float>(kQteVisualPulseFrames - pulseFrame) / static_cast<float>(halfPulseFrames);
-        }
-        pulseT = SmoothStep01(pulseT);
+        timingCloseness = SmoothStep01(timingCloseness);
 
-        const float saturation = kQteVisualTargetSaturate + (kQteVisualPulseSaturate * pulseT);
-        const float fov = targetFov + (kQteVisualPulseFov * pulseT);
+        const float saturation = LerpFloat(m_qteStoredSaturate, kQteVisualMinSaturate, timingCloseness);
+        const float fov = LerpFloat(m_qteStoredFovDegrees, targetFov, timingCloseness);
         ApplyQteVisualEffect(saturation, fov);
         return;
     }
