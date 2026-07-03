@@ -919,6 +919,12 @@ void GameApp::Run()
                         }
                         else
                         {
+                            const std::wstring interactionType = m_interactionManager.GetInteractableType(interactionId);
+                            if (interactionType == L"Tree")
+                            {
+                                m_interactionManager.RemoveInteractableById(interactionId);
+                            }
+
                             m_qte = new NS_QTE_Module::QTE_Module();
                             QteSprite* sprGrowingCircle = new QteSprite();
                             sprGrowingCircle->app = this;

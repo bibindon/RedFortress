@@ -26,7 +26,9 @@ public:
     void DrawPrompt();
     bool ConsumeTriggeredInteraction(std::wstring* interactionId);
     std::wstring GetNearestOfType(const D3DXVECTOR3& playerPosition, const std::wstring& type) const;
+    std::wstring GetInteractableType(const std::wstring& interactionId) const;
     const std::vector<Interactable>& GetInteractables() const;
+    void RemoveInteractableById(const std::wstring& interactionId);
     void Clear();
 
 private:

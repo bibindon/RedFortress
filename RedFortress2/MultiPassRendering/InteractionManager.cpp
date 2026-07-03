@@ -172,9 +172,51 @@ std::wstring InteractionManager::GetNearestOfType(const D3DXVECTOR3& playerPosit
     return m_interactables.at(nearestIndex).id;
 }
 
+std::wstring InteractionManager::GetInteractableType(const std::wstring& interactionId) const
+{
+    if (interactionId.empty())
+    {
+        return L"";
+    }
+
+    for (const Interactable& interactable : m_interactables)
+    {
+        if (interactable.id == interactionId)
+        {
+            return interactable.type;
+        }
+    }
+
+    return L"";
+}
+
 const std::vector<InteractionManager::Interactable>& InteractionManager::GetInteractables() const
 {
     return m_interactables;
+}
+
+void InteractionManager::RemoveInteractableById(const std::wstring& interactionId)
+{
+    if (interactionId.empty())
+    {
+        return;
+    }
+
+    for (std::vector<Interactable>::iterator iter = m_interactables.begin();
+         iter != m_interactables.end();
+         ++iter)
+    {
+        if (iter->id == interactionId)
+        {
+            m_interactables.erase(iter);
+            m_activeIndex = -1;
+            if (m_triggeredInteractionId == interactionId)
+            {
+                m_triggeredInteractionId.clear();
+            }
+            return;
+        }
+    }
 }
 
 void InteractionManager::Clear()
