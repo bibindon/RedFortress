@@ -244,7 +244,7 @@ private:
     HINSTANCE m_hInstance = NULL;
     D3DXVECTOR3 m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_pendingJump = false;
-    int m_dashParticleCooldownFrames = 0;
+    bool m_dashParticleEmitted = false;
     std::unordered_map<int, D3DXVECTOR3> m_prevMovingPlatformPositions;
     HpBar m_hpBar;
     DamagePopupManager m_damagePopupManager;

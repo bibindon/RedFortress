@@ -78,7 +78,6 @@ namespace
     const int kPlayerInvincibleDuration = 60;
     const int kRespawnInvincibleFrames = 180;
     const int kKnockbackDurationFrames = 60;
-    const int kDashParticleIntervalFrames = 3;
     const float kKnockbackSpeed = 1.0f;
     const int kRespawnCameraDelayFrames = 120;
     const int kRespawnCameraMoveFrames = 30;
@@ -1518,13 +1517,12 @@ void GameApp::UpdateDashParticleEffect()
 {
     if (!m_playerMover.IsDashing())
     {
-        m_dashParticleCooldownFrames = 0;
+        m_dashParticleEmitted = false;
         return;
     }
 
-    if (m_dashParticleCooldownFrames > 0)
+    if (m_dashParticleEmitted)
     {
-        --m_dashParticleCooldownFrames;
         return;
     }
 
@@ -1544,7 +1542,7 @@ void GameApp::UpdateDashParticleEffect()
     origin += D3DXVECTOR3(0.0f, 0.92f, 0.0f);
     origin += back * 0.42f;
     m_render.PlaceDashParticleEffect(origin, direction);
-    m_dashParticleCooldownFrames = kDashParticleIntervalFrames;
+    m_dashParticleEmitted = true;
 }
 
 void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const float animationSpeed)
