@@ -16,7 +16,7 @@
 122,../cubeWood/cube_wood.x, 4,0.03,-10, 0, 0, 0, 1, normal
 123,../cubeWood/cube_wood.x, 9,0.04,10, 0, 0, 0, 1, normal
 124,../cubeWood/cube_wood.x, 13,0.05,-6, 0, 0, 0, 1, normal
-126,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
+126,..\SkySphere_night\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 201,../fence.x,-11,0.5,-30,0,0,0,1,normal
 202,../fence.x,-3,0.5,-30,0,0,0,1,normal
 203,../fence.x,5,0.5,-30,0,0,0,1,normal
