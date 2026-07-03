@@ -476,6 +476,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
         m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
         m_inventoryManager.Save();
     }
+    ApplyUnlockedAbilities();
     LoadItemNameCatalog();
     m_collectibleManager.Initialize(m_render, m_inventoryManager);
     m_collectibleManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
@@ -809,6 +810,7 @@ void GameApp::Run()
             if (m_craftMenu.BlocksGameInput())
             {
                 m_craftMenu.Update();
+                ApplyUnlockedAbilities();
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
@@ -1809,6 +1811,16 @@ void GameApp::InitializePlayerPhysics()
     PhysicsLib::SettingsState::SetAirDashEnabled(m_inventoryManager.IsAbilityUnlocked(L"AirDash"));
     PhysicsLib::SettingsState::SetDashSpeed(18.0f);
     PhysicsLib::SettingsState::SetDashDuration(0.2f);
+}
+
+void GameApp::ApplyUnlockedAbilities()
+{
+    PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
+    settings.doubleJumpEnabled = m_inventoryManager.IsAbilityUnlocked(L"DoubleJump");
+    m_playerMover.SetSettings(settings);
+
+    PhysicsLib::SettingsState::SetGroundDashEnabled(m_inventoryManager.IsAbilityUnlocked(L"GroundDash"));
+    PhysicsLib::SettingsState::SetAirDashEnabled(m_inventoryManager.IsAbilityUnlocked(L"AirDash"));
 }
 
 void GameApp::LoadPhysicsObjectsFromCsv(const std::wstring& csvPath)

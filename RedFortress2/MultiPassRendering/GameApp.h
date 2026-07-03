@@ -138,6 +138,7 @@ private:
     int DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefinition);
     void InitializeCameraFromRenderSettings();
     void InitializePlayerPhysics();
+    void ApplyUnlockedAbilities();
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
     void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
     void UpdatePlayerMeshVisibility();
