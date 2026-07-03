@@ -993,9 +993,9 @@ void GameApp::Run()
             }
             else
             {
-                // QTE バー停止入力
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F) ||
-                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
+                // QTE 停止入力
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
                 {
                     m_qte->StopBarAnimation();
                 }
