@@ -17,4 +17,4 @@
 22,res/model/cubeWood/cube_wood_collision.x,3,0.03,6,0,0,0,1,Collision,n
 23,res/model/cubeWood/cube_wood_collision.x,-3,0.04,18,0,0,0,1,Collision,n
 24,res/model/cubeWood/cube_wood_collision.x,3,0.05,26,0,0,0,1,Collision,n
-27,res/model/tree2Physics/lemonTree.x,6,0,20,0,0,0,1,Collision,n
+27,res/model/tree2Physics/tree_cylinder_collision.x,6,0,20,0,0,0,1,Collision,n
