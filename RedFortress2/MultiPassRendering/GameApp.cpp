@@ -95,6 +95,13 @@ namespace
     const int kStageIntroOutFrames = 25;
     const int kLetterboxBarHeight = 130;
     const std::wstring kLetterboxBarImagePath = L"res\\2D_Image\\black2x2.bmp";
+    const int kQteVisualEnterFrames = 18;
+    const int kQteVisualRestoreFrames = 24;
+    const int kQteVisualPulseFrames = 60;
+    const float kQteVisualTargetSaturate = 0.22f;
+    const float kQteVisualPulseSaturate = 0.08f;
+    const float kQteVisualTargetFovOffset = -14.0f;
+    const float kQteVisualPulseFov = 2.5f;
     const std::wstring kBombModelPath = L"res\\model\\bomb\\bomb.x";
     const int kBombFrames = 120;
     const float kBombPlaceDistance = 1.5f;
@@ -927,6 +934,7 @@ void GameApp::Run()
                             sprButton->app = this;
                             sprButton->Load(L"res\\2D_Image\\qte_button.png");
                             m_qte->SetCircleSprites(sprGrowingCircle, sprTargetCircle, sprButton, 1600, 900);
+                            BeginQteVisualEffect();
                             m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
                             m_pendingJump = false;
                         }
@@ -1006,8 +1014,11 @@ void GameApp::Run()
                     m_qte->Finalize();
                     delete m_qte;
                     m_qte = nullptr;
+                    EndQteVisualEffect();
                 }
             }
+
+            UpdateQteVisualEffect();
 
             m_enemyManager.SyncMeshes(m_render);
             UpdateGoalArrow();
@@ -1317,6 +1328,8 @@ void GameApp::Run()
 
 void GameApp::Finalize()
 {
+    RestoreQteVisualEffectImmediate();
+
     if (m_settingsDialog != NULL)
     {
         DestroyWindow(m_settingsDialog);
@@ -1359,6 +1372,17 @@ static D3DXVECTOR3 LerpVector3(const D3DXVECTOR3& a, const D3DXVECTOR3& b, float
     return a + (b - a) * t;
 }
 
+static float LerpFloat(const float a, const float b, const float t)
+{
+    return a + (b - a) * t;
+}
+
+static float SmoothStep01(float t)
+{
+    t = ClampFloat(t, 0.0f, 1.0f);
+    return t * t * (3.0f - 2.0f * t);
+}
+
 static float MoveAngleToward(float current, float target, float maxDelta)
 {
     float diff = target - current;
@@ -1366,6 +1390,134 @@ static float MoveAngleToward(float current, float target, float maxDelta)
     while (diff < -D3DX_PI) diff += 2.0f * D3DX_PI;
     if (fabsf(diff) <= maxDelta) return target;
     return current + (diff > 0.0f ? maxDelta : -maxDelta);
+}
+
+void GameApp::BeginQteVisualEffect()
+{
+    if (m_qteVisualPhase == QteVisualPhase::None)
+    {
+        m_qteStoredSaturateEnabled = m_render.IsPostEffectSaturateEnabled();
+        m_qteStoredSaturate = m_render.GetPostEffectSaturate();
+        m_qteStoredFovDegrees = m_render.GetCameraHorizontalFovDegrees();
+    }
+
+    m_qteVisualStartSaturate = m_render.GetPostEffectSaturate();
+    m_qteVisualStartFovDegrees = m_render.GetCameraHorizontalFovDegrees();
+    m_qteVisualFrame = 0;
+    m_qteVisualActiveFrame = 0;
+    m_qteVisualPhase = QteVisualPhase::Entering;
+    m_render.SetPostEffectSaturateEnable(true);
+}
+
+void GameApp::EndQteVisualEffect()
+{
+    if (m_qteVisualPhase == QteVisualPhase::None)
+    {
+        return;
+    }
+
+    if (m_qteVisualPhase == QteVisualPhase::Restoring)
+    {
+        return;
+    }
+
+    m_qteVisualStartSaturate = m_render.GetPostEffectSaturate();
+    m_qteVisualStartFovDegrees = m_render.GetCameraHorizontalFovDegrees();
+    m_qteVisualFrame = 0;
+    m_qteVisualPhase = QteVisualPhase::Restoring;
+}
+
+void GameApp::RestoreQteVisualEffectImmediate()
+{
+    if (m_qteVisualPhase == QteVisualPhase::None)
+    {
+        return;
+    }
+
+    m_render.SetPostEffectSaturate(m_qteStoredSaturate);
+    if (m_qteStoredSaturateEnabled)
+    {
+        m_render.SetPostEffectSaturateEnable(true);
+    }
+    else
+    {
+        m_render.SetPostEffectSaturateEnable(false);
+    }
+    m_render.SetCameraHorizontalFovDegrees(m_qteStoredFovDegrees);
+
+    m_qteVisualPhase = QteVisualPhase::None;
+    m_qteVisualFrame = 0;
+    m_qteVisualActiveFrame = 0;
+}
+
+void GameApp::UpdateQteVisualEffect()
+{
+    if (m_qteVisualPhase == QteVisualPhase::None)
+    {
+        return;
+    }
+
+    float targetFov = m_qteStoredFovDegrees + kQteVisualTargetFovOffset;
+    targetFov = ClampFloat(targetFov, 45.0f, 120.0f);
+
+    if (m_qteVisualPhase == QteVisualPhase::Entering)
+    {
+        ++m_qteVisualFrame;
+        const float rawT = static_cast<float>(m_qteVisualFrame) / static_cast<float>(kQteVisualEnterFrames);
+        const float t = SmoothStep01(rawT);
+        const float saturation = LerpFloat(m_qteVisualStartSaturate, kQteVisualTargetSaturate, t);
+        const float fov = LerpFloat(m_qteVisualStartFovDegrees, targetFov, t);
+        ApplyQteVisualEffect(saturation, fov);
+
+        if (m_qteVisualFrame >= kQteVisualEnterFrames)
+        {
+            m_qteVisualPhase = QteVisualPhase::Active;
+            m_qteVisualFrame = 0;
+            m_qteVisualActiveFrame = 0;
+        }
+        return;
+    }
+
+    if (m_qteVisualPhase == QteVisualPhase::Active)
+    {
+        ++m_qteVisualActiveFrame;
+        const int halfPulseFrames = kQteVisualPulseFrames / 2;
+        const int pulseFrame = m_qteVisualActiveFrame % kQteVisualPulseFrames;
+        float pulseT = 0.0f;
+        if (pulseFrame <= halfPulseFrames)
+        {
+            pulseT = static_cast<float>(pulseFrame) / static_cast<float>(halfPulseFrames);
+        }
+        else
+        {
+            pulseT = static_cast<float>(kQteVisualPulseFrames - pulseFrame) / static_cast<float>(halfPulseFrames);
+        }
+        pulseT = SmoothStep01(pulseT);
+
+        const float saturation = kQteVisualTargetSaturate + (kQteVisualPulseSaturate * pulseT);
+        const float fov = targetFov + (kQteVisualPulseFov * pulseT);
+        ApplyQteVisualEffect(saturation, fov);
+        return;
+    }
+
+    ++m_qteVisualFrame;
+    const float rawT = static_cast<float>(m_qteVisualFrame) / static_cast<float>(kQteVisualRestoreFrames);
+    const float t = SmoothStep01(rawT);
+    const float saturation = LerpFloat(m_qteVisualStartSaturate, m_qteStoredSaturate, t);
+    const float fov = LerpFloat(m_qteVisualStartFovDegrees, m_qteStoredFovDegrees, t);
+    ApplyQteVisualEffect(saturation, fov);
+
+    if (m_qteVisualFrame >= kQteVisualRestoreFrames)
+    {
+        RestoreQteVisualEffectImmediate();
+    }
+}
+
+void GameApp::ApplyQteVisualEffect(const float saturation, const float fovDegrees)
+{
+    m_render.SetPostEffectSaturateEnable(true);
+    m_render.SetPostEffectSaturate(ClampFloat(saturation, 0.0f, 2.0f));
+    m_render.SetCameraHorizontalFovDegrees(fovDegrees);
 }
 
 void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const float animationSpeed)
@@ -3722,6 +3874,7 @@ void GameApp::StartGameOverSequence()
         delete m_qte;
         m_qte = nullptr;
     }
+    RestoreQteVisualEffectImmediate();
 
     m_pauseMenu.Close();
     m_craftMenu.Close();
@@ -3936,6 +4089,8 @@ bool GameApp::StartStageAfterClear()
 
 void GameApp::LoadCurrentStageObjects()
 {
+    RestoreQteVisualEffectImmediate();
+
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
 
     std::wstring renderSettingsPath;
