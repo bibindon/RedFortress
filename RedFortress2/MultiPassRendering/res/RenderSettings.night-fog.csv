@@ -95,7 +95,7 @@ DepthOfFieldAutoActivationDistance,1.0
 ,
 ModelLoadScale,1.0
 ,
-SunLightIntensity,0.4
+SunLightIntensity,0.1
 SunLightColorR,0.3
 SunLightColorG,0.3
 SunLightColorB,0.75

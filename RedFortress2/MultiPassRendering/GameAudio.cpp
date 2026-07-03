@@ -40,6 +40,7 @@ const std::wstring kBombPlace = L"res\\sound\\bombDrop.wav";
 const std::wstring kStomp = L"res\\sound\\stomp.wav";
 const std::wstring kBuster = L"res\\sound\\buster.wav";
 const std::wstring kWeaponChange = L"res\\sound\\weaponChange.wav";
+const std::wstring kQte = L"res\\sound\\qte.wav";
 const int kTitleBgmVolume = 22;
 const int kEndingBgmVolume = 50;
 const int kFieldBgmVolume = 40;
@@ -145,7 +146,7 @@ void Initialize()
         kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSlashHit, kAttackHit,
         kEnemyAttack, kPlayerDamage, kItemGet, kJump, kPowerUp, kDash, kDashBooster,
         kExplosion, kBombPlace, kStomp, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
-        kDrink
+        kDrink, kQte
     };
     for (const std::wstring& effect : effects)
     {
@@ -279,7 +280,7 @@ void PlayBombPlace() { PlayEffect(kBombPlace, 78); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }
 void PlayWeaponChange() { PlayEffect(kWeaponChange, 72); }
-void PlayQteStart() { PlayEffect(kPowerUp, 70); }
+void PlayQteStart() { PlayEffect(kQte, 70); }
 void PlayQteStop() { PlayEffect(kStageSelectConfirm, 70); }
 void PlayQteSuccess() { PlayEffect(kItemGet, 82); }
 void PlayQteNormal() { PlayEffect(kMenuConfirm, 76); }
