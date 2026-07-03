@@ -325,6 +325,14 @@ public:
         }
     }
 
+    void DrawImageScaled(const int x, const int y, const int width, const int height, const int transparency) override
+    {
+        if (app != nullptr && !m_filepath.empty())
+        {
+            app->m_render.DrawImageSized(m_filepath, x, y, width, height, transparency);
+        }
+    }
+
     void Load(const std::wstring& filepath) override
     {
         m_filepath = filepath;
@@ -909,13 +917,16 @@ void GameApp::Run()
                         else
                         {
                             m_qte = new NS_QTE_Module::QTE_Module();
-                            QteSprite* sprWhiteBar = new QteSprite();
-                            sprWhiteBar->app = this;
-                            sprWhiteBar->Load(L"res\\2D_Image\\white_bar.bmp");
-                            QteSprite* sprBlackBar = new QteSprite();
-                            sprBlackBar->app = this;
-                            sprBlackBar->Load(L"res\\2D_Image\\black_bar.bmp");
-                            m_qte->SetBars(sprWhiteBar, sprBlackBar, 1600, 900);
+                            QteSprite* sprGrowingCircle = new QteSprite();
+                            sprGrowingCircle->app = this;
+                            sprGrowingCircle->Load(L"res\\2D_Image\\qte_growing_circle.png");
+                            QteSprite* sprTargetCircle = new QteSprite();
+                            sprTargetCircle->app = this;
+                            sprTargetCircle->Load(L"res\\2D_Image\\qte_target_circle.png");
+                            QteSprite* sprButton = new QteSprite();
+                            sprButton->app = this;
+                            sprButton->Load(L"res\\2D_Image\\qte_button.png");
+                            m_qte->SetCircleSprites(sprGrowingCircle, sprTargetCircle, sprButton, 1600, 900);
                             m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
                             m_pendingJump = false;
                         }
