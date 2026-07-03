@@ -5,6 +5,7 @@
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
+#include <cmath>
 #include <fstream>
 
 namespace
@@ -13,6 +14,7 @@ const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooste
 const int kDashBoosterCooldownFrames = 30;
 const int kDashBoosterSoundDelayFrames = 30;
 const float kDashBoosterVisualScale = 3.0f;
+const float kDashBoosterModelYawOffset = D3DX_PI / 6.0f;
 
 bool ParseChargeEnabled(const std::wstring& value)
 {
@@ -42,6 +44,30 @@ bool ParseChargeEnabled(const std::wstring& value)
     }
 
     return true;
+}
+
+D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
+{
+    D3DXVECTOR3 normalizedDirection = direction;
+    if (D3DXVec3LengthSq(&normalizedDirection) <= 0.0001f)
+    {
+        return D3DXVECTOR3(0.0f, -kDashBoosterModelYawOffset, 0.0f);
+    }
+
+    D3DXVec3Normalize(&normalizedDirection, &normalizedDirection);
+
+    const float horizontalLength =
+        std::sqrt(normalizedDirection.x * normalizedDirection.x +
+                  normalizedDirection.z * normalizedDirection.z);
+
+    float yaw = 0.0f;
+    if (horizontalLength > 0.0001f)
+    {
+        yaw = std::atan2(normalizedDirection.x, normalizedDirection.z);
+    }
+
+    const float pitch = std::atan2(normalizedDirection.y, horizontalLength);
+    return D3DXVECTOR3(pitch, yaw - kDashBoosterModelYawOffset, 0.0f);
 }
 }
 
@@ -113,9 +139,10 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
             booster.direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
         }
 
+        const D3DXVECTOR3 visualRotation = CalculateDashBoosterVisualRotation(booster.direction);
         booster.renderId = m_render->AddMeshMix(NSRender::Util::GetExeDir() + kDashBoosterModelPath,
                                                 booster.position,
-                                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                visualRotation,
                                                 booster.scale * kDashBoosterVisualScale,
                                                 -1.0f,
                                                 false,
