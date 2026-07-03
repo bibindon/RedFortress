@@ -1278,10 +1278,6 @@ std::wstring PauseMenu::BuildQualityComboText() const
     std::wstring quality = L"LOW";
     if (m_selectedQualityIndex == 1)
     {
-        quality = L"MIDDLE";
-    }
-    else if (m_selectedQualityIndex == 2)
-    {
         quality = L"HIGH";
     }
     return QualityToLabel(quality);
@@ -1327,13 +1323,9 @@ void PauseMenu::RefreshSettingsOptions()
 
     const std::wstring quality = m_render != nullptr ? m_render->GetRenderQuality() : L"LOW";
     m_selectedQualityIndex = 0;
-    if (quality == L"MIDDLE")
+    if (quality == L"MIDDLE" || quality == L"HIGH")
     {
         m_selectedQualityIndex = 1;
-    }
-    else if (quality == L"HIGH")
-    {
-        m_selectedQualityIndex = 2;
     }
 }
 
@@ -1375,10 +1367,6 @@ void PauseMenu::ApplySelectedQuality()
     std::wstring quality = L"LOW";
     if (m_selectedQualityIndex == 1)
     {
-        quality = L"MIDDLE";
-    }
-    else if (m_selectedQualityIndex == 2)
-    {
         quality = L"HIGH";
     }
     m_render->SetRenderQuality(quality);
@@ -1396,7 +1384,7 @@ int PauseMenu::GetSettingsOptionCount(const SettingsRow row) const
         return 2;
     }
 
-    return 3;
+    return 2;
 }
 
 int PauseMenu::GetSelectedSettingsOptionIndex(const SettingsRow row) const
@@ -1438,11 +1426,6 @@ std::wstring PauseMenu::GetSettingsOptionLabel(const SettingsRow row, const int 
     }
 
     if (index == 1)
-    {
-        return QualityToLabel(L"MIDDLE");
-    }
-
-    if (index == 2)
     {
         return QualityToLabel(L"HIGH");
     }
@@ -1544,12 +1527,7 @@ std::wstring PauseMenu::WindowModeToLabel(const NSRender::eWindowMode mode)
 
 std::wstring PauseMenu::QualityToLabel(const std::wstring& quality)
 {
-    if (quality == L"MIDDLE")
-    {
-        return L"中";
-    }
-
-    if (quality == L"HIGH")
+    if (quality == L"MIDDLE" || quality == L"HIGH")
     {
         return L"高";
     }

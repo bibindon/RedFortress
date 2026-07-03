@@ -2982,8 +2982,7 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         return true;
     }
 
-    m_itemPickupMessage = L"弾は満タン";
-    m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+    GameAudio::PlayAmmoMax();
     return false;
 }
 
@@ -3828,6 +3827,8 @@ void GameApp::HandlePlayerDeath()
     {
         return;
     }
+
+    GameAudio::PlayPlayerDeath();
 
     // カメラ移動開始位置を保存（プレイヤー位置を変更する前に行う）
     m_respawnCameraFromPos = m_render.GetCameraPos();
