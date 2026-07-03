@@ -4131,19 +4131,6 @@ void GameApp::UpdateStageIntro()
         }
     }
 
-    // スキップ（Space/Enter で閉幕へ）
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
-    {
-        if (m_stageIntroPhase != StageIntroPhase::LetterboxOut)
-        {
-            m_stageIntroPhase = StageIntroPhase::LetterboxOut;
-            m_stageIntroFrame = 0;
-            phaseFrames = kStageIntroOutFrames;
-            t = 0.0f;
-        }
-    }
-
     // フェーズごとのアニメ値
     float barHeight = static_cast<float>(kLetterboxBarHeight);
     float titleAlpha = 1.0f;
