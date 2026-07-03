@@ -289,38 +289,35 @@ void PauseMenu::UpdateTopMenu()
             if (clickedMenuIndex != m_selectedTopMenuIndex)
             {
                 m_selectedTopMenuIndex = clickedMenuIndex;
-                m_activeTopMenuIndex = -1;
                 GameAudio::PlayMenuMove();
             }
-            else
+
+            GameAudio::PlayMenuConfirm();
+            m_activeTopMenuIndex = clickedMenuIndex;
+            if (m_activeTopMenuIndex == kItemMenuIndex)
             {
-                GameAudio::PlayMenuConfirm();
-                m_activeTopMenuIndex = clickedMenuIndex;
-                if (m_activeTopMenuIndex == kItemMenuIndex)
-                {
-                    m_focusArea = FocusArea::ItemList;
-                }
-                else if (m_activeTopMenuIndex == kWeaponMenuIndex)
-                {
-                    m_focusArea = FocusArea::WeaponList;
-                }
-                else if (m_activeTopMenuIndex == kSettingsMenuIndex)
-                {
-                    RefreshSettingsOptions();
-                    m_focusArea = FocusArea::SettingsPanel;
-                    m_selectedSettingsRow = SettingsRow::Resolution;
-                    EnsureSelectedSettingsOptionVisible();
-                }
-                else if (m_activeTopMenuIndex == kSaveMenuIndex)
-                {
-                    m_showSaveConfirm = true;
-                    m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
-                }
-                else if (m_activeTopMenuIndex == kExitMenuIndex)
-                {
-                    m_showExitConfirm = true;
-                    m_selectedExitConfirmIndex = kExitConfirmNoIndex;
-                }
+                m_focusArea = FocusArea::ItemList;
+            }
+            else if (m_activeTopMenuIndex == kWeaponMenuIndex)
+            {
+                m_focusArea = FocusArea::WeaponList;
+            }
+            else if (m_activeTopMenuIndex == kSettingsMenuIndex)
+            {
+                RefreshSettingsOptions();
+                m_focusArea = FocusArea::SettingsPanel;
+                m_selectedSettingsRow = SettingsRow::Resolution;
+                EnsureSelectedSettingsOptionVisible();
+            }
+            else if (m_activeTopMenuIndex == kSaveMenuIndex)
+            {
+                m_showSaveConfirm = true;
+                m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
+            }
+            else if (m_activeTopMenuIndex == kExitMenuIndex)
+            {
+                m_showExitConfirm = true;
+                m_selectedExitConfirmIndex = kExitConfirmNoIndex;
             }
             return;
         }
@@ -403,6 +400,38 @@ void PauseMenu::UpdateItemList()
     }
 
     EnsureSelectedItemVisible();
+
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                             static_cast<float>(NSRender::Common::ScreenW());
+        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                             static_cast<float>(NSRender::Common::ScreenH());
+        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kItemListX,
+                          kItemListY,
+                          520,
+                          static_cast<int>(kVisibleItemCount) * kItemListLineHeight))
+        {
+            const std::size_t clickedIndex = m_itemScrollOffset +
+                static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+            if (clickedIndex < ownedItems.size())
+            {
+                if (clickedIndex != m_selectedItemIndex)
+                {
+                    m_selectedItemIndex = clickedIndex;
+                    m_itemStatusMessage.clear();
+                    EnsureSelectedItemVisible();
+                    GameAudio::PlayMenuMove();
+                }
+            }
+            return;
+        }
+    }
 
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
         InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE))
@@ -530,6 +559,37 @@ void PauseMenu::UpdateWeaponList()
     }
 
     EnsureSelectedWeaponVisible();
+
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                             static_cast<float>(NSRender::Common::ScreenW());
+        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                             static_cast<float>(NSRender::Common::ScreenH());
+        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kItemListX,
+                          kItemListY,
+                          520,
+                          static_cast<int>(kVisibleItemCount) * kItemListLineHeight))
+        {
+            const std::size_t clickedIndex = m_weaponScrollOffset +
+                static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+            if (clickedIndex < ownedWeapons.size())
+            {
+                if (clickedIndex != m_selectedWeaponIndex)
+                {
+                    m_selectedWeaponIndex = clickedIndex;
+                    EnsureSelectedWeaponVisible();
+                    GameAudio::PlayMenuMove();
+                }
+            }
+            return;
+        }
+    }
 }
 
 void PauseMenu::UpdateSettingsPanel()
