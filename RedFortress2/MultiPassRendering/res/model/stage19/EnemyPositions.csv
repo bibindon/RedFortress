@@ -1,3 +1,7 @@
-﻿Type,PosX,PosY,PosZ,RotY
-enemy3,5.0,0.2,0.0,0
-enemy4,-5.0,0.2,0.0,0
+Type,PosX,PosY,PosZ,RotY
+enemy2,-4.0,0.2,18.0,0
+enemy3,5.0,0.2,12.0,0
+enemy3,-6.0,0.2,0.0,0
+enemy4,6.0,0.2,-8.0,0
+enemy4,-5.0,0.2,-20.0,0
+enemy3,4.0,0.2,-24.0,0
