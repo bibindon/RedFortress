@@ -1,21 +1,12 @@
 ﻿#include "DashBoosterManager.h"
 
-#include "GameAudio.h"
-#include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
-#include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
-#include <cmath>
 #include <fstream>
+#include <utility>
 
 namespace
 {
-const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooster.x";
-const int kDashBoosterCooldownFrames = 30;
-const int kDashBoosterSoundDelayFrames = 30;
-const float kDashBoosterVisualScale = 3.0f;
-const float kDashBoosterModelYawOffset = D3DX_PI / 6.0f;
-
 bool ParseChargeEnabled(const std::wstring& value)
 {
     if (value == L"0")
@@ -44,30 +35,6 @@ bool ParseChargeEnabled(const std::wstring& value)
     }
 
     return true;
-}
-
-D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
-{
-    D3DXVECTOR3 normalizedDirection = direction;
-    if (D3DXVec3LengthSq(&normalizedDirection) <= 0.0001f)
-    {
-        return D3DXVECTOR3(0.0f, -kDashBoosterModelYawOffset, 0.0f);
-    }
-
-    D3DXVec3Normalize(&normalizedDirection, &normalizedDirection);
-
-    const float horizontalLength =
-        std::sqrt(normalizedDirection.x * normalizedDirection.x +
-                  normalizedDirection.z * normalizedDirection.z);
-
-    float yaw = 0.0f;
-    if (horizontalLength > 0.0001f)
-    {
-        yaw = std::atan2(normalizedDirection.x, normalizedDirection.z);
-    }
-
-    const float pitch = std::atan2(normalizedDirection.y, horizontalLength);
-    return D3DXVECTOR3(pitch, yaw - kDashBoosterModelYawOffset, 0.0f);
 }
 }
 
@@ -110,23 +77,30 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
             continue;
         }
 
-        DashBoosterObject booster;
+        std::wstring id;
+        D3DXVECTOR3 position(0.0f, 0.0f, 0.0f);
+        D3DXVECTOR3 direction(0.0f, 1.0f, 0.0f);
+        float speed = 16.0f;
+        float duration = 0.35f;
+        float radius = 1.0f;
+        float scale = 0.5f;
+        bool chargeEnabled = true;
         try
         {
-            booster.id = row.at(0);
-            booster.position.x = std::stof(row.at(1));
-            booster.position.y = std::stof(row.at(2));
-            booster.position.z = std::stof(row.at(3));
-            booster.direction.x = std::stof(row.at(4));
-            booster.direction.y = std::stof(row.at(5));
-            booster.direction.z = std::stof(row.at(6));
-            booster.speed = std::stof(row.at(7));
-            booster.duration = std::stof(row.at(8));
-            booster.radius = std::stof(row.at(9));
-            booster.scale = std::stof(row.at(10));
+            id = row.at(0);
+            position.x = std::stof(row.at(1));
+            position.y = std::stof(row.at(2));
+            position.z = std::stof(row.at(3));
+            direction.x = std::stof(row.at(4));
+            direction.y = std::stof(row.at(5));
+            direction.z = std::stof(row.at(6));
+            speed = std::stof(row.at(7));
+            duration = std::stof(row.at(8));
+            radius = std::stof(row.at(9));
+            scale = std::stof(row.at(10));
             if (row.size() >= 12)
             {
-                booster.chargeEnabled = ParseChargeEnabled(row.at(11));
+                chargeEnabled = ParseChargeEnabled(row.at(11));
             }
         }
         catch (...)
@@ -134,66 +108,31 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
             continue;
         }
 
-        if (D3DXVec3LengthSq(&booster.direction) <= 0.0001f)
-        {
-            booster.direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-        }
-
-        const D3DXVECTOR3 visualRotation = CalculateDashBoosterVisualRotation(booster.direction);
-        booster.renderId = m_render->AddMeshMix(NSRender::Util::GetExeDir() + kDashBoosterModelPath,
-                                                booster.position,
-                                                visualRotation,
-                                                booster.scale * kDashBoosterVisualScale,
-                                                -1.0f,
-                                                false,
-                                                false,
-                                                false);
-        m_boosters.push_back(booster);
+        DashBooster booster;
+        booster.Initialize(*m_render,
+                           id,
+                           position,
+                           direction,
+                           speed,
+                           duration,
+                           radius,
+                           scale,
+                           chargeEnabled);
+        m_boosters.push_back(std::move(booster));
     }
 }
 
 void DashBoosterManager::Update(const D3DXVECTOR3& playerPosition,
                                 PhysicsLib::CharacterMover& playerMover)
 {
-    for (DashBoosterObject& booster : m_boosters)
+    if (m_render == nullptr)
     {
-        if (booster.soundDelayFrames > 0)
-        {
-            --booster.soundDelayFrames;
-            if (booster.soundDelayFrames <= 0)
-            {
-                GameAudio::PlayDashBooster();
-            }
-        }
+        return;
+    }
 
-        if (booster.cooldownFrames > 0)
-        {
-            --booster.cooldownFrames;
-        }
-
-        if (playerMover.IsBoosted())
-        {
-            continue;
-        }
-
-        const D3DXVECTOR3 difference = playerPosition - booster.position;
-        if (D3DXVec3Length(&difference) > booster.radius)
-        {
-            continue;
-        }
-
-        if (booster.cooldownFrames > 0)
-        {
-            continue;
-        }
-
-        playerMover.SetPosition(booster.position);
-        playerMover.ApplyDashBooster(booster.direction,
-                                     booster.speed,
-                                     booster.duration,
-                                     booster.chargeEnabled);
-        booster.soundDelayFrames = kDashBoosterSoundDelayFrames;
-        booster.cooldownFrames = kDashBoosterCooldownFrames;
+    for (DashBooster& booster : m_boosters)
+    {
+        booster.Update(*m_render, playerPosition, playerMover);
     }
 }
 
@@ -201,13 +140,9 @@ void DashBoosterManager::Clear()
 {
     if (m_render != nullptr)
     {
-        for (DashBoosterObject& booster : m_boosters)
+        for (DashBooster& booster : m_boosters)
         {
-            if (booster.renderId >= 0)
-            {
-                m_render->RemoveMeshMix(booster.renderId);
-                booster.renderId = -1;
-            }
+            booster.Release(*m_render);
         }
     }
 
