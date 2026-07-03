@@ -33,6 +33,7 @@ public:
 private:
     void UpdateVisual(NSRender::Render& render);
     void Trigger(NSRender::Render& render, PhysicsLib::CharacterMover& playerMover);
+    void PlayLaunchEffects(NSRender::Render& render);
     bool CanTrigger(const D3DXVECTOR3& playerPosition,
                     const PhysicsLib::CharacterMover& playerMover) const;
 
@@ -47,8 +48,7 @@ private:
     bool m_chargeEnabled = true;
     int m_renderId = -1;
     int m_cooldownFrames = 0;
-    int m_soundDelayFrames = 0;
+    int m_launchEffectDelayFrames = 0;
     int m_damageFlashFrames = 0;
-    int m_visualFrame = 0;
-    int m_pulseFrames = 0;
+    bool m_waitingForLaunchEffect = false;
 };

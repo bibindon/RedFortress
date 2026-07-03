@@ -10,14 +10,11 @@ namespace
 {
 const std::wstring kDashBoosterModelPath = L"res\\model\\dashBooster\\dashBooster.x";
 const int kDashBoosterCooldownFrames = 30;
-const int kDashBoosterSoundDelayFrames = 30;
+const int kDashBoosterChargeFrames = 30;
 const int kDashBoosterDamageFlashFrames = 10;
-const int kDashBoosterPulseFrames = 18;
 const float kDashBoosterVisualScale = 3.0f;
 const float kDashBoosterModelYawOffset = D3DX_PI / 6.0f;
-const float kDashBoosterIdleScaleAmplitude = 0.08f;
-const float kDashBoosterPulseScaleAmplitude = 0.22f;
-const float kDashBoosterIdleSpeed = 0.11f;
+const float kDashBoosterContactScale = 1.24f;
 
 D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
 {
@@ -70,10 +67,9 @@ void DashBooster::Initialize(NSRender::Render& render,
     m_chargeEnabled = chargeEnabled;
     m_visualRotation = CalculateDashBoosterVisualRotation(m_direction);
     m_cooldownFrames = 0;
-    m_soundDelayFrames = 0;
+    m_launchEffectDelayFrames = 0;
     m_damageFlashFrames = 0;
-    m_visualFrame = 0;
-    m_pulseFrames = 0;
+    m_waitingForLaunchEffect = false;
 
     m_renderId = render.AddMeshMix(NSRender::Util::GetExeDir() + kDashBoosterModelPath,
                                    m_position,
@@ -90,13 +86,9 @@ void DashBooster::Update(NSRender::Render& render,
                          const D3DXVECTOR3& playerPosition,
                          PhysicsLib::CharacterMover& playerMover)
 {
-    if (m_soundDelayFrames > 0)
+    if (m_waitingForLaunchEffect && m_launchEffectDelayFrames > 0)
     {
-        --m_soundDelayFrames;
-        if (m_soundDelayFrames <= 0)
-        {
-            GameAudio::PlayDashBooster();
-        }
+        --m_launchEffectDelayFrames;
     }
 
     if (m_cooldownFrames > 0)
@@ -113,12 +105,17 @@ void DashBooster::Update(NSRender::Render& render,
         }
     }
 
-    UpdateVisual(render);
+    if (m_waitingForLaunchEffect && m_launchEffectDelayFrames <= 0)
+    {
+        PlayLaunchEffects(render);
+    }
 
     if (CanTrigger(playerPosition, playerMover))
     {
         Trigger(render, playerMover);
     }
+
+    UpdateVisual(render);
 }
 
 void DashBooster::Release(NSRender::Render& render)
@@ -138,20 +135,13 @@ void DashBooster::UpdateVisual(NSRender::Render& render)
         return;
     }
 
-    ++m_visualFrame;
-    const float idleScale = 1.0f + std::sin(static_cast<float>(m_visualFrame) * kDashBoosterIdleSpeed) *
-                                      kDashBoosterIdleScaleAmplitude;
-
-    float pulseScale = 0.0f;
-    if (m_pulseFrames > 0)
+    float contactScale = 1.0f;
+    if (m_waitingForLaunchEffect)
     {
-        const float pulseProgress =
-            static_cast<float>(m_pulseFrames) / static_cast<float>(kDashBoosterPulseFrames);
-        pulseScale = std::sin(pulseProgress * D3DX_PI) * kDashBoosterPulseScaleAmplitude;
-        --m_pulseFrames;
+        contactScale = kDashBoosterContactScale;
     }
 
-    const float visualScale = m_scale * kDashBoosterVisualScale * (idleScale + pulseScale);
+    const float visualScale = m_scale * kDashBoosterVisualScale * contactScale;
 
     D3DXMATRIX scaleMatrix;
     D3DXMATRIX rotationMatrix;
@@ -175,17 +165,36 @@ void DashBooster::Trigger(NSRender::Render& render, PhysicsLib::CharacterMover& 
                                  m_duration,
                                  m_chargeEnabled);
 
+    if (m_chargeEnabled)
+    {
+        m_launchEffectDelayFrames = kDashBoosterChargeFrames;
+    }
+    else
+    {
+        m_launchEffectDelayFrames = 0;
+    }
+    m_waitingForLaunchEffect = true;
+    m_cooldownFrames = kDashBoosterCooldownFrames;
+
+    if (m_launchEffectDelayFrames <= 0)
+    {
+        PlayLaunchEffects(render);
+    }
+}
+
+void DashBooster::PlayLaunchEffects(NSRender::Render& render)
+{
     const D3DXVECTOR3 effectPosition = m_position + m_direction * 0.55f;
     render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Damage, effectPosition);
+    GameAudio::PlayDashBooster();
     if (m_renderId >= 0)
     {
         render.SetMeshMixDamageFlash(m_renderId, true);
     }
 
     m_damageFlashFrames = kDashBoosterDamageFlashFrames;
-    m_pulseFrames = kDashBoosterPulseFrames;
-    m_soundDelayFrames = kDashBoosterSoundDelayFrames;
-    m_cooldownFrames = kDashBoosterCooldownFrames;
+    m_launchEffectDelayFrames = 0;
+    m_waitingForLaunchEffect = false;
 }
 
 bool DashBooster::CanTrigger(const D3DXVECTOR3& playerPosition,
