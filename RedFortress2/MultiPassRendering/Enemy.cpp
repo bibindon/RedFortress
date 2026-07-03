@@ -44,6 +44,10 @@ namespace
     const int kHitStunFrames = 60;
     const float kStompMaxDistanceAboveEnemy = 0.3f;
     const int kLastKnownPlayerFrames = 120;
+    const float kEnemyGravity = 9.8f;
+    const float kEnemyMaxFallSpeed = 30.0f;
+    const float kEnemyFallDeathY = -10.0f;
+    const float kGroundNormalYThreshold = 0.3f;
 }
 
 Enemy::Enemy()
@@ -80,6 +84,8 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition,
     m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_knockbackFrames = 0;
     m_removalFrames = 0;
+    m_verticalVelocity = 0.0f;
+    m_isGrounded = false;
     m_facePlayerTurnFrames = 0;
     m_alertFrames = 0;
     m_idleWaitFrames = 0;
@@ -127,6 +133,12 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
         {
             --m_removalFrames;
         }
+        return;
+    }
+
+    ApplyGravity(render);
+    if (m_state == State::Dead)
+    {
         return;
     }
 
@@ -278,14 +290,7 @@ void Enemy::ApplyDamage(NSRender::Render& render, const int amount)
     if (m_hp <= 0)
     {
         m_hp = 0;
-        m_state = State::Dead;
-        m_hitStunFrames = 0;
-        m_facePlayerTurnFrames = 0;
-        m_removalFrames = 30;
-        if (m_meshId >= 0)
-        {
-            render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 2);
-        }
+        StartDeath(render);
     }
     else
     {
@@ -294,6 +299,21 @@ void Enemy::ApplyDamage(NSRender::Render& render, const int amount)
         {
             render.SetMeshMixSkinAnimSpeed(m_meshId, 0.0f);
         }
+    }
+}
+
+void Enemy::StartDeath(NSRender::Render& render)
+{
+    m_state = State::Dead;
+    m_hitStunFrames = 0;
+    m_facePlayerTurnFrames = 0;
+    m_knockbackFrames = 0;
+    m_verticalVelocity = 0.0f;
+    m_isGrounded = false;
+    m_removalFrames = 30;
+    if (m_meshId >= 0)
+    {
+        render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 2);
     }
 }
 
@@ -719,37 +739,76 @@ void Enemy::UpdateFacing(const D3DXVECTOR3& targetPos)
     m_yaw = MoveAngleToward(m_yaw, targetYaw, kTurnRadiansPerSecond * kTargetFrameSeconds);
 }
 
-void Enemy::MoveWithCollision(const D3DXVECTOR3& velocity)
+void Enemy::ApplyGravity(NSRender::Render& render)
+{
+    if (m_position.y < kEnemyFallDeathY)
+    {
+        StartDeath(render);
+        return;
+    }
+
+    m_verticalVelocity -= kEnemyGravity * kTargetFrameSeconds;
+    if (m_verticalVelocity < -kEnemyMaxFallSpeed)
+    {
+        m_verticalVelocity = -kEnemyMaxFallSpeed;
+    }
+
+    D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
+    const bool collided = MoveWithCollision(D3DXVECTOR3(0.0f, m_verticalVelocity, 0.0f), &hitNormal);
+    m_isGrounded = false;
+    if (collided && hitNormal.y > kGroundNormalYThreshold && m_verticalVelocity <= 0.0f)
+    {
+        m_isGrounded = true;
+        m_verticalVelocity = 0.0f;
+    }
+
+    if (m_position.y < kEnemyFallDeathY)
+    {
+        StartDeath(render);
+    }
+}
+
+bool Enemy::MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outHitNormal)
 {
     if (D3DXVec3LengthSq(&velocity) <= 0.0001f)
     {
-        return;
+        if (outHitNormal != nullptr)
+        {
+            *outHitNormal = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        }
+        return false;
     }
 
     D3DXVECTOR3 resolvedPosition = m_position;
     D3DXVECTOR3 resolvedVelocity = velocity;
+    D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
     const float radius = m_contactRadius;
     const float height = m_height;
 
-    PhysicsLib::PhysicsLib::CheckCollide(m_position,
-                                         velocity,
-                                         PhysicsLib::PhysicsLib::ShapeType::Cylinder,
-                                         &resolvedPosition,
-                                         &resolvedVelocity,
-                                         nullptr,
-                                         nullptr,
-                                         radius,
-                                         height,
-                                         nullptr,
-                                         nullptr,
-                                         nullptr,
-                                         nullptr,
-                                         nullptr,
-                                         nullptr,
-                                         nullptr,
-                                         nullptr);
+    const bool collided = PhysicsLib::PhysicsLib::CheckCollide(m_position,
+                                                               velocity,
+                                                               PhysicsLib::PhysicsLib::ShapeType::Cylinder,
+                                                               &resolvedPosition,
+                                                               &resolvedVelocity,
+                                                               nullptr,
+                                                               nullptr,
+                                                               radius,
+                                                               height,
+                                                               nullptr,
+                                                               &hitNormal,
+                                                               nullptr,
+                                                               nullptr,
+                                                               nullptr,
+                                                               nullptr,
+                                                               nullptr,
+                                                               nullptr);
 
     m_position = resolvedPosition;
+    if (outHitNormal != nullptr)
+    {
+        *outHitNormal = hitNormal;
+    }
+    return collided;
 }
 
 bool Enemy::IsPlayerInView(const D3DXVECTOR3& playerPos) const

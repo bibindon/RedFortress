@@ -69,6 +69,8 @@ private:
     void StartIdleBehavior();
     void UpdateIdleBehavior();
     void ApplyDamage(NSRender::Render& render, int amount);
+    void StartDeath(NSRender::Render& render);
+    void ApplyGravity(NSRender::Render& render);
     void BeginAlert(const D3DXVECTOR3& playerPos, bool faceImmediately);
     void UpdateChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
     void UpdateRetreatBehavior();
@@ -77,7 +79,7 @@ private:
     void StartFacePlayerTurn();
     void UpdateFacePlayerTurn(const D3DXVECTOR3& playerPos);
     void UpdateFacing(const D3DXVECTOR3& targetPos);
-    void MoveWithCollision(const D3DXVECTOR3& velocity);
+    bool MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outHitNormal = nullptr);
     bool IsPlayerInView(const D3DXVECTOR3& playerPos) const;
     float NextRandom01();
     int NextRandomInt(int minValueInclusive, int maxValueInclusive);
@@ -100,6 +102,8 @@ private:
     float m_retreatDistance = 3.0f;
     float m_contactRadius = 0.5f;
     float m_height = 1.0f;
+    float m_verticalVelocity = 0.0f;
+    bool m_isGrounded = false;
     int m_blinkFrames = 0;
     int m_hitStunFrames = 0;
     D3DXVECTOR3 m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
