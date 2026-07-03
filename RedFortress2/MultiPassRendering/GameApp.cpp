@@ -3915,10 +3915,19 @@ void GameApp::LoadCurrentStageObjects()
 {
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
 
-    const std::wstring renderSettingsPath = stage.renderSettingsCsvPath.empty()
-        ? L"res\\RenderSettings.csv"
-        : stage.renderSettingsCsvPath;
+    std::wstring renderSettingsPath;
+    if (stage.renderSettingsCsvPath.empty())
+    {
+        renderSettingsPath = L"res\\RenderSettings.csv";
+    }
+    else
+    {
+        renderSettingsPath = stage.renderSettingsCsvPath;
+    }
+
+    const std::wstring currentRenderQuality = m_render.GetRenderQuality();
     m_render.ReloadSettingsCsv(renderSettingsPath);
+    m_render.SetRenderQuality(currentRenderQuality);
 
     m_useFixedCamera = stage.useFixedCamera;
     m_fixedCameraPos = stage.fixedCameraPos;
