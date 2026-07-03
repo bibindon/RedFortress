@@ -41,6 +41,7 @@ private:
     void LoadRecipes();
     int GetRecipeRequiredWorld(const Recipe& recipe) const;
     bool IsRecipeUnlocked(const Recipe& recipe) const;
+    bool IsRecipeAlreadyCrafted(const Recipe& recipe) const;
     bool CanCraft(const Recipe& recipe) const;
     std::wstring GetName(const std::wstring& id) const;
     void MoveSelection(int direction);

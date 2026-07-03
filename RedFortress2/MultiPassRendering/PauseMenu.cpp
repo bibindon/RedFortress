@@ -1053,7 +1053,7 @@ void PauseMenu::RenderWeaponPanel()
                          520,
                          kSubTextColor);
     m_render->DrawTextEx(m_qualityFontId,
-                         L"所持数：" + std::to_wstring(m_inventory->GetWeaponCount(selectedWeapon.id)),
+                         L"状態：使用可能",
                          detailX,
                          565,
                          kSubTextColor);
@@ -1599,7 +1599,10 @@ std::vector<std::size_t> PauseMenu::GetOwnedWeaponIndices() const
     std::vector<std::size_t> indices;
     for (std::size_t i = 0; i < m_weapons.size(); ++i)
     {
-        indices.push_back(i);
+        if (m_inventory != nullptr && m_inventory->GetWeaponCount(m_weapons.at(i).id) > 0)
+        {
+            indices.push_back(i);
+        }
     }
 
     return indices;

@@ -115,6 +115,14 @@ void CraftMenu::Update()
     }
 
     const Recipe& recipe = m_recipes.at(m_selectedIndex);
+    if (IsRecipeAlreadyCrafted(recipe))
+    {
+        GameAudio::PlayMenuCancel();
+        m_statusMessage = L"すでに作成済みです";
+        m_statusColor = kMissingTextColor;
+        return;
+    }
+
     if (!IsRecipeUnlocked(recipe))
     {
         GameAudio::PlayMenuCancel();
@@ -173,18 +181,27 @@ void CraftMenu::Render()
     for (std::size_t i = m_scrollOffset; i < endIndex; ++i)
     {
         const Recipe& recipe = m_recipes.at(i);
+        const bool alreadyCrafted = IsRecipeAlreadyCrafted(recipe);
         UINT color = kTextColor;
-        if (!IsRecipeUnlocked(recipe) || !CanCraft(recipe))
+        if (alreadyCrafted || !IsRecipeUnlocked(recipe) || !CanCraft(recipe))
         {
             color = kDisabledTextColor;
         }
-        if (i == m_selectedIndex && IsRecipeUnlocked(recipe) && CanCraft(recipe))
+        if (i == m_selectedIndex && !alreadyCrafted && IsRecipeUnlocked(recipe) && CanCraft(recipe))
         {
             color = kSelectedTextColor;
         }
 
         const int row = static_cast<int>(i - m_scrollOffset);
-        std::wstring text = GetName(recipe.resultId) + L"  x" + std::to_wstring(recipe.resultCount);
+        std::wstring text = GetName(recipe.resultId);
+        if (recipe.resultType != L"Weapon")
+        {
+            text += L"  x" + std::to_wstring(recipe.resultCount);
+        }
+        if (alreadyCrafted)
+        {
+            text += L"  作成済み";
+        }
         if (i == m_selectedIndex)
         {
             text = L"> " + text;
@@ -221,7 +238,11 @@ void CraftMenu::Render()
     }
 
     std::wstring availability = L"素材不足";
-    if (!IsRecipeUnlocked(selectedRecipe))
+    if (IsRecipeAlreadyCrafted(selectedRecipe))
+    {
+        availability = L"作成済み";
+    }
+    else if (!IsRecipeUnlocked(selectedRecipe))
     {
         const int requiredWorld = GetRecipeRequiredWorld(selectedRecipe);
         if (requiredWorld <= 2)
@@ -238,7 +259,7 @@ void CraftMenu::Render()
         availability = L"作成できます";
     }
     UINT availabilityColor = kEnoughTextColor;
-    if (!IsRecipeUnlocked(selectedRecipe) || !CanCraft(selectedRecipe))
+    if (IsRecipeAlreadyCrafted(selectedRecipe) || !IsRecipeUnlocked(selectedRecipe) || !CanCraft(selectedRecipe))
     {
         availabilityColor = kMissingTextColor;
     }
@@ -327,7 +348,24 @@ void CraftMenu::LoadRecipes()
 
 bool CraftMenu::CanCraft(const Recipe& recipe) const
 {
-    return m_inventory != nullptr && m_inventory->HasItems(recipe.materials);
+    return m_inventory != nullptr &&
+           !IsRecipeAlreadyCrafted(recipe) &&
+           m_inventory->HasItems(recipe.materials);
+}
+
+bool CraftMenu::IsRecipeAlreadyCrafted(const Recipe& recipe) const
+{
+    if (m_inventory == nullptr)
+    {
+        return false;
+    }
+
+    if (recipe.resultType != L"Weapon")
+    {
+        return false;
+    }
+
+    return m_inventory->GetWeaponCount(recipe.resultId) > 0;
 }
 
 int CraftMenu::GetRecipeRequiredWorld(const Recipe& recipe) const

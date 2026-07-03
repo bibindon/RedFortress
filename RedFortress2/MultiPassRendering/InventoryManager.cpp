@@ -69,7 +69,7 @@ bool InventoryManager::Load()
         }
         else if (row.at(0) == kWeaponType && count > 0)
         {
-            m_weaponCounts[row.at(1)] = count;
+            m_weaponCounts[row.at(1)] = 1;
         }
         else if (row.at(0) == kCollectedWeaponType && count > 0)
         {
@@ -161,7 +161,7 @@ void InventoryManager::AddWeapon(const std::wstring& weaponId, const int count)
 {
     if (!weaponId.empty() && count > 0)
     {
-        m_weaponCounts[weaponId] += count;
+        m_weaponCounts[weaponId] = 1;
     }
 }
 
