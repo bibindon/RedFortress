@@ -78,6 +78,7 @@ namespace
     const int kPlayerInvincibleDuration = 60;
     const int kRespawnInvincibleFrames = 180;
     const int kKnockbackDurationFrames = 60;
+    const int kDashParticleIntervalFrames = 3;
     const float kKnockbackSpeed = 1.0f;
     const int kRespawnCameraDelayFrames = 120;
     const int kRespawnCameraMoveFrames = 30;
@@ -1105,6 +1106,7 @@ void GameApp::Run()
                     m_pendingJump = false;
                 }
                 m_playerMover.Update(m_pendingMove, m_pendingJump);
+                UpdateDashParticleEffect();
                 m_dashBoosterManager.Update(m_playerMover.GetPosition(), m_playerMover);
                 m_collectibleManager.Update(m_playerMover.GetPosition(), m_destructibleManager);
                 if (m_playerMover.IsCrushed())
@@ -1510,6 +1512,39 @@ void GameApp::ApplyQteVisualEffect(const float saturation, const float fovDegree
     m_render.SetPostEffectSaturateEnable(true);
     m_render.SetPostEffectSaturate(ClampFloat(saturation, 0.0f, 2.0f));
     m_render.SetCameraHorizontalFovDegrees(fovDegrees);
+}
+
+void GameApp::UpdateDashParticleEffect()
+{
+    if (!m_playerMover.IsDashing())
+    {
+        m_dashParticleCooldownFrames = 0;
+        return;
+    }
+
+    if (m_dashParticleCooldownFrames > 0)
+    {
+        --m_dashParticleCooldownFrames;
+        return;
+    }
+
+    D3DXVECTOR3 direction = m_playerMover.GetVelocity();
+    direction.y = 0.0f;
+    if (D3DXVec3LengthSq(&direction) <= 0.0001f)
+    {
+        direction = D3DXVECTOR3(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+    }
+    else
+    {
+        D3DXVec3Normalize(&direction, &direction);
+    }
+
+    const D3DXVECTOR3 back = direction * -1.0f;
+    D3DXVECTOR3 origin = m_playerMover.GetPosition();
+    origin += D3DXVECTOR3(0.0f, 0.92f, 0.0f);
+    origin += back * 0.42f;
+    m_render.PlaceDashParticleEffect(origin, direction);
+    m_dashParticleCooldownFrames = kDashParticleIntervalFrames;
 }
 
 void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const float animationSpeed)

@@ -187,6 +187,7 @@ private:
     void RestoreQteVisualEffectImmediate();
     void UpdateQteVisualEffect();
     void ApplyQteVisualEffect(float saturation, float fovDegrees);
+    void UpdateDashParticleEffect();
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
     enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageClear, GameOver, Ending, EndingFin };
@@ -243,6 +244,7 @@ private:
     HINSTANCE m_hInstance = NULL;
     D3DXVECTOR3 m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_pendingJump = false;
+    int m_dashParticleCooldownFrames = 0;
     std::unordered_map<int, D3DXVECTOR3> m_prevMovingPlatformPositions;
     HpBar m_hpBar;
     DamagePopupManager m_damagePopupManager;
