@@ -3012,6 +3012,10 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         }
         m_itemPickupMessage = L"バスター弾を回復";
         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        if (m_busterAmmo >= kBusterAmmoMax)
+        {
+            GameAudio::PlayAmmoMax();
+        }
         return true;
     }
 
@@ -3024,6 +3028,10 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         }
         m_itemPickupMessage = L"爆弾を回復";
         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        if (m_bombAmmo >= kBombAmmoMax)
+        {
+            GameAudio::PlayAmmoMax();
+        }
         return true;
     }
 
@@ -3036,6 +3044,10 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         }
         m_itemPickupMessage = L"バスター弾を回復";
         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        if (m_busterAmmo >= kBusterAmmoMax)
+        {
+            GameAudio::PlayAmmoMax();
+        }
         return true;
     }
 
@@ -3048,10 +3060,13 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         }
         m_itemPickupMessage = L"爆弾を回復";
         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        if (m_bombAmmo >= kBombAmmoMax)
+        {
+            GameAudio::PlayAmmoMax();
+        }
         return true;
     }
 
-    GameAudio::PlayAmmoMax();
     return false;
 }
 
