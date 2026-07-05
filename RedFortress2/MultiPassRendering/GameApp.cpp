@@ -1104,7 +1104,10 @@ void GameApp::Run()
                                         kAttackTypeIconSize,
                                         kAttackTypeIconSize);
             }
-            m_damagePopupManager.Update();
+            if (!IsHitStopActive())
+            {
+                m_damagePopupManager.Update();
+            }
             m_damagePopupManager.Draw();
             m_enemyManager.DrawHpBars(m_render);
             if (m_qte == nullptr && !IsCurrentStageSelect())
