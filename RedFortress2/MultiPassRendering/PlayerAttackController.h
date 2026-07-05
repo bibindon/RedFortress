@@ -42,6 +42,7 @@ public:
     bool IsMovementActive() const;
     bool ConsumeHitRequested();
     const PlayerAttackDefinition& GetCurrentDefinition() const;
+    PlayerAttackType GetCurrentAttackType() const;
 
     void SelectClubCategory();
     void CycleAttackCategory(int direction = 1);

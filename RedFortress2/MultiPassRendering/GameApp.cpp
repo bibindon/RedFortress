@@ -132,6 +132,8 @@ namespace
     const int kAmmoRailOffsetY = 11;
     const int kAmmoBeadSize = 14;
     const int kAmmoBeadStep = 17;
+    const int kWeakAttackHitStopFrames = 6;
+    const int kStrongAttackHitStopFrames = 9;
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
     {
@@ -156,6 +158,26 @@ namespace
         }
 
         return attackType == PlayerAttackType::BusterStrongAttack;
+    }
+
+    bool IsWeakMeleeAttackType(const PlayerAttackType attackType)
+    {
+        if (attackType == PlayerAttackType::WeakAttack)
+        {
+            return true;
+        }
+
+        return attackType == PlayerAttackType::SwordAttack;
+    }
+
+    bool IsStrongMeleeAttackType(const PlayerAttackType attackType)
+    {
+        if (attackType == PlayerAttackType::StrongAttack)
+        {
+            return true;
+        }
+
+        return attackType == PlayerAttackType::SwordStrongAttack;
     }
 
     const std::wstring& GetAttackIconPath(const PlayerAttackType attackType)
@@ -602,6 +624,7 @@ void GameApp::Run()
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
+            !IsHitStopActive() &&
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
              InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START)))
         {
@@ -613,6 +636,7 @@ void GameApp::Run()
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
+            !IsHitStopActive() &&
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LCONTROL) ||
              InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RCONTROL)))
         {
@@ -625,6 +649,7 @@ void GameApp::Run()
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
+            !IsHitStopActive() &&
             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_R))
         {
             TryUseRecoveryItemFromKey();
@@ -879,6 +904,29 @@ void GameApp::Run()
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
                 m_render.Draw();
+                continue;
+            }
+
+            if (IsHitStopActive())
+            {
+                if (!IsCurrentStageSelect())
+                {
+                    m_hpBar.Draw();
+                    DrawAmmoGauge();
+                    const int kAttackTypeHudX = 48;
+                    const int kAttackTypeHudY = 92;
+                    const int kAttackTypeIconSize = 64;
+                    m_render.DrawImageSized(GetAttackIconPath(m_playerAttackController.GetAttackType(false)),
+                                            kAttackTypeHudX,
+                                            kAttackTypeHudY,
+                                            kAttackTypeIconSize,
+                                            kAttackTypeIconSize);
+                }
+                m_damagePopupManager.Draw();
+                m_enemyManager.DrawHpBars(m_render);
+                DrawItemPickupMessage();
+                m_render.Draw();
+                UpdateHitStop();
                 continue;
             }
 
@@ -1142,6 +1190,7 @@ void GameApp::Run()
                         if (damagedEnemyCount > 0)
                         {
                             GameAudio::PlaySlashHit();
+                            BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                         }
                         else
                         {
@@ -1155,6 +1204,7 @@ void GameApp::Run()
                                 {
                                     m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
                                     GameAudio::PlaySlashHit();
+                                    BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                                 }
                             }
                         }
@@ -3821,6 +3871,68 @@ void GameApp::HealPlayerHp(int amount)
     }
 }
 
+void GameApp::BeginHitStop(int frames)
+{
+    if (frames <= 0)
+    {
+        return;
+    }
+
+    if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen() || m_playerDeathPending || m_qte != nullptr)
+    {
+        return;
+    }
+
+    if (frames > m_hitStopFrames)
+    {
+        m_hitStopFrames = frames;
+    }
+
+    if (!m_render.IsSceneUpdatePaused())
+    {
+        m_render.SetSceneUpdatePaused(true);
+        m_hitStopScenePauseApplied = true;
+    }
+}
+
+void GameApp::UpdateHitStop()
+{
+    if (m_hitStopFrames > 0)
+    {
+        --m_hitStopFrames;
+    }
+
+    if (m_hitStopFrames <= 0)
+    {
+        m_hitStopFrames = 0;
+        if (m_hitStopScenePauseApplied)
+        {
+            m_render.SetSceneUpdatePaused(false);
+            m_hitStopScenePauseApplied = false;
+        }
+    }
+}
+
+bool GameApp::IsHitStopActive() const
+{
+    return m_hitStopFrames > 0;
+}
+
+int GameApp::GetHitStopFrames(PlayerAttackType attackType) const
+{
+    if (IsWeakMeleeAttackType(attackType))
+    {
+        return kWeakAttackHitStopFrames;
+    }
+
+    if (IsStrongMeleeAttackType(attackType))
+    {
+        return kStrongAttackHitStopFrames;
+    }
+
+    return 0;
+}
+
 void GameApp::HandlePlayerDeath()
 {
     if (m_playerDeathPending)
@@ -3838,6 +3950,8 @@ void GameApp::HandlePlayerDeath()
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
+    m_hitStopFrames = 0;
+    m_hitStopScenePauseApplied = false;
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
     m_baseBombCapacity = 1;
