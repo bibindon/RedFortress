@@ -132,8 +132,8 @@ namespace
     const int kAmmoRailOffsetY = 11;
     const int kAmmoBeadSize = 14;
     const int kAmmoBeadStep = 17;
-    const int kWeakAttackHitStopFrames = 30;
-    const int kStrongAttackHitStopFrames = 30;
+    const int kWeakAttackHitStopFrames = 15;
+    const int kStrongAttackHitStopFrames = 15;
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
     {
@@ -909,6 +909,11 @@ void GameApp::Run()
 
             if (IsHitStopActive())
             {
+                m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
+                m_destructibleManager.Update(m_render);
+                m_enemyManager.SyncMeshes(m_render);
+                UpdateGoalArrow();
+
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
@@ -922,6 +927,7 @@ void GameApp::Run()
                                             kAttackTypeIconSize,
                                             kAttackTypeIconSize);
                 }
+                m_damagePopupManager.Update();
                 m_damagePopupManager.Draw();
                 m_enemyManager.DrawHpBars(m_render);
                 DrawItemPickupMessage();
@@ -1121,6 +1127,13 @@ void GameApp::Run()
             DrawStageSelectCursor();
             DrawItemPickupMessage();
             m_render.Draw();
+
+            if (m_pendingHitStopFrames > 0)
+            {
+                StartHitStopNow(m_pendingHitStopFrames);
+                m_pendingHitStopFrames = 0;
+                continue;
+            }
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
             {
@@ -1343,6 +1356,7 @@ void GameApp::Run()
                 GameAudio::PlayJump();
                 if (m_playerMeshId >= 0)
                 {
+                    m_playerAnimationSpeed = 0.1f;
                     m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 0.1f);
                     m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
                 }
@@ -1602,6 +1616,7 @@ void GameApp::UpdateDashParticleEffect()
 void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const float animationSpeed)
 {
     m_playerAnimState = nextState;
+    m_playerAnimationSpeed = animationSpeed;
     if (m_playerMeshId < 0)
     {
         return;
@@ -1918,6 +1933,7 @@ void GameApp::UpdatePlayerByInput()
         }
         else if (nextState == PlayerAnimState::Run)
         {
+            m_playerAnimationSpeed = runAnimationSpeed;
             m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, runAnimationSpeed);
         }
     }
@@ -3886,15 +3902,29 @@ void GameApp::BeginHitStop(int frames)
         return;
     }
 
+    if (frames > m_pendingHitStopFrames)
+    {
+        m_pendingHitStopFrames = frames;
+    }
+}
+
+void GameApp::StartHitStopNow(int frames)
+{
+    if (frames <= 0)
+    {
+        return;
+    }
+
     if (frames > m_hitStopFrames)
     {
         m_hitStopFrames = frames;
     }
 
-    if (!m_render.IsSceneUpdatePaused())
+    if (!m_hitStopPlayerAnimationPaused && m_playerMeshId >= 0)
     {
-        m_render.SetSceneUpdatePaused(true);
-        m_hitStopScenePauseApplied = true;
+        m_hitStopStoredPlayerAnimationSpeed = m_playerAnimationSpeed;
+        m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 0.0f);
+        m_hitStopPlayerAnimationPaused = true;
     }
 }
 
@@ -3908,10 +3938,13 @@ void GameApp::UpdateHitStop()
     if (m_hitStopFrames <= 0)
     {
         m_hitStopFrames = 0;
-        if (m_hitStopScenePauseApplied)
+        if (m_hitStopPlayerAnimationPaused)
         {
-            m_render.SetSceneUpdatePaused(false);
-            m_hitStopScenePauseApplied = false;
+            if (m_playerMeshId >= 0)
+            {
+                m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_hitStopStoredPlayerAnimationSpeed);
+            }
+            m_hitStopPlayerAnimationPaused = false;
         }
     }
 }
@@ -3954,7 +3987,8 @@ void GameApp::HandlePlayerDeath()
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
     m_hitStopFrames = 0;
-    m_hitStopScenePauseApplied = false;
+    m_pendingHitStopFrames = 0;
+    m_hitStopPlayerAnimationPaused = false;
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
     m_baseBombCapacity = 1;

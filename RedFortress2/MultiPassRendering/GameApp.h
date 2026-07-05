@@ -189,6 +189,7 @@ private:
     void ApplyQteVisualEffect(float saturation, float fovDegrees);
     void UpdateDashParticleEffect();
     void BeginHitStop(int frames);
+    void StartHitStopNow(int frames);
     void UpdateHitStop();
     bool IsHitStopActive() const;
     int GetHitStopFrames(PlayerAttackType attackType) const;
@@ -250,7 +251,10 @@ private:
     bool m_pendingJump = false;
     bool m_dashParticleEmitted = false;
     int m_hitStopFrames = 0;
-    bool m_hitStopScenePauseApplied = false;
+    int m_pendingHitStopFrames = 0;
+    float m_playerAnimationSpeed = 1.0f;
+    float m_hitStopStoredPlayerAnimationSpeed = 1.0f;
+    bool m_hitStopPlayerAnimationPaused = false;
     std::unordered_map<int, D3DXVECTOR3> m_prevMovingPlatformPositions;
     HpBar m_hpBar;
     DamagePopupManager m_damagePopupManager;
