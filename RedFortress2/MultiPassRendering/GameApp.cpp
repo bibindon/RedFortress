@@ -132,8 +132,8 @@ namespace
     const int kAmmoRailOffsetY = 11;
     const int kAmmoBeadSize = 14;
     const int kAmmoBeadStep = 17;
-    const int kWeakAttackHitStopFrames = 6;
-    const int kStrongAttackHitStopFrames = 9;
+    const int kWeakAttackHitStopFrames = 30;
+    const int kStrongAttackHitStopFrames = 30;
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
     {
