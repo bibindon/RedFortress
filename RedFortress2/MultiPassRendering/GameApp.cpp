@@ -147,6 +147,84 @@ namespace
         return stageId.length() >= 6 && stageId.substr(0, 6) == L"select";
     }
 
+    bool TryParsePositiveNumber(const std::wstring& text, const std::size_t begin, const std::size_t end, int* value)
+    {
+        if (value == nullptr || begin >= end || end > text.length())
+        {
+            return false;
+        }
+
+        int result = 0;
+        for (std::size_t i = begin; i < end; ++i)
+        {
+            const wchar_t ch = text.at(i);
+            if (ch < L'0' || ch > L'9')
+            {
+                return false;
+            }
+
+            result = result * 10 + static_cast<int>(ch - L'0');
+        }
+
+        *value = result;
+        return true;
+    }
+
+    bool TryParseStageDestinationId(const std::wstring& destinationId, int* worldNumber, int* stageNumber)
+    {
+        const std::size_t separator = destinationId.find(L'-');
+        if (separator == std::wstring::npos)
+        {
+            return false;
+        }
+
+        int parsedWorld = 0;
+        int parsedStage = 0;
+        if (!TryParsePositiveNumber(destinationId, 0, separator, &parsedWorld))
+        {
+            return false;
+        }
+        if (!TryParsePositiveNumber(destinationId, separator + 1, destinationId.length(), &parsedStage))
+        {
+            return false;
+        }
+
+        *worldNumber = parsedWorld;
+        *stageNumber = parsedStage;
+        return true;
+    }
+
+    bool TryBuildAdjacentStagePortalId(const std::wstring& portalId, const int stageStep, std::wstring* adjacentPortalId)
+    {
+        if (adjacentPortalId == nullptr)
+        {
+            return false;
+        }
+
+        const std::wstring prefix = L"portal-to-";
+        if (portalId.length() <= prefix.length() || portalId.substr(0, prefix.length()) != prefix)
+        {
+            return false;
+        }
+
+        const std::wstring destinationId = portalId.substr(prefix.length());
+        int worldNumber = 0;
+        int stageNumber = 0;
+        if (!TryParseStageDestinationId(destinationId, &worldNumber, &stageNumber))
+        {
+            return false;
+        }
+
+        const int nextStageNumber = stageNumber + stageStep;
+        if (nextStageNumber < 1 || nextStageNumber > 8)
+        {
+            return false;
+        }
+
+        *adjacentPortalId = prefix + std::to_wstring(worldNumber) + L"-" + std::to_wstring(nextStageNumber);
+        return true;
+    }
+
     bool IsBombAttackType(const PlayerAttackType attackType)
     {
         if (attackType == PlayerAttackType::BombAttack)
@@ -2516,13 +2594,42 @@ void GameApp::MoveStageSelectCursorByDirection(const float directionX, const flo
         return;
     }
 
+    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+    if (directionX != 0.0f && directionY == 0.0f)
+    {
+        int stageStep = -1;
+        if (directionX > 0.0f)
+        {
+            stageStep = 1;
+        }
+
+        std::wstring adjacentPortalId;
+        if (TryBuildAdjacentStagePortalId(m_selectedStagePortalId, stageStep, &adjacentPortalId))
+        {
+            for (const InteractionManager::Interactable& interactable : interactables)
+            {
+                if (interactable.type == L"StagePortal" &&
+                    interactable.id == adjacentPortalId)
+                {
+                    if (IsStagePortalSelectable(interactable.id))
+                    {
+                        m_selectedStagePortalId = interactable.id;
+                        m_selectedStagePortalPosition = interactable.position;
+                        m_hasSelectedStagePortal = true;
+                        SyncStageSelectPlayerToPortal(false);
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
     const POINT currentScreenPosition = NSRender::Camera::GetScreenPos(m_selectedStagePortalPosition);
     if (currentScreenPosition.x < 0 || currentScreenPosition.y < 0)
     {
         return;
     }
 
-    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
     const InteractionManager::Interactable* bestInteractable = nullptr;
     float bestScore = 100000000.0f;
 
