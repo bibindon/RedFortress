@@ -59,4 +59,5 @@ private:
     int m_hitDelayFrames = -1;
     bool m_hitRequested = false;
     bool m_hitResolved = false;
+    bool m_useSecondSlashAnimation = false;
 };

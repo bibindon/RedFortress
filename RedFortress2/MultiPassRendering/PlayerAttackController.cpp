@@ -16,6 +16,15 @@ bool PlayerAttackController::TryStart(PlayerAttackType attackType)
 
     m_currentAttackType = attackType;
     m_currentDefinition = GetDefinition(attackType);
+    if (m_currentDefinition.animationName == L"slash")
+    {
+        if (m_useSecondSlashAnimation)
+        {
+            m_currentDefinition.animationName = L"slash2";
+        }
+
+        m_useSecondSlashAnimation = !m_useSecondSlashAnimation;
+    }
     m_remainingFrames = m_currentDefinition.durationFrames;
     m_hitDelayFrames = m_currentDefinition.hitDelayFrames;
     m_hitRequested = false;
