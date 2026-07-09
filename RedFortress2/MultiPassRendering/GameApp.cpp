@@ -439,7 +439,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     GameAudio::PlayLoadingEnvironment();
 
     m_render.SetShowFPS(false);
-    m_render.SetLightDir(D3DXVECTOR3(-0.4f, 1.0f, 0.6f));
+    m_render.SetLightDir(D3DXVECTOR3(0.6f, 0.7f, -0.9f));
     m_stageManager.Initialize();
     m_stageManager.MoveToStage(m_stageManager.FindStageIndexById(L"select1"));
     const StageManager::StageData& initialStage = m_stageManager.GetCurrentStage();
