@@ -50,6 +50,7 @@ namespace
     const std::wstring kQteRewardItemId = L"001";
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
     const std::wstring kSaberModelPath = L"res\\model\\saber\\saber.x";
+    const char* kPlayerRightWristBoneName = "Bone_179";
     const float kStickModelScale = 0.5f;
     const float kSaberModelScale = 0.5f;
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
@@ -4416,7 +4417,7 @@ void GameApp::LoadCurrentStageObjects()
         {
             m_render.SetMeshMixEnabled(m_stickMeshId, false);
             const float kStickLocalRotateZ = D3DX_PI * 0.5f;
-            m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, "MarineV2_arm_wrist_R",
+            m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, kPlayerRightWristBoneName,
                                       D3DXVECTOR3(0.0f, 0.0f, kStickLocalRotateZ),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
@@ -4429,7 +4430,7 @@ void GameApp::LoadCurrentStageObjects()
         {
             m_render.SetMeshMixEnabled(m_saberMeshId, false);
             const float kSaberLocalRotateZ = D3DX_PI * 0.5f;
-            m_render.AttachMeshToBone(m_saberMeshId, m_playerMeshId, "MarineV2_arm_wrist_R",
+            m_render.AttachMeshToBone(m_saberMeshId, m_playerMeshId, kPlayerRightWristBoneName,
                                       D3DXVECTOR3(0.0f, 0.0f, kSaberLocalRotateZ),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
