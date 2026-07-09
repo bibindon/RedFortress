@@ -39,6 +39,7 @@ namespace
     const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
     const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
+    const float kStageSelectCubeScale = 0.33333334f;
     const std::wstring kAttackClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
@@ -139,6 +140,11 @@ namespace
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const EnemyBase& enemy)
     {
         return enemy.GetPosition() + D3DXVECTOR3(0.0f, kEnemyAttackTargetHeight, 0.0f);
+    }
+
+    bool IsStageSelectId(const std::wstring& stageId)
+    {
+        return stageId.length() >= 6 && stageId.substr(0, 6) == L"select";
     }
 
     bool IsBombAttackType(const PlayerAttackType attackType)
@@ -488,17 +494,20 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     });
     m_destructibleManager.LoadForStage(m_render, initialStage.destructibleCsvPath);
 
-    const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
-                                initialStage.clearPosition.y - 0.5f,
-                               initialStage.clearPosition.z);
-    m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
-                                              goalPos,
-                                              D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                              1.0f,
-                                              -1.0f,
-                                              false,
-                                              false,
-                                              false);
+    if (!IsStageSelectId(initialStage.id))
+    {
+        const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
+                                  initialStage.clearPosition.y - 0.5f,
+                                  initialStage.clearPosition.z);
+        m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
+                                                 goalPos,
+                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                 1.0f,
+                                                 -1.0f,
+                                                 false,
+                                                 false,
+                                                 false);
+    }
 
     InputDevice::Initialize(m_hInstance, m_hWnd);
     InputDevice::SetRemoteDesktopMode(m_remoteDesktopMode);
@@ -2202,7 +2211,7 @@ void GameApp::UpdateHeldWeaponVisibility()
 bool GameApp::IsCurrentStageSelect() const
 {
     const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
-    return currentId.length() >= 6 && currentId.substr(0, 6) == L"select";
+    return IsStageSelectId(currentId);
 }
 
 bool GameApp::IsStagePortalSelectable(const std::wstring& portalId) const
@@ -3252,7 +3261,7 @@ void GameApp::CreateStageSelectCubes()
         const int renderId = m_render.AddMeshMix(cubePath,
                                                   interactable.position,
                                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                  1.0f);
+                                                  kStageSelectCubeScale);
         if (renderId >= 0)
         {
             m_stageSelectCubeMeshIds.push_back(renderId);
@@ -4348,15 +4357,18 @@ void GameApp::LoadCurrentStageObjects()
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
     m_render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
 
-    const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 0.5f, stage.clearPosition.z);
-    m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
-                                             goalPos,
-                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                             1.0f,
-                                             -1.0f,
-                                             false,
-                                             false,
-                                             false);
+    if (!IsStageSelectId(stage.id))
+    {
+        const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 0.5f, stage.clearPosition.z);
+        m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
+                                                 goalPos,
+                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                 1.0f,
+                                                 -1.0f,
+                                                 false,
+                                                 false,
+                                                 false);
+    }
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
