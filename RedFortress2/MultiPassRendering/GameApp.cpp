@@ -11,8 +11,8 @@
 namespace
 {
     const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
-    const std::wstring g_playerMeshPath = L"res\\model2\\marine\\marine.x";
-    const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine\\marine.csv";
+    const std::wstring g_playerMeshPath = L"res\\model2\\marine_512\\marine.x";
+    const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine_512\\marine.csv";
     const std::wstring g_playerIdleAnimName = L"000";
     const std::wstring g_playerWalkAnimName = L"walk";
     const std::wstring g_playerRunAnimName = L"run";
@@ -448,16 +448,15 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.LoadXFileListMoveFromCsv(initialStage.moveCsvPath);
     m_render.SetLoadingScreenProgress(25);
     m_render.Draw();
-    m_playerMeshId = m_render.AddMeshMixSkinAnim(g_playerMeshPath,
-                                                 g_playerAnimCsvPath,
-                                                 initialStage.playerStartPosition,
-                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                 1.0f,
-                                                 NSRender::AnimSetMap(),
-                                                 -1.0f,
-                                                 false,
-                                                 false,
-                                                 NSRender::MeshMixSkinAnimLoadMode::Custom);
+    m_playerMeshId = m_render.AddMeshMixSkinAnim2(g_playerMeshPath,
+                                                  g_playerAnimCsvPath,
+                                                  initialStage.playerStartPosition,
+                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                  1.0f,
+                                                  NSRender::AnimSetMap(),
+                                                  -1.0f,
+                                                  false,
+                                                  false);
     m_render.SetLoadingScreenProgress(40);
     m_render.Draw();
 
