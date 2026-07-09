@@ -284,6 +284,12 @@ void EnemyManager::RegisterEnemyTypes()
     RegisterEnemyType(L"enemy4", L"Enemy4");
     RegisterEnemyType(L"enemy5", L"Enemy5");
     RegisterEnemyType(L"enemy6", L"Enemy6");
+
+    EnemyTypeInfo& enemy2Info = m_typeInfoMap[L"enemy2"];
+    enemy2Info.scale = 3.0f;
+    enemy2Info.maxHp = 15;
+    enemy2Info.contactRadius = 0.75f;
+    enemy2Info.height = 0.75f;
 }
 
 void EnemyManager::RegisterEnemyType(const std::wstring& type,
