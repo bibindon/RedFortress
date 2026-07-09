@@ -136,7 +136,7 @@ namespace
     const int kWeakAttackHitStopFrames = 15;
     const int kStrongAttackHitStopFrames = 15;
 
-    D3DXVECTOR3 GetEnemyAttackTargetPosition(const Enemy& enemy)
+    D3DXVECTOR3 GetEnemyAttackTargetPosition(const EnemyBase& enemy)
     {
         return enemy.GetPosition() + D3DXVECTOR3(0.0f, kEnemyAttackTargetHeight, 0.0f);
     }
@@ -1270,33 +1270,33 @@ void GameApp::Run()
             {
                 for (auto& enemy : m_enemyManager.GetEnemies())
                 {
-                    if (enemy.IsDead())
+                    if (enemy->IsDead())
                     {
                         continue;
                     }
 
-                    if (enemy.IsStompedByPlayer(playerPositionBeforePhysicsUpdate,
+                    if (enemy->IsStompedByPlayer(playerPositionBeforePhysicsUpdate,
                                                 m_playerMover.GetPosition(),
                                                 m_playerMover.IsJumping(),
                                                 m_playerMover.GetVelocity().y))
                     {
-                        enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
-                        m_damagePopupManager.Add(10, enemy.GetPosition(), false);
-                        TryDropEnemyItem(enemy);
+                        enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
+                        m_damagePopupManager.Add(10, enemy->GetPosition(), false);
+                        TryDropEnemyItem(*enemy);
                         GameAudio::PlayStomp();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
                         break;
                     }
-                    else if (m_pickupManager.IsStarActive() && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
+                    else if (m_pickupManager.IsStarActive() && enemy->IsTouchingPlayer(m_playerMover.GetPosition()))
                     {
-                        enemy.TakeDamage(m_render, 10, m_playerMover.GetPosition());
-                        m_damagePopupManager.Add(10, enemy.GetPosition(), false);
-                        TryDropEnemyItem(enemy);
+                        enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
+                        m_damagePopupManager.Add(10, enemy->GetPosition(), false);
+                        TryDropEnemyItem(*enemy);
                         GameAudio::PlayAttackHit();
                         break;
                     }
-                    else if (m_playerInvincibleFrames <= 0 && enemy.IsTouchingPlayer(m_playerMover.GetPosition()))
+                    else if (m_playerInvincibleFrames <= 0 && enemy->IsTouchingPlayer(m_playerMover.GetPosition()))
                     {
                         GameAudio::PlayEnemyAttack();
                         DamagePlayerHp(10);
@@ -1306,7 +1306,7 @@ void GameApp::Run()
                             m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kPlayerInvincibleDuration, 2);
                         }
                         m_playerKnockbackFrames = kKnockbackDurationFrames;
-                        D3DXVECTOR3 knockbackDir = m_playerMover.GetPosition() - enemy.GetPosition();
+                        D3DXVECTOR3 knockbackDir = m_playerMover.GetPosition() - enemy->GetPosition();
                         knockbackDir.y = 0.0f;
                         if (D3DXVec3LengthSq(&knockbackDir) > 0.0001f)
                         {
@@ -1317,7 +1317,7 @@ void GameApp::Run()
                             knockbackDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
                         }
                         m_playerKnockbackDir = knockbackDir;
-                        enemy.MarkAttackedPlayer();
+                        enemy->MarkAttackedPlayer();
                         break;
                     }
                 }
@@ -1986,12 +1986,12 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
 
     for (auto& enemy : m_enemyManager.GetEnemies())
     {
-        if (enemy.IsDead())
+        if (enemy->IsDead())
         {
             continue;
         }
 
-        const D3DXVECTOR3 targetPos = GetEnemyAttackTargetPosition(enemy);
+        const D3DXVECTOR3 targetPos = GetEnemyAttackTargetPosition(*enemy);
         if (fabsf(targetPos.y - attackCenterY) > attackDefinition.verticalRange)
         {
             continue;
@@ -2017,12 +2017,12 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
         const float dot = D3DXVec3Dot(&forward, &dir);
         if (dot > cosf(attackDefinition.halfAngleRadians))
         {
-            enemy.StartKnockbackFrom(playerPos,
+            enemy->StartKnockbackFrom(playerPos,
                                      kEnemyAttackKnockbackDistance,
                                      kEnemyAttackKnockbackFrames);
-            enemy.TakeDamage(m_render, attackDefinition.damage, playerPos);
-            m_damagePopupManager.Add(attackDefinition.damage, enemy.GetPosition(), false);
-            TryDropEnemyItem(enemy);
+            enemy->TakeDamage(m_render, attackDefinition.damage, playerPos);
+            m_damagePopupManager.Add(attackDefinition.damage, enemy->GetPosition(), false);
+            TryDropEnemyItem(*enemy);
             ++damagedCount;
         }
     }
@@ -2030,7 +2030,7 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
     return damagedCount;
 }
 
-void GameApp::TryDropEnemyItem(const Enemy& enemy)
+void GameApp::TryDropEnemyItem(const EnemyBase& enemy)
 {
     if (!enemy.IsDead())
     {
@@ -2225,7 +2225,7 @@ bool GameApp::AreAllStageEnemiesDefeated() const
 {
     for (const auto& enemy : m_enemyManager.GetEnemies())
     {
-        if (!enemy.IsDead())
+        if (!enemy->IsDead())
         {
             return false;
         }
@@ -3865,7 +3865,7 @@ bool GameApp::IsStageClearReached()
 
     for (const auto& enemy : m_enemyManager.GetEnemies())
     {
-        if (!enemy.IsDead())
+        if (!enemy->IsDead())
         {
             return false;
         }
@@ -4751,19 +4751,19 @@ void GameApp::UpdateBombs()
 
             for (auto& enemy : m_enemyManager.GetEnemies())
             {
-                if (enemy.IsDead())
+                if (enemy->IsDead())
                 {
                     continue;
                 }
 
-                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(enemy) - bombPos;
+                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(*enemy) - bombPos;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBombExplosionRadius)
                 {
-                    enemy.TakeDamageWithoutFacing(m_render, kBombExplosionDamage);
-                    enemy.StartKnockbackFrom(bombPos, 0.5f, 30);
-                    m_damagePopupManager.Add(kBombExplosionDamage, enemy.GetPosition(), false);
-                    TryDropEnemyItem(enemy);
+                    enemy->TakeDamageWithoutFacing(m_render, kBombExplosionDamage);
+                    enemy->StartKnockbackFrom(bombPos, 0.5f, 30);
+                    m_damagePopupManager.Add(kBombExplosionDamage, enemy->GetPosition(), false);
+                    TryDropEnemyItem(*enemy);
                 }
             }
 
@@ -4896,19 +4896,19 @@ void GameApp::UpdateBusters()
         {
             for (auto& enemy : m_enemyManager.GetEnemies())
             {
-                if (enemy.IsDead())
+                if (enemy->IsDead())
                 {
                     continue;
                 }
 
-                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(enemy) - it->position;
+                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(*enemy) - it->position;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBusterHitRadius)
                 {
-                    enemy.TakeDamage(m_render, kBusterDamage, it->position);
-                    enemy.StartKnockbackFrom(it->position, 0.3f, 20);
-                    m_damagePopupManager.Add(kBusterDamage, enemy.GetPosition(), false);
-                    TryDropEnemyItem(enemy);
+                    enemy->TakeDamage(m_render, kBusterDamage, it->position);
+                    enemy->StartKnockbackFrom(it->position, 0.3f, 20);
+                    m_damagePopupManager.Add(kBusterDamage, enemy->GetPosition(), false);
+                    TryDropEnemyItem(*enemy);
                     GameAudio::PlayAttackHit();
                     destroyed = true;
                     break;

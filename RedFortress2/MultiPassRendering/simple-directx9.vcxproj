@@ -161,7 +161,14 @@
     <ClCompile Include="StageEditor.cpp" />
     <ClCompile Include="SlideShowManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Enemy3.cpp" />
+    <ClCompile Include="Enemy4.cpp" />
+    <ClCompile Include="Enemy5.cpp" />
+    <ClCompile Include="Enemy6.cpp" />
+    <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyBigWolf.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="EnemyWolf.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="HpBar.cpp" />
     <ClCompile Include="DamagePopupManager.cpp" />

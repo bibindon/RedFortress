@@ -1,7 +1,9 @@
 ﻿#pragma once
 
-#include "Enemy.h"
+#include "EnemyBase.h"
 #include <d3dx9.h>
+#include <functional>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -10,6 +12,14 @@ namespace NSRender
 {
 class Render;
 }
+
+struct FactoryEntry
+{
+    std::wstring meshPath;
+    std::wstring animCsvPath;
+    float scale;
+    std::function<std::unique_ptr<EnemyBase>(const D3DXVECTOR3&, int, float)> create;
+};
 
 class EnemyManager
 {
@@ -21,8 +31,8 @@ public:
     void SyncMeshes(NSRender::Render& render);
     void DrawHpBars(NSRender::Render& render);
 
-    std::vector<Enemy>& GetEnemies();
-    const std::vector<Enemy>& GetEnemies() const;
+    std::vector<std::unique_ptr<EnemyBase>>& GetEnemies();
+    const std::vector<std::unique_ptr<EnemyBase>>& GetEnemies() const;
 
     void SpawnAt(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw);
     void RemoveEnemy(NSRender::Render& render, std::size_t index);
@@ -32,23 +42,10 @@ public:
 private:
     void Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw);
     void RegisterEnemyTypes();
-    void RegisterEnemyType(const std::wstring& type,
-                           const std::wstring& folderName);
 
-    std::vector<Enemy> m_enemies;
+    template<typename T>
+    void RegisterEnemyType(const std::wstring& type, const std::wstring& folderName);
 
-    struct EnemyTypeInfo
-    {
-        std::wstring meshPath;
-        std::wstring animCsvPath;
-        float scale = 2.0f;
-        int maxHp = 10;
-        float moveSpeed = 2.5f;
-        float viewDistance = 12.0f;
-        float contactRadius = 0.5f;
-        float height = 0.5f;
-    };
-
-    bool TryGetTypeInfo(const std::wstring& type, EnemyTypeInfo* typeInfo) const;
-    std::unordered_map<std::wstring, EnemyTypeInfo> m_typeInfoMap;
+    std::vector<std::unique_ptr<EnemyBase>> m_enemies;
+    std::unordered_map<std::wstring, FactoryEntry> m_factory;
 };

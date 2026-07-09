@@ -10,7 +10,7 @@
 #include "resource.h"
 #include "StageManager.h"
 #include "EnemyManager.h"
-#include "Enemy.h"
+#include "EnemyBase.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
@@ -235,11 +235,11 @@ void StageEditor::PopulateList(HWND hDlg)
     }
     else
     {
-        std::vector<Enemy>& enemies = m_enemyManager->GetEnemies();
+        auto& enemies = m_enemyManager->GetEnemies();
         for (std::size_t i = 0; i < enemies.size(); ++i)
         {
-            Enemy& enemy = enemies[i];
-            if (enemy.IsReadyToRemove())
+            auto& enemy = enemies[i];
+            if (enemy->IsReadyToRemove())
             {
                 continue;
             }
@@ -248,11 +248,11 @@ void StageEditor::PopulateList(HWND hDlg)
             lvi.mask = LVIF_TEXT | LVIF_PARAM;
             lvi.iItem = ListView_GetItemCount(hList);
             lvi.lParam = static_cast<LPARAM>(i);
-            lvi.pszText = const_cast<LPWSTR>(enemy.GetType().c_str());
+            lvi.pszText = const_cast<LPWSTR>(enemy->GetType().c_str());
             const int index = ListView_InsertItem(hList, &lvi);
 
-            const D3DXVECTOR3 pos = enemy.GetPosition();
-            const float rotYDeg = enemy.GetYaw() * 180.0f / D3DX_PI;
+            const D3DXVECTOR3 pos = enemy->GetPosition();
+            const float rotYDeg = enemy->GetYaw() * 180.0f / D3DX_PI;
 
             std::wstring posX = std::to_wstring(pos.x);
             std::wstring posY = std::to_wstring(pos.y);
@@ -504,15 +504,15 @@ void StageEditor::OnEnemyListSelChange(HWND hDlg)
     }
 
     const std::size_t index = static_cast<std::size_t>(lvi.lParam);
-    std::vector<Enemy>& enemies = m_enemyManager->GetEnemies();
+    auto& enemies = m_enemyManager->GetEnemies();
     if (index >= enemies.size())
     {
         return;
     }
 
-    const Enemy& enemy = enemies[index];
-    const D3DXVECTOR3 pos = enemy.GetPosition();
-    const float rotYDeg = enemy.GetYaw() * 180.0f / D3DX_PI;
+    const auto& enemy = enemies[index];
+    const D3DXVECTOR3 pos = enemy->GetPosition();
+    const float rotYDeg = enemy->GetYaw() * 180.0f / D3DX_PI;
 
     SetDlgItemText(hDlg, IDC_EDIT_POS_X, std::to_wstring(pos.x).c_str());
     SetDlgItemText(hDlg, IDC_EDIT_POS_Y, std::to_wstring(pos.y).c_str());
@@ -527,7 +527,7 @@ void StageEditor::OnEnemyListSelChange(HWND hDlg)
         {
             wchar_t buf[64] = {};
             SendMessage(hCombo, CB_GETLBTEXT, i, reinterpret_cast<LPARAM>(buf));
-            if (enemy.GetType() == buf)
+            if (enemy->GetType() == buf)
             {
                 SendMessage(hCombo, CB_SETCURSEL, i, 0);
                 break;
@@ -559,7 +559,7 @@ void StageEditor::OnUpdateEnemy(HWND hDlg)
     }
 
     const std::size_t index = static_cast<std::size_t>(lvi.lParam);
-    std::vector<Enemy>& enemies = m_enemyManager->GetEnemies();
+    auto& enemies = m_enemyManager->GetEnemies();
     if (index >= enemies.size())
     {
         return;
@@ -579,9 +579,9 @@ void StageEditor::OnUpdateEnemy(HWND hDlg)
     const float rotYDeg = static_cast<float>(std::wcstod(buf, nullptr));
     const float rotY = D3DXToRadian(rotYDeg);
 
-    enemies[index].SetPosition(D3DXVECTOR3(posX, posY, posZ));
-    enemies[index].SetYaw(rotY);
-    enemies[index].SyncMesh(*m_render);
+    enemies[index]->SetPosition(D3DXVECTOR3(posX, posY, posZ));
+    enemies[index]->SetYaw(rotY);
+    enemies[index]->SyncMesh(*m_render);
 
     HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_ENEMY_TYPE);
     if (hCombo != NULL)
@@ -591,7 +591,7 @@ void StageEditor::OnUpdateEnemy(HWND hDlg)
         {
             wchar_t typeBuf[64] = {};
             SendMessage(hCombo, CB_GETLBTEXT, sel, reinterpret_cast<LPARAM>(typeBuf));
-            enemies[index].SetType(typeBuf);
+            enemies[index]->SetType(typeBuf);
         }
     }
 

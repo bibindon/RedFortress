@@ -150,7 +150,7 @@ private:
     void EnsureGoalArrow();
     void RemoveGoalArrow();
     void UpdateGoalArrow();
-    void TryDropEnemyItem(const Enemy& enemy);
+    void TryDropEnemyItem(const EnemyBase& enemy);
     void InitializeStageSelectCursor();
     void SyncStageSelectPlayerToPortal(bool immediate);
     void MoveStageSelectCursorByDirection(float directionX, float directionY);

@@ -1,5 +1,12 @@
 ﻿#include "EnemyManager.h"
 
+#include "EnemyWolf.h"
+#include "EnemyBigWolf.h"
+#include "Enemy3.h"
+#include "Enemy4.h"
+#include "Enemy5.h"
+#include "Enemy6.h"
+
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Camera.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
@@ -45,6 +52,20 @@ namespace
     }
 }
 
+template<typename T>
+void EnemyManager::RegisterEnemyType(const std::wstring& type, const std::wstring& folderName)
+{
+    const std::wstring basePath = L"res\\model2\\" + folderName + L"\\";
+    m_factory[type] = {
+        basePath + L"wolfAnim.x",
+        basePath + L"wolfAnim.csv",
+        T::GetScale(),
+        [](const D3DXVECTOR3& pos, int meshId, float yaw) {
+            return std::make_unique<T>(pos, meshId, yaw);
+        }
+    };
+}
+
 void EnemyManager::Initialize()
 {
     m_enemies.clear();
@@ -55,7 +76,7 @@ void EnemyManager::Clear(NSRender::Render& render)
 {
     for (auto it = m_enemies.rbegin(); it != m_enemies.rend(); ++it)
     {
-        const int meshId = it->GetMeshId();
+        const int meshId = (*it)->GetMeshId();
         if (meshId >= 0)
         {
             render.RemoveMeshMixSkinAnim(meshId);
@@ -109,14 +130,14 @@ void EnemyManager::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos
 {
     for (auto& enemy : m_enemies)
     {
-        enemy.Update(render, playerPos, playerInvincible);
+        enemy->Update(render, playerPos, playerInvincible);
     }
 
     for (auto it = m_enemies.begin(); it != m_enemies.end();)
     {
-        if (it->IsReadyToRemove())
+        if ((*it)->IsReadyToRemove())
         {
-            const int meshId = it->GetMeshId();
+            const int meshId = (*it)->GetMeshId();
             if (meshId >= 0)
             {
                 render.StopMeshMixSkinAnimBlink(meshId);
@@ -135,7 +156,7 @@ void EnemyManager::SyncMeshes(NSRender::Render& render)
 {
     for (auto& enemy : m_enemies)
     {
-        enemy.SyncMesh(render);
+        enemy->SyncMesh(render);
     }
 }
 
@@ -145,19 +166,19 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
 
     for (const auto& enemy : m_enemies)
     {
-        if (enemy.IsDead())
+        if (enemy->IsDead())
         {
             continue;
         }
 
-        const int hp = enemy.GetHp();
-        const int maxHp = enemy.GetMaxHp();
+        const int hp = enemy->GetHp();
+        const int maxHp = enemy->GetMaxHp();
         if (maxHp <= 0)
         {
             continue;
         }
 
-        const D3DXVECTOR3 barPos = enemy.GetPosition() + D3DXVECTOR3(0.0f, 1.5f, 0.0f);
+        const D3DXVECTOR3 barPos = enemy->GetPosition() + D3DXVECTOR3(0.0f, 1.5f, 0.0f);
         const POINT screenPos = NSRender::Camera::GetScreenPos(barPos);
         if (screenPos.x < 0 || screenPos.y < 0)
         {
@@ -195,12 +216,12 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
     }
 }
 
-std::vector<Enemy>& EnemyManager::GetEnemies()
+std::vector<std::unique_ptr<EnemyBase>>& EnemyManager::GetEnemies()
 {
     return m_enemies;
 }
 
-const std::vector<Enemy>& EnemyManager::GetEnemies() const
+const std::vector<std::unique_ptr<EnemyBase>>& EnemyManager::GetEnemies() const
 {
     return m_enemies;
 }
@@ -217,7 +238,7 @@ void EnemyManager::RemoveEnemy(NSRender::Render& render, std::size_t index)
         return;
     }
 
-    const int meshId = m_enemies[index].GetMeshId();
+    const int meshId = m_enemies[index]->GetMeshId();
     if (meshId >= 0)
     {
         render.StopMeshMixSkinAnimBlink(meshId);
@@ -231,7 +252,7 @@ void EnemyManager::RemoveAll(NSRender::Render& render)
 {
     for (auto it = m_enemies.rbegin(); it != m_enemies.rend(); ++it)
     {
-        const int meshId = it->GetMeshId();
+        const int meshId = (*it)->GetMeshId();
         if (meshId >= 0)
         {
             render.StopMeshMixSkinAnimBlink(meshId);
@@ -255,18 +276,18 @@ void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
 
     for (const auto& enemy : m_enemies)
     {
-        if (enemy.IsReadyToRemove())
+        if (enemy->IsReadyToRemove())
         {
             continue;
         }
 
         std::vector<std::wstring> row;
-        row.push_back(enemy.GetType());
-        row.push_back(std::to_wstring(enemy.GetPosition().x));
-        row.push_back(std::to_wstring(enemy.GetPosition().y));
-        row.push_back(std::to_wstring(enemy.GetPosition().z));
+        row.push_back(enemy->GetType());
+        row.push_back(std::to_wstring(enemy->GetPosition().x));
+        row.push_back(std::to_wstring(enemy->GetPosition().y));
+        row.push_back(std::to_wstring(enemy->GetPosition().z));
 
-        const float rotYDeg = enemy.GetYaw() * 180.0f / D3DX_PI;
+        const float rotYDeg = enemy->GetYaw() * 180.0f / D3DX_PI;
         row.push_back(std::to_wstring(rotYDeg));
 
         csvData.push_back(row);
@@ -277,81 +298,38 @@ void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
 
 void EnemyManager::RegisterEnemyTypes()
 {
-    m_typeInfoMap.clear();
-    RegisterEnemyType(L"wolf", L"separatedAnim");
-    RegisterEnemyType(L"enemy2", L"Enemy2");
-    RegisterEnemyType(L"enemy3", L"Enemy3");
-    RegisterEnemyType(L"enemy4", L"Enemy4");
-    RegisterEnemyType(L"enemy5", L"Enemy5");
-    RegisterEnemyType(L"enemy6", L"Enemy6");
-
-    EnemyTypeInfo& enemy2Info = m_typeInfoMap[L"enemy2"];
-    enemy2Info.scale = 3.0f;
-    enemy2Info.maxHp = 15;
-    enemy2Info.contactRadius = 0.75f;
-    enemy2Info.height = 0.75f;
-}
-
-void EnemyManager::RegisterEnemyType(const std::wstring& type,
-                                     const std::wstring& folderName)
-{
-    const std::wstring basePath = L"res\\model2\\" + folderName + L"\\";
-    EnemyTypeInfo info;
-    info.meshPath = basePath + L"wolfAnim.x";
-    info.animCsvPath = basePath + L"wolfAnim.csv";
-    m_typeInfoMap[type] = info;
-}
-
-bool EnemyManager::TryGetTypeInfo(const std::wstring& type,
-                                  EnemyTypeInfo* typeInfo) const
-{
-    if (typeInfo == nullptr)
-    {
-        return false;
-    }
-
-    const auto found = m_typeInfoMap.find(type);
-    if (found == m_typeInfoMap.end())
-    {
-        return false;
-    }
-
-    *typeInfo = found->second;
-    return true;
+    m_factory.clear();
+    RegisterEnemyType<EnemyWolf>(L"wolf", L"separatedAnim");
+    RegisterEnemyType<EnemyBigWolf>(L"enemy2", L"Enemy2");
+    RegisterEnemyType<Enemy3>(L"enemy3", L"Enemy3");
+    RegisterEnemyType<Enemy4>(L"enemy4", L"Enemy4");
+    RegisterEnemyType<Enemy5>(L"enemy5", L"Enemy5");
+    RegisterEnemyType<Enemy6>(L"enemy6", L"Enemy6");
 }
 
 void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
 {
-    EnemyTypeInfo info;
-    if (!TryGetTypeInfo(type, &info))
+    const auto found = m_factory.find(type);
+    if (found == m_factory.end())
     {
         return;
     }
 
-    const int meshId = render.AddMeshMixSkinAnim(info.meshPath,
-                                                 info.animCsvPath,
-                                                 position,
-                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                 info.scale,
-                                                 NSRender::AnimSetMap(),
-                                                 -1.0f,
-                                                 false,
-                                                 false,
-                                                 NSRender::MeshMixSkinAnimLoadMode::Custom);
+    const FactoryEntry& entry = found->second;
+    const int meshId = render.AddMeshMixSkinAnim(entry.meshPath,
+                                                  entry.animCsvPath,
+                                                  position,
+                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                  entry.scale,
+                                                  NSRender::AnimSetMap(),
+                                                  -1.0f,
+                                                  false,
+                                                  false,
+                                                  NSRender::MeshMixSkinAnimLoadMode::Custom);
     if (meshId < 0)
     {
         return;
     }
 
-    Enemy enemy;
-    enemy.Initialize(position,
-                     meshId,
-                     type,
-                     yaw,
-                     info.maxHp,
-                     info.moveSpeed,
-                     info.viewDistance,
-                     info.contactRadius,
-                     info.height);
-    m_enemies.push_back(enemy);
+    m_enemies.push_back(entry.create(position, meshId, yaw));
 }
