@@ -131,12 +131,12 @@ namespace
     const int kBusterRapidLevelMax = 8;
     const int kBusterCooldownByLevel[kBusterRapidLevelMax] = { 24, 20, 16, 12, 9, 6, 4, 3 };
     const float kEnemyAttackTargetHeight = 1.0f;
-    const int kAmmoGaugeX = 54;
+    const int kAmmoGaugeX = 130;
     const int kAmmoGaugeY = 78;
     const int kAmmoRailHeight = 5;
     const int kAmmoRailOffsetY = 11;
     const int kAmmoBeadSize = 14;
-    const int kAmmoBeadStep = 17;
+    const int kAmmoBeadStep = 15;
     const int kWeakAttackHitStopFrames = 15;
     const int kStrongAttackHitStopFrames = 15;
 
