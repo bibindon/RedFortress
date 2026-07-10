@@ -169,10 +169,10 @@ void PauseMenu::Toggle()
         return;
     }
 
-    Open();
+    Open(m_saveEnabled);
 }
 
-void PauseMenu::Open()
+void PauseMenu::Open(const bool saveEnabled)
 {
     if (m_render == nullptr)
     {
@@ -184,6 +184,7 @@ void PauseMenu::Open()
     m_showExitConfirm = false;
     m_showSaveConfirm = false;
     m_saveRequested = false;
+    m_saveEnabled = saveEnabled;
     m_skipInputFrame = true;
     m_focusArea = FocusArea::TopMenu;
     m_selectedSettingsRow = SettingsRow::Resolution;
@@ -337,21 +338,13 @@ void PauseMenu::UpdateTopMenu()
     const int previousIndex = m_selectedTopMenuIndex;
     if (IsMenuLeftPressed())
     {
-        --m_selectedTopMenuIndex;
-        if (m_selectedTopMenuIndex < 0)
-        {
-            m_selectedTopMenuIndex = kTopMenuCount - 1;
-        }
+        MoveTopMenuSelection(-1);
         m_activeTopMenuIndex = -1;
     }
 
     if (IsMenuRightPressed())
     {
-        ++m_selectedTopMenuIndex;
-        if (m_selectedTopMenuIndex >= kTopMenuCount)
-        {
-            m_selectedTopMenuIndex = 0;
-        }
+        MoveTopMenuSelection(1);
         m_activeTopMenuIndex = -1;
     }
 
@@ -372,6 +365,11 @@ void PauseMenu::UpdateTopMenu()
         int clickedMenuIndex = -1;
         if (TryGetTopMenuIndexFromPoint(baseMouseX, baseMouseY, &clickedMenuIndex))
         {
+            if (!IsTopMenuItemEnabled(clickedMenuIndex))
+            {
+                return;
+            }
+
             if (clickedMenuIndex != m_selectedTopMenuIndex)
             {
                 m_selectedTopMenuIndex = clickedMenuIndex;
@@ -411,6 +409,11 @@ void PauseMenu::UpdateTopMenu()
 
     if (IsMenuConfirmPressed())
     {
+        if (!IsTopMenuItemEnabled(m_selectedTopMenuIndex))
+        {
+            return;
+        }
+
         GameAudio::PlayMenuConfirm();
         m_activeTopMenuIndex = m_selectedTopMenuIndex;
         if (m_activeTopMenuIndex == kItemMenuIndex)
@@ -960,7 +963,11 @@ void PauseMenu::RenderTopMenu()
         const int menuIndex = static_cast<int>(i);
         const int x = kTopMenuX + menuIndex * kTopMenuItemInterval;
         UINT color = kInactiveTextColor;
-        if (menuIndex == m_selectedTopMenuIndex)
+        if (!IsTopMenuItemEnabled(menuIndex))
+        {
+            color = D3DCOLOR_RGBA(110, 115, 125, 180);
+        }
+        else if (menuIndex == m_selectedTopMenuIndex)
         {
             color = kSelectedTextColor;
         }
@@ -972,6 +979,39 @@ void PauseMenu::RenderTopMenu()
                                    kTopMenuItemWidth,
                                    kTopMenuItemHeight,
                                    color);
+    }
+}
+
+bool PauseMenu::IsTopMenuItemEnabled(const int menuIndex) const
+{
+    if (menuIndex == kSaveMenuIndex)
+    {
+        return m_saveEnabled;
+    }
+
+    return true;
+}
+
+void PauseMenu::MoveTopMenuSelection(const int direction)
+{
+    int nextIndex = m_selectedTopMenuIndex;
+    for (int i = 0; i < kTopMenuCount; ++i)
+    {
+        nextIndex += direction;
+        if (nextIndex < 0)
+        {
+            nextIndex = kTopMenuCount - 1;
+        }
+        else if (nextIndex >= kTopMenuCount)
+        {
+            nextIndex = 0;
+        }
+
+        if (IsTopMenuItemEnabled(nextIndex))
+        {
+            m_selectedTopMenuIndex = nextIndex;
+            return;
+        }
     }
 }
 

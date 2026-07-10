@@ -707,7 +707,6 @@ void GameApp::Run()
             GameAudio::PlayEndingMusic();
         }
         if (m_gameState == GameState::Playing &&
-            !IsCurrentStageSelect() &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
@@ -715,7 +714,7 @@ void GameApp::Run()
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
              InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START)))
         {
-            m_pauseMenu.Open();
+            m_pauseMenu.Open(IsCurrentStageSelect());
         }
 
         if (m_gameState != GameState::EndingFin &&
@@ -957,7 +956,10 @@ void GameApp::Run()
                 }
                 if (m_pauseMenu.ConsumeSaveRequested())
                 {
-                    m_saveDataManager.Save();
+                    if (IsCurrentStageSelect())
+                    {
+                        m_saveDataManager.Save();
+                    }
                 }
                 if (!IsCurrentStageSelect())
                 {

@@ -21,7 +21,7 @@ public:
                     bool& mouseCursorVisible,
                     InventoryManager& inventory);
     void Toggle();
-    void Open();
+    void Open(bool saveEnabled);
     void Close();
     void Update();
     void Render(const std::wstring& stageName, int lives);
@@ -107,6 +107,8 @@ private:
     std::vector<std::size_t> GetOwnedItemIndices() const;
     std::vector<std::size_t> GetOwnedWeaponIndices() const;
     void SetMouseCursorVisible(bool visible);
+    bool IsTopMenuItemEnabled(int menuIndex) const;
+    void MoveTopMenuSelection(int direction);
     bool TryGetTopMenuIndexFromPoint(long x, long y, int* outMenuIndex) const;
     static bool IsPointInRect(long x, long y, int left, int top, int width, int height);
 
@@ -118,6 +120,7 @@ private:
     bool m_showExitConfirm = false;
     bool m_skipInputFrame = false;
     bool m_saveRequested = false;
+    bool m_saveEnabled = false;
     bool m_showSaveConfirm = false;
     int m_selectedSaveConfirmIndex = 0;
     FocusArea m_focusArea = FocusArea::TopMenu;
