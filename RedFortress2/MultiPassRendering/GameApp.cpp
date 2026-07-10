@@ -44,6 +44,9 @@ namespace
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
     const std::wstring kAttackBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
+    const int kAttackTypeHudX = 42;
+    const int kAttackTypeHudY = 86;
+    const int kAttackTypeIconSize = 77;
     const std::wstring kAmmoRailImagePath = L"res\\2D_Image\\ammo_rail.png";
     const std::wstring kAmmoBeadFullImagePath = L"res\\2D_Image\\ammo_bead_full.png";
     const std::wstring kAmmoBeadEmptyImagePath = L"res\\2D_Image\\ammo_bead_empty.png";
@@ -1007,9 +1010,6 @@ void GameApp::Run()
                 {
                     m_hpBar.Draw();
                     DrawAmmoGauge();
-                    const int kAttackTypeHudX = 48;
-                    const int kAttackTypeHudY = 92;
-                    const int kAttackTypeIconSize = 64;
                     m_render.DrawImageSized(GetAttackIconPath(m_playerAttackController.GetAttackType(false)),
                                             kAttackTypeHudX,
                                             kAttackTypeHudY,
@@ -1210,9 +1210,6 @@ void GameApp::Run()
             {
                 m_hpBar.Draw();
                 DrawAmmoGauge();
-                const int kAttackTypeHudX = 48;
-                const int kAttackTypeHudY = 92;
-                const int kAttackTypeIconSize = 64;
                 m_render.DrawImageSized(GetAttackIconPath(m_playerAttackController.GetAttackType(false)),
                                         kAttackTypeHudX,
                                         kAttackTypeHudY,
