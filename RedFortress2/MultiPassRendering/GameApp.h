@@ -91,6 +91,9 @@ private:
     void UpdateTitleByInput();
     void UpdateStageClear();
     bool IsStageClearReached();
+    void BeginStageClearVisual();
+    void UpdateStageClearVisual();
+    void RestoreStageClearVisual();
     bool StartNextStage();
     std::wstring GetStageStoryScriptPath(const std::wstring& stageId,
                                          const std::wstring& timing) const;
@@ -273,6 +276,13 @@ private:
     bool m_playerFallingDead = false;
     int m_fallDeathFrames = 0;
     bool m_stageClearProcessed = false;
+    bool m_stageClearWasFirstClear = false;
+    int m_stageClearFrame = 0;
+    D3DXVECTOR3 m_stageClearCameraStartPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_stageClearCameraStartTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_stageClearCameraEndPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_stageClearCameraEndTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    float m_stageClearStoredFovDegrees = 90.0f;
     bool m_startStageAfterSlideShow = false;
     std::size_t m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);
     StageEditor m_stageEditor;

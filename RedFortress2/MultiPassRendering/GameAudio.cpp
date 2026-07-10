@@ -285,6 +285,7 @@ void PlayBombPlace() { PlayEffect(kBombPlace, 78); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }
 void PlayWeaponChange() { PlayEffect(kWeaponChange, 72); }
+void PlayStageClear() { PlayEffect(kQteBest, 86); }
 void PlayQteStart() { PlayEffect(kQte, 70); }
 void PlayQteStop() { PlayEffect(kStageSelectConfirm, 70); }
 void PlayQteSuccess() { PlayEffect(kQteBest, 82); }

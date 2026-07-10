@@ -35,6 +35,7 @@ void PlayBombPlace();
 void PlayStomp();
 void PlayBuster();
 void PlayWeaponChange();
+void PlayStageClear();
 void PlayQteStart();
 void PlayQteStop();
 void PlayQteSuccess();

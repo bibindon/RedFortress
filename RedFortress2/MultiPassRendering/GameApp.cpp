@@ -101,6 +101,19 @@ namespace
     const int kStageIntroOutFrames = 25;
     const int kLetterboxBarHeight = 130;
     const std::wstring kLetterboxBarImagePath = L"res\\2D_Image\\black2x2.bmp";
+    const std::wstring kStageClearRingImagePath = L"res\\2D_Image\\stage_clear_ring.png";
+    const std::wstring kStageClearSparklesImagePath = L"res\\2D_Image\\stage_clear_sparkles.png";
+    const std::wstring kStageClearFrameImagePath = L"res\\2D_Image\\stage_clear_frame.png";
+    const std::wstring kStageClearFlashImagePath = L"res\\2D_Image\\white_bar.bmp";
+    const int kStageClearCameraMoveFrames = 45;
+    const int kStageClearIdleFrame = 12;
+    const int kStageClearSlashFrame = 28;
+    const int kStageClearSlashEndFrame = 82;
+    const int kStageClearTitleFrame = 58;
+    const int kStageClearInputFrame = 135;
+    const int kStageClearFinalAutoFrame = 240;
+    const int kStageClearLetterboxHeight = 90;
+    const float kStageClearTargetFovDegrees = 58.0f;
     const int kQteVisualRestoreFrames = 24;
     const float kQteVisualMinSaturate = 0.10f;
     const float kQteVisualMaxFovReduction = 18.0f;
@@ -1469,6 +1482,7 @@ void GameApp::Run()
                 ClearBusters();
                 m_gameState = GameState::StageClear;
                 m_stageClearProcessed = false;
+                m_stageClearFrame = 0;
             }
 
             if (m_playerMover.JustJumped())
@@ -3935,6 +3949,7 @@ void GameApp::UpdateStageClear()
     const std::wstring clearedStageId = m_stageManager.GetCurrentStage().id;
     if (!m_stageClearProcessed)
     {
+        m_stageClearWasFirstClear = !m_saveDataManager.IsStageCleared(clearedStageId);
         m_saveDataManager.MarkStageCleared(clearedStageId);
         m_saveDataManager.MarkStageUnlocked(clearedStageId);
 
@@ -3945,20 +3960,40 @@ void GameApp::UpdateStageClear()
             m_saveDataManager.MarkStageUnlocked(id);
         }
 
+        BeginStageClearVisual();
         m_stageClearProcessed = true;
     }
 
-    if (m_stageManager.GetCurrentStage().id == L"4-8")
+    UpdateStageClearVisual();
+
+    bool proceedToNextScene = false;
+    if (m_stageClearFrame >= kStageClearInputFrame)
     {
-        m_slideShowManager.Start(L"res\\script\\ending.csv");
-        m_slideShowManager.SetStopOnFinish(false);
-        m_gameState = GameState::Ending;
-        return;
+        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
+            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+            InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
+        {
+            proceedToNextScene = true;
+        }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    const bool isFinalStage = m_stageManager.GetCurrentStage().id == L"4-8";
+    if (isFinalStage && m_stageClearFrame >= kStageClearFinalAutoFrame)
     {
+        proceedToNextScene = true;
+    }
+
+    if (proceedToNextScene)
+    {
+        RestoreStageClearVisual();
+        if (isFinalStage)
+        {
+            m_slideShowManager.Start(L"res\\script\\ending.csv");
+            m_slideShowManager.SetStopOnFinish(false);
+            m_gameState = GameState::Ending;
+            return;
+        }
+
         const std::wstring storyScriptPath = GetStageStoryScriptPath(clearedStageId, L"After");
         if (!storyScriptPath.empty())
         {
@@ -3976,6 +4011,105 @@ void GameApp::UpdateStageClear()
 
     DrawStageClear();
     m_render.Draw();
+}
+
+void GameApp::BeginStageClearVisual()
+{
+    m_stageClearFrame = 0;
+    m_stageClearCameraStartPos = m_render.GetCameraPos();
+    m_stageClearCameraStartTarget = m_render.GetLookAtPos();
+    m_stageClearStoredFovDegrees = m_render.GetCameraHorizontalFovDegrees();
+
+    const D3DXVECTOR3 playerPosition = m_playerMover.GetPosition();
+    m_stageClearCameraEndTarget = playerPosition + D3DXVECTOR3(0.0f, 1.05f, 0.0f);
+    D3DXVECTOR3 playerForward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+    if (D3DXVec3LengthSq(&playerForward) <= 0.0001f)
+    {
+        playerForward = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+    }
+    D3DXVec3Normalize(&playerForward, &playerForward);
+    const D3DXVECTOR3 desiredCameraPosition = m_stageClearCameraEndTarget +
+                                               playerForward * 5.0f +
+                                               D3DXVECTOR3(0.0f, 1.2f, 0.0f);
+    m_stageClearCameraEndPos = m_cameraMover.ResolvePosition(m_stageClearCameraEndTarget,
+                                                             desiredCameraPosition);
+
+    if (m_goalMarkerMeshId >= 0)
+    {
+        m_render.RemoveMeshMix(m_goalMarkerMeshId);
+        m_goalMarkerMeshId = -1;
+    }
+    RemoveGoalArrow();
+
+    if (m_playerMeshId >= 0)
+    {
+        m_playerAnimState = PlayerAnimState::Run;
+        m_playerAnimationSpeed = 0.45f;
+        m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerRunAnimName);
+    }
+
+    m_render.SetCameraShakeDuration(0.18f);
+    m_render.SetCameraShakeIntensity(0.035f);
+}
+
+void GameApp::UpdateStageClearVisual()
+{
+    const float rawCameraT = static_cast<float>(m_stageClearFrame + 1) /
+                             static_cast<float>(kStageClearCameraMoveFrames);
+    const float cameraT = SmoothStep01(rawCameraT);
+    const D3DXVECTOR3 cameraPosition = LerpVector3(m_stageClearCameraStartPos,
+                                                   m_stageClearCameraEndPos,
+                                                   cameraT);
+    const D3DXVECTOR3 cameraTarget = LerpVector3(m_stageClearCameraStartTarget,
+                                                 m_stageClearCameraEndTarget,
+                                                 cameraT);
+    const float fovDegrees = LerpFloat(m_stageClearStoredFovDegrees,
+                                       kStageClearTargetFovDegrees,
+                                       cameraT);
+    m_render.SetCamera(cameraPosition, cameraTarget);
+    m_render.SetCameraHorizontalFovDegrees(fovDegrees);
+
+    if (m_stageClearFrame == kStageClearIdleFrame && m_playerMeshId >= 0)
+    {
+        SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+    }
+
+    if (m_stageClearFrame == kStageClearSlashFrame && m_playerMeshId >= 0)
+    {
+        m_playerAnimState = PlayerAnimState::Attack;
+        m_playerAnimationSpeed = 0.85f;
+        m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"slash2");
+        GameAudio::PlayPlayerAttack();
+        m_render.SetCameraShakeDuration(0.16f);
+        m_render.SetCameraShakeIntensity(0.025f);
+    }
+
+    if (m_stageClearFrame == kStageClearTitleFrame)
+    {
+        GameAudio::PlayStageClear();
+    }
+
+    if (m_stageClearFrame == kStageClearSlashEndFrame && m_playerMeshId >= 0)
+    {
+        SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+    }
+
+    ++m_stageClearFrame;
+}
+
+void GameApp::RestoreStageClearVisual()
+{
+    m_render.SetCameraHorizontalFovDegrees(m_stageClearStoredFovDegrees);
+    m_render.SetCamera(m_stageClearCameraStartPos, m_stageClearCameraStartTarget);
+    m_render.SetCameraShakeDuration(0.0f);
+    m_render.SetCameraShakeIntensity(0.0f);
+    if (m_playerMeshId >= 0)
+    {
+        SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+    }
+    m_stageClearFrame = 0;
 }
 
 std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId,
@@ -4765,7 +4899,7 @@ void GameApp::DrawStageClear()
 {
     if (m_stageClearFontId < 0)
     {
-        m_stageClearFontId = m_render.SetUpFont(L"BIZ UDGothic", 64, D3DCOLOR_RGBA(255, 255, 255, 255));
+        m_stageClearFontId = m_render.SetUpFont(L"BIZ UDGothic", 60, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
     if (m_stageClearHintFontId < 0)
@@ -4773,21 +4907,134 @@ void GameApp::DrawStageClear()
         m_stageClearHintFontId = m_render.SetUpFont(L"BIZ UDGothic", 24, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    if (m_stageManager.GetCurrentStage().id == L"4-8")
+    m_render.DrawImageSized(kLetterboxBarImagePath,
+                            0,
+                            0,
+                            NSRender::Common::BASE_W,
+                            NSRender::Common::BASE_H,
+                            58);
+
+    if (m_stageClearFrame < 14)
     {
-        m_render.DrawTextCenter(m_stageClearFontId, L"All Clear", 0, 330, NSRender::Common::BASE_W, 100);
-        return;
+        const float flashT = static_cast<float>(m_stageClearFrame) / 14.0f;
+        const int flashAlpha = static_cast<int>((1.0f - flashT) * 210.0f);
+        m_render.DrawImageSized(kStageClearFlashImagePath,
+                                0,
+                                0,
+                                NSRender::Common::BASE_W,
+                                NSRender::Common::BASE_H,
+                                flashAlpha);
     }
 
-    const std::wstring clearText = m_stageManager.GetCurrentStageDisplayName() + L" Clear";
-    m_render.DrawTextCenter(m_stageClearFontId, clearText, 0, 300, NSRender::Common::BASE_W, 100);
-    m_render.DrawTextCenter(m_stageClearHintFontId,
-                            L"Space / Enter で次のステージへ",
-                            0,
-                            405,
-                            NSRender::Common::BASE_W,
-                            50,
-                            D3DCOLOR_RGBA(255, 255, 255, 220));
+    if (m_stageClearFrame >= 12)
+    {
+        const float ringRawT = static_cast<float>(m_stageClearFrame - 12) / 38.0f;
+        const float ringT = SmoothStep01(ringRawT);
+        const int ringSize = static_cast<int>(300.0f + 340.0f * ringT);
+        const int ringAlpha = static_cast<int>(210.0f * ringT);
+        m_render.DrawImageSized(kStageClearRingImagePath,
+                                (NSRender::Common::BASE_W - ringSize) / 2,
+                                72 + (640 - ringSize) / 2,
+                                ringSize,
+                                ringSize,
+                                ringAlpha);
+    }
+
+    if (m_stageClearFrame >= 26)
+    {
+        const float sparklesRawT = static_cast<float>(m_stageClearFrame - 26) / 44.0f;
+        const float sparklesT = SmoothStep01(sparklesRawT);
+        const int sparklesWidth = static_cast<int>(760.0f + 300.0f * sparklesT);
+        const int sparklesHeight = static_cast<int>(570.0f + 170.0f * sparklesT);
+        const int sparklesAlpha = static_cast<int>(190.0f * sparklesT);
+        m_render.DrawImageSized(kStageClearSparklesImagePath,
+                                (NSRender::Common::BASE_W - sparklesWidth) / 2,
+                                40,
+                                sparklesWidth,
+                                sparklesHeight,
+                                sparklesAlpha);
+    }
+
+    if (m_stageClearFrame >= kStageClearTitleFrame)
+    {
+        const float titleRawT = static_cast<float>(m_stageClearFrame - kStageClearTitleFrame) / 22.0f;
+        const float titleT = SmoothStep01(titleRawT);
+        const int frameWidth = static_cast<int>(880.0f + 220.0f * titleT);
+        const int frameHeight = static_cast<int>(340.0f + 80.0f * titleT);
+        const int frameAlpha = static_cast<int>(255.0f * titleT);
+        m_render.DrawImageSized(kStageClearFrameImagePath,
+                                (NSRender::Common::BASE_W - frameWidth) / 2,
+                                360 + (420 - frameHeight) / 2,
+                                frameWidth,
+                                frameHeight,
+                                frameAlpha);
+
+        std::wstring clearText = L"STAGE CLEAR";
+        if (m_stageManager.GetCurrentStage().id == L"4-8")
+        {
+            clearText = L"ALL CLEAR";
+        }
+        m_render.DrawTextCenter(m_stageClearFontId,
+                                clearText,
+                                0,
+                                510,
+                                NSRender::Common::BASE_W,
+                                82,
+                                D3DCOLOR_RGBA(255, 245, 205, frameAlpha));
+        m_render.DrawTextCenter(m_stageClearHintFontId,
+                                m_stageManager.GetCurrentStageDisplayName(),
+                                0,
+                                592,
+                                NSRender::Common::BASE_W,
+                                42,
+                                D3DCOLOR_RGBA(205, 235, 255, frameAlpha));
+
+        if (m_stageClearWasFirstClear)
+        {
+            m_render.DrawTextCenter(m_stageClearHintFontId,
+                                    L"NEW CLEAR",
+                                    0,
+                                    458,
+                                    NSRender::Common::BASE_W,
+                                    40,
+                                    D3DCOLOR_RGBA(255, 210, 90, frameAlpha));
+        }
+    }
+
+    if (m_stageClearFrame >= kStageClearInputFrame)
+    {
+        std::wstring promptText = L"Space / Enter / A でステージセレクトへ";
+        if (m_stageManager.GetCurrentStage().id == L"4-8")
+        {
+            promptText = L"Space / Enter / A でエンディングへ";
+        }
+        m_render.DrawTextCenter(m_stageClearHintFontId,
+                                promptText,
+                                0,
+                                735,
+                                NSRender::Common::BASE_W,
+                                42,
+                                D3DCOLOR_RGBA(255, 255, 255, 225));
+    }
+
+    const float letterboxRawT = static_cast<float>(m_stageClearFrame) / 28.0f;
+    const float letterboxT = SmoothStep01(letterboxRawT);
+    const int letterboxHeight = static_cast<int>(static_cast<float>(kStageClearLetterboxHeight) * letterboxT);
+    if (letterboxHeight > 0)
+    {
+        m_render.DrawImageSized(kLetterboxBarImagePath,
+                                0,
+                                0,
+                                NSRender::Common::BASE_W,
+                                letterboxHeight,
+                                255);
+        m_render.DrawImageSized(kLetterboxBarImagePath,
+                                0,
+                                NSRender::Common::BASE_H - letterboxHeight,
+                                NSRender::Common::BASE_W,
+                                letterboxHeight,
+                                255);
+    }
 }
 
 void GameApp::DrawEndingFin()
