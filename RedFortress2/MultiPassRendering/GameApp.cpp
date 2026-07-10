@@ -1079,6 +1079,26 @@ void GameApp::Run()
                             sprButton->app = this;
                             sprButton->Load(L"res\\2D_Image\\qte_button.png");
                             m_qte->SetCircleSprites(sprGrowingCircle, sprTargetCircle, sprButton, 1600, 900);
+
+                            QteSprite* sprSuccessBurst = new QteSprite();
+                            sprSuccessBurst->app = this;
+                            sprSuccessBurst->Load(L"res\\2D_Image\\qte_best_burst.png");
+                            QteSprite* sprSuccessWave = new QteSprite();
+                            sprSuccessWave->app = this;
+                            sprSuccessWave->Load(L"res\\2D_Image\\qte_best_wave.png");
+                            QteSprite* sprSuccessSparkles = new QteSprite();
+                            sprSuccessSparkles->app = this;
+                            sprSuccessSparkles->Load(L"res\\2D_Image\\qte_best_sparkles.png");
+                            m_qte->SetSuccessEffectSprites(sprSuccessBurst, sprSuccessWave, sprSuccessSparkles);
+
+                            QteSprite* sprNormalWave = new QteSprite();
+                            sprNormalWave->app = this;
+                            sprNormalWave->Load(L"res\\2D_Image\\qte_normal_wave.png");
+                            QteSprite* sprFailureImpact = new QteSprite();
+                            sprFailureImpact->app = this;
+                            sprFailureImpact->Load(L"res\\2D_Image\\qte_failure_impact.png");
+                            m_qte->SetResultEffectSprites(sprNormalWave, sprFailureImpact);
+
                             GameAudio::PlayQteStart();
                             BeginQteVisualEffect();
                             m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
