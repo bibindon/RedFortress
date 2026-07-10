@@ -21,12 +21,13 @@ public:
                     bool& mouseCursorVisible,
                     InventoryManager& inventory);
     void Toggle();
-    void Open(bool saveEnabled);
+    void Open(bool saveEnabled, bool returnToStageSelectEnabled);
     void Close();
     void Update();
     void Render(const std::wstring& stageName, int lives);
     bool ConsumeExitRequested();
     bool ConsumeSaveRequested();
+    bool ConsumeReturnToStageSelectRequested();
     bool IsOpen() const;
     bool BlocksGameInput() const;
     void SetItemUseCallback(std::function<bool(const std::wstring&)> callback);
@@ -57,7 +58,8 @@ private:
         TopMenu,
         ItemList,
         WeaponList,
-        SettingsPanel
+        SettingsPanel,
+        ExitPanel
     };
 
     enum class SettingsRow
@@ -73,6 +75,7 @@ private:
     void UpdateItemList();
     void UpdateWeaponList();
     void UpdateSettingsPanel();
+    void UpdateExitPanel();
     void UpdateExitConfirm();
     void UpdateSaveConfirm();
     bool IsUsableItem(const std::wstring& itemId) const;
@@ -82,6 +85,7 @@ private:
     void RenderTopMenu();
     void RenderItemPanel();
     void RenderWeaponPanel();
+    void RenderExitPanel();
     void RenderExitConfirm();
     void RenderSaveConfirm();
     void RenderSettingsPanel();
@@ -122,12 +126,15 @@ private:
     bool m_saveRequested = false;
     bool m_saveEnabled = false;
     bool m_showSaveConfirm = false;
+    bool m_returnToStageSelectRequested = false;
+    bool m_returnToStageSelectEnabled = false;
     int m_selectedSaveConfirmIndex = 0;
     FocusArea m_focusArea = FocusArea::TopMenu;
     SettingsRow m_selectedSettingsRow = SettingsRow::Resolution;
     int m_selectedTopMenuIndex = 0;
     int m_activeTopMenuIndex = -1;
     int m_selectedExitConfirmIndex = 0;
+    int m_selectedExitPanelIndex = 0;
     int m_selectedResolutionIndex = 0;
     int m_selectedWindowModeIndex = 0;
     int m_selectedQualityIndex = 0;

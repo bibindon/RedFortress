@@ -3,6 +3,7 @@
 #include "resource.h"
 #include "GameAudio.h"
 #include <cstdlib>
+#include <stdexcept>
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Util.h"
 #include "../../RedFortressRender/Render/Camera.h"
@@ -717,7 +718,12 @@ void GameApp::Run()
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
              InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START)))
         {
-            m_pauseMenu.Open(IsCurrentStageSelect());
+            bool returnToStageSelectEnabled = false;
+            if (!IsCurrentStageSelect())
+            {
+                returnToStageSelectEnabled = m_saveDataManager.IsStageCleared(m_stageManager.GetCurrentStage().id);
+            }
+            m_pauseMenu.Open(IsCurrentStageSelect(), returnToStageSelectEnabled);
         }
 
         if (m_gameState != GameState::EndingFin &&
@@ -963,6 +969,14 @@ void GameApp::Run()
                     {
                         m_saveDataManager.Save();
                     }
+                }
+                if (m_pauseMenu.ConsumeReturnToStageSelectRequested())
+                {
+                    if (!StartStageAfterClear())
+                    {
+                        throw std::runtime_error("Failed to return to stage select from pause menu.");
+                    }
+                    continue;
                 }
                 if (!IsCurrentStageSelect())
                 {

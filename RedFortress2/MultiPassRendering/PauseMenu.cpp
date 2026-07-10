@@ -32,10 +32,10 @@ const std::array<const wchar_t*, 5> kTopMenuItems =
     L"セーブ",
     L"終了"
 };
-const int kTopMenuItemWidth = 220;
+const int kTopMenuItemWidth = 200;
 const int kTopMenuItemHeight = 44;
-const int kTopMenuItemInterval = 270;
-const int kTopMenuX = 250;
+const int kTopMenuItemInterval = 260;
+const int kTopMenuX = 190;
 const int kTopMenuY = 200;
 const int kTopMenuCount = 5;
 const int kItemMenuIndex = 0;
@@ -49,9 +49,20 @@ const int kSaveConfirmYesIndex = 0;
 const int kSaveConfirmNoIndex = 1;
 const int kExitConfirmButtonWidth = 150;
 const int kExitConfirmButtonHeight = 44;
-const int kExitConfirmYesX = 70;
-const int kExitConfirmNoX = 240;
-const int kExitConfirmY = 790;
+const int kExitConfirmYesX = 1010;
+const int kExitConfirmNoX = 1190;
+const int kExitConfirmY = 700;
+const int kConfirmPromptX = 970;
+const int kConfirmPromptY = 650;
+const int kConfirmPromptWidth = 400;
+const int kConfirmPromptHeight = 36;
+const int kExitPanelReturnIndex = 0;
+const int kExitPanelGameIndex = 1;
+const int kExitPanelButtonX = 980;
+const int kExitPanelButtonWidth = 460;
+const int kExitPanelButtonHeight = 56;
+const int kExitPanelReturnY = 510;
+const int kExitPanelGameY = 600;
 const std::size_t kVisibleItemCount = 11;
 const int kItemListX = 205;
 const int kItemListY = 350;
@@ -169,10 +180,10 @@ void PauseMenu::Toggle()
         return;
     }
 
-    Open(m_saveEnabled);
+    Open(m_saveEnabled, m_returnToStageSelectEnabled);
 }
 
-void PauseMenu::Open(const bool saveEnabled)
+void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabled)
 {
     if (m_render == nullptr)
     {
@@ -185,12 +196,19 @@ void PauseMenu::Open(const bool saveEnabled)
     m_showSaveConfirm = false;
     m_saveRequested = false;
     m_saveEnabled = saveEnabled;
+    m_returnToStageSelectRequested = false;
+    m_returnToStageSelectEnabled = returnToStageSelectEnabled;
     m_skipInputFrame = true;
     m_focusArea = FocusArea::TopMenu;
     m_selectedSettingsRow = SettingsRow::Resolution;
     m_selectedTopMenuIndex = 0;
     m_activeTopMenuIndex = -1;
     m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+    m_selectedExitPanelIndex = kExitPanelGameIndex;
+    if (m_returnToStageSelectEnabled)
+    {
+        m_selectedExitPanelIndex = kExitPanelReturnIndex;
+    }
     m_selectedResolutionIndex = 0;
     m_selectedWindowModeIndex = 0;
     m_selectedQualityIndex = 0;
@@ -261,6 +279,12 @@ void PauseMenu::Update()
     if (m_showSaveConfirm)
     {
         UpdateSaveConfirm();
+        return;
+    }
+
+    if (m_focusArea == FocusArea::ExitPanel)
+    {
+        UpdateExitPanel();
         return;
     }
 
@@ -400,8 +424,12 @@ void PauseMenu::UpdateTopMenu()
             }
             else if (m_activeTopMenuIndex == kExitMenuIndex)
             {
-                m_showExitConfirm = true;
-                m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+                m_focusArea = FocusArea::ExitPanel;
+                m_selectedExitPanelIndex = kExitPanelGameIndex;
+                if (m_returnToStageSelectEnabled)
+                {
+                    m_selectedExitPanelIndex = kExitPanelReturnIndex;
+                }
             }
             return;
         }
@@ -438,8 +466,12 @@ void PauseMenu::UpdateTopMenu()
         }
         else if (m_activeTopMenuIndex == kExitMenuIndex)
         {
-            m_showExitConfirm = true;
-            m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+            m_focusArea = FocusArea::ExitPanel;
+            m_selectedExitPanelIndex = kExitPanelGameIndex;
+            if (m_returnToStageSelectEnabled)
+            {
+                m_selectedExitPanelIndex = kExitPanelReturnIndex;
+            }
         }
     }
 
@@ -447,6 +479,89 @@ void PauseMenu::UpdateTopMenu()
     {
         GameAudio::PlayMenuCancel();
         Close();
+    }
+}
+
+void PauseMenu::UpdateExitPanel()
+{
+    if (IsMenuUpPressed() && m_returnToStageSelectEnabled)
+    {
+        if (m_selectedExitPanelIndex != kExitPanelReturnIndex)
+        {
+            m_selectedExitPanelIndex = kExitPanelReturnIndex;
+            GameAudio::PlayMenuMove();
+        }
+    }
+
+    if (IsMenuDownPressed())
+    {
+        if (m_selectedExitPanelIndex != kExitPanelGameIndex)
+        {
+            m_selectedExitPanelIndex = kExitPanelGameIndex;
+            GameAudio::PlayMenuMove();
+        }
+    }
+
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                             static_cast<float>(NSRender::Common::ScreenW());
+        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                             static_cast<float>(NSRender::Common::ScreenH());
+        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+
+        if (m_returnToStageSelectEnabled &&
+            IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitPanelButtonX,
+                          kExitPanelReturnY,
+                          kExitPanelButtonWidth,
+                          kExitPanelButtonHeight))
+        {
+            GameAudio::PlayMenuConfirm();
+            m_returnToStageSelectRequested = true;
+            Close();
+            return;
+        }
+
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitPanelButtonX,
+                          kExitPanelGameY,
+                          kExitPanelButtonWidth,
+                          kExitPanelButtonHeight))
+        {
+            GameAudio::PlayMenuConfirm();
+            m_selectedExitPanelIndex = kExitPanelGameIndex;
+            m_showExitConfirm = true;
+            m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+            return;
+        }
+    }
+
+    if (IsMenuConfirmPressed())
+    {
+        if (m_selectedExitPanelIndex == kExitPanelReturnIndex && m_returnToStageSelectEnabled)
+        {
+            GameAudio::PlayMenuConfirm();
+            m_returnToStageSelectRequested = true;
+            Close();
+            return;
+        }
+
+        GameAudio::PlayMenuConfirm();
+        m_showExitConfirm = true;
+        m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+        return;
+    }
+
+    if (IsMenuCancelPressed())
+    {
+        GameAudio::PlayMenuCancel();
+        m_focusArea = FocusArea::TopMenu;
+        m_activeTopMenuIndex = -1;
     }
 }
 
@@ -890,8 +1005,8 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
 
     m_render->DrawTextExCenter(m_stageNameFontId,
                                stageName,
-                               960,
-                               115,
+                               880,
+                               130,
                                560,
                                60,
                                kTextColor);
@@ -899,8 +1014,8 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
     const std::wstring livesText = L"残機: " + std::to_wstring(lives);
     m_render->DrawTextExCenter(m_qualityFontId,
                                livesText,
-                               960,
-                               150,
+                               1000,
+                               165,
                                320,
                                40,
                                kSubTextColor);
@@ -929,9 +1044,9 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
     {
         m_render->DrawTextExCenter(m_menuItemFontId,
                                    L"セーブしますか？",
-                                   1180,
-                                   760,
-                                   330,
+                                   1040,
+                                   510,
+                                   400,
                                    56,
                                    kTextColor);
         if (m_showSaveConfirm)
@@ -942,18 +1057,44 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
 
     if (m_activeTopMenuIndex == kExitMenuIndex)
     {
-        m_render->DrawTextExCenter(m_menuItemFontId,
-                                   L"拠点に戻る",
-                                   1180,
-                                   760,
-                                   330,
-                                   56,
-                                   kTextColor);
+        RenderExitPanel();
         if (m_showExitConfirm)
         {
             RenderExitConfirm();
         }
     }
+}
+
+void PauseMenu::RenderExitPanel()
+{
+    if (m_returnToStageSelectEnabled)
+    {
+        UINT returnColor = kInactiveTextColor;
+        if (m_selectedExitPanelIndex == kExitPanelReturnIndex)
+        {
+            returnColor = kSelectedTextColor;
+        }
+        m_render->DrawTextExCenter(m_menuItemFontId,
+                                   L"ステージセレクトに戻る",
+                                   kExitPanelButtonX,
+                                   kExitPanelReturnY,
+                                   kExitPanelButtonWidth,
+                                   kExitPanelButtonHeight,
+                                   returnColor);
+    }
+
+    UINT gameExitColor = kInactiveTextColor;
+    if (m_selectedExitPanelIndex == kExitPanelGameIndex)
+    {
+        gameExitColor = kSelectedTextColor;
+    }
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"ゲームを終了",
+                               kExitPanelButtonX,
+                               kExitPanelGameY,
+                               kExitPanelButtonWidth,
+                               kExitPanelButtonHeight,
+                               gameExitColor);
 }
 
 void PauseMenu::RenderTopMenu()
@@ -1093,7 +1234,7 @@ void PauseMenu::RenderItemPanel()
                                  245);
     }
 
-    const int detailX = 1140;
+    const int detailX = 1120;
     m_render->DrawTextEx(m_menuItemFontId,
                          selectedItem.name,
                          detailX,
@@ -1122,28 +1263,28 @@ void PauseMenu::RenderItemPanel()
     m_render->DrawTextEx(m_qualityFontId,
                          L"説明",
                          800,
-                         685,
+                         665,
                          kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          selectedItem.description,
                          800,
-                         725,
+                         700,
                          kSubTextColor);
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"Enter / Space  使用   Esc  戻る",
                                820,
-                               730,
+                               720,
                                640,
-                               36,
+                               28,
                                kSubTextColor);
     if (!m_itemStatusMessage.empty())
     {
         m_render->DrawTextExCenter(m_qualityFontId,
                                    m_itemStatusMessage,
                                    820,
-                                   775,
+                                   750,
                                    640,
-                                   36,
+                                   28,
                                    m_itemStatusColor);
     }
 }
@@ -1215,7 +1356,7 @@ void PauseMenu::RenderWeaponPanel()
                                kSubTextColor);
 
     const WeaponData& selectedWeapon = m_weapons.at(ownedWeapons.at(m_selectedWeaponIndex));
-    const int detailX = 850;
+    const int detailX = 800;
     m_render->DrawTextEx(m_menuItemFontId,
                          selectedWeapon.name,
                          detailX,
@@ -1246,11 +1387,27 @@ void PauseMenu::RenderWeaponPanel()
                          detailX,
                          620,
                          kTextColor);
+    const std::size_t kWeaponDescriptionLineLength = 28;
+    std::wstring descriptionLine1 = selectedWeapon.description;
+    std::wstring descriptionLine2;
+    if (descriptionLine1.length() > kWeaponDescriptionLineLength)
+    {
+        descriptionLine2 = descriptionLine1.substr(kWeaponDescriptionLineLength);
+        descriptionLine1 = descriptionLine1.substr(0, kWeaponDescriptionLineLength);
+    }
     m_render->DrawTextEx(m_qualityFontId,
-                         selectedWeapon.description,
+                         descriptionLine1,
                          detailX,
                          665,
                          kSubTextColor);
+    if (!descriptionLine2.empty())
+    {
+        m_render->DrawTextEx(m_qualityFontId,
+                             descriptionLine2,
+                             detailX,
+                             695,
+                             kSubTextColor);
+    }
 }
 
 void PauseMenu::RenderExitConfirm()
@@ -1269,10 +1426,10 @@ void PauseMenu::RenderExitConfirm()
 
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"ゲームを終了しますか？",
-                               40,
-                               740,
-                               380,
-                               36,
+                               kConfirmPromptX,
+                               kConfirmPromptY,
+                               kConfirmPromptWidth,
+                               kConfirmPromptHeight,
                                kSubTextColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"はい",
@@ -1368,9 +1525,9 @@ void PauseMenu::RenderSettingsPanel()
 
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"↑↓ 項目選択   ←→/Enter 選択肢変更   クリック 選択   Esc 戻る",
-                               820,
+                               520,
                                730,
-                               700,
+                               900,
                                36,
                                kSubTextColor);
 }
@@ -1806,6 +1963,13 @@ bool PauseMenu::ConsumeSaveRequested()
     return requested;
 }
 
+bool PauseMenu::ConsumeReturnToStageSelectRequested()
+{
+    const bool requested = m_returnToStageSelectRequested;
+    m_returnToStageSelectRequested = false;
+    return requested;
+}
+
 void PauseMenu::UpdateSaveConfirm()
 {
     if (IsMenuLeftPressed())
@@ -1898,10 +2062,10 @@ void PauseMenu::RenderSaveConfirm()
 
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"セーブしますか？",
-                               40,
-                               740,
-                               380,
-                               36,
+                               kConfirmPromptX,
+                               kConfirmPromptY,
+                               kConfirmPromptWidth,
+                               kConfirmPromptHeight,
                                kSubTextColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"はい",
