@@ -91,6 +91,7 @@ namespace
         }
         return -1;
     }
+
 #endif
 
     const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
@@ -1699,6 +1700,25 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         const std::string stageId = NarrowDebugIdentifier(stage.id);
         const std::string selectedPortalId = NarrowDebugIdentifier(m_selectedStagePortalId);
         const D3DXVECTOR3 playerPosition = m_playerMover.GetPosition();
+        const EnemyBase* nearestEnemy = nullptr;
+        float nearestEnemyDistance = 0.0f;
+        std::size_t livingEnemyCount = 0;
+        for (const std::unique_ptr<EnemyBase>& enemy : m_enemyManager.GetEnemies())
+        {
+            if (enemy == nullptr || enemy->GetHp() <= 0)
+            {
+                continue;
+            }
+
+            ++livingEnemyCount;
+            const D3DXVECTOR3 difference = enemy->GetPosition() - playerPosition;
+            const float distance = sqrtf(difference.x * difference.x + difference.z * difference.z);
+            if (nearestEnemy == nullptr || distance < nearestEnemyDistance)
+            {
+                nearestEnemy = enemy.get();
+                nearestEnemyDistance = distance;
+            }
+        }
 
         std::ostringstream response;
         response << std::fixed << std::setprecision(2)
@@ -1720,7 +1740,23 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
                  << ",\"player\":{\"x\":" << playerPosition.x
                  << ",\"y\":" << playerPosition.y
                  << ",\"z\":" << playerPosition.z
-                 << ",\"hp\":" << m_player.GetHp() << "}}";
+                 << ",\"hp\":" << m_player.GetHp() << "}"
+                 << ",\"livingEnemyCount\":" << livingEnemyCount
+                 << ",\"nearestEnemy\":";
+        if (nearestEnemy == nullptr)
+        {
+            response << "null";
+        }
+        else
+        {
+            const D3DXVECTOR3 enemyPosition = nearestEnemy->GetPosition();
+            response << "{\"x\":" << enemyPosition.x
+                     << ",\"y\":" << enemyPosition.y
+                     << ",\"z\":" << enemyPosition.z
+                     << ",\"hp\":" << nearestEnemy->GetHp()
+                     << ",\"distance\":" << nearestEnemyDistance << "}";
+        }
+        response << "}";
         return response.str();
     }
 
@@ -1746,6 +1782,47 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
     if (commandName == "CLEAR_KEYS")
     {
         InputDevice::SKeyBoard::ClearInjectedKeys();
+        return "{\"ok\":true}";
+    }
+
+    if (commandName == "MOUSE_DOWN" || commandName == "MOUSE_UP")
+    {
+        std::string buttonName;
+        commandStream >> buttonName;
+        std::transform(buttonName.begin(), buttonName.end(), buttonName.begin(), [](const unsigned char value) {
+            return static_cast<char>(toupper(value));
+        });
+        InputDevice::MouseButton button = InputDevice::MOUSE_LEFT;
+        if (buttonName == "LEFT")
+        {
+            button = InputDevice::MOUSE_LEFT;
+        }
+        else if (buttonName == "RIGHT")
+        {
+            button = InputDevice::MOUSE_RIGHT;
+        }
+        else if (buttonName == "MIDDLE")
+        {
+            button = InputDevice::MOUSE_MIDDLE;
+        }
+        else
+        {
+            return "{\"ok\":false,\"error\":\"unknown_mouse_button\"}";
+        }
+
+        bool isDown = false;
+        if (commandName == "MOUSE_DOWN")
+        {
+            isDown = true;
+        }
+        InputDevice::Mouse::SetInjectedButtonDown(button, isDown);
+        return "{\"ok\":true}";
+    }
+
+    if (commandName == "CLEAR_INPUT")
+    {
+        InputDevice::SKeyBoard::ClearInjectedKeys();
+        InputDevice::Mouse::ClearInjectedButtons();
         return "{\"ok\":true}";
     }
 
@@ -1787,6 +1864,7 @@ void GameApp::Finalize()
 #ifdef _DEBUG
     m_debugRpc.Finalize();
     InputDevice::SKeyBoard::ClearInjectedKeys();
+    InputDevice::Mouse::ClearInjectedButtons();
 #endif
 
     RestoreQteVisualEffectImmediate();
