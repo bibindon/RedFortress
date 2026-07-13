@@ -4127,7 +4127,6 @@ void GameApp::UpdateStageClearVisual()
         m_playerAnimationSpeed = 0.85f;
         m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
         m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"slash2");
-        GameAudio::PlayPlayerAttack();
         m_render.SetCameraShakeDuration(0.16f);
         m_render.SetCameraShakeIntensity(0.025f);
     }
