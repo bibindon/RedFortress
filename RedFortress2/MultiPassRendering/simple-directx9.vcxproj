@@ -235,12 +235,17 @@
   <ItemGroup>
     <Image Include="res\2D_Image\icon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ParticleAsset Include="$(ProjectDir)..\..\RedFortressRender\Render\assets\particle\*.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets" Condition="Exists('..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets')" />
   </ImportGroup>
   <Target Name="CopyResources" AfterTargets="Build">
     <Exec Command="xcopy /E /Y /I /D &quot;$(ProjectDir)res&quot; &quot;$(OutDir)res&quot;" />
+    <MakeDir Directories="$(OutDir)particle" />
+    <Copy SourceFiles="@(ParticleAsset)" DestinationFolder="$(OutDir)particle" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

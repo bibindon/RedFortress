@@ -2,6 +2,8 @@
 
 #include <Windows.h>
 #include <algorithm>
+#include <stdexcept>
+#include <system_error>
 #include <vector>
 
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
@@ -49,6 +51,25 @@ bool InventoryManager::Load()
     m_weaponCounts.clear();
     m_collectedWeaponCollectibleIds.clear();
     m_unlockedAbilityIds.clear();
+
+    const DWORD attributes = GetFileAttributesW(m_filePath.c_str());
+    if (attributes == INVALID_FILE_ATTRIBUTES)
+    {
+        const DWORD error = GetLastError();
+        if (error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND)
+        {
+            return false;
+        }
+
+        throw std::system_error(static_cast<int>(error),
+                                std::system_category(),
+                                "InventoryManager: failed to inspect inventory save file");
+    }
+
+    if ((attributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+    {
+        throw std::runtime_error("InventoryManager: inventory save path is a directory");
+    }
 
     std::vector<std::vector<std::wstring>> csvData;
     csvData = csv::Read(m_filePath);
