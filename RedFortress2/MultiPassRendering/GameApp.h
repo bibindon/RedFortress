@@ -89,6 +89,8 @@ private:
     void UpdateCameraByInput();
     void UpdatePlayerByInput();
     void UpdateTitleByInput();
+    void BeginStageExit();
+    void UpdateStageExit();
     void UpdateStageClear();
     bool IsStageClearReached();
     void BeginStageClearVisual();
@@ -98,6 +100,7 @@ private:
     std::wstring GetStageStoryScriptPath(const std::wstring& stageId,
                                          const std::wstring& timing) const;
     bool StartStageAfterClear();
+    bool MoveToStageAfterClear();
     void LoadCurrentStageObjects();
     void BeginStageIntro();
     void UpdateStageIntro();
@@ -198,7 +201,7 @@ private:
     int GetHitStopFrames(PlayerAttackType attackType) const;
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
-    enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageClear, GameOver, Ending, EndingFin };
+    enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageExit, StageClear, GameOver, Ending, EndingFin };
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
@@ -275,6 +278,8 @@ private:
     bool m_playerDeathPending = false;
     bool m_playerFallingDead = false;
     int m_fallDeathFrames = 0;
+    int m_stageExitFrame = 0;
+    float m_stageExitVisualOffsetY = 0.0f;
     bool m_stageClearProcessed = false;
     bool m_stageClearWasFirstClear = false;
     int m_stageClearFrame = 0;

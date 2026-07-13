@@ -118,6 +118,11 @@ namespace
     const int kStageClearReplayFinalAutoFrame = 90;
     const int kStageClearReplayLetterboxHeight = 40;
     const float kStageClearTargetFovDegrees = 58.0f;
+    const int kStageExitFadeStartFrame = 8;
+    const int kStageExitTransitionFrame = 30;
+    const float kStageExitRiseHeight = 1.2f;
+    const float kStageExitAnimationSpeed = 1.2f;
+    const float kStageExitFadeDurationSeconds = 0.35f;
     const int kQteVisualRestoreFrames = 24;
     const float kQteVisualMinSaturate = 0.10f;
     const float kQteVisualMaxFovReduction = 18.0f;
@@ -918,6 +923,10 @@ void GameApp::Run()
         {
             UpdateStageClear();
         }
+        else if (m_gameState == GameState::StageExit)
+        {
+            UpdateStageExit();
+        }
         else if (m_gameState == GameState::GameOver)
         {
             UpdateGameOver();
@@ -989,10 +998,7 @@ void GameApp::Run()
                 }
                 if (m_pauseMenu.ConsumeReturnToStageSelectRequested())
                 {
-                    if (!StartStageAfterClear())
-                    {
-                        throw std::runtime_error("Failed to return to stage select from pause menu.");
-                    }
+                    BeginStageExit();
                     continue;
                 }
                 if (!IsCurrentStageSelect())
@@ -2242,6 +2248,10 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         {
             displayPosition.y += kStageSelectPlayerVisualOffsetY;
             displayScale = kStageSelectPlayerVisualScale;
+        }
+        else if (m_gameState == GameState::StageExit)
+        {
+            displayPosition.y += m_stageExitVisualOffsetY;
         }
 
         if (m_playerIsSkinAnim)
@@ -3948,6 +3958,59 @@ void GameApp::UpdateTitleByInput()
     }
 }
 
+void GameApp::BeginStageExit()
+{
+    m_pauseMenu.Close();
+    m_mouseCursorVisible = false;
+    InputDevice::Mouse::SetVisible(false);
+    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_pendingJump = false;
+    m_stageExitFrame = 0;
+    m_stageExitVisualOffsetY = 0.0f;
+    m_gameState = GameState::StageExit;
+
+    if (m_playerMeshId >= 0)
+    {
+        m_playerAnimState = PlayerAnimState::Jump;
+        m_playerAnimationSpeed = kStageExitAnimationSpeed;
+        m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerJumpAnimName);
+    }
+
+    GameAudio::PlayJump();
+}
+
+void GameApp::UpdateStageExit()
+{
+    float riseT = static_cast<float>(m_stageExitFrame) /
+                  static_cast<float>(kStageExitTransitionFrame);
+    if (riseT > 1.0f)
+    {
+        riseT = 1.0f;
+    }
+    m_stageExitVisualOffsetY = kStageExitRiseHeight * riseT * riseT;
+
+    UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+
+    if (m_stageExitFrame == kStageExitFadeStartFrame)
+    {
+        m_render.StartFadeOut(kStageExitFadeDurationSeconds);
+    }
+
+    if (m_stageExitFrame >= kStageExitTransitionFrame)
+    {
+        m_stageExitVisualOffsetY = 0.0f;
+        if (!MoveToStageAfterClear())
+        {
+            throw std::runtime_error("Failed to return to stage select after stage exit animation.");
+        }
+        return;
+    }
+
+    m_render.Draw();
+    ++m_stageExitFrame;
+}
+
 void GameApp::UpdateStageClear()
 {
     const std::wstring clearedStageId = m_stageManager.GetCurrentStage().id;
@@ -4578,6 +4641,12 @@ bool GameApp::StartNextStage()
 
 bool GameApp::StartStageAfterClear()
 {
+    m_render.StartFadeOut(0.3f);
+    return MoveToStageAfterClear();
+}
+
+bool GameApp::MoveToStageAfterClear()
+{
     const std::wstring clearedStageId = m_stageManager.GetCurrentStage().id;
     const int stageNumber = m_stageManager.GetCurrentStageNumber();
     const std::size_t destinationIndex = m_stageManager.GetClearDestinationIndex(stageNumber);
@@ -4597,7 +4666,6 @@ bool GameApp::StartStageAfterClear()
         }
     }
 
-    m_render.StartFadeOut(0.3f);
     m_preferredStageSelectPortalId = L"portal-to-" + clearedStageId;
     LoadCurrentStageObjects();
     if (IsCurrentStageSelect())
@@ -4711,6 +4779,8 @@ void GameApp::LoadCurrentStageObjects()
     m_pendingJump = false;
     m_playerYaw = 0.0f;
     m_playerAnimState = PlayerAnimState::Idle;
+    m_stageExitFrame = 0;
+    m_stageExitVisualOffsetY = 0.0f;
     m_damagePopupManager.Clear();
     m_playerInvincibleFrames = 0;
     m_pickupManager.ResetTemporaryEffects();
