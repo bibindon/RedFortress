@@ -2,7 +2,11 @@
 
 #include "resource.h"
 #include "GameAudio.h"
+#include <algorithm>
+#include <cctype>
 #include <cstdlib>
+#include <iomanip>
+#include <sstream>
 #include <stdexcept>
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Util.h"
@@ -11,6 +15,84 @@
 
 namespace
 {
+#ifdef _DEBUG
+    std::string NarrowDebugIdentifier(const std::wstring& identifier)
+    {
+        std::string result;
+        result.reserve(identifier.size());
+        for (const wchar_t value : identifier)
+        {
+            if (value < 0 || value > 0x7f)
+            {
+                throw std::runtime_error("Debug RPC identifiers must contain ASCII characters only.");
+            }
+            result.push_back(static_cast<char>(value));
+        }
+        return result;
+    }
+
+    int GetDebugKeyCode(std::string keyName)
+    {
+        std::transform(keyName.begin(), keyName.end(), keyName.begin(), [](const unsigned char value) {
+            return static_cast<char>(toupper(value));
+        });
+
+        if (keyName == "RETURN" || keyName == "ENTER")
+        {
+            return DIK_RETURN;
+        }
+        if (keyName == "SPACE")
+        {
+            return DIK_SPACE;
+        }
+        if (keyName == "ESCAPE" || keyName == "ESC")
+        {
+            return DIK_ESCAPE;
+        }
+        if (keyName == "LEFT")
+        {
+            return DIK_LEFT;
+        }
+        if (keyName == "RIGHT")
+        {
+            return DIK_RIGHT;
+        }
+        if (keyName == "UP")
+        {
+            return DIK_UP;
+        }
+        if (keyName == "DOWN")
+        {
+            return DIK_DOWN;
+        }
+        if (keyName == "W")
+        {
+            return DIK_W;
+        }
+        if (keyName == "A")
+        {
+            return DIK_A;
+        }
+        if (keyName == "S")
+        {
+            return DIK_S;
+        }
+        if (keyName == "D")
+        {
+            return DIK_D;
+        }
+        if (keyName == "R")
+        {
+            return DIK_R;
+        }
+        if (keyName == "LCONTROL" || keyName == "CTRL")
+        {
+            return DIK_LCONTROL;
+        }
+        return -1;
+    }
+#endif
+
     const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
     const std::wstring g_playerMeshPath = L"res\\model2\\marine_512\\marine.x";
     const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine_512\\marine.csv";
@@ -683,6 +765,11 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetLoadingScreenProgress(85);
     m_render.Draw();
 
+#ifdef _DEBUG
+    m_debugFpsSampleTick = GetTickCount64();
+    m_debugRpc.Initialize();
+#endif
+
     return true;
 }
 
@@ -710,6 +797,10 @@ void GameApp::Run()
         }
 
         InputDevice::Update();
+
+#ifdef _DEBUG
+        ProcessDebugRpc();
+#endif
 
         const D3DXVECTOR3 audioPlayerPosition = m_playerMover.GetPosition();
         const D3DXVECTOR3 audioListenerForward = GetCameraPlanarForward();
@@ -1558,8 +1649,146 @@ void GameApp::Run()
     }
 }
 
+#ifdef _DEBUG
+void GameApp::ProcessDebugRpc()
+{
+    ++m_debugFrameNumber;
+
+    const ULONGLONG currentTick = GetTickCount64();
+    const ULONGLONG elapsedMilliseconds = currentTick - m_debugFpsSampleTick;
+    if (elapsedMilliseconds >= 500)
+    {
+        const ULONGLONG elapsedFrames = m_debugFrameNumber - m_debugFpsSampleFrame;
+        m_debugFps = static_cast<float>(elapsedFrames) * 1000.0f /
+                     static_cast<float>(elapsedMilliseconds);
+        m_debugFpsSampleTick = currentTick;
+        m_debugFpsSampleFrame = m_debugFrameNumber;
+    }
+
+    m_debugRpc.Poll([this](const std::string& command) {
+        return HandleDebugRpcCommand(command);
+    });
+}
+
+std::string GameApp::HandleDebugRpcCommand(const std::string& command)
+{
+    std::istringstream commandStream(command);
+    std::string commandName;
+    commandStream >> commandName;
+    std::transform(commandName.begin(), commandName.end(), commandName.begin(), [](const unsigned char value) {
+        return static_cast<char>(toupper(value));
+    });
+
+    if (commandName == "PING")
+    {
+        return "{\"ok\":true,\"result\":\"pong\"}";
+    }
+
+    if (commandName == "GET_FPS")
+    {
+        std::ostringstream response;
+        response << std::fixed << std::setprecision(2)
+                 << "{\"ok\":true,\"fps\":" << m_debugFps
+                 << ",\"frame\":" << m_debugFrameNumber << "}";
+        return response.str();
+    }
+
+    if (commandName == "GET_STATE")
+    {
+        const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+        const std::string stageId = NarrowDebugIdentifier(stage.id);
+        const std::string selectedPortalId = NarrowDebugIdentifier(m_selectedStagePortalId);
+        const D3DXVECTOR3 playerPosition = m_playerMover.GetPosition();
+
+        std::ostringstream response;
+        response << std::fixed << std::setprecision(2)
+                 << "{\"ok\":true"
+                 << ",\"frame\":" << m_debugFrameNumber
+                 << ",\"fps\":" << m_debugFps
+                 << ",\"gameState\":\"" << GetDebugGameStateName() << "\""
+                 << ",\"stageId\":\"" << stageId << "\""
+                 << ",\"pauseOpen\":";
+        if (m_pauseMenu.IsOpen())
+        {
+            response << "true";
+        }
+        else
+        {
+            response << "false";
+        }
+        response << ",\"selectedPortalId\":\"" << selectedPortalId << "\""
+                 << ",\"player\":{\"x\":" << playerPosition.x
+                 << ",\"y\":" << playerPosition.y
+                 << ",\"z\":" << playerPosition.z
+                 << ",\"hp\":" << m_player.GetHp() << "}}";
+        return response.str();
+    }
+
+    if (commandName == "KEY_DOWN" || commandName == "KEY_UP")
+    {
+        std::string keyName;
+        commandStream >> keyName;
+        const int keyCode = GetDebugKeyCode(keyName);
+        if (keyCode < 0)
+        {
+            return "{\"ok\":false,\"error\":\"unknown_key\"}";
+        }
+
+        bool isDown = false;
+        if (commandName == "KEY_DOWN")
+        {
+            isDown = true;
+        }
+        InputDevice::SKeyBoard::SetInjectedKeyDown(keyCode, isDown);
+        return "{\"ok\":true}";
+    }
+
+    if (commandName == "CLEAR_KEYS")
+    {
+        InputDevice::SKeyBoard::ClearInjectedKeys();
+        return "{\"ok\":true}";
+    }
+
+    return "{\"ok\":false,\"error\":\"unknown_command\"}";
+}
+
+const char* GameApp::GetDebugGameStateName() const
+{
+    switch (m_gameState)
+    {
+    case GameState::Loading:
+        return "Loading";
+    case GameState::Title:
+        return "Title";
+    case GameState::SlideShow:
+        return "SlideShow";
+    case GameState::StageIntro:
+        return "StageIntro";
+    case GameState::Playing:
+        return "Playing";
+    case GameState::StageExit:
+        return "StageExit";
+    case GameState::StageClear:
+        return "StageClear";
+    case GameState::GameOver:
+        return "GameOver";
+    case GameState::Ending:
+        return "Ending";
+    case GameState::EndingFin:
+        return "EndingFin";
+    }
+
+    throw std::runtime_error("Unknown game state in debug RPC response.");
+}
+#endif
+
 void GameApp::Finalize()
 {
+#ifdef _DEBUG
+    m_debugRpc.Finalize();
+    InputDevice::SKeyBoard::ClearInjectedKeys();
+#endif
+
     RestoreQteVisualEffectImmediate();
 
     if (m_settingsDialog != NULL)

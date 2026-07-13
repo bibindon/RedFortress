@@ -32,6 +32,7 @@
 #include "PlayerAttackController.h"
 #include "PickupManager.h"
 #include "DashBoosterManager.h"
+#include "DebugRpc.h"
 
 struct ActiveBomb
 {
@@ -74,6 +75,12 @@ private:
     // ゲームループ
     void Update();
     void Draw();
+
+#ifdef _DEBUG
+    void ProcessDebugRpc();
+    std::string HandleDebugRpcCommand(const std::string& command);
+    const char* GetDebugGameStateName() const;
+#endif
 
     // ダイアログ
     static INT_PTR CALLBACK SettingsDialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -212,6 +219,13 @@ private:
     using PhysicsWorld = PhysicsLib::PhysicsLib;
 
     bool m_close = false;
+#ifdef _DEBUG
+    DebugRpc m_debugRpc;
+    ULONGLONG m_debugFrameNumber = 0;
+    ULONGLONG m_debugFpsSampleTick = 0;
+    ULONGLONG m_debugFpsSampleFrame = 0;
+    float m_debugFps = 0.0f;
+#endif
     NSRender::Render m_render;
     Player m_player;
     StageManager m_stageManager;

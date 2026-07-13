@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DebugRpc.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAttackController.cpp" />
@@ -183,6 +184,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DebugRpc.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SlideShowManager.h" />
     <ClInclude Include="Player.h" />
