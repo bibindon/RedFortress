@@ -2963,6 +2963,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                                10.0f,
                                10.0f,
                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                               8.0f,
                                kStageSelectPlayerLightOwnerTag);
         return;
     }
@@ -3034,6 +3035,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                                10.0f,
                                10.0f,
                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                               8.0f,
                                kStageSelectPlayerLightOwnerTag);
         return;
     }
@@ -3101,6 +3103,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                            10.0f,
                            10.0f,
                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                           8.0f,
                            kStageSelectPlayerLightOwnerTag);
 }
 
