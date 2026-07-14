@@ -27368,7 +27368,7 @@ Frame Root {
           0.080000;0.080000;0.080000;;
           0.380000;0.380000;0.380000;;
           TextureFilename {
-            "Skydome_world3.png";
+            "Skydome_world3_v2.png";
           }
         }
       }

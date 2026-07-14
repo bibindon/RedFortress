@@ -490,7 +490,7 @@ def main():
     output_x_path, preview_path = get_arguments()
     collection = clear_scene()
     materials = {
-        "sky": create_material("RF2_CaveSky_World3Night", "Skydome_world3.png", (0.06, 0.09, 0.18, 1.0), 0.85),
+        "sky": create_material("RF2_CaveSky_World3Night", "Skydome_world3_v2.png", (0.06, 0.09, 0.18, 1.0), 0.85),
         "rock": create_material("RF3_MountainStone", "../stage-select2/stageSelectCaveWall.png", (0.22, 0.25, 0.32, 1.0)),
         "dark": create_material("RF3_ObsidianStone", "../stage-select2/stageSelectCaveDeepDark.png", (0.035, 0.04, 0.08, 1.0)),
         "path": create_material("RF3_PilgrimPath", "../stage-select2/stageSelectCavePath.png", (0.24, 0.19, 0.15, 1.0)),
