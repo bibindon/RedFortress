@@ -151,7 +151,7 @@ private:
     int DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefinition);
     void InitializeCameraFromRenderSettings();
     void ConfigureStagePointLights(const std::wstring& stageId);
-    void UpdateStageSelect2PlayerLight();
+    void UpdateStageSelectPlayerLight();
     void InitializePlayerPhysics();
     void ApplyUnlockedAbilities();
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);

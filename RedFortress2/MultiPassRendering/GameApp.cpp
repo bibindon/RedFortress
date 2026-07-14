@@ -128,8 +128,8 @@ namespace
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
     const float kStageSelectPlayerVisualScale = 1.0f;
-    const float kStageSelect2PlayerLightHeight = 3.2f;
-    const wchar_t* kStageSelect2PlayerLightOwnerTag = L"stage-select2-player";
+    const float kStageSelectPlayerLightHeight = 3.2f;
+    const wchar_t* kStageSelectPlayerLightOwnerTag = L"stage-select-player";
     const int kStageSelectStageNameX = 48;
     const int kStageSelectStageNameY = 42;
     const int kStageSelectLivesX = 1190;
@@ -2736,7 +2736,7 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         }
     }
 
-    UpdateStageSelect2PlayerLight();
+    UpdateStageSelectPlayerLight();
 
     // 落下死演出中はメッシュ更新のみ行い、カメラ追従を止めてプレイヤーが落ちていく様を見せる
     if (m_playerFallingDead)
@@ -2822,14 +2822,72 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     m_render.ClearPointLights();
     if (stageId == L"select3")
     {
+        const wchar_t* portalDestinationIds[] =
+        {
+            L"select2",
+            L"3-1",
+            L"3-2",
+            L"3-3",
+            L"3-4",
+            L"3-5",
+            L"3-6",
+            L"3-7",
+            L"3-8",
+            L"select4",
+            L"base"
+        };
+        const D3DXVECTOR3 portalLightPositions[] =
+        {
+            D3DXVECTOR3(-16.0f, 2.4f, -10.0f),
+            D3DXVECTOR3(-11.0f, 2.6f, -8.0f),
+            D3DXVECTOR3(-5.0f, 3.4f, -3.0f),
+            D3DXVECTOR3(4.0f, 4.2f, -1.0f),
+            D3DXVECTOR3(11.0f, 5.0f, 3.0f),
+            D3DXVECTOR3(7.0f, 6.0f, 8.0f),
+            D3DXVECTOR3(0.0f, 6.8f, 10.5f),
+            D3DXVECTOR3(-7.0f, 7.8f, 14.0f),
+            D3DXVECTOR3(0.0f, 9.1f, 17.5f),
+            D3DXVECTOR3(15.0f, 2.8f, -8.0f),
+            D3DXVECTOR3(-19.0f, 2.8f, -4.0f)
+        };
+        const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
+        const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
+        const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
+        const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
+        for (int i = 0; i < portalLightCount; ++i)
+        {
+            const std::wstring destinationId = portalDestinationIds[i];
+            D3DXCOLOR lightColor = unclearedColor;
+            if (destinationId == L"select2" || destinationId == L"select4" || destinationId == L"base")
+            {
+                lightColor = travelColor;
+            }
+            else if (m_saveDataManager.IsStageCleared(destinationId))
+            {
+                lightColor = clearedColor;
+            }
+            m_render.AddPointLight(portalLightPositions[i], 5.0f, lightColor);
+        }
+
         const D3DXCOLOR coldLight(0.10f, 0.30f, 1.0f, 1.0f);
         const D3DXCOLOR spiritLight(0.55f, 0.82f, 1.0f, 1.0f);
         const D3DXCOLOR sealLight(1.0f, 0.34f, 0.04f, 1.0f);
-        m_render.AddPointLight(D3DXVECTOR3(-8.0f, 3.2f, -4.0f), 5.0f, coldLight);
-        m_render.AddPointLight(D3DXVECTOR3(8.0f, 5.2f, 6.0f), 5.0f, coldLight);
         m_render.AddPointLight(D3DXVECTOR3(-4.0f, 7.5f, 14.0f), 5.5f, spiritLight);
         m_render.AddPointLight(D3DXVECTOR3(0.0f, 10.2f, 21.0f), 7.0f, sealLight);
         m_render.AddPointLight(D3DXVECTOR3(15.0f, 3.0f, -7.0f), 4.5f, coldLight);
+
+        const D3DXVECTOR3 playerLightPosition =
+            m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
+        const D3DXCOLOR playerLightColor(1.0f, 0.78f, 0.52f, 1.0f);
+        m_render.AddPointLight(playerLightPosition,
+                               7.0f,
+                               playerLightColor,
+                               NSRender::PointLightShape::Point,
+                               12.0f,
+                               10.0f,
+                               10.0f,
+                               D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                               kStageSelectPlayerLightOwnerTag);
         return;
     }
 
@@ -2886,7 +2944,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     }
 
     const D3DXVECTOR3 playerLightPosition =
-        m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelect2PlayerLightHeight, 0.0f);
+        m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
     const D3DXCOLOR playerLightColor(1.0f, 0.78f, 0.52f, 1.0f);
     m_render.AddPointLight(playerLightPosition,
                            7.0f,
@@ -2896,19 +2954,20 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                            10.0f,
                            10.0f,
                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                           kStageSelect2PlayerLightOwnerTag);
+                           kStageSelectPlayerLightOwnerTag);
 }
 
-void GameApp::UpdateStageSelect2PlayerLight()
+void GameApp::UpdateStageSelectPlayerLight()
 {
-    if (m_stageManager.GetCurrentStage().id != L"select2")
+    const std::wstring& stageId = m_stageManager.GetCurrentStage().id;
+    if (stageId != L"select2" && stageId != L"select3")
     {
         return;
     }
 
     const D3DXVECTOR3 lightPosition =
-        m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelect2PlayerLightHeight, 0.0f);
-    m_render.SetPointLightPositionByOwnerTag(kStageSelect2PlayerLightOwnerTag, lightPosition);
+        m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
+    m_render.SetPointLightPositionByOwnerTag(kStageSelectPlayerLightOwnerTag, lightPosition);
 }
 
 bool GameApp::IsCurrentStageSelect() const
