@@ -130,6 +130,34 @@ def create_mesh_object(collection, name, mesh, material):
     return obj
 
 
+def ensure_generated_uv_map(mesh):
+    if len(mesh.uv_layers) > 0 or len(mesh.vertices) == 0:
+        return
+
+    coordinate_ranges = []
+    for axis_index in range(3):
+        values = [vertex.co[axis_index] for vertex in mesh.vertices]
+        minimum = min(values)
+        maximum = max(values)
+        coordinate_ranges.append((maximum - minimum, axis_index, minimum))
+
+    coordinate_ranges.sort(reverse=True)
+    first_range, first_axis, first_minimum = coordinate_ranges[0]
+    second_range, second_axis, second_minimum = coordinate_ranges[1]
+    if first_range <= 0.000001:
+        first_range = 1.0
+    if second_range <= 0.000001:
+        second_range = 1.0
+
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        for loop_index in polygon.loop_indices:
+            vertex = mesh.vertices[mesh.loops[loop_index].vertex_index]
+            u = (vertex.co[first_axis] - first_minimum) / first_range
+            v = (vertex.co[second_axis] - second_minimum) / second_range
+            uv_layer.data[loop_index].uv = (u, v)
+
+
 def create_cylinder(collection, name, location, radius, depth, segments, material):
     mesh = bpy.data.meshes.new(name + "Mesh")
     bm = bmesh.new()
@@ -516,6 +544,7 @@ def export_directx_meshes(collection, output_path):
             continue
         if not scene_object.get("rf2_export"):
             continue
+        ensure_generated_uv_map(scene_object.data)
         scene_object.select_set(True)
         selected_count += 1
 
