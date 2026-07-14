@@ -43,6 +43,13 @@ Note: In PowerShell, `$env:PATH` and `$env:Path` are the same variable, so do NO
 - **DirectX coordinate system**: Y axis is **up** (not depth). Z is depth.
 - **Naming**: Classes/Methods use PascalCase. Members use `m_` prefix (e.g. `m_settings`). D3D pointer members use `m_p` prefix. File-scope constants use `k` prefix. File-scope globals use `g_` prefix.
 
+## Blender DirectX X export
+
+- The game loader must support `.x` files emitted directly by the official Blender DirectX X exporter add-on, including Blender 5.1.2 output.
+- Always export Blender models with the official add-on (`bpy.ops.export_scene.directx_x`).
+- Do not create or use a custom `.x` exporter, serializer, converter, or post-processing rewrite to make Blender output compatible with the game.
+- If an official Blender-exported `.x` file cannot be loaded, fix the game-side loader or renderer instead of changing the export format.
+
 ## File loading: working directory matters
 
 `Render::LoadSettingsCsv()` at `Render.cpp:570` opens `RenderSettings.csv` with a bare relative `std::wifstream`. It does NOT resolve relative to the exe directory. If the process working directory differs from the exe location, the file silently fails to load and all settings fall back to hardcoded defaults with no error.

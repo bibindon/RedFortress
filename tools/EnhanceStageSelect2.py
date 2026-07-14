@@ -2,7 +2,6 @@
 import bpy
 import math
 import os
-import re
 import sys
 
 from mathutils import Matrix, Vector
@@ -509,173 +508,43 @@ def build_stage_details(collection, materials):
         )
 
 
-def texture_for_material(material):
-    custom_texture = material.get("rf2_texture")
-    if custom_texture:
-        return custom_texture
-    for prefix, texture in TEXTURES.items():
-        if material.name.startswith(prefix):
-            return texture
-    raise RuntimeError("No DirectX texture mapping for material: " + material.name)
-
-
-def sanitize_name(name):
-    sanitized = re.sub(r"[^A-Za-z0-9_]", "_", name)
-    if not sanitized:
-        return "Unnamed"
-    return sanitized
-
-
-def directx_vector(vector):
-    return Vector((vector.x, vector.z, vector.y))
-
-
 def export_directx_meshes(collection, output_path):
-    depsgraph = bpy.context.evaluated_depsgraph_get()
-    lines = [
-        "xof 0303txt 0032",
-        "Frame Root {",
-        "  FrameTransformMatrix {",
-        "    1.000000,0.000000,0.000000,0.000000,",
-        "    0.000000,1.000000,0.000000,0.000000,",
-        "    0.000000,0.000000,1.000000,0.000000,",
-        "    0.000000,0.000000,0.000000,1.000000;;",
-        "  }",
-    ]
-    export_objects = sorted(
-        [obj for obj in collection.all_objects if obj.type == "MESH" and obj.get("rf2_export")],
-        key=lambda obj: obj.name,
-    )
-    for obj in export_objects:
-        evaluated = obj.evaluated_get(depsgraph)
-        mesh = evaluated.to_mesh(preserve_all_data_layers=True, depsgraph=depsgraph)
-        try:
-            mesh.calc_loop_triangles()
-            if not mesh.loop_triangles:
-                continue
-            if len(mesh.materials) != 1 or mesh.materials[0] is None:
-                raise RuntimeError("Detail objects must use exactly one material: " + obj.name)
-            material = mesh.materials[0]
-            texture = texture_for_material(material)
-            world_matrix = obj.matrix_world
-            normal_matrix = world_matrix.to_3x3().inverted().transposed()
-            uv_layer = mesh.uv_layers.active
-            positions = []
-            normals = []
-            texture_coordinates = []
-            for triangle in mesh.loop_triangles:
-                loop_indices = [triangle.loops[0], triangle.loops[2], triangle.loops[1]]
-                for loop_index in loop_indices:
-                    loop = mesh.loops[loop_index]
-                    position = directx_vector(world_matrix @ mesh.vertices[loop.vertex_index].co)
-                    normal = directx_vector(normal_matrix @ mesh.corner_normals[loop_index].vector)
-                    normal.normalize()
-                    positions.append(position)
-                    normals.append(normal)
-                    if uv_layer is None:
-                        texture_coordinates.append((position.x * 0.18, position.z * 0.18))
-                    else:
-                        uv = uv_layer.data[loop_index].uv
-                        texture_coordinates.append((uv.x, 1.0 - uv.y))
+    bpy.ops.object.select_all(action="DESELECT")
+    selected_count = 0
+    for scene_object in collection.all_objects:
+        if scene_object.type != "MESH":
+            continue
+        if not scene_object.get("rf2_export"):
+            continue
+        scene_object.select_set(True)
+        selected_count += 1
 
-            frame_name = sanitize_name(obj.name)
-            mesh_name = frame_name + "Mesh"
-            vertex_count = len(positions)
-            face_count = vertex_count // 3
-            emissive = "          0.000000;0.000000;0.000000;;"
-            if material.name == "RF2_CaveSky_World3Night":
-                emissive = "          0.380000;0.380000;0.380000;;"
-            elif material.name == "RF3_StarWhite":
-                emissive = "          0.950000;0.950000;1.000000;;"
-            elif material.name == "RF2_CaveSky_World4Dawn":
-                emissive = "          0.550000;0.550000;0.550000;;"
-            elif material.name.startswith("RF2_CaveSky"):
-                emissive = "          0.280000;0.280000;0.280000;;"
-            lines.extend([
-                "  Frame " + frame_name + " {",
-                "    FrameTransformMatrix {",
-                "      1.000000,0.000000,0.000000,0.000000,",
-                "      0.000000,1.000000,0.000000,0.000000,",
-                "      0.000000,0.000000,1.000000,0.000000,",
-                "      0.000000,0.000000,0.000000,1.000000;;",
-                "    }",
-                "    Mesh " + mesh_name + " {",
-                "      " + str(vertex_count) + ";",
-            ])
-            for index, position in enumerate(positions):
-                suffix = ","
-                if index + 1 == vertex_count:
-                    suffix = ";"
-                lines.append("      %.6f;%.6f;%.6f;%s" % (position.x, position.y, position.z, suffix))
-            lines.append("      " + str(face_count) + ";")
-            for face_index in range(face_count):
-                vertex_index = face_index * 3
-                suffix = ","
-                if face_index + 1 == face_count:
-                    suffix = ";"
-                lines.append("      3;%d,%d,%d;%s" % (
-                    vertex_index,
-                    vertex_index + 1,
-                    vertex_index + 2,
-                    suffix,
-                ))
-            lines.extend([
-                "      MeshNormals {",
-                "        " + str(vertex_count) + ";",
-            ])
-            for index, normal in enumerate(normals):
-                suffix = ","
-                if index + 1 == vertex_count:
-                    suffix = ";"
-                lines.append("        %.6f;%.6f;%.6f;%s" % (normal.x, normal.y, normal.z, suffix))
-            lines.append("        " + str(face_count) + ";")
-            for face_index in range(face_count):
-                vertex_index = face_index * 3
-                suffix = ","
-                if face_index + 1 == face_count:
-                    suffix = ";"
-                lines.append("        3;%d,%d,%d;%s" % (
-                    vertex_index,
-                    vertex_index + 1,
-                    vertex_index + 2,
-                    suffix,
-                ))
-            lines.extend([
-                "      }",
-                "      MeshTextureCoords {",
-                "        " + str(vertex_count) + ";",
-            ])
-            for index, uv in enumerate(texture_coordinates):
-                suffix = ","
-                if index + 1 == vertex_count:
-                    suffix = ";"
-                lines.append("        %.6f;%.6f;%s" % (uv[0], uv[1], suffix))
-            lines.extend([
-                "      }",
-                "      MeshMaterialList {",
-                "        1;",
-                "        " + str(face_count) + ";",
-                "        " + ",".join("0" for _ in range(face_count)) + ";;",
-                "        Material " + sanitize_name(material.name) + " {",
-                "          0.720000;0.720000;0.720000;1.000000;;",
-                "          8.000000;",
-                "          0.080000;0.080000;0.080000;;",
-                emissive,
-                "          TextureFilename {",
-                "            \"" + texture + "\";",
-                "          }",
-                "        }",
-                "      }",
-                "    }",
-                "  }",
-            ])
-        finally:
-            evaluated.to_mesh_clear()
-    lines.append("}")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8", newline="") as output_file:
-        output_file.write("\r\n".join(lines) + "\r\n")
-    print("EXPORTED_DETAIL_OBJECTS", len(export_objects))
+    if selected_count == 0:
+        raise RuntimeError("No meshes were selected for DirectX export.")
+
+    result = bpy.ops.export_scene.directx_x(
+        filepath=output_path,
+        use_selection=True,
+        use_mesh_modifiers=True,
+        global_scale=1.0,
+        axis_forward="-Z",
+        axis_up="Y",
+        export_normals=True,
+        export_uvs=True,
+        export_materials=True,
+        export_textures=True,
+        export_armature=False,
+        export_weights=False,
+        export_animation=False,
+        unweld_on_export=False,
+        use_original_material_data=False,
+        export_format="TEXT_X",
+        triangulate=False,
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError("DirectX export failed: " + output_path)
+
+    print("EXPORTED_DETAIL_OBJECTS", selected_count)
 
 
 def add_preview_light(name, light_type, location, energy, color, size=5.0):
