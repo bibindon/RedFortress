@@ -328,35 +328,39 @@ namespace
         return true;
     }
 
-    bool TryBuildAdjacentStagePortalId(const std::wstring& portalId, const int stageStep, std::wstring* adjacentPortalId)
+    bool AreStagePortalsSequential(const std::wstring& currentPortalId, const std::wstring& candidatePortalId)
     {
-        if (adjacentPortalId == nullptr)
-        {
-            return false;
-        }
-
         const std::wstring prefix = L"portal-to-";
-        if (portalId.length() <= prefix.length() || portalId.substr(0, prefix.length()) != prefix)
+        if (currentPortalId.length() <= prefix.length() ||
+            currentPortalId.substr(0, prefix.length()) != prefix ||
+            candidatePortalId.length() <= prefix.length() ||
+            candidatePortalId.substr(0, prefix.length()) != prefix)
+        {
+            return true;
+        }
+
+        int currentWorldNumber = 0;
+        int currentStageNumber = 0;
+        const std::wstring currentDestinationId = currentPortalId.substr(prefix.length());
+        if (!TryParseStageDestinationId(currentDestinationId, &currentWorldNumber, &currentStageNumber))
+        {
+            return true;
+        }
+
+        int candidateWorldNumber = 0;
+        int candidateStageNumber = 0;
+        const std::wstring candidateDestinationId = candidatePortalId.substr(prefix.length());
+        if (!TryParseStageDestinationId(candidateDestinationId, &candidateWorldNumber, &candidateStageNumber))
+        {
+            return true;
+        }
+
+        if (currentWorldNumber != candidateWorldNumber)
         {
             return false;
         }
 
-        const std::wstring destinationId = portalId.substr(prefix.length());
-        int worldNumber = 0;
-        int stageNumber = 0;
-        if (!TryParseStageDestinationId(destinationId, &worldNumber, &stageNumber))
-        {
-            return false;
-        }
-
-        const int nextStageNumber = stageNumber + stageStep;
-        if (nextStageNumber < 1 || nextStageNumber > 8)
-        {
-            return false;
-        }
-
-        *adjacentPortalId = prefix + std::to_wstring(worldNumber) + L"-" + std::to_wstring(nextStageNumber);
-        return true;
+        return std::abs(currentStageNumber - candidateStageNumber) == 1;
     }
 
     bool IsBombAttackType(const PlayerAttackType attackType)
@@ -3227,6 +3231,7 @@ void GameApp::InitializeStageSelectCursor()
     m_stageSelectPlayerMoveTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_stageSelectPlayerMoveElapsed = 0.0f;
     m_stageSelectPlayerMoveActive = false;
+    m_stageSelectStickDirectionActive = false;
 
     if (!IsCurrentStageSelect())
     {
@@ -3348,34 +3353,6 @@ void GameApp::MoveStageSelectCursorByDirection(const float directionX, const flo
     }
 
     const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
-    if (directionX != 0.0f && directionY == 0.0f)
-    {
-        int stageStep = -1;
-        if (directionX > 0.0f)
-        {
-            stageStep = 1;
-        }
-
-        std::wstring adjacentPortalId;
-        if (TryBuildAdjacentStagePortalId(m_selectedStagePortalId, stageStep, &adjacentPortalId))
-        {
-            for (const InteractionManager::Interactable& interactable : interactables)
-            {
-                if (interactable.type == L"StagePortal" &&
-                    interactable.id == adjacentPortalId)
-                {
-                    if (IsStagePortalSelectable(interactable.id))
-                    {
-                        m_selectedStagePortalId = interactable.id;
-                        m_selectedStagePortalPosition = interactable.position;
-                        m_hasSelectedStagePortal = true;
-                        SyncStageSelectPlayerToPortal(false);
-                    }
-                    return;
-                }
-            }
-        }
-    }
 
     const POINT currentScreenPosition = NSRender::Camera::GetScreenPos(m_selectedStagePortalPosition);
     if (currentScreenPosition.x < 0 || currentScreenPosition.y < 0)
@@ -3390,6 +3367,7 @@ void GameApp::MoveStageSelectCursorByDirection(const float directionX, const flo
     {
         if (interactable.type != L"StagePortal" ||
             interactable.id == m_selectedStagePortalId ||
+            !AreStagePortalsSequential(m_selectedStagePortalId, interactable.id) ||
             !IsStagePortalSelectable(interactable.id))
         {
             continue;
@@ -3464,8 +3442,54 @@ void GameApp::UpdateStageSelectCursorByInput()
     {
         directionY = 1.0f;
     }
+    else if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_LEFT))
+    {
+        directionX = -1.0f;
+    }
+    else if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_RIGHT))
+    {
+        directionX = 1.0f;
+    }
+    else if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_UP))
+    {
+        directionY = -1.0f;
+    }
+    else if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_DOWN))
+    {
+        directionY = 1.0f;
+    }
 
-    if (directionX != 0.0f || directionY != 0.0f)
+    const InputDevice::GamePadStick leftStick = InputDevice::GamePad::GetStickL();
+    if (leftStick.power <= 0.35f)
+    {
+        m_stageSelectStickDirectionActive = false;
+    }
+    else if (directionX == 0.0f && directionY == 0.0f &&
+             !m_stageSelectStickDirectionActive && leftStick.power >= 0.60f)
+    {
+        m_stageSelectStickDirectionActive = true;
+        if (fabsf(leftStick.x) >= fabsf(leftStick.y))
+        {
+            if (leftStick.x < 0.0f)
+            {
+                directionX = -1.0f;
+            }
+            else
+            {
+                directionX = 1.0f;
+            }
+        }
+        else if (leftStick.y > 0.0f)
+        {
+            directionY = -1.0f;
+        }
+        else
+        {
+            directionY = 1.0f;
+        }
+    }
+
+    if (!m_stageSelectPlayerMoveActive && (directionX != 0.0f || directionY != 0.0f))
     {
         MoveStageSelectCursorByDirection(directionX, directionY);
     }
@@ -3535,7 +3559,8 @@ void GameApp::UpdateStageSelectCursorByInput()
         }
     }
 
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+        InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
     {
         MoveToSelectedStagePortal();
     }

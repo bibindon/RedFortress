@@ -242,41 +242,98 @@ def create_star_field(collection, material):
     random_generator = random.Random(31027)
     vertices = []
     faces = []
-    star_count = 240
-    for index in range(star_count):
-        while True:
-            x = random_generator.uniform(-42.0, 42.0)
-            y = random_generator.uniform(42.0, 52.0)
-            horizontal_distance = math.sqrt(x * x + y * y)
-            if horizontal_distance >= 70.0:
+    camera_position = Vector((0.0, -38.0, 23.0))
+    camera_target = Vector((0.0, 6.0, 4.2))
+    camera_forward = (camera_target - camera_position).normalized()
+    camera_right = Vector((1.0, 0.0, 0.0))
+    camera_up = camera_right.cross(camera_forward).normalized()
+    horizontal_half_tangent = 1.0
+    vertical_half_tangent = horizontal_half_tangent * 9.0 / 16.0
+    sky_center = Vector((0.0, 0.0, 4.0))
+    horizontal_sky_radius = 72.0
+    vertical_sky_radius = 38.0
+    row_count = 21
+    column_count = 38
+    star_index = 0
+    for row_index in range(row_count):
+        for column_index in range(column_count):
+            jitter_x = random_generator.uniform(-0.48, 0.48)
+            jitter_y = random_generator.uniform(-0.48, 0.48)
+            screen_x = ((column_index + 0.5 + jitter_x) / column_count) * 2.0 - 1.0
+            screen_y = ((row_index + 0.5 + jitter_y) / row_count) * 2.0 - 1.0
+            density = 0.46
+            density += 0.13 * math.sin(screen_x * 3.1 + screen_y * 1.7)
+            density += 0.10 * math.cos(screen_y * 4.3 - screen_x * 1.2)
+            cluster_offset_x = screen_x + 0.58
+            cluster_offset_y = screen_y - 0.24
+            density += 0.20 * math.exp(
+                -(cluster_offset_x * cluster_offset_x + cluster_offset_y * cluster_offset_y) / 0.10
+            )
+            cluster_offset_x = screen_x - 0.52
+            cluster_offset_y = screen_y + 0.42
+            density += 0.17 * math.exp(
+                -(cluster_offset_x * cluster_offset_x + cluster_offset_y * cluster_offset_y) / 0.08
+            )
+            density = max(0.22, min(density, 0.76))
+            if random_generator.random() > density:
                 continue
-            sky_height = 4.0 + 38.0 * math.sqrt(1.0 - horizontal_distance * horizontal_distance / (72.0 * 72.0))
-            if sky_height >= 19.0:
-                break
-        z = random_generator.uniform(17.0, sky_height - 0.8)
-        radius = random_generator.uniform(0.07, 0.15)
-        if index % 17 == 0:
-            radius = random_generator.uniform(0.16, 0.21)
-        vertical_radius = radius * random_generator.uniform(1.1, 1.7)
-        base_index = len(vertices)
-        vertices.extend([
-            (x, y, z + vertical_radius),
-            (x, y, z - vertical_radius),
-            (x + radius, y, z),
-            (x - radius, y, z),
-            (x, y + radius, z),
-            (x, y - radius, z),
-        ])
-        faces.extend([
-            (base_index, base_index + 2, base_index + 4),
-            (base_index, base_index + 4, base_index + 3),
-            (base_index, base_index + 3, base_index + 5),
-            (base_index, base_index + 5, base_index + 2),
-            (base_index + 1, base_index + 4, base_index + 2),
-            (base_index + 1, base_index + 3, base_index + 4),
-            (base_index + 1, base_index + 5, base_index + 3),
-            (base_index + 1, base_index + 2, base_index + 5),
-        ])
+            ray_direction = (
+                camera_forward +
+                camera_right * (screen_x * horizontal_half_tangent) +
+                camera_up * (screen_y * vertical_half_tangent)
+            ).normalized()
+            relative_camera = camera_position - sky_center
+            ray_a = (
+                (ray_direction.x * ray_direction.x + ray_direction.y * ray_direction.y) /
+                (horizontal_sky_radius * horizontal_sky_radius) +
+                ray_direction.z * ray_direction.z / (vertical_sky_radius * vertical_sky_radius)
+            )
+            ray_b = 2.0 * (
+                (relative_camera.x * ray_direction.x + relative_camera.y * ray_direction.y) /
+                (horizontal_sky_radius * horizontal_sky_radius) +
+                relative_camera.z * ray_direction.z / (vertical_sky_radius * vertical_sky_radius)
+            )
+            ray_c = (
+                (relative_camera.x * relative_camera.x + relative_camera.y * relative_camera.y) /
+                (horizontal_sky_radius * horizontal_sky_radius) +
+                relative_camera.z * relative_camera.z / (vertical_sky_radius * vertical_sky_radius) - 1.0
+            )
+            discriminant = ray_b * ray_b - 4.0 * ray_a * ray_c
+            if discriminant <= 0.0:
+                raise RuntimeError("Stage-select 3 star ray did not intersect the sky sphere.")
+            distance = (-ray_b + math.sqrt(discriminant)) / (2.0 * ray_a)
+            star_position = camera_position + ray_direction * (distance - 0.8)
+            x = star_position.x
+            y = star_position.y
+            z = star_position.z
+            size_roll = random_generator.random()
+            if size_roll < 0.70:
+                radius = distance * random_generator.uniform(0.00075, 0.00110)
+            elif size_roll < 0.95:
+                radius = distance * random_generator.uniform(0.00115, 0.00165)
+            else:
+                radius = distance * random_generator.uniform(0.0019, 0.0023)
+            vertical_radius = radius * random_generator.uniform(1.05, 1.55)
+            base_index = len(vertices)
+            vertices.extend([
+                (x, y, z + vertical_radius),
+                (x, y, z - vertical_radius),
+                (x + radius, y, z),
+                (x - radius, y, z),
+                (x, y + radius, z),
+                (x, y - radius, z),
+            ])
+            faces.extend([
+                (base_index, base_index + 2, base_index + 4),
+                (base_index, base_index + 4, base_index + 3),
+                (base_index, base_index + 3, base_index + 5),
+                (base_index, base_index + 5, base_index + 2),
+                (base_index + 1, base_index + 4, base_index + 2),
+                (base_index + 1, base_index + 3, base_index + 4),
+                (base_index + 1, base_index + 5, base_index + 3),
+                (base_index + 1, base_index + 2, base_index + 5),
+            ])
+            star_index += 1
     mesh = bpy.data.meshes.new("RF3_StarFieldMesh")
     mesh.from_pydata(vertices, [], faces)
     mesh.update()
@@ -511,7 +568,7 @@ def render_preview(preview_path):
     camera = bpy.data.objects.new("RF3_PreviewCamera", camera_data)
     bpy.context.scene.collection.objects.link(camera)
     camera.location = (0.0, -38.0, 23.0)
-    camera.data.lens = 48.0
+    camera.data.lens = 18.0
     common.aim_object(camera, (0.0, 6.0, 4.2))
     bpy.context.scene.camera = camera
 

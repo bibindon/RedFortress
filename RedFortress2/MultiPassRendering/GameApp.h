@@ -359,6 +359,7 @@ private:
     D3DXVECTOR3 m_stageSelectPlayerMoveTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     float m_stageSelectPlayerMoveElapsed = 0.0f;
     bool m_stageSelectPlayerMoveActive = false;
+    bool m_stageSelectStickDirectionActive = false;
     std::vector<int> m_stageSelectCubeMeshIds;
     bool m_titleDeleteConfirmMode = false;
     bool m_titleLanguageSelectionMode = false;
