@@ -128,6 +128,8 @@ namespace
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
     const float kStageSelectPlayerVisualScale = 1.0f;
+    const float kStageSelect2PlayerLightHeight = 3.2f;
+    const wchar_t* kStageSelect2PlayerLightOwnerTag = L"stage-select2-player";
     const int kStageSelectStageNameX = 48;
     const int kStageSelectStageNameY = 42;
     const int kStageSelectLivesX = 1190;
@@ -2734,6 +2736,8 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         }
     }
 
+    UpdateStageSelect2PlayerLight();
+
     // 落下死演出中はメッシュ更新のみ行い、カメラ追従を止めてプレイヤーが落ちていく様を見せる
     if (m_playerFallingDead)
     {
@@ -2833,6 +2837,30 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     m_render.AddPointLight(D3DXVECTOR3(-10.0f, 2.3f, 0.0f), 5.0f, cyanLight);
     m_render.AddPointLight(D3DXVECTOR3(-3.0f, 2.3f, -8.0f), 4.5f, warmLight);
     m_render.AddPointLight(D3DXVECTOR3(9.0f, 2.5f, -7.0f), 5.0f, blueLight);
+    const D3DXVECTOR3 playerLightPosition =
+        m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelect2PlayerLightHeight, 0.0f);
+    const D3DXCOLOR playerLightColor(1.0f, 0.78f, 0.52f, 1.0f);
+    m_render.AddPointLight(playerLightPosition,
+                           7.0f,
+                           playerLightColor,
+                           NSRender::PointLightShape::Point,
+                           12.0f,
+                           10.0f,
+                           10.0f,
+                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                           kStageSelect2PlayerLightOwnerTag);
+}
+
+void GameApp::UpdateStageSelect2PlayerLight()
+{
+    if (m_stageManager.GetCurrentStage().id != L"select2")
+    {
+        return;
+    }
+
+    const D3DXVECTOR3 lightPosition =
+        m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelect2PlayerLightHeight, 0.0f);
+    m_render.SetPointLightPositionByOwnerTag(kStageSelect2PlayerLightOwnerTag, lightPosition);
 }
 
 bool GameApp::IsCurrentStageSelect() const
