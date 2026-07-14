@@ -124,6 +124,7 @@ namespace
     const float kPlayerWalkAnimationSpeed = 1.3f;
     const float kStagePortalClickRadius = 48.0f;
     const float kStageSelectPlayerMoveDuration = 0.5f;
+    const float kStageSelectTransitionFadeDuration = 0.3f;
     const float kStageSelectPlayerRightYaw = -D3DX_PI * 0.5f;
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
@@ -853,6 +854,13 @@ void GameApp::Run()
         {
             GameAudio::PlayEndingMusic();
         }
+
+        if (m_stageTransitionAction != StageTransitionAction::None)
+        {
+            UpdateStageTransition();
+            continue;
+        }
+
         if (m_gameState == GameState::Playing &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
@@ -4336,6 +4344,11 @@ bool GameApp::StartStageByIndex(std::size_t stageIndex)
     const std::wstring storyScriptPath = GetStageStoryScriptPath(stage.id, L"Before");
     if (!storyScriptPath.empty())
     {
+        if (m_gameState == GameState::Playing && IsCurrentStageSelect())
+        {
+            return BeginStageTransitionToStory(stageIndex);
+        }
+
         m_pendingStageIndexAfterSlideShow = stageIndex;
         m_slideShowManager.Start(storyScriptPath);
         m_slideShowManager.SetStopOnFinish(false);
@@ -4348,17 +4361,173 @@ bool GameApp::StartStageByIndex(std::size_t stageIndex)
 
 bool GameApp::StartStageByIndexImmediate(std::size_t stageIndex)
 {
+    if (stageIndex >= m_stageManager.GetStageCount())
+    {
+        return false;
+    }
+
+    const StageManager::StageData& targetStage = m_stageManager.GetStage(stageIndex);
+    const bool leavesStageSelect = m_gameState == GameState::Playing && IsCurrentStageSelect();
+    const bool entersStageSelect = IsStageSelectId(targetStage.id);
+    if (leavesStageSelect || entersStageSelect)
+    {
+        return BeginStageTransitionToIndex(stageIndex);
+    }
+
+    return CompleteStageMove(stageIndex);
+}
+
+bool GameApp::BeginStageTransitionToIndex(const std::size_t stageIndex)
+{
+    if (stageIndex >= m_stageManager.GetStageCount() ||
+        m_stageTransitionAction != StageTransitionAction::None)
+    {
+        return false;
+    }
+
+    m_stageTransitionIndex = stageIndex;
+    m_stageTransitionAction = StageTransitionAction::MoveToIndex;
+    m_render.StartFadeOut(kStageSelectTransitionFadeDuration);
+    return true;
+}
+
+bool GameApp::BeginStageTransitionToStory(const std::size_t stageIndex)
+{
+    if (stageIndex >= m_stageManager.GetStageCount() ||
+        m_stageTransitionAction != StageTransitionAction::None)
+    {
+        return false;
+    }
+
+    m_stageTransitionIndex = stageIndex;
+    m_stageTransitionAction = StageTransitionAction::StartStory;
+    m_render.StartFadeOut(kStageSelectTransitionFadeDuration);
+    return true;
+}
+
+bool GameApp::BeginStageTransitionAfterClear()
+{
+    if (m_stageTransitionAction != StageTransitionAction::None)
+    {
+        return false;
+    }
+
+    m_stageTransitionIndex = static_cast<std::size_t>(-1);
+    m_stageTransitionAction = StageTransitionAction::MoveAfterClear;
+    m_render.StartFadeOut(kStageSelectTransitionFadeDuration);
+    return true;
+}
+
+void GameApp::UpdateStageTransition()
+{
+    if (m_stageTransitionAction == StageTransitionAction::FadeIn)
+    {
+        if (m_render.GetFadeAlpha() <= 0.0f)
+        {
+            m_stageTransitionAction = StageTransitionAction::None;
+            m_stageTransitionIndex = static_cast<std::size_t>(-1);
+            return;
+        }
+
+        if (m_gameState == GameState::SlideShow && m_slideShowManager.IsActive())
+        {
+            m_render.Draw();
+            m_slideShowManager.Render();
+            m_slideShowManager.DrawSkipHint();
+            return;
+        }
+
+        if (IsCurrentStageSelect())
+        {
+            DrawStageSelectCursor();
+        }
+        m_render.Draw();
+        return;
+    }
+
+    if (m_render.GetFadeAlpha() < 1.0f)
+    {
+        if (m_gameState == GameState::Title)
+        {
+            DrawTitleScreen();
+            return;
+        }
+
+        if (m_gameState == GameState::StageClear)
+        {
+            DrawStageClear();
+        }
+        else if (IsCurrentStageSelect())
+        {
+            DrawStageSelectCursor();
+        }
+
+        m_render.Draw();
+        return;
+    }
+
+    const StageTransitionAction action = m_stageTransitionAction;
+    const std::size_t stageIndex = m_stageTransitionIndex;
+    m_stageTransitionAction = StageTransitionAction::None;
+    m_stageTransitionIndex = static_cast<std::size_t>(-1);
+
+    if (action == StageTransitionAction::MoveToIndex)
+    {
+        if (!CompleteStageMove(stageIndex))
+        {
+            throw std::runtime_error("Failed to move to a stage after the stage-select fade-out.");
+        }
+        return;
+    }
+
+    if (action == StageTransitionAction::StartStory)
+    {
+        const StageManager::StageData& stage = m_stageManager.GetStage(stageIndex);
+        const std::wstring storyScriptPath = GetStageStoryScriptPath(stage.id, L"Before");
+        if (storyScriptPath.empty())
+        {
+            throw std::runtime_error("Stage story was not found after the stage-select fade-out.");
+        }
+
+        m_pendingStageIndexAfterSlideShow = stageIndex;
+        m_slideShowManager.Start(storyScriptPath);
+        m_slideShowManager.SetStopOnFinish(false);
+        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
+        m_gameState = GameState::SlideShow;
+        m_stageTransitionAction = StageTransitionAction::FadeIn;
+        return;
+    }
+
+    if (action == StageTransitionAction::MoveAfterClear)
+    {
+        if (!MoveToStageAfterClear())
+        {
+            throw std::runtime_error("Failed to return to stage select after the fade-out.");
+        }
+        if (IsCurrentStageSelect())
+        {
+            m_stageTransitionAction = StageTransitionAction::FadeIn;
+        }
+        return;
+    }
+
+    throw std::runtime_error("Invalid stage transition action.");
+}
+
+bool GameApp::CompleteStageMove(const std::size_t stageIndex)
+{
     if (!m_stageManager.MoveToStage(stageIndex))
     {
         return false;
     }
 
-    m_render.StartFadeOut(0.3f);
     LoadCurrentStageObjects();
     if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
-        m_render.StartFadeIn(0.3f);
+        m_render.SetFadeAlpha(1.0f);
+        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
         m_gameState = GameState::Playing;
+        m_stageTransitionAction = StageTransitionAction::FadeIn;
     }
     else
     {
@@ -5386,8 +5555,7 @@ bool GameApp::StartNextStage()
 
 bool GameApp::StartStageAfterClear()
 {
-    m_render.StartFadeOut(0.3f);
-    return MoveToStageAfterClear();
+    return BeginStageTransitionAfterClear();
 }
 
 bool GameApp::MoveToStageAfterClear()
@@ -5415,7 +5583,7 @@ bool GameApp::MoveToStageAfterClear()
     LoadCurrentStageObjects();
     if (IsCurrentStageSelect())
     {
-        m_render.StartFadeIn(0.3f);
+        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
         m_gameState = GameState::Playing;
     }
     else

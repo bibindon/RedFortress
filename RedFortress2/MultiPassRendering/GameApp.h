@@ -129,6 +129,11 @@ private:
     void AllUnlockStages(HWND hDlg);
     bool StartStageByIndex(std::size_t stageIndex);
     bool StartStageByIndexImmediate(std::size_t stageIndex);
+    bool BeginStageTransitionToIndex(std::size_t stageIndex);
+    bool BeginStageTransitionToStory(std::size_t stageIndex);
+    bool BeginStageTransitionAfterClear();
+    void UpdateStageTransition();
+    bool CompleteStageMove(std::size_t stageIndex);
     void StartNewGame();
     std::size_t GetContinueStartStageIndex() const;
     void MoveToSelectedStage(HWND hDlg);
@@ -215,6 +220,7 @@ private:
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
     enum class QteVisualPhase { None, Active, Restoring };
+    enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, FadeIn };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
 
@@ -322,6 +328,8 @@ private:
     float m_stageClearStoredFovDegrees = 90.0f;
     bool m_startStageAfterSlideShow = false;
     std::size_t m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);
+    StageTransitionAction m_stageTransitionAction = StageTransitionAction::None;
+    std::size_t m_stageTransitionIndex = static_cast<std::size_t>(-1);
     StageEditor m_stageEditor;
     D3DXVECTOR3 m_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
