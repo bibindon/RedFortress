@@ -38,6 +38,7 @@ PORTALS = [
 ]
 
 TEXTURES = {
+    "RF2_CaveSky": "../SkySphere_cave/Skydome.png",
     "stageSelectCaveWall": "stageSelectCaveWall.png",
     "stageSelectCaveDeepDark": "stageSelectCaveDeepDark.png",
     "stageSelectCavePath": "stageSelectCavePath.png",
@@ -91,6 +92,35 @@ def find_material(prefix):
             material["rf2_texture"] = TEXTURES[prefix]
             return material
     raise RuntimeError("Required material not found: " + prefix)
+
+
+def create_cave_sky_material():
+    material = bpy.data.materials.get("RF2_CaveSky")
+    if material is None:
+        material = bpy.data.materials.new("RF2_CaveSky")
+    material["rf2_texture"] = TEXTURES["RF2_CaveSky"]
+    material.diffuse_color = (0.12, 0.09, 0.055, 1.0)
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    nodes.clear()
+    output_node = nodes.new("ShaderNodeOutputMaterial")
+    shader_node = nodes.new("ShaderNodeBsdfPrincipled")
+    texture_node = nodes.new("ShaderNodeTexImage")
+    image_path = os.path.abspath(os.path.join(
+        os.path.dirname(bpy.data.filepath),
+        TEXTURES["RF2_CaveSky"],
+    ))
+    texture_node.image = bpy.data.images.load(image_path, check_existing=True)
+    links.new(texture_node.outputs["Color"], shader_node.inputs["Base Color"])
+    if "Roughness" in shader_node.inputs:
+        shader_node.inputs["Roughness"].default_value = 1.0
+    if "Emission Color" in shader_node.inputs:
+        links.new(texture_node.outputs["Color"], shader_node.inputs["Emission Color"])
+    if "Emission Strength" in shader_node.inputs:
+        shader_node.inputs["Emission Strength"].default_value = 0.28
+    links.new(shader_node.outputs["BSDF"], output_node.inputs["Surface"])
+    return material
 
 
 def create_mesh_object(collection, name, mesh, material):
@@ -251,6 +281,49 @@ def create_irregular_pool(collection, material):
     create_mesh_object(collection, "RF2_ObsidianPool", mesh, material)
 
 
+def create_cave_sky(collection, material):
+    horizontal_radius = 72.0
+    vertical_radius = 38.0
+    center_height = 4.0
+    longitude_segments = 32
+    latitude_segments = 14
+    vertices = []
+    texture_coordinates = []
+    for latitude_index in range(latitude_segments + 1):
+        latitude = math.pi * latitude_index / latitude_segments
+        ring_radius = math.sin(latitude) * horizontal_radius
+        height = math.cos(latitude) * vertical_radius + center_height
+        for longitude_index in range(longitude_segments + 1):
+            longitude = math.tau * longitude_index / longitude_segments
+            vertices.append((
+                ring_radius * math.cos(longitude),
+                ring_radius * math.sin(longitude),
+                height,
+            ))
+            texture_coordinates.append((
+                longitude_index / longitude_segments,
+                latitude_index / latitude_segments,
+            ))
+    faces = []
+    row_size = longitude_segments + 1
+    for latitude_index in range(latitude_segments):
+        for longitude_index in range(longitude_segments):
+            a = latitude_index * row_size + longitude_index
+            b = a + 1
+            c = a + row_size + 1
+            d = a + row_size
+            faces.append((a, d, c, b))
+    mesh = bpy.data.meshes.new("RF2_CaveSkyMesh")
+    mesh.from_pydata(vertices, [], faces)
+    mesh.update()
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            uv_layer.data[loop_index].uv = texture_coordinates[vertex_index]
+    create_mesh_object(collection, "RF2_CaveSky", mesh, material)
+
+
 def create_gateway(collection, prefix, center, direction, shrine_material, wall_material):
     direction_vector = Vector(direction)
     direction_vector.normalize()
@@ -314,6 +387,7 @@ def add_crystal_cluster(collection, prefix, center, crystal_material, wall_mater
 
 
 def build_stage_details(collection, materials):
+    create_cave_sky(collection, materials["sky"])
     create_path_ribbon(collection, materials["path"])
     for index, (x, y) in enumerate(PORTALS):
         create_cylinder(
@@ -508,6 +582,9 @@ def export_directx_meshes(collection, output_path):
             mesh_name = frame_name + "Mesh"
             vertex_count = len(positions)
             face_count = vertex_count // 3
+            emissive = "          0.000000;0.000000;0.000000;;"
+            if material.name.startswith("RF2_CaveSky"):
+                emissive = "          0.280000;0.280000;0.280000;;"
             lines.extend([
                 "  Frame " + frame_name + " {",
                 "    FrameTransformMatrix {",
@@ -577,7 +654,7 @@ def export_directx_meshes(collection, output_path):
                 "          0.720000;0.720000;0.720000;1.000000;;",
                 "          8.000000;",
                 "          0.080000;0.080000;0.080000;;",
-                "          0.000000;0.000000;0.000000;;",
+                emissive,
                 "          TextureFilename {",
                 "            \"" + texture + "\";",
                 "          }",
@@ -620,9 +697,9 @@ def render_preview(preview_path):
     camera_data = bpy.data.cameras.new("RF2_PREVIEW_CameraData")
     camera = bpy.data.objects.new("RF2_PREVIEW_Camera", camera_data)
     bpy.context.scene.collection.objects.link(camera)
-    camera.location = (0.0, -30.0, 22.0)
+    camera.location = (0.0, -32.0, 15.0)
     camera_data.lens = 42.0
-    aim_object(camera, (0.0, 3.0, 0.5))
+    aim_object(camera, (0.0, 2.0, 0.8))
     bpy.context.scene.camera = camera
 
     key = add_preview_light(
@@ -673,6 +750,7 @@ def main():
     remove_dummy_base_objects()
     collection = create_detail_collection()
     materials = {
+        "sky": create_cave_sky_material(),
         "wall": find_material("stageSelectCaveWall"),
         "dark": find_material("stageSelectCaveDeepDark"),
         "path": find_material("stageSelectCavePath"),
