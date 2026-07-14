@@ -94,6 +94,26 @@ def create_polygon_prism(collection, name, boundary, bottom_height, top_height, 
     return common.create_mesh_object(collection, name, mesh, material)
 
 
+def create_sloped_patch(collection, name, boundary, bottom_height, material):
+    center_x = sum(vertex[0] for vertex in boundary) / len(boundary)
+    center_y = sum(vertex[1] for vertex in boundary) / len(boundary)
+    center_z = sum(vertex[2] for vertex in boundary) / len(boundary) + 0.18
+    vertices = list(boundary)
+    center_index = len(vertices)
+    vertices.append((center_x, center_y, center_z))
+    bottom_start = len(vertices)
+    vertices.extend((x, y, bottom_height) for x, y, z in boundary)
+    faces = []
+    for index in range(len(boundary)):
+        next_index = (index + 1) % len(boundary)
+        faces.append((center_index, index, next_index))
+        faces.append((index, bottom_start + index, bottom_start + next_index, next_index))
+    mesh = bpy.data.meshes.new(name + "Mesh")
+    mesh.from_pydata(vertices, [], faces)
+    mesh.update()
+    return common.create_mesh_object(collection, name, mesh, material)
+
+
 def create_path_ribbon(collection, name, points, half_width, material):
     vertices = []
     faces = []
@@ -217,35 +237,8 @@ def create_night_sky(collection, material):
         sky_object.name = "RF3_MoonlessSky"
 
 
-def create_visible_starfield(collection, material):
-    vertices = []
-    faces = []
-    star_count = 72
-    for index in range(star_count):
-        x = -34.0 + float((index * 37) % 69)
-        y = 40.0 + float(index % 5) * 1.8
-        z = 6.0 + float((index * 23) % 29)
-        size = 0.08 + float((index * 11) % 7) * 0.025
-        if index % 17 == 0:
-            size = 0.30
-        base = len(vertices)
-        vertices.extend([
-            (x, y, z - size),
-            (x + size, y, z),
-            (x, y, z + size),
-            (x - size, y, z),
-        ])
-        faces.append((base, base + 1, base + 2, base + 3))
-        faces.append((base + 3, base + 2, base + 1, base))
-    mesh = bpy.data.meshes.new("RF3_VisibleStarsMesh")
-    mesh.from_pydata(vertices, [], faces)
-    mesh.update()
-    common.create_mesh_object(collection, "RF3_VisibleStars", mesh, material)
-
-
 def build_scene(collection, materials):
     create_night_sky(collection, materials["sky"])
-    create_visible_starfield(collection, materials["stars"])
 
     create_polygon_prism(
         collection,
@@ -254,6 +247,36 @@ def build_scene(collection, materials):
         -2.8,
         0.0,
         materials["dark"],
+    )
+    create_sloped_patch(
+        collection,
+        "RF3_LeftFoothill",
+        [
+            (-42.0, -10.0, -2.2),
+            (-38.0, 6.0, -1.2),
+            (-26.0, 9.0, 0.0),
+            (-24.0, -8.0, 0.15),
+            (-15.0, -16.0, -0.25),
+            (-18.0, -23.0, -1.3),
+            (-34.0, -24.0, -2.0),
+        ],
+        -3.2,
+        materials["rock"],
+    )
+    create_sloped_patch(
+        collection,
+        "RF3_RightFoothill",
+        [
+            (42.0, -10.0, -2.2),
+            (38.0, 6.0, -1.2),
+            (26.0, 9.0, 0.0),
+            (24.0, -8.0, 0.15),
+            (15.0, -16.0, -0.25),
+            (18.0, -23.0, -1.3),
+            (34.0, -24.0, -2.0),
+        ],
+        -3.2,
+        materials["rock"],
     )
     create_polygon_prism(
         collection,
@@ -339,6 +362,8 @@ def build_scene(collection, materials):
 
     pines = [
         (-21.0, -9.0, 0.0, 1.3),
+        (-32.0, -7.0, -0.8, 1.8),
+        (32.0, -7.0, -0.8, 1.7),
         (-21.0, 4.0, 0.0, 1.7),
         (20.0, 2.0, 0.0, 1.5),
         (17.0, 12.0, 2.3, 1.2),
@@ -357,6 +382,10 @@ def build_scene(collection, materials):
         (23.0, 17.0, 5.0, 4.5, 4.0, 7.0),
         (-25.0, -2.0, 3.0, 3.5, 4.0, 5.0),
         (25.0, -2.0, 3.0, 3.5, 4.0, 5.0),
+        (-33.0, -13.0, -0.7, 4.5, 3.4, 3.1),
+        (33.0, -13.0, -0.7, 4.5, 3.4, 3.1),
+        (-29.0, 1.0, 0.0, 3.6, 3.0, 3.8),
+        (29.0, 1.0, 0.0, 3.6, 3.0, 3.8),
     ]
     for index, (x, y, z, sx, sy, sz) in enumerate(cliff_rocks):
         common.create_rock(collection, "RF3_Cliff_%02d" % index, (x, y, z), (sx, sy, sz), index * 0.43, materials["rock"], 210 + index)
@@ -461,8 +490,7 @@ def main():
     output_x_path, preview_path = get_arguments()
     collection = clear_scene()
     materials = {
-        "sky": create_material("RF2_CaveSky_World3Night", "../SkySphere_night/Skydome.png", (0.06, 0.09, 0.18, 1.0), 0.85),
-        "stars": create_material("RF2_CaveSky_World3Stars", "../cube_white.png", (0.85, 0.92, 1.0, 1.0), 2.4),
+        "sky": create_material("RF2_CaveSky_World3Night", "Skydome_world3.png", (0.06, 0.09, 0.18, 1.0), 0.85),
         "rock": create_material("RF3_MountainStone", "../stage-select2/stageSelectCaveWall.png", (0.22, 0.25, 0.32, 1.0)),
         "dark": create_material("RF3_ObsidianStone", "../stage-select2/stageSelectCaveDeepDark.png", (0.035, 0.04, 0.08, 1.0)),
         "path": create_material("RF3_PilgrimPath", "../stage-select2/stageSelectCavePath.png", (0.24, 0.19, 0.15, 1.0)),

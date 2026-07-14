@@ -2864,21 +2864,21 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
             {
                 lightColor = clearedColor;
             }
-            m_render.AddPointLight(portalLightPositions[i], 5.0f, lightColor);
+            m_render.AddPointLight(portalLightPositions[i], 1.8f, lightColor);
         }
 
         const D3DXCOLOR fireColor(1.0f, 0.14f, 0.02f, 1.0f);
         const D3DXCOLOR spiritColor(0.35f, 0.65f, 1.0f, 1.0f);
         const D3DXCOLOR dawnColor(1.0f, 0.38f, 0.12f, 1.0f);
-        m_render.AddPointLight(D3DXVECTOR3(-1.5f, 2.7f, -3.2f), 6.0f, fireColor);
-        m_render.AddPointLight(D3DXVECTOR3(0.0f, 6.0f, 15.5f), 6.5f, spiritColor);
-        m_render.AddPointLight(D3DXVECTOR3(12.0f, 5.0f, 9.0f), 7.0f, dawnColor);
+        m_render.AddPointLight(D3DXVECTOR3(-1.5f, 2.7f, -3.2f), 2.2f, fireColor);
+        m_render.AddPointLight(D3DXVECTOR3(0.0f, 6.0f, 15.5f), 2.0f, spiritColor);
+        m_render.AddPointLight(D3DXVECTOR3(12.0f, 5.0f, 9.0f), 1.8f, dawnColor);
 
         const D3DXVECTOR3 playerLightPosition =
             m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
         const D3DXCOLOR playerLightColor(1.0f, 0.78f, 0.52f, 1.0f);
         m_render.AddPointLight(playerLightPosition,
-                               7.0f,
+                               2.5f,
                                playerLightColor,
                                NSRender::PointLightShape::Point,
                                12.0f,

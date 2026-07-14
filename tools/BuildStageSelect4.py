@@ -127,14 +127,13 @@ def build_scene(collection, materials):
         0.35,
         materials["sand"],
     )
-    world3.create_polygon_prism(
-        collection,
-        "RF4_ForestRise",
-        [(-18.0, -1.0), (17.0, -1.0), (19.0, 12.0), (9.0, 22.0), (-10.0, 22.0), (-20.0, 12.0)],
-        0.2,
-        2.0,
-        materials["grass"],
-    )
+    forest_boundary = [
+        (-18.0, -0.4), (-14.0, -1.5), (-9.0, -0.7), (-3.0, -1.8),
+        (3.0, -0.8), (9.0, -1.6), (17.0, -0.3),
+        (19.0, 12.0), (9.0, 22.0), (-10.0, 22.0), (-20.0, 12.0),
+    ]
+    world3.create_polygon_prism(collection, "RF4_ForestRockBase", forest_boundary, 0.2, 1.92, materials["rock"])
+    world3.create_polygon_prism(collection, "RF4_ForestGrassCap", forest_boundary, 1.92, 2.0, materials["grass"])
     world3.create_polygon_prism(
         collection,
         "RF4_FinalClearing",
@@ -179,7 +178,13 @@ def build_scene(collection, materials):
     for index, (x, y, z, scale) in enumerate(trees):
         create_tree(collection, "RF4_Tree_%02d_" % index, (x, y, z), scale, materials["wood"], materials["leaves"], 500 + index * 4)
 
-    rocks = [(-24.0, -9.0, 0.5, 2.8), (-21.0, 18.0, 2.2, 3.2), (20.0, 18.0, 2.2, 3.0), (25.0, -3.0, 0.6, 2.5), (-12.0, 24.0, 2.5, 3.3), (12.0, 25.0, 2.5, 3.2)]
+    rocks = [
+        (-24.0, -9.0, 0.5, 2.8), (-21.0, 18.0, 2.2, 3.2),
+        (20.0, 18.0, 2.2, 3.0), (25.0, -3.0, 0.6, 2.5),
+        (-12.0, 24.0, 2.5, 3.3), (12.0, 25.0, 2.5, 3.2),
+        (-15.0, -1.3, 1.25, 2.2), (-9.0, -1.5, 1.10, 1.8),
+        (4.0, -1.4, 1.15, 2.0), (14.0, -1.2, 1.25, 2.2),
+    ]
     for index, (x, y, z, scale) in enumerate(rocks):
         common.create_rock(collection, "RF4_CoastRock_%02d" % index, (x, y, z), (scale, scale * 0.8, scale * 1.3), index * 0.48, materials["rock"], 560 + index)
 
