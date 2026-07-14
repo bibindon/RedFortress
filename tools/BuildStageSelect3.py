@@ -1,5 +1,6 @@
 ﻿import math
 import os
+import random
 import sys
 
 import bmesh
@@ -237,8 +238,56 @@ def create_night_sky(collection, material):
         sky_object.name = "RF3_MoonlessSky"
 
 
+def create_star_field(collection, material):
+    random_generator = random.Random(31027)
+    vertices = []
+    faces = []
+    star_count = 240
+    for index in range(star_count):
+        while True:
+            x = random_generator.uniform(-42.0, 42.0)
+            y = random_generator.uniform(42.0, 52.0)
+            horizontal_distance = math.sqrt(x * x + y * y)
+            if horizontal_distance >= 70.0:
+                continue
+            sky_height = 4.0 + 38.0 * math.sqrt(1.0 - horizontal_distance * horizontal_distance / (72.0 * 72.0))
+            if sky_height >= 19.0:
+                break
+        z = random_generator.uniform(17.0, sky_height - 0.8)
+        radius = random_generator.uniform(0.07, 0.15)
+        if index % 17 == 0:
+            radius = random_generator.uniform(0.16, 0.21)
+        vertical_radius = radius * random_generator.uniform(1.1, 1.7)
+        base_index = len(vertices)
+        vertices.extend([
+            (x, y, z + vertical_radius),
+            (x, y, z - vertical_radius),
+            (x + radius, y, z),
+            (x - radius, y, z),
+            (x, y + radius, z),
+            (x, y - radius, z),
+        ])
+        faces.extend([
+            (base_index, base_index + 2, base_index + 4),
+            (base_index, base_index + 4, base_index + 3),
+            (base_index, base_index + 3, base_index + 5),
+            (base_index, base_index + 5, base_index + 2),
+            (base_index + 1, base_index + 4, base_index + 2),
+            (base_index + 1, base_index + 3, base_index + 4),
+            (base_index + 1, base_index + 5, base_index + 3),
+            (base_index + 1, base_index + 2, base_index + 5),
+        ])
+    mesh = bpy.data.meshes.new("RF3_StarFieldMesh")
+    mesh.from_pydata(vertices, [], faces)
+    mesh.update()
+    star_object = common.create_mesh_object(collection, "RF3_StarField", mesh, material)
+    if hasattr(star_object, "visible_shadow"):
+        star_object.visible_shadow = False
+
+
 def build_scene(collection, materials):
     create_night_sky(collection, materials["sky"])
+    create_star_field(collection, materials["star"])
 
     create_polygon_prism(
         collection,
@@ -490,7 +539,8 @@ def main():
     output_x_path, preview_path = get_arguments()
     collection = clear_scene()
     materials = {
-        "sky": create_material("RF2_CaveSky_World3Night", "Skydome_world3_v2.png", (0.06, 0.09, 0.18, 1.0), 0.85),
+        "sky": create_material("RF2_CaveSky_World3Night", "../SkySphere_night/Skydome.png", (0.025, 0.035, 0.075, 1.0), 0.45),
+        "star": create_material("RF3_StarWhite", "../cube_white.png", (0.90, 0.96, 1.0, 1.0), 2.4),
         "rock": create_material("RF3_MountainStone", "../stage-select2/stageSelectCaveWall.png", (0.22, 0.25, 0.32, 1.0)),
         "dark": create_material("RF3_ObsidianStone", "../stage-select2/stageSelectCaveDeepDark.png", (0.035, 0.04, 0.08, 1.0)),
         "path": create_material("RF3_PilgrimPath", "../stage-select2/stageSelectCavePath.png", (0.24, 0.19, 0.15, 1.0)),
@@ -502,7 +552,20 @@ def main():
         "river": create_material("RF2_CaveSky_World3River", "../cubeBlue/cube_blue.png", (0.025, 0.12, 0.42, 1.0), 0.65),
     }
     build_scene(collection, materials)
+    star_object = bpy.data.objects.get("RF3_StarField")
+    if star_object is None:
+        raise RuntimeError("RF3_StarField was not created.")
+    star_object["rf2_export"] = False
     common.export_directx_meshes(bpy.context.scene.collection, output_x_path)
+    for scene_object in bpy.context.scene.collection.all_objects:
+        if scene_object.type == "MESH":
+            scene_object["rf2_export"] = False
+    star_object["rf2_export"] = True
+    star_output_path = os.path.join(os.path.dirname(output_x_path), "stageSelectMoonMountainStars.x")
+    common.export_directx_meshes(bpy.context.scene.collection, star_output_path)
+    for scene_object in bpy.context.scene.collection.all_objects:
+        if scene_object.type == "MESH":
+            scene_object["rf2_export"] = True
     render_preview(preview_path)
     bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
     print("SAVED_BLEND", bpy.data.filepath)

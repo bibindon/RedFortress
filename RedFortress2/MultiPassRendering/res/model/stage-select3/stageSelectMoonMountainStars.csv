@@ -1,0 +1,6 @@
+MeshType,Emit
+EmitIntensity,1.4
+EmitColor,225,240,255
+Shadow,0
+SSAO,0
+LambertShadow,0
