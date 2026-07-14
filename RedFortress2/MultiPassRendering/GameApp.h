@@ -76,7 +76,7 @@ private:
     void Update();
     void Draw();
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     void ProcessDebugRpc();
     std::string HandleDebugRpcCommand(const std::string& command);
     const char* GetDebugGameStateName() const;
@@ -219,13 +219,29 @@ private:
     using PhysicsWorld = PhysicsLib::PhysicsLib;
 
     bool m_close = false;
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     DebugRpc m_debugRpc;
     ULONGLONG m_debugFrameNumber = 0;
     ULONGLONG m_debugFpsSampleTick = 0;
     ULONGLONG m_debugFpsSampleFrame = 0;
     float m_debugFps = 0.0f;
+    ULONGLONG m_debugProfileStartTick = 0;
+    ULONGLONG m_debugProfileStartFrame = 0;
+    ULONGLONG m_debugProfileRenderSamples = 0;
+    double m_debugProfileSceneUpdateMilliseconds = 0.0;
+    double m_debugProfileGBufferMilliseconds = 0.0;
+    double m_debugProfileMirrorMilliseconds = 0.0;
+    double m_debugProfileMainPassMilliseconds = 0.0;
+    double m_debugProfilePostEffectMilliseconds = 0.0;
+    double m_debugProfileDraw2DMilliseconds = 0.0;
+    double m_debugProfileFrameWaitMilliseconds = 0.0;
+    double m_debugProfilePresentMilliseconds = 0.0;
+    double m_debugProfileRenderTotalMilliseconds = 0.0;
 #endif
+    bool m_debugPlayerRenderEnabled = true;
+    bool m_debugPlayerPhysicsEnabled = true;
+    bool m_debugEnemyUpdateEnabled = true;
+    bool m_debugInvincible = false;
     NSRender::Render m_render;
     Player m_player;
     StageManager m_stageManager;

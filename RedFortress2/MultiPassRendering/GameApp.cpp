@@ -15,7 +15,7 @@
 
 namespace
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     std::string NarrowDebugIdentifier(const std::wstring& identifier)
     {
         std::string result;
@@ -90,6 +90,24 @@ namespace
             return DIK_LCONTROL;
         }
         return -1;
+    }
+
+    bool TryParseDebugBoolean(std::string value, bool* result)
+    {
+        std::transform(value.begin(), value.end(), value.begin(), [](const unsigned char character) {
+            return static_cast<char>(toupper(character));
+        });
+        if (value == "TRUE" || value == "1" || value == "ON")
+        {
+            *result = true;
+            return true;
+        }
+        if (value == "FALSE" || value == "0" || value == "OFF")
+        {
+            *result = false;
+            return true;
+        }
+        return false;
     }
 
 #endif
@@ -766,7 +784,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetLoadingScreenProgress(85);
     m_render.Draw();
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     m_debugFpsSampleTick = GetTickCount64();
     m_debugRpc.Initialize();
 #endif
@@ -799,7 +817,7 @@ void GameApp::Run()
 
         InputDevice::Update();
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
         ProcessDebugRpc();
 #endif
 
@@ -1130,7 +1148,10 @@ void GameApp::Run()
 
             if (IsHitStopActive())
             {
-                m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
+                if (m_debugEnemyUpdateEnabled)
+                {
+                    m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
+                }
                 m_destructibleManager.Update(m_render);
                 m_enemyManager.SyncMeshes(m_render);
                 UpdateGoalArrow();
@@ -1168,7 +1189,10 @@ void GameApp::Run()
                 UpdatePlayerByInput();
 
                 // 敵の更新
-                m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
+                if (m_debugEnemyUpdateEnabled)
+                {
+                    m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
+                }
 
                 m_destructibleManager.Update(m_render);
 
@@ -1403,7 +1427,10 @@ void GameApp::Run()
                     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
                     m_pendingJump = false;
                 }
-                m_playerMover.Update(m_pendingMove, m_pendingJump);
+                if (m_debugPlayerPhysicsEnabled)
+                {
+                    m_playerMover.Update(m_pendingMove, m_pendingJump);
+                }
                 UpdateDashParticleEffect();
                 m_dashBoosterManager.Update(m_playerMover.GetPosition(), m_playerMover);
                 m_collectibleManager.Update(m_playerMover.GetPosition(), m_destructibleManager);
@@ -1650,10 +1677,30 @@ void GameApp::Run()
     }
 }
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
 void GameApp::ProcessDebugRpc()
 {
     ++m_debugFrameNumber;
+
+    if (m_debugInvincible)
+    {
+        m_playerInvincibleFrames = 120;
+    }
+
+    if (m_debugProfileStartTick != 0)
+    {
+        const NSRender::RenderFrameProfile& renderProfile = m_render.GetLastFrameProfile();
+        ++m_debugProfileRenderSamples;
+        m_debugProfileSceneUpdateMilliseconds += renderProfile.sceneUpdateMilliseconds;
+        m_debugProfileGBufferMilliseconds += renderProfile.gBufferMilliseconds;
+        m_debugProfileMirrorMilliseconds += renderProfile.mirrorMilliseconds;
+        m_debugProfileMainPassMilliseconds += renderProfile.mainPassMilliseconds;
+        m_debugProfilePostEffectMilliseconds += renderProfile.postEffectMilliseconds;
+        m_debugProfileDraw2DMilliseconds += renderProfile.draw2DMilliseconds;
+        m_debugProfileFrameWaitMilliseconds += renderProfile.frameWaitMilliseconds;
+        m_debugProfilePresentMilliseconds += renderProfile.presentMilliseconds;
+        m_debugProfileRenderTotalMilliseconds += renderProfile.totalMilliseconds;
+    }
 
     const ULONGLONG currentTick = GetTickCount64();
     const ULONGLONG elapsedMilliseconds = currentTick - m_debugFpsSampleTick;
@@ -1694,6 +1741,111 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         return response.str();
     }
 
+    if (commandName == "PROFILE_RESET")
+    {
+        m_debugProfileStartTick = GetTickCount64();
+        m_debugProfileStartFrame = m_debugFrameNumber;
+        m_debugProfileRenderSamples = 0;
+        m_debugProfileSceneUpdateMilliseconds = 0.0;
+        m_debugProfileGBufferMilliseconds = 0.0;
+        m_debugProfileMirrorMilliseconds = 0.0;
+        m_debugProfileMainPassMilliseconds = 0.0;
+        m_debugProfilePostEffectMilliseconds = 0.0;
+        m_debugProfileDraw2DMilliseconds = 0.0;
+        m_debugProfileFrameWaitMilliseconds = 0.0;
+        m_debugProfilePresentMilliseconds = 0.0;
+        m_debugProfileRenderTotalMilliseconds = 0.0;
+        return "{\"ok\":true}";
+    }
+
+    if (commandName == "PROFILE_RESULT")
+    {
+        if (m_debugProfileStartTick == 0)
+        {
+            return "{\"ok\":false,\"error\":\"profile_not_started\"}";
+        }
+        const ULONGLONG elapsedMilliseconds = GetTickCount64() - m_debugProfileStartTick;
+        if (elapsedMilliseconds == 0)
+        {
+            return "{\"ok\":false,\"error\":\"profile_has_no_elapsed_time\"}";
+        }
+        const ULONGLONG elapsedFrames = m_debugFrameNumber - m_debugProfileStartFrame;
+        const float averageFps = static_cast<float>(elapsedFrames) * 1000.0f /
+                                 static_cast<float>(elapsedMilliseconds);
+        double renderSampleDivisor = 1.0;
+        if (m_debugProfileRenderSamples > 0)
+        {
+            renderSampleDivisor = static_cast<double>(m_debugProfileRenderSamples);
+        }
+        std::ostringstream response;
+        response << std::fixed << std::setprecision(2)
+                 << "{\"ok\":true,\"averageFps\":" << averageFps
+                 << ",\"elapsedMilliseconds\":" << elapsedMilliseconds
+                 << ",\"frames\":" << elapsedFrames
+                 << ",\"renderSamples\":" << m_debugProfileRenderSamples
+                 << ",\"sceneUpdateMs\":" << m_debugProfileSceneUpdateMilliseconds / renderSampleDivisor
+                 << ",\"gBufferMs\":" << m_debugProfileGBufferMilliseconds / renderSampleDivisor
+                 << ",\"mirrorMs\":" << m_debugProfileMirrorMilliseconds / renderSampleDivisor
+                 << ",\"mainPassMs\":" << m_debugProfileMainPassMilliseconds / renderSampleDivisor
+                 << ",\"postEffectMs\":" << m_debugProfilePostEffectMilliseconds / renderSampleDivisor
+                 << ",\"draw2DMs\":" << m_debugProfileDraw2DMilliseconds / renderSampleDivisor
+                 << ",\"frameWaitMs\":" << m_debugProfileFrameWaitMilliseconds / renderSampleDivisor
+                 << ",\"presentMs\":" << m_debugProfilePresentMilliseconds / renderSampleDivisor
+                 << ",\"renderTotalMs\":" << m_debugProfileRenderTotalMilliseconds / renderSampleDivisor
+                 << "}";
+        return response.str();
+    }
+
+    if (commandName == "SET_PLAYER_RENDER" ||
+        commandName == "SET_PLAYER_PHYSICS" ||
+        commandName == "SET_ENEMY_UPDATE" ||
+        commandName == "SET_SKIN_ANIMATION" ||
+        commandName == "SET_INVINCIBLE")
+    {
+        std::string value;
+        commandStream >> value;
+        bool enabled = false;
+        if (!TryParseDebugBoolean(value, &enabled))
+        {
+            return "{\"ok\":false,\"error\":\"invalid_boolean\"}";
+        }
+
+        if (commandName == "SET_PLAYER_RENDER")
+        {
+            m_debugPlayerRenderEnabled = enabled;
+        }
+        else if (commandName == "SET_PLAYER_PHYSICS")
+        {
+            m_debugPlayerPhysicsEnabled = enabled;
+        }
+        else if (commandName == "SET_ENEMY_UPDATE")
+        {
+            m_debugEnemyUpdateEnabled = enabled;
+        }
+        else if (commandName == "SET_SKIN_ANIMATION")
+        {
+            m_render.SetSkinAnimationUpdateEnabled(enabled);
+        }
+        else if (commandName == "SET_INVINCIBLE")
+        {
+            m_debugInvincible = enabled;
+        }
+        return "{\"ok\":true}";
+    }
+
+    if (commandName == "SET_RESOLUTION")
+    {
+        int width = 0;
+        int height = 0;
+        commandStream >> width >> height;
+        if (width <= 0 || height <= 0)
+        {
+            return "{\"ok\":false,\"error\":\"invalid_resolution\"}";
+        }
+        m_render.ChangeResolution(width, height);
+        return "{\"ok\":true}";
+    }
+
     if (commandName == "GET_STATE")
     {
         const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
@@ -1727,6 +1879,8 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
                  << ",\"fps\":" << m_debugFps
                  << ",\"gameState\":\"" << GetDebugGameStateName() << "\""
                  << ",\"stageId\":\"" << stageId << "\""
+                 << ",\"screenWidth\":" << NSRender::Common::ScreenW()
+                 << ",\"screenHeight\":" << NSRender::Common::ScreenH()
                  << ",\"pauseOpen\":";
         if (m_pauseMenu.IsOpen())
         {
@@ -1861,7 +2015,7 @@ const char* GameApp::GetDebugGameStateName() const
 
 void GameApp::Finalize()
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     m_debugRpc.Finalize();
     InputDevice::SKeyBoard::ClearInjectedKeys();
     InputDevice::Mouse::ClearInjectedButtons();
@@ -2548,7 +2702,11 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
     const D3DXVECTOR3 currentRenderPosition = m_playerMover.GetPosition();
     if (m_playerMeshId >= 0)
     {
-        const bool playerVisible = !m_playerMover.IsDashBoosterCharging();
+        bool playerVisible = !m_playerMover.IsDashBoosterCharging();
+        if (!m_debugPlayerRenderEnabled)
+        {
+            playerVisible = false;
+        }
         D3DXVECTOR3 displayPosition = currentRenderPosition;
         float displayScale = 1.0f;
         if (IsCurrentStageSelect())

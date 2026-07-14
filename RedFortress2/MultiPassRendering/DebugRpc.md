@@ -35,3 +35,12 @@ Launch stage 1-1, approach the nearest enemy, and repeatedly attack with:
 ```powershell
 .\tools\RunStage1AttackScenario.ps1
 ```
+
+Measure stage 1-1 performance in the x64 Release build with:
+
+```powershell
+& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" RedFortress2\MultiPassRendering.sln /p:Configuration=Release /p:Platform=x64 /p:EnableDebugRpc=true
+.\tools\MeasureStage1Performance.ps1
+```
+
+The normal Release build does not expose the RPC pipe unless `EnableDebugRpc=true` is specified.
