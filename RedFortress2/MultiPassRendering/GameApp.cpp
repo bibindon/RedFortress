@@ -2775,11 +2775,11 @@ void GameApp::UpdatePlayerMeshVisibility()
 
     if (m_playerIsSkinAnim)
     {
-        m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
+        m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, m_debugPlayerRenderEnabled);
     }
     else
     {
-        m_render.SetMeshMixEnabled(m_playerMeshId, true);
+        m_render.SetMeshMixEnabled(m_playerMeshId, m_debugPlayerRenderEnabled);
     }
 }
 
@@ -2788,7 +2788,7 @@ void GameApp::UpdateHeldWeaponVisibility()
     bool stickVisible = false;
     bool saberVisible = false;
 
-    if (!IsCurrentStageSelect())
+    if (m_debugPlayerRenderEnabled && !IsCurrentStageSelect())
     {
         const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
         if (attackType == PlayerAttackType::WeakAttack)
@@ -4293,6 +4293,14 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
     case WM_INITDIALOG:
         SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_SETCHECK,
                     m_remoteDesktopMode ? BST_CHECKED : BST_UNCHECKED, 0);
+        if (m_debugPlayerRenderEnabled)
+        {
+            SendMessage(GetDlgItem(hDlg, IDC_CHECK_HIDE_PLAYER), BM_SETCHECK, BST_UNCHECKED, 0);
+        }
+        else
+        {
+            SendMessage(GetDlgItem(hDlg, IDC_CHECK_HIDE_PLAYER), BM_SETCHECK, BST_CHECKED, 0);
+        }
         SetDlgItemText(hDlg, IDC_EDIT_CAMERA_DIST, std::to_wstring(m_cameraDistance).c_str());
         PopulateStageCombo(hDlg);
         PopulateUnlockStageCombo(hDlg);
@@ -4311,6 +4319,13 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
         case IDC_CHECK1:
             m_remoteDesktopMode = (SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_GETCHECK, 0, 0) == BST_CHECKED);
             InputDevice::SetRemoteDesktopMode(m_remoteDesktopMode);
+            return TRUE;
+
+        case IDC_CHECK_HIDE_PLAYER:
+            m_debugPlayerRenderEnabled =
+                (SendMessage(GetDlgItem(hDlg, IDC_CHECK_HIDE_PLAYER), BM_GETCHECK, 0, 0) != BST_CHECKED);
+            UpdatePlayerMeshVisibility();
+            UpdateHeldWeaponVisibility();
             return TRUE;
 
         case IDC_BUTTON_RESET_MOVING:
