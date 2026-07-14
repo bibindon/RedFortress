@@ -150,6 +150,7 @@ private:
     D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);
     int DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefinition);
     void InitializeCameraFromRenderSettings();
+    void ConfigureStagePointLights(const std::wstring& stageId);
     void InitializePlayerPhysics();
     void ApplyUnlockedAbilities();
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);

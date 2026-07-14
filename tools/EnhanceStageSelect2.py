@@ -24,17 +24,17 @@ DUMMY_BASE_PREFIXES = (
 )
 
 PORTALS = [
-    (-18.2, 11.0),
-    (-17.0, 14.0),
-    (-15.0, 12.0),
-    (-12.0, 10.0),
-    (-8.0, 7.0),
-    (-4.0, 4.0),
-    (1.0, 1.0),
-    (6.0, -2.0),
-    (10.0, -5.0),
-    (14.0, -9.0),
-    (16.0, -11.0),
+    (-17.5, 11.0),
+    (-14.0, 14.0),
+    (-3.0, 15.0),
+    (8.0, 12.0),
+    (13.0, 7.0),
+    (8.0, 3.0),
+    (-3.0, 2.0),
+    (-10.0, 0.0),
+    (-9.0, -5.0),
+    (-3.0, -8.0),
+    (9.0, -7.0),
 ]
 
 TEXTURES = {
@@ -423,7 +423,7 @@ def build_stage_details(collection, materials):
     create_gateway(
         collection,
         "RF2_WestGate_",
-        (-17.0, 14.0),
+        (-14.0, 14.0),
         (2.0, -1.0),
         materials["shrine"],
         materials["wall"],
@@ -431,18 +431,18 @@ def build_stage_details(collection, materials):
     create_gateway(
         collection,
         "RF2_EastGate_",
-        (16.0, -11.0),
+        (9.0, -7.0),
         (2.0, -1.0),
         materials["shrine"],
         materials["wall"],
     )
 
     crystal_centers = [
-        (-14.5, 5.0),
-        (-5.5, -3.5),
-        (3.5, 7.0),
-        (11.5, 2.5),
-        (-9.5, -7.5),
+        (-14.5, 3.0),
+        (-8.5, 10.0),
+        (1.5, 7.5),
+        (7.0, 16.5),
+        (14.5, -7.5),
     ]
     for index, center in enumerate(crystal_centers):
         add_crystal_cluster(
@@ -496,7 +496,7 @@ def build_stage_details(collection, materials):
             120 + index,
         )
 
-    moss_locations = [(-13.5, 8.0), (-6.0, 5.2), (2.8, -0.5), (8.0, -4.0)]
+    moss_locations = [(-12.0, 11.5), (2.0, 13.5), (3.0, 3.5), (-6.5, -2.0)]
     for index, (x, y) in enumerate(moss_locations):
         create_cylinder(
             collection,
@@ -699,7 +699,7 @@ def render_preview(preview_path):
     bpy.context.scene.collection.objects.link(camera)
     camera.location = (0.0, -32.0, 15.0)
     camera_data.lens = 42.0
-    aim_object(camera, (0.0, 2.0, 0.8))
+    aim_object(camera, (0.0, 5.5, 0.8))
     bpy.context.scene.camera = camera
 
     key = add_preview_light(
