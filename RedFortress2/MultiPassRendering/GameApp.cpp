@@ -219,8 +219,13 @@ namespace
     const int kStageClearReplayFinalAutoFrame = 90;
     const int kStageClearReplayLetterboxHeight = 40;
     const float kStageClearTargetFovDegrees = 58.0f;
-    const int kStageExitFadeStartFrame = 8;
-    const int kStageExitTransitionFrame = 30;
+    const int kStageExitJumpDelayFrames = 30;
+    const int kStageExitJumpDurationFrames = 30;
+    const int kStageExitFadeStartFrame = kStageExitJumpDelayFrames + 8;
+    const int kStageExitBlackHoldFrames = 60;
+    const int kStageExitTransitionFrame = kStageExitJumpDelayFrames +
+                                          kStageExitJumpDurationFrames +
+                                          kStageExitBlackHoldFrames;
     const float kStageExitRiseHeight = 1.2f;
     const float kStageExitAnimationSpeed = 1.2f;
     const float kStageExitFadeDurationSeconds = 0.35f;
@@ -2551,7 +2556,7 @@ void GameApp::UpdatePlayerByInput()
     {
         const D3DXVECTOR3 dashForward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
         m_playerMover.RequestDash(dashForward);
-        m_pendingJump = false;
+        m_pendingJump = jumpPressed;
     }
     else
     {
@@ -4445,21 +4450,31 @@ void GameApp::BeginStageExit()
     m_stageExitVisualOffsetY = 0.0f;
     m_gameState = GameState::StageExit;
 
-    if (m_playerMeshId >= 0)
-    {
-        m_playerAnimState = PlayerAnimState::Jump;
-        m_playerAnimationSpeed = kStageExitAnimationSpeed;
-        m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
-        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerJumpAnimName);
-    }
-
-    GameAudio::PlayJump();
+    SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
 }
 
 void GameApp::UpdateStageExit()
 {
-    float riseT = static_cast<float>(m_stageExitFrame) /
-                  static_cast<float>(kStageExitTransitionFrame);
+    if (m_stageExitFrame == kStageExitJumpDelayFrames)
+    {
+        if (m_playerMeshId >= 0)
+        {
+            m_playerAnimState = PlayerAnimState::Jump;
+            m_playerAnimationSpeed = kStageExitAnimationSpeed;
+            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+            m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerJumpAnimName);
+        }
+
+        GameAudio::PlayJump();
+    }
+
+    int jumpFrame = m_stageExitFrame - kStageExitJumpDelayFrames;
+    if (jumpFrame < 0)
+    {
+        jumpFrame = 0;
+    }
+    float riseT = static_cast<float>(jumpFrame) /
+                  static_cast<float>(kStageExitJumpDurationFrames);
     if (riseT > 1.0f)
     {
         riseT = 1.0f;
