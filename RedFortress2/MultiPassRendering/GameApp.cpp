@@ -261,8 +261,8 @@ namespace
     const int kAmmoRailOffsetY = 11;
     const int kAmmoBeadSize = 14;
     const int kAmmoBeadStep = 15;
-    const int kWeakAttackHitStopFrames = 15;
-    const int kStrongAttackHitStopFrames = 15;
+    const int kWeakAttackHitStopFrames = 8;
+    const int kStrongAttackHitStopFrames = 8;
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const EnemyBase& enemy)
     {
@@ -1148,10 +1148,6 @@ void GameApp::Run()
 
             if (IsHitStopActive())
             {
-                if (m_debugEnemyUpdateEnabled)
-                {
-                    m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
-                }
                 m_destructibleManager.Update(m_render);
                 m_enemyManager.SyncMeshes(m_render);
                 UpdateGoalArrow();
@@ -4812,6 +4808,8 @@ void GameApp::StartHitStopNow(int frames)
         m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 0.0f);
         m_hitStopPlayerAnimationPaused = true;
     }
+
+    m_render.SetSceneUpdatePaused(true);
 }
 
 void GameApp::UpdateHitStop()
@@ -4832,6 +4830,7 @@ void GameApp::UpdateHitStop()
             }
             m_hitStopPlayerAnimationPaused = false;
         }
+        m_render.SetSceneUpdatePaused(false);
     }
 }
 
