@@ -217,8 +217,35 @@ def create_night_sky(collection, material):
         sky_object.name = "RF3_MoonlessSky"
 
 
+def create_visible_starfield(collection, material):
+    vertices = []
+    faces = []
+    star_count = 72
+    for index in range(star_count):
+        x = -34.0 + float((index * 37) % 69)
+        y = 40.0 + float(index % 5) * 1.8
+        z = 6.0 + float((index * 23) % 29)
+        size = 0.08 + float((index * 11) % 7) * 0.025
+        if index % 17 == 0:
+            size = 0.30
+        base = len(vertices)
+        vertices.extend([
+            (x, y, z - size),
+            (x + size, y, z),
+            (x, y, z + size),
+            (x - size, y, z),
+        ])
+        faces.append((base, base + 1, base + 2, base + 3))
+        faces.append((base + 3, base + 2, base + 1, base))
+    mesh = bpy.data.meshes.new("RF3_VisibleStarsMesh")
+    mesh.from_pydata(vertices, [], faces)
+    mesh.update()
+    common.create_mesh_object(collection, "RF3_VisibleStars", mesh, material)
+
+
 def build_scene(collection, materials):
     create_night_sky(collection, materials["sky"])
+    create_visible_starfield(collection, materials["stars"])
 
     create_polygon_prism(
         collection,
@@ -342,10 +369,53 @@ def build_scene(collection, materials):
         0.08,
         materials["blue"],
     )
+    create_path_ribbon(
+        collection,
+        "RF3_ForegroundRiver",
+        [
+            (-17.0, -16.0, 0.10),
+            (-10.0, -13.0, 0.11),
+            (-2.0, -14.0, 0.12),
+            (4.0, -11.0, 0.13),
+            (3.0, -8.0, 0.14),
+            (9.0, -5.5, 0.15),
+            (14.5, -2.0, 0.15),
+        ],
+        1.85,
+        materials["river"],
+    )
+    foreground_rocks = [
+        (-22.5, -13.5, 0.8, 4.0, 2.6, 1.8),
+        (-16.0, -12.0, 0.6, 3.3, 2.0, 1.4),
+        (-9.0, -14.0, 0.5, 2.8, 2.1, 1.2),
+        (8.5, -14.5, 0.5, 2.6, 2.0, 1.1),
+        (16.5, -12.5, 0.7, 3.4, 2.3, 1.5),
+        (23.0, -13.5, 0.9, 4.2, 2.8, 2.0),
+    ]
+    for index, (x, y, z, sx, sy, sz) in enumerate(foreground_rocks):
+        common.create_rock(
+            collection,
+            "RF3_ForegroundCliff_%02d" % index,
+            (x, y, z),
+            (sx, sy, sz),
+            index * 0.63,
+            materials["dark"],
+            320 + index,
+        )
+    foreground_pines = [(-18.5, -11.5, 0.3, 1.15), (19.5, -10.5, 0.3, 1.25)]
+    for index, (x, y, z, scale) in enumerate(foreground_pines):
+        create_pine(
+            collection,
+            "RF3_ForegroundPine_%02d_" % index,
+            (x, y, z),
+            scale,
+            materials["path"],
+            materials["foliage"],
+        )
     common.create_box(collection, "RF3_BrokenBridgeA", (11.6, -5.0, 1.0), (2.6, 0.55, 0.14), math.radians(18.0), materials["path"])
     common.create_box(collection, "RF3_BrokenBridgeB", (17.7, -3.8, 1.25), (2.0, 0.55, 0.14), math.radians(-22.0), materials["path"])
 
-    spirit_locations = [(-2.0, 5.0, 4.4), (12.5, 13.5, 7.0), (-10.0, 21.0, 8.5)]
+    spirit_locations = [(-5.0, -11.5, 2.2), (6.0, -9.0, 1.9), (-2.0, 5.0, 4.4), (12.5, 13.5, 7.0), (-10.0, 21.0, 8.5)]
     for index, location in enumerate(spirit_locations):
         common.create_rock(collection, "RF3_WhiteWisp_%02d" % index, location, (0.35, 0.35, 0.55), index * 0.7, materials["white"], 260 + index)
     mist_locations = [(2.0, 4.5, 2.6), (-4.5, 11.0, 5.2), (4.0, 16.0, 7.6), (0.0, 23.0, 8.2)]
@@ -362,9 +432,9 @@ def render_preview(preview_path):
     camera_data = bpy.data.cameras.new("RF3_PreviewCameraData")
     camera = bpy.data.objects.new("RF3_PreviewCamera", camera_data)
     bpy.context.scene.collection.objects.link(camera)
-    camera.location = (0.0, -43.0, 25.0)
+    camera.location = (0.0, -38.0, 23.0)
     camera.data.lens = 48.0
-    common.aim_object(camera, (0.0, 5.5, 3.8))
+    common.aim_object(camera, (0.0, 6.0, 4.2))
     bpy.context.scene.camera = camera
 
     moon_light = add_preview_light("RF3_Starlight", "AREA", (-8.0, -6.0, 25.0), 2400.0, (0.18, 0.30, 0.72), 14.0)
@@ -391,7 +461,8 @@ def main():
     output_x_path, preview_path = get_arguments()
     collection = clear_scene()
     materials = {
-        "sky": create_material("RF2_CaveSky_World3Night", "../SkySphere_night/Skydome.png", (0.02, 0.03, 0.08, 1.0), 0.35),
+        "sky": create_material("RF2_CaveSky_World3Night", "../SkySphere_night/Skydome.png", (0.06, 0.09, 0.18, 1.0), 0.85),
+        "stars": create_material("RF2_CaveSky_World3Stars", "../cube_white.png", (0.85, 0.92, 1.0, 1.0), 2.4),
         "rock": create_material("RF3_MountainStone", "../stage-select2/stageSelectCaveWall.png", (0.22, 0.25, 0.32, 1.0)),
         "dark": create_material("RF3_ObsidianStone", "../stage-select2/stageSelectCaveDeepDark.png", (0.035, 0.04, 0.08, 1.0)),
         "path": create_material("RF3_PilgrimPath", "../stage-select2/stageSelectCavePath.png", (0.24, 0.19, 0.15, 1.0)),
@@ -400,6 +471,7 @@ def main():
         "gold": create_material("RF3_SealGold", "../sphereOrange/sphere_orange.png", (1.0, 0.42, 0.04, 1.0), 1.8),
         "white": create_material("RF3_SpiritWhite", "../cube_white.png", (0.72, 0.90, 1.0, 1.0), 1.1),
         "blue": create_material("RF3_SpiritBlue", "../cubeBlue/cube_blue.png", (0.05, 0.28, 1.0, 1.0), 0.7),
+        "river": create_material("RF2_CaveSky_World3River", "../cubeBlue/cube_blue.png", (0.025, 0.12, 0.42, 1.0), 0.65),
     }
     build_scene(collection, materials)
     common.export_directx_meshes(bpy.context.scene.collection, output_x_path)

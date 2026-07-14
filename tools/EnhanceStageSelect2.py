@@ -583,7 +583,11 @@ def export_directx_meshes(collection, output_path):
             vertex_count = len(positions)
             face_count = vertex_count // 3
             emissive = "          0.000000;0.000000;0.000000;;"
-            if material.name.startswith("RF2_CaveSky"):
+            if material.name == "RF2_CaveSky_World3Night":
+                emissive = "          0.650000;0.650000;0.650000;;"
+            elif material.name == "RF2_CaveSky_World4Dawn":
+                emissive = "          0.550000;0.550000;0.550000;;"
+            elif material.name.startswith("RF2_CaveSky"):
                 emissive = "          0.280000;0.280000;0.280000;;"
             lines.extend([
                 "  Frame " + frame_name + " {",

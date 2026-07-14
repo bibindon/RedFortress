@@ -63,8 +63,10 @@ void StageManager::Initialize()
     const D3DXVECTOR3 kSelect1CameraLookAt(-7.0f, 2.5f, 6.0f);
     const D3DXVECTOR3 kSelect2CameraPos(0.0f, 15.0f, -32.0f);
     const D3DXVECTOR3 kSelect2CameraLookAt(0.0f, 0.8f, 5.5f);
-    const D3DXVECTOR3 kSelect3CameraPos(0.0f, 25.0f, -43.0f);
-    const D3DXVECTOR3 kSelect3CameraLookAt(0.0f, 3.8f, 5.5f);
+    const D3DXVECTOR3 kSelect3CameraPos(0.0f, 23.0f, -38.0f);
+    const D3DXVECTOR3 kSelect3CameraLookAt(0.0f, 4.2f, 6.0f);
+    const D3DXVECTOR3 kSelect4CameraPos(0.0f, 20.0f, -38.0f);
+    const D3DXVECTOR3 kSelect4CameraLookAt(0.0f, 2.3f, 5.0f);
     const D3DXVECTOR3 kSelectCameraPos(0.0f, 8.0f, -32.0f);
     const D3DXVECTOR3 kSelectCameraLookAt(0.0f, 2.5f, 6.0f);
     AddStage(L"select1", 34, L"Stage Select 1", L"stage-select1",
@@ -79,8 +81,9 @@ void StageManager::Initialize()
              true, kSelect3CameraPos, kSelect3CameraLookAt,
              L"res\\RenderSettings.night.csv");
     AddStage(L"select4", 37, L"Stage Select 4", L"stage-select4",
-             D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
-             true, kSelectCameraPos, kSelectCameraLookAt);
+             D3DXVECTOR3(-18.0f, 0.65f, -12.0f), D3DXVECTOR3(0.0f, 3.55f, 15.5f),
+             true, kSelect4CameraPos, kSelect4CameraLookAt,
+             L"res\\RenderSettings.evening.csv");
 }
 
 void StageManager::AddStage(const std::wstring& id,
