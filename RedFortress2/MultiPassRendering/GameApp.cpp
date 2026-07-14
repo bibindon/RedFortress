@@ -329,6 +329,47 @@ namespace
         return true;
     }
 
+    bool TryParseStageSelectDestinationId(const std::wstring& destinationId, int* worldNumber)
+    {
+        const std::wstring prefix = L"select";
+        if (worldNumber == nullptr ||
+            destinationId.length() <= prefix.length() ||
+            destinationId.substr(0, prefix.length()) != prefix)
+        {
+            return false;
+        }
+
+        return TryParsePositiveNumber(destinationId, prefix.length(), destinationId.length(), worldNumber);
+    }
+
+    bool IsStageEndpointConnectedToSelect(const int stageWorldNumber,
+                                          const int stageNumber,
+                                          const int selectWorldNumber)
+    {
+        if (selectWorldNumber == stageWorldNumber - 1 && stageNumber == 1)
+        {
+            return true;
+        }
+        if (selectWorldNumber == stageWorldNumber + 1 && stageNumber == 8)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool IsStageSelectNavigationPortal(const std::wstring& portalId)
+    {
+        const std::wstring prefix = L"portal-to-";
+        if (portalId.length() <= prefix.length() || portalId.substr(0, prefix.length()) != prefix)
+        {
+            return false;
+        }
+
+        int worldNumber = 0;
+        return TryParseStageSelectDestinationId(portalId.substr(prefix.length()), &worldNumber);
+    }
+
     bool AreStagePortalsSequential(const std::wstring& currentPortalId, const std::wstring& candidatePortalId)
     {
         const std::wstring prefix = L"portal-to-";
@@ -343,25 +384,50 @@ namespace
         int currentWorldNumber = 0;
         int currentStageNumber = 0;
         const std::wstring currentDestinationId = currentPortalId.substr(prefix.length());
-        if (!TryParseStageDestinationId(currentDestinationId, &currentWorldNumber, &currentStageNumber))
-        {
-            return true;
-        }
+        const bool currentIsStage =
+            TryParseStageDestinationId(currentDestinationId, &currentWorldNumber, &currentStageNumber);
 
         int candidateWorldNumber = 0;
         int candidateStageNumber = 0;
         const std::wstring candidateDestinationId = candidatePortalId.substr(prefix.length());
-        if (!TryParseStageDestinationId(candidateDestinationId, &candidateWorldNumber, &candidateStageNumber))
+        const bool candidateIsStage =
+            TryParseStageDestinationId(candidateDestinationId, &candidateWorldNumber, &candidateStageNumber);
+
+        if (currentIsStage && candidateIsStage)
         {
-            return true;
+            if (currentWorldNumber != candidateWorldNumber)
+            {
+                return false;
+            }
+
+            return std::abs(currentStageNumber - candidateStageNumber) == 1;
         }
 
-        if (currentWorldNumber != candidateWorldNumber)
+        int currentSelectWorldNumber = 0;
+        const bool currentIsStageSelect =
+            TryParseStageSelectDestinationId(currentDestinationId, &currentSelectWorldNumber);
+        int candidateSelectWorldNumber = 0;
+        const bool candidateIsStageSelect =
+            TryParseStageSelectDestinationId(candidateDestinationId, &candidateSelectWorldNumber);
+
+        if (currentIsStage && candidateIsStageSelect)
+        {
+            return IsStageEndpointConnectedToSelect(currentWorldNumber,
+                                                     currentStageNumber,
+                                                     candidateSelectWorldNumber);
+        }
+        if (currentIsStageSelect && candidateIsStage)
+        {
+            return IsStageEndpointConnectedToSelect(candidateWorldNumber,
+                                                     candidateStageNumber,
+                                                     currentSelectWorldNumber);
+        }
+        if (currentIsStageSelect || candidateIsStageSelect)
         {
             return false;
         }
 
-        return std::abs(currentStageNumber - candidateStageNumber) == 1;
+        return true;
     }
 
     bool IsBombAttackType(const PlayerAttackType attackType)
@@ -3530,7 +3596,10 @@ void GameApp::UpdateStageSelectCursorByInput()
 
             for (const InteractionManager::Interactable& interactable : interactables)
             {
-                if (interactable.type != L"StagePortal" || !IsStagePortalSelectable(interactable.id))
+                if (interactable.type != L"StagePortal" ||
+                    !IsStagePortalSelectable(interactable.id) ||
+                    (IsStageSelectNavigationPortal(interactable.id) &&
+                     !AreStagePortalsSequential(m_selectedStagePortalId, interactable.id)))
                 {
                     continue;
                 }
