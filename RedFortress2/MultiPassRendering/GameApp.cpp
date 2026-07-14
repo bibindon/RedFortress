@@ -2963,7 +2963,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                                10.0f,
                                10.0f,
                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                               8.0f,
+                               12.0f,
                                kStageSelectPlayerLightOwnerTag);
         return;
     }
@@ -3035,7 +3035,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                                10.0f,
                                10.0f,
                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                               8.0f,
+                               12.0f,
                                kStageSelectPlayerLightOwnerTag);
         return;
     }
@@ -3089,21 +3089,21 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         {
             lightColor = clearedColor;
         }
-        m_render.AddPointLight(portalLightPositions[i], 5.0f, lightColor);
+        m_render.AddPointLight(portalLightPositions[i], 2.0f, lightColor);
     }
 
     const D3DXVECTOR3 playerLightPosition =
         m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
     const D3DXCOLOR playerLightColor(1.0f, 0.78f, 0.52f, 1.0f);
     m_render.AddPointLight(playerLightPosition,
-                           7.0f,
+                           2.5f,
                            playerLightColor,
                            NSRender::PointLightShape::Point,
                            12.0f,
                            10.0f,
                            10.0f,
                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                           8.0f,
+                           12.0f,
                            kStageSelectPlayerLightOwnerTag);
 }
 
