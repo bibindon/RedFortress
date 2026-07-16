@@ -878,6 +878,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
     m_mouseCursorVisible = true;
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
+    ApplyMouseCursor();
 
     m_command.UpsertCommand(L"start", true);
     m_command.UpsertCommand(L"continue", m_saveDataManager.HasSaveFile());
