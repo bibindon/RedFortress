@@ -12,8 +12,8 @@
 210,../collision_wall.x,10,1.59,-22,0,0,0,1,normal
 211,../collision_wall.x,0,1.60,4,0,0,0,1,normal
 212,../collision_wall.x,0,1.61,-18,0,0,0,1,normal
-213,../collision_moving_platform/collision_moving_platform.x,-4,0.82,8,0,0,0,1,normal
-214,../collision_moving_platform/collision_moving_platform.x,4,0.83,-8,0,0,0,1,normal
+213,../collision_moving_platform/collision_moving_platform.x,-4,0.82,8,0,0,0,1,meshmix2
+214,../collision_moving_platform/collision_moving_platform.x,4,0.83,-8,0,0,0,1,meshmix2
 226,..\SkySphere_evening\SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
 301,../fence.x,-11,0.5,-30,0,0,0,1,normal
 302,../fence.x,-3,0.5,-30,0,0,0,1,normal

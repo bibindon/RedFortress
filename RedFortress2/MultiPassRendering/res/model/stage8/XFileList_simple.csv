@@ -8,8 +8,8 @@
 808,../collision_wall.x,8.5,1.55,-16,0,90,0,1,normal
 809,../collision_wall.x,-4.5,1.56,22,0,90,0,1,normal
 810,../collision_wall.x,5.5,1.57,-22,0,0,0,1,normal
-813,../collision_moving_platform/collision_moving_platform.x,-3.5,0.82,2,0,0,0,1,normal
-814,../collision_moving_platform/collision_moving_platform.x,3.5,0.83,-2,0,0,0,1,normal
+813,../collision_moving_platform/collision_moving_platform.x,-3.5,0.82,2,0,0,0,1,meshmix2
+814,../collision_moving_platform/collision_moving_platform.x,3.5,0.83,-2,0,0,0,1,meshmix2
 819,../cubeWood/cube_wood.x,-11.5,0,22,0,0,0,1,normal
 820,../cubeWood/cube_wood.x,-6,0.01,13.0,0,0,0,1,normal
 821,../cubeWood/cube_wood.x,-2.5,0.02,8,0,0,0,1,normal
