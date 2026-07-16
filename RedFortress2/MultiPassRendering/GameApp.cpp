@@ -3142,7 +3142,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         D3DXVECTOR3(-9.0f, 2.3f, -5.0f),
         D3DXVECTOR3(-3.0f, 2.3f, -8.0f),
         D3DXVECTOR3(9.0f, 2.3f, -7.0f),
-        D3DXVECTOR3(-14.0f, 2.3f, -8.0f)
+        D3DXVECTOR3(-17.0f, 2.3f, 2.0f)
     };
     const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
     const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);

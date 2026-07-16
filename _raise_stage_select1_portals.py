@@ -1,0 +1,80 @@
+import bpy
+import os
+from mathutils import Vector
+
+
+model_dir = os.path.dirname(bpy.data.filepath)
+island_export_path = os.path.join(model_dir, "stageSelectIsland.x")
+sea_export_path = os.path.join(model_dir, "stageSelectSea.x")
+preview_path = os.path.join(model_dir, "world1_preview.png")
+
+portal_ground_heights = [0.8, 0.7, 0.9, 2.6, 4.8, 4.9, 6.8, 6.8, 6.8, 7.1]
+for index, ground_height in enumerate(portal_ground_heights):
+    prefix = f"RF1_Portal_{index:02d}"
+    bpy.data.objects[f"{prefix}_Base"].location.z = ground_height + 0.45
+    bpy.data.objects[f"{prefix}_Inset"].location.z = ground_height + 0.625
+    bpy.data.objects[f"{prefix}_Ring"].location.z = ground_height + 0.77
+
+for material in bpy.data.materials:
+    material["_x_power"] = 500.0
+
+preview_camera = bpy.context.scene.camera
+if preview_camera is not None:
+    preview_camera.location = Vector((-7.0, -26.0, 18.0))
+    preview_target = Vector((-7.0, 4.0, 3.5))
+    preview_camera.rotation_euler = (preview_target - preview_camera.location).to_track_quat("-Z", "Y").to_euler()
+
+sea_object_names = {
+    "StageSelect_DeepSea.001",
+    "StageSelect_ShallowWaterRing.001",
+    "StageSelect_FoamArc_00.001",
+    "StageSelect_FoamArc_01.001",
+    "StageSelect_FoamArc_02.001",
+    "RF1_Portal_00_Ring",
+    "RF1_Portal_09_Ring",
+    "RF1_FoamBreak_00",
+    "RF1_FoamBreak_01",
+    "RF1_FoamBreak_02",
+    "RF1_FoamBreak_03",
+    "RF1_FoamBreak_04",
+    "RF1_FoamBreak_05",
+    "RF1_FoamBreak_06",
+}
+
+
+def export_objects(filepath, object_names):
+    bpy.ops.object.select_all(action="DESELECT")
+    selected_objects = []
+    for object_name in object_names:
+        export_object = bpy.data.objects.get(object_name)
+        if export_object is None or export_object.type != "MESH":
+            raise RuntimeError(f"Export mesh was not found: {object_name}")
+        export_object.select_set(True)
+        selected_objects.append(export_object)
+
+    bpy.context.view_layer.objects.active = selected_objects[0]
+    result = bpy.ops.export_scene.directx_x(
+        filepath=filepath,
+        use_selection=True,
+        axis_forward="-Z",
+        axis_up="Y",
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError(f"Official DirectX X export failed: {filepath}")
+
+
+island_object_names = {
+    obj.name
+    for obj in bpy.data.objects
+    if obj.type == "MESH" and obj.name not in sea_object_names
+}
+
+bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
+export_objects(island_export_path, island_object_names)
+export_objects(sea_export_path, sea_object_names)
+
+bpy.context.scene.render.filepath = preview_path
+bpy.ops.render.render(write_still=True)
+
+print("Raised portals:", len(portal_ground_heights))
+print("Preview camera:", tuple(preview_camera.location) if preview_camera is not None else None)
