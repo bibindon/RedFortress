@@ -1518,7 +1518,15 @@ void GameApp::Run()
                 const auto& platforms = m_render.GetMovingPlatforms();
                 for (const auto& platform : platforms)
                 {
-                    const D3DXVECTOR3 platformPos = m_render.GetMeshMixPos(platform.renderId);
+                    D3DXVECTOR3 platformPos;
+                    if (platform.usesMeshMix2)
+                    {
+                        platformPos = m_render.GetMeshMix2Pos(platform.renderId);
+                    }
+                    else
+                    {
+                        platformPos = m_render.GetMeshMixPos(platform.renderId);
+                    }
                     D3DXVECTOR3& prevPos = m_prevMovingPlatformPositions[platform.csvId];
                     const D3DXVECTOR3 platformVelocity = (platformPos - prevPos) / kTargetFrameSeconds;
                     prevPos = platformPos;
