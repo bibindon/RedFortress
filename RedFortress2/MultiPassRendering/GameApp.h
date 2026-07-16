@@ -359,6 +359,7 @@ private:
     int m_stageIntroFontId = -1;
     StageIntroPhase m_stageIntroPhase = StageIntroPhase::LetterboxIn;
     int m_stageIntroFrame = 0;
+    int m_stageIntroZoomElapsed = 0;
     float m_stageIntroStartFadeAlpha = 0.0f;
     int m_goalMarkerMeshId = -1;
     int m_goalArrowMeshId = -1;

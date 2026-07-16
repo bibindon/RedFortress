@@ -203,6 +203,9 @@ namespace
     const int kStageIntroLetterboxFrames = 25;
     const int kStageIntroHoldFrames = 80;
     const int kStageIntroOutFrames = 25;
+    const int kStageIntroZoomTotalFrames =
+        kStageIntroLetterboxFrames + kStageIntroHoldFrames + kStageIntroOutFrames;
+    const float kStageIntroZoomStartScale = 2.5f;
     const int kLetterboxBarHeight = 130;
     const std::wstring kLetterboxBarImagePath = L"res\\2D_Image\\black2x2.bmp";
     const std::wstring kStageClearRingImagePath = L"res\\2D_Image\\stage_clear_ring.png";
@@ -936,7 +939,7 @@ void GameApp::Run()
         {
             GameAudio::PlayTitleMusic();
         }
-        else if (m_gameState == GameState::Playing)
+        else if (m_gameState == GameState::Playing || m_gameState == GameState::StageIntro)
         {
             const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
             const bool useRainEnvironment = audioStage.weather == StageManager::StageWeather::Rain;
@@ -5951,6 +5954,7 @@ void GameApp::BeginStageIntro()
 {
     m_stageIntroPhase = StageIntroPhase::LetterboxIn;
     m_stageIntroFrame = 0;
+    m_stageIntroZoomElapsed = 0;
     m_stageIntroStartFadeAlpha = m_render.GetFadeAlpha();
     if (m_stageIntroFontId < 0)
     {
@@ -6013,6 +6017,25 @@ void GameApp::UpdateStageIntro()
     // シーン描画用のカメラとプレイヤーメッシュを更新
     UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
 
+    if (!m_useFixedCamera)
+    {
+        const D3DXVECTOR3 zoomCameraTarget = m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
+        const float zoomHorizontalDistance = m_cameraDistance * cosf(m_cameraPitch);
+        const D3DXVECTOR3 zoomOffset(sinf(m_cameraYaw) * zoomHorizontalDistance,
+                                      sinf(m_cameraPitch) * m_cameraDistance,
+                                      -cosf(m_cameraYaw) * zoomHorizontalDistance);
+        const D3DXVECTOR3 zoomEndPos = m_cameraMover.ResolvePosition(zoomCameraTarget,
+                                                                      zoomCameraTarget + zoomOffset);
+        const D3DXVECTOR3 zoomStartPos = m_cameraMover.ResolvePosition(
+            zoomCameraTarget,
+            zoomCameraTarget + zoomOffset * kStageIntroZoomStartScale);
+        const float zoomRawT = static_cast<float>(m_stageIntroZoomElapsed) /
+                                static_cast<float>(kStageIntroZoomTotalFrames);
+        const float zoomT = SmoothStep01(zoomRawT);
+        const D3DXVECTOR3 zoomCameraPosition = LerpVector3(zoomStartPos, zoomEndPos, zoomT);
+        m_render.SetCamera(zoomCameraPosition, zoomCameraTarget);
+    }
+
     // シネマティック黒帯
     const int barH = static_cast<int>(barHeight + 0.5f);
     if (barH > 0)
@@ -6041,6 +6064,7 @@ void GameApp::UpdateStageIntro()
 
     // フレーム進行とフェーズ遷移
     ++m_stageIntroFrame;
+    ++m_stageIntroZoomElapsed;
     if (m_stageIntroFrame >= phaseFrames)
     {
         m_stageIntroFrame = 0;
