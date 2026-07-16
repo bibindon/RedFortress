@@ -679,7 +679,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     wc.hIcon = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
     const std::wstring cursorPath = NSRender::Util::GetExeDir() +
                                     L"res\\2D_Image\\marine_cursor.cur";
-    const int cursorSize = 64;
+    const int cursorSize = 32;
     m_hCursor = static_cast<HCURSOR>(LoadImageW(NULL,
                                                 cursorPath.c_str(),
                                                 IMAGE_CURSOR,
