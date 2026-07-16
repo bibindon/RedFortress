@@ -291,6 +291,7 @@ private:
     HWND m_settingsDialog = NULL;
     HWND m_hWnd = NULL;
     HINSTANCE m_hInstance = NULL;
+    HCURSOR m_hCursor = NULL;
     D3DXVECTOR3 m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_pendingJump = false;
     bool m_dashParticleEmitted = false;

@@ -677,7 +677,20 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     wc.cbWndExtra = 0;
     wc.hInstance = m_hInstance;
     wc.hIcon = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
-    wc.hCursor = NULL;
+    const std::wstring cursorPath = NSRender::Util::GetExeDir() +
+                                    L"res\\2D_Image\\marine_cursor.cur";
+    const int cursorSize = 64;
+    m_hCursor = static_cast<HCURSOR>(LoadImageW(NULL,
+                                                cursorPath.c_str(),
+                                                IMAGE_CURSOR,
+                                                cursorSize,
+                                                cursorSize,
+                                                LR_LOADFROMFILE));
+    if (m_hCursor == NULL)
+    {
+        throw std::runtime_error("Failed to load the game mouse cursor.");
+    }
+    wc.hCursor = m_hCursor;
     wc.hbrBackground = NULL;
     wc.lpszMenuName = NULL;
     wc.lpszClassName = _T("Window1");
@@ -2132,6 +2145,12 @@ void GameApp::Finalize()
     InputDevice::Finalize();
 
     UnregisterClass(_T("Window1"), m_hInstance);
+
+    if (m_hCursor != NULL)
+    {
+        DestroyCursor(m_hCursor);
+        m_hCursor = NULL;
+    }
 }
 
 static float ClampFloat(float v, float lo, float hi)

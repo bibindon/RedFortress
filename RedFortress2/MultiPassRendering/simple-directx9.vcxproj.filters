@@ -192,5 +192,8 @@
     <Image Include="res\2D_Image\icon.ico">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="res\2D_Image\marine_cursor.cur">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

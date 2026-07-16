@@ -237,6 +237,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\2D_Image\icon.ico" />
+    <Image Include="res\2D_Image\marine_cursor.cur" />
   </ItemGroup>
   <ItemGroup>
     <ParticleAsset Include="$(ProjectDir)..\..\RedFortressRender\Render\assets\particle\*.png" />
