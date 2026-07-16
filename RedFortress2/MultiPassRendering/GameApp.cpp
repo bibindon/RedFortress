@@ -148,7 +148,7 @@ namespace
     const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
     const float kStageSelectCubeScale = 0.16666667f;
-    const float kStageSelectCubeVisualOffsetY = 0.5f;
+    const float kStageSelectCubeVisualOffsetY = 1.0f;
     const std::wstring kAttackClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
