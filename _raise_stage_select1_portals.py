@@ -11,16 +11,27 @@ preview_path = os.path.join(model_dir, "world1_preview.png")
 portal_ground_heights = [0.8, 0.7, 0.9, 2.6, 4.8, 4.9, 6.8, 6.8, 6.8, 7.1]
 for index, ground_height in enumerate(portal_ground_heights):
     prefix = f"RF1_Portal_{index:02d}"
-    bpy.data.objects[f"{prefix}_Base"].location.z = ground_height + 0.45
-    bpy.data.objects[f"{prefix}_Inset"].location.z = ground_height + 0.625
-    bpy.data.objects[f"{prefix}_Ring"].location.z = ground_height + 0.77
+    base = bpy.data.objects[f"{prefix}_Base"]
+    inset = bpy.data.objects[f"{prefix}_Inset"]
+    ring = bpy.data.objects[f"{prefix}_Ring"]
+
+    base.location.z = ground_height + 0.45
+    inset.location.z = ground_height + 0.625
+    ring.location.z = ground_height + 0.77
+
+    base.scale.x = 0.5
+    base.scale.y = 0.5
+    inset.scale.x = 0.5
+    inset.scale.y = 0.5
+    ring.scale.x = 0.5
+    ring.scale.y = 0.5
 
 for material in bpy.data.materials:
     material["_x_power"] = 500.0
 
 preview_camera = bpy.context.scene.camera
 if preview_camera is not None:
-    preview_camera.location = Vector((-7.0, -32.0, 20.0))
+    preview_camera.location = Vector((-7.0, -28.0, 18.0))
     preview_target = Vector((-7.0, 4.0, 3.5))
     preview_camera.rotation_euler = (preview_target - preview_camera.location).to_track_quat("-Z", "Y").to_euler()
     preview_camera.data.lens = 28.0
