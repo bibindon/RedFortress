@@ -3134,7 +3134,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         D3DXVECTOR3(-9.0f, 2.3f, -5.0f),
         D3DXVECTOR3(-3.0f, 2.3f, -8.0f),
         D3DXVECTOR3(9.0f, 2.3f, -7.0f),
-        D3DXVECTOR3(-17.5f, 2.3f, 11.0f)
+        D3DXVECTOR3(-14.0f, 2.3f, -8.0f)
     };
     const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
     const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
@@ -3154,6 +3154,44 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         }
         m_render.AddPointLight(portalLightPositions[i], 2.0f, lightColor);
     }
+
+    const D3DXCOLOR crystalLightColor(0.08f, 0.55f, 1.0f, 1.0f);
+    m_render.AddPointLight(D3DXVECTOR3(-11.5f, 2.4f, 6.5f),
+                           2.4f,
+                           crystalLightColor,
+                           NSRender::PointLightShape::Point,
+                           12.0f,
+                           10.0f,
+                           10.0f,
+                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                           8.0f);
+    m_render.AddPointLight(D3DXVECTOR3(1.5f, 2.4f, 7.5f),
+                           2.4f,
+                           crystalLightColor,
+                           NSRender::PointLightShape::Point,
+                           12.0f,
+                           10.0f,
+                           10.0f,
+                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                           8.0f);
+    m_render.AddPointLight(D3DXVECTOR3(7.0f, 2.4f, 16.5f),
+                           2.4f,
+                           crystalLightColor,
+                           NSRender::PointLightShape::Point,
+                           12.0f,
+                           10.0f,
+                           10.0f,
+                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                           8.0f);
+    m_render.AddPointLight(D3DXVECTOR3(14.5f, 2.4f, -7.5f),
+                           2.4f,
+                           crystalLightColor,
+                           NSRender::PointLightShape::Point,
+                           12.0f,
+                           10.0f,
+                           10.0f,
+                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                           8.0f);
 
     const D3DXVECTOR3 playerLightPosition =
         m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
