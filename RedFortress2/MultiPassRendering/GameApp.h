@@ -147,6 +147,7 @@ private:
     void BuildTitleMainCommands();
     void BuildTitleConfirmCommands();
     void BuildTitleLanguageCommands();
+    void ApplyTitleRenderSettings();
     void EnterDeleteConfirmation();
     void ExitDeleteConfirmation();
     void ExitTitleLanguageSelection();

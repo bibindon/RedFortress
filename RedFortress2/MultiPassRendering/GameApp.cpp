@@ -122,6 +122,10 @@ namespace
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
     const std::wstring g_gameOverImagePath = L"res\\2D_Image\\gameover.png";
     const float kPlayerWalkAnimationSpeed = 1.3f;
+    const float kTitleSaturationLevel = 0.85f;
+    const float kTitleShadowDarkness = 0.75f;
+    const float kTitleSunLightIntensity = 0.45f;
+    const float kTitleAmbientLightIntensity = 0.14f;
     const float kStagePortalClickRadius = 48.0f;
     const float kStageSelectPlayerMoveDuration = 0.5f;
     const float kStageSelectTransitionFadeDuration = 0.3f;
@@ -1006,6 +1010,7 @@ void GameApp::Run()
             if (m_render.IsAllMeshLoaded())
             {
                 m_render.EndLoadingScreen();
+                ApplyTitleRenderSettings();
                 m_gameState = GameState::Title;
                 ApplyMouseCursor();
             }
@@ -5686,6 +5691,14 @@ bool GameApp::IsGameOverActionTriggered() const
     return false;
 }
 
+void GameApp::ApplyTitleRenderSettings()
+{
+    m_render.SetPostEffectSaturate(kTitleSaturationLevel);
+    m_render.SetMeshMixShadowDarkness(kTitleShadowDarkness);
+    m_render.SetLightBrightness(kTitleSunLightIntensity);
+    m_render.SetAmbientLightBrightness(kTitleAmbientLightIntensity);
+}
+
 void GameApp::ReturnToTitleFromGameOver()
 {
     m_gameOverPhase = GameOverPhase::None;
@@ -5701,6 +5714,7 @@ void GameApp::ReturnToTitleFromGameOver()
     m_titleLanguageSelectionMode = false;
     BuildTitleMainCommands();
     RefreshTitleCommands();
+    ApplyTitleRenderSettings();
     m_render.StartFadeIn(0.3f);
     m_gameState = GameState::Title;
 }
