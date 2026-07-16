@@ -314,6 +314,7 @@ private:
     int m_playerInvincibleFrames = 0;
     int m_stickMeshId = -1;
     int m_saberMeshId = -1;
+    int m_gunMeshId = -1;
     int m_playerKnockbackFrames = 0;
     D3DXVECTOR3 m_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int m_respawnCameraDelayFrames = 0;

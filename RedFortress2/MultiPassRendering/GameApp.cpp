@@ -159,9 +159,11 @@ namespace
     const std::wstring kQteRewardItemId = L"001";
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
     const std::wstring kSaberModelPath = L"res\\model\\saber\\saber.x";
+    const std::wstring kGunModelPath = L"res\\model\\gun\\gun.x";
     const char* kPlayerLeftWristBoneName = "Bone_242";
     const float kStickModelScale = 0.5f;
     const float kSaberModelScale = 0.5f;
+    const float kGunModelScale = 0.5f;
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
     const std::wstring kInitialClubWeaponId = L"W001";
@@ -2918,6 +2920,7 @@ void GameApp::UpdateHeldWeaponVisibility()
 {
     bool stickVisible = false;
     bool saberVisible = false;
+    bool gunVisible = false;
 
     if (m_debugPlayerRenderEnabled && !IsCurrentStageSelect())
     {
@@ -2930,6 +2933,10 @@ void GameApp::UpdateHeldWeaponVisibility()
         {
             saberVisible = true;
         }
+        else if (IsBusterAttackType(attackType))
+        {
+            gunVisible = true;
+        }
     }
 
     if (m_stickMeshId >= 0)
@@ -2940,6 +2947,11 @@ void GameApp::UpdateHeldWeaponVisibility()
     if (m_saberMeshId >= 0)
     {
         m_render.SetMeshMixEnabled(m_saberMeshId, saberVisible);
+    }
+
+    if (m_gunMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_gunMeshId, gunVisible);
     }
 }
 
@@ -5813,6 +5825,12 @@ void GameApp::LoadCurrentStageObjects()
         m_render.RemoveMeshMix(m_saberMeshId);
         m_saberMeshId = -1;
     }
+    if (m_gunMeshId >= 0)
+    {
+        m_render.DetachMeshFromBone(m_gunMeshId);
+        m_render.RemoveMeshMix(m_gunMeshId);
+        m_gunMeshId = -1;
+    }
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
@@ -5908,6 +5926,19 @@ void GameApp::LoadCurrentStageObjects()
             const float kSaberLocalRotateZ = D3DX_PI * 0.5f;
             m_render.AttachMeshToBone(m_saberMeshId, m_playerMeshId, kPlayerLeftWristBoneName,
                                       D3DXVECTOR3(0.0f, 0.0f, kSaberLocalRotateZ),
+                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+        }
+
+        m_gunMeshId = m_render.AddMeshMix(kGunModelPath,
+                                          kHiddenHeldWeaponPosition,
+                                          D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                          kGunModelScale);
+        if (m_gunMeshId >= 0)
+        {
+            m_render.SetMeshMixEnabled(m_gunMeshId, false);
+            const float kGunLocalRotateZ = D3DX_PI * 0.5f;
+            m_render.AttachMeshToBone(m_gunMeshId, m_playerMeshId, kPlayerLeftWristBoneName,
+                                      D3DXVECTOR3(0.0f, 0.0f, kGunLocalRotateZ),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
     }
