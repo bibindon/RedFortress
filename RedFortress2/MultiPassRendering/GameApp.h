@@ -71,6 +71,8 @@ private:
     static LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
     bool InitializeWindow(HINSTANCE hInstance, int nCmdShow);
     void ProcessMessages();
+    HCURSOR GetActiveMouseCursor() const;
+    void ApplyMouseCursor();
 
     // ゲームループ
     void Update();
@@ -292,6 +294,8 @@ private:
     HWND m_hWnd = NULL;
     HINSTANCE m_hInstance = NULL;
     HCURSOR m_hCursor = NULL;
+    HCURSOR m_hPressedCursor = NULL;
+    HCURSOR m_hLoadingCursor = NULL;
     D3DXVECTOR3 m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_pendingJump = false;
     bool m_dashParticleEmitted = false;

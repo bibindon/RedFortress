@@ -677,20 +677,32 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     wc.cbWndExtra = 0;
     wc.hInstance = m_hInstance;
     wc.hIcon = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
-    const std::wstring cursorPath = NSRender::Util::GetExeDir() +
-                                    L"res\\2D_Image\\marine_cursor.cur";
+    const std::wstring cursorDirectory = NSRender::Util::GetExeDir() +
+                                         L"res\\2D_Image\\";
     const int cursorSize = 32;
     m_hCursor = static_cast<HCURSOR>(LoadImageW(NULL,
-                                                cursorPath.c_str(),
+                                                (cursorDirectory + L"marine_cursor.cur").c_str(),
                                                 IMAGE_CURSOR,
                                                 cursorSize,
                                                 cursorSize,
                                                 LR_LOADFROMFILE));
-    if (m_hCursor == NULL)
+    m_hPressedCursor = static_cast<HCURSOR>(LoadImageW(NULL,
+                                                       (cursorDirectory + L"marine_cursor_pressed.cur").c_str(),
+                                                       IMAGE_CURSOR,
+                                                       cursorSize,
+                                                       cursorSize,
+                                                       LR_LOADFROMFILE));
+    m_hLoadingCursor = static_cast<HCURSOR>(LoadImageW(NULL,
+                                                       (cursorDirectory + L"marine_cursor_loading.ani").c_str(),
+                                                       IMAGE_CURSOR,
+                                                       cursorSize,
+                                                       cursorSize,
+                                                       LR_LOADFROMFILE));
+    if (m_hCursor == NULL || m_hPressedCursor == NULL || m_hLoadingCursor == NULL)
     {
-        throw std::runtime_error("Failed to load the game mouse cursor.");
+        throw std::runtime_error("Failed to load the game mouse cursors.");
     }
-    wc.hCursor = m_hCursor;
+    wc.hCursor = m_hLoadingCursor;
     wc.hbrBackground = NULL;
     wc.lpszMenuName = NULL;
     wc.lpszClassName = _T("Window1");
@@ -989,6 +1001,7 @@ void GameApp::Run()
             {
                 m_render.EndLoadingScreen();
                 m_gameState = GameState::Title;
+                ApplyMouseCursor();
             }
         }
         else if (m_gameState == GameState::Title)
@@ -2150,6 +2163,18 @@ void GameApp::Finalize()
     {
         DestroyCursor(m_hCursor);
         m_hCursor = NULL;
+    }
+
+    if (m_hPressedCursor != NULL)
+    {
+        DestroyCursor(m_hPressedCursor);
+        m_hPressedCursor = NULL;
+    }
+
+    if (m_hLoadingCursor != NULL)
+    {
+        DestroyCursor(m_hLoadingCursor);
+        m_hLoadingCursor = NULL;
     }
 }
 
@@ -4920,6 +4945,23 @@ LRESULT WINAPI GameApp::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 {
     switch (msg)
     {
+    case WM_SETCURSOR:
+    {
+        if (LOWORD(lParam) == HTCLIENT)
+        {
+            Instance().ApplyMouseCursor();
+            return TRUE;
+        }
+        break;
+    }
+
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONUP:
+    {
+        Instance().ApplyMouseCursor();
+        break;
+    }
+
     case WM_CLOSE:
     {
         Instance().m_close = true;
@@ -4935,6 +4977,30 @@ LRESULT WINAPI GameApp::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
     }
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+HCURSOR GameApp::GetActiveMouseCursor() const
+{
+    if (m_gameState == GameState::Loading && m_hLoadingCursor != NULL)
+    {
+        return m_hLoadingCursor;
+    }
+
+    if ((GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0 && m_hPressedCursor != NULL)
+    {
+        return m_hPressedCursor;
+    }
+
+    return m_hCursor;
+}
+
+void GameApp::ApplyMouseCursor()
+{
+    HCURSOR cursor = GetActiveMouseCursor();
+    if (cursor != NULL && GetCursor() != cursor)
+    {
+        SetCursor(cursor);
+    }
 }
 
 void GameApp::UpdateTitleByInput()

@@ -195,5 +195,11 @@
     <Image Include="res\2D_Image\marine_cursor.cur">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="res\2D_Image\marine_cursor_loading.ani">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="res\2D_Image\marine_cursor_pressed.cur">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>
