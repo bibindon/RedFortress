@@ -5956,6 +5956,11 @@ void GameApp::BeginStageIntro()
     m_stageIntroFrame = 0;
     m_stageIntroZoomElapsed = 0;
     m_stageIntroStartFadeAlpha = m_render.GetFadeAlpha();
+    if (!m_useFixedCamera)
+    {
+        // プレイヤーの進行方向と反対側にカメラを置き、演出後も背後視点を維持する。
+        m_cameraYaw = D3DX_PI - m_playerYaw;
+    }
     if (m_stageIntroFontId < 0)
     {
         m_stageIntroFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 56, D3DCOLOR_RGBA(255, 255, 255, 255));
