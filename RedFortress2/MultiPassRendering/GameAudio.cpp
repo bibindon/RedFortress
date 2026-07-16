@@ -44,6 +44,7 @@ const std::wstring kBuster = L"res\\sound\\buster.wav";
 const std::wstring kWeaponChange = L"res\\sound\\weaponChange.wav";
 const std::wstring kQte = L"res\\sound\\qte.wav";
 const std::wstring kQteBest = L"res\\sound\\qte_best.wav";
+const std::wstring kArrow = L"res\\sound\\arrow.wav";
 const int kTitleBgmVolume = 22;
 const int kEndingBgmVolume = 50;
 const int kFieldBgmVolume = 40;
@@ -54,6 +55,30 @@ int g_environmentId = -1;
 int g_hyperModeId = -1;
 int g_currentBgmVolume = 0;
 int g_effectiveBgmVolume = -1;
+bool g_initialized = false;
+bool g_recoveryPending = false;
+bool g_hyperModeRequested = false;
+ULONGLONG g_nextRecoveryTick = 0;
+const ULONGLONG kRecoveryRetryIntervalMilliseconds = 500;
+
+void ResetTrackingState()
+{
+    g_currentBgm.clear();
+    g_currentEnvironment.clear();
+    g_environmentId = -1;
+    g_hyperModeId = -1;
+    g_currentBgmVolume = 0;
+    g_effectiveBgmVolume = -1;
+}
+
+void BeginAudioDeviceRecovery()
+{
+    g_initialized = false;
+    ResetTrackingState();
+    SoundLib::SoundLib::Finalize();
+    g_recoveryPending = true;
+    g_nextRecoveryTick = GetTickCount64() + kRecoveryRetryIntervalMilliseconds;
+}
 
 int GetEffectiveBgmVolume(const int volume)
 {
@@ -67,6 +92,11 @@ int GetEffectiveBgmVolume(const int volume)
 
 void ApplyCurrentBgmVolume()
 {
+    if (!g_initialized)
+    {
+        return;
+    }
+
     if (g_currentBgm.empty())
     {
         g_effectiveBgmVolume = -1;
@@ -79,12 +109,25 @@ void ApplyCurrentBgmVolume()
         return;
     }
 
-    SoundLib::SoundLib::SetBgmVolume(effectiveVolume);
+    try
+    {
+        SoundLib::SoundLib::SetBgmVolume(effectiveVolume);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
     g_effectiveBgmVolume = effectiveVolume;
 }
 
 void PlayBgmIfChanged(const std::wstring& path, const int volume)
 {
+    if (!g_initialized)
+    {
+        return;
+    }
+
     if (g_currentBgm == path)
     {
         g_currentBgmVolume = volume;
@@ -93,7 +136,15 @@ void PlayBgmIfChanged(const std::wstring& path, const int volume)
     }
 
     const int effectiveVolume = GetEffectiveBgmVolume(volume);
-    SoundLib::SoundLib::PlayBgm(path, effectiveVolume);
+    try
+    {
+        SoundLib::SoundLib::PlayBgm(path, effectiveVolume);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
     g_currentBgm = path;
     g_currentBgmVolume = volume;
     g_effectiveBgmVolume = effectiveVolume;
@@ -101,23 +152,49 @@ void PlayBgmIfChanged(const std::wstring& path, const int volume)
 
 void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
 {
+    if (!g_initialized)
+    {
+        return;
+    }
+
     if (g_currentEnvironment == path)
     {
         return;
     }
-    if (g_environmentId >= 0)
+    try
     {
-        SoundLib::SoundLib::StopEnvironmentSound(g_environmentId);
+        if (g_environmentId >= 0)
+        {
+            SoundLib::SoundLib::StopEnvironmentSound(g_environmentId);
+        }
+        g_environmentId = SoundLib::SoundLib::PlayEnvironmentSound(path, volume);
     }
-    g_environmentId = SoundLib::SoundLib::PlayEnvironmentSound(path, volume);
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
     g_currentEnvironment = path;
 }
 
 void StopBgmIfPlaying()
 {
+    if (!g_initialized)
+    {
+        return;
+    }
+
     if (!g_currentBgm.empty())
     {
-        SoundLib::SoundLib::StopBgm();
+        try
+        {
+            SoundLib::SoundLib::StopBgm();
+        }
+        catch (const SoundLib::AudioDeviceException&)
+        {
+            BeginAudioDeviceRecovery();
+            return;
+        }
         g_currentBgm.clear();
         g_currentBgmVolume = 0;
         g_effectiveBgmVolume = -1;
@@ -126,9 +203,22 @@ void StopBgmIfPlaying()
 
 void StopEnvironment()
 {
+    if (!g_initialized)
+    {
+        return;
+    }
+
     if (g_environmentId >= 0)
     {
-        SoundLib::SoundLib::StopEnvironmentSound(g_environmentId);
+        try
+        {
+            SoundLib::SoundLib::StopEnvironmentSound(g_environmentId);
+        }
+        catch (const SoundLib::AudioDeviceException&)
+        {
+            BeginAudioDeviceRecovery();
+            return;
+        }
         g_environmentId = -1;
     }
     g_currentEnvironment.clear();
@@ -136,7 +226,19 @@ void StopEnvironment()
 
 void PlayEffect(const std::wstring& path, const int volume)
 {
-    SoundLib::SoundLib::PlaySoundEffect(path, volume);
+    if (!g_initialized)
+    {
+        return;
+    }
+
+    try
+    {
+        SoundLib::SoundLib::PlaySoundEffect(path, volume);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+    }
 }
 }
 
@@ -144,30 +246,82 @@ namespace GameAudio
 {
 void Initialize()
 {
+    g_initialized = false;
+    ResetTrackingState();
     const std::wstring effects[] =
     {
         kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSlashHit, kAttackHit,
         kEnemyAttack, kPlayerDamage, kPlayerDeath, kItemGet, kAmmoMax, kJump, kPowerUp, kDash, kDashBooster,
         kExplosion, kBombPlace, kStomp, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
-        kDrink, kQte, kQteBest
+        kDrink, kQte, kQteBest, kArrow
     };
     for (const std::wstring& effect : effects)
     {
         SoundLib::SoundLib::LoadSoundEffect(effect);
     }
-    g_currentBgm.clear();
-    g_currentEnvironment.clear();
-    g_environmentId = -1;
-    g_hyperModeId = -1;
-    g_currentBgmVolume = 0;
-    g_effectiveBgmVolume = -1;
+    g_initialized = true;
+    g_recoveryPending = false;
+    g_nextRecoveryTick = 0;
+    if (g_hyperModeRequested)
+    {
+        StartHyperMode();
+    }
 }
 
 void Finalize()
 {
-    StopHyperMode();
-    StopEnvironment();
-    StopBgmIfPlaying();
+    if (g_initialized)
+    {
+        StopHyperMode();
+        StopEnvironment();
+        StopBgmIfPlaying();
+    }
+    g_initialized = false;
+    g_recoveryPending = false;
+    g_hyperModeRequested = false;
+    g_nextRecoveryTick = 0;
+    ResetTrackingState();
+}
+
+void Update(HWND windowHandle,
+            const SoundLib::Vector3& listenerPosition,
+            const SoundLib::Vector3& listenerFront,
+            const SoundLib::Vector3& listenerTop)
+{
+    if (g_recoveryPending)
+    {
+        const ULONGLONG currentTick = GetTickCount64();
+        if (currentTick < g_nextRecoveryTick)
+        {
+            return;
+        }
+
+        try
+        {
+            SoundLib::SoundLib::Initialize(windowHandle);
+            Initialize();
+        }
+        catch (const SoundLib::AudioDeviceException&)
+        {
+            SoundLib::SoundLib::Finalize();
+            g_nextRecoveryTick = currentTick + kRecoveryRetryIntervalMilliseconds;
+            return;
+        }
+    }
+
+    if (!g_initialized)
+    {
+        return;
+    }
+
+    try
+    {
+        SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+    }
 }
 
 void PlayLoadingEnvironment()
@@ -257,23 +411,52 @@ void PlayPowerUp() { PlayEffect(kPowerUp, 82); }
 void PlayDrink() { PlayEffect(kDrink, 80); }
 void StartHyperMode()
 {
+    g_hyperModeRequested = true;
+    if (!g_initialized)
+    {
+        return;
+    }
+
     if (g_hyperModeId >= 0)
     {
         return;
     }
 
-    g_hyperModeId = SoundLib::SoundLib::PlayEnvironmentSound(kHyperMode, 78);
+    try
+    {
+        g_hyperModeId = SoundLib::SoundLib::PlayEnvironmentSound(kHyperMode, 78);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
     ApplyCurrentBgmVolume();
 }
 
 void StopHyperMode()
 {
+    g_hyperModeRequested = false;
+    if (!g_initialized)
+    {
+        g_hyperModeId = -1;
+        return;
+    }
+
     if (g_hyperModeId < 0)
     {
         return;
     }
 
-    SoundLib::SoundLib::StopEnvironmentSound(g_hyperModeId);
+    try
+    {
+        SoundLib::SoundLib::StopEnvironmentSound(g_hyperModeId);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
     g_hyperModeId = -1;
     ApplyCurrentBgmVolume();
 }
@@ -285,6 +468,7 @@ void PlayBombPlace() { PlayEffect(kBombPlace, 78); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }
 void PlayWeaponChange() { PlayEffect(kWeaponChange, 72); }
+void PlayArrow() { PlayEffect(kArrow, 100); }
 void PlayStageClear() { PlayEffect(kQteBest, 86); }
 void PlayQteStart() { PlayEffect(kQte, 70); }
 void PlayQteStop() { PlayEffect(kStageSelectConfirm, 70); }

@@ -1,11 +1,18 @@
 ﻿#pragma once
 
+#include <Windows.h>
 #include <string>
+
+#include "../../SoundLib/SoundLib/SoundLib.h"
 
 namespace GameAudio
 {
 void Initialize();
 void Finalize();
+void Update(HWND windowHandle,
+            const SoundLib::Vector3& listenerPosition,
+            const SoundLib::Vector3& listenerFront,
+            const SoundLib::Vector3& listenerTop);
 void PlayLoadingEnvironment();
 void PlayTitleMusic();
 void PlayEndingMusic();
@@ -35,6 +42,7 @@ void PlayBombPlace();
 void PlayStomp();
 void PlayBuster();
 void PlayWeaponChange();
+void PlayArrow();
 void PlayStageClear();
 void PlayQteStart();
 void PlayQteStop();

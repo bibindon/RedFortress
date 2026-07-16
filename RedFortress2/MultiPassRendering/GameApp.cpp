@@ -112,7 +112,6 @@ namespace
 
 #endif
 
-    const std::wstring g_arrowSoundPath = L"res\\sound\\arrow.wav";
     const std::wstring g_playerMeshPath = L"res\\model2\\marine_512\\marine.x";
     const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine_512\\marine.csv";
     const std::wstring g_playerIdleAnimName = L"000";
@@ -757,7 +756,6 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetLoadingScreenProgress(0);
     m_render.Draw();
     SoundLib::SoundLib::Initialize(m_hWnd);
-    SoundLib::SoundLib::LoadSoundEffect(g_arrowSoundPath);
     GameAudio::Initialize();
     GameAudio::PlayLoadingEnvironment();
 
@@ -939,7 +937,7 @@ void GameApp::Run()
         SoundLib::Vector3 listenerPosition { audioPlayerPosition.x, audioPlayerPosition.y, audioPlayerPosition.z };
         SoundLib::Vector3 listenerFront { audioListenerForward.x, audioListenerForward.y, audioListenerForward.z };
         SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
-        SoundLib::SoundLib::Update(listenerPosition, listenerFront, listenerTop);
+        GameAudio::Update(m_hWnd, listenerPosition, listenerFront, listenerTop);
 
         if (m_gameState == GameState::Title)
         {
@@ -1745,7 +1743,7 @@ void GameApp::Run()
 
             if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F2))
             {
-                SoundLib::SoundLib::PlaySoundEffect(g_arrowSoundPath, 100);
+                GameAudio::PlayArrow();
             }
         }
 
