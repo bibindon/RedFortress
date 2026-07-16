@@ -5,7 +5,7 @@ AnimTicksPerSecond {
 }
 Material RF3_StarWhite {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cube_white.png";}

@@ -5,48 +5,48 @@ AnimTicksPerSecond {
 }
 Material stageSelectCaveShrine {
 	 0.350000; 0.340000; 0.310000; 1.000000;;
-	 2.070530;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"stageSelectCaveShrine.png";}
 }
 Material stageSelectCaveWall {
 	 0.180000; 0.170000; 0.160000; 1.000000;;
-	 2.070530;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"stageSelectCaveWall.png";}
 }
 Material stageSelectCaveDeepDark {
 	 0.070000; 0.065000; 0.070000; 1.000000;;
-	 2.070530;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"stageSelectCaveDeepDark.png";}
 }
 Material stageSelectCaveFloor {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 11.313708;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 }
 Material stageSelectCaveCrystal {
 	 0.160000; 0.680000; 0.960000; 1.000000;;
-	 58.892011;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"stageSelectCaveCrystal.png";}
 }
 Material stageSelectCavePath {
 	 0.360000; 0.310000; 0.230000; 1.000000;;
-	 2.070530;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"stageSelectCavePath.png";}
 }
 Material RF2_CaveSky {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.000000;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\SkySphere_cave\\Skydome.png";}

@@ -5,140 +5,140 @@ AnimTicksPerSecond {
 }
 Material RF2_CaveSky_World4Dawn {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\SkySphere_evening\\Skydome.png";}
 }
 Material RF2_CaveSky_World4Sea {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select1\\stageSelectSea.png";}
 }
 Material RF4_DawnSand {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select1\\stageSelectSand.png";}
 }
 Material RF4_DarkGrass {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select1\\stageSelectGrass.png";}
 }
 Material RF4_FinalClearingMat {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCavePath.png";}
 }
 Material RF4_ForestPath {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCavePath.png";}
 }
 Material RF4_DarkWood {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cubeWood\\wood.png";}
 }
 Material RF4_CoastRockMat {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select1\\stageSelectRock.png";}
 }
 Material RF4_DeepShadow {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCaveDeepDark.png";}
 }
 Material RF2_CaveSky_World4Travel {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cubeBlue\\cube_blue.png";}
 }
 Material RF4_PortalStone {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCaveShrine.png";}
 }
 Material RF2_CaveSky_World4Foam {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select1\\stageSelectWaveFoam.png";}
 }
 Material RF2_CaveSky_World4Fire {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\sphereOrange\\sphere_orange.png";}
 }
 Material RF2_CaveSky_World4Gold {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\sphereOrange\\sphere_orange.png";}
 }
 Material RF4_BoatHull {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cube_red.png";}
 }
 Material RF4_BoatWhite {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cube_white.png";}
 }
 Material RF4_ForestLeaves {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select1\\stageSelectPalmLeaf.png";}
 }
 Material RF2_CaveSky_World4Sun {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\sphereOrange\\sphere_orange.png";}
 }
 Material RF2_CaveSky_World4Spirit {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cube_white.png";}
 }
 Material RF4_BlackMist {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCaveDeepDark.png";}

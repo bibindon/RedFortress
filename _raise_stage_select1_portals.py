@@ -20,9 +20,10 @@ for material in bpy.data.materials:
 
 preview_camera = bpy.context.scene.camera
 if preview_camera is not None:
-    preview_camera.location = Vector((-7.0, -26.0, 18.0))
+    preview_camera.location = Vector((-7.0, -32.0, 20.0))
     preview_target = Vector((-7.0, 4.0, 3.5))
     preview_camera.rotation_euler = (preview_target - preview_camera.location).to_track_quat("-Z", "Y").to_euler()
+    preview_camera.data.lens = 28.0
 
 sea_object_names = {
     "StageSelect_DeepSea.001",

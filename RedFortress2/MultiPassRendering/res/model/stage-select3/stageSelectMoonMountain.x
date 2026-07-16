@@ -5,70 +5,70 @@ AnimTicksPerSecond {
 }
 Material RF2_CaveSky_World3Night {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\SkySphere_night\\Skydome.png";}
 }
 Material RF3_ObsidianStone {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCaveDeepDark.png";}
 }
 Material RF3_MountainStone {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCaveWall.png";}
 }
 Material RF3_PilgrimPath {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCavePath.png";}
 }
 Material RF3_AncientShrine {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCaveShrine.png";}
 }
 Material RF3_SpiritBlue {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cubeBlue\\cube_blue.png";}
 }
 Material RF3_SealGold {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\sphereOrange\\sphere_orange.png";}
 }
 Material RF3_SpiritWhite {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cube_white.png";}
 }
 Material RF3_NightFoliage {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\stage-select2\\stageSelectCaveMoss.png";}
 }
 Material RF2_CaveSky_World3River {
 	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 1.474269;
+	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
 	TextureFileName {"..\\cubeBlue\\cube_blue.png";}
