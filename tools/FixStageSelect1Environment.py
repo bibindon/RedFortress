@@ -1,5 +1,6 @@
 ﻿import math
 import os
+import csv
 
 import bpy
 
@@ -211,6 +212,28 @@ def create_grass_to_beach_seam_skirt():
     bpy.context.scene.collection.objects.link(skirt_object)
 
 
+def align_portal_pedestals(output_directory):
+    interactables_path = os.path.join(output_directory, "Interactables.csv")
+    portal_positions = []
+    with open(interactables_path, "r", encoding="utf-8-sig", newline="") as interactables_file:
+        reader = csv.DictReader(interactables_file)
+        for row in reader:
+            if row["Type"] == "StagePortal":
+                portal_positions.append((float(row["PosX"]), float(row["PosZ"])))
+
+    if len(portal_positions) != 10:
+        raise RuntimeError("Stage-select 1 must define exactly 10 stage portals.")
+
+    object_suffixes = ("Base", "Inset", "Ring")
+    for portal_index, portal_position in enumerate(portal_positions):
+        game_x, game_z = portal_position
+        for object_suffix in object_suffixes:
+            object_name = "RF1_Portal_{:02d}_{}".format(portal_index, object_suffix)
+            pedestal_object = get_required_object(object_name)
+            pedestal_object.location.x = -game_x
+            pedestal_object.location.y = game_z
+
+
 def is_sea_object(scene_object):
     if scene_object.type != "MESH":
         return False
@@ -263,13 +286,14 @@ def main():
     if not blend_path:
         raise RuntimeError("Open world1.blend before running this script.")
 
+    output_directory = os.path.dirname(blend_path)
     apply_material_settings()
     replace_deep_sea_with_disk()
     widen_shallow_water_overlap()
     expand_grass_apron_overlap()
     create_grass_to_beach_seam_skirt()
+    align_portal_pedestals(output_directory)
 
-    output_directory = os.path.dirname(blend_path)
     export_selected_meshes(os.path.join(output_directory, "stageSelectIsland.x"), False)
     export_selected_meshes(os.path.join(output_directory, "stageSelectSea.x"), True)
     bpy.ops.wm.save_as_mainfile(filepath=blend_path)
