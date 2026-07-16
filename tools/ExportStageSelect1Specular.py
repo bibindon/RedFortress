@@ -4,17 +4,17 @@ import bpy
 
 
 MATERIAL_SETTINGS = {
-    "CoastalRock": (0.10, 0.90),
-    "DeepSea_TropicalBlue.001": (0.02, 1.00),
-    "IslandGrass": (0.14, 0.75),
-    "PalmLeaves": (0.20, 0.65),
-    "PalmLeaves_LitTips": (0.16, 0.75),
-    "PalmTrunk": (0.22, 0.70),
-    "ShallowWater_Cyan": (0.01, 1.00),
-    "ShellAccent": (0.08, 1.00),
-    "WarmSand": (0.12, 0.85),
-    "WaveFoam_White": (0.12, 0.85),
-    "WeatheredWood": (0.24, 0.65),
+    "CoastalRock": (0.65, 0.18),
+    "DeepSea_TropicalBlue.001": (0.48, 0.20),
+    "IslandGrass": (0.62, 0.14),
+    "PalmLeaves": (0.68, 0.12),
+    "PalmLeaves_LitTips": (0.65, 0.14),
+    "PalmTrunk": (0.65, 0.16),
+    "ShallowWater_Cyan": (0.42, 0.18),
+    "ShellAccent": (0.62, 0.15),
+    "WarmSand": (0.58, 0.16),
+    "WaveFoam_White": (0.70, 0.12),
+    "WeatheredWood": (0.72, 0.14),
 }
 
 SEA_MATERIAL_NAMES = {

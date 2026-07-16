@@ -1,8 +1,8 @@
 SaturateEnable,1
-SaturateLevel,1.2
+SaturateLevel,0.9
 ,
 HalfLambertShadowSaturation,2.0
-HalfLambertShadowDarkness,0.6
+HalfLambertShadowDarkness,0.78
 ,
 GaussianEnable,0
 GaussianSampleSize,101
@@ -91,11 +91,11 @@ DepthOfFieldAutoActivationDistance,1.0
 ,
 ModelLoadScale,1.0
 ,
-SunLightIntensity,0.75
+SunLightIntensity,0.35
 SunLightColorR,1.0
 SunLightColorG,1.0
 SunLightColorB,1.0
-AmbientLightIntensity,0.28
+AmbientLightIntensity,0.10
 AmbientLightColorR,1.0
 AmbientLightColorG,1.0
 AmbientLightColorB,1.0
