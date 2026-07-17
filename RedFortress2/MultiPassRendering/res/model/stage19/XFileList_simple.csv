@@ -2,12 +2,12 @@
 2,../plateField64x128.x,0,0,0,0,0,0,1,normal
 201,../collision_wall/collision_wall.x,-10,1.50,22,0,0,0,1,normal
 202,../collision_wall/collision_wall.x,10,1.51,22,0,0,0,1,normal
-203,../collision_wall/collision_wall.x,-6,1.52,14,0,1.5708,0,1,normal
-204,../collision_wall/collision_wall.x,6,1.53,10,0,1.5708,0,1,normal
+203,../collision_wall/collision_wall.x,-6,1.52,14,0,90,0,1,normal
+204,../collision_wall/collision_wall.x,6,1.53,10,0,90,0,1,normal
 205,../collision_wall/collision_wall.x,-11,1.54,2,0,0,0,1,normal
 206,../collision_wall/collision_wall.x,11,1.55,-2,0,0,0,1,normal
-207,../collision_wall/collision_wall.x,-6,1.56,-10,0,1.5708,0,1,normal
-208,../collision_wall/collision_wall.x,6,1.57,-14,0,1.5708,0,1,normal
+207,../collision_wall/collision_wall.x,-6,1.56,-10,0,90,0,1,normal
+208,../collision_wall/collision_wall.x,6,1.57,-14,0,90,0,1,normal
 209,../collision_wall/collision_wall.x,-10,1.58,-22,0,0,0,1,normal
 210,../collision_wall/collision_wall.x,10,1.59,-22,0,0,0,1,normal
 211,../collision_wall/collision_wall.x,0,1.60,4,0,0,0,1,normal

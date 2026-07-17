@@ -22,18 +22,21 @@ Material Worn_Iron_Edge {
 	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
+	TextureFileName {"forged_metal.png";}
 }
 Material Forged_Iron {
 	 0.055000; 0.075000; 0.090000; 1.000000;;
 	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
+	TextureFileName {"forged_metal.png";}
 }
 Material Brass_Bolts {
 	 0.720000; 0.390000; 0.080000; 1.000000;;
 	 500.000000;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
+	TextureFileName {"forged_metal.png";}
 }
 Frame Moving_Platform_Visual {
 	FrameTransformMatrix {
