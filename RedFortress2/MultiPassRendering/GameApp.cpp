@@ -170,6 +170,7 @@ namespace
     const float kGunModelScale = 0.5f;
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
+    const std::wstring kStarPowerUpItemId = L"star_power_up";
     const std::wstring kInitialClubWeaponId = L"W001";
     const std::wstring kSwordWeaponId = L"W002";
     const std::wstring kBusterWeaponId = L"W003";
@@ -4278,7 +4279,7 @@ void GameApp::RestoreTemporaryPowerUps()
 
 void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)
 {
-    if (itemId == L"star_power_up")
+    if (itemId == kStarPowerUpItemId)
     {
         return;
     }
