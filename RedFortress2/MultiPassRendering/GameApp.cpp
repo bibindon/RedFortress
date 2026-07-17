@@ -182,6 +182,8 @@ namespace
     const int kItemPickupMessageTotalFrames = 180;
     const int kItemPickupMessageFadeFrames = 24;
     const int kItemPickupMessageY = 780;
+    const int kItemPickupMessageFontSize = 20;
+    const int kItemPickupMessageHeight = 30;
 
     const float CAMERA_MOVE_SPEED = 0.08f;
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
@@ -4299,7 +4301,7 @@ void GameApp::DrawItemPickupMessage()
     if (m_itemPickupMessageFontId < 0)
     {
         m_itemPickupMessageFontId = m_render.SetUpFontEx(L"BIZ UDGothic",
-                                                          14,
+                                                          kItemPickupMessageFontSize,
                                                           D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
@@ -4328,7 +4330,7 @@ void GameApp::DrawItemPickupMessage()
                               0,
                               kItemPickupMessageY,
                               NSRender::Common::BASE_W,
-                              21,
+                              kItemPickupMessageHeight,
                               D3DCOLOR_RGBA(255, 255, 255, alpha));
 
     --m_itemPickupMessageFrames;
