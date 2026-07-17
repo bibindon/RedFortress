@@ -111,6 +111,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.enemyCsvPath = basePath + L"EnemyPositions.csv";
     stage.collectibleCsvPath = basePath + L"Collectibles.csv";
     stage.interactableCsvPath = basePath + L"Interactables.csv";
+    stage.stageSelectNavigationCsvPath = basePath + L"StageSelectNavigation.csv";
     stage.starCsvPath = basePath + L"Stars.csv";
     stage.speedUpCsvPath = basePath + L"SpeedUps.csv";
     stage.destructibleCsvPath = basePath + L"Destructibles.csv";

@@ -1,0 +1,11 @@
+CurrentPortalID,LeftPortalID,RightPortalID,UpPortalID,DownPortalID
+portal-to-select3,,portal-to-4-1,,
+portal-to-4-1,portal-to-select3,portal-to-4-2,,
+portal-to-4-2,portal-to-4-1,portal-to-4-3,,
+portal-to-4-3,portal-to-4-2,portal-to-4-4,,
+portal-to-4-4,portal-to-4-3,portal-to-base,portal-to-4-5,
+portal-to-4-5,portal-to-4-6,,,portal-to-4-4
+portal-to-4-6,portal-to-4-7,portal-to-4-5,,
+portal-to-4-7,,,portal-to-4-8,portal-to-4-6
+portal-to-4-8,,,,portal-to-4-7
+portal-to-base,portal-to-4-4,,,

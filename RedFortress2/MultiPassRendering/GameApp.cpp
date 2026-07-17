@@ -301,142 +301,6 @@ namespace
         return stageId.length() >= 6 && stageId.substr(0, 6) == L"select";
     }
 
-    bool TryParsePositiveNumber(const std::wstring& text, const std::size_t begin, const std::size_t end, int* value)
-    {
-        if (value == nullptr || begin >= end || end > text.length())
-        {
-            return false;
-        }
-
-        int result = 0;
-        for (std::size_t i = begin; i < end; ++i)
-        {
-            const wchar_t ch = text.at(i);
-            if (ch < L'0' || ch > L'9')
-            {
-                return false;
-            }
-
-            result = result * 10 + static_cast<int>(ch - L'0');
-        }
-
-        *value = result;
-        return true;
-    }
-
-    bool TryParseStageDestinationId(const std::wstring& destinationId, int* worldNumber, int* stageNumber)
-    {
-        const std::size_t separator = destinationId.find(L'-');
-        if (separator == std::wstring::npos)
-        {
-            return false;
-        }
-
-        int parsedWorld = 0;
-        int parsedStage = 0;
-        if (!TryParsePositiveNumber(destinationId, 0, separator, &parsedWorld))
-        {
-            return false;
-        }
-        if (!TryParsePositiveNumber(destinationId, separator + 1, destinationId.length(), &parsedStage))
-        {
-            return false;
-        }
-
-        *worldNumber = parsedWorld;
-        *stageNumber = parsedStage;
-        return true;
-    }
-
-    bool TryParseStageSelectDestinationId(const std::wstring& destinationId, int* worldNumber)
-    {
-        const std::wstring prefix = L"select";
-        if (worldNumber == nullptr ||
-            destinationId.length() <= prefix.length() ||
-            destinationId.substr(0, prefix.length()) != prefix)
-        {
-            return false;
-        }
-
-        return TryParsePositiveNumber(destinationId, prefix.length(), destinationId.length(), worldNumber);
-    }
-
-    bool IsStageEndpointConnectedToSelect(const int stageWorldNumber,
-                                          const int stageNumber,
-                                          const int selectWorldNumber)
-    {
-        if (selectWorldNumber == stageWorldNumber - 1 && stageNumber == 1)
-        {
-            return true;
-        }
-        if (selectWorldNumber == stageWorldNumber + 1 && stageNumber == 8)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    bool AreStagePortalsSequential(const std::wstring& currentPortalId, const std::wstring& candidatePortalId)
-    {
-        const std::wstring prefix = L"portal-to-";
-        if (currentPortalId.length() <= prefix.length() ||
-            currentPortalId.substr(0, prefix.length()) != prefix ||
-            candidatePortalId.length() <= prefix.length() ||
-            candidatePortalId.substr(0, prefix.length()) != prefix)
-        {
-            return true;
-        }
-
-        int currentWorldNumber = 0;
-        int currentStageNumber = 0;
-        const std::wstring currentDestinationId = currentPortalId.substr(prefix.length());
-        const bool currentIsStage =
-            TryParseStageDestinationId(currentDestinationId, &currentWorldNumber, &currentStageNumber);
-
-        int candidateWorldNumber = 0;
-        int candidateStageNumber = 0;
-        const std::wstring candidateDestinationId = candidatePortalId.substr(prefix.length());
-        const bool candidateIsStage =
-            TryParseStageDestinationId(candidateDestinationId, &candidateWorldNumber, &candidateStageNumber);
-
-        if (currentIsStage && candidateIsStage)
-        {
-            if (currentWorldNumber != candidateWorldNumber)
-            {
-                return false;
-            }
-
-            return std::abs(currentStageNumber - candidateStageNumber) == 1;
-        }
-
-        int currentSelectWorldNumber = 0;
-        const bool currentIsStageSelect =
-            TryParseStageSelectDestinationId(currentDestinationId, &currentSelectWorldNumber);
-        int candidateSelectWorldNumber = 0;
-        const bool candidateIsStageSelect =
-            TryParseStageSelectDestinationId(candidateDestinationId, &candidateSelectWorldNumber);
-
-        if (currentIsStage && candidateIsStageSelect)
-        {
-            return IsStageEndpointConnectedToSelect(currentWorldNumber,
-                                                     currentStageNumber,
-                                                     candidateSelectWorldNumber);
-        }
-        if (currentIsStageSelect && candidateIsStage)
-        {
-            return IsStageEndpointConnectedToSelect(candidateWorldNumber,
-                                                     candidateStageNumber,
-                                                     currentSelectWorldNumber);
-        }
-        if (currentIsStageSelect || candidateIsStageSelect)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     bool IsBombAttackType(const PlayerAttackType attackType)
     {
         if (attackType == PlayerAttackType::BombAttack)
@@ -842,6 +706,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_collectibleManager.RefreshVisibility(m_destructibleManager);
     m_interactionManager.Initialize(m_render);
     m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
+    LoadStageSelectNavigation(initialStage.stageSelectNavigationCsvPath);
     m_lavaZoneManager.LoadForStage(initialStage.lavaCsvPath);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     m_pauseMenu.SetItemUseCallback([this](const std::wstring& itemId) {
@@ -3541,6 +3406,152 @@ void GameApp::InitializeStageSelectCursor()
     }
 }
 
+void GameApp::LoadStageSelectNavigation(const std::wstring& csvPath)
+{
+    m_stageSelectNavigation.clear();
+    if (!IsCurrentStageSelect())
+    {
+        return;
+    }
+
+    if (csvPath.empty())
+    {
+        throw std::runtime_error("Stage-select navigation CSV path is empty.");
+    }
+
+    const std::wstring fullCsvPath = NSRender::Util::GetExeDir() + csvPath;
+    std::wifstream file(fullCsvPath);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Stage-select navigation CSV could not be opened.");
+    }
+    file.close();
+
+    const std::vector<std::vector<std::wstring>> csvData = csv::Read(fullCsvPath);
+    for (const std::vector<std::wstring>& row : csvData)
+    {
+        if (!row.empty() && row.at(0) == L"CurrentPortalID")
+        {
+            continue;
+        }
+        if (row.size() < 5 || row.at(0).empty())
+        {
+            throw std::runtime_error("Stage-select navigation CSV contains an invalid row.");
+        }
+
+        StageSelectNavigationEntry entry;
+        entry.leftPortalId = row.at(1);
+        entry.rightPortalId = row.at(2);
+        entry.upPortalId = row.at(3);
+        entry.downPortalId = row.at(4);
+        const std::pair<std::unordered_map<std::wstring, StageSelectNavigationEntry>::iterator, bool> result =
+            m_stageSelectNavigation.emplace(row.at(0), entry);
+        if (!result.second)
+        {
+            throw std::runtime_error("Stage-select navigation CSV contains a duplicate portal ID.");
+        }
+    }
+
+    ValidateStageSelectNavigation();
+}
+
+void GameApp::ValidateStageSelectNavigation() const
+{
+    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+    std::vector<std::wstring> portalIds;
+    for (const InteractionManager::Interactable& interactable : interactables)
+    {
+        if (interactable.type == L"StagePortal")
+        {
+            portalIds.push_back(interactable.id);
+        }
+    }
+    if (portalIds.empty())
+    {
+        throw std::runtime_error("Stage select does not contain any stage portals.");
+    }
+
+    for (const std::wstring& portalId : portalIds)
+    {
+        if (m_stageSelectNavigation.find(portalId) == m_stageSelectNavigation.end())
+        {
+            throw std::runtime_error("Stage-select navigation CSV is missing a stage portal.");
+        }
+    }
+
+    for (const std::pair<const std::wstring, StageSelectNavigationEntry>& navigation : m_stageSelectNavigation)
+    {
+        if (std::find(portalIds.begin(), portalIds.end(), navigation.first) == portalIds.end())
+        {
+            throw std::runtime_error("Stage-select navigation CSV contains an unknown current portal ID.");
+        }
+
+        const std::wstring* destinationIds[] = {
+            &navigation.second.leftPortalId,
+            &navigation.second.rightPortalId,
+            &navigation.second.upPortalId,
+            &navigation.second.downPortalId
+        };
+        for (const std::wstring* destinationId : destinationIds)
+        {
+            if (destinationId->empty())
+            {
+                continue;
+            }
+            if (std::find(portalIds.begin(), portalIds.end(), *destinationId) == portalIds.end())
+            {
+                throw std::runtime_error("Stage-select navigation CSV contains an unknown destination portal ID.");
+            }
+
+            const StageSelectNavigationEntry& reverseEntry = m_stageSelectNavigation.at(*destinationId);
+            const bool hasReverseConnection =
+                reverseEntry.leftPortalId == navigation.first ||
+                reverseEntry.rightPortalId == navigation.first ||
+                reverseEntry.upPortalId == navigation.first ||
+                reverseEntry.downPortalId == navigation.first;
+            if (!hasReverseConnection)
+            {
+                throw std::runtime_error("Stage-select navigation CSV contains a one-way connection.");
+            }
+        }
+    }
+
+    std::vector<std::wstring> visitedPortalIds;
+    std::vector<std::wstring> pendingPortalIds;
+    pendingPortalIds.push_back(portalIds.front());
+    for (std::size_t pendingIndex = 0; pendingIndex < pendingPortalIds.size(); ++pendingIndex)
+    {
+        const std::wstring& portalId = pendingPortalIds.at(pendingIndex);
+        if (std::find(visitedPortalIds.begin(), visitedPortalIds.end(), portalId) != visitedPortalIds.end())
+        {
+            continue;
+        }
+        visitedPortalIds.push_back(portalId);
+
+        const StageSelectNavigationEntry& entry = m_stageSelectNavigation.at(portalId);
+        const std::wstring* destinationIds[] = {
+            &entry.leftPortalId,
+            &entry.rightPortalId,
+            &entry.upPortalId,
+            &entry.downPortalId
+        };
+        for (const std::wstring* destinationId : destinationIds)
+        {
+            if (!destinationId->empty() &&
+                std::find(visitedPortalIds.begin(), visitedPortalIds.end(), *destinationId) ==
+                    visitedPortalIds.end())
+            {
+                pendingPortalIds.push_back(*destinationId);
+            }
+        }
+    }
+
+    if (visitedPortalIds.size() != portalIds.size())
+    {
+        throw std::runtime_error("Stage-select navigation CSV contains an unreachable stage portal.");
+    }
+}
+
 void GameApp::SyncStageSelectPlayerToPortal(const bool immediate)
 {
     if (!IsCurrentStageSelect() || !m_hasSelectedStagePortal)
@@ -3598,63 +3609,51 @@ void GameApp::MoveStageSelectCursorByDirection(const float directionX, const flo
         return;
     }
 
-    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
+    const std::unordered_map<std::wstring, StageSelectNavigationEntry>::const_iterator navigation =
+        m_stageSelectNavigation.find(m_selectedStagePortalId);
+    if (navigation == m_stageSelectNavigation.end())
+    {
+        throw std::runtime_error("Selected stage portal is missing from the navigation map.");
+    }
 
-    const POINT currentScreenPosition = NSRender::Camera::GetScreenPos(m_selectedStagePortalPosition);
-    if (currentScreenPosition.x < 0 || currentScreenPosition.y < 0)
+    const std::wstring* destinationPortalId = nullptr;
+    if (directionX < 0.0f)
+    {
+        destinationPortalId = &navigation->second.leftPortalId;
+    }
+    else if (directionX > 0.0f)
+    {
+        destinationPortalId = &navigation->second.rightPortalId;
+    }
+    else if (directionY < 0.0f)
+    {
+        destinationPortalId = &navigation->second.upPortalId;
+    }
+    else if (directionY > 0.0f)
+    {
+        destinationPortalId = &navigation->second.downPortalId;
+    }
+
+    if (destinationPortalId == nullptr || destinationPortalId->empty() ||
+        !IsStagePortalSelectable(*destinationPortalId))
     {
         return;
     }
 
-    const InteractionManager::Interactable* bestInteractable = nullptr;
-    float bestScore = 100000000.0f;
-
+    const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
     for (const InteractionManager::Interactable& interactable : interactables)
     {
-        if (interactable.type != L"StagePortal" ||
-            interactable.id == m_selectedStagePortalId ||
-            !AreStagePortalsSequential(m_selectedStagePortalId, interactable.id) ||
-            !IsStagePortalSelectable(interactable.id))
+        if (interactable.type == L"StagePortal" && interactable.id == *destinationPortalId)
         {
-            continue;
-        }
-
-        const POINT candidateScreenPosition = NSRender::Camera::GetScreenPos(interactable.position);
-        if (candidateScreenPosition.x < 0 || candidateScreenPosition.y < 0)
-        {
-            continue;
-        }
-
-        const float differenceX = static_cast<float>(candidateScreenPosition.x - currentScreenPosition.x);
-        const float differenceY = static_cast<float>(candidateScreenPosition.y - currentScreenPosition.y);
-        const float distance = sqrtf(differenceX * differenceX + differenceY * differenceY);
-        if (distance <= 0.0001f)
-        {
-            continue;
-        }
-
-        const float directionDistance = differenceX * directionX + differenceY * directionY;
-        const float alignment = directionDistance / distance;
-        if (alignment < 0.35f)
-        {
-            continue;
-        }
-
-        const float score = distance + (1.0f - alignment) * 500.0f;
-        if (score < bestScore)
-        {
-            bestScore = score;
-            bestInteractable = &interactable;
+            m_selectedStagePortalId = interactable.id;
+            m_selectedStagePortalPosition = interactable.position;
+            m_hasSelectedStagePortal = true;
+            SyncStageSelectPlayerToPortal(false);
+            return;
         }
     }
 
-    if (bestInteractable != nullptr)
-    {
-        m_selectedStagePortalId = bestInteractable->id;
-        m_selectedStagePortalPosition = bestInteractable->position;
-        m_hasSelectedStagePortal = true;
-        SyncStageSelectPlayerToPortal(false);
-    }
+    throw std::runtime_error("Stage-select navigation destination was not found.");
 }
 
 void GameApp::UpdateStageSelectCursorByInput()
@@ -6052,6 +6051,7 @@ void GameApp::LoadCurrentStageObjects()
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
+    LoadStageSelectNavigation(stage.stageSelectNavigationCsvPath);
     m_lavaZoneManager.LoadForStage(stage.lavaCsvPath);
 
     m_pickupManager.LoadForStage(stage.starCsvPath, stage.speedUpCsvPath);

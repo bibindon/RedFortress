@@ -62,6 +62,14 @@ public:
     void Finalize();
 
 private:
+    struct StageSelectNavigationEntry
+    {
+        std::wstring leftPortalId;
+        std::wstring rightPortalId;
+        std::wstring upPortalId;
+        std::wstring downPortalId;
+    };
+
     GameApp();
     ~GameApp();
     GameApp(const GameApp&) = delete;
@@ -178,6 +186,8 @@ private:
     void UpdateGoalArrow();
     void TryDropEnemyItem(const EnemyBase& enemy);
     void InitializeStageSelectCursor();
+    void LoadStageSelectNavigation(const std::wstring& csvPath);
+    void ValidateStageSelectNavigation() const;
     void SyncStageSelectPlayerToPortal(bool immediate);
     void MoveStageSelectCursorByDirection(float directionX, float directionY);
     void UpdateStageSelectCursorByInput();
@@ -380,6 +390,7 @@ private:
     float m_stageSelectPlayerMoveElapsed = 0.0f;
     bool m_stageSelectPlayerMoveActive = false;
     bool m_stageSelectStickDirectionActive = false;
+    std::unordered_map<std::wstring, StageSelectNavigationEntry> m_stageSelectNavigation;
     std::vector<int> m_stageSelectCubeMeshIds;
     bool m_titleDeleteConfirmMode = false;
     bool m_titleLanguageSelectionMode = false;

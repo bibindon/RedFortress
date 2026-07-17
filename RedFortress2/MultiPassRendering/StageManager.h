@@ -25,6 +25,7 @@ public:
         std::wstring enemyCsvPath;
         std::wstring collectibleCsvPath;
         std::wstring interactableCsvPath;
+        std::wstring stageSelectNavigationCsvPath;
         std::wstring starCsvPath;
         std::wstring speedUpCsvPath;
         std::wstring destructibleCsvPath;
