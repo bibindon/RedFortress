@@ -132,6 +132,7 @@ namespace
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
     const float kStageSelect2PlayerVisualOffsetY = -1.0f;
+    const float kStageSelect2PlayerLightOffsetY = -3.0f;
     const float kStageSelectPlayerVisualScale = 1.0f;
     const float kStageSelectPlayerLightHeight = 3.2f;
     const wchar_t* kStageSelectPlayerLightOwnerTag = L"stage-select-player";
@@ -3132,8 +3133,9 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                            8.0f);
 
-    const D3DXVECTOR3 playerLightPosition =
+    D3DXVECTOR3 playerLightPosition =
         m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
+    playerLightPosition.y += kStageSelect2PlayerLightOffsetY;
     const D3DXCOLOR playerLightColor(1.0f, 0.78f, 0.52f, 1.0f);
     m_render.AddPointLight(playerLightPosition,
                            2.5f,
@@ -3159,7 +3161,7 @@ void GameApp::UpdateStageSelectPlayerLight()
         m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
     if (stageId == L"select2")
     {
-        lightPosition.y += kStageSelect2PlayerVisualOffsetY;
+        lightPosition.y += kStageSelect2PlayerLightOffsetY;
     }
     m_render.SetPointLightPositionByOwnerTag(kStageSelectPlayerLightOwnerTag, lightPosition);
 }
