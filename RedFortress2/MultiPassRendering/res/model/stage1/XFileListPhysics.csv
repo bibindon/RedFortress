@@ -3,11 +3,11 @@
 2,res/model/plateField64x128.x,0,0.01,0,0,0,0,1,Collision,n
 3,res/model/collision_wall/collision_wall_collision.x,-7,1.5,-20,0,0,0,1,Collision,n
 4,res/model/collision_wall/collision_wall_collision.x,7,1.51,-20,0,0,0,1,Collision,n
-5,res/model/collision_wall/collision_wall_collision.x,-8,1.52,-4,0,1.5708,0,1,Collision,n
-6,res/model/collision_wall/collision_wall_collision.x,8,1.53,4,0,1.5708,0,1,Collision,n
+5,res/model/collision_wall/collision_wall_collision.x,-8,1.52,-4,0,90,0,1,Collision,n
+6,res/model/collision_wall/collision_wall_collision.x,8,1.53,4,0,90,0,1,Collision,n
 7,res/model/collision_wall/collision_wall_collision.x,-5,1.54,14,0,0,0,1,Collision,n
 8,res/model/collision_wall/collision_wall_collision.x,5,1.55,14,0,0,0,1,Collision,n
-9,res/model/collision_wall/collision_wall_collision.x,-10,1.56,24,0,1.5708,0,1,Collision,n
+9,res/model/collision_wall/collision_wall_collision.x,-10,1.56,24,0,90,0,1,Collision,n
 10,res/model/collision_wall/collision_wall_collision.x,11,1.57,-8,0,0,0,1,Collision,n
 13,res/model/collision_moving_platform.x,5,0.82,-8,0,0,0,1,Collision,y
 14,res/model/collision_moving_platform.x,0,0.83,0,0,0,0,1,Collision,y

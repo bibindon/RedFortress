@@ -2,13 +2,13 @@
 1,res/model/cubeNormalInverse30x60.x,0,0,0,0,0,0,1,Collision,n
 2,res/model/plateField64x128.x,0,0.01,0,0,0,0,1,Collision,n
 303,res/model/collision_wall/collision_wall_collision.x,11,1.5,22,0,0,0,1,Collision,n
-304,res/model/collision_wall/collision_wall_collision.x,5,1.51,18,0,1.5708,0,1,Collision,n
+304,res/model/collision_wall/collision_wall_collision.x,5,1.51,18,0,90,0,1,Collision,n
 305,res/model/collision_wall/collision_wall_collision.x,-1,1.52,14,0,0,0,1,Collision,n
-306,res/model/collision_wall/collision_wall_collision.x,-7,1.53,10,0,1.5708,0,1,Collision,n
+306,res/model/collision_wall/collision_wall_collision.x,-7,1.53,10,0,90,0,1,Collision,n
 307,res/model/collision_wall/collision_wall_collision.x,7,1.54,-2,0,0,0,1,Collision,n
-308,res/model/collision_wall/collision_wall_collision.x,1,1.55,-10,0,1.5708,0,1,Collision,n
+308,res/model/collision_wall/collision_wall_collision.x,1,1.55,-10,0,90,0,1,Collision,n
 309,res/model/collision_wall/collision_wall_collision.x,-5,1.56,-18,0,0,0,1,Collision,n
-310,res/model/collision_wall/collision_wall_collision.x,-11,1.57,-24,0,1.5708,0,1,Collision,n
+310,res/model/collision_wall/collision_wall_collision.x,-11,1.57,-24,0,90,0,1,Collision,n
 313,res/model/collision_moving_platform.x,3,0.82,8,0,0,0,1,Collision,y
 314,res/model/collision_moving_platform.x,-1,0.83,2,0,0,0,1,Collision,y
 319,res/model/cubeWood/cube_wood_collision.x,12,0,16,0,0,0,1,Collision,n
