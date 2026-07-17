@@ -129,6 +129,7 @@ private:
     void ApplySelectedSpeedLevel(HWND hDlg);
     void UnlockStagesUpToSelected(HWND hDlg);
     void AllUnlockStages(HWND hDlg);
+    void UnlockAllWeapons();
     bool StartStageByIndex(std::size_t stageIndex);
     bool StartStageByIndexImmediate(std::size_t stageIndex);
     bool BeginStageTransitionToIndex(std::size_t stageIndex);

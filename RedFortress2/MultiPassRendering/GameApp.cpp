@@ -1762,6 +1762,7 @@ void GameApp::Run()
             }
         }
 
+#if !defined(REDFORTRESS_DISABLE_SETTINGS_DIALOG)
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F1))
         {
             if (m_settingsDialog == NULL)
@@ -1785,6 +1786,7 @@ void GameApp::Run()
                 }
             }
         }
+#endif
 
         if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_F8))
         {
@@ -4577,6 +4579,17 @@ void GameApp::AllUnlockStages(HWND hDlg)
     RefreshTitleCommands();
 }
 
+void GameApp::UnlockAllWeapons()
+{
+    m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
+    m_inventoryManager.AddWeapon(kSwordWeaponId, 1);
+    m_inventoryManager.AddWeapon(kBusterWeaponId, 1);
+    m_inventoryManager.AddWeapon(kBombWeaponId, 1);
+    m_inventoryManager.Save();
+    RefillWeaponAmmo();
+    UpdateHeldWeaponVisibility();
+}
+
 bool GameApp::StartStageByIndex(std::size_t stageIndex)
 {
     if (stageIndex >= m_stageManager.GetStageCount())
@@ -5043,6 +5056,10 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
 
         case IDC_BUTTON_ALL_UNLOCK:
             AllUnlockStages(hDlg);
+            return TRUE;
+
+        case IDC_BUTTON_UNLOCK_ALL_WEAPONS:
+            UnlockAllWeapons();
             return TRUE;
 
         case IDC_COMBO_SPEED_LEVEL:
