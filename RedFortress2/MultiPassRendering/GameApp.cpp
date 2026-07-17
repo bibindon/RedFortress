@@ -625,7 +625,11 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     GameAudio::Initialize();
     GameAudio::PlayLoadingEnvironment();
 
+#if defined(REDFORTRESS_DISABLE_SETTINGS_DIALOG)
     m_render.SetShowFPS(false);
+#else
+    m_render.SetShowFPS(true);
+#endif
     m_render.SetLightDir(D3DXVECTOR3(0.6f, 0.7f, -0.9f));
     m_stageManager.Initialize();
     m_stageManager.MoveToStage(m_stageManager.FindStageIndexById(L"select1"));
