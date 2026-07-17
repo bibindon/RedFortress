@@ -127,7 +127,7 @@ namespace
     const float kTitleAmbientLightIntensity = 0.14f;
     const float kStagePortalClickRadius = 48.0f;
     const float kStageSelectPlayerMoveDuration = 0.5f;
-    const float kStageSelectTransitionFadeDuration = 0.3f;
+    const float kStageSelectTransitionFadeDuration = 0.5f;
     const float kStageSelectPlayerRightYaw = -D3DX_PI * 0.5f;
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
@@ -171,6 +171,7 @@ namespace
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
     const std::wstring kStarPowerUpItemId = L"star_power_up";
+    const std::wstring kSpeedUpItemId = L"speed_up";
     const std::wstring kInitialClubWeaponId = L"W001";
     const std::wstring kSwordWeaponId = L"W002";
     const std::wstring kBusterWeaponId = L"W003";
@@ -4284,7 +4285,15 @@ void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)
         return;
     }
 
-    std::wstring message = GetItemDisplayName(itemId) + L"を手に入れた";
+    std::wstring message;
+    if (itemId == kSpeedUpItemId)
+    {
+        message = L"スピードアップ";
+    }
+    else
+    {
+        message = GetItemDisplayName(itemId) + L"を手に入れた";
+    }
     if (count > 1)
     {
         message += L" x" + std::to_wstring(count);
