@@ -4278,7 +4278,12 @@ void GameApp::RestoreTemporaryPowerUps()
 
 void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)
 {
-    std::wstring message = GetItemDisplayName(itemId) + L"を入手";
+    if (itemId == L"star_power_up")
+    {
+        return;
+    }
+
+    std::wstring message = GetItemDisplayName(itemId) + L"を手に入れた";
     if (count > 1)
     {
         message += L" x" + std::to_wstring(count);
@@ -4298,7 +4303,7 @@ void GameApp::DrawItemPickupMessage()
     if (m_itemPickupMessageFontId < 0)
     {
         m_itemPickupMessageFontId = m_render.SetUpFontEx(L"BIZ UDGothic",
-                                                          28,
+                                                          14,
                                                           D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
@@ -4327,7 +4332,7 @@ void GameApp::DrawItemPickupMessage()
                               0,
                               kItemPickupMessageY,
                               NSRender::Common::BASE_W,
-                              42,
+                              21,
                               D3DCOLOR_RGBA(255, 255, 255, alpha));
 
     --m_itemPickupMessageFrames;
