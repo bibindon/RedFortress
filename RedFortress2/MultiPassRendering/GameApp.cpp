@@ -1596,7 +1596,7 @@ void GameApp::Run()
                 }
             }
 
-            if (IsStageClearReached())
+            if (!IsCurrentStageSelect() && IsStageClearReached())
             {
                 ClearBusters();
                 m_gameState = GameState::StageClear;
