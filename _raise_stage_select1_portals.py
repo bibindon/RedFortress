@@ -123,30 +123,22 @@ def close_mountain_grass_gap():
     remove_object("StageSelect_CentralMountainContactApron")
     remove_object("RF1_GrassToBeachSeamSkirt")
 
-    ring_vertex_count = 64
-    vertices = []
-    for vertex_index in range(ring_vertex_count):
-        angle = math.tau * float(vertex_index) / float(ring_vertex_count)
-        irregularity = 1.0 + 0.025 * math.sin(angle * 5.0) + 0.018 * math.sin(angle * 11.0)
-        vertices.append((
-            math.cos(angle) * 18.2 * irregularity,
-            math.sin(angle) * 13.0 * irregularity,
-            -0.35,
-        ))
-    faces = [tuple(range(ring_vertex_count))]
-
-    fill_mesh = bpy.data.meshes.new("RF1_GrassGapFillSurface_Mesh")
-    fill_mesh.from_pydata(vertices, [], faces)
-    fill_mesh.update()
-    uv_layer = fill_mesh.uv_layers.new(name="UVMap")
-    for polygon in fill_mesh.polygons:
-        for loop_index in polygon.loop_indices:
-            vertex = fill_mesh.vertices[fill_mesh.loops[loop_index].vertex_index].co
-            uv_layer.data[loop_index].uv = (vertex.x / 36.4 + 0.5, vertex.y / 26.0 + 0.5)
-        polygon.use_smooth = False
-    fill_object = bpy.data.objects.new("RF1_GrassGapFillSurface", fill_mesh)
-    bpy.context.collection.objects.link(fill_object)
-    assign_material(fill_object, fill_material)
+    sandy_island = bpy.data.objects.get("StageSelect_SandyIslandBase.001")
+    if sandy_island is not None:
+        sand_material = get_material("WarmSand")
+        if sandy_island.data.materials.get(sand_material.name) is None:
+            sandy_island.data.materials.append(sand_material)
+        if sandy_island.data.materials.get(fill_material.name) is None:
+            sandy_island.data.materials.append(fill_material)
+        sand_index = sandy_island.data.materials.find(sand_material.name)
+        fill_index = sandy_island.data.materials.find(fill_material.name)
+        for polygon in sandy_island.data.polygons:
+            center = polygon.center
+            ellipse_distance = (center.x / 19.0) ** 2 + (center.y / 13.5) ** 2
+            if polygon.normal.z > 0.45 and ellipse_distance < 1.0:
+                polygon.material_index = fill_index
+            else:
+                polygon.material_index = sand_index
 
     central_mountain = bpy.data.objects.get("StageSelect_CentralMountain")
     if central_mountain is not None:
@@ -155,10 +147,14 @@ def close_mountain_grass_gap():
         grass_index = central_mountain.data.materials.find(grass_material.name)
         for polygon in central_mountain.data.polygons:
             polygon.material_index = grass_index
+        central_mountain.scale.x = 1.02
+        central_mountain.scale.y = 1.02
 
     side_band = bpy.data.objects.get("StageSelect_CentralMountainSideBand")
     if side_band is not None:
         assign_material(side_band, grass_material)
+        side_band.scale.x = 1.03
+        side_band.scale.y = 1.03
 
 objects_to_remove = [
     "StageSelect_CentralMountainRockCap",
@@ -233,14 +229,19 @@ for index, portal_position in enumerate(portal_layout):
 for material in bpy.data.materials:
     material["_x_power"] = 500.0
 
-sea_texture = bpy.data.images.get("stageSelectSea.png")
-if sea_texture is not None:
-    sea_texture.reload()
+for texture_name in (
+    "stageSelectSea.png",
+    "stageSelectShallowWater.png",
+    "stageSelectSand.png",
+):
+    stage_select_texture = bpy.data.images.get(texture_name)
+    if stage_select_texture is not None:
+        stage_select_texture.reload()
 
 preview_camera = bpy.context.scene.camera
 if preview_camera is not None:
     preview_camera.location = Vector((0.0, -26.0, 18.0))
-    preview_target = Vector((0.0, 0.0, 3.0))
+    preview_target = Vector((0.0, -2.0, 2.0))
     preview_camera.rotation_euler = (preview_target - preview_camera.location).to_track_quat("-Z", "Y").to_euler()
     preview_camera.data.lens = 28.0
 
