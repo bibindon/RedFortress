@@ -3671,19 +3671,23 @@ void GameApp::UpdateStageSelectCursorByInput()
 
     float directionX = 0.0f;
     float directionY = 0.0f;
-    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT))
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT) ||
+        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_A))
     {
         directionX = -1.0f;
     }
-    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT))
+    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RIGHT) ||
+             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_D))
     {
         directionX = 1.0f;
     }
-    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
+    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP) ||
+             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_W))
     {
         directionY = -1.0f;
     }
-    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
+    else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN) ||
+             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_S))
     {
         directionY = 1.0f;
     }
@@ -3906,7 +3910,7 @@ void GameApp::DrawStageSelectCursor()
     }
 
     m_render.DrawTextEx(m_stageSelectHintFontId,
-                        L"方向キー・マウス: ステージ選択",
+                        L"方向キー・WASD・パッド・マウス: ステージ選択",
                         kStageSelectStageNameX,
                         kStageSelectHintY,
                         D3DCOLOR_RGBA(255, 255, 255, 220));
