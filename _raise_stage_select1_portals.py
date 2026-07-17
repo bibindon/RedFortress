@@ -1,4 +1,4 @@
-import bpy
+﻿import bpy
 import math
 import os
 import random
@@ -82,6 +82,236 @@ def create_portal_path(portal_positions):
             path_piece_index += 1
 
 
+def remove_objects_with_prefixes(prefixes):
+    for target in list(bpy.data.objects):
+        if target.name.startswith(prefixes):
+            bpy.data.objects.remove(target, do_unlink=True)
+
+
+def create_golden_mountain_trail(portal_positions):
+    remove_objects_with_prefixes((
+        "RF1_PathStone_",
+        "RF1_PathLog_",
+        "RF1_GoldenTrail",
+        "RF1_TrailStep_",
+    ))
+
+    sand_material = get_material("WarmSand")
+    wood_material = get_material("WeatheredWood")
+    half_width = 1.18
+    vertices = []
+    texture_coordinates = []
+    cumulative_distance = 0.0
+
+    for point_index, point in enumerate(portal_positions):
+        point_vector = Vector(point)
+        if point_index == 0:
+            tangent = Vector(portal_positions[1]) - point_vector
+        elif point_index + 1 == len(portal_positions):
+            tangent = point_vector - Vector(portal_positions[point_index - 1])
+        else:
+            tangent = Vector(portal_positions[point_index + 1]) - Vector(portal_positions[point_index - 1])
+        tangent.z = 0.0
+        tangent.normalize()
+        perpendicular = Vector((-tangent.y, tangent.x, 0.0))
+
+        if point_index > 0:
+            previous = Vector(portal_positions[point_index - 1])
+            planar_difference = point_vector - previous
+            planar_difference.z = 0.0
+            cumulative_distance += planar_difference.length
+
+        trail_height = point_vector.z + 0.18
+        left = Vector((point_vector.x, point_vector.y, trail_height)) + perpendicular * half_width
+        right = Vector((point_vector.x, point_vector.y, trail_height)) - perpendicular * half_width
+        vertices.append(tuple(left))
+        vertices.append(tuple(right))
+        texture_u = cumulative_distance / 3.5
+        texture_coordinates.append((texture_u, 0.0))
+        texture_coordinates.append((texture_u, 1.0))
+
+    faces = []
+    for point_index in range(len(portal_positions) - 1):
+        base_index = point_index * 2
+        faces.append((base_index, base_index + 1, base_index + 3, base_index + 2))
+
+    mesh = bpy.data.meshes.new("RF1_GoldenTrailMesh")
+    mesh.from_pydata(vertices, [], faces)
+    mesh.materials.append(sand_material)
+    mesh.update()
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            uv_layer.data[loop_index].uv = texture_coordinates[vertex_index]
+
+    trail_object = bpy.data.objects.new("RF1_GoldenTrail", mesh)
+    bpy.context.scene.collection.objects.link(trail_object)
+
+    step_index = 0
+    for segment_index in range(len(portal_positions) - 1):
+        start = Vector(portal_positions[segment_index])
+        end = Vector(portal_positions[segment_index + 1])
+        height_difference = end.z - start.z
+        if abs(height_difference) < 0.75:
+            continue
+
+        direction = end - start
+        direction.z = 0.0
+        direction.normalize()
+        cross_direction = Vector((-direction.y, direction.x, 0.0))
+        step_count = max(3, int(abs(height_difference) * 3.0))
+        for local_step_index in range(step_count):
+            interpolation = float(local_step_index + 1) / float(step_count + 1)
+            position = start.lerp(end, interpolation)
+            bpy.ops.mesh.primitive_cube_add(
+                size=1.0,
+                location=(position.x, position.y, position.z + 0.27),
+            )
+            step_object = bpy.context.object
+            step_object.name = f"RF1_TrailStep_{step_index:02d}"
+            step_object.scale = (half_width * 0.92, 0.14, 0.09)
+            step_object.rotation_euler.z = math.atan2(cross_direction.y, cross_direction.x)
+            assign_material(step_object, wood_material)
+            step_index += 1
+
+
+def apply_mountain_cliff_materials():
+    mountain = bpy.data.objects.get("StageSelect_CentralMountain")
+    if mountain is None or mountain.type != "MESH":
+        raise RuntimeError("StageSelect_CentralMountain was not found.")
+
+    grass_material = get_material("IslandGrass")
+    rock_material = get_material("CoastalRock")
+    if mountain.data.materials.get(grass_material.name) is None:
+        mountain.data.materials.append(grass_material)
+    if mountain.data.materials.get(rock_material.name) is None:
+        mountain.data.materials.append(rock_material)
+    grass_index = mountain.data.materials.find(grass_material.name)
+    rock_index = mountain.data.materials.find(rock_material.name)
+
+    for polygon in mountain.data.polygons:
+        is_low_cliff = polygon.center.z < 1.35 and polygon.normal.z < 0.72
+        if is_low_cliff:
+            polygon.material_index = rock_index
+            polygon.use_smooth = False
+        else:
+            polygon.material_index = grass_index
+            polygon.use_smooth = True
+
+
+def create_tropical_palm(prefix, location, height, rotation):
+    trunk_material = get_material("PalmTrunk")
+    leaf_material = get_material("PalmLeaves")
+    bpy.ops.mesh.primitive_cone_add(
+        vertices=7,
+        radius1=0.22,
+        radius2=0.13,
+        depth=height,
+        location=(location[0], location[1], location[2] + height * 0.5),
+    )
+    trunk = bpy.context.object
+    trunk.name = prefix + "Trunk"
+    trunk.rotation_euler.z = rotation
+    assign_material(trunk, trunk_material)
+    for polygon in trunk.data.polygons:
+        polygon.use_smooth = False
+
+    crown_height = location[2] + height
+    leaf_vertices = []
+    leaf_faces = []
+    leaf_count = 7
+    for leaf_index in range(leaf_count):
+        angle = rotation + math.tau * leaf_index / leaf_count
+        direction = Vector((math.cos(angle), math.sin(angle), 0.0))
+        side = Vector((-direction.y, direction.x, 0.0))
+        center = Vector((location[0], location[1], crown_height + 0.08))
+        middle = center + direction * 0.75 + Vector((0.0, 0.0, 0.18))
+        tip = center + direction * 1.75 + Vector((0.0, 0.0, -0.38))
+        base_index = len(leaf_vertices)
+        leaf_vertices.extend((
+            tuple(center - side * 0.16),
+            tuple(center + side * 0.16),
+            tuple(middle + side * 0.24),
+            tuple(tip),
+        ))
+        leaf_faces.append((base_index, base_index + 1, base_index + 2, base_index + 3))
+        leaf_faces.append((base_index + 3, base_index + 2, base_index + 1, base_index))
+
+    leaf_mesh = bpy.data.meshes.new(prefix + "LeavesMesh")
+    leaf_mesh.from_pydata(leaf_vertices, [], leaf_faces)
+    leaf_mesh.materials.append(leaf_material)
+    leaf_mesh.update()
+    leaves = bpy.data.objects.new(prefix + "Leaves", leaf_mesh)
+    bpy.context.scene.collection.objects.link(leaves)
+
+
+def create_tropical_details():
+    remove_objects_with_prefixes(("RF1_NewPalm_", "RF1_TropicalBush_", "RF1_NewCliff_"))
+    palm_specs = [
+        (-10.5, -5.0, 1.0, 2.0, 0.2),
+        (-8.3, -1.8, 1.8, 2.3, 1.1),
+        (5.8, -8.0, 0.8, 2.1, 2.0),
+        (10.0, -2.7, 1.0, 2.4, 0.6),
+        (-7.0, 0.7, 2.7, 1.9, 1.8),
+        (4.8, 1.2, 4.7, 1.8, 2.6),
+        (-0.5, 1.8, 5.7, 1.7, 0.9),
+    ]
+    for palm_index, (x, y, z, height, rotation) in enumerate(palm_specs):
+        create_tropical_palm(
+            f"RF1_NewPalm_{palm_index:02d}_",
+            (x, y, z),
+            height,
+            rotation,
+        )
+
+    grass_material = get_material("IslandGrass")
+    bush_specs = [
+        (-9.0, -7.0, 1.0),
+        (-5.0, -7.2, 1.2),
+        (3.7, -7.0, 1.4),
+        (8.8, -5.0, 1.3),
+        (4.5, -2.5, 3.4),
+        (-5.5, -2.2, 3.5),
+        (0.0, 0.8, 5.8),
+    ]
+    for bush_index, (x, y, z) in enumerate(bush_specs):
+        bpy.ops.mesh.primitive_ico_sphere_add(
+            subdivisions=1,
+            radius=1.0,
+            location=(x, y, z + 0.28),
+        )
+        bush = bpy.context.object
+        bush.name = f"RF1_TropicalBush_{bush_index:02d}"
+        bush.scale = (0.72, 0.55, 0.38)
+        bush.rotation_euler.z = bush_index * 0.73
+        assign_material(bush, grass_material)
+        for polygon in bush.data.polygons:
+            polygon.use_smooth = False
+
+    rock_material = get_material("CoastalRock")
+    cliff_specs = [
+        (-4.8, -7.2, 1.1, 1.4, 0.9, 1.5),
+        (3.7, -7.4, 1.0, 1.2, 0.8, 1.7),
+        (-6.2, -1.3, 2.0, 1.0, 0.8, 1.8),
+        (5.7, -1.0, 2.6, 1.2, 0.9, 2.0),
+        (-0.5, 1.2, 4.5, 1.0, 0.8, 1.6),
+    ]
+    for cliff_index, (x, y, z, scale_x, scale_y, scale_z) in enumerate(cliff_specs):
+        bpy.ops.mesh.primitive_ico_sphere_add(
+            subdivisions=1,
+            radius=1.0,
+            location=(x, y, z + scale_z * 0.5),
+        )
+        cliff = bpy.context.object
+        cliff.name = f"RF1_NewCliff_{cliff_index:02d}"
+        cliff.scale = (scale_x, scale_y, scale_z)
+        cliff.rotation_euler.z = cliff_index * 0.91
+        assign_material(cliff, rock_material)
+        for polygon in cliff.data.polygons:
+            polygon.use_smooth = False
+
+
 def make_rocks_more_rugged():
     rugged_prefixes = (
         "RF1_MountainOutcrop_",
@@ -144,9 +374,6 @@ def close_mountain_grass_gap():
     if central_mountain is not None:
         if central_mountain.data.materials.get(grass_material.name) is None:
             central_mountain.data.materials.append(grass_material)
-        grass_index = central_mountain.data.materials.find(grass_material.name)
-        for polygon in central_mountain.data.polygons:
-            polygon.material_index = grass_index
         central_mountain.scale.x = 1.02
         central_mountain.scale.y = 1.02
 
@@ -200,7 +427,9 @@ portal_layout = [
 ]
 close_mountain_grass_gap()
 make_rocks_more_rugged()
-create_portal_path(portal_layout)
+apply_mountain_cliff_materials()
+create_golden_mountain_trail(portal_layout)
+create_tropical_details()
 
 for index, portal_position in enumerate(portal_layout):
     position_x, position_y, ground_height = portal_position

@@ -90,7 +90,28 @@ def find_material(prefix):
         if material.name.startswith(prefix):
             material["rf2_texture"] = TEXTURES[prefix]
             return material
-    raise RuntimeError("Required material not found: " + prefix)
+
+    texture_path = TEXTURES.get(prefix)
+    if texture_path is None:
+        raise RuntimeError("Required material texture is not registered: " + prefix)
+
+    material = bpy.data.materials.new(prefix)
+    material["rf2_texture"] = texture_path
+    material.diffuse_color = (1.0, 1.0, 1.0, 1.0)
+    material.roughness = 0.85
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    nodes.clear()
+    output_node = nodes.new("ShaderNodeOutputMaterial")
+    shader_node = nodes.new("ShaderNodeBsdfPrincipled")
+    texture_node = nodes.new("ShaderNodeTexImage")
+    image_path = os.path.abspath(os.path.join(os.path.dirname(bpy.data.filepath), texture_path))
+    texture_node.image = bpy.data.images.load(image_path, check_existing=True)
+    links.new(texture_node.outputs["Color"], shader_node.inputs["Base Color"])
+    shader_node.inputs["Roughness"].default_value = 0.85
+    links.new(shader_node.outputs["BSDF"], output_node.inputs["Surface"])
+    return material
 
 
 def create_cave_sky_material():
@@ -118,6 +139,27 @@ def create_cave_sky_material():
         links.new(texture_node.outputs["Color"], shader_node.inputs["Emission Color"])
     if "Emission Strength" in shader_node.inputs:
         shader_node.inputs["Emission Strength"].default_value = 0.28
+    links.new(shader_node.outputs["BSDF"], output_node.inputs["Surface"])
+    return material
+
+
+def create_portal_mountain_material():
+    material = bpy.data.materials.get("RF2_PortalMountainBrown")
+    if material is None:
+        material = bpy.data.materials.new("RF2_PortalMountainBrown")
+    material["rf2_texture"] = ""
+    material.diffuse_color = (0.54, 0.27, 0.085, 1.0)
+    material.roughness = 0.82
+    material.metallic = 0.0
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    nodes.clear()
+    output_node = nodes.new("ShaderNodeOutputMaterial")
+    shader_node = nodes.new("ShaderNodeBsdfPrincipled")
+    shader_node.inputs["Base Color"].default_value = (0.54, 0.27, 0.085, 1.0)
+    shader_node.inputs["Roughness"].default_value = 0.82
+    shader_node.inputs["Metallic"].default_value = 0.0
     links.new(shader_node.outputs["BSDF"], output_node.inputs["Surface"])
     return material
 
@@ -205,6 +247,86 @@ def create_rock(collection, name, location, scale, rotation_z, material, seed):
     obj.location = location
     obj.rotation_euler.z = rotation_z
     return obj
+
+
+def create_portal_mountain(collection, name, location, material, seed):
+    segment_count = 7
+    top_height = -0.11
+    shoulder_height = -0.30
+    base_height = -1.58
+    vertices = []
+
+    for segment_index in range(segment_count):
+        angle = math.tau * segment_index / segment_count + seed * 0.071
+        radius = 1.52 + 0.13 * math.sin(seed * 1.31 + segment_index * 2.17)
+        vertices.append((radius * math.cos(angle), radius * math.sin(angle), top_height))
+
+    for segment_index in range(segment_count):
+        angle = math.tau * segment_index / segment_count + seed * 0.071 + 0.10
+        radius = 2.38 + 0.25 * math.sin(seed * 1.73 + segment_index * 1.91)
+        height = shoulder_height + 0.11 * math.cos(seed * 0.83 + segment_index * 2.43)
+        vertices.append((radius * math.cos(angle), radius * math.sin(angle), height))
+
+    for segment_index in range(segment_count):
+        angle = math.tau * segment_index / segment_count + seed * 0.071 - 0.08
+        radius = 3.42 + 0.28 * math.sin(seed * 2.11 + segment_index * 1.47)
+        height = base_height + 0.18 * math.cos(seed * 1.19 + segment_index * 2.07)
+        vertices.append((radius * math.cos(angle), radius * math.sin(angle), height))
+
+    faces = [tuple(range(segment_count))]
+    for segment_index in range(segment_count):
+        next_index = (segment_index + 1) % segment_count
+        top_a = segment_index
+        top_b = next_index
+        shoulder_a = segment_count + segment_index
+        shoulder_b = segment_count + next_index
+        base_a = segment_count * 2 + segment_index
+        base_b = segment_count * 2 + next_index
+        if segment_index % 2 == 0:
+            faces.append((top_a, shoulder_a, shoulder_b))
+            faces.append((top_a, shoulder_b, top_b))
+            faces.append((shoulder_a, base_a, base_b))
+            faces.append((shoulder_a, base_b, shoulder_b))
+        else:
+            faces.append((top_a, shoulder_a, top_b))
+            faces.append((top_b, shoulder_a, shoulder_b))
+            faces.append((shoulder_a, base_a, shoulder_b))
+            faces.append((shoulder_b, base_a, base_b))
+
+    mesh = bpy.data.meshes.new(name + "Mesh")
+    mesh.from_pydata(vertices, [], faces)
+    mesh.update()
+    for polygon in mesh.polygons:
+        polygon.use_smooth = False
+    obj = create_mesh_object(collection, name, mesh, material)
+    obj.location = location
+    return obj
+
+
+def cut_portal_mountain_openings():
+    terrain = bpy.data.objects.get("RF2_CaveTerrain")
+    if terrain is None or terrain.type != "MESH":
+        raise RuntimeError("RF2_CaveTerrain mesh was not found.")
+
+    mesh = terrain.data
+    bm = bmesh.new()
+    bm.from_mesh(mesh)
+    faces_to_remove = []
+    opening_radius_squared = 2.95 * 2.95
+    for face in bm.faces:
+        center = face.calc_center_median()
+        for portal_x, portal_y in PORTALS:
+            difference_x = center.x - portal_x
+            difference_y = center.y - portal_y
+            if difference_x * difference_x + difference_y * difference_y <= opening_radius_squared:
+                faces_to_remove.append(face)
+                break
+
+    if faces_to_remove:
+        bmesh.ops.delete(bm, geom=faces_to_remove, context="FACES")
+    bm.to_mesh(mesh)
+    bm.free()
+    mesh.update()
 
 
 def create_crystal(collection, name, location, radius, height, rotation, material):
@@ -417,6 +539,13 @@ def build_stage_details(collection, materials):
     create_cave_sky(collection, materials["sky"])
     create_path_ribbon(collection, materials["path"])
     for index, (x, y) in enumerate(PORTALS):
+        create_portal_mountain(
+            collection,
+            "RF2_PortalMountain_%02d" % index,
+            (x, y, 0.0),
+            materials["mountain"],
+            150 + index,
+        )
         create_cylinder(
             collection,
             "RF2_PortalBase_%02d" % index,
@@ -652,6 +781,7 @@ def main():
     remove_collection(DETAIL_COLLECTION_NAME)
     remove_obsolete_base_objects()
     remove_dummy_base_objects()
+    cut_portal_mountain_openings()
     collection = create_detail_collection()
     materials = {
         "sky": create_cave_sky_material(),
@@ -661,6 +791,7 @@ def main():
         "moss": find_material("stageSelectCaveMoss"),
         "crystal": find_material("stageSelectCaveCrystal"),
         "shrine": find_material("stageSelectCaveShrine"),
+        "mountain": create_portal_mountain_material(),
     }
     build_stage_details(collection, materials)
     for obj in bpy.context.scene.collection.all_objects:
