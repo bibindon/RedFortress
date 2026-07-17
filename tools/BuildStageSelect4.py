@@ -10,6 +10,8 @@ import BuildStageSelect3 as world3
 
 
 COLLECTION_NAME = "RF4_DawnFinalIsland"
+OCEAN_RADIUS_METERS = 500.0
+DAWN_SKY_SCALE = 9.0
 
 PORTALS = [
     ("select3", -18.0, -12.0, 0.65),
@@ -110,8 +112,17 @@ def build_scene(collection, materials):
     sky = bpy.data.objects.get("RF3_MoonlessSky")
     if sky is not None:
         sky.name = "RF4_DawnSky"
+        sky.scale = (DAWN_SKY_SCALE, DAWN_SKY_SCALE, DAWN_SKY_SCALE)
 
-    common.create_cylinder(collection, "RF4_Ocean", (0.0, 5.0, -0.23), 95.0, 0.16, 64, materials["sea"])
+    common.create_cylinder(
+        collection,
+        "RF4_Ocean",
+        (0.0, 5.0, -0.23),
+        OCEAN_RADIUS_METERS,
+        0.16,
+        64,
+        materials["sea"],
+    )
     world3.create_polygon_prism(
         collection,
         "RF4_SandIsland",
@@ -176,7 +187,6 @@ def build_scene(collection, materials):
     for index, (x, y, z, scale) in enumerate(rocks):
         common.create_rock(collection, "RF4_CoastRock_%02d" % index, (x, y, z), (scale, scale * 0.8, scale * 1.3), index * 0.48, materials["rock"], 560 + index)
 
-    common.create_rock(collection, "RF4_DawnSun", (18.0, 32.0, 11.5), (2.7, 1.2, 2.7), 0.0, materials["sun"], 600)
     common.create_box(collection, "RF4_FallenCrossVertical", (-2.0, 16.5, 3.55), (0.20, 1.10, 0.18), math.radians(22.0), materials["gold"])
     common.create_box(collection, "RF4_FallenCrossHorizontal", (-1.7, 16.9, 3.72), (0.65, 0.18, 0.16), math.radians(22.0), materials["gold"])
 
@@ -235,7 +245,6 @@ def main():
         "foam": create_material("RF2_CaveSky_World4Foam", "../stage-select1/stageSelectWaveFoam.png", (0.65, 0.82, 1.0, 1.0), 0.40),
         "fire": create_material("RF2_CaveSky_World4Fire", "../sphereOrange/sphere_orange.png", (1.0, 0.10, 0.01, 1.0), 2.0),
         "gold": create_material("RF2_CaveSky_World4Gold", "../sphereOrange/sphere_orange.png", (1.0, 0.40, 0.03, 1.0), 1.4),
-        "sun": create_material("RF2_CaveSky_World4Sun", "../sphereOrange/sphere_orange.png", (1.0, 0.22, 0.04, 1.0), 2.2),
         "spirit": create_material("RF2_CaveSky_World4Spirit", "../cube_white.png", (0.62, 0.86, 1.0, 1.0), 1.3),
         "mist": create_material("RF4_BlackMist", "../stage-select2/stageSelectCaveDeepDark.png", (0.025, 0.01, 0.04, 1.0)),
         "portal": create_material("RF4_PortalStone", "../stage-select2/stageSelectCaveShrine.png", (0.38, 0.31, 0.28, 1.0)),
