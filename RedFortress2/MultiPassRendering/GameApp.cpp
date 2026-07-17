@@ -230,6 +230,9 @@ namespace
     const int kStageClearReplayInputFrame = 28;
     const int kStageClearReplayFinalAutoFrame = 90;
     const int kStageClearReplayLetterboxHeight = 40;
+    const int kStageClearReplayJumpDurationFrames = 30;
+    const float kStageClearReplayJumpHeight = 1.0f;
+    const float kStageClearReplayJumpAnimationSpeed = 1.2f;
     const float kStageClearTargetFovDegrees = 58.0f;
     const int kStageExitJumpDelayFrames = 30;
     const int kStageExitJumpDurationFrames = 30;
@@ -2861,6 +2864,10 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         {
             displayPosition.y += m_stageExitVisualOffsetY;
         }
+        else if (m_gameState == GameState::StageClear && !m_stageClearWasFirstClear)
+        {
+            displayPosition.y += m_stageClearVisualOffsetY;
+        }
 
         if (m_playerIsSkinAnim)
         {
@@ -5230,6 +5237,7 @@ void GameApp::UpdateStageClear()
 void GameApp::BeginStageClearVisual()
 {
     m_stageClearFrame = 0;
+    m_stageClearVisualOffsetY = 0.0f;
     m_stageClearCameraStartPos = m_render.GetCameraPos();
     m_stageClearCameraStartTarget = m_render.GetLookAtPos();
     m_stageClearStoredFovDegrees = m_render.GetCameraHorizontalFovDegrees();
@@ -5246,8 +5254,12 @@ void GameApp::BeginStageClearVisual()
         RemoveGoalArrow();
         if (m_playerMeshId >= 0)
         {
-            SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+            m_playerAnimState = PlayerAnimState::Jump;
+            m_playerAnimationSpeed = kStageClearReplayJumpAnimationSpeed;
+            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+            m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerJumpAnimName);
         }
+        GameAudio::PlayJump();
         m_render.SetCameraShakeDuration(0.08f);
         m_render.SetCameraShakeIntensity(0.012f);
         return;
@@ -5290,8 +5302,20 @@ void GameApp::UpdateStageClearVisual()
 {
     if (!m_stageClearWasFirstClear)
     {
+        float jumpT = static_cast<float>(m_stageClearFrame) /
+                      static_cast<float>(kStageClearReplayJumpDurationFrames);
+        if (jumpT > 1.0f)
+        {
+            jumpT = 1.0f;
+        }
+        m_stageClearVisualOffsetY = 4.0f * kStageClearReplayJumpHeight * jumpT * (1.0f - jumpT);
+        UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
         m_render.SetCamera(m_stageClearCameraStartPos, m_stageClearCameraStartTarget);
         m_render.SetCameraHorizontalFovDegrees(m_stageClearStoredFovDegrees);
+        if (m_stageClearFrame == kStageClearReplayJumpDurationFrames && m_playerMeshId >= 0)
+        {
+            SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+        }
         if (m_stageClearFrame == kStageClearReplayTitleFrame)
         {
             GameAudio::PlayStageSelectConfirm();
@@ -5345,6 +5369,8 @@ void GameApp::UpdateStageClearVisual()
 
 void GameApp::RestoreStageClearVisual()
 {
+    m_stageClearVisualOffsetY = 0.0f;
+    UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
     m_render.SetCameraHorizontalFovDegrees(m_stageClearStoredFovDegrees);
     m_render.SetCamera(m_stageClearCameraStartPos, m_stageClearCameraStartTarget);
     m_render.SetCameraShakeDuration(0.0f);

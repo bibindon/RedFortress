@@ -328,6 +328,7 @@ private:
     bool m_stageClearProcessed = false;
     bool m_stageClearWasFirstClear = false;
     int m_stageClearFrame = 0;
+    float m_stageClearVisualOffsetY = 0.0f;
     D3DXVECTOR3 m_stageClearCameraStartPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageClearCameraStartTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageClearCameraEndPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
