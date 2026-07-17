@@ -39,14 +39,14 @@
 　ドアが閉まったあと、会議室にはしばらく沈黙が残った。","res\2D_Image\novel_chr_korone_mystery_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_excited_transparent.png","","false","1.00"
 "4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「……」
 「……」
-　マリンとマネージャーは、もう一度、記事の切り抜きを見た。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
+　マリンとマネージャーは、もう一度、記事の切り抜きを見た。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","true","0.98"
 "4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「行きます？」
 　マネージャーが言った。
-「行くしかないでしょ」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
+「行くしかないでしょ」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","true","0.98"
 "4","res\2D_Image\novel_bg_p04_pier.png","1600x900","　マリンは即答した。　◇　数日後。　マリンとマネージャーは、海辺の桟橋に立っていた。
 　潮風が髪を揺らし、カモメが鳴いている。　冒険の始まりとしては、なかなか悪くない。
-　ただし、桟橋に停まっていたのは海賊船ではなかった。　小さなモーターボートだった。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
-"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「……」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","res\2D_Image\novel_chr_marine_departure_transparent.png","","false","0.98","","","",""
+　ただし、桟橋に停まっていたのは海賊船ではなかった。　小さなモーターボートだった。","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","true","0.98"
+"4","res\2D_Image\novel_bg_p04_pier.png","1600x900","「……」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_departure_transparent.png","","true","0.98"
 "5","res\2D_Image\novel_bg_p05_motorboat.png","1600x900","　マリンは無言でそれを見つめた。　白い船体。　コンパクトな座席。
 　釣りに行くには良さそうなサイズ。　だが、少なくとも海賊船ではない。
 「そこは海賊船じゃないんですか」","res\2D_Image\novel_chr_manager_support_transparent.png","","false","1.00","","","","","res\2D_Image\novel_chr_marine_worried_transparent.png","","true","1.00"

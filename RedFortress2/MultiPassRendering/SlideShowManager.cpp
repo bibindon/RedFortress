@@ -25,7 +25,7 @@ void SlideShowManager::SpriteAdapter::DrawImage(const int x, const int y, const 
         return;
     }
 
-    if (m_filepath.find(L"novel_chr_") != std::wstring::npos)
+    if (m_filepath.find(L"_chr_") != std::wstring::npos)
     {
         m_render.DrawImageAutoResize(m_filepath, 0.78f, 0.48f, transparency);
     }
@@ -46,7 +46,7 @@ void SlideShowManager::SpriteAdapter::DrawImageEx(const int x,
         return;
     }
 
-    if (m_filepath.find(L"novel_chr_") != std::wstring::npos)
+    if (m_filepath.find(L"_chr_") != std::wstring::npos)
     {
         m_render.DrawImageAutoResizeEx(m_filepath,
                                        static_cast<float>(x) / static_cast<float>(NSRender::Common::BASE_W),
