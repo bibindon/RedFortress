@@ -4688,6 +4688,21 @@ bool GameApp::BeginStageTransitionAfterClear()
 
 void GameApp::UpdateStageTransition()
 {
+    if (m_stageTransitionAction == StageTransitionAction::WaitForStageSelectLoad)
+    {
+        m_render.SetFadeAlpha(1.0f);
+        m_render.Draw();
+
+        if (!m_render.IsAllMeshLoaded())
+        {
+            return;
+        }
+
+        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
+        m_stageTransitionAction = StageTransitionAction::FadeIn;
+        return;
+    }
+
     if (m_stageTransitionAction == StageTransitionAction::FadeIn)
     {
         if (m_render.GetFadeAlpha() <= 0.0f)
@@ -4784,6 +4799,14 @@ void GameApp::UpdateStageTransition()
 
 bool GameApp::CompleteStageMove(const std::size_t stageIndex)
 {
+    if (stageIndex >= m_stageManager.GetStageCount())
+    {
+        return false;
+    }
+
+    const StageManager::StageData& targetStage = m_stageManager.GetStage(stageIndex);
+    const bool waitForStageSelectLoad = IsCurrentStageSelect() && IsStageSelectId(targetStage.id);
+
     if (!m_stageManager.MoveToStage(stageIndex))
     {
         return false;
@@ -4793,9 +4816,16 @@ bool GameApp::CompleteStageMove(const std::size_t stageIndex)
     if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
         m_render.SetFadeAlpha(1.0f);
-        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
         m_gameState = GameState::Playing;
-        m_stageTransitionAction = StageTransitionAction::FadeIn;
+        if (waitForStageSelectLoad)
+        {
+            m_stageTransitionAction = StageTransitionAction::WaitForStageSelectLoad;
+        }
+        else
+        {
+            m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
+            m_stageTransitionAction = StageTransitionAction::FadeIn;
+        }
     }
     else
     {

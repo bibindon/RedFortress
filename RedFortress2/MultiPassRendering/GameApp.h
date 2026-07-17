@@ -226,7 +226,7 @@ private:
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
     enum class QteVisualPhase { None, Active, Restoring };
-    enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, FadeIn };
+    enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, WaitForStageSelectLoad, FadeIn };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
 
