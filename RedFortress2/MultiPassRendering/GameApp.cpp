@@ -3849,8 +3849,14 @@ bool GameApp::MoveToSelectedStagePortal()
     }
 
     m_lastSelectId = m_stageManager.GetCurrentStage().id;
+    m_preferredStageSelectPortalId.clear();
+    if (IsStageSelectId(destinationId))
+    {
+        m_preferredStageSelectPortalId = L"portal-to-" + m_lastSelectId;
+    }
     if (!StartStageByIndex(targetIndex))
     {
+        m_preferredStageSelectPortalId.clear();
         return false;
     }
 
