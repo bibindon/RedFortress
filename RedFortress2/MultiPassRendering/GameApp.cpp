@@ -171,6 +171,9 @@ namespace
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
     const std::wstring kInitialClubWeaponId = L"W001";
+    const std::wstring kSwordWeaponId = L"W002";
+    const std::wstring kBusterWeaponId = L"W003";
+    const std::wstring kBombWeaponId = L"W004";
     const std::wstring kRedSpaghettiItemId = L"007";
     const std::wstring kPotatoChipsItemId = L"008";
     const std::wstring kChuageJuiceItemId = L"017";
@@ -2499,25 +2502,33 @@ void GameApp::UpdatePlayerByInput()
         const long wheelDelta = InputDevice::Mouse::GetWheelDelta();
         if (wheelDelta != 0)
         {
-            m_playerAttackController.CycleAttackCategory();
-            GameAudio::PlayWeaponChange();
+            if (CycleOwnedAttackCategory(1))
+            {
+                GameAudio::PlayWeaponChange();
+            }
         }
         else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP))
         {
-            m_playerAttackController.CycleAttackCategory(-1);
-            GameAudio::PlayWeaponChange();
+            if (CycleOwnedAttackCategory(-1))
+            {
+                GameAudio::PlayWeaponChange();
+            }
         }
         else if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN))
         {
-            m_playerAttackController.CycleAttackCategory(1);
-            GameAudio::PlayWeaponChange();
+            if (CycleOwnedAttackCategory(1))
+            {
+                GameAudio::PlayWeaponChange();
+            }
         }
         UpdateHeldWeaponVisibility();
     }
 
     const PlayerAttackType requestedAttackType = m_playerAttackController.GetAttackType(shiftPressed);
 
-    if (!IsCurrentStageSelect() && InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    if (!IsCurrentStageSelect() &&
+        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) &&
+        IsAttackCategoryOwned(requestedAttackType))
     {
         const bool isBombCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"海賊爆弾"));
         const bool isBusterCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"海賊銃"));
@@ -2944,17 +2955,20 @@ void GameApp::UpdateHeldWeaponVisibility()
     if (m_debugPlayerRenderEnabled && !IsCurrentStageSelect())
     {
         const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
-        if (attackType == PlayerAttackType::WeakAttack)
+        if (IsAttackCategoryOwned(attackType))
         {
-            stickVisible = true;
-        }
-        else if (attackType == PlayerAttackType::SwordAttack)
-        {
-            saberVisible = true;
-        }
-        else if (IsBusterAttackType(attackType))
-        {
-            gunVisible = true;
+            if (attackType == PlayerAttackType::WeakAttack)
+            {
+                stickVisible = true;
+            }
+            else if (attackType == PlayerAttackType::SwordAttack)
+            {
+                saberVisible = true;
+            }
+            else if (IsBusterAttackType(attackType))
+            {
+                gunVisible = true;
+            }
         }
     }
 
@@ -2972,6 +2986,50 @@ void GameApp::UpdateHeldWeaponVisibility()
     {
         m_render.SetMeshMixEnabled(m_gunMeshId, gunVisible);
     }
+}
+
+bool GameApp::IsAttackCategoryOwned(const PlayerAttackType attackType) const
+{
+    if (attackType == PlayerAttackType::WeakAttack ||
+        attackType == PlayerAttackType::StrongAttack)
+    {
+        return m_inventoryManager.GetWeaponCount(kInitialClubWeaponId) > 0;
+    }
+
+    if (attackType == PlayerAttackType::SwordAttack ||
+        attackType == PlayerAttackType::SwordStrongAttack)
+    {
+        return m_inventoryManager.GetWeaponCount(kSwordWeaponId) > 0;
+    }
+
+    if (IsBusterAttackType(attackType))
+    {
+        return m_inventoryManager.GetWeaponCount(kBusterWeaponId) > 0;
+    }
+
+    if (IsBombAttackType(attackType))
+    {
+        return m_inventoryManager.GetWeaponCount(kBombWeaponId) > 0;
+    }
+
+    return false;
+}
+
+bool GameApp::CycleOwnedAttackCategory(const int direction)
+{
+    const PlayerAttackType previousAttackType = m_playerAttackController.GetAttackType(false);
+    const int categoryCount = 4;
+    for (int categoryIndex = 0; categoryIndex < categoryCount; ++categoryIndex)
+    {
+        m_playerAttackController.CycleAttackCategory(direction);
+        const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
+        if (IsAttackCategoryOwned(attackType))
+        {
+            return attackType != previousAttackType;
+        }
+    }
+
+    return false;
 }
 
 void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
@@ -6287,41 +6345,6 @@ void GameApp::DrawStageClear()
                                     740,
                                     520,
                                     sparklesAlpha);
-        }
-
-        if (m_stageClearFrame >= kStageClearReplayTitleFrame)
-        {
-            const float titleRawT = static_cast<float>(m_stageClearFrame - kStageClearReplayTitleFrame) / 10.0f;
-            const float titleT = SmoothStep01(titleRawT);
-            const int frameWidth = static_cast<int>(860.0f + 80.0f * titleT);
-            const int frameHeight = static_cast<int>(300.0f + 30.0f * titleT);
-            const int frameAlpha = static_cast<int>(235.0f * titleT);
-            m_render.DrawImageSized(kStageClearFrameImagePath,
-                                    (NSRender::Common::BASE_W - frameWidth) / 2,
-                                    395 + (330 - frameHeight) / 2,
-                                    frameWidth,
-                                    frameHeight,
-                                    frameAlpha);
-
-            std::wstring clearText = L"STAGE CLEAR";
-            if (m_stageManager.GetCurrentStage().id == L"4-8")
-            {
-                clearText = L"ALL CLEAR";
-            }
-            m_render.DrawTextCenter(m_stageClearFontId,
-                                    clearText,
-                                    0,
-                                    500,
-                                    NSRender::Common::BASE_W,
-                                    76,
-                                    D3DCOLOR_RGBA(255, 245, 205, frameAlpha));
-            m_render.DrawTextCenter(m_stageClearHintFontId,
-                                    m_stageManager.GetCurrentStageDisplayName(),
-                                    0,
-                                    570,
-                                    NSRender::Common::BASE_W,
-                                    38,
-                                    D3DCOLOR_RGBA(205, 235, 255, frameAlpha));
         }
 
         if (m_stageClearFrame >= kStageClearReplayInputFrame)

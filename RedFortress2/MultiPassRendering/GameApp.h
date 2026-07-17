@@ -166,6 +166,8 @@ private:
     void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
     void UpdatePlayerMeshVisibility();
     void UpdateHeldWeaponVisibility();
+    bool IsAttackCategoryOwned(PlayerAttackType attackType) const;
+    bool CycleOwnedAttackCategory(int direction);
     bool IsCurrentStageSelect() const;
     bool IsStagePortalSelectable(const std::wstring& portalId) const;
     bool AreAllStageEnemiesDefeated() const;
