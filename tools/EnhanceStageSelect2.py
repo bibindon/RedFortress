@@ -23,7 +23,7 @@ DUMMY_BASE_PREFIXES = (
 )
 
 PORTALS = [
-    (-17.5, 11.0),
+    (-17.0, 2.0),
     (-14.0, 14.0),
     (-3.0, 15.0),
     (8.0, 12.0),
@@ -250,48 +250,50 @@ def create_rock(collection, name, location, scale, rotation_z, material, seed):
 
 
 def create_portal_mountain(collection, name, location, material, seed):
-    segment_count = 7
-    top_height = -0.11
-    shoulder_height = -0.30
-    base_height = -1.58
+    segment_count = 8
+    ring_specs = [
+        (1.50, -0.11, 0.10, 0.00),
+        (2.08, -0.38, 0.30, 0.13),
+        (2.82, -0.96, 0.42, -0.09),
+        (3.48, -1.68, 0.50, 0.07),
+    ]
     vertices = []
 
-    for segment_index in range(segment_count):
-        angle = math.tau * segment_index / segment_count + seed * 0.071
-        radius = 1.52 + 0.13 * math.sin(seed * 1.31 + segment_index * 2.17)
-        vertices.append((radius * math.cos(angle), radius * math.sin(angle), top_height))
-
-    for segment_index in range(segment_count):
-        angle = math.tau * segment_index / segment_count + seed * 0.071 + 0.10
-        radius = 2.38 + 0.25 * math.sin(seed * 1.73 + segment_index * 1.91)
-        height = shoulder_height + 0.11 * math.cos(seed * 0.83 + segment_index * 2.43)
-        vertices.append((radius * math.cos(angle), radius * math.sin(angle), height))
-
-    for segment_index in range(segment_count):
-        angle = math.tau * segment_index / segment_count + seed * 0.071 - 0.08
-        radius = 3.42 + 0.28 * math.sin(seed * 2.11 + segment_index * 1.47)
-        height = base_height + 0.18 * math.cos(seed * 1.19 + segment_index * 2.07)
-        vertices.append((radius * math.cos(angle), radius * math.sin(angle), height))
+    for ring_index, (base_radius, base_height, roughness, angle_offset) in enumerate(ring_specs):
+        for segment_index in range(segment_count):
+            angle = (
+                math.tau * segment_index / segment_count
+                + seed * 0.071
+                + angle_offset
+            )
+            alternating_ridge = 1.0
+            if segment_index % 2 == 0:
+                alternating_ridge = -1.0
+            radius_noise = math.sin(seed * 1.31 + ring_index * 2.07 + segment_index * 1.73)
+            radius = base_radius + roughness * (0.55 * radius_noise + 0.45 * alternating_ridge)
+            height = base_height
+            if ring_index > 0:
+                height_noise = math.cos(seed * 0.89 + ring_index * 1.67 + segment_index * 2.31)
+                height += roughness * 0.62 * height_noise
+            vertices.append((radius * math.cos(angle), radius * math.sin(angle), height))
 
     faces = [tuple(range(segment_count))]
-    for segment_index in range(segment_count):
-        next_index = (segment_index + 1) % segment_count
-        top_a = segment_index
-        top_b = next_index
-        shoulder_a = segment_count + segment_index
-        shoulder_b = segment_count + next_index
-        base_a = segment_count * 2 + segment_index
-        base_b = segment_count * 2 + next_index
-        if segment_index % 2 == 0:
-            faces.append((top_a, shoulder_a, shoulder_b))
-            faces.append((top_a, shoulder_b, top_b))
-            faces.append((shoulder_a, base_a, base_b))
-            faces.append((shoulder_a, base_b, shoulder_b))
-        else:
-            faces.append((top_a, shoulder_a, top_b))
-            faces.append((top_b, shoulder_a, shoulder_b))
-            faces.append((shoulder_a, base_a, shoulder_b))
-            faces.append((shoulder_b, base_a, base_b))
+    for ring_index in range(len(ring_specs) - 1):
+        inner_start = ring_index * segment_count
+        outer_start = (ring_index + 1) * segment_count
+        for segment_index in range(segment_count):
+            next_index = (segment_index + 1) % segment_count
+            inner_a = inner_start + segment_index
+            inner_b = inner_start + next_index
+            outer_a = outer_start + segment_index
+            outer_b = outer_start + next_index
+            use_forward_ridge = (segment_index + ring_index) % 2 == 0
+            if use_forward_ridge:
+                faces.append((inner_a, outer_a, outer_b))
+                faces.append((inner_a, outer_b, inner_b))
+            else:
+                faces.append((inner_a, outer_a, inner_b))
+                faces.append((inner_b, outer_a, outer_b))
 
     mesh = bpy.data.meshes.new(name + "Mesh")
     mesh.from_pydata(vertices, [], faces)
@@ -584,15 +586,6 @@ def build_stage_details(collection, materials):
         materials["shrine"],
         materials["wall"],
     )
-    create_gateway(
-        collection,
-        "RF2_EastGate_",
-        (9.0, -7.0),
-        (2.0, -1.0),
-        materials["shrine"],
-        materials["wall"],
-    )
-
     crystal_centers = [
         (-14.5, 3.0),
         (-8.5, 10.0),

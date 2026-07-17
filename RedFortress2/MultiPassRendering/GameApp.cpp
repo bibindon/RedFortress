@@ -4365,7 +4365,7 @@ void GameApp::CreateStageSelectCubes()
     float cubeVisualOffsetY = kStageSelectCubeVisualOffsetY;
     if (m_stageManager.GetCurrentStage().id == L"select2")
     {
-        cubeVisualOffsetY -= 0.5f;
+        cubeVisualOffsetY -= 1.0f;
     }
     const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
     for (const InteractionManager::Interactable& interactable : interactables)
@@ -4571,7 +4571,7 @@ void GameApp::UnlockStagesUpToSelected(HWND hDlg)
     {
         return;
     }
-
+     
     const std::size_t targetIndex = static_cast<std::size_t>(stageIndex);
     const std::size_t stageCount = m_stageManager.GetStageCount();
     for (std::size_t i = 0; i < stageCount && i <= targetIndex; ++i)
