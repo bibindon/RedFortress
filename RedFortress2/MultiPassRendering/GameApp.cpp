@@ -375,18 +375,6 @@ namespace
         return false;
     }
 
-    bool IsStageSelectNavigationPortal(const std::wstring& portalId)
-    {
-        const std::wstring prefix = L"portal-to-";
-        if (portalId.length() <= prefix.length() || portalId.substr(0, prefix.length()) != prefix)
-        {
-            return false;
-        }
-
-        int worldNumber = 0;
-        return TryParseStageSelectDestinationId(portalId.substr(prefix.length()), &worldNumber);
-    }
-
     bool AreStagePortalsSequential(const std::wstring& currentPortalId, const std::wstring& candidatePortalId)
     {
         const std::wstring prefix = L"portal-to-";
@@ -3779,9 +3767,7 @@ void GameApp::UpdateStageSelectCursorByInput()
             for (const InteractionManager::Interactable& interactable : interactables)
             {
                 if (interactable.type != L"StagePortal" ||
-                    !IsStagePortalSelectable(interactable.id) ||
-                    (IsStageSelectNavigationPortal(interactable.id) &&
-                     !AreStagePortalsSequential(m_selectedStagePortalId, interactable.id)))
+                    !IsStagePortalSelectable(interactable.id))
                 {
                     continue;
                 }
@@ -4371,6 +4357,11 @@ void GameApp::CreateStageSelectCubes()
     RemoveStageSelectCubes();
 
     const std::wstring portalPrefix = L"portal-to-";
+    float cubeVisualOffsetY = kStageSelectCubeVisualOffsetY;
+    if (m_stageManager.GetCurrentStage().id == L"select2")
+    {
+        cubeVisualOffsetY -= 0.5f;
+    }
     const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
     for (const InteractionManager::Interactable& interactable : interactables)
     {
@@ -4416,7 +4407,7 @@ void GameApp::CreateStageSelectCubes()
         }
 
         D3DXVECTOR3 cubePosition = interactable.position;
-        cubePosition.y += kStageSelectCubeVisualOffsetY;
+        cubePosition.y += cubeVisualOffsetY;
         const int renderId = m_render.AddMeshMix(cubePath,
                                                   cubePosition,
                                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
