@@ -131,6 +131,7 @@ namespace
     const float kStageSelectPlayerRightYaw = -D3DX_PI * 0.5f;
     const float kStageSelectPlayerLeftYaw = D3DX_PI * 0.5f;
     const float kStageSelectPlayerVisualOffsetY = 1.0f;
+    const float kStageSelect2PlayerVisualOffsetY = -1.0f;
     const float kStageSelectPlayerVisualScale = 1.0f;
     const float kStageSelectPlayerLightHeight = 3.2f;
     const wchar_t* kStageSelectPlayerLightOwnerTag = L"stage-select-player";
@@ -149,6 +150,7 @@ namespace
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
     const float kStageSelectCubeScale = 0.16666667f;
     const float kStageSelectCubeVisualOffsetY = 1.0f;
+    const float kStageSelect2CubeVisualOffsetY = -1.3f;
     const std::wstring kAttackClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
@@ -2728,6 +2730,10 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         if (IsCurrentStageSelect())
         {
             displayPosition.y += kStageSelectPlayerVisualOffsetY;
+            if (m_stageManager.GetCurrentStage().id == L"select2")
+            {
+                displayPosition.y += kStageSelect2PlayerVisualOffsetY;
+            }
             displayScale = kStageSelectPlayerVisualScale;
         }
         else if (m_gameState == GameState::StageExit)
@@ -3149,8 +3155,12 @@ void GameApp::UpdateStageSelectPlayerLight()
         return;
     }
 
-    const D3DXVECTOR3 lightPosition =
+    D3DXVECTOR3 lightPosition =
         m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kStageSelectPlayerLightHeight, 0.0f);
+    if (stageId == L"select2")
+    {
+        lightPosition.y += kStageSelect2PlayerVisualOffsetY;
+    }
     m_render.SetPointLightPositionByOwnerTag(kStageSelectPlayerLightOwnerTag, lightPosition);
 }
 
@@ -4365,7 +4375,7 @@ void GameApp::CreateStageSelectCubes()
     float cubeVisualOffsetY = kStageSelectCubeVisualOffsetY;
     if (m_stageManager.GetCurrentStage().id == L"select2")
     {
-        cubeVisualOffsetY -= 1.0f;
+        cubeVisualOffsetY += kStageSelect2CubeVisualOffsetY;
     }
     const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
     for (const InteractionManager::Interactable& interactable : interactables)
