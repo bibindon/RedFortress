@@ -1,4 +1,4 @@
-import math
+﻿import math
 import os
 
 import bpy
@@ -104,7 +104,7 @@ def add_box(name, location, dimensions, material, bevel=0.025, rotation=(0.0, 0.
     return obj
 
 
-def add_rivet(name, location, material, radius=0.048):
+def add_rivet(name, location, material, radius=0.044):
     bpy.ops.mesh.primitive_uv_sphere_add(
         segments=16,
         ring_count=8,
@@ -263,7 +263,7 @@ def build_wall():
         )
 
     rivet_y_positions = (-3.52, -2.80, -2.08, -1.36, -0.68, 0.0, 0.68, 1.36, 2.08, 2.80, 3.52)
-    for face_index, x in enumerate((-0.466, 0.466)):
+    for face_index, x in enumerate((-0.450, 0.450)):
         for band_index, z in enumerate((-0.88, 0.88)):
             for rivet_index, y in enumerate(rivet_y_positions):
                 add_rivet(
@@ -290,7 +290,7 @@ def build_wall():
             bevel=0.022,
         )
 
-    for face_index, x in enumerate((-0.466, 0.466)):
+    for face_index, x in enumerate((-0.450, 0.450)):
         for post_index, y in enumerate((-3.73, -1.86, 1.86, 3.73)):
             for z_index, z in enumerate((-1.17, -0.58, 0.0, 0.58, 1.17)):
                 add_rivet(
@@ -317,9 +317,48 @@ def configure_scene():
     scene.frame_end = 1
 
 
+def bake_mesh_transforms_for_directx():
+    identity_matrix = (
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0,
+    )
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in [item for item in bpy.context.scene.objects if item.type == "MESH"]:
+        bpy.context.view_layer.objects.active = obj
+        obj.select_set(True)
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        obj["_x_frame_ftm"] = identity_matrix
+        obj.select_set(False)
+
+
+def join_visual_meshes():
+    meshes = [item for item in bpy.context.scene.objects if item.type == "MESH"]
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in meshes:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = meshes[0]
+    bpy.ops.object.join()
+    wall = bpy.context.object
+    wall.name = "Collision_Wall_Visual"
+    bpy.ops.object.material_slot_remove_unused()
+    wall["_x_frame_name"] = "Collision_Wall_Visual"
+    wall["_x_mesh_name"] = "Collision_Wall_VisualGeo"
+    wall["_x_frame_ftm"] = (
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0,
+    )
+    wall.select_set(False)
+
+
 def main():
     clear_scene()
     build_wall()
+    bake_mesh_transforms_for_directx()
+    join_visual_meshes()
     add_camera_and_lights()
     configure_scene()
 
@@ -331,6 +370,7 @@ def main():
         axis_up="Y",
         export_animation=False,
         triangulate=True,
+        unweld_on_export=False,
     )
     print("EXPORT_RESULT", result)
     print("BLEND_PATH", BLEND_PATH)
