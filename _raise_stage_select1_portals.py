@@ -7,16 +7,35 @@ model_dir = os.path.dirname(bpy.data.filepath)
 island_export_path = os.path.join(model_dir, "stageSelectIsland.x")
 sea_export_path = os.path.join(model_dir, "stageSelectSea.x")
 preview_path = os.path.join(model_dir, "world1_preview.png")
+bpy.context.preferences.filepaths.save_version = 0
 
-portal_ground_heights = [0.8, 0.7, 0.9, 2.6, 4.8, 4.9, 6.8, 6.8, 6.8, 7.1]
-for index, ground_height in enumerate(portal_ground_heights):
+portal_layout = [
+    (-15.0, -11.5, 0.8),
+    (-12.8, -9.4, 0.7),
+    (-7.0, -6.0, 1.1),
+    (0.0, -6.0, 2.9),
+    (7.0, -6.0, 1.3),
+    (7.0, -4.0, 2.6),
+    (1.0, -4.0, 4.6),
+    (-4.0, -4.0, 4.1),
+    (-3.0, 0.0, 5.7),
+    (2.0, 0.0, 6.5),
+]
+for index, portal_position in enumerate(portal_layout):
+    position_x, position_y, ground_height = portal_position
     prefix = f"RF1_Portal_{index:02d}"
     base = bpy.data.objects[f"{prefix}_Base"]
     inset = bpy.data.objects[f"{prefix}_Inset"]
     ring = bpy.data.objects[f"{prefix}_Ring"]
 
+    base.location.x = position_x
+    base.location.y = position_y
     base.location.z = ground_height + 0.45
+    inset.location.x = position_x
+    inset.location.y = position_y
     inset.location.z = ground_height + 0.625
+    ring.location.x = position_x
+    ring.location.y = position_y
     ring.location.z = ground_height + 0.77
 
     base.scale.x = 0.5
@@ -31,8 +50,8 @@ for material in bpy.data.materials:
 
 preview_camera = bpy.context.scene.camera
 if preview_camera is not None:
-    preview_camera.location = Vector((-7.0, -23.0, 16.0))
-    preview_target = Vector((-7.0, -4.0, 3.5))
+    preview_camera.location = Vector((0.0, -26.0, 18.0))
+    preview_target = Vector((0.0, 0.0, 3.0))
     preview_camera.rotation_euler = (preview_target - preview_camera.location).to_track_quat("-Z", "Y").to_euler()
     preview_camera.data.lens = 28.0
 
@@ -88,5 +107,5 @@ export_objects(sea_export_path, sea_object_names)
 bpy.context.scene.render.filepath = preview_path
 bpy.ops.render.render(write_still=True)
 
-print("Raised portals:", len(portal_ground_heights))
+print("Arranged portals:", len(portal_layout))
 print("Preview camera:", tuple(preview_camera.location) if preview_camera is not None else None)
