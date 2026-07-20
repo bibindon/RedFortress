@@ -115,9 +115,9 @@ namespace
     const std::wstring g_playerMeshPath = L"res\\model2\\marine_512\\marine.x";
     const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine_512\\marine.csv";
     const std::wstring g_stageSelectPlayerMeshPath =
-        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect.x";
+        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect_30K.x";
     const std::wstring g_stageSelectPlayerAnimCsvPath =
-        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect.csv";
+        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect_30K.csv";
     const std::wstring g_playerIdleAnimName = L"000";
     const std::wstring g_playerWalkAnimName = L"walk";
     const std::wstring g_playerRunAnimName = L"run";
