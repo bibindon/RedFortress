@@ -8,14 +8,6 @@ MODEL_DIR = os.path.dirname(OUTPUT_DIR)
 BLEND_PATH = os.path.join(OUTPUT_DIR, "ground.blend")
 FIELD_TEXTURE_PATH = os.path.join(MODEL_DIR, "field.png")
 WHITE_WALL_TEXTURE_PATH = os.path.join(MODEL_DIR, "whiteWall.png")
-IDENTITY_MATRIX = (
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
-)
-
-
 def clear_scene():
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(use_global=False)
@@ -72,7 +64,6 @@ def create_mesh_object(name, vertices, faces, uvs, material):
     obj.data.materials.append(material)
     obj["_x_frame_name"] = name
     obj["_x_mesh_name"] = name + "Geo"
-    obj["_x_frame_ftm"] = IDENTITY_MATRIX
     return obj
 
 

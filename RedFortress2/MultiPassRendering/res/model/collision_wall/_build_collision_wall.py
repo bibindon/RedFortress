@@ -318,18 +318,11 @@ def configure_scene():
 
 
 def bake_mesh_transforms_for_directx():
-    identity_matrix = (
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0,
-    )
     bpy.ops.object.select_all(action="DESELECT")
     for obj in [item for item in bpy.context.scene.objects if item.type == "MESH"]:
         bpy.context.view_layer.objects.active = obj
         obj.select_set(True)
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-        obj["_x_frame_ftm"] = identity_matrix
         obj.select_set(False)
 
 
@@ -345,12 +338,6 @@ def join_visual_meshes():
     bpy.ops.object.material_slot_remove_unused()
     wall["_x_frame_name"] = "Collision_Wall_Visual"
     wall["_x_mesh_name"] = "Collision_Wall_VisualGeo"
-    wall["_x_frame_ftm"] = (
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0,
-    )
     wall.select_set(False)
 
 
