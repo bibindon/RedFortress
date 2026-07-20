@@ -1,0 +1,3 @@
+Anim, "000", "PlayerForStageSelect.000.x", default
+Anim, "walk", "PlayerForStageSelect.walk.x", loop
+Anim, "run", "PlayerForStageSelect.walk.x", loop

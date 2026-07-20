@@ -114,6 +114,10 @@ namespace
 
     const std::wstring g_playerMeshPath = L"res\\model2\\marine_512\\marine.x";
     const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine_512\\marine.csv";
+    const std::wstring g_stageSelectPlayerMeshPath =
+        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect.x";
+    const std::wstring g_stageSelectPlayerAnimCsvPath =
+        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect.csv";
     const std::wstring g_playerIdleAnimName = L"000";
     const std::wstring g_playerWalkAnimName = L"walk";
     const std::wstring g_playerRunAnimName = L"run";
@@ -640,15 +644,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.LoadXFileListMoveFromCsv(initialStage.moveCsvPath);
     m_render.SetLoadingScreenProgress(25);
     m_render.Draw();
-    m_playerMeshId = m_render.AddMeshMixSkinAnim2(g_playerMeshPath,
-                                                  g_playerAnimCsvPath,
-                                                  initialStage.playerStartPosition,
-                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                  1.0f,
-                                                  NSRender::AnimSetMap(),
-                                                  -1.0f,
-                                                  false,
-                                                  false);
+    LoadPlayerMeshForStage(IsStageSelectId(initialStage.id), initialStage.playerStartPosition);
     m_render.SetLoadingScreenProgress(40);
     m_render.Draw();
 
@@ -2275,6 +2271,45 @@ void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const flo
     }
 
     m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerIdleAnimName);
+}
+
+void GameApp::LoadPlayerMeshForStage(const bool useStageSelectModel, const D3DXVECTOR3& position)
+{
+    if (m_playerMeshId >= 0)
+    {
+        if (m_playerUsesStageSelectModel == useStageSelectModel)
+        {
+            return;
+        }
+        if (!m_render.RemoveMeshMixSkinAnim(m_playerMeshId))
+        {
+            throw std::runtime_error("Failed to remove the previous player mesh.");
+        }
+        m_playerMeshId = -1;
+    }
+
+    std::wstring meshPath = g_playerMeshPath;
+    std::wstring animationCsvPath = g_playerAnimCsvPath;
+    if (useStageSelectModel)
+    {
+        meshPath = g_stageSelectPlayerMeshPath;
+        animationCsvPath = g_stageSelectPlayerAnimCsvPath;
+    }
+
+    m_playerMeshId = m_render.AddMeshMixSkinAnim2(meshPath,
+                                                  animationCsvPath,
+                                                  position,
+                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                  1.0f,
+                                                  NSRender::AnimSetMap(),
+                                                  -1.0f,
+                                                  false,
+                                                  false);
+    if (m_playerMeshId < 0)
+    {
+        throw std::runtime_error("Failed to load the player mesh.");
+    }
+    m_playerUsesStageSelectModel = useStageSelectModel;
 }
 
 void GameApp::InitializeCameraFromRenderSettings()
@@ -6056,6 +6091,8 @@ void GameApp::LoadCurrentStageObjects()
         m_render.RemoveMeshMix(m_gunMeshId);
         m_gunMeshId = -1;
     }
+
+    LoadPlayerMeshForStage(IsStageSelectId(stage.id), stage.playerStartPosition);
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();

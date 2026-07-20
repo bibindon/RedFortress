@@ -239,6 +239,7 @@ private:
     enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, WaitForStageSelectLoad, FadeIn };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
+    void LoadPlayerMeshForStage(bool useStageSelectModel, const D3DXVECTOR3& position);
 
     using PhysicsWorld = PhysicsLib::PhysicsLib;
 
@@ -285,6 +286,7 @@ private:
     float m_qteVisualStartFovDegrees = 90.0f;
     int m_playerMeshId = -1;
     bool m_playerIsSkinAnim = true;
+    bool m_playerUsesStageSelectModel = false;
     PhysicsLib::CharacterMover m_playerMover;
     PhysicsLib::CameraMover m_cameraMover;
     float m_cameraYaw = 0.0f;
