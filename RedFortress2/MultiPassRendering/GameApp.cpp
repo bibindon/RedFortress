@@ -112,12 +112,12 @@ namespace
 
 #endif
 
-    const std::wstring g_playerMeshPath = L"res\\model2\\marine_512\\marine.x";
-    const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine_512\\marine.csv";
+    const std::wstring g_playerMeshPath = L"res\\model2\\marine_512_low\\marine.x";
+    const std::wstring g_playerAnimCsvPath = L"res\\model2\\marine_512_low\\marine.csv";
     const std::wstring g_stageSelectPlayerMeshPath =
-        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect_30K.x";
+        L"res\\model2\\marine_512_low\\marine.x";
     const std::wstring g_stageSelectPlayerAnimCsvPath =
-        L"res\\model2\\PlayerForStageSelect\\PlayerForStageSelect_30K.csv";
+        L"res\\model2\\marine_512_low\\marine.csv";
     const std::wstring g_playerIdleAnimName = L"000";
     const std::wstring g_playerWalkAnimName = L"walk";
     const std::wstring g_playerRunAnimName = L"run";
