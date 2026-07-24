@@ -83,7 +83,7 @@ def cube_project_uv(obj, cube_size=1.0):
     obj.select_set(False)
 
 
-def add_box(name, location, dimensions, material, bevel=0.025, rotation=(0.0, 0.0, 0.0)):
+def add_box(name, location, dimensions, material, rotation=(0.0, 0.0, 0.0)):
     bpy.ops.mesh.primitive_cube_add(location=location, rotation=rotation)
     obj = bpy.context.object
     obj.name = name
@@ -91,67 +91,20 @@ def add_box(name, location, dimensions, material, bevel=0.025, rotation=(0.0, 0.
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     cube_project_uv(obj, cube_size=0.7)
     apply_material(obj, material)
-
-    if bevel > 0.0:
-        modifier = obj.modifiers.new(name="Crafted_Edges", type="BEVEL")
-        modifier.width = bevel
-        modifier.segments = 3
-        modifier.limit_method = "ANGLE"
-        bpy.context.view_layer.objects.active = obj
-        obj.select_set(True)
-        bpy.ops.object.modifier_apply(modifier=modifier.name)
-        obj.select_set(False)
     return obj
 
 
 def add_rivet(name, location, material, radius=0.044):
-    bpy.ops.mesh.primitive_uv_sphere_add(
-        segments=16,
-        ring_count=8,
-        radius=radius,
-        location=location,
-    )
-    obj = bpy.context.object
-    obj.name = name
-    apply_material(obj, material)
-    for polygon in obj.data.polygons:
-        polygon.use_smooth = True
-    return obj
-
-
-def add_torus(name, location, material):
-    bpy.ops.mesh.primitive_torus_add(
-        major_segments=40,
-        minor_segments=10,
-        location=location,
-        rotation=(0.0, math.radians(90.0), 0.0),
-        major_radius=0.34,
-        minor_radius=0.042,
-    )
-    obj = bpy.context.object
-    obj.name = name
-    apply_material(obj, material)
-    for polygon in obj.data.polygons:
-        polygon.use_smooth = True
-    return obj
-
-
-def add_emblem_disc(name, x, material):
     bpy.ops.mesh.primitive_cylinder_add(
-        vertices=12,
-        radius=0.255,
-        depth=0.065,
-        location=(x, 0.0, 0.0),
+        vertices=6,
+        radius=radius,
+        depth=0.026,
+        location=location,
         rotation=(0.0, math.radians(90.0), 0.0),
     )
     obj = bpy.context.object
     obj.name = name
     apply_material(obj, material)
-    bevel = obj.modifiers.new(name="Forged_Rim", type="BEVEL")
-    bevel.width = 0.018
-    bevel.segments = 2
-    bpy.context.view_layer.objects.active = obj
-    bpy.ops.object.modifier_apply(modifier=bevel.name)
     return obj
 
 
@@ -196,8 +149,7 @@ def add_camera_and_lights():
 def build_wall():
     wood = make_material("Aged_Walnut_Planks", (0.56, 0.31, 0.18), 0.42, 0.0, TEXTURE_PATH)
     dark_wood = make_material("Dark_Oak_Bracing", (0.24, 0.095, 0.045), 0.34, 0.0, TEXTURE_PATH)
-    iron = make_material("Blackened_Iron", (0.055, 0.065, 0.072), 0.16, 0.88)
-    edge_iron = make_material("Worn_Steel_Edges", (0.20, 0.23, 0.24), 0.12, 0.92)
+    iron = make_material("Forged_Iron", (0.12, 0.14, 0.15), 0.14, 0.90)
     brass = make_material("Brass_Rivets", (0.58, 0.28, 0.055), 0.10, 0.90)
 
     plank_offsets = (-0.025, 0.018, -0.010, 0.030, -0.018, 0.012, -0.030, 0.022, -0.008)
@@ -210,7 +162,6 @@ def build_wall():
             (plank_offsets[index], 0.0, z),
             (plank_depths[index], length, 0.292),
             wood,
-            bevel=0.038,
         )
 
     for index, y in enumerate((-3.73, -1.86, 0.0, 1.86, 3.73)):
@@ -222,7 +173,6 @@ def build_wall():
             (0.0, y, 0.0),
             (0.89, width, 2.86),
             dark_wood,
-            bevel=0.055,
         )
 
     brace_angle = math.radians(36.0)
@@ -239,7 +189,6 @@ def build_wall():
                 (x, y, 0.0),
                 (0.135, 4.05, 0.205),
                 dark_wood,
-                bevel=0.035,
                 rotation=(angle, 0.0, 0.0),
             )
 
@@ -250,7 +199,6 @@ def build_wall():
                 (x, 0.0, z),
                 (0.065, 7.48, 0.125),
                 iron,
-                bevel=0.018,
             )
 
     for z, label in ((1.425, "Top"), (-1.425, "Bottom")):
@@ -258,11 +206,10 @@ def build_wall():
             f"{label}_Forged_Cap",
             (0.0, 0.0, z),
             (0.97, 7.90, 0.105),
-            edge_iron,
-            bevel=0.024,
+            iron,
         )
 
-    rivet_y_positions = (-3.52, -2.80, -2.08, -1.36, -0.68, 0.0, 0.68, 1.36, 2.08, 2.80, 3.52)
+    rivet_y_positions = (-2.80, 0.0, 2.80)
     for face_index, x in enumerate((-0.450, 0.450)):
         for band_index, z in enumerate((-0.88, 0.88)):
             for rivet_index, y in enumerate(rivet_y_positions):
@@ -271,35 +218,6 @@ def build_wall():
                     (x, y, z),
                     brass,
                 )
-
-    for face_index, x in enumerate((-0.446, 0.446)):
-        add_torus(f"Central_Emblem_Ring_{face_index + 1}", (x, 0.0, 0.0), edge_iron)
-        add_emblem_disc(f"Central_Emblem_Disc_{face_index + 1}", x, iron)
-        add_box(
-            f"Emblem_Vertical_{face_index + 1}",
-            (x, 0.0, 0.0),
-            (0.075, 0.10, 0.34),
-            brass,
-            bevel=0.022,
-        )
-        add_box(
-            f"Emblem_Horizontal_{face_index + 1}",
-            (x, 0.0, 0.0),
-            (0.075, 0.34, 0.10),
-            brass,
-            bevel=0.022,
-        )
-
-    for face_index, x in enumerate((-0.450, 0.450)):
-        for post_index, y in enumerate((-3.73, -1.86, 1.86, 3.73)):
-            for z_index, z in enumerate((-1.17, -0.58, 0.0, 0.58, 1.17)):
-                add_rivet(
-                    f"Post_Rivet_{face_index + 1}_{post_index + 1}_{z_index + 1}",
-                    (x, y, z),
-                    edge_iron,
-                    radius=0.041,
-                )
-
 
 def configure_scene():
     scene = bpy.context.scene
