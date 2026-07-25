@@ -30,7 +30,7 @@ namespace
     float GetYawToTarget(const D3DXVECTOR3& fromPos, const D3DXVECTOR3& targetPos)
     {
         const D3DXVECTOR3 diff = targetPos - fromPos;
-        return atan2f(-diff.x, -diff.z);
+        return atan2f(diff.x, diff.z);
     }
 
     unsigned int MixSeed(unsigned int seed, unsigned int value)
