@@ -195,7 +195,7 @@ void StageEditor::PopulateList(HWND hDlg)
         const std::vector<NSRender::RenderLoadedModelInfo> models = m_render->GetLoadedModelInfoList();
         for (const auto& model : models)
         {
-            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix2)
             {
                 continue;
             }
@@ -635,7 +635,7 @@ void StageEditor::OnSave(HWND hDlg)
         int id = 1;
         for (const auto& model : models)
         {
-            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix2)
             {
                 continue;
             }
@@ -696,7 +696,7 @@ void StageEditor::OnSave(HWND hDlg)
         int physicsId = 1;
         for (const auto& model : models)
         {
-            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix2)
             {
                 continue;
             }
@@ -764,7 +764,7 @@ void StageEditor::OnSave(HWND hDlg)
         int moveId = 1;
         for (const auto& model : models)
         {
-            if (model.type != NSRender::RenderLoadedModelType::MeshMix)
+            if (model.type != NSRender::RenderLoadedModelType::MeshMix2)
             {
                 continue;
             }
