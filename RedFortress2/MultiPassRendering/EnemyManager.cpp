@@ -325,7 +325,7 @@ void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, 
                                                   -1.0f,
                                                   false,
                                                   false,
-                                                  NSRender::MeshMixSkinAnimLoadMode::Custom);
+                                                  NSRender::MeshMixSkinAnimLoadMode::Blender512Custom);
     if (meshId < 0)
     {
         return;
