@@ -33,6 +33,7 @@ public:
         std::wstring lavaCsvPath;
         std::wstring renderSettingsCsvPath;
         StageWeather weather = StageWeather::None;
+        bool playerPointLightEnabled = false;
         D3DXVECTOR3 playerStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 clearPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         float clearDistance = 1.0f;
@@ -69,7 +70,8 @@ private:
                   const D3DXVECTOR3& fixedCameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                   const D3DXVECTOR3& fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                   const std::wstring& renderSettingsCsvPath = L"",
-                  StageWeather weather = StageWeather::None);
+                  StageWeather weather = StageWeather::None,
+                  bool playerPointLightEnabled = false);
 
     std::vector<StageData> m_stages;
     std::size_t m_currentStageIndex = 0;

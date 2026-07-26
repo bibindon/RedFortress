@@ -8,7 +8,7 @@ void StageManager::Initialize()
     AddStage(L"1-1", 1, L"Stage 1-1", L"stage1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
     AddStage(L"1-2", 2, L"Stage 1-2", L"stage2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"res\\RenderSettings.night.csv");
+             L"res\\RenderSettings.night.csv", StageWeather::None, true);
     AddStage(L"1-3", 3, L"Stage 1-3", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.evening.csv");
@@ -17,7 +17,7 @@ void StageManager::Initialize()
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
     AddStage(L"1-5", 5, L"Stage 1-5", L"stage17", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"res\\RenderSettings.night-rain.csv", StageWeather::Rain);
+             L"res\\RenderSettings.night-rain.csv", StageWeather::Rain, true);
     AddStage(L"1-6", 6, L"Stage 1-6", L"stage18", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.evening-rain.csv", StageWeather::Rain);
@@ -26,7 +26,7 @@ void StageManager::Initialize()
              L"res\\RenderSettings.fog.csv", StageWeather::Fog);
     AddStage(L"1-8", 8, L"Stage 1-8", L"stage20", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"res\\RenderSettings.night-fog.csv", StageWeather::Fog);
+             L"res\\RenderSettings.night-fog.csv", StageWeather::Fog, true);
 
     AddStage(L"2-1", 9, L"Stage 2-1", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
@@ -97,7 +97,8 @@ void StageManager::AddStage(const std::wstring& id,
                             const D3DXVECTOR3& fixedCameraPos,
                             const D3DXVECTOR3& fixedCameraLookAt,
                             const std::wstring& renderSettingsCsvPath,
-                            StageWeather weather)
+                            StageWeather weather,
+                            bool playerPointLightEnabled)
 {
     const std::wstring basePath = L"res\\model\\" + folderName + L"\\";
 
@@ -119,6 +120,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.lavaCsvPath = basePath + L"LavaZones.csv";
     stage.renderSettingsCsvPath = renderSettingsCsvPath;
     stage.weather = weather;
+    stage.playerPointLightEnabled = playerPointLightEnabled;
     stage.playerStartPosition = playerStartPosition;
     stage.clearPosition = clearPosition;
     stage.clearDistance = 2.0f;

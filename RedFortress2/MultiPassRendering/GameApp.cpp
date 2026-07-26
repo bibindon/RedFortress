@@ -140,6 +140,10 @@ namespace
     const float kStageSelectPlayerVisualScale = 1.0f;
     const float kStageSelectPlayerLightHeight = 3.2f;
     const wchar_t* kStageSelectPlayerLightOwnerTag = L"stage-select-player";
+    const float kPlayerPointLightHeight = 2.2f;
+    const float kPlayerPointLightBrightness = 2.5f;
+    const float kPlayerPointLightRange = 12.0f;
+    const wchar_t* kPlayerPointLightOwnerTag = L"stage-player";
     const int kStageSelectStageNameX = 48;
     const int kStageSelectStageNameY = 42;
     const int kStageSelectLivesX = 1190;
@@ -2811,6 +2815,7 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         }
     }
 
+    UpdatePlayerPointLight();
     UpdateStageSelectPlayerLight();
 
     // 落下死演出中はメッシュ更新のみ行い、カメラ追従を止めてプレイヤーが落ちていく様を見せる
@@ -2952,6 +2957,7 @@ bool GameApp::CycleOwnedAttackCategory(const int direction)
 void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
 {
     m_render.ClearPointLights();
+    UpdatePlayerPointLight();
     if (stageId == L"select4")
     {
         const wchar_t* portalDestinationIds[] =
@@ -3198,6 +3204,34 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                            12.0f,
                            kStageSelectPlayerLightOwnerTag);
+}
+
+void GameApp::UpdatePlayerPointLight()
+{
+    const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+    if (!stage.playerPointLightEnabled)
+    {
+        return;
+    }
+
+    const D3DXVECTOR3 lightPosition =
+        m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, kPlayerPointLightHeight, 0.0f);
+    if (m_render.SetPointLightPositionByOwnerTag(kPlayerPointLightOwnerTag, lightPosition))
+    {
+        return;
+    }
+
+    const D3DXCOLOR lightColor(1.0f, 0.78f, 0.52f, 1.0f);
+    m_render.AddPointLight(lightPosition,
+                           kPlayerPointLightBrightness,
+                           lightColor,
+                           NSRender::PointLightShape::Point,
+                           12.0f,
+                           10.0f,
+                           10.0f,
+                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                           kPlayerPointLightRange,
+                           kPlayerPointLightOwnerTag);
 }
 
 void GameApp::UpdateStageSelectPlayerLight()
@@ -5944,6 +5978,7 @@ bool GameApp::IsGameOverActionTriggered() const
 
 void GameApp::ApplyTitleRenderSettings()
 {
+    m_render.ClearPointLights();
     m_render.SetPostEffectSaturate(kTitleSaturationLevel);
     m_render.SetMeshMixShadowDarkness(kTitleShadowDarkness);
     m_render.SetLightBrightness(kTitleSunLightIntensity);
