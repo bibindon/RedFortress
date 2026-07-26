@@ -966,7 +966,9 @@ void GameApp::Run()
                 {
                     if (IsCurrentStageSelect())
                     {
+                        m_render.SetFadeAlpha(1.0f);
                         m_gameState = GameState::Playing;
+                        m_stageTransitionAction = StageTransitionAction::WaitForStageLoad;
                     }
                     else
                     {
@@ -997,7 +999,9 @@ void GameApp::Run()
                     {
                         if (IsCurrentStageSelect())
                         {
+                            m_render.SetFadeAlpha(1.0f);
                             m_gameState = GameState::Playing;
+                            m_stageTransitionAction = StageTransitionAction::WaitForStageLoad;
                         }
                         else
                         {
@@ -4750,7 +4754,7 @@ bool GameApp::BeginStageTransitionAfterClear()
 
 void GameApp::UpdateStageTransition()
 {
-    if (m_stageTransitionAction == StageTransitionAction::WaitForStageSelectLoad)
+    if (m_stageTransitionAction == StageTransitionAction::WaitForStageLoad)
     {
         m_render.SetFadeAlpha(1.0f);
         m_render.Draw();
@@ -4760,8 +4764,18 @@ void GameApp::UpdateStageTransition()
             return;
         }
 
-        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
-        m_stageTransitionAction = StageTransitionAction::FadeIn;
+        if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
+        {
+            m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
+            m_stageTransitionAction = StageTransitionAction::FadeIn;
+        }
+        else
+        {
+            m_stageTransitionAction = StageTransitionAction::None;
+            m_stageTransitionIndex = static_cast<std::size_t>(-1);
+            m_gameState = GameState::StageIntro;
+            BeginStageIntro();
+        }
         return;
     }
 
@@ -4849,10 +4863,6 @@ void GameApp::UpdateStageTransition()
         {
             throw std::runtime_error("Failed to return to stage select after the fade-out.");
         }
-        if (IsCurrentStageSelect())
-        {
-            m_stageTransitionAction = StageTransitionAction::FadeIn;
-        }
         return;
     }
 
@@ -4866,35 +4876,22 @@ bool GameApp::CompleteStageMove(const std::size_t stageIndex)
         return false;
     }
 
-    const StageManager::StageData& targetStage = m_stageManager.GetStage(stageIndex);
-    const bool waitForStageSelectLoad = IsCurrentStageSelect() && IsStageSelectId(targetStage.id);
-
     if (!m_stageManager.MoveToStage(stageIndex))
     {
         return false;
     }
 
     LoadCurrentStageObjects();
+    m_render.SetFadeAlpha(1.0f);
     if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
-        m_render.SetFadeAlpha(1.0f);
         m_gameState = GameState::Playing;
-        if (waitForStageSelectLoad)
-        {
-            m_stageTransitionAction = StageTransitionAction::WaitForStageSelectLoad;
-        }
-        else
-        {
-            m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
-            m_stageTransitionAction = StageTransitionAction::FadeIn;
-        }
     }
     else
     {
-        m_render.SetFadeAlpha(1.0f);
         m_gameState = GameState::StageIntro;
-        BeginStageIntro();
     }
+    m_stageTransitionAction = StageTransitionAction::WaitForStageLoad;
     return true;
 }
 
@@ -5973,16 +5970,16 @@ bool GameApp::StartNextStage()
     }
 
     LoadCurrentStageObjects();
-    if (IsCurrentStageSelect())
+    m_render.SetFadeAlpha(1.0f);
+    if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
         m_gameState = GameState::Playing;
     }
     else
     {
-        m_render.SetFadeAlpha(1.0f);
         m_gameState = GameState::StageIntro;
-        BeginStageIntro();
     }
+    m_stageTransitionAction = StageTransitionAction::WaitForStageLoad;
     return true;
 }
 
@@ -6014,17 +6011,16 @@ bool GameApp::MoveToStageAfterClear()
 
     m_preferredStageSelectPortalId = L"portal-to-" + clearedStageId;
     LoadCurrentStageObjects();
-    if (IsCurrentStageSelect())
+    m_render.SetFadeAlpha(1.0f);
+    if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
-        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
         m_gameState = GameState::Playing;
     }
     else
     {
-        m_render.SetFadeAlpha(1.0f);
         m_gameState = GameState::StageIntro;
-        BeginStageIntro();
     }
+    m_stageTransitionAction = StageTransitionAction::WaitForStageLoad;
     return true;
 }
 
