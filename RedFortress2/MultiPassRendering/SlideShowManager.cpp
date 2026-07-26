@@ -1,4 +1,6 @@
 ﻿#include "SlideShowManager.h"
+#include <algorithm>
+
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "GameAudio.h"
 
@@ -6,6 +8,95 @@ const float SlideShowManager::kSkipHoldSeconds = 1.0f;
 
 static const std::wstring kTextBackPath = L"res\\2D_Image\\textBack.png";
 static const std::wstring kFadeImagePath = L"res\\2D_Image\\black2x2.bmp";
+
+namespace
+{
+struct SlideShowCanvasRect
+{
+    int x = 0;
+    int y = 0;
+    int width = 0;
+    int height = 0;
+};
+
+SlideShowCanvasRect ConvertSlideShowCanvasRect(const float x,
+                                               const float y,
+                                               const float width,
+                                               const float height)
+{
+    SlideShowCanvasRect result;
+    if (NSRender::Common::ScreenW() <= 0 ||
+        NSRender::Common::ScreenH() <= 0 ||
+        width <= 0.0f ||
+        height <= 0.0f)
+    {
+        return result;
+    }
+
+    const float screenScaleX =
+        static_cast<float>(NSRender::Common::ScreenW()) /
+        static_cast<float>(NSRender::Common::BASE_W);
+    const float screenScaleY =
+        static_cast<float>(NSRender::Common::ScreenH()) /
+        static_cast<float>(NSRender::Common::BASE_H);
+    const float uniformScale = (std::min)(screenScaleX, screenScaleY);
+    const float canvasScreenWidth =
+        static_cast<float>(NSRender::Common::BASE_W) * uniformScale;
+    const float canvasScreenHeight =
+        static_cast<float>(NSRender::Common::BASE_H) * uniformScale;
+    const float offsetScreenX =
+        (static_cast<float>(NSRender::Common::ScreenW()) - canvasScreenWidth) * 0.5f;
+    const float offsetScreenY =
+        (static_cast<float>(NSRender::Common::ScreenH()) - canvasScreenHeight) * 0.5f;
+
+    result.x = static_cast<int>((offsetScreenX + (x * uniformScale)) / screenScaleX);
+    result.y = static_cast<int>((offsetScreenY + (y * uniformScale)) / screenScaleY);
+    result.width = static_cast<int>((width * uniformScale) / screenScaleX);
+    result.height = static_cast<int>((height * uniformScale) / screenScaleY);
+    if (result.width <= 0)
+    {
+        result.width = 1;
+    }
+    if (result.height <= 0)
+    {
+        result.height = 1;
+    }
+    return result;
+}
+
+POINT ConvertSlideShowCanvasPoint(const int x, const int y)
+{
+    const SlideShowCanvasRect converted =
+        ConvertSlideShowCanvasRect(static_cast<float>(x),
+                                   static_cast<float>(y),
+                                   1.0f,
+                                   1.0f);
+    POINT result;
+    result.x = converted.x;
+    result.y = converted.y;
+    return result;
+}
+
+void DrawSlideShowCanvasImage(NSRender::Render& render,
+                              const std::wstring& filepath,
+                              const float x,
+                              const float y,
+                              const float width,
+                              const float height,
+                              const int transparency,
+                              const bool flipX)
+{
+    const SlideShowCanvasRect destination =
+        ConvertSlideShowCanvasRect(x, y, width, height);
+    render.DrawImageSizedEx(filepath,
+                            destination.x,
+                            destination.y,
+                            destination.width,
+                            destination.height,
+                            transparency,
+                            flipX);
+}
+}
 
 //-----------------------------------------------------------------------------
 // SpriteAdapter
@@ -27,11 +118,35 @@ void SlideShowManager::SpriteAdapter::DrawImage(const int x, const int y, const 
 
     if (m_filepath.find(L"_chr_") != std::wstring::npos)
     {
-        m_render.DrawImageAutoResize(m_filepath, 0.78f, 0.48f, transparency);
+        const SIZE imageSize = m_render.GetImageSize(m_filepath);
+        if (imageSize.cx <= 0 || imageSize.cy <= 0)
+        {
+            return;
+        }
+
+        const float drawWidth = static_cast<float>(imageSize.cx);
+        const float drawHeight = static_cast<float>(imageSize.cy);
+        const float centerX = 0.78f * static_cast<float>(NSRender::Common::BASE_W);
+        const float centerY = 0.48f * static_cast<float>(NSRender::Common::BASE_H);
+        DrawSlideShowCanvasImage(m_render,
+                                 m_filepath,
+                                 centerX - drawWidth * 0.5f,
+                                 centerY - drawHeight * 0.5f,
+                                 drawWidth,
+                                 drawHeight,
+                                 transparency,
+                                 false);
     }
     else
     {
-        m_render.DrawImageStretched(m_filepath, transparency);
+        DrawSlideShowCanvasImage(m_render,
+                                 m_filepath,
+                                 0.0f,
+                                 0.0f,
+                                 static_cast<float>(NSRender::Common::BASE_W),
+                                 static_cast<float>(NSRender::Common::BASE_H),
+                                 transparency,
+                                 false);
     }
 }
 
@@ -48,16 +163,51 @@ void SlideShowManager::SpriteAdapter::DrawImageEx(const int x,
 
     if (m_filepath.find(L"_chr_") != std::wstring::npos)
     {
-        m_render.DrawImageAutoResizeEx(m_filepath,
-                                       static_cast<float>(x) / static_cast<float>(NSRender::Common::BASE_W),
-                                       static_cast<float>(y) / static_cast<float>(NSRender::Common::BASE_H),
-                                       scale,
-                                       flipX,
-                                       transparency);
+        const SIZE imageSize = m_render.GetImageSize(m_filepath);
+        if (imageSize.cx <= 0 || imageSize.cy <= 0)
+        {
+            return;
+        }
+
+        const float drawWidth = static_cast<float>(imageSize.cx) * scale;
+        const float drawHeight = static_cast<float>(imageSize.cy) * scale;
+        DrawSlideShowCanvasImage(m_render,
+                                 m_filepath,
+                                 static_cast<float>(x) - drawWidth * 0.5f,
+                                 static_cast<float>(y) - drawHeight * 0.5f,
+                                 drawWidth,
+                                 drawHeight,
+                                 transparency,
+                                 flipX);
     }
     else
     {
-        m_render.DrawImageStretchedScaled(m_filepath, scale, transparency);
+        if (m_filepath == kTextBackPath)
+        {
+            DrawSlideShowCanvasImage(m_render,
+                                     m_filepath,
+                                     0.0f,
+                                     0.0f,
+                                     static_cast<float>(NSRender::Common::BASE_W),
+                                     static_cast<float>(NSRender::Common::BASE_H),
+                                     transparency,
+                                     false);
+            return;
+        }
+
+        const SIZE imageSize = m_render.GetImageSize(m_filepath);
+        if (imageSize.cx <= 0 || imageSize.cy <= 0)
+        {
+            return;
+        }
+        DrawSlideShowCanvasImage(m_render,
+                                 m_filepath,
+                                 0.0f,
+                                 0.0f,
+                                 static_cast<float>(imageSize.cx) * scale,
+                                 static_cast<float>(imageSize.cy) * scale,
+                                 transparency,
+                                 false);
     }
 }
 
@@ -105,7 +255,12 @@ void SlideShowManager::FontAdapter::DrawText_(const std::wstring& msg, const int
 {
     if (m_fontIdRef >= 0)
     {
-        m_render.DrawTextEx(m_fontIdRef, msg, x, y, D3DCOLOR_RGBA(255, 255, 255, 255));
+        const POINT position = ConvertSlideShowCanvasPoint(x, y);
+        m_render.DrawTextEx(m_fontIdRef,
+                            msg,
+                            position.x,
+                            position.y,
+                            D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 }
 
@@ -202,6 +357,7 @@ void SlideShowManager::Render()
 {
     if (m_slideShow != nullptr)
     {
+        m_render.DrawImageStretched(kFadeImagePath, 255);
         m_slideShow->Render();
     }
 }
@@ -268,11 +424,13 @@ void SlideShowManager::DrawSkipHint()
         m_skipHintFontId = m_render.SetUpFont(L"BIZ UDGothic", 18, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
+    const SlideShowCanvasRect hintRect =
+        ConvertSlideShowCanvasRect(1190.0f, 820.0f, 360.0f, 40.0f);
     m_render.DrawTextCenter(m_skipHintFontId,
                             L"Space長押しでスキップ",
-                            1190,
-                            820,
-                            360,
-                            40,
+                            hintRect.x,
+                            hintRect.y,
+                            hintRect.width,
+                            hintRect.height,
                             D3DCOLOR_RGBA(255, 255, 255, 190));
 }
