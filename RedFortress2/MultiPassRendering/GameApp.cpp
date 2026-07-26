@@ -762,6 +762,14 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetLoadingScreenProgress(85);
     m_render.Draw();
 
+    m_render.PreloadImage(kLetterboxBarImagePath);
+    m_render.PreloadImage(kStageClearFlashImagePath);
+    m_render.PreloadImage(kStageClearRingImagePath);
+    m_render.PreloadImage(kStageClearSparklesImagePath);
+    m_render.PreloadImage(kStageClearFrameImagePath);
+    m_render.SetLoadingScreenProgress(95);
+    m_render.Draw();
+
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     m_debugFpsSampleTick = GetTickCount64();
     m_debugRpc.Initialize();
