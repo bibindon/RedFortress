@@ -174,6 +174,7 @@ private:
     void ApplyUnlockedAbilities();
     void LoadPhysicsObjectsFromCsv(const std::wstring& csvPath);
     void UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPosition);
+    void ApplyStageEnvironmentLighting(const std::wstring& stageId);
     void UpdatePlayerMeshVisibility();
     void UpdateHeldWeaponVisibility();
     bool IsAttackCategoryOwned(PlayerAttackType attackType) const;

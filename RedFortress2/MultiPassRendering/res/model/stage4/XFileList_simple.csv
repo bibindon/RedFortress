@@ -1,4 +1,4 @@
-﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
+ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
 2,../ground/plateField64x128.x, 0, 0,0, 0, 0, 0, 1,meshmix2
 303,../collision_wall/collision_wall.x, 11, 1.5,22, 0, 0, 0, 1,meshmix2
 304,../collision_wall/collision_wall.x, 5,1.51,18, 0, 90, 0, 1,meshmix2
@@ -16,7 +16,7 @@
 322,../cubeWood/cube_wood.x, -4,0.03,-10, 0, 0, 0, 1, normal
 323,../cubeWood/cube_wood.x, -9,0.04,-18, 0, 0, 0, 1, normal
 324,../cubeWood/cube_wood.x, -13,0.05,-26, 0, 0, 0, 1, normal
-326,..\SkySphere_cave\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
+326,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 201,../fence.x,-11,0.5,-30,0,0,0,1,normal
 202,../fence.x,-3,0.5,-30,0,0,0,1,normal
 203,../fence.x,5,0.5,-30,0,0,0,1,normal

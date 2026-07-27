@@ -3295,6 +3295,46 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                            kStageSelectPlayerLightOwnerTag);
 }
 
+void GameApp::ApplyStageEnvironmentLighting(const std::wstring& stageId)
+{
+    if (stageId.length() < 2 || stageId[1] != L'-')
+    {
+        return;
+    }
+
+    if (stageId[0] == L'2')
+    {
+        m_render.SetPostEffectSaturate(0.68f);
+        m_render.SetMeshMixShadowDarkness(0.75f);
+        m_render.SetLightBrightness(0.035f);
+        m_render.SetLightColor(D3DXCOLOR(0.16f, 0.20f, 0.36f, 1.0f));
+        m_render.SetAmbientLightBrightness(0.055f);
+        m_render.SetAmbientLightColor(D3DXCOLOR(0.10f, 0.15f, 0.28f, 1.0f));
+        return;
+    }
+
+    if (stageId[0] == L'3')
+    {
+        m_render.SetPostEffectSaturate(1.0f);
+        m_render.SetMeshMixShadowDarkness(0.75f);
+        m_render.SetLightBrightness(0.65f);
+        m_render.SetLightColor(D3DXCOLOR(1.0f, 0.55f, 0.25f, 1.0f));
+        m_render.SetAmbientLightBrightness(0.22f);
+        m_render.SetAmbientLightColor(D3DXCOLOR(0.55f, 0.25f, 0.10f, 1.0f));
+        return;
+    }
+
+    if (stageId[0] == L'4')
+    {
+        m_render.SetPostEffectSaturate(0.8f);
+        m_render.SetMeshMixShadowDarkness(0.75f);
+        m_render.SetLightBrightness(0.10f);
+        m_render.SetLightColor(D3DXCOLOR(0.30f, 0.30f, 0.75f, 1.0f));
+        m_render.SetAmbientLightBrightness(0.14f);
+        m_render.SetAmbientLightColor(D3DXCOLOR(0.22f, 0.22f, 0.50f, 1.0f));
+    }
+}
+
 void GameApp::UpdatePlayerPointLight()
 {
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
@@ -6191,6 +6231,7 @@ void GameApp::LoadCurrentStageObjects()
     const std::wstring currentRenderQuality = m_render.GetRenderQuality();
     m_render.ReloadSettingsCsv(renderSettingsPath);
     m_render.SetRenderQuality(currentRenderQuality);
+    ApplyStageEnvironmentLighting(stage.id);
     ConfigureStagePointLights(stage.id);
 
     m_useFixedCamera = stage.useFixedCamera;
