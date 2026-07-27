@@ -2716,7 +2716,12 @@ void GameApp::TryDropEnemyItem(const EnemyBase& enemy)
         return;
     }
 
-    if (m_destructibleManager.TryDropAmmoHeart(m_render, enemy.GetPosition(), kEnemyAmmoHeartDropPercent))
+    const bool busterUnlocked = m_inventoryManager.GetWeaponCount(kBusterWeaponId) > 0;
+    const bool bombUnlocked = m_inventoryManager.GetWeaponCount(kBombWeaponId) > 0;
+    if ((busterUnlocked || bombUnlocked) &&
+        m_destructibleManager.TryDropAmmoHeart(m_render,
+                                               enemy.GetPosition(),
+                                               kEnemyAmmoHeartDropPercent))
     {
         return;
     }
@@ -4249,8 +4254,12 @@ bool GameApp::TryUseRecoveryItemFromKey()
 
 bool GameApp::RecoverWeaponAmmoFromPickup()
 {
+    const bool busterUnlocked = m_inventoryManager.GetWeaponCount(kBusterWeaponId) > 0;
+    const bool bombUnlocked = m_inventoryManager.GetWeaponCount(kBombWeaponId) > 0;
     const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
-    if (IsBusterAttackType(attackType) && m_busterAmmo < kBusterAmmoMax)
+    if (busterUnlocked &&
+        IsBusterAttackType(attackType) &&
+        m_busterAmmo < kBusterAmmoMax)
     {
         m_busterAmmo += kBusterAmmoRecoverAmount;
         if (m_busterAmmo > kBusterAmmoMax)
@@ -4266,7 +4275,9 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         return true;
     }
 
-    if (IsBombAttackType(attackType) && m_bombAmmo < kBombAmmoMax)
+    if (bombUnlocked &&
+        IsBombAttackType(attackType) &&
+        m_bombAmmo < kBombAmmoMax)
     {
         m_bombAmmo += kBombAmmoRecoverAmount;
         if (m_bombAmmo > kBombAmmoMax)
@@ -4282,7 +4293,7 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         return true;
     }
 
-    if (m_busterAmmo < kBusterAmmoMax)
+    if (busterUnlocked && m_busterAmmo < kBusterAmmoMax)
     {
         m_busterAmmo += kBusterAmmoRecoverAmount;
         if (m_busterAmmo > kBusterAmmoMax)
@@ -4298,7 +4309,7 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         return true;
     }
 
-    if (m_bombAmmo < kBombAmmoMax)
+    if (bombUnlocked && m_bombAmmo < kBombAmmoMax)
     {
         m_bombAmmo += kBombAmmoRecoverAmount;
         if (m_bombAmmo > kBombAmmoMax)
@@ -4314,6 +4325,12 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         return true;
     }
 
+    if (busterUnlocked || bombUnlocked)
+    {
+        m_itemPickupMessage = L"残弾数MAX";
+        m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+        GameAudio::PlayAmmoMax();
+    }
     return false;
 }
 
