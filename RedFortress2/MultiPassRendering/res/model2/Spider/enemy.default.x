@@ -43971,13 +43971,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		{ Body }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.999305,0.000012,0.000013,-0.037276;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
@@ -43994,13 +43994,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.552950,-0.773631,0.412961;;;
 		}
 	}
 	Animation {
@@ -44012,13 +44012,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.000001,1.164805,-0.000002;;;
 		}
 	}
 	Animation {
@@ -44030,13 +44030,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000005,1.062788,-0.000005;;;
 		}
 	}
 	Animation {
@@ -44044,17 +44044,17 @@ AnimationSet SpiderArmature|Spider_Idle {
 		AnimationKey {
 			0;
 			1;
-			0;4;0.742360,-0.168695,-0.382333,0.523704;;;
+			0;4;0.742359,-0.168695,-0.382333,0.523704;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.502549,-0.818262,0.185188;;;
 		}
 	}
 	Animation {
@@ -44066,13 +44066,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000000,1.581772,-0.000001;;;
 		}
 	}
 	Animation {
@@ -44084,13 +44084,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000001,1.645839,0.000006;;;
 		}
 	}
 	Animation {
@@ -44102,13 +44102,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;0.999999,0.999999,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.375949,-0.806221,-0.295565;;;
 		}
 	}
 	Animation {
@@ -44116,17 +44116,17 @@ AnimationSet SpiderArmature|Spider_Idle {
 		AnimationKey {
 			0;
 			1;
-			0;4;0.258196,-0.384669,-0.879726,0.106991;;;
+			0;4;0.258196,-0.384670,-0.879726,0.106991;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000001,1.000001,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.000002,1.108683,-0.000001;;;
 		}
 	}
 	Animation {
@@ -44138,13 +44138,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000001,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000014,1.056022,-0.000001;;;
 		}
 	}
 	Animation {
@@ -44156,13 +44156,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.434647,-0.834762,-0.057887;;;
 		}
 	}
 	Animation {
@@ -44174,13 +44174,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000001,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.000001,1.490802,-0.000003;;;
 		}
 	}
 	Animation {
@@ -44192,13 +44192,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000009,1.377042,-0.000011;;;
 		}
 	}
 	Animation {
@@ -44210,13 +44210,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.553297,-0.773631,0.412960;;;
 		}
 	}
 	Animation {
@@ -44228,13 +44228,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000002,1.164805,0.000000;;;
 		}
 	}
 	Animation {
@@ -44246,13 +44246,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000003,1.062788,0.000006;;;
 		}
 	}
 	Animation {
@@ -44264,13 +44264,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.502896,-0.818262,0.185188;;;
 		}
 	}
 	Animation {
@@ -44282,13 +44282,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,0.999999,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.000001,1.581773,0.000002;;;
 		}
 	}
 	Animation {
@@ -44300,13 +44300,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000008,1.645837,0.000000;;;
 		}
 	}
 	Animation {
@@ -44318,13 +44318,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.376296,-0.806221,-0.295565;;;
 		}
 	}
 	Animation {
@@ -44336,13 +44336,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000000,1.108683,0.000002;;;
 		}
 	}
 	Animation {
@@ -44354,13 +44354,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000014,1.056023,-0.000005;;;
 		}
 	}
 	Animation {
@@ -44372,13 +44372,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;-0.434994,-0.834762,-0.057888;;;
 		}
 	}
 	Animation {
@@ -44386,17 +44386,17 @@ AnimationSet SpiderArmature|Spider_Idle {
 		AnimationKey {
 			0;
 			1;
-			0;4;0.805399,0.548630,0.099118,-0.201278;;;
+			0;4;0.805399,0.548631,0.099118,-0.201278;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000001,1.490802,-0.000002;;;
 		}
 	}
 	Animation {
@@ -44408,13 +44408,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000011,1.377041,0.000009;;;
 		}
 	}
 	Animation {
@@ -44426,13 +44426,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;0.879960,0.879960,0.879960;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.001174,-0.597372,-0.759342;;;
 		}
 	}
 	Animation {
@@ -44462,13 +44462,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
-			0;
-;
+			1;
+			0;3;0.000000,0.381715,0.000001;;;
 		}
 	}
 	Animation {
@@ -44493,13 +44493,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		{ FrontFoot.L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.075954,0.071349,0.681471,0.724388;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000001,1.000000;;;
 		}
 		AnimationKey {
 			2;
@@ -44511,31 +44511,31 @@ AnimationSet SpiderArmature|Spider_Idle {
 		{ MidFrontFoot.L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.239985,0.226516,0.642323,0.691751;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
 			1;
-			0;3;2.615682,0.024694,1.771592;;;
+			0;3;2.615682,0.024694,1.771591;;;
 		}
 	}
 	Animation {
 		{ BackFoot.L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.685654,0.620553,0.007029,0.380450;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;0.999999,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
@@ -44547,13 +44547,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		{ MidBackFoot.L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.586123,0.595024,0.311755,0.453007;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
@@ -44583,13 +44583,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		{ FrontFoot2.R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.075847,0.071462,-0.681482,-0.724377;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
@@ -44601,13 +44601,13 @@ AnimationSet SpiderArmature|Spider_Idle {
 		{ MidFrontFoot.R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.244158,0.222009,-0.640749,-0.693210;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
@@ -44630,20 +44630,20 @@ AnimationSet SpiderArmature|Spider_Idle {
 		AnimationKey {
 			2;
 			1;
-			0;3;-2.031847,0.019919,-2.201393;;;
+			0;3;-2.031846,0.019918,-2.201393;;;
 		}
 	}
 	Animation {
 		{ MidBackFoot.R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.411184,0.726990,-0.521209,-0.175368;;;
 		}
 		AnimationKey {
 			1;
-			0;
-;
+			1;
+			0;3;1.000000,1.000000,1.000000;;;
 		}
 		AnimationKey {
 			2;
