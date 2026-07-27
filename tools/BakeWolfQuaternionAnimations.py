@@ -170,6 +170,85 @@ def capture_evaluated_vertices(mesh_object, armature, samples):
     return captured
 
 
+def normalize_deform_weights(mesh_object, armature, actions):
+    samples = get_pose_sample_frames(actions)
+    before = capture_evaluated_vertices(mesh_object, armature, samples)
+    deform_bone_names = {
+        bone.name
+        for bone in armature.data.bones
+        if bone.use_deform
+    }
+
+    normalized_vertex_count = 0
+    maximum_influence_count = 0
+    for vertex in mesh_object.data.vertices:
+        influences = []
+        for group_element in vertex.groups:
+            vertex_group = mesh_object.vertex_groups[group_element.group]
+            if vertex_group.name not in deform_bone_names:
+                continue
+            if group_element.weight <= 0.0:
+                continue
+            influences.append((vertex_group, group_element.weight))
+
+        if len(influences) == 0:
+            raise RuntimeError(f"Vertex {vertex.index} has no deform weights")
+        if len(influences) > maximum_influence_count:
+            maximum_influence_count = len(influences)
+
+        total_weight = sum(weight for unused_group, weight in influences)
+        if total_weight <= 0.0:
+            raise RuntimeError(f"Vertex {vertex.index} has invalid deform weights")
+        if abs(total_weight - 1.0) <= 0.000001:
+            continue
+
+        normalized_vertex_count += 1
+        for vertex_group, weight in influences:
+            vertex_group.add(
+                [vertex.index],
+                weight / total_weight,
+                "REPLACE",
+            )
+
+    maximum_weight_sum_error = 0.0
+    for vertex in mesh_object.data.vertices:
+        total_weight = 0.0
+        for group_element in vertex.groups:
+            vertex_group = mesh_object.vertex_groups[group_element.group]
+            if vertex_group.name in deform_bone_names:
+                total_weight += group_element.weight
+        error = abs(total_weight - 1.0)
+        if error > maximum_weight_sum_error:
+            maximum_weight_sum_error = error
+
+    if maximum_weight_sum_error > 0.000001:
+        raise RuntimeError(
+            "Wolf deform weights were not normalized; maximum error is "
+            f"{maximum_weight_sum_error}"
+        )
+
+    after = capture_evaluated_vertices(mesh_object, armature, samples)
+    maximum_position_error = 0.0
+    for sample in samples:
+        before_vertices = before[sample]
+        after_vertices = after[sample]
+        for before_position, after_position in zip(before_vertices, after_vertices):
+            error = (before_position - after_position).length
+            if error > maximum_position_error:
+                maximum_position_error = error
+
+    if maximum_position_error > 0.00001:
+        raise RuntimeError(
+            "Normalizing wolf deform weights changed an animated vertex by "
+            f"{maximum_position_error}"
+        )
+
+    print(f"WOLF_NORMALIZED_VERTEX_COUNT {normalized_vertex_count}")
+    print(f"WOLF_MAX_INFLUENCE_COUNT {maximum_influence_count}")
+    print(f"WOLF_WEIGHT_SUM_MAX_ERROR {maximum_weight_sum_error:.12f}")
+    print(f"WOLF_WEIGHT_NORMALIZE_MAX_VERTEX_ERROR {maximum_position_error:.12f}")
+
+
 def normalize_mesh_transform(mesh_object, armature, actions):
     samples = get_pose_sample_frames(actions)
     before = capture_evaluated_vertices(mesh_object, armature, samples)
@@ -300,6 +379,7 @@ def main():
         bone.rotation_mode = "QUATERNION"
 
     validate_baked_rotations(armature, actions, all_samples)
+    normalize_deform_weights(mesh_object, armature, actions)
     normalize_mesh_transform(mesh_object, armature, actions)
     bpy.data.use_autopack = False
     bpy.context.preferences.filepaths.save_version = 0
