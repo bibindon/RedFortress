@@ -223,8 +223,8 @@ AnimationSet 000 {
 		{ root }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;1.000000,-0.000000,-0.000000,-0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -241,8 +241,8 @@ AnimationSet 000 {
 		{ Becken }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.637223,-0.770680,0.000000,-0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -259,8 +259,8 @@ AnimationSet 000 {
 		{ Bauch }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.993956,0.109781,0.000000,0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -277,8 +277,8 @@ AnimationSet 000 {
 		{ Bauch.001 }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.999788,0.020589,-0.000000,-0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -295,8 +295,8 @@ AnimationSet 000 {
 		{ Brust }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.990978,0.134024,0.000000,0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -313,8 +313,8 @@ AnimationSet 000 {
 		{ Hals }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.917487,0.397767,-0.000000,-0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -331,8 +331,8 @@ AnimationSet 000 {
 		{ Kopf.002 }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.157148,-0.987575,-0.000000,0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -349,8 +349,8 @@ AnimationSet 000 {
 		{ Kopf }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.550277,0.834982,-0.000544,0.000599;;;
 		}
 		AnimationKey {
 			1;
@@ -367,8 +367,8 @@ AnimationSet 000 {
 		{ Unterkiefer }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.826638,-0.562216,-0.023793,-0.004171;;;
 		}
 		AnimationKey {
 			1;
@@ -385,8 +385,8 @@ AnimationSet 000 {
 		{ Hals_fett }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.867986,-0.495967,0.014200,-0.020357;;;
 		}
 		AnimationKey {
 			1;
@@ -403,8 +403,8 @@ AnimationSet 000 {
 		{ Maulunten }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.942379,0.333625,0.024690,-0.002535;;;
 		}
 		AnimationKey {
 			1;
@@ -421,8 +421,8 @@ AnimationSet 000 {
 		{ Mauloben }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.968633,-0.248496,0.000805,-0.000078;;;
 		}
 		AnimationKey {
 			1;
@@ -439,8 +439,8 @@ AnimationSet 000 {
 		{ MundW_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.043144,-0.212920,0.964486,0.150233;;;
 		}
 		AnimationKey {
 			1;
@@ -457,8 +457,8 @@ AnimationSet 000 {
 		{ MundW_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.044715,-0.212933,-0.964360,-0.150562;;;
 		}
 		AnimationKey {
 			1;
@@ -475,8 +475,8 @@ AnimationSet 000 {
 		{ Ohr_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.879270,0.457678,0.130332,0.020699;;;
 		}
 		AnimationKey {
 			1;
@@ -493,8 +493,8 @@ AnimationSet 000 {
 		{ Ohr_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.879483,0.457678,-0.129040,-0.019748;;;
 		}
 		AnimationKey {
 			1;
@@ -511,8 +511,8 @@ AnimationSet 000 {
 		{ Braun_O_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.397054,-0.484574,0.770198,0.119712;;;
 		}
 		AnimationKey {
 			1;
@@ -529,8 +529,8 @@ AnimationSet 000 {
 		{ Braun_O_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.398314,-0.484574,-0.769441,-0.120388;;;
 		}
 		AnimationKey {
 			1;
@@ -547,8 +547,8 @@ AnimationSet 000 {
 		{ aug_lied_O_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.121389,-0.500213,0.847175,0.131704;;;
 		}
 		AnimationKey {
 			1;
@@ -565,8 +565,8 @@ AnimationSet 000 {
 		{ aug_lied_O_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.122776,-0.500213,-0.846855,-0.132473;;;
 		}
 		AnimationKey {
 			1;
@@ -583,8 +583,8 @@ AnimationSet 000 {
 		{ aug_lied_U_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.271959,-0.516140,0.802546,0.124731;;;
 		}
 		AnimationKey {
 			1;
@@ -601,8 +601,8 @@ AnimationSet 000 {
 		{ aug_lied_U_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.273273,-0.516140,-0.801982,-0.125488;;;
 		}
 		AnimationKey {
 			1;
@@ -619,8 +619,8 @@ AnimationSet 000 {
 		{ Bauch.003 }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.360974,-0.932576,-0.000000,0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -637,8 +637,8 @@ AnimationSet 000 {
 		{ Schalterplatte_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.802303,0.543911,-0.126393,0.210940;;;
 		}
 		AnimationKey {
 			1;
@@ -655,8 +655,8 @@ AnimationSet 000 {
 		{ Oberarm_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.799848,-0.550670,0.116671,-0.208311;;;
 		}
 		AnimationKey {
 			1;
@@ -673,8 +673,8 @@ AnimationSet 000 {
 		{ Unterarm_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.942712,0.333577,0.000892,0.004419;;;
 		}
 		AnimationKey {
 			1;
@@ -691,8 +691,8 @@ AnimationSet 000 {
 		{ Vorderpfote_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.765030,0.643886,0.011858,0.000004;;;
 		}
 		AnimationKey {
 			1;
@@ -709,8 +709,8 @@ AnimationSet 000 {
 		{ Schalterplatte_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.802303,0.543911,0.126393,-0.210940;;;
 		}
 		AnimationKey {
 			1;
@@ -727,8 +727,8 @@ AnimationSet 000 {
 		{ Oberarm_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.799848,-0.550670,-0.116671,0.208311;;;
 		}
 		AnimationKey {
 			1;
@@ -745,8 +745,8 @@ AnimationSet 000 {
 		{ Unterarm_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.942712,0.333578,-0.000892,-0.004419;;;
 		}
 		AnimationKey {
 			1;
@@ -763,8 +763,8 @@ AnimationSet 000 {
 		{ Vorderpfote_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.764122,0.643476,-0.039104,0.022949;;;
 		}
 		AnimationKey {
 			1;
@@ -781,8 +781,8 @@ AnimationSet 000 {
 		{ Schwanz }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.268957,-0.963152,0.000000,-0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -799,8 +799,8 @@ AnimationSet 000 {
 		{ Schwanz.001 }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.997810,-0.066144,-0.000000,0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -817,8 +817,8 @@ AnimationSet 000 {
 		{ Schwanz.002 }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.992741,-0.120275,-0.000000,-0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -835,8 +835,8 @@ AnimationSet 000 {
 		{ Schwanz.003 }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.994878,-0.101087,0.000000,0.000000;;;
 		}
 		AnimationKey {
 			1;
@@ -853,8 +853,8 @@ AnimationSet 000 {
 		{ Oberschenkel_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.791612,-0.607550,-0.064775,0.006140;;;
 		}
 		AnimationKey {
 			1;
@@ -871,8 +871,8 @@ AnimationSet 000 {
 		{ Unterschenkel_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.943749,-0.322017,0.038519,-0.064492;;;
 		}
 		AnimationKey {
 			1;
@@ -889,8 +889,8 @@ AnimationSet 000 {
 		{ Pfote1_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.956599,0.284110,-0.033289,0.055605;;;
 		}
 		AnimationKey {
 			1;
@@ -907,8 +907,8 @@ AnimationSet 000 {
 		{ Pfote2_L }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.703227,0.708864,0.054626,0.000012;;;
 		}
 		AnimationKey {
 			1;
@@ -925,8 +925,8 @@ AnimationSet 000 {
 		{ Oberschenkel_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.791612,-0.607550,0.064774,-0.006140;;;
 		}
 		AnimationKey {
 			1;
@@ -943,8 +943,8 @@ AnimationSet 000 {
 		{ Unterschenkel_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.943749,-0.322016,-0.038519,0.064492;;;
 		}
 		AnimationKey {
 			1;
@@ -961,8 +961,8 @@ AnimationSet 000 {
 		{ Pfote1_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.956600,0.284105,0.033289,-0.055605;;;
 		}
 		AnimationKey {
 			1;
@@ -979,8 +979,8 @@ AnimationSet 000 {
 		{ Pfote2_R }
 		AnimationKey {
 			0;
-			0;
-;
+			1;
+			0;4;0.054626,-0.000012,0.703224,-0.708867;;;
 		}
 		AnimationKey {
 			1;
