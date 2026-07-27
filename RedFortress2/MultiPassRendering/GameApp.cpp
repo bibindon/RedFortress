@@ -1469,7 +1469,15 @@ void GameApp::Run()
                 if (m_qte == nullptr && m_playerAttackController.ConsumeHitRequested())
                 {
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
-                    if (attackDefinition.range > 0.0f)
+                    const PlayerAttackType attackType = m_playerAttackController.GetCurrentAttackType();
+                    if (IsBombAttackType(attackType))
+                    {
+                        const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
+                        const D3DXVECTOR3 bombPosition =
+                            m_playerMover.GetPosition() + forward * kBombPlaceDistance;
+                        PlaceBomb(bombPosition);
+                    }
+                    else if (attackDefinition.range > 0.0f)
                     {
                         const int damagedEnemyCount = DamageEnemiesInAttackRange(attackDefinition);
                         if (damagedEnemyCount > 0)
@@ -2452,17 +2460,19 @@ void GameApp::UpdatePlayerByInput()
         const bool isStarActive = m_pickupManager.IsStarActive();
         if (isBombCategory)
         {
-            if (isStarActive || m_bombAmmo > 0)
+            const bool canPlaceBomb =
+                static_cast<int>(m_activeBombs.size()) < m_bombCapacity;
+            if (canPlaceBomb &&
+                (isStarActive || m_bombAmmo > 0) &&
+                m_playerAttackController.TryStart(requestedAttackType))
             {
-                const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
-                const D3DXVECTOR3 bombPos = m_playerMover.GetPosition() + forward * kBombPlaceDistance;
-                if (PlaceBomb(bombPos))
+                if (!isStarActive)
                 {
-                    if (!isStarActive)
-                    {
-                        --m_bombAmmo;
-                    }
+                    --m_bombAmmo;
                 }
+                const PlayerAttackDefinition& attackDefinition =
+                    m_playerAttackController.GetCurrentDefinition();
+                SetPlayerAnimationState(PlayerAnimState::Attack, attackDefinition.animationSpeed);
             }
         }
         else if (isBusterCategory)

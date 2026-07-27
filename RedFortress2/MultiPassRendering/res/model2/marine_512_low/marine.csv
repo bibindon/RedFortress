@@ -4,3 +4,5 @@ Anim, "run", "marine.run.x", loop
 Anim, "slash", "marine.slash.x", normal
 Anim, "slash2", "marine.slash2.x", normal
 Anim, "jump", "marine.jump.x", stopend
+Anim, "shoot", "marine.shoot.x", normal
+Anim, "place_bomb", "marine.place_bomb.x", normal
