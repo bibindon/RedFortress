@@ -126,8 +126,12 @@ def find_export_objects(armature_name):
 
 def select_export_objects(armature, mesh_objects):
     bpy.ops.object.select_all(action="DESELECT")
+    armature.hide_viewport = False
+    armature.hide_set(False)
     armature.select_set(True)
     for mesh_object in mesh_objects:
+        mesh_object.hide_viewport = False
+        mesh_object.hide_set(False)
         mesh_object.select_set(True)
     bpy.context.view_layer.objects.active = armature
 
