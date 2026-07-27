@@ -37,6 +37,7 @@ ASSET_CONFIGS = {
     },
     "bird": {
         "armature": "bird-skeleton",
+        "texture_filename": "bird_feathers.png",
         "actions": {
             "idle": "idle",
             "move": "flap",
@@ -183,6 +184,19 @@ def set_material_power(mesh_objects, material_power):
         raise RuntimeError("No material was found for the requested material power")
 
 
+def set_material_texture_filename(mesh_objects, texture_filename):
+    material_count = 0
+    for mesh_object in mesh_objects:
+        for material in mesh_object.data.materials:
+            if material is None:
+                continue
+            material["_x_texture_filename"] = texture_filename
+            material_count += 1
+
+    if material_count == 0:
+        raise RuntimeError("No material was found for the requested texture")
+
+
 def normalize_x_file(path):
     with open(path, "rb") as source_file:
         data = source_file.read()
@@ -194,7 +208,7 @@ def normalize_x_file(path):
         destination_file.write(data)
 
 
-def validate_x_file(path, export_animation, material_power):
+def validate_x_file(path, export_animation, material_power, texture_filename):
     with open(path, "rb") as source_file:
         data = source_file.read()
 
@@ -226,6 +240,16 @@ def validate_x_file(path, export_animation, material_power):
                     f"Unexpected material power in {path}: {exported_power}"
                 )
 
+    if texture_filename is not None:
+        texture_reference = f'TextureFileName {{"{texture_filename}";}}'
+        material_count = len(re.findall(r"\bMaterial\s+[^{]+\{", text))
+        texture_count = text.count(texture_reference)
+        if texture_count != material_count:
+            raise RuntimeError(
+                f"Expected texture on every material in {path}: "
+                f"{texture_count}/{material_count}"
+            )
+
     if export_animation:
         if re.search(r"\bAnimationSet\b", text) is None:
             raise RuntimeError(f"AnimationSet was not found: {path}")
@@ -252,6 +276,7 @@ def export_x(
     frame_start,
     frame_end,
     material_power,
+    texture_filename,
 ):
     select_export_objects(armature, mesh_objects)
 
@@ -272,7 +297,7 @@ def export_x(
     if "FINISHED" not in result:
         raise RuntimeError(f"DirectX X export failed: {path}")
     normalize_x_file(path)
-    validate_x_file(path, export_animation, material_power)
+    validate_x_file(path, export_animation, material_power, texture_filename)
 
 
 def write_animation_csv(output_directory):
@@ -303,6 +328,12 @@ def main():
     material_power = config.get("material_power")
     if material_power is not None:
         set_material_power(mesh_objects, material_power)
+    texture_filename = config.get("texture_filename")
+    if texture_filename is not None:
+        texture_path = os.path.join(output_directory, texture_filename)
+        if not os.path.isfile(texture_path):
+            raise RuntimeError(f"Texture file was not found: {texture_path}")
+        set_material_texture_filename(mesh_objects, texture_filename)
 
     action_map = {}
     for logical_name, source_name in config["actions"].items():
@@ -325,6 +356,7 @@ def main():
         idle_start,
         idle_end,
         material_power,
+        texture_filename,
     )
 
     default_path = os.path.join(output_directory, "enemy.default.x")
@@ -336,6 +368,7 @@ def main():
         idle_start,
         idle_start,
         material_power,
+        texture_filename,
     )
 
     for logical_name, action in action_map.items():
@@ -350,6 +383,7 @@ def main():
             frame_start,
             frame_end,
             material_power,
+            texture_filename,
         )
         print(
             f"EXPORTED {asset_name} {logical_name} "
