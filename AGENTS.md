@@ -47,6 +47,9 @@ Note: In PowerShell, `$env:PATH` and `$env:Path` are the same variable, so do NO
 
 - The game loader must support `.x` files emitted directly by the official Blender DirectX X exporter add-on, including Blender 5.1.2 output.
 - Always export Blender models with the official add-on (`bpy.ops.export_scene.directx_x`).
+- Model characters facing Blender's **-Y axis**, with Blender's **+Z axis** as up.
+- Export to DirectX X with `axis_forward="Z"` and `axis_up="Y"`. These settings match the existing player and wolf assets.
+- Use `tools/PrepareEnemyModels.py` for enemy exports so the axis settings and validation remain consistent.
 - Do not create or use a custom `.x` exporter, serializer, converter, or post-processing rewrite to make Blender output compatible with the game.
 - If an official Blender-exported `.x` file cannot be loaded, fix the game-side loader or renderer instead of changing the export format.
 

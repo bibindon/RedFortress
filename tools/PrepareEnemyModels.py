@@ -1,12 +1,19 @@
 ﻿import os
+import re
 import sys
 
 import bpy
 
 
+DIRECTX_X_AXIS_FORWARD = "Z"
+DIRECTX_X_AXIS_UP = "Y"
+TRANSFORM_EPSILON = 0.0001
+
+
 ASSET_CONFIGS = {
     "crab": {
         "armature": "rig crab",
+        "material_power": 500.0,
         "actions": {
             "idle": "idle",
             "move": "walk",
@@ -18,6 +25,7 @@ ASSET_CONFIGS = {
     },
     "frog": {
         "armature": "frog_armature",
+        "material_power": 500.0,
         "actions": {
             "idle": "idle",
             "move": "walk",
@@ -136,6 +144,45 @@ def select_export_objects(armature, mesh_objects):
     bpy.context.view_layer.objects.active = armature
 
 
+def validate_export_objects(armature, mesh_objects):
+    export_objects = [armature]
+    export_objects.extend(mesh_objects)
+
+    for export_object in export_objects:
+        for rotation in export_object.rotation_euler:
+            if abs(rotation) > TRANSFORM_EPSILON:
+                raise RuntimeError(
+                    f"Object rotation must be applied before export: "
+                    f"{export_object.name}"
+                )
+
+        for scale in export_object.scale:
+            if scale <= TRANSFORM_EPSILON:
+                raise RuntimeError(
+                    f"Object scale must be positive before export: "
+                    f"{export_object.name}"
+                )
+
+        determinant = export_object.matrix_world.to_3x3().determinant()
+        if determinant <= TRANSFORM_EPSILON:
+            raise RuntimeError(
+                f"Object transform is mirrored or degenerate: {export_object.name}"
+            )
+
+
+def set_material_power(mesh_objects, material_power):
+    material_count = 0
+    for mesh_object in mesh_objects:
+        for material in mesh_object.data.materials:
+            if material is None:
+                continue
+            material["_x_power"] = material_power
+            material_count += 1
+
+    if material_count == 0:
+        raise RuntimeError("No material was found for the requested material power")
+
+
 def normalize_x_file(path):
     with open(path, "rb") as source_file:
         data = source_file.read()
@@ -145,6 +192,45 @@ def normalize_x_file(path):
     data = data.replace(b"\n", b"\r\n")
     with open(path, "wb") as destination_file:
         destination_file.write(data)
+
+
+def validate_x_file(path, export_animation, material_power):
+    with open(path, "rb") as source_file:
+        data = source_file.read()
+
+    if data.startswith(b"\xef\xbb\xbf"):
+        raise RuntimeError(f"DirectX X file must not contain a UTF-8 BOM: {path}")
+    if not data.startswith(b"xof "):
+        raise RuntimeError(f"DirectX X header was not found: {path}")
+    if b"\n" in data.replace(b"\r\n", b""):
+        raise RuntimeError(f"DirectX X file must use CRLF line endings: {path}")
+
+    text = data.decode("utf-8")
+    skin_weights_pattern = (
+        r'SkinWeights\s*\{\s*"[^"]+";\s*[1-9][0-9]*;'
+    )
+    if re.search(skin_weights_pattern, text) is None:
+        raise RuntimeError(f"Non-empty SkinWeights block was not found: {path}")
+
+    if material_power is not None:
+        material_power_pattern = (
+            r"Material\s+[^{]+\{\s+[^\r\n]+\s+"
+            r"([+-]?[0-9]+(?:\.[0-9]+)?);"
+        )
+        exported_powers = re.findall(material_power_pattern, text)
+        if len(exported_powers) == 0:
+            raise RuntimeError(f"Material power was not found: {path}")
+        for exported_power in exported_powers:
+            if abs(float(exported_power) - material_power) > TRANSFORM_EPSILON:
+                raise RuntimeError(
+                    f"Unexpected material power in {path}: {exported_power}"
+                )
+
+    if export_animation:
+        if re.search(r"\bAnimationSet\b", text) is None:
+            raise RuntimeError(f"AnimationSet was not found: {path}")
+        if re.search(r"\bAnimationKey\b", text) is None:
+            raise RuntimeError(f"AnimationKey was not found: {path}")
 
 
 def set_action(armature, action):
@@ -158,15 +244,23 @@ def set_action(armature, action):
     return frame_start, frame_end
 
 
-def export_x(path, armature, mesh_objects, export_animation, frame_start, frame_end):
+def export_x(
+    path,
+    armature,
+    mesh_objects,
+    export_animation,
+    frame_start,
+    frame_end,
+    material_power,
+):
     select_export_objects(armature, mesh_objects)
 
     arguments = {
         "filepath": path,
         "check_existing": False,
         "use_selection": True,
-        "axis_forward": "-Z",
-        "axis_up": "Y",
+        "axis_forward": DIRECTX_X_AXIS_FORWARD,
+        "axis_up": DIRECTX_X_AXIS_UP,
         "export_animation": export_animation,
     }
     if export_animation:
@@ -178,6 +272,7 @@ def export_x(path, armature, mesh_objects, export_animation, frame_start, frame_
     if "FINISHED" not in result:
         raise RuntimeError(f"DirectX X export failed: {path}")
     normalize_x_file(path)
+    validate_x_file(path, export_animation, material_power)
 
 
 def write_animation_csv(output_directory):
@@ -204,6 +299,10 @@ def main():
 
     load_source(source_path)
     armature, mesh_objects = find_export_objects(config["armature"])
+    validate_export_objects(armature, mesh_objects)
+    material_power = config.get("material_power")
+    if material_power is not None:
+        set_material_power(mesh_objects, material_power)
 
     action_map = {}
     for logical_name, source_name in config["actions"].items():
@@ -218,10 +317,26 @@ def main():
     idle_start, idle_end = set_action(armature, idle_action)
 
     base_path = os.path.join(output_directory, "enemy.x")
-    export_x(base_path, armature, mesh_objects, False, idle_start, idle_end)
+    export_x(
+        base_path,
+        armature,
+        mesh_objects,
+        False,
+        idle_start,
+        idle_end,
+        material_power,
+    )
 
     default_path = os.path.join(output_directory, "enemy.default.x")
-    export_x(default_path, armature, mesh_objects, True, idle_start, idle_start)
+    export_x(
+        default_path,
+        armature,
+        mesh_objects,
+        True,
+        idle_start,
+        idle_start,
+        material_power,
+    )
 
     for logical_name, action in action_map.items():
         frame_start, frame_end = set_action(armature, action)
@@ -234,6 +349,7 @@ def main():
             True,
             frame_start,
             frame_end,
+            material_power,
         )
         print(
             f"EXPORTED {asset_name} {logical_name} "
