@@ -180,6 +180,10 @@
     <ClCompile Include="EnemyCrab.cpp" />
     <ClCompile Include="EnemyFrog.cpp" />
     <ClCompile Include="EnemyGhost.cpp" />
+    <ClCompile Include="EnemySpider.cpp" />
+    <ClCompile Include="EnemySkeleton.cpp" />
+    <ClCompile Include="EnemyMushroom.cpp" />
+    <ClCompile Include="EnemyGolem.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EnemyWolf.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
@@ -216,6 +220,10 @@
     <ClInclude Include="EnemyCrab.h" />
     <ClInclude Include="EnemyFrog.h" />
     <ClInclude Include="EnemyGhost.h" />
+    <ClInclude Include="EnemySpider.h" />
+    <ClInclude Include="EnemySkeleton.h" />
+    <ClInclude Include="EnemyMushroom.h" />
+    <ClInclude Include="EnemyGolem.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EnemyWolf.h" />
     <ClInclude Include="PauseMenu.h" />

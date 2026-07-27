@@ -65,6 +65,58 @@ ASSET_CONFIGS = {
             "death": "CharacterArmature|Death",
         },
     },
+    "spider": {
+        "armature": "SpiderArmature",
+        "material_power": 500.0,
+        "actions": {
+            "idle": "SpiderArmature|Spider_Idle",
+            "move": "SpiderArmature|Spider_Walk",
+            "fast_move": "SpiderArmature|Spider_Jump",
+            "attack": "SpiderArmature|Spider_Attack",
+            "hit": "SpiderArmature|Spider_Idle",
+            "death": "SpiderArmature|Spider_Death",
+        },
+    },
+    "skeleton": {
+        "armature": "SkeletonArmature",
+        "material_power": 500.0,
+        "actions": {
+            "idle": "SkeletonArmature|Skeleton_Idle",
+            "move": "SkeletonArmature|Skeleton_Running",
+            "fast_move": "SkeletonArmature|Skeleton_Running",
+            "attack": "SkeletonArmature|Skeleton_Attack",
+            "hit": "SkeletonArmature|Skeleton_Idle",
+            "death": "SkeletonArmature|Skeleton_Death",
+        },
+    },
+    "mushroom": {
+        "armature": "CharacterArmature",
+        "material_textures": {
+            "Atlas": "mushroom.png",
+        },
+        "actions": {
+            "idle": "Idle",
+            "move": "Walk",
+            "fast_move": "Jump",
+            "attack": "Bite_Front",
+            "hit": "HitRecieve",
+            "death": "Death",
+        },
+    },
+    "golem": {
+        "armature": "CharacterArmature",
+        "material_textures": {
+            "Atlas": "golem.png",
+        },
+        "actions": {
+            "idle": "Flying_Idle",
+            "move": "Fast_Flying",
+            "fast_move": "Fast_Flying",
+            "attack": "Headbutt",
+            "hit": "HitReact",
+            "death": "Death",
+        },
+    },
 }
 
 

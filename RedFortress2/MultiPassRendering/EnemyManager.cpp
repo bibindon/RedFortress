@@ -10,6 +10,10 @@
 #include "EnemyCrab.h"
 #include "EnemyFrog.h"
 #include "EnemyGhost.h"
+#include "EnemySpider.h"
+#include "EnemySkeleton.h"
+#include "EnemyMushroom.h"
+#include "EnemyGolem.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Camera.h"
@@ -335,6 +339,10 @@ void EnemyManager::RegisterEnemyTypes()
     RegisterEnemyType<EnemyBird>(L"bird", L"Bird", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyCrab>(L"crab", L"Crab", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyFrog>(L"frog", L"Frog", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemySpider>(L"spider", L"Spider", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemySkeleton>(L"skeleton", L"Skeleton", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyMushroom>(L"mushroom", L"Mushroom", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyGolem>(L"golem", L"Golem", L"enemy.x", L"enemy.csv");
 }
 
 void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
