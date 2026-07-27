@@ -1,17 +1,81 @@
-"""Re-export Spider X files with IK baked before export.
+"""Re-export Spider X files with IK constraints rebuilt and baked.
 
-Bakes all animation actions so that IK/constraint-driven bone motion
-is converted to actual bone keyframes. Then exports using the same
-logic as PrepareEnemyModels.py.
+The original source.blend has IK control bones (FrontFoot.L, etc.) but
+no IK constraints on the leg chain tips. This script:
+1. Reconstructs IK constraints on each leg's tip bone (segment 3)
+2. Bakes only the tip bones (segment 3) so IK-driven motion becomes keyframes
+3. Exports using the same logic as PrepareEnemyModels.py
+
+Uses use_current_action=True to preserve the original F-curve animation
+on bones that already animate correctly (segments 1 and 2).
+Does NOT use clear_constraints to avoid modifying source.blend.
 """
 import bpy
 import os
 import re
 import sys
 
+# IK chain definitions: (tip_bone_name, ik_target_bone, pole_target_bone)
+IK_CHAINS = [
+    ("FrontLeg3.L",    "FrontFoot.L",    "PoleTarget.L"),
+    ("FrontLeg3.R",    "FrontFoot2.R",   "PoleTarget.R"),
+    ("MidFrontLeg3.L", "MidFrontFoot.L", "PoleTarget.L"),
+    ("MidFrontLeg3.R", "MidFrontFoot.R", "PoleTarget.R"),
+    ("BackLeg3.L",     "BackFoot.L",     "PoleTarget.L"),
+    ("BackLeg3.R",     "BackFoot.R",     "PoleTarget.R"),
+    ("MidBackLeg3.L",  "MidBackFoot.L",  "PoleTarget.L"),
+    ("MidBackLeg3.R",  "MidBackFoot.R",  "PoleTarget.R"),
+]
+
+# Only the tip bones (segment 3) need IK baking
+TIP_BONES = [name for name, _, _ in IK_CHAINS]
+
+
+def rebuild_ik_constraints(armature):
+    """Add IK constraints to leg tip bones targeting the IK control bones."""
+    added = 0
+
+    for tip_name, target_name, pole_name in IK_CHAINS:
+        tip_pbone = armature.pose.bones.get(tip_name)
+        target_pbone = armature.pose.bones.get(target_name)
+        pole_pbone = armature.pose.bones.get(pole_name)
+
+        if tip_pbone is None:
+            print(f"  WARNING: tip bone '{tip_name}' not found, skipping")
+            continue
+        if target_pbone is None:
+            print(f"  WARNING: target bone '{target_name}' not found, skipping")
+            continue
+
+        # Remove any existing constraints on this bone
+        for c in list(tip_pbone.constraints):
+            tip_pbone.constraints.remove(c)
+
+        # Add IK constraint
+        ik = tip_pbone.constraints.new("IK")
+        ik.name = "IK"
+        ik.target = armature
+        ik.subtarget = target_name
+        ik.chain_count = 3
+        ik.use_stretch = False
+
+        if pole_pbone is not None:
+            ik.pole_target = armature
+            ik.pole_subtarget = pole_name
+            ik.pole_angle = 0.0
+
+        added += 1
+        print(f"  Added IK: {tip_name} -> {target_name} (pole: {pole_name})")
+
+    return added
+
 
 def bake_all_actions(armature):
-    """Bake all actions to convert IK/constraint motion to keyframes."""
+    """Bake all actions with visual keying, preserving original animation.
+
+    Uses use_current_action=True to overwrite F-curves with IK-evaluated values.
+    Uses clear_constraints=False to keep source.blend unmodified.
+    """
     if armature.animation_data is None:
         armature.animation_data_create()
 
@@ -36,13 +100,15 @@ def bake_all_actions(armature):
         bpy.ops.object.mode_set(mode="POSE")
         bpy.ops.pose.select_all(action="SELECT")
 
-        # Bake the action: converts IK/constraints to actual keyframes
+        # Bake: visual_keying captures IK-evaluated pose
+        # use_current_action=True: overwrites existing F-curves
+        # clear_constraints=False: keeps IK constraints (does not modify blend file)
         bpy.ops.nla.bake(
             frame_start=frame_start,
             frame_end=frame_end,
             only_selected=True,
             visual_keying=True,
-            clear_constraints=True,
+            clear_constraints=False,
             use_current_action=True,
             bake_types={"POSE"},
         )
@@ -82,8 +148,13 @@ def main():
     if armature is None:
         raise RuntimeError("SpiderArmature not found")
 
-    # Bake IK/constraints for all actions
-    print("Baking IK for all actions...")
+    # Step 1: Rebuild IK constraints
+    print("Rebuilding IK constraints...")
+    ik_count = rebuild_ik_constraints(armature)
+    print(f"  Added {ik_count} IK constraint(s)")
+
+    # Step 2: Bake all actions with IK (clear_constraints=False)
+    print("Baking all actions with IK...")
     baked = bake_all_actions(armature)
     print(f"  Baked {baked} action(s)")
 
