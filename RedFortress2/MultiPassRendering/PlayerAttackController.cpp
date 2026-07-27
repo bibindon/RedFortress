@@ -196,8 +196,8 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.moveSpeed = 0.0f;
         definition.moveStartRemainingFrames = 0;
         definition.moveEndRemainingFrames = 0;
-        definition.animationName = L"shoot";
-        definition.animationSpeed = 4.0f;
+        definition.animationName = L"shoot_recoil";
+        definition.animationSpeed = 2.0f;
         break;
     case PlayerAttackType::BusterStrongAttack:
         definition.durationFrames = 6;
@@ -208,8 +208,8 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.moveSpeed = 0.0f;
         definition.moveStartRemainingFrames = 0;
         definition.moveEndRemainingFrames = 0;
-        definition.animationName = L"shoot";
-        definition.animationSpeed = 4.0f;
+        definition.animationName = L"shoot_recoil";
+        definition.animationSpeed = 2.0f;
         break;
     }
 

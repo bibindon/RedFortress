@@ -9,10 +9,16 @@ ARMATURE_NAME = "宝鐘マリンV2_arm"
 MESH_NAME = "宝鐘マリンV2_mesh_decimate50"
 BASE_ACTION_NAME = "slash"
 
-SHOOT_ACTION_NAME = "shoot"
+SHOOT_START_ACTION_NAME = "shoot_start"
+SHOOT_RECOIL_ACTION_NAME = "shoot_recoil"
+SHOOT_AIM_ACTION_NAME = "shoot_aim"
+SHOOT_END_ACTION_NAME = "shoot_end"
 PLACE_BOMB_ACTION_NAME = "place_bomb"
 
-SHOOT_END_FRAME = 12
+SHOOT_START_END_FRAME = 6
+SHOOT_RECOIL_END_FRAME = 6
+SHOOT_AIM_END_FRAME = 1
+SHOOT_END_END_FRAME = 8
 PLACE_BOMB_END_FRAME = 24
 
 
@@ -116,26 +122,62 @@ def apply_shoot_pose(armature, recoil):
     rotate_bone_local(armature, "Bone_157", 0.0, 8.0, 5.0)
 
 
-def create_shoot_action(armature, base_pose):
-    action = create_action(armature, SHOOT_ACTION_NAME)
+def create_shoot_start_action(armature, base_pose):
+    action = create_action(armature, SHOOT_START_ACTION_NAME)
 
     restore_pose(armature, base_pose)
     key_pose(armature, 0)
 
     restore_pose(armature, base_pose)
     apply_shoot_pose(armature, 0.0)
-    key_pose(armature, 3)
+    key_pose(armature, 2)
 
     restore_pose(armature, base_pose)
     apply_shoot_pose(armature, 1.0)
-    key_pose(armature, 5)
+    key_pose(armature, 3)
 
     restore_pose(armature, base_pose)
     apply_shoot_pose(armature, 0.0)
-    key_pose(armature, 8)
+    key_pose(armature, SHOOT_START_END_FRAME)
+    return action
+
+
+def create_shoot_recoil_action(armature, base_pose):
+    action = create_action(armature, SHOOT_RECOIL_ACTION_NAME)
 
     restore_pose(armature, base_pose)
-    key_pose(armature, SHOOT_END_FRAME)
+    apply_shoot_pose(armature, 0.0)
+    key_pose(armature, 0)
+
+    restore_pose(armature, base_pose)
+    apply_shoot_pose(armature, 1.0)
+    key_pose(armature, 2)
+
+    restore_pose(armature, base_pose)
+    apply_shoot_pose(armature, 0.0)
+    key_pose(armature, SHOOT_RECOIL_END_FRAME)
+    return action
+
+
+def create_shoot_aim_action(armature, base_pose):
+    action = create_action(armature, SHOOT_AIM_ACTION_NAME)
+
+    restore_pose(armature, base_pose)
+    apply_shoot_pose(armature, 0.0)
+    key_pose(armature, 0)
+    key_pose(armature, SHOOT_AIM_END_FRAME)
+    return action
+
+
+def create_shoot_end_action(armature, base_pose):
+    action = create_action(armature, SHOOT_END_ACTION_NAME)
+
+    restore_pose(armature, base_pose)
+    apply_shoot_pose(armature, 0.0)
+    key_pose(armature, 0)
+
+    restore_pose(armature, base_pose)
+    key_pose(armature, SHOOT_END_END_FRAME)
     return action
 
 
@@ -260,15 +302,40 @@ def main():
     bpy.context.scene.frame_set(0)
     base_pose = capture_pose(armature)
 
-    shoot_action = create_shoot_action(armature, base_pose)
+    legacy_shoot_action = bpy.data.actions.get("shoot")
+    if legacy_shoot_action is not None:
+        bpy.data.actions.remove(legacy_shoot_action)
+
+    shoot_start_action = create_shoot_start_action(armature, base_pose)
+    shoot_recoil_action = create_shoot_recoil_action(armature, base_pose)
+    shoot_aim_action = create_shoot_aim_action(armature, base_pose)
+    shoot_end_action = create_shoot_end_action(armature, base_pose)
     place_bomb_action = create_place_bomb_action(armature, base_pose)
 
     asset_directory = os.path.dirname(blend_path)
     export_action(
         armature,
-        shoot_action,
-        os.path.join(asset_directory, "marine.shoot.x"),
-        SHOOT_END_FRAME,
+        shoot_start_action,
+        os.path.join(asset_directory, "marine.shoot_start.x"),
+        SHOOT_START_END_FRAME,
+    )
+    export_action(
+        armature,
+        shoot_recoil_action,
+        os.path.join(asset_directory, "marine.shoot_recoil.x"),
+        SHOOT_RECOIL_END_FRAME,
+    )
+    export_action(
+        armature,
+        shoot_aim_action,
+        os.path.join(asset_directory, "marine.shoot_aim.x"),
+        SHOOT_AIM_END_FRAME,
+    )
+    export_action(
+        armature,
+        shoot_end_action,
+        os.path.join(asset_directory, "marine.shoot_end.x"),
+        SHOOT_END_END_FRAME,
     )
     export_action(
         armature,
@@ -277,17 +344,23 @@ def main():
         PLACE_BOMB_END_FRAME,
     )
 
-    armature.animation_data.action = shoot_action
+    armature.animation_data.action = shoot_start_action
     bpy.context.scene.frame_start = 0
-    bpy.context.scene.frame_end = SHOOT_END_FRAME
+    bpy.context.scene.frame_end = SHOOT_START_END_FRAME
     bpy.context.scene.frame_set(0)
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=blend_path)
     bpy.ops.wm.save_as_mainfile(filepath=blend_path + "1", copy=True)
 
-    print("MARINE_ACTION shoot 0 12")
+    print("MARINE_ACTION shoot_start 0 6")
+    print("MARINE_ACTION shoot_recoil 0 6")
+    print("MARINE_ACTION shoot_aim 0 1")
+    print("MARINE_ACTION shoot_end 0 8")
     print("MARINE_ACTION place_bomb 0 24")
-    print("MARINE_EXPORTED marine.shoot.x")
+    print("MARINE_EXPORTED marine.shoot_start.x")
+    print("MARINE_EXPORTED marine.shoot_recoil.x")
+    print("MARINE_EXPORTED marine.shoot_aim.x")
+    print("MARINE_EXPORTED marine.shoot_end.x")
     print("MARINE_EXPORTED marine.place_bomb.x")
 
 

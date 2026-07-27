@@ -292,6 +292,8 @@ namespace
     const int kBusterAmmoRecoverAmount = 3;
     const int kBusterRapidLevelMax = 8;
     const int kBusterCooldownByLevel[kBusterRapidLevelMax] = { 24, 20, 16, 12, 9, 6, 4, 3 };
+    const int kBusterAimHoldFrames = 30;
+    const int kBusterLowerFrames = 8;
     const float kEnemyAttackTargetHeight = 1.0f;
     const int kAmmoGaugeX = 130;
     const int kAmmoGaugeY = 78;
@@ -2294,7 +2296,44 @@ void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const flo
         return;
     }
 
+    if (nextState == PlayerAnimState::BusterAim)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"shoot_aim");
+        return;
+    }
+
+    if (nextState == PlayerAnimState::BusterLower)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"shoot_end");
+        return;
+    }
+
     m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerIdleAnimName);
+}
+
+void GameApp::PlayBusterShotAnimation(const bool wasAiming, const float animationSpeed)
+{
+    m_playerAnimState = PlayerAnimState::Attack;
+    m_playerAnimationSpeed = animationSpeed;
+    if (m_playerMeshId < 0)
+    {
+        return;
+    }
+
+    m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, animationSpeed);
+    if (wasAiming)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"shoot_recoil");
+        return;
+    }
+
+    m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"shoot_start");
+}
+
+void GameApp::ResetBusterAimState()
+{
+    m_busterAimHoldFrames = 0;
+    m_busterLowerFrames = 0;
 }
 
 void GameApp::LoadPlayerMeshForStage(const bool useStageSelectModel, const D3DXVECTOR3& position)
@@ -2412,6 +2451,18 @@ void GameApp::UpdatePlayerByInput()
     }
 
     m_playerAttackController.Update();
+    if (m_busterAimHoldFrames > 0)
+    {
+        --m_busterAimHoldFrames;
+        if (m_busterAimHoldFrames == 0)
+        {
+            m_busterLowerFrames = kBusterLowerFrames;
+        }
+    }
+    else if (m_busterLowerFrames > 0)
+    {
+        --m_busterLowerFrames;
+    }
 
     // ノックバックカウントダウン
     if (m_playerKnockbackFrames > 0)
@@ -2450,6 +2501,10 @@ void GameApp::UpdatePlayerByInput()
     }
 
     const PlayerAttackType requestedAttackType = m_playerAttackController.GetAttackType(shiftPressed);
+    if (!IsBusterAttackType(requestedAttackType))
+    {
+        ResetBusterAimState();
+    }
 
     if (!IsCurrentStageSelect() &&
         InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) &&
@@ -2481,6 +2536,7 @@ void GameApp::UpdatePlayerByInput()
             {
                 if (m_playerAttackController.TryStart(requestedAttackType))
                 {
+                    const bool wasAiming = m_busterAimHoldFrames > 0;
                     const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
                     D3DXVECTOR3 spawnPos = m_playerMover.GetPosition() + forward * 1.0f;
                     spawnPos.y += kBusterSpawnHeight;
@@ -2490,9 +2546,11 @@ void GameApp::UpdatePlayerByInput()
                         --m_busterAmmo;
                     }
                     m_busterCooldownFrames = GetBusterCooldownFrames(m_busterRapidLevel);
+                    m_busterAimHoldFrames = kBusterAimHoldFrames;
+                    m_busterLowerFrames = 0;
                     GameAudio::PlayBuster();
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
-                    SetPlayerAnimationState(PlayerAnimState::Attack, attackDefinition.animationSpeed);
+                    PlayBusterShotAnimation(wasAiming, attackDefinition.animationSpeed);
                 }
             }
         }
@@ -2578,6 +2636,14 @@ void GameApp::UpdatePlayerByInput()
         {
             nextState = PlayerAnimState::Attack;
         }
+        else if (m_busterAimHoldFrames > 0)
+        {
+            nextState = PlayerAnimState::BusterAim;
+        }
+        else if (m_busterLowerFrames > 0)
+        {
+            nextState = PlayerAnimState::BusterLower;
+        }
         else if (isDashing)
         {
             nextState = PlayerAnimState::Dash;
@@ -2616,6 +2682,14 @@ void GameApp::UpdatePlayerByInput()
             {
                 animationSpeed = 0.1f;
                 GameAudio::PlayDash();
+            }
+            else if (nextState == PlayerAnimState::BusterAim)
+            {
+                animationSpeed = 1.0f;
+            }
+            else if (nextState == PlayerAnimState::BusterLower)
+            {
+                animationSpeed = 2.0f;
             }
 
             SetPlayerAnimationState(nextState, animationSpeed);
@@ -5801,6 +5875,7 @@ void GameApp::HandlePlayerDeath()
     m_hitStopPlayerAnimationPaused = false;
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
+    ResetBusterAimState();
     m_baseBombCapacity = 1;
     m_baseBusterRapidLevel = 1;
     m_bombCapacity = 1;
@@ -5857,6 +5932,7 @@ void GameApp::CompletePlayerDeath()
     // 各種状態リセット
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
+    ResetBusterAimState();
     m_damagePopupManager.Clear();
 }
 
@@ -5879,6 +5955,7 @@ void GameApp::StartGameOverSequence()
     m_respawnCameraDelayFrames = 0;
     m_respawnCameraMoveFrames = 0;
     m_playerAttackController.Reset();
+    ResetBusterAimState();
     m_damagePopupManager.Clear();
     ClearBombs();
     ClearBusters();
@@ -6023,6 +6100,7 @@ void GameApp::ReturnToTitleFromGameOver()
     m_damagePopupManager.Clear();
     m_pickupManager.ResetPlayerEffects();
     m_playerAttackController.Reset();
+    ResetBusterAimState();
     m_titleDeleteConfirmMode = false;
     m_titleLanguageSelectionMode = false;
     BuildTitleMainCommands();
@@ -6209,6 +6287,7 @@ void GameApp::LoadCurrentStageObjects()
     RestoreTemporaryPowerUps();
     m_playerKnockbackFrames = 0;
     m_playerAttackController.Reset();
+    ResetBusterAimState();
     m_playerAttackController.SelectClubCategory();
     m_respawnCameraDelayFrames = 0;
     m_respawnCameraMoveFrames = 0;

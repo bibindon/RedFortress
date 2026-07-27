@@ -231,7 +231,7 @@ private:
     bool IsHitStopActive() const;
     int GetHitStopFrames(PlayerAttackType attackType) const;
 
-    enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash };
+    enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash, BusterAim, BusterLower };
     enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageExit, StageClear, GameOver, Ending, EndingFin };
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
@@ -240,6 +240,8 @@ private:
     enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, WaitForStageLoad, FadeIn };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
+    void PlayBusterShotAnimation(bool wasAiming, float animationSpeed);
+    void ResetBusterAimState();
     void LoadPlayerMeshForStage(bool useStageSelectModel, const D3DXVECTOR3& position);
 
     using PhysicsWorld = PhysicsLib::PhysicsLib;
@@ -405,6 +407,8 @@ private:
     int m_bombAmmo = 10;
     std::vector<ActiveBuster> m_activeBusters;
     int m_busterCooldownFrames = 0;
+    int m_busterAimHoldFrames = 0;
+    int m_busterLowerFrames = 0;
     int m_busterRapidLevel = 1;
     int m_baseBusterRapidLevel = 1;
     int m_busterAmmo = 30;
