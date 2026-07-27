@@ -37,7 +37,13 @@ ASSET_CONFIGS = {
     },
     "bird": {
         "armature": "bird-skeleton",
-        "texture_filename": "bird_feathers.png",
+        "material_face_color": [1.0, 1.0, 1.0, 1.0],
+        "material_textures": {
+            "body": "bird_body.png",
+            "pupil": "bird_pupil.png",
+            "eyes": "bird_eyes.png",
+            "beak": "bird_beak.png",
+        },
         "actions": {
             "idle": "idle",
             "move": "flap",
@@ -49,6 +55,7 @@ ASSET_CONFIGS = {
     },
     "ghost": {
         "armature": "CharacterArmature",
+        "texture_filename": "ghost_mist.png",
         "actions": {
             "idle": "CharacterArmature|Flying_Idle",
             "move": "CharacterArmature|Fast_Flying",
@@ -197,6 +204,37 @@ def set_material_texture_filename(mesh_objects, texture_filename):
         raise RuntimeError("No material was found for the requested texture")
 
 
+def set_material_face_color(mesh_objects, face_color):
+    material_count = 0
+    for mesh_object in mesh_objects:
+        for material in mesh_object.data.materials:
+            if material is None:
+                continue
+            material["_x_face_color"] = face_color
+            material_count += 1
+
+    if material_count == 0:
+        raise RuntimeError("No material was found for the requested face color")
+
+
+def set_material_textures(mesh_objects, material_textures):
+    configured_materials = set()
+    for mesh_object in mesh_objects:
+        for material in mesh_object.data.materials:
+            if material is None:
+                continue
+            texture_filename = material_textures.get(material.name)
+            if texture_filename is None:
+                continue
+            material["_x_texture_filename"] = texture_filename
+            configured_materials.add(material.name)
+
+    missing_materials = set(material_textures.keys()) - configured_materials
+    if len(missing_materials) > 0:
+        missing_text = ", ".join(sorted(missing_materials))
+        raise RuntimeError(f"Configured materials were not found: {missing_text}")
+
+
 def normalize_x_file(path):
     with open(path, "rb") as source_file:
         data = source_file.read()
@@ -208,7 +246,14 @@ def normalize_x_file(path):
         destination_file.write(data)
 
 
-def validate_x_file(path, export_animation, material_power, texture_filename):
+def validate_x_file(
+    path,
+    export_animation,
+    material_power,
+    texture_filename,
+    material_face_color,
+    material_textures,
+):
     with open(path, "rb") as source_file:
         data = source_file.read()
 
@@ -250,6 +295,39 @@ def validate_x_file(path, export_animation, material_power, texture_filename):
                 f"{texture_count}/{material_count}"
             )
 
+    if material_face_color is not None:
+        face_color_pattern = (
+            r"Material\s+[^{]+\{\s+"
+            r"([+-]?[0-9]+(?:\.[0-9]+)?);\s*"
+            r"([+-]?[0-9]+(?:\.[0-9]+)?);\s*"
+            r"([+-]?[0-9]+(?:\.[0-9]+)?);\s*"
+            r"([+-]?[0-9]+(?:\.[0-9]+)?);;"
+        )
+        exported_colors = re.findall(face_color_pattern, text)
+        if len(exported_colors) == 0:
+            raise RuntimeError(f"Material face colors were not found: {path}")
+        for exported_color in exported_colors:
+            for color_index in range(4):
+                color_value = float(exported_color[color_index])
+                expected_value = material_face_color[color_index]
+                if abs(color_value - expected_value) > TRANSFORM_EPSILON:
+                    raise RuntimeError(
+                        f"Unexpected material face color in {path}: "
+                        f"{exported_color}"
+                    )
+
+    if material_textures is not None:
+        for material_name, expected_texture in material_textures.items():
+            material_pattern = (
+                rf"Material\s+{re.escape(material_name)}\s*\{{"
+                rf".*?TextureFileName\s*\{{\"{re.escape(expected_texture)}\";\}}"
+                rf".*?\}}"
+            )
+            if re.search(material_pattern, text, re.DOTALL) is None:
+                raise RuntimeError(
+                    f"Expected texture for {material_name} was not found in {path}"
+                )
+
     if export_animation:
         if re.search(r"\bAnimationSet\b", text) is None:
             raise RuntimeError(f"AnimationSet was not found: {path}")
@@ -277,6 +355,8 @@ def export_x(
     frame_end,
     material_power,
     texture_filename,
+    material_face_color,
+    material_textures,
 ):
     select_export_objects(armature, mesh_objects)
 
@@ -297,7 +377,14 @@ def export_x(
     if "FINISHED" not in result:
         raise RuntimeError(f"DirectX X export failed: {path}")
     normalize_x_file(path)
-    validate_x_file(path, export_animation, material_power, texture_filename)
+    validate_x_file(
+        path,
+        export_animation,
+        material_power,
+        texture_filename,
+        material_face_color,
+        material_textures,
+    )
 
 
 def write_animation_csv(output_directory):
@@ -334,6 +421,21 @@ def main():
         if not os.path.isfile(texture_path):
             raise RuntimeError(f"Texture file was not found: {texture_path}")
         set_material_texture_filename(mesh_objects, texture_filename)
+    material_face_color = config.get("material_face_color")
+    if material_face_color is not None:
+        set_material_face_color(mesh_objects, material_face_color)
+    material_textures = config.get("material_textures")
+    if material_textures is not None:
+        for configured_texture in material_textures.values():
+            configured_texture_path = os.path.join(
+                output_directory,
+                configured_texture,
+            )
+            if not os.path.isfile(configured_texture_path):
+                raise RuntimeError(
+                    f"Texture file was not found: {configured_texture_path}"
+                )
+        set_material_textures(mesh_objects, material_textures)
 
     action_map = {}
     for logical_name, source_name in config["actions"].items():
@@ -357,6 +459,8 @@ def main():
         idle_end,
         material_power,
         texture_filename,
+        material_face_color,
+        material_textures,
     )
 
     default_path = os.path.join(output_directory, "enemy.default.x")
@@ -369,6 +473,8 @@ def main():
         idle_start,
         material_power,
         texture_filename,
+        material_face_color,
+        material_textures,
     )
 
     for logical_name, action in action_map.items():
@@ -384,6 +490,8 @@ def main():
             frame_end,
             material_power,
             texture_filename,
+            material_face_color,
+            material_textures,
         )
         print(
             f"EXPORTED {asset_name} {logical_name} "

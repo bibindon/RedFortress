@@ -8,18 +8,21 @@ Material Eye_White {
 	 17.081826;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
+	TextureFileName {"ghost_mist.png";}
 }
 Material Eye_Black {
 	 0.010649; 0.010980; 0.012795; 1.000000;;
 	 17.081826;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
+	TextureFileName {"ghost_mist.png";}
 }
 Material Ghost_Main {
 	 0.018297; 0.004173; 0.023278; 1.000000;;
 	 17.081826;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
+	TextureFileName {"ghost_mist.png";}
 }
 Frame Root {
 	FrameTransformMatrix {

@@ -4,32 +4,32 @@ AnimTicksPerSecond {
 	30;
 }
 Material body {
-	 0.947307; 0.491021; 0.038204; 1.000000;;
+	 1.000000; 1.000000; 1.000000; 1.000000;;
 	 11.313708;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"bird_feathers.png";}
+	TextureFileName {"bird_body.png";}
 }
 Material pupil {
-	 0.080220; 0.035601; 0.061246; 1.000000;;
+	 1.000000; 1.000000; 1.000000; 1.000000;;
 	 11.313708;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"bird_feathers.png";}
+	TextureFileName {"bird_pupil.png";}
 }
 Material eyes {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
+	 1.000000; 1.000000; 1.000000; 1.000000;;
 	 11.313708;
 	 0.500000; 0.500000; 0.500000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"bird_feathers.png";}
+	TextureFileName {"bird_eyes.png";}
 }
 Material beak {
-	 0.745404; 0.054480; 0.007499; 1.000000;;
+	 1.000000; 1.000000; 1.000000; 1.000000;;
 	 11.313708;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"bird_feathers.png";}
+	TextureFileName {"bird_beak.png";}
 }
 Frame body {
 	FrameTransformMatrix {
