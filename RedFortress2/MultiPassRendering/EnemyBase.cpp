@@ -58,7 +58,9 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
                      const float moveSpeed,
                      const float viewDistance,
                      const float contactRadius,
-                     const float height)
+                     const float height,
+                     const MovementMode movementMode,
+                     const bool usesExtendedAnimations)
     : m_position(startPosition)
 {
     m_homePosition = startPosition;
@@ -71,6 +73,8 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
     m_viewDistance = viewDistance;
     m_contactRadius = contactRadius;
     m_height = height;
+    m_movementMode = movementMode;
+    m_usesExtendedAnimations = usesExtendedAnimations;
     m_state = State::Idle;
     m_animState = AnimState::Idle;
     m_yaw = yaw;
@@ -111,6 +115,11 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
 void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible)
 {
     AnimState nextAnim = AnimState::Idle;
+    ++m_flightFrame;
+    if (m_frogJumpCooldownFrames > 0)
+    {
+        --m_frogJumpCooldownFrames;
+    }
 
     if (m_knockbackFrames > 0)
     {
@@ -131,7 +140,11 @@ void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, b
         return;
     }
 
-    ApplyGravity(render);
+    if (m_movementMode == MovementMode::Ground ||
+        m_movementMode == MovementMode::Frog)
+    {
+        ApplyGravity(render);
+    }
     if (m_state == State::Dead)
     {
         return;
@@ -157,6 +170,17 @@ void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, b
         if (m_hitStunFrames <= 0 && m_meshId >= 0)
         {
             render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+            m_animationNeedsRefresh = true;
+        }
+        return;
+    }
+
+    if (m_forcedAnimationFrames > 0)
+    {
+        --m_forcedAnimationFrames;
+        if (m_forcedAnimationFrames <= 0)
+        {
+            m_animationNeedsRefresh = true;
         }
         return;
     }
@@ -218,7 +242,15 @@ void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, b
             {
                 UpdateFacePlayerTurn(playerPos);
             }
-            UpdateIdleBehavior();
+            if (m_movementMode == MovementMode::Hover ||
+                m_movementMode == MovementMode::Swoop)
+            {
+                UpdateFlyingIdleBehavior();
+            }
+            else
+            {
+                UpdateIdleBehavior();
+            }
             if (m_idleMoveFrames > 0)
             {
                 nextAnim = AnimState::Walk;
@@ -226,6 +258,10 @@ void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, b
         }
     }
 
+    if (m_movementMode == MovementMode::Frog && m_frogJumpActive)
+    {
+        nextAnim = AnimState::Run;
+    }
     ApplyAnimation(render, nextAnim);
 }
 
@@ -289,10 +325,22 @@ void EnemyBase::ApplyDamage(NSRender::Render& render, const int amount)
     }
     else
     {
-        m_hitStunFrames = kHitStunFrames;
-        if (m_meshId >= 0)
+        if (m_usesExtendedAnimations)
         {
-            render.SetMeshMixSkinAnimSpeed(m_meshId, 0.0f);
+            m_hitStunFrames = 12;
+            if (m_meshId >= 0)
+            {
+                render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+                render.PlayMeshMixSkinAnimAnimation(m_meshId, L"hit");
+            }
+        }
+        else
+        {
+            m_hitStunFrames = kHitStunFrames;
+            if (m_meshId >= 0)
+            {
+                render.SetMeshMixSkinAnimSpeed(m_meshId, 0.0f);
+            }
         }
     }
 }
@@ -308,7 +356,16 @@ void EnemyBase::StartDeath(NSRender::Render& render)
     m_removalFrames = 30;
     if (m_meshId >= 0)
     {
-        render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 2);
+        if (m_usesExtendedAnimations)
+        {
+            m_removalFrames = 45;
+            render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+            render.PlayMeshMixSkinAnimAnimation(m_meshId, L"death");
+        }
+        else
+        {
+            render.StartMeshMixSkinAnimBlink(m_meshId, m_removalFrames, 2);
+        }
     }
 }
 
@@ -322,7 +379,7 @@ bool EnemyBase::IsReadyToRemove() const
     return m_state == State::Dead && m_removalFrames <= 0;
 }
 
-void EnemyBase::MarkAttackedPlayer()
+void EnemyBase::MarkAttackedPlayer(NSRender::Render& render)
 {
     if (m_state != State::Dead)
     {
@@ -354,7 +411,20 @@ void EnemyBase::MarkAttackedPlayer()
         {
             D3DXVec3Normalize(&retreatDir, &retreatDir);
         }
+        if (m_movementMode == MovementMode::Hover ||
+            m_movementMode == MovementMode::Swoop)
+        {
+            retreatDir.y = 0.65f;
+            D3DXVec3Normalize(&retreatDir, &retreatDir);
+        }
         m_retreatDirection = retreatDir;
+
+        if (m_usesExtendedAnimations && m_meshId >= 0)
+        {
+            render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+            render.PlayMeshMixSkinAnimAnimation(m_meshId, L"attack");
+            m_forcedAnimationFrames = 18;
+        }
     }
 }
 
@@ -424,7 +494,14 @@ void EnemyBase::UpdateIdleBehavior()
         --m_idleMoveFrames;
         UpdateFacing(m_position + D3DXVECTOR3(-sinf(m_idleMoveYaw), 0.0f, -cosf(m_idleMoveYaw)));
         D3DXVECTOR3 moveDir(-sinf(m_yaw), 0.0f, -cosf(m_yaw));
-        MoveWithCollision(moveDir * (m_moveSpeed * 0.18f));
+        if (m_movementMode == MovementMode::Frog)
+        {
+            UpdateFrogMovement(moveDir, 0.55f);
+        }
+        else
+        {
+            MoveWithCollision(moveDir * (m_moveSpeed * 0.18f));
+        }
 
         D3DXVECTOR3 fromHome = m_position - m_homePosition;
         fromHome.y = 0.0f;
@@ -470,6 +547,13 @@ void EnemyBase::BeginAlert(const D3DXVECTOR3& playerPos, const bool faceImmediat
 
 void EnemyBase::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool playerInvincible)
 {
+    if (m_movementMode == MovementMode::Hover ||
+        m_movementMode == MovementMode::Swoop)
+    {
+        UpdateFlyingChaseBehavior(playerPos, playerInvincible);
+        return;
+    }
+
     bool canSeePlayer = false;
     if (!playerInvincible)
     {
@@ -563,7 +647,14 @@ void EnemyBase::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool pla
         speedMultiplier = 0.32f;
     }
 
-    MoveWithCollision(moveDir * (m_moveSpeed * speedMultiplier));
+    if (m_movementMode == MovementMode::Frog)
+    {
+        UpdateFrogMovement(moveDir, speedMultiplier);
+    }
+    else
+    {
+        MoveWithCollision(moveDir * (m_moveSpeed * speedMultiplier));
+    }
 }
 
 void EnemyBase::UpdateRetreatBehavior()
@@ -582,14 +673,118 @@ void EnemyBase::UpdateRetreatBehavior()
     }
 }
 
+void EnemyBase::UpdateFlyingIdleBehavior()
+{
+    float hoverAmplitude = 0.25f;
+    float hoverSpeed = 0.045f;
+    if (m_movementMode == MovementMode::Swoop)
+    {
+        hoverAmplitude = 0.4f;
+        hoverSpeed = 0.065f;
+    }
+
+    D3DXVECTOR3 target = m_homePosition;
+    target.y += sinf(static_cast<float>(m_flightFrame) * hoverSpeed) * hoverAmplitude;
+    D3DXVECTOR3 direction = target - m_position;
+    const float distance = D3DXVec3Length(&direction);
+    if (distance > 0.01f)
+    {
+        D3DXVec3Normalize(&direction, &direction);
+        float speed = m_moveSpeed * 0.35f;
+        if (distance < 0.5f)
+        {
+            speed *= distance / 0.5f;
+        }
+        MoveWithCollision(direction * speed);
+    }
+}
+
+void EnemyBase::UpdateFlyingChaseBehavior(const D3DXVECTOR3& playerPos,
+                                          const bool playerInvincible)
+{
+    bool canSeePlayer = false;
+    if (!playerInvincible)
+    {
+        const D3DXVECTOR3 difference = playerPos - m_position;
+        const float distance = D3DXVec3Length(&difference);
+        if (distance <= m_viewDistance && IsPlayerInView(playerPos))
+        {
+            canSeePlayer = true;
+        }
+    }
+
+    if (canSeePlayer)
+    {
+        m_lastKnownPlayerPosition = playerPos;
+        m_lastKnownPlayerFrames = kLastKnownPlayerFrames;
+    }
+    else if (m_lastKnownPlayerFrames <= 0)
+    {
+        m_state = State::Idle;
+        return;
+    }
+
+    D3DXVECTOR3 moveTarget = m_lastKnownPlayerPosition;
+    moveTarget.y += 0.8f;
+    float speedMultiplier = 0.75f;
+    if (m_movementMode == MovementMode::Swoop)
+    {
+        moveTarget.y += 0.15f;
+        speedMultiplier = 1.0f;
+    }
+
+    const float minimumY = m_homePosition.y - 1.5f;
+    const float maximumY = m_homePosition.y + 2.0f;
+    if (moveTarget.y < minimumY)
+    {
+        moveTarget.y = minimumY;
+    }
+    if (moveTarget.y > maximumY)
+    {
+        moveTarget.y = maximumY;
+    }
+
+    D3DXVECTOR3 direction = moveTarget - m_position;
+    if (D3DXVec3LengthSq(&direction) <= 0.0001f)
+    {
+        return;
+    }
+    D3DXVec3Normalize(&direction, &direction);
+    UpdateFacing(moveTarget);
+    MoveWithCollision(direction * (m_moveSpeed * speedMultiplier));
+}
+
+void EnemyBase::UpdateFrogMovement(const D3DXVECTOR3& moveDirection,
+                                   const float speedMultiplier)
+{
+    if (m_isGrounded && m_frogJumpCooldownFrames <= 0 && !m_frogJumpActive)
+    {
+        m_frogJumpDirection = moveDirection;
+        m_frogJumpDirection.y = 0.0f;
+        if (D3DXVec3LengthSq(&m_frogJumpDirection) > 0.0001f)
+        {
+            D3DXVec3Normalize(&m_frogJumpDirection, &m_frogJumpDirection);
+        }
+        m_verticalVelocity = 4.5f;
+        m_isGrounded = false;
+        m_frogJumpActive = true;
+    }
+
+    if (m_frogJumpActive)
+    {
+        MoveWithCollision(m_frogJumpDirection * (m_moveSpeed * speedMultiplier));
+    }
+}
+
 void EnemyBase::ApplyAnimation(NSRender::Render& render, const AnimState nextAnim)
 {
-    if (nextAnim == m_animState)
+    if (nextAnim == m_animState && !m_animationNeedsRefresh)
     {
         return;
     }
 
     m_animState = nextAnim;
+    m_animationNeedsRefresh = false;
     if (m_meshId < 0)
     {
         return;
@@ -755,6 +950,12 @@ void EnemyBase::ApplyGravity(NSRender::Render& render)
     {
         m_isGrounded = true;
         m_verticalVelocity = 0.0f;
+        if (m_movementMode == MovementMode::Frog && m_frogJumpActive)
+        {
+            m_frogJumpActive = false;
+            m_frogJumpCooldownFrames = 24;
+            m_animationNeedsRefresh = true;
+        }
     }
 
     if (m_position.y < kEnemyFallDeathY)

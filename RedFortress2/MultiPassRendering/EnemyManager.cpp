@@ -6,6 +6,10 @@
 #include "Enemy4.h"
 #include "Enemy5.h"
 #include "Enemy6.h"
+#include "EnemyBird.h"
+#include "EnemyCrab.h"
+#include "EnemyFrog.h"
+#include "EnemyGhost.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Camera.h"
@@ -53,12 +57,15 @@ namespace
 }
 
 template<typename T>
-void EnemyManager::RegisterEnemyType(const std::wstring& type, const std::wstring& folderName)
+void EnemyManager::RegisterEnemyType(const std::wstring& type,
+                                     const std::wstring& folderName,
+                                     const std::wstring& meshFileName,
+                                     const std::wstring& animationFileName)
 {
     const std::wstring basePath = L"res\\model2\\" + folderName + L"\\";
     m_factory[type] = {
-        basePath + L"wolfAnim.x",
-        basePath + L"wolfAnim.csv",
+        basePath + meshFileName,
+        basePath + animationFileName,
         T::GetScale(),
         [](const D3DXVECTOR3& pos, int meshId, float yaw) {
             return std::make_unique<T>(pos, meshId, yaw);
@@ -231,6 +238,25 @@ void EnemyManager::SpawnAt(NSRender::Render& render, const D3DXVECTOR3& position
     Spawn(render, position, type, yaw);
 }
 
+void EnemyManager::ReplaceEnemyType(NSRender::Render& render,
+                                    const std::size_t index,
+                                    const std::wstring& type)
+{
+    if (index >= m_enemies.size())
+    {
+        return;
+    }
+    if (m_factory.find(type) == m_factory.end())
+    {
+        return;
+    }
+
+    const D3DXVECTOR3 position = m_enemies[index]->GetPosition();
+    const float yaw = m_enemies[index]->GetYaw();
+    RemoveEnemy(render, index);
+    Spawn(render, position, type, yaw);
+}
+
 void EnemyManager::RemoveEnemy(NSRender::Render& render, std::size_t index)
 {
     if (index >= m_enemies.size())
@@ -299,12 +325,16 @@ void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
 void EnemyManager::RegisterEnemyTypes()
 {
     m_factory.clear();
-    RegisterEnemyType<EnemyWolf>(L"wolf", L"separatedAnim");
-    RegisterEnemyType<EnemyBigWolf>(L"enemy2", L"Enemy2");
-    RegisterEnemyType<Enemy3>(L"enemy3", L"Enemy3");
-    RegisterEnemyType<Enemy4>(L"enemy4", L"Enemy4");
-    RegisterEnemyType<Enemy5>(L"enemy5", L"Enemy5");
-    RegisterEnemyType<Enemy6>(L"enemy6", L"Enemy6");
+    RegisterEnemyType<EnemyWolf>(L"wolf", L"separatedAnim", L"wolfAnim.x", L"wolfAnim.csv");
+    RegisterEnemyType<EnemyBigWolf>(L"enemy2", L"Enemy2", L"wolfAnim.x", L"wolfAnim.csv");
+    RegisterEnemyType<Enemy3>(L"enemy3", L"Enemy3", L"wolfAnim.x", L"wolfAnim.csv");
+    RegisterEnemyType<Enemy4>(L"enemy4", L"Enemy4", L"wolfAnim.x", L"wolfAnim.csv");
+    RegisterEnemyType<Enemy5>(L"enemy5", L"Enemy5", L"wolfAnim.x", L"wolfAnim.csv");
+    RegisterEnemyType<Enemy6>(L"enemy6", L"Enemy6", L"wolfAnim.x", L"wolfAnim.csv");
+    RegisterEnemyType<EnemyGhost>(L"ghost", L"Ghost", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyBird>(L"bird", L"Bird", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyCrab>(L"crab", L"Crab", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyFrog>(L"frog", L"Frog", L"enemy.x", L"enemy.csv");
 }
 
 void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)

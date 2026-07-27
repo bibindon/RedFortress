@@ -426,6 +426,10 @@ void StageEditor::InitEnemyTypeCombo(HWND hDlg)
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy4"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy5"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy6"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"ghost"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"bird"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"crab"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"frog"));
     SendMessage(hCombo, CB_SETCURSEL, 0, 0);
 }
 
@@ -591,7 +595,11 @@ void StageEditor::OnUpdateEnemy(HWND hDlg)
         {
             wchar_t typeBuf[64] = {};
             SendMessage(hCombo, CB_GETLBTEXT, sel, reinterpret_cast<LPARAM>(typeBuf));
-            enemies[index]->SetType(typeBuf);
+            const std::wstring selectedType = typeBuf;
+            if (enemies[index]->GetType() != selectedType)
+            {
+                m_enemyManager->ReplaceEnemyType(*m_render, index, selectedType);
+            }
         }
     }
 

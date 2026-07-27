@@ -175,7 +175,11 @@
     <ClCompile Include="Enemy5.cpp" />
     <ClCompile Include="Enemy6.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyBird.cpp" />
     <ClCompile Include="EnemyBigWolf.cpp" />
+    <ClCompile Include="EnemyCrab.cpp" />
+    <ClCompile Include="EnemyFrog.cpp" />
+    <ClCompile Include="EnemyGhost.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EnemyWolf.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
@@ -206,7 +210,14 @@
     <ClInclude Include="LavaZoneManager.h" />
     <ClInclude Include="StageEditor.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyBird.h" />
+    <ClInclude Include="EnemyBigWolf.h" />
+    <ClInclude Include="EnemyCrab.h" />
+    <ClInclude Include="EnemyFrog.h" />
+    <ClInclude Include="EnemyGhost.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyWolf.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="HpBar.h" />
     <ClInclude Include="DamagePopupManager.h" />

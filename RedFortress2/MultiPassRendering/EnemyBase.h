@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <d3dx9.h>
 #include <string>
@@ -28,6 +28,14 @@ public:
         Run
     };
 
+    enum class MovementMode
+    {
+        Ground,
+        Frog,
+        Hover,
+        Swoop
+    };
+
     virtual ~EnemyBase() = default;
 
     void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
@@ -37,7 +45,7 @@ public:
     void TakeDamageWithoutFacing(NSRender::Render& render, int amount);
     bool IsDead() const;
     bool IsReadyToRemove() const;
-    void MarkAttackedPlayer();
+    void MarkAttackedPlayer(NSRender::Render& render);
     int GetHp() const;
     int GetMaxHp() const;
     D3DXVECTOR3 GetPosition() const;
@@ -65,7 +73,9 @@ protected:
               float moveSpeed,
               float viewDistance,
               float contactRadius,
-              float height);
+              float height,
+              MovementMode movementMode = MovementMode::Ground,
+              bool usesExtendedAnimations = false);
 
 private:
     void StartIdleBehavior();
@@ -76,6 +86,9 @@ private:
     void BeginAlert(const D3DXVECTOR3& playerPos, bool faceImmediately);
     void UpdateChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
     void UpdateRetreatBehavior();
+    void UpdateFlyingIdleBehavior();
+    void UpdateFlyingChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
+    void UpdateFrogMovement(const D3DXVECTOR3& moveDirection, float speedMultiplier);
     void ApplyAnimation(NSRender::Render& render, AnimState nextAnim);
     void FaceTargetImmediately(const D3DXVECTOR3& targetPos);
     void StartFacePlayerTurn();
@@ -104,8 +117,16 @@ private:
     float m_retreatDistance = 3.0f;
     float m_contactRadius = 0.5f;
     float m_height = 1.0f;
+    MovementMode m_movementMode = MovementMode::Ground;
+    bool m_usesExtendedAnimations = false;
     float m_verticalVelocity = 0.0f;
     bool m_isGrounded = false;
+    int m_frogJumpCooldownFrames = 0;
+    bool m_frogJumpActive = false;
+    D3DXVECTOR3 m_frogJumpDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+    int m_flightFrame = 0;
+    int m_forcedAnimationFrames = 0;
+    bool m_animationNeedsRefresh = false;
     int m_blinkFrames = 0;
     int m_hitStunFrames = 0;
     D3DXVECTOR3 m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

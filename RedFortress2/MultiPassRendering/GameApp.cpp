@@ -1596,7 +1596,7 @@ void GameApp::Run()
                             knockbackDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
                         }
                         m_playerKnockbackDir = knockbackDir;
-                        enemy->MarkAttackedPlayer();
+                        enemy->MarkAttackedPlayer(m_render);
                         break;
                     }
                 }
