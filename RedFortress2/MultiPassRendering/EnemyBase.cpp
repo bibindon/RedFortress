@@ -1,4 +1,4 @@
-#include "EnemyBase.h"
+﻿#include "EnemyBase.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
@@ -30,7 +30,7 @@ namespace
     float GetYawToTarget(const D3DXVECTOR3& fromPos, const D3DXVECTOR3& targetPos)
     {
         const D3DXVECTOR3 diff = targetPos - fromPos;
-        return atan2f(diff.x, diff.z);
+        return atan2f(-diff.x, -diff.z);
     }
 
     unsigned int MixSeed(unsigned int seed, unsigned int value)
@@ -236,7 +236,9 @@ void EnemyBase::SyncMesh(NSRender::Render& render)
         return;
     }
 
-    render.SetMeshMixSkinAnimPos(m_meshId, m_position);
+    D3DXVECTOR3 displayPosition = m_position;
+    displayPosition.y -= m_height * 0.5f;
+    render.SetMeshMixSkinAnimPos(m_meshId, displayPosition);
     render.SetMeshMixSkinAnimRotY(m_meshId, m_yaw);
 }
 
