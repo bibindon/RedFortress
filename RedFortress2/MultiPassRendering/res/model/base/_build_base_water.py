@@ -1,4 +1,5 @@
 ﻿from pathlib import Path
+import math
 
 import bpy
 
@@ -7,9 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent
 BLEND_PATH = BASE_DIR / "base_water.blend"
 X_PATH = BASE_DIR / "base_water.x"
 
-WIDTH = 22.0
-DEPTH = 8.0
-GRID_SPACING = 0.2
+WIDTH = 18.0
+DEPTH = 7.8
+RING_COUNT = 20
+RING_SEGMENTS = 96
 
 
 def clear_scene():
@@ -42,31 +44,49 @@ def create_water_material():
 
 
 def create_water_mesh(material):
-    x_segments = round(WIDTH / GRID_SPACING)
-    y_segments = round(DEPTH / GRID_SPACING)
     half_width = WIDTH * 0.5
     half_depth = DEPTH * 0.5
 
-    vertices = []
-    uvs = []
-    for y_index in range(y_segments + 1):
-        y_ratio = y_index / y_segments
-        y = -half_depth + (DEPTH * y_ratio)
-        for x_index in range(x_segments + 1):
-            x_ratio = x_index / x_segments
-            x = -half_width + (WIDTH * x_ratio)
+    vertices = [(0.0, 0.0, 0.0)]
+    uvs = [(0.5, 0.5)]
+    for ring_index in range(1, RING_COUNT + 1):
+        ring_ratio = ring_index / RING_COUNT
+        for segment_index in range(RING_SEGMENTS):
+            angle = (math.tau * segment_index) / RING_SEGMENTS
+            shoreline_variation = (
+                1.0
+                + (0.045 * math.sin((angle * 3.0) + 0.4))
+                + (0.025 * math.sin((angle * 7.0) - 0.7))
+            )
+            radius = ring_ratio * shoreline_variation
+            x = math.cos(angle) * half_width * radius
+            y = math.sin(angle) * half_depth * radius
             vertices.append((x, y, 0.0))
-            uvs.append((x_ratio, y_ratio))
+            uvs.append(
+                (
+                    0.5 + (0.5 * math.cos(angle) * ring_ratio),
+                    0.5 + (0.5 * math.sin(angle) * ring_ratio),
+                )
+            )
 
-    row_size = x_segments + 1
     faces = []
-    for y_index in range(y_segments):
-        for x_index in range(x_segments):
-            lower_left = (y_index * row_size) + x_index
-            lower_right = lower_left + 1
-            upper_left = lower_left + row_size
-            upper_right = upper_left + 1
-            faces.append((lower_left, lower_right, upper_right, upper_left))
+    for segment_index in range(RING_SEGMENTS):
+        next_segment = (segment_index + 1) % RING_SEGMENTS
+        faces.append((0, 1 + segment_index, 1 + next_segment))
+
+    for ring_index in range(1, RING_COUNT):
+        inner_start = 1 + ((ring_index - 1) * RING_SEGMENTS)
+        outer_start = 1 + (ring_index * RING_SEGMENTS)
+        for segment_index in range(RING_SEGMENTS):
+            next_segment = (segment_index + 1) % RING_SEGMENTS
+            faces.append(
+                (
+                    inner_start + segment_index,
+                    outer_start + segment_index,
+                    outer_start + next_segment,
+                    inner_start + next_segment,
+                )
+            )
 
     mesh = bpy.data.meshes.new("BaseWaterSurfaceGeo")
     mesh.from_pydata(vertices, (), faces)
@@ -115,6 +135,7 @@ def export_x(water):
 
 def main():
     bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
+    bpy.context.preferences.filepaths.save_version = 0
     clear_scene()
     material = create_water_material()
     water = create_water_mesh(material)
