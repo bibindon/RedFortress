@@ -11,6 +11,7 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos, const int meshId, const f
                 0.65f * 3.0f,
                 0.55f * 3.0f,
                 MovementMode::Ground,
-                true)
+                true,
+                HitReactionMode::SuperArmor)
 {
 }

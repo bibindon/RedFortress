@@ -122,6 +122,7 @@ private:
     void BeginStageIntro();
     void UpdateStageIntro();
     void DamagePlayerHp(int amount);
+    void ProcessEnemyAttackHits();
     void HealPlayerHp(int amount);
     void HandlePlayerDeath();
     void CompletePlayerDeath();
@@ -337,6 +338,7 @@ private:
     int m_saberMeshId = -1;
     int m_gunMeshId = -1;
     int m_playerKnockbackFrames = 0;
+    int m_playerSlowFrames = 0;
     D3DXVECTOR3 m_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int m_respawnCameraDelayFrames = 0;
     int m_respawnCameraMoveFrames = 0;

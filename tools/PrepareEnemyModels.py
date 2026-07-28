@@ -72,6 +72,10 @@ ASSET_CONFIGS = {
             "move": "SpiderArmature|Spider_Walk",
             "fast_move": "SpiderArmature|Spider_Jump",
             "attack": "SpiderArmature|Spider_Attack",
+            "attack_bite": "SpiderArmature|Spider_Attack",
+            "attack_pounce": "SpiderArmature|Spider_Jump",
+            "attack_web": "SpiderArmature|Spider_Attack",
+            "attack_poison": "SpiderArmature|Spider_Attack",
             "hit": "SpiderArmature|Spider_Idle",
             "death": "SpiderArmature|Spider_Death",
         },
@@ -84,6 +88,10 @@ ASSET_CONFIGS = {
             "move": "SkeletonArmature|Skeleton_Running",
             "fast_move": "SkeletonArmature|Skeleton_Running",
             "attack": "SkeletonArmature|Skeleton_Attack",
+            "attack_slash": "SkeletonArmature|Skeleton_Attack",
+            "attack_smash": "SkeletonArmature|Skeleton_Attack",
+            "attack_charge": "SkeletonArmature|Skeleton_Running",
+            "attack_bone": "SkeletonArmature|Skeleton_Spawn",
             "hit": "SkeletonArmature|Skeleton_Idle",
             "death": "SkeletonArmature|Skeleton_Death",
         },
@@ -480,7 +488,7 @@ def export_x(
     )
 
 
-def write_animation_csv(output_directory):
+def write_animation_csv(output_directory, action_map):
     rows = [
         'Anim, "000", "enemy.default.x", default',
         'Anim, "idle", "enemy.idle.x", loop',
@@ -491,6 +499,20 @@ def write_animation_csv(output_directory):
         'Anim, "hit", "enemy.hit.x", stopWhenEnd',
         'Anim, "death", "enemy.death.x", stopWhenEnd',
     ]
+    standard_actions = {
+        "idle",
+        "move",
+        "fast_move",
+        "attack",
+        "hit",
+        "death",
+    }
+    for logical_name in action_map:
+        if logical_name in standard_actions:
+            continue
+        rows.append(
+            f'Anim, "{logical_name}", "enemy.{logical_name}.x", stopWhenEnd'
+        )
     output_path = os.path.join(output_directory, "enemy.csv")
     data = ("\r\n".join(rows) + "\r\n").encode("utf-8")
     with open(output_path, "wb") as output_file:
@@ -603,7 +625,7 @@ def main():
             f"{action.name} {frame_start} {frame_end}"
         )
 
-    write_animation_csv(output_directory)
+    write_animation_csv(output_directory, action_map)
     print(
         f"PREPARED {asset_name} meshes={len(mesh_objects)} "
         f"output={output_directory}"

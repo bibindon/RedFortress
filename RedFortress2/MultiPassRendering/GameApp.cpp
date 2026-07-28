@@ -1210,6 +1210,7 @@ void GameApp::Run()
                 if (m_debugEnemyUpdateEnabled)
                 {
                     m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
+                    ProcessEnemyAttackHits();
                 }
 
                 m_destructibleManager.Update(m_render);
@@ -1592,7 +1593,9 @@ void GameApp::Run()
                         GameAudio::PlayAttackHit();
                         break;
                     }
-                    else if (m_playerInvincibleFrames <= 0 && enemy->IsTouchingPlayer(m_playerMover.GetPosition()))
+                    else if (m_playerInvincibleFrames <= 0 &&
+                             !enemy->UsesSpecialAttacks() &&
+                             enemy->IsTouchingPlayer(m_playerMover.GetPosition()))
                     {
                         GameAudio::PlayEnemyAttack();
                         DamagePlayerHp(10);
@@ -2486,6 +2489,10 @@ void GameApp::UpdatePlayerByInput()
     {
         --m_playerKnockbackFrames;
     }
+    if (m_playerSlowFrames > 0)
+    {
+        --m_playerSlowFrames;
+    }
 
     const bool shiftPressed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT)
         || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT);
@@ -2606,6 +2613,10 @@ void GameApp::UpdatePlayerByInput()
     else
     {
         settings.moveSpeed = runSpeed * runSpeedMultiplier;
+    }
+    if (m_playerSlowFrames > 0)
+    {
+        settings.moveSpeed *= 0.5f;
     }
     m_playerMover.SetSettings(settings);
 
@@ -5807,6 +5818,55 @@ bool GameApp::IsStageClearReached()
     return true;
 }
 
+void GameApp::ProcessEnemyAttackHits()
+{
+    for (auto& enemy : m_enemyManager.GetEnemies())
+    {
+        EnemyBase::AttackHit hit;
+        if (!enemy->ConsumeAttackHit(&hit))
+        {
+            continue;
+        }
+        if (m_playerInvincibleFrames > 0 ||
+            m_pickupManager.IsStarActive() ||
+            enemy->IsDead())
+        {
+            continue;
+        }
+
+        GameAudio::PlayEnemyAttack();
+        DamagePlayerHp(hit.damage);
+        m_playerInvincibleFrames = kPlayerInvincibleDuration;
+        if (m_playerMeshId >= 0)
+        {
+            m_render.StartMeshMixSkinAnimBlink(m_playerMeshId,
+                                               kPlayerInvincibleDuration,
+                                               2);
+        }
+
+        if (hit.knockbackFrames > 0)
+        {
+            m_playerKnockbackFrames = hit.knockbackFrames;
+            D3DXVECTOR3 knockbackDirection = m_playerMover.GetPosition() - hit.sourcePosition;
+            knockbackDirection.y = 0.0f;
+            if (D3DXVec3LengthSq(&knockbackDirection) > 0.0001f)
+            {
+                D3DXVec3Normalize(&knockbackDirection, &knockbackDirection);
+            }
+            else
+            {
+                knockbackDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+            }
+            m_playerKnockbackDir = knockbackDirection;
+        }
+        if (hit.slowFrames > m_playerSlowFrames)
+        {
+            m_playerSlowFrames = hit.slowFrames;
+        }
+        break;
+    }
+}
+
 void GameApp::DamagePlayerHp(int amount)
 {
     const int oldHp = m_player.GetHp();
@@ -5937,6 +5997,7 @@ void GameApp::HandlePlayerDeath()
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
+    m_playerSlowFrames = 0;
     m_hitStopFrames = 0;
     m_pendingHitStopFrames = 0;
     m_hitStopPlayerAnimationPaused = false;
@@ -5998,6 +6059,7 @@ void GameApp::CompletePlayerDeath()
 
     // 各種状態リセット
     m_playerKnockbackFrames = 0;
+    m_playerSlowFrames = 0;
     m_playerAttackController.Reset();
     ResetBusterAimState();
     m_damagePopupManager.Clear();
@@ -6018,6 +6080,7 @@ void GameApp::StartGameOverSequence()
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
+    m_playerSlowFrames = 0;
     m_playerInvincibleFrames = 0;
     m_respawnCameraDelayFrames = 0;
     m_respawnCameraMoveFrames = 0;
@@ -6354,6 +6417,7 @@ void GameApp::LoadCurrentStageObjects()
     m_pickupManager.ResetTemporaryEffects();
     RestoreTemporaryPowerUps();
     m_playerKnockbackFrames = 0;
+    m_playerSlowFrames = 0;
     m_playerAttackController.Reset();
     ResetBusterAimState();
     m_playerAttackController.SelectClubCategory();

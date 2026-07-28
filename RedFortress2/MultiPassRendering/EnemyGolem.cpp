@@ -11,6 +11,7 @@ EnemyGolem::EnemyGolem(const D3DXVECTOR3& pos, const int meshId, const float yaw
                 0.8f,
                 2.4f,
                 MovementMode::Ground,
-                true)
+                true,
+                HitReactionMode::SuperArmor)
 {
 }

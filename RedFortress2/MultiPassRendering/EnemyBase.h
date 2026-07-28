@@ -36,10 +36,26 @@ public:
         Swoop
     };
 
+    enum class HitReactionMode
+    {
+        Normal,
+        SuperArmor
+    };
+
+    struct AttackHit
+    {
+        int damage = 0;
+        D3DXVECTOR3 sourcePosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        int knockbackFrames = 0;
+        int slowFrames = 0;
+    };
+
     virtual ~EnemyBase() = default;
 
     void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
     void SyncMesh(NSRender::Render& render);
+    bool ConsumeAttackHit(AttackHit* outHit);
+    virtual bool UsesSpecialAttacks() const;
 
     void TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& attackerPos);
     void TakeDamageWithoutFacing(NSRender::Render& render, int amount);
@@ -75,7 +91,24 @@ protected:
               float contactRadius,
               float height,
               MovementMode movementMode = MovementMode::Ground,
-              bool usesExtendedAnimations = false);
+              bool usesExtendedAnimations = false,
+              HitReactionMode hitReactionMode = HitReactionMode::Normal);
+
+    virtual bool UpdateSpecialAttack(NSRender::Render& render,
+                                     const D3DXVECTOR3& playerPos,
+                                     bool playerInvincible);
+    bool IsSpecialAttackReady() const;
+    void FaceSpecialAttackTarget(const D3DXVECTOR3& targetPos);
+    bool MoveForSpecialAttack(const D3DXVECTOR3& velocity);
+    bool MoveSpecialProjectile(D3DXVECTOR3* position,
+                               const D3DXVECTOR3& velocity,
+                               float radius);
+    void PlaySpecialAttackAnimation(NSRender::Render& render, const std::wstring& animationName);
+    void FinishSpecialAttack();
+    void EmitAttackHit(int damage,
+                       const D3DXVECTOR3& sourcePosition,
+                       int knockbackFrames,
+                       int slowFrames);
 
 private:
     void StartIdleBehavior();
@@ -119,6 +152,7 @@ private:
     float m_height = 1.0f;
     MovementMode m_movementMode = MovementMode::Ground;
     bool m_usesExtendedAnimations = false;
+    HitReactionMode m_hitReactionMode = HitReactionMode::Normal;
     float m_verticalVelocity = 0.0f;
     bool m_isGrounded = false;
     int m_frogJumpCooldownFrames = 0;
@@ -143,4 +177,6 @@ private:
     float m_chaseStrafeDirection = 1.0f;
     float m_personalityBias = 0.0f;
     unsigned int m_behaviorSeed = 1;
+    AttackHit m_pendingAttackHit;
+    bool m_hasPendingAttackHit = false;
 };

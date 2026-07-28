@@ -6,3 +6,7 @@ Anim, "run", "enemy.fast_move.x", loop
 Anim, "attack", "enemy.attack.x", stopWhenEnd
 Anim, "hit", "enemy.hit.x", stopWhenEnd
 Anim, "death", "enemy.death.x", stopWhenEnd
+Anim, "attack_slash", "enemy.attack_slash.x", stopWhenEnd
+Anim, "attack_smash", "enemy.attack_smash.x", stopWhenEnd
+Anim, "attack_charge", "enemy.attack_charge.x", stopWhenEnd
+Anim, "attack_bone", "enemy.attack_bone.x", stopWhenEnd

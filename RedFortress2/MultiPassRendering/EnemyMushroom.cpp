@@ -11,6 +11,7 @@ EnemyMushroom::EnemyMushroom(const D3DXVECTOR3& pos, const int meshId, const flo
                 0.6f,
                 1.1f,
                 MovementMode::Ground,
-                true)
+                true,
+                HitReactionMode::SuperArmor)
 {
 }

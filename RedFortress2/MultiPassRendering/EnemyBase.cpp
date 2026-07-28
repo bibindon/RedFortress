@@ -60,7 +60,8 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
                      const float contactRadius,
                      const float height,
                      const MovementMode movementMode,
-                     const bool usesExtendedAnimations)
+                     const bool usesExtendedAnimations,
+                     const HitReactionMode hitReactionMode)
     : m_position(startPosition)
 {
     m_homePosition = startPosition;
@@ -75,6 +76,7 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
     m_height = height;
     m_movementMode = movementMode;
     m_usesExtendedAnimations = usesExtendedAnimations;
+    m_hitReactionMode = hitReactionMode;
     m_state = State::Idle;
     m_animState = AnimState::Idle;
     m_yaw = yaw;
@@ -185,6 +187,11 @@ void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, b
         return;
     }
 
+    if (UpdateSpecialAttack(render, playerPos, playerInvincible))
+    {
+        return;
+    }
+
     if (m_state == State::Alert)
     {
         if (m_alertFrames > 0)
@@ -276,6 +283,105 @@ void EnemyBase::SyncMesh(NSRender::Render& render)
     render.SetMeshMixSkinAnimRotY(m_meshId, m_yaw);
 }
 
+bool EnemyBase::ConsumeAttackHit(AttackHit* outHit)
+{
+    if (!m_hasPendingAttackHit || outHit == nullptr)
+    {
+        return false;
+    }
+
+    *outHit = m_pendingAttackHit;
+    m_pendingAttackHit = AttackHit();
+    m_hasPendingAttackHit = false;
+    return true;
+}
+
+bool EnemyBase::UsesSpecialAttacks() const
+{
+    return false;
+}
+
+bool EnemyBase::UpdateSpecialAttack(NSRender::Render& render,
+                                    const D3DXVECTOR3& playerPos,
+                                    const bool playerInvincible)
+{
+    return false;
+}
+
+bool EnemyBase::IsSpecialAttackReady() const
+{
+    return m_state == State::Chase;
+}
+
+void EnemyBase::FaceSpecialAttackTarget(const D3DXVECTOR3& targetPos)
+{
+    FaceTargetImmediately(targetPos);
+}
+
+bool EnemyBase::MoveForSpecialAttack(const D3DXVECTOR3& velocity)
+{
+    return MoveWithCollision(velocity);
+}
+
+bool EnemyBase::MoveSpecialProjectile(D3DXVECTOR3* position,
+                                      const D3DXVECTOR3& velocity,
+                                      const float radius)
+{
+    if (position == nullptr)
+    {
+        return true;
+    }
+
+    D3DXVECTOR3 resolvedPosition = *position;
+    D3DXVECTOR3 resolvedVelocity = velocity;
+    const bool collided = PhysicsLib::PhysicsLib::CheckCollide(
+        *position,
+        velocity,
+        PhysicsLib::PhysicsLib::ShapeType::Sphere,
+        &resolvedPosition,
+        &resolvedVelocity,
+        nullptr,
+        nullptr,
+        radius,
+        0.0f);
+    *position = resolvedPosition;
+    return collided;
+}
+
+void EnemyBase::PlaySpecialAttackAnimation(NSRender::Render& render,
+                                           const std::wstring& animationName)
+{
+    if (m_meshId < 0)
+    {
+        return;
+    }
+
+    render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+    render.PlayMeshMixSkinAnimAnimation(m_meshId, animationName);
+}
+
+void EnemyBase::FinishSpecialAttack()
+{
+    m_animationNeedsRefresh = true;
+}
+
+void EnemyBase::EmitAttackHit(const int damage,
+                              const D3DXVECTOR3& sourcePosition,
+                              const int knockbackFrames,
+                              const int slowFrames)
+{
+    if (m_hasPendingAttackHit)
+    {
+        return;
+    }
+
+    m_pendingAttackHit.damage = damage;
+    m_pendingAttackHit.sourcePosition = sourcePosition;
+    m_pendingAttackHit.knockbackFrames = knockbackFrames;
+    m_pendingAttackHit.slowFrames = slowFrames;
+    m_hasPendingAttackHit = true;
+}
+
 void EnemyBase::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTOR3& attackerPos)
 {
     if (m_state == State::Dead)
@@ -323,7 +429,7 @@ void EnemyBase::ApplyDamage(NSRender::Render& render, const int amount)
         m_hp = 0;
         StartDeath(render);
     }
-    else
+    else if (m_hitReactionMode == HitReactionMode::Normal)
     {
         if (m_usesExtendedAnimations)
         {
@@ -348,6 +454,8 @@ void EnemyBase::ApplyDamage(NSRender::Render& render, const int amount)
 void EnemyBase::StartDeath(NSRender::Render& render)
 {
     m_state = State::Dead;
+    m_pendingAttackHit = AttackHit();
+    m_hasPendingAttackHit = false;
     m_hitStunFrames = 0;
     m_facePlayerTurnFrames = 0;
     m_knockbackFrames = 0;
@@ -452,6 +560,11 @@ void EnemyBase::StartKnockbackFrom(const D3DXVECTOR3& sourcePosition,
                                    const float distance,
                                    const int durationFrames)
 {
+    if (m_hitReactionMode == HitReactionMode::SuperArmor)
+    {
+        return;
+    }
+
     if (distance <= 0.0f || durationFrames <= 0)
     {
         return;
