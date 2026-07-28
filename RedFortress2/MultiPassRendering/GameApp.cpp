@@ -314,6 +314,23 @@ namespace
         return stageId.length() >= 6 && stageId.substr(0, 6) == L"select";
     }
 
+    float CalculatePlayerStartYaw(const StageManager::StageData& stage)
+    {
+        if (IsStageSelectId(stage.id))
+        {
+            return 0.0f;
+        }
+
+        const D3DXVECTOR3 direction = stage.clearPosition - stage.playerStartPosition;
+        const float horizontalLengthSquared = direction.x * direction.x + direction.z * direction.z;
+        if (horizontalLengthSquared <= 0.0001f)
+        {
+            return 0.0f;
+        }
+
+        return atan2f(-direction.x, -direction.z);
+    }
+
     bool IsBombAttackType(const PlayerAttackType attackType)
     {
         if (attackType == PlayerAttackType::BombAttack)
@@ -6328,7 +6345,7 @@ void GameApp::LoadCurrentStageObjects()
     m_prevMovingPlatformPositions.clear();
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
-    m_playerYaw = 0.0f;
+    m_playerYaw = CalculatePlayerStartYaw(stage);
     m_playerAnimState = PlayerAnimState::Idle;
     m_stageExitFrame = 0;
     m_stageExitVisualOffsetY = 0.0f;
