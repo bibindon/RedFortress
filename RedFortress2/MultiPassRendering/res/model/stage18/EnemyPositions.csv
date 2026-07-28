@@ -1,3 +1,5 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-enemy2,0.0,0.2,10.0,0
-enemy3,0.0,0.2,-10.0,0
+frog,-2,0.2,10,180
+crab,4,0.2,-10,0
+bird,8,2,14,270
+wolf,8,0.2,-20,90

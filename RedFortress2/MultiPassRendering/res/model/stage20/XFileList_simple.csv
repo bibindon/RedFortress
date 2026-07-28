@@ -1,22 +1,14 @@
 ﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
-2,../ground/plateField64x128.x, 0, 0,0, 0, 0, 0, 1,meshmix2
-303,../collision_wall/collision_wall.x, 11, 1.5,22, 0, 0, 0, 1,meshmix2
-304,../collision_wall/collision_wall.x, 5,1.51,18, 0, 90, 0, 1,meshmix2
-305,../collision_wall/collision_wall.x, -1,1.52,14, 0, 0, 0, 1,meshmix2
-306,../collision_wall/collision_wall.x, -7,1.53,10, 0, 90, 0, 1,meshmix2
-307,../collision_wall/collision_wall.x, 7,1.54,-2, 0, 0, 0, 1,meshmix2
-308,../collision_wall/collision_wall.x, 1,1.55,-10, 0, 90, 0, 1,meshmix2
-309,../collision_wall/collision_wall.x, -5,1.56,-18, 0, 0, 0, 1,meshmix2
-310,../collision_wall/collision_wall.x, -11,1.57,-24, 0, 90, 0, 1,meshmix2
-313,../collision_moving_platform/collision_moving_platform.x, 3,0.82,8, 0, 0, 0, 1, meshmix2
-314,../collision_moving_platform/collision_moving_platform.x, -1,0.83,2, 0, 0, 0, 1, meshmix2
-319,../cubeWood/cube_wood.x, 12,0,16, 0, 0, 0, 1, normal
-320,../cubeWood/cube_wood.x, 6,0.01,8, 0, 0, 0, 1, normal
-321,../cubeWood/cube_wood.x, 0,0.02,0, 0, 0, 0, 1, normal
-322,../cubeWood/cube_wood.x, -4,0.03,-10, 0, 0, 0, 1, normal
-323,../cubeWood/cube_wood.x, -9,0.04,-18, 0, 0, 0, 1, normal
-324,../cubeWood/cube_wood.x, -13,0.05,-26, 0, 0, 0, 1, normal
-326,..\SkySphere\SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
+2,../ground/plateField64x128.x,0,0,0,0,0,0,1,meshmix2
+303,../collision_wall/collision_wall.x,-9,1.5,10,0,0,0,1,meshmix2
+304,../collision_wall/collision_wall.x,9,1.5,10,0,0,0,1,meshmix2
+305,../collision_wall/collision_wall.x,-9,1.5,-10,0,0,0,1,meshmix2
+306,../collision_wall/collision_wall.x,9,1.5,-10,0,0,0,1,meshmix2
+319,../cubeWood/cube_wood.x,-6,0,20,0,0,0,1,normal
+320,../cubeWood/cube_wood.x,6,0,20,0,0,0,1,normal
+321,../cubeWood/cube_wood.x,-6,0,-20,0,0,0,1,normal
+322,../cubeWood/cube_wood.x,6,0,-20,0,0,0,1,normal
+326,../SkySphere/SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
 201,../fence.x,-11,0.5,-30,0,0,0,1,normal
 202,../fence.x,-3,0.5,-30,0,0,0,1,normal
 203,../fence.x,5,0.5,-30,0,0,0,1,normal

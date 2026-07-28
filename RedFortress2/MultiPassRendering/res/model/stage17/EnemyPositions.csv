@@ -1,3 +1,6 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-wolf,5.0,0.2,0.0,0
-enemy2,-5.0,0.2,0.0,0
+wolf,-8,0.2,-18,0
+small_mushroom,8,0.2,-8,180
+crab,-8,0.2,7,0
+bird,8,2,18,180
+wolf,0,0.2,23,180

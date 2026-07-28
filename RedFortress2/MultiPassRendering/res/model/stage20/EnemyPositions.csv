@@ -1,3 +1,4 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-enemy4,0.0,0.2,0.0,0
-enemy5,7.0,0.2,14.0,0
+giant_crab,0,0.2,0,180
+crab,-8,0.2,7,0
+crab,8,0.2,-7,180
