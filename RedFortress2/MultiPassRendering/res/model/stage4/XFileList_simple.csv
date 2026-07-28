@@ -1,5 +1,5 @@
 ﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
-2,../ground/plateField64x128.x,0,0,0,0,0,0,1,meshmix2
+2,stage_ground.x,0,0,0,0,0,0,1,meshmix2
 303,../collision_wall/collision_wall.x,-4,1.5,18,0,90,0,1,meshmix2
 304,../collision_wall/collision_wall.x,4,1.5,5,0,90,0,1,meshmix2
 305,../collision_wall/collision_wall.x,-4,1.5,-10,0,90,0,1,meshmix2

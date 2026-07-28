@@ -1,0 +1,476 @@
+﻿import csv
+import os
+from collections import deque
+from pathlib import Path
+
+import bpy
+
+
+GROUND_DIR = Path(__file__).resolve().parent
+MODEL_DIR = GROUND_DIR.parent
+BLEND_PATH = GROUND_DIR / "stage_grounds.blend"
+FIELD_TEXTURE_PATH = MODEL_DIR / "field.png"
+SIDE_TEXTURE_PATH = MODEL_DIR / "whiteWall.png"
+SLAB_BOTTOM = -20.0
+PIT_BOTTOM = -18.0
+
+
+STAGES = (
+    {"display": "1-1", "folder": "stage1", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-13.0, -10.0, -3.0, 7.0),)},
+    {"display": "1-2", "folder": "stage2", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((3.0, 7.0, -17.0, -11.0),)},
+    {"display": "1-3", "folder": "stage3", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-2.0, 2.0, -6.0, 6.0),)},
+    {"display": "1-4", "folder": "stage4", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-13.0, -9.0, -15.0, -11.0), (8.0, 12.0, -20.0, -12.0))},
+    {"display": "1-5", "folder": "stage17", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-13.0, -10.0, 4.0, 9.0), (10.0, 13.0, -8.0, -2.0))},
+    {"display": "1-6", "folder": "stage18", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-13.0, -10.0, -12.0, -4.0), (10.0, 13.0, 4.0, 12.0))},
+    {"display": "1-7", "folder": "stage19", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-2.0, 2.0, -6.0, 6.0),)},
+    {"display": "1-8", "folder": "stage20", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-14.0, -11.0, -4.0, 4.0), (11.0, 14.0, -4.0, 4.0))},
+
+    {"display": "2-1", "folder": "stage5", "size": (60.0, 60.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-24.0, -18.0, -12.0, 12.0), (18.0, 24.0, -12.0, 12.0))},
+    {"display": "2-2", "folder": "stage6", "size": (60.0, 60.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-38.0, -28.0, -12.0, 12.0),)},
+    {"display": "2-3", "folder": "stage7", "size": (60.0, 60.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-38.0, -30.0, -30.0, -10.0), (30.0, 38.0, 10.0, 30.0), (-8.0, 8.0, 40.0, 48.0))},
+    {"display": "2-4", "folder": "stage8", "size": (60.0, 60.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-40.0, -24.0, -10.0, 10.0), (24.0, 40.0, -10.0, 10.0))},
+    {"display": "2-5", "folder": "stage21", "size": (60.0, 60.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-24.0, -16.0, -20.0, 4.0), (16.0, 24.0, -4.0, 20.0))},
+    {"display": "2-6", "folder": "stage22", "size": (60.0, 60.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-36.0, -28.0, -30.0, 30.0),)},
+    {"display": "2-7", "folder": "stage23", "size": (60.0, 60.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-40.0, -32.0, 10.0, 26.0), (32.0, 40.0, -10.0, 6.0), (-8.0, 8.0, -46.0, -38.0))},
+    {"display": "2-8", "folder": "stage24", "size": (60.0, 60.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-32.0, 32.0, 34.0, 42.0), (-32.0, 32.0, -42.0, -34.0), (-42.0, -34.0, -34.0, 34.0), (34.0, 42.0, -34.0, 34.0))},
+
+    {"display": "3-1", "folder": "stage9", "size": (60.0, 120.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-30.0, -20.0, -40.0, 40.0), (20.0, 30.0, -40.0, 40.0))},
+    {"display": "3-2", "folder": "stage10", "size": (60.0, 120.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-32.0, -6.0, -52.0, -44.0), (6.0, 32.0, -52.0, -44.0), (-32.0, -6.0, 44.0, 52.0), (6.0, 32.0, 44.0, 52.0))},
+    {"display": "3-3", "folder": "stage11", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-35.0, -25.0, -50.0, 50.0),)},
+    {"display": "3-4", "folder": "stage12", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-38.0, -26.0, 30.0, 50.0), (-6.0, 6.0, 55.0, 70.0), (26.0, 38.0, -50.0, -30.0))},
+    {"display": "3-5", "folder": "stage25", "size": (60.0, 120.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-30.0, 30.0, 45.0, 55.0),)},
+    {"display": "3-6", "folder": "stage26", "size": (60.0, 120.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-40.0, -30.0, 20.0, 45.0), (30.0, 40.0, -45.0, -20.0), (-5.0, 5.0, 60.0, 75.0))},
+    {"display": "3-7", "folder": "stage27", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-40.0, -30.0, -12.0, 12.0), (30.0, 40.0, -12.0, 12.0), (-18.0, -8.0, 48.0, 64.0), (8.0, 18.0, -64.0, -48.0))},
+    {"display": "3-8", "folder": "stage28", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-28.0, -18.0, 14.0, 32.0), (18.0, 28.0, 14.0, 32.0), (-28.0, -18.0, -32.0, -14.0), (18.0, 28.0, -32.0, -14.0))},
+
+    {"display": "4-1", "folder": "stage13", "size": (60.0, 120.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-26.0, -18.0, -34.0, 34.0), (18.0, 26.0, -34.0, 34.0))},
+    {"display": "4-2", "folder": "stage14", "size": (60.0, 120.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-30.0, -3.0, 40.0, 48.0), (3.0, 30.0, 40.0, 48.0))},
+    {"display": "4-3", "folder": "stage15", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-40.0, -30.0, -16.0, 16.0), (30.0, 40.0, -16.0, 16.0))},
+    {"display": "4-4", "folder": "stage16", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-40.0, -32.0, -45.0, 25.0), (-5.0, 5.0, 50.0, 75.0), (32.0, 40.0, -25.0, 45.0))},
+    {"display": "4-5", "folder": "stage29", "size": (60.0, 120.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-30.0, -20.0, -12.0, 12.0), (20.0, 30.0, -12.0, 12.0), (-12.0, 12.0, 42.0, 52.0), (-12.0, 12.0, -52.0, -42.0))},
+    {"display": "4-6", "folder": "stage30", "size": (60.0, 120.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-42.0, -28.0, 36.0, 50.0), (28.0, 42.0, 36.0, 50.0), (-42.0, -28.0, -50.0, -36.0), (28.0, 42.0, -50.0, -36.0))},
+    {"display": "4-7", "folder": "stage31", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-28.0, -18.0, 20.0, 36.0), (16.0, 28.0, 4.0, 18.0), (-26.0, -14.0, -18.0, -4.0), (14.0, 24.0, -36.0, -20.0))},
+    {"display": "4-8", "folder": "stage32", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-30.0, -4.0, 40.0, 48.0), (4.0, 30.0, 40.0, 48.0), (-30.0, -4.0, -48.0, -40.0), (4.0, 30.0, -48.0, -40.0), (-40.0, -32.0, -40.0, 40.0), (32.0, 40.0, -40.0, 40.0))},
+)
+
+
+POSITION_CSV_FILES = (
+    "EnemyPositions.csv",
+    "Destructibles.csv",
+    "Collectibles.csv",
+    "SpeedUps.csv",
+    "DashBoosters.csv",
+)
+
+
+def clear_scene():
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.ops.object.delete(use_global=False)
+    for collection in (bpy.data.meshes, bpy.data.materials, bpy.data.images):
+        for data_block in list(collection):
+            collection.remove(data_block)
+
+
+def create_material(name, texture_path, texture_filename, color):
+    material = bpy.data.materials.new(name)
+    material.use_nodes = True
+    material.diffuse_color = color
+    material.roughness = 1.0
+    material.metallic = 0.0
+    material["_x_power"] = 0.0
+    material["_x_specular"] = (0.0, 0.0, 0.0)
+    material["_x_emissive"] = (0.0, 0.0, 0.0)
+    material["_x_texture_filename"] = texture_filename
+
+    principled = next(
+        node for node in material.node_tree.nodes
+        if node.type == "BSDF_PRINCIPLED"
+    )
+    principled.inputs["Base Color"].default_value = color
+    principled.inputs["Roughness"].default_value = 1.0
+
+    image = bpy.data.images.load(str(texture_path), check_existing=True)
+    texture = material.node_tree.nodes.new("ShaderNodeTexImage")
+    texture.name = name + "_Texture"
+    texture.image = image
+    texture.extension = "REPEAT"
+    material.node_tree.links.new(texture.outputs["Color"], principled.inputs["Base Color"])
+    return material
+
+
+def point_in_pit(x, y, pits, margin=0.0):
+    for pit in pits:
+        x_min, x_max, y_min, y_max = pit
+        if x >= x_min - margin and x <= x_max + margin:
+            if y >= y_min - margin and y <= y_max + margin:
+                return True
+    return False
+
+
+def validate_stage(stage):
+    half_width, half_depth = stage["size"]
+    pits = stage["pits"]
+
+    for pit_index, pit in enumerate(pits):
+        x_min, x_max, y_min, y_max = pit
+        if x_min >= x_max or y_min >= y_max:
+            raise RuntimeError(stage["display"] + " has an invalid pit rectangle")
+        if x_min <= -half_width or x_max >= half_width:
+            raise RuntimeError(stage["display"] + " pit touches the outer X wall")
+        if y_min <= -half_depth or y_max >= half_depth:
+            raise RuntimeError(stage["display"] + " pit touches the outer Z wall")
+        for other_index in range(pit_index):
+            other = pits[other_index]
+            separated = x_max <= other[0] or x_min >= other[1]
+            if not separated:
+                separated = y_max <= other[2] or y_min >= other[3]
+            if not separated:
+                raise RuntimeError(stage["display"] + " has overlapping pits")
+
+    for label in ("start", "goal"):
+        point = stage[label]
+        if point_in_pit(point[0], point[1], pits, margin=1.0):
+            raise RuntimeError(stage["display"] + " " + label + " overlaps a pit")
+
+    stage_dir = MODEL_DIR / stage["folder"]
+    conflicts = []
+    for csv_name in POSITION_CSV_FILES:
+        csv_path = stage_dir / csv_name
+        if not csv_path.exists():
+            continue
+        with csv_path.open("r", encoding="utf-8-sig", newline="") as file:
+            for row_index, row in enumerate(csv.DictReader(file), start=2):
+                if "PosX" not in row or "PosZ" not in row:
+                    continue
+                if row["PosX"] is None or row["PosZ"] is None:
+                    continue
+                if row["PosX"].strip() == "" or row["PosZ"].strip() == "":
+                    continue
+                x = float(row["PosX"])
+                y = float(row["PosZ"])
+                if point_in_pit(x, y, pits, margin=0.8):
+                    conflicts.append(csv_name + ":" + str(row_index))
+
+    render_path = stage_dir / "XFileList_simple.csv"
+    if render_path.exists():
+        with render_path.open("r", encoding="utf-8-sig", newline="") as file:
+            for row_index, row in enumerate(csv.DictReader(file), start=2):
+                filename = row.get("FileName", "")
+                lowered = filename.lower()
+                if "ground" in lowered or "platefield" in lowered:
+                    continue
+                if "skysphere" in lowered or "fence.x" in lowered:
+                    continue
+                if "collision_moving_platform" in lowered:
+                    continue
+                if row.get("PosX") is None or row.get("PosZ") is None:
+                    continue
+                x = float(row["PosX"])
+                y = float(row["PosZ"])
+                if point_in_pit(x, y, pits, margin=0.8):
+                    conflicts.append("XFileList_simple.csv:" + str(row_index))
+
+    collision_rectangles = load_collision_rectangles(stage)
+    for rectangle in collision_rectangles:
+        for pit in pits:
+            if rectangle_intersects_pit(rectangle, pit, margin=0.2):
+                conflicts.append("XFileListPhysics.csv:" + str(rectangle[4]))
+                break
+
+    if not has_safe_route(stage, collision_rectangles):
+        conflicts.append("no safe route from start to goal")
+
+    return conflicts
+
+
+def load_collision_rectangles(stage):
+    rectangles = []
+    physics_path = MODEL_DIR / stage["folder"] / "XFileListPhysics.csv"
+    with physics_path.open("r", encoding="utf-8-sig", newline="") as file:
+        for row_index, row in enumerate(csv.DictReader(file), start=2):
+            filename = row.get("FileName", "").lower()
+            if row.get("Move", "").lower() == "y":
+                continue
+            half_x = None
+            half_y = None
+            if "collision_wall" in filename:
+                rotation = int(float(row.get("RotY", "0"))) % 180
+                if rotation == 0:
+                    half_x = 0.9
+                    half_y = 4.4
+                else:
+                    half_x = 4.4
+                    half_y = 0.9
+            elif "cube_wood" in filename:
+                half_x = 1.25
+                half_y = 1.25
+            elif "tree_cylinder" in filename:
+                half_x = 1.2
+                half_y = 1.2
+            if half_x is None:
+                continue
+            center_x = float(row["PosX"])
+            center_y = float(row["PosZ"])
+            rectangles.append((
+                center_x - half_x,
+                center_x + half_x,
+                center_y - half_y,
+                center_y + half_y,
+                row_index,
+            ))
+    return rectangles
+
+
+def rectangle_intersects_pit(rectangle, pit, margin=0.0):
+    if rectangle[1] <= pit[0] - margin or rectangle[0] >= pit[1] + margin:
+        return False
+    if rectangle[3] <= pit[2] - margin or rectangle[2] >= pit[3] + margin:
+        return False
+    return True
+
+
+def load_lava_zones(stage):
+    zones = []
+    lava_path = MODEL_DIR / stage["folder"] / "LavaZones.csv"
+    if not lava_path.exists():
+        return zones
+    with lava_path.open("r", encoding="utf-8-sig", newline="") as file:
+        for row in csv.DictReader(file):
+            zones.append((float(row["PosX"]), float(row["PosZ"]), float(row["Radius"])))
+    return zones
+
+
+def has_safe_route(stage, rectangles):
+    half_width, half_depth = stage["size"]
+    pits = stage["pits"]
+    lava_zones = load_lava_zones(stage)
+    grid_step = 1.0
+    player_margin = 0.45
+
+    def blocked(x, y):
+        if x < -half_width + player_margin or x > half_width - player_margin:
+            return True
+        if y < -half_depth + player_margin or y > half_depth - player_margin:
+            return True
+        if point_in_pit(x, y, pits, margin=player_margin):
+            return True
+        for zone_x, zone_y, radius in lava_zones:
+            delta_x = x - zone_x
+            delta_y = y - zone_y
+            safe_radius = radius + player_margin
+            if delta_x * delta_x + delta_y * delta_y <= safe_radius * safe_radius:
+                return True
+        for rectangle in rectangles:
+            if x >= rectangle[0] - player_margin and x <= rectangle[1] + player_margin:
+                if y >= rectangle[2] - player_margin and y <= rectangle[3] + player_margin:
+                    return True
+        return False
+
+    start = stage["start"]
+    goal = stage["goal"]
+    if blocked(start[0], start[1]) or blocked(goal[0], goal[1]):
+        return False
+
+    queue = deque((start,))
+    visited = {(round(start[0], 3), round(start[1], 3))}
+    directions = ((grid_step, 0.0), (-grid_step, 0.0), (0.0, grid_step), (0.0, -grid_step))
+    while queue:
+        x, y = queue.popleft()
+        if abs(x - goal[0]) <= grid_step * 0.5 and abs(y - goal[1]) <= grid_step * 0.5:
+            return True
+        for delta_x, delta_y in directions:
+            next_x = x + delta_x
+            next_y = y + delta_y
+            key = (round(next_x, 3), round(next_y, 3))
+            if key in visited:
+                continue
+            if blocked(next_x, next_y):
+                continue
+            visited.add(key)
+            queue.append((next_x, next_y))
+    return False
+
+def add_quad(vertices, faces, uvs, material_indices, coordinates, quad_uvs, material_index):
+    start = len(vertices)
+    vertices.extend(coordinates)
+    uvs.extend(quad_uvs)
+    faces.append((start, start + 1, start + 2, start + 3))
+    material_indices.append(material_index)
+
+
+def create_stage_ground(stage, top_material, side_material):
+    half_width, half_depth = stage["size"]
+    pits = stage["pits"]
+    vertices = []
+    faces = []
+    uvs = []
+    material_indices = []
+
+    x_values = {-half_width, half_width}
+    y_values = {-half_depth, half_depth}
+    for pit in pits:
+        x_values.add(pit[0])
+        x_values.add(pit[1])
+        y_values.add(pit[2])
+        y_values.add(pit[3])
+    x_values = sorted(x_values)
+    y_values = sorted(y_values)
+
+    for x_index in range(len(x_values) - 1):
+        for y_index in range(len(y_values) - 1):
+            x_min = x_values[x_index]
+            x_max = x_values[x_index + 1]
+            y_min = y_values[y_index]
+            y_max = y_values[y_index + 1]
+            center_x = (x_min + x_max) * 0.5
+            center_y = (y_min + y_max) * 0.5
+            if point_in_pit(center_x, center_y, pits):
+                continue
+            add_quad(
+                vertices,
+                faces,
+                uvs,
+                material_indices,
+                ((x_min, y_min, 0.0), (x_max, y_min, 0.0), (x_max, y_max, 0.0), (x_min, y_max, 0.0)),
+                ((x_min / 8.0, y_min / 8.0), (x_max / 8.0, y_min / 8.0), (x_max / 8.0, y_max / 8.0), (x_min / 8.0, y_max / 8.0)),
+                0,
+            )
+
+    add_quad(
+        vertices,
+        faces,
+        uvs,
+        material_indices,
+        ((-half_width, -half_depth, SLAB_BOTTOM), (-half_width, half_depth, SLAB_BOTTOM), (half_width, half_depth, SLAB_BOTTOM), (half_width, -half_depth, SLAB_BOTTOM)),
+        ((0.0, 0.0), (0.0, half_depth / 8.0), (half_width / 8.0, half_depth / 8.0), (half_width / 8.0, 0.0)),
+        1,
+    )
+
+    add_quad(vertices, faces, uvs, material_indices,
+             ((-half_width, -half_depth, 0.0), (-half_width, -half_depth, SLAB_BOTTOM), (half_width, -half_depth, SLAB_BOTTOM), (half_width, -half_depth, 0.0)),
+             ((0.0, 0.0), (0.0, 2.5), (half_width / 4.0, 2.5), (half_width / 4.0, 0.0)), 1)
+    add_quad(vertices, faces, uvs, material_indices,
+             ((half_width, half_depth, 0.0), (half_width, half_depth, SLAB_BOTTOM), (-half_width, half_depth, SLAB_BOTTOM), (-half_width, half_depth, 0.0)),
+             ((0.0, 0.0), (0.0, 2.5), (half_width / 4.0, 2.5), (half_width / 4.0, 0.0)), 1)
+    add_quad(vertices, faces, uvs, material_indices,
+             ((-half_width, half_depth, 0.0), (-half_width, half_depth, SLAB_BOTTOM), (-half_width, -half_depth, SLAB_BOTTOM), (-half_width, -half_depth, 0.0)),
+             ((0.0, 0.0), (0.0, 2.5), (half_depth / 4.0, 2.5), (half_depth / 4.0, 0.0)), 1)
+    add_quad(vertices, faces, uvs, material_indices,
+             ((half_width, -half_depth, 0.0), (half_width, -half_depth, SLAB_BOTTOM), (half_width, half_depth, SLAB_BOTTOM), (half_width, half_depth, 0.0)),
+             ((0.0, 0.0), (0.0, 2.5), (half_depth / 4.0, 2.5), (half_depth / 4.0, 0.0)), 1)
+
+    for pit in pits:
+        x_min, x_max, y_min, y_max = pit
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_min, y_min, 0.0), (x_min, y_min, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM), (x_min, y_max, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 1)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_max, y_max, 0.0), (x_max, y_max, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_min, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 1)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_max, y_min, 0.0), (x_max, y_min, PIT_BOTTOM), (x_min, y_min, PIT_BOTTOM), (x_min, y_min, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 1)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_min, y_max, 0.0), (x_min, y_max, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_max, y_max, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 1)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_min, y_min, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM)),
+                 ((0.0, 0.0), ((x_max - x_min) / 4.0, 0.0), ((x_max - x_min) / 4.0, (y_max - y_min) / 4.0), (0.0, (y_max - y_min) / 4.0)), 1)
+
+    object_name = "Stage" + stage["display"].replace("-", "_") + "Ground"
+    mesh = bpy.data.meshes.new(object_name + "Geo")
+    mesh.from_pydata(vertices, (), faces)
+    mesh.update(calc_edges=True)
+    mesh.materials.append(top_material)
+    mesh.materials.append(side_material)
+
+    for polygon_index, polygon in enumerate(mesh.polygons):
+        polygon.use_smooth = False
+        polygon.material_index = material_indices[polygon_index]
+
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            uv_layer.data[loop_index].uv = uvs[vertex_index]
+
+    obj = bpy.data.objects.new(object_name, mesh)
+    bpy.context.collection.objects.link(obj)
+    obj["_x_frame_name"] = object_name
+    obj["_x_mesh_name"] = object_name + "Geo"
+    return obj
+
+
+def export_object(obj, output_path):
+    bpy.ops.object.select_all(action="DESELECT")
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    result = bpy.ops.export_scene.directx_x(
+        filepath=str(output_path),
+        use_selection=True,
+        use_mesh_modifiers=True,
+        global_scale=1.0,
+        axis_forward="Z",
+        axis_up="Y",
+        export_normals=True,
+        export_uvs=True,
+        export_materials=True,
+        export_textures=True,
+        export_armature=False,
+        export_weights=False,
+        export_animation=False,
+        unweld_on_export=False,
+        export_format="TEXT_X",
+        triangulate=True,
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError("DirectX X export failed: " + str(output_path))
+
+
+def main():
+    if len(STAGES) != 32:
+        raise RuntimeError("Exactly 32 stage ground definitions are required")
+
+    folders = {stage["folder"] for stage in STAGES}
+    if len(folders) != 32:
+        raise RuntimeError("Stage ground folder names must be unique")
+
+    bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
+    clear_scene()
+    top_material = create_material(
+        "StageGroundTop",
+        FIELD_TEXTURE_PATH,
+        "../field.png",
+        (0.64, 0.64, 0.64, 1.0),
+    )
+    side_material = create_material(
+        "StageGroundSide",
+        SIDE_TEXTURE_PATH,
+        "../whiteWall.png",
+        (0.42, 0.42, 0.42, 1.0),
+    )
+
+    validation_errors = []
+    for stage in STAGES:
+        conflicts = validate_stage(stage)
+        if conflicts:
+            validation_errors.append(stage["display"] + ": " + ", ".join(conflicts))
+    if validation_errors:
+        raise RuntimeError("Stage ground conflicts:\n" + "\n".join(validation_errors))
+
+    objects = []
+    for stage in STAGES:
+        obj = create_stage_ground(stage, top_material, side_material)
+        objects.append((stage, obj))
+
+    bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))
+    for stage, obj in objects:
+        output_path = MODEL_DIR / stage["folder"] / "stage_ground.x"
+        export_object(obj, output_path)
+        print("EXPORTED", stage["display"], output_path)
+
+    print("BLEND_PATH", BLEND_PATH)
+    print("EXPORTED_STAGE_GROUNDS", len(objects))
+
+
+main()
