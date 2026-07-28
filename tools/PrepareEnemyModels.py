@@ -56,6 +56,8 @@ ASSET_CONFIGS = {
     "ghost": {
         "armature": "CharacterArmature",
         "texture_filename": "ghost_mist.png",
+        "apply_object_scale": True,
+        "blend_filename": "Ghost_clean.blend",
         "actions": {
             "idle": "CharacterArmature|Flying_Idle",
             "move": "CharacterArmature|Fast_Flying",
@@ -202,6 +204,34 @@ def select_export_objects(armature, mesh_objects):
         mesh_object.hide_set(False)
         mesh_object.select_set(True)
     bpy.context.view_layer.objects.active = armature
+
+
+def apply_export_object_scale(armature, mesh_objects):
+    select_export_objects(armature, [])
+    result = bpy.ops.object.transform_apply(
+        location=False,
+        rotation=False,
+        scale=True,
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError(f"Failed to apply armature scale: {armature.name}")
+
+    for mesh_object in mesh_objects:
+        select_export_objects(armature, [])
+        armature.select_set(False)
+        mesh_object.select_set(True)
+        bpy.context.view_layer.objects.active = mesh_object
+        result = bpy.ops.object.transform_apply(
+            location=False,
+            rotation=False,
+            scale=True,
+        )
+        if "FINISHED" not in result:
+            raise RuntimeError(
+                f"Failed to apply mesh scale: {mesh_object.name}"
+            )
+
+    bpy.context.view_layer.update()
 
 
 def validate_export_objects(armature, mesh_objects):
@@ -463,6 +493,8 @@ def main():
 
     load_source(source_path)
     armature, mesh_objects = find_export_objects(config["armature"])
+    if config.get("apply_object_scale", False):
+        apply_export_object_scale(armature, mesh_objects)
     validate_export_objects(armature, mesh_objects)
     material_power = config.get("material_power")
     if material_power is not None:
@@ -500,6 +532,13 @@ def main():
 
     idle_action = action_map["idle"]
     idle_start, idle_end = set_action(armature, idle_action)
+
+    blend_filename = config.get("blend_filename")
+    if blend_filename is not None:
+        blend_path = os.path.join(output_directory, blend_filename)
+        result = bpy.ops.wm.save_as_mainfile(filepath=blend_path)
+        if "FINISHED" not in result:
+            raise RuntimeError(f"Failed to save Blender file: {blend_path}")
 
     base_path = os.path.join(output_directory, "enemy.x")
     export_x(
