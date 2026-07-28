@@ -28,6 +28,7 @@ Saves Skeleton_clean.blend (source.blend is never modified).
 import os
 
 import bpy
+from mathutils import Matrix
 
 
 ARMATURE_NAME = "SkeletonArmature"
@@ -56,36 +57,43 @@ def add_root_bone(armature_obj):
 def move_origin_to_feet(armature_obj, mesh_objects):
     """Lift the model so the lowest foot vertex is at Z=0.
 
-    a. transform_apply each mesh so its local space aligns with armature
-       local space (collapses matrix_parent_inverse into vertices).
-    b. Find the lowest mesh vertex in world space.
-    c. Translate mesh vertices + every bone rest head/tail (except Root,
+    a. Convert every mesh vertex into armature-local space.
+    b. Clear the mesh object's local transform and parent inverse.
+    c. Find the lowest mesh vertex in armature-local space.
+    d. Translate mesh vertices + every bone rest head/tail (except Root,
        pinned at origin) by +delta in Z.
-    d. Zero the object locations so the exported top-level frame is at
-       the origin with identity rotation.
-    """
-    # a. Collapse parent_inverse into mesh vertices.
-    bpy.ops.object.select_all(action="DESELECT")
-    for mesh_obj in mesh_objects:
-        mesh_obj.select_set(True)
-        bpy.context.view_layer.objects.active = mesh_obj
-        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    bpy.ops.object.select_all(action="DESELECT")
+    e. Reset the armature world transform so the exported top-level frame
+       is at the origin with identity rotation.
 
-    # b. World-space lowest vertex.
+    Blender evaluates matrix_parent_inverse when displaying a parented mesh,
+    but the official DirectX X exporter does not serialize that matrix. It
+    must therefore be baked explicitly before export.
+    """
+    # a-b. Put mesh data in armature-local space and remove transforms that
+    # the official DirectX X exporter cannot represent.
+    armature_world_inverse = armature_obj.matrix_world.inverted()
+    for mesh_obj in mesh_objects:
+        mesh_to_armature = armature_world_inverse @ mesh_obj.matrix_world
+        mesh_obj.data.transform(mesh_to_armature)
+        mesh_obj.data.update()
+        mesh_obj.matrix_parent_inverse = Matrix.Identity(4)
+        mesh_obj.matrix_basis = Matrix.Identity(4)
+
+    bpy.context.view_layer.update()
+
+    # c. Armature-local lowest vertex.
     lowest_z = None
     for mesh_obj in mesh_objects:
         for v in mesh_obj.data.vertices:
-            wco = mesh_obj.matrix_world @ v.co
-            if lowest_z is None or wco.z < lowest_z:
-                lowest_z = wco.z
+            if lowest_z is None or v.co.z < lowest_z:
+                lowest_z = v.co.z
 
     if lowest_z is None or abs(lowest_z) < 1e-6:
         return 0.0
 
     delta = -lowest_z
 
-    # c. Translate mesh vertices and bone rest by delta in Z (Root pinned).
+    # d. Translate mesh vertices and bone rest by delta in Z (Root pinned).
     for mesh_obj in mesh_objects:
         for v in mesh_obj.data.vertices:
             v.co.z += delta
@@ -101,10 +109,8 @@ def move_origin_to_feet(armature_obj, mesh_objects):
         eb.tail.z += delta
     bpy.ops.object.mode_set(mode="OBJECT")
 
-    # d. Zero object locations so the top-level .x frame is at origin.
-    armature_obj.location = (0.0, 0.0, 0.0)
-    for mesh_obj in mesh_objects:
-        mesh_obj.location = (0.0, 0.0, 0.0)
+    # e. The mesh objects now inherit this identity transform directly.
+    armature_obj.matrix_world = Matrix.Identity(4)
 
     bpy.context.view_layer.update()
     return delta
