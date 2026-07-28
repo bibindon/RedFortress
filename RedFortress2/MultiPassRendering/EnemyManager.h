@@ -50,6 +50,13 @@ private:
                            const std::wstring& meshFileName,
                            const std::wstring& animationFileName);
 
+    template<typename T>
+    void RegisterEnemyVariant(const std::wstring& type,
+                              const std::wstring& folderName,
+                              const std::wstring& meshFileName,
+                              const std::wstring& animationFileName,
+                              float sizeMultiplier);
+
     std::vector<std::unique_ptr<EnemyBase>> m_enemies;
     std::unordered_map<std::wstring, FactoryEntry> m_factory;
 };

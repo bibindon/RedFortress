@@ -429,7 +429,16 @@ void StageEditor::InitEnemyTypeCombo(HWND hDlg)
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"ghost"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"bird"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"crab"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"giant_crab"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"frog"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"spider"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"small_spider"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"skeleton"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"small_skeleton"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"mushroom"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"small_mushroom"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"golem"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"small_golem"));
     SendMessage(hCombo, CB_SETCURSEL, 0, 0);
 }
 

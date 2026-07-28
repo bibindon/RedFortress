@@ -77,6 +77,24 @@ void EnemyManager::RegisterEnemyType(const std::wstring& type,
     };
 }
 
+template<typename T>
+void EnemyManager::RegisterEnemyVariant(const std::wstring& type,
+                                        const std::wstring& folderName,
+                                        const std::wstring& meshFileName,
+                                        const std::wstring& animationFileName,
+                                        const float sizeMultiplier)
+{
+    const std::wstring basePath = L"res\\model2\\" + folderName + L"\\";
+    m_factory[type] = {
+        basePath + meshFileName,
+        basePath + animationFileName,
+        T::GetScale() * sizeMultiplier,
+        [type, sizeMultiplier](const D3DXVECTOR3& pos, int meshId, float yaw) {
+            return std::make_unique<T>(pos, meshId, yaw, type, sizeMultiplier);
+        }
+    };
+}
+
 void EnemyManager::Initialize()
 {
     m_enemies.clear();
@@ -338,11 +356,16 @@ void EnemyManager::RegisterEnemyTypes()
     RegisterEnemyType<EnemyGhost>(L"ghost", L"Ghost", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyBird>(L"bird", L"Bird", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyCrab>(L"crab", L"Crab", L"enemy.x", L"enemy.csv");
+    RegisterEnemyVariant<EnemyCrab>(L"giant_crab", L"Crab", L"enemy.x", L"enemy.csv", 3.0f);
     RegisterEnemyType<EnemyFrog>(L"frog", L"Frog", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemySpider>(L"spider", L"Spider", L"enemy.x", L"enemy.csv");
+    RegisterEnemyVariant<EnemySpider>(L"small_spider", L"Spider", L"enemy.x", L"enemy.csv", 0.5f);
     RegisterEnemyType<EnemySkeleton>(L"skeleton", L"Skeleton", L"enemy.x", L"enemy.csv");
+    RegisterEnemyVariant<EnemySkeleton>(L"small_skeleton", L"Skeleton", L"enemy.x", L"enemy.csv", 0.5f);
     RegisterEnemyType<EnemyMushroom>(L"mushroom", L"Mushroom", L"enemy.x", L"enemy.csv");
+    RegisterEnemyVariant<EnemyMushroom>(L"small_mushroom", L"Mushroom", L"enemy.x", L"enemy.csv", 0.5f);
     RegisterEnemyType<EnemyGolem>(L"golem", L"Golem", L"enemy.x", L"enemy.csv");
+    RegisterEnemyVariant<EnemyGolem>(L"small_golem", L"Golem", L"enemy.x", L"enemy.csv", 0.5f);
 }
 
 void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)

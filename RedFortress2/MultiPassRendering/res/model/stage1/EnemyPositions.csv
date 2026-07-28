@@ -9,3 +9,8 @@ spider,3.0,0.2,12.0,0
 skeleton,-3.0,0.2,12.0,0
 mushroom,6.0,0.2,-12.0,0
 golem,-6.0,0.2,-12.0,0
+giant_crab,0.0,0.2,16.0,0
+small_spider,3.0,0.2,20.0,0
+small_skeleton,-3.0,0.2,20.0,0
+small_mushroom,6.0,0.2,-16.0,0
+small_golem,-6.0,0.2,-16.0,0
