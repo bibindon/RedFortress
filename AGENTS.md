@@ -1,5 +1,9 @@
 # AGENTS.md - RedFortress
 
+## 回答言語
+
+- 日本語で回答すること。
+
 ## Project overview
 
 Multi-project C++ DirectX 9 game engine. Most directories are git submodules with their own repos. The main game entrypoint is `RedFortress2/MultiPassRendering/simple-directx9.vcxproj`. Solution file: `RedFortress2/MultiPassRendering.sln`.

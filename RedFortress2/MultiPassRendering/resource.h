@@ -42,6 +42,7 @@
 #define IDC_BUTTON_ALL_UNLOCK         1036
 #define IDC_CHECK_HIDE_PLAYER         1037
 #define IDC_BUTTON_UNLOCK_ALL_WEAPONS 1038
+#define IDC_BUTTON_RESET_ALL_SKILLS  1039
 
 // Next default values for new objects
 //
@@ -49,7 +50,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        104
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1039
+#define _APS_NEXT_CONTROL_VALUE         1040
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

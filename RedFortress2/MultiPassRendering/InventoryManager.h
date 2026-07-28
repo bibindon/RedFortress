@@ -30,6 +30,7 @@ public:
     bool IsWeaponCollectibleCollected(const std::wstring& collectibleId) const;
 
     void Reset();
+    void ResetAbilities();
 
 private:
     void BuildFilePath();

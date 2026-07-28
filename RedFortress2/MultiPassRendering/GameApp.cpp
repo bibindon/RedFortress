@@ -4845,6 +4845,12 @@ void GameApp::UnlockAllWeapons()
     UpdateHeldWeaponVisibility();
 }
 
+void GameApp::ResetAllSkills()
+{
+    m_inventoryManager.ResetAbilities();
+    ApplyUnlockedAbilities();
+}
+
 bool GameApp::StartStageByIndex(std::size_t stageIndex)
 {
     if (stageIndex >= m_stageManager.GetStageCount())
@@ -5338,6 +5344,10 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
 
         case IDC_BUTTON_UNLOCK_ALL_WEAPONS:
             UnlockAllWeapons();
+            return TRUE;
+
+        case IDC_BUTTON_RESET_ALL_SKILLS:
+            ResetAllSkills();
             return TRUE;
 
         case IDC_COMBO_SPEED_LEVEL:
