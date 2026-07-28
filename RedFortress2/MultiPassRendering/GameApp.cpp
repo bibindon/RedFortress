@@ -4872,9 +4872,11 @@ void GameApp::UnlockAllWeapons()
     UpdateHeldWeaponVisibility();
 }
 
-void GameApp::ResetAllSkills()
+void GameApp::UnlockAllSkills()
 {
-    m_inventoryManager.ResetAbilities();
+    m_inventoryManager.UnlockAbility(L"GroundDash");
+    m_inventoryManager.UnlockAbility(L"AirDash");
+    m_inventoryManager.UnlockAbility(L"DoubleJump");
     ApplyUnlockedAbilities();
 }
 
@@ -5373,8 +5375,8 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
             UnlockAllWeapons();
             return TRUE;
 
-        case IDC_BUTTON_RESET_ALL_SKILLS:
-            ResetAllSkills();
+        case IDC_BUTTON_UNLOCK_ALL_SKILLS:
+            UnlockAllSkills();
             return TRUE;
 
         case IDC_COMBO_SPEED_LEVEL:
