@@ -387,6 +387,20 @@ def add_nature(prototypes):
     for file_name, name, location, scale, rotation in rock_layout:
         objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
 
+    climb_rock_layout = (
+        ("Rock1.blend", "ClimbRockWestSouth", (-13.1, -2.0, 0.25), 1.45, 12.0),
+        ("Rock2.blend", "ClimbRockWestMid", (-12.0, 1.0, 0.35), 2.00, 42.0),
+        ("Rock1.blend", "ClimbRockWestNorth", (-13.0, 4.2, 0.42), 2.15, -18.0),
+        ("Rock2.blend", "ClimbRockHillWestA", (-11.2, 8.2, 0.58), 1.90, 25.0),
+        ("Rock1.blend", "ClimbRockHillWestB", (-8.7, 11.2, 0.72), 1.65, -35.0),
+        ("Rock2.blend", "ClimbRockHillWestC", (-6.5, 14.0, 0.62), 2.20, 8.0),
+        ("Rock1.blend", "ClimbRockHillEastA", (11.8, 10.0, 0.55), 1.55, 32.0),
+        ("Rock2.blend", "ClimbRockHillEastB", (9.6, 13.0, 0.68), 2.15, -12.0),
+        ("Rock1.blend", "ClimbRockHillEastC", (7.2, 16.2, 0.58), 2.10, 48.0),
+    )
+    for file_name, name, location, scale, rotation in climb_rock_layout:
+        objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
+
     bush_layout = (
         ("Bush1.blend", "BushSouthWest", (-11.5, -28.0, 0.1), 0.85, 0.0),
         ("Bush2.blend", "BushWorkshop", (-12.0, -19.5, 0.45), 0.75, 25.0),
@@ -494,6 +508,26 @@ def create_collision():
                 2.2 * scale,
                 collision_material,
                 10,
+            )
+        )
+    climb_rock_collisions = (
+        ("ClimbRockWestSouthCollision", -13.1, -2.0, 0.25, 1.45),
+        ("ClimbRockWestMidCollision", -12.0, 1.0, 0.35, 2.00),
+        ("ClimbRockWestNorthCollision", -13.0, 4.2, 0.42, 2.15),
+        ("ClimbRockHillWestACollision", -11.2, 8.2, 0.58, 1.90),
+        ("ClimbRockHillWestBCollision", -8.7, 11.2, 0.72, 1.65),
+        ("ClimbRockHillWestCCollision", -6.5, 14.0, 0.62, 2.20),
+        ("ClimbRockHillEastACollision", 11.8, 10.0, 0.55, 1.55),
+        ("ClimbRockHillEastBCollision", 9.6, 13.0, 0.68, 2.15),
+        ("ClimbRockHillEastCCollision", 7.2, 16.2, 0.58, 2.10),
+    )
+    for name, x, y, z, scale in climb_rock_collisions:
+        objects.append(
+            add_cube(
+                name,
+                (x, y, z + (0.18 * scale)),
+                (1.75 * scale, 2.10 * scale, 0.92 * scale),
+                collision_material,
             )
         )
     objects.append(add_cube("WorkshopDeckCollision", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), collision_material))
