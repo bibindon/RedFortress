@@ -1,10 +1,12 @@
-﻿# Bird source
+﻿# Raven source
 
-- Title: Bird
-- Author: mess110
-- Source: https://opengameart.org/content/bird-1
+- Title: Raven
+- Author: Teh_Bucket
+- Source: https://opengameart.org/content/raven-0
 - License: CC0 1.0 Universal
-- Original format: Blender
+- Original format: Blender 2.74
 
-The original archive's license file and `source.blend` are retained.
+The original `raven_0.blend` download is retained as `source.blend`.
+`Raven_clean.blend` contains the game-axis orientation and the added hit and
+death actions.
 Game `.x` files were exported with the official Blender DirectX X exporter.
