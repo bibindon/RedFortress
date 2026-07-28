@@ -23,7 +23,7 @@ def clear_scene():
 def create_water_material():
     material = bpy.data.materials.new("BaseWaterDark")
     material.use_nodes = True
-    material.diffuse_color = (0.24, 0.26, 0.28, 0.52)
+    material.diffuse_color = (0.01, 0.01, 0.01, 0.68)
     material.roughness = 0.24
     material.metallic = 0.0
     material["_x_power"] = 96.0
@@ -35,7 +35,7 @@ def create_water_material():
         for node in material.node_tree.nodes
         if node.type == "BSDF_PRINCIPLED"
     )
-    principled.inputs["Base Color"].default_value = (0.24, 0.26, 0.28, 0.52)
+    principled.inputs["Base Color"].default_value = (0.01, 0.01, 0.01, 0.68)
     principled.inputs["Roughness"].default_value = 0.24
     principled.inputs["Alpha"].default_value = 0.52
     return material
