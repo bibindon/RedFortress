@@ -5,10 +5,5 @@ class EnemySkeleton : public EnemyBase
 {
 public:
     EnemySkeleton(const D3DXVECTOR3& pos, int meshId, float yaw);
-    EnemySkeleton(const D3DXVECTOR3& pos,
-                  int meshId,
-                  float yaw,
-                  const std::wstring& type,
-                  float sizeMultiplier);
     static float GetScale() { return 1.0f; }
 };
