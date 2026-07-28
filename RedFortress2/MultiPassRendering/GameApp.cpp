@@ -2251,11 +2251,6 @@ void GameApp::UpdateDashParticleEffect()
         return;
     }
 
-    if (m_dashParticleEmitted)
-    {
-        return;
-    }
-
     D3DXVECTOR3 direction = m_playerMover.GetVelocity();
     direction.y = 0.0f;
     if (D3DXVec3LengthSq(&direction) <= 0.0001f)
@@ -2271,7 +2266,11 @@ void GameApp::UpdateDashParticleEffect()
     D3DXVECTOR3 origin = m_playerMover.GetPosition();
     origin += D3DXVECTOR3(0.0f, 0.92f, 0.0f);
     origin += back * 0.42f;
-    m_render.PlaceDashParticleEffect(origin, direction);
+    const bool dashStarted = !m_dashParticleEmitted;
+    m_render.PlaceDashParticleEffect(origin,
+                                     direction,
+                                     m_playerMover.IsGrounded(),
+                                     dashStarted);
     m_dashParticleEmitted = true;
 }
 
