@@ -1,4 +1,5 @@
-﻿import os
+﻿import math
+import os
 import re
 import sys
 
@@ -57,6 +58,7 @@ ASSET_CONFIGS = {
         "armature": "CharacterArmature",
         "texture_filename": "ghost_mist.png",
         "apply_object_scale": True,
+        "armature_rotation_x_degrees": -90.0,
         "blend_filename": "Ghost_clean.blend",
         "actions": {
             "idle": "CharacterArmature|Flying_Idle",
@@ -230,6 +232,20 @@ def apply_export_object_scale(armature, mesh_objects):
             raise RuntimeError(
                 f"Failed to apply mesh scale: {mesh_object.name}"
             )
+
+    bpy.context.view_layer.update()
+
+
+def apply_armature_rotation_x(armature, rotation_degrees):
+    armature.rotation_euler.x = math.radians(rotation_degrees)
+    select_export_objects(armature, [])
+    result = bpy.ops.object.transform_apply(
+        location=False,
+        rotation=True,
+        scale=False,
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError(f"Failed to apply armature rotation: {armature.name}")
 
     bpy.context.view_layer.update()
 
@@ -495,6 +511,9 @@ def main():
     armature, mesh_objects = find_export_objects(config["armature"])
     if config.get("apply_object_scale", False):
         apply_export_object_scale(armature, mesh_objects)
+    armature_rotation_x_degrees = config.get("armature_rotation_x_degrees")
+    if armature_rotation_x_degrees is not None:
+        apply_armature_rotation_x(armature, armature_rotation_x_degrees)
     validate_export_objects(armature, mesh_objects)
     material_power = config.get("material_power")
     if material_power is not None:
