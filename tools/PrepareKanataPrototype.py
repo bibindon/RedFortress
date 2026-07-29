@@ -5,7 +5,7 @@ import shutil
 import sys
 
 import bpy
-from mathutils import Euler
+from mathutils import Euler, Matrix
 
 
 AXIS_FORWARD = "Z"
@@ -239,18 +239,42 @@ def bake_deformed_meshes(meshes):
             preserve_all_data_layers=True,
             depsgraph=dependency_graph,
         )
+        source_world_matrix = source_object.matrix_world.copy()
+        for vertex in baked_mesh_data.vertices:
+            vertex.co = source_world_matrix @ vertex.co
+
         baked_object = bpy.data.objects.new(source_object.name, baked_mesh_data)
         bpy.context.scene.collection.objects.link(baked_object)
-        baked_object.matrix_world = source_object.matrix_world.copy()
+        baked_object.matrix_world = Matrix.Identity(4)
         for polygon in baked_mesh_data.polygons:
             polygon.use_smooth = True
         baked_meshes.append(baked_object)
     return baked_meshes
 
 
+def combine_baked_meshes(baked_meshes):
+    if not baked_meshes:
+        raise RuntimeError("No baked meshes were created")
+
+    bpy.ops.object.select_all(action="DESELECT")
+    for mesh in baked_meshes:
+        mesh.select_set(True)
+    bpy.context.view_layer.objects.active = baked_meshes[0]
+    result = bpy.ops.object.join()
+    if "FINISHED" not in result:
+        raise RuntimeError(f"Failed to combine baked meshes: {result}")
+
+    combined_mesh = bpy.context.view_layer.objects.active
+    combined_mesh.name = "KanataRigidMesh"
+    combined_mesh.data.name = "KanataRigidMesh_Data"
+    combined_mesh.matrix_world = Matrix.Identity(4)
+    return [combined_mesh]
+
+
 def create_rigid_root_armature(source_armature, source_meshes):
     apply_bake_pose(source_armature)
     baked_meshes = bake_deformed_meshes(source_meshes)
+    baked_meshes = combine_baked_meshes(baked_meshes)
 
     for source_mesh in source_meshes:
         bpy.data.objects.remove(source_mesh, do_unlink=True)
@@ -393,6 +417,18 @@ def validate_x(path, expect_animation):
         raise RuntimeError(f"Unexpected DirectX X header: {path}")
     if "SkinWeights" not in text:
         raise RuntimeError(f"Skin weights were not exported: {path}")
+    skin_weight_bones = set(
+        re.findall(r'SkinWeights\s*\{\s*"([^"]+)"', text, re.DOTALL)
+    )
+    if skin_weight_bones != {"GameRoot"}:
+        raise RuntimeError(
+            f"Only the rigid GameRoot bone may be exported: {skin_weight_bones}"
+        )
+    exported_meshes = re.findall(r"^\s*Mesh\s+\w+\s*\{", text, re.MULTILINE)
+    if len(exported_meshes) != 1:
+        raise RuntimeError(
+            f"The rigid prototype must contain exactly one mesh: {len(exported_meshes)}"
+        )
     if "TextureFileName" not in text:
         raise RuntimeError(f"Texture references were not exported: {path}")
     if expect_animation:
