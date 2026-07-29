@@ -80,6 +80,11 @@ public:
                            bool playerIsJumping,
                            float playerYVelocity) const;
 
+    // ボス敵判定。ボス体力バーの表示対象となる敵は true を返す。
+    virtual bool IsBoss() const { return false; }
+    // ボス体力バー上部に表示する表示名。ボス以外は空文字列。
+    virtual std::wstring GetBossName() const { return L""; }
+
 protected:
     EnemyBase(const D3DXVECTOR3& startPosition,
               int meshId,

@@ -765,6 +765,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_command.Init(pFont, pSE, pSpr, false, L"res\\commandName_title.csv");
 
     m_hpBar.Initialize(&m_render, &m_player);
+    m_bossHpBar.Initialize(&m_render);
     m_damagePopupManager.Initialize(&m_render);
     m_damagePopupManager.SetEnabled(false);
 
@@ -1102,6 +1103,8 @@ void GameApp::Run()
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
+                    UpdateBossHpBar();
+                    DrawBossHpBar();
                     DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
@@ -1134,6 +1137,8 @@ void GameApp::Run()
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
+                    UpdateBossHpBar();
+                    DrawBossHpBar();
                     DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
@@ -1158,6 +1163,8 @@ void GameApp::Run()
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
+                    UpdateBossHpBar();
+                    DrawBossHpBar();
                     DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
@@ -1175,6 +1182,8 @@ void GameApp::Run()
                 if (!IsCurrentStageSelect())
                 {
                     m_hpBar.Draw();
+                    UpdateBossHpBar();
+                    DrawBossHpBar();
                     DrawAmmoGauge();
                     m_render.DrawImageSized(GetAttackIconPath(m_playerAttackController.GetAttackType(false)),
                                             kAttackTypeHudX,
@@ -1379,6 +1388,8 @@ void GameApp::Run()
             if (!IsCurrentStageSelect())
             {
                 m_hpBar.Draw();
+                UpdateBossHpBar();
+                DrawBossHpBar();
                 DrawAmmoGauge();
                 m_render.DrawImageSized(GetAttackIconPath(m_playerAttackController.GetAttackType(false)),
                                         kAttackTypeHudX,
@@ -2858,6 +2869,7 @@ void GameApp::InitializePlayerPhysics()
     m_playerMover.SetSettings(settings);
     m_player.ResetHp();
     m_hpBar.Reset();
+    m_bossHpBar.SetBoss(nullptr);
     m_playerMover.Reset(m_stageManager.GetCurrentStage().playerStartPosition);
 
     PhysicsLib::SettingsState::SetShapeType(PhysicsWorld::ShapeType::Cylinder);
@@ -4482,6 +4494,20 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         GameAudio::PlayAmmoMax();
     }
     return false;
+}
+
+void GameApp::UpdateBossHpBar()
+{
+    // 生存ボスを検索し、ボスバーに設定する。
+    // ボスが切り替わったとき（スポーン/死亡/別ステージへ）は
+    // BossHpBar 側で表示をリセットする。
+    m_bossHpBar.SetBoss(m_enemyManager.GetAliveBoss());
+    m_bossHpBar.Update();
+}
+
+void GameApp::DrawBossHpBar()
+{
+    m_bossHpBar.Draw();
 }
 
 void GameApp::DrawAmmoGauge()

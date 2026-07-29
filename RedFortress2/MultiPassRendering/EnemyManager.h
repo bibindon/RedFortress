@@ -34,6 +34,9 @@ public:
     std::vector<std::unique_ptr<EnemyBase>>& GetEnemies();
     const std::vector<std::unique_ptr<EnemyBase>>& GetEnemies() const;
 
+    // 生存中のボス敵を1体返す。ボスがいない場合は nullptr。
+    EnemyBase* GetAliveBoss();
+
     void SpawnAt(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw);
     void ReplaceEnemyType(NSRender::Render& render, std::size_t index, const std::wstring& type);
     void RemoveEnemy(NSRender::Render& render, std::size_t index);

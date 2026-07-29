@@ -28,6 +28,7 @@
 #include "../../QTE_Module/QTE_Module/QTE_Module.h"
 #include "StageEditor.h"
 #include "HpBar.h"
+#include "BossHpBar.h"
 #include "DamagePopupManager.h"
 #include "PlayerAttackController.h"
 #include "PickupManager.h"
@@ -208,6 +209,8 @@ private:
     void UpdateBusters();
     void ClearBusters();
     void DrawAmmoGauge();
+    void UpdateBossHpBar();
+    void DrawBossHpBar();
     int GetCurrentAmmo() const;
     int GetCurrentAmmoMax() const;
     int GetCurrentWorld() const;
@@ -328,6 +331,7 @@ private:
     bool m_hitStopPlayerAnimationPaused = false;
     std::unordered_map<int, D3DXVECTOR3> m_prevMovingPlatformPositions;
     HpBar m_hpBar;
+    BossHpBar m_bossHpBar;
     DamagePopupManager m_damagePopupManager;
     EnemyManager m_enemyManager;
     DestructibleManager m_destructibleManager;

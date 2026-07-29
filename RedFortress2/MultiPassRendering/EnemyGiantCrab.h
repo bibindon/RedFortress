@@ -6,4 +6,6 @@ class EnemyGiantCrab : public EnemyBase
 public:
     EnemyGiantCrab(const D3DXVECTOR3& pos, int meshId, float yaw);
     static float GetScale() { return 0.38f * 3.0f; }
+    bool IsBoss() const override { return true; }
+    std::wstring GetBossName() const override { return L"ジャイアントクラブ"; }
 };

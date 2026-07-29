@@ -194,6 +194,7 @@
     <ClCompile Include="EnemyWolf.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="HpBar.cpp" />
+    <ClCompile Include="BossHpBar.cpp" />
     <ClCompile Include="DamagePopupManager.cpp" />
     <ClCompile Include="DestructibleManager.cpp" />
     <ClCompile Include="PickupManager.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="EnemyWolf.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="HpBar.h" />
+    <ClInclude Include="BossHpBar.h" />
     <ClInclude Include="DamagePopupManager.h" />
     <ClInclude Include="PickupManager.h" />
     <ClInclude Include="DashBooster.h" />

@@ -243,6 +243,18 @@ const std::vector<std::unique_ptr<EnemyBase>>& EnemyManager::GetEnemies() const
     return m_enemies;
 }
 
+EnemyBase* EnemyManager::GetAliveBoss()
+{
+    for (auto& enemy : m_enemies)
+    {
+        if (enemy->IsBoss() && !enemy->IsDead())
+        {
+            return enemy.get();
+        }
+    }
+    return nullptr;
+}
+
 void EnemyManager::SpawnAt(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
 {
     Spawn(render, position, type, yaw);
