@@ -31,6 +31,21 @@ namespace
         return result;
     }
 
+    std::wstring WidenDebugIdentifier(const std::string& identifier)
+    {
+        std::wstring result;
+        result.reserve(identifier.size());
+        for (const unsigned char value : identifier)
+        {
+            if (value > 0x7f)
+            {
+                throw std::runtime_error("Debug RPC identifiers must contain ASCII characters only.");
+            }
+            result.push_back(static_cast<wchar_t>(value));
+        }
+        return result;
+    }
+
     int GetDebugKeyCode(std::string keyName)
     {
         std::transform(keyName.begin(), keyName.end(), keyName.begin(), [](const unsigned char value) {
@@ -1766,6 +1781,17 @@ void GameApp::ProcessDebugRpc()
     });
 }
 
+bool GameApp::LoadStageForDebug(const std::wstring& stageId)
+{
+    const std::size_t stageIndex = m_stageManager.FindStageIndexById(stageId);
+    if (stageIndex >= m_stageManager.GetStageCount())
+    {
+        return false;
+    }
+
+    return CompleteStageMove(stageIndex);
+}
+
 std::string GameApp::HandleDebugRpcCommand(const std::string& command)
 {
     std::istringstream commandStream(command);
@@ -1892,6 +1918,24 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         }
         m_render.ChangeResolution(width, height);
         return "{\"ok\":true}";
+    }
+
+    if (commandName == "LOAD_STAGE")
+    {
+        std::string stageId;
+        commandStream >> stageId;
+        if (stageId.empty())
+        {
+            return "{\"ok\":false,\"error\":\"invalid_stage_id\"}";
+        }
+
+        const std::wstring wideStageId = WidenDebugIdentifier(stageId);
+        if (!LoadStageForDebug(wideStageId))
+        {
+            return "{\"ok\":false,\"error\":\"stage_not_found\"}";
+        }
+
+        return "{\"ok\":true,\"stageId\":\"" + NarrowDebugIdentifier(wideStageId) + "\"}";
     }
 
     if (commandName == "GET_STATE")

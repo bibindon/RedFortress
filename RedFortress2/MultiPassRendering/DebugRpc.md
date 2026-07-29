@@ -8,6 +8,7 @@ Supported commands are:
 - `PING`
 - `GET_FPS`
 - `GET_STATE`
+- `LOAD_STAGE <stage-id>`
 - `KEY_DOWN <key>`
 - `KEY_UP <key>`
 - `MOUSE_DOWN <button>`
@@ -44,3 +45,9 @@ Measure stage 1-1 performance in the x64 Release build with:
 ```
 
 The normal Release build does not expose the RPC pipe unless `EnableDebugRpc=true` is specified.
+
+Launch the game directly into a stage without navigating the title screen. The launcher passes `--stage 4-8` to the game and uses RPC only to verify the loaded stage:
+
+```powershell
+.\tools\LaunchDebugStage.ps1 4-8
+```

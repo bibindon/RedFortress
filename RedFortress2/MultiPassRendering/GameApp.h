@@ -61,6 +61,9 @@ public:
     bool Initialize(HINSTANCE hInstance, int nCmdShow);
     void Run();
     void Finalize();
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+    bool LoadStageForDebug(const std::wstring& stageId);
+#endif
 
 private:
     struct StageSelectNavigationEntry
