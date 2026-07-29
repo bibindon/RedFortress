@@ -11,7 +11,7 @@ EnemyKanata::EnemyKanata(const D3DXVECTOR3& pos,
                 1.8f,
                 20.0f,
                 0.55f,
-                3.0f,
+                GetCollisionHeight(),
                 MovementMode::Ground,
                 true,
                 HitReactionMode::SuperArmor)

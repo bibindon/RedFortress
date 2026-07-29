@@ -11,7 +11,7 @@
 ステージ3-8（`stage28`）に配置するボス敵 **ホシガール（Hoshigirl）** を実装する。
 黒い布ゴースト型のデザイン。4種類の攻撃パターンを持つ本格的なボス。
 
-**現状**: モデル・配置・基本ボスクラスは完了。攻撃AIの実装が残作業。
+**現状**: モデル・配置・基本ボスクラス・4攻撃AIすべて実装完了。ビルド成功済み。残作業は実機テスト（挙動・バランス確認）のみ。
 
 ---
 
@@ -31,16 +31,37 @@
 - [x] 地面埋まりバグ修正: `GetMeshVerticalOffset() { return 0.25f; }` を追加
   - 原因: モデル足元が原点より-0.1m下に作られていた。scale(2.5)×0.1=0.25m押し上げ
 
-### フェーズ2: 4攻撃パターン実装（0% — これから作業）
-- [ ] **STEP 1**: `EnemyHoshigirl.h` を4攻撃パターン対応に書き換え
-- [ ] **STEP 2**: `EnemyHoshigirl.cpp` に4攻撃パターンを実装
-  - [ ] ②STEP 2a: ファイル骨格（インクルード、無名空間、定数、列挙型）
-  - [ ] ②STEP 2b: コンストラクタと公開メソッド（UsesSpecialAttacks, UpdateSpecialAttack）
-  - [ ] ②STEP 2c: 攻撃選択ロジック（SelectAttack, IsAttackAllowed, BeginAttack）
-  - [ ] ②STEP 2d: フェーズ遷移（BeginActivePhase, BeginRecovery, EndAttack）
-  - [ ] ②STEP 2e: UpdateActivePhase（各攻撃の発動フレーム処理）
-  - [ ] ②STEP 2f: 持続エフェクト更新（UpdateSoulBoltProjectile, UpdateCurseMire）
-- [ ] **STEP 3**: ビルド検証（MSBuild Debug x64）
+### フェーズ2: 4攻撃パターン実装（100% 完了）
+- [x] **STEP 1**: `EnemyHoshigirl.h` を4攻撃パターン対応に書き換え
+- [x] **STEP 2**: `EnemyHoshigirl.cpp` に4攻撃パターンを実装
+  - [x] ②STEP 2a: ファイル骨格（インクルード、無名空間、定数、列挙型）
+  - [x] ②STEP 2b: コンストラクタと公開メソッド（UsesSpecialAttacks, UpdateSpecialAttack）
+  - [x] ②STEP 2c: 攻撃選択ロジック（SelectAttack, IsAttackAllowed, BeginAttack）
+  - [x] ②STEP 2d: フェーズ遷移（BeginActivePhase, BeginRecovery, EndAttack）
+  - [x] ②STEP 2e: UpdateActivePhase（各攻撃の発動フレーム処理）
+  - [x] ②STEP 2f: 持続エフェクト更新（UpdateSoulBoltProjectile, UpdateCurseMire）
+- [x] **STEP 3**: ビルド検証（MSBuild Debug x64）— 2026-07-29 成功
+
+> **中断時の状況メモ（2026-07-29 解消済み）**:
+> 前回セッションは STEP 2 実装完了直後にトークン制限で中断されたため、
+> このファイルのチェックボックス更新だけが残っていた。
+> コードは EnemySkeleton/EnemySpider 準拠で全4攻撃とも実装済み。
+> ビルド時に `vc145.pdb` の C2471 エラーが出たが、原因は実行中の
+> `simple-directx9.exe` と stale な `mspdbsrv.exe` の残存プロセス。
+> 両方終了させて PDB を削除したところ正常にビルド成功した。
+
+### フェーズ3: 死亡アニメーション追加（100% 完了 — 2026-07-29）
+- [x] `Hoshigirl.blend` に `death` アクションをPython（blender --background）で作成
+  - 内容: f1 直立 → f7 後退り（リコイル）→ f18 前方くずおれ → f24/30 崩れきって保持
+  - 全9ボーンに回転キー、Root に位置キー（チャンネル欠落なし）
+  - デザイン: 布ゴーストが「しぼんで前方に崩れる」死亡表現。顔が地面を向く
+- [x] `PrepareEnemyModels.py` の hoshigirl 設定: `"death": "idle"` → `"death": "death"`
+- [x] 再エクスポート実行（`blender --background --python tools/PrepareEnemyModels.py -- hoshigirl ...`）
+  - `enemy.death.x` が `AnimationSet death`（キー時刻 1,7,18,24,30）を含むことを検証済み
+  - idle/attack/hit 等は従来どおり idle アクションのまま（ユーザー指定の制約は維持）
+- [x] 出力先 `RedFortress2/x64/Debug/res/model2/Hoshigirl/` に手動コピー済み
+  - ※ C++ コード変更なしのためビルド不要。次回ビルド時の xcopy でも同期される
+- [ ] **残**: 実機で死亡演出を確認（45フレーム後に消去される点に注意）
 
 ---
 
@@ -54,7 +75,7 @@
 | アーマー | `HitReactionMode::SuperArmor`（ノックバック無効） | ユーザー指定 |
 | スケール | 2.5f（モデル1.6m × 2.5 ≒ 4m） | — |
 | メッシュ垂直オフセット | 0.25f（地面埋まり補正） | モデル足元が原点-0.1m |
-| アニメーション | idle のみ（全状態でidle再生） | ユーザー指定 |
+| アニメーション | idle（待機・移動・攻撃・被弾）+ death（死亡のみ専用） | ユーザー指定＋フェーズ3でdeath追加 |
 
 ---
 

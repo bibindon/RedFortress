@@ -134,7 +134,7 @@ ASSET_CONFIGS = {
             "fast_move": "idle",
             "attack": "idle",
             "hit": "idle",
-            "death": "idle",
+            "death": "death",
         },
     },
 }

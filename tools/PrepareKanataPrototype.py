@@ -409,6 +409,46 @@ def export_x(path, armature, meshes, export_animation):
         raise RuntimeError(f"DirectX X export failed: {path}")
 
 
+def validate_exported_mesh_ground_origin(text, path):
+    mesh_match = re.search(
+        r"^\s*Mesh\s+\w+\s*\{\s*(\d+)\s*;\s*(.*?)\s*;\s*\d+\s*;",
+        text,
+        re.MULTILINE | re.DOTALL,
+    )
+    if mesh_match is None:
+        raise RuntimeError(f"Exported rigid mesh vertices were not found: {path}")
+
+    vertex_count = int(mesh_match.group(1))
+    coordinate_values = [
+        float(value)
+        for value in re.findall(
+            r"[-+]?\d+(?:\.\d*)?(?:[eE][-+]?\d+)?",
+            mesh_match.group(2),
+        )
+    ]
+    expected_coordinate_count = vertex_count * 3
+    if len(coordinate_values) != expected_coordinate_count:
+        raise RuntimeError(
+            "Unexpected exported rigid mesh coordinate count: "
+            f"expected={expected_coordinate_count} actual={len(coordinate_values)} "
+            f"path={path}"
+        )
+
+    y_values = coordinate_values[1::3]
+    minimum_y = min(y_values)
+    maximum_y = max(y_values)
+    if abs(minimum_y) > 0.001:
+        raise RuntimeError(
+            "Exported Kanata mesh must keep its feet at local Y=0: "
+            f"minimum_y={minimum_y} path={path}"
+        )
+    model_height = maximum_y - minimum_y
+    if model_height < 1.4 or model_height > 1.8:
+        raise RuntimeError(
+            f"Unexpected exported Kanata mesh height: {model_height} path={path}"
+        )
+
+
 def validate_x(path, expect_animation):
     with open(path, "r", encoding="utf-8-sig") as exported_file:
         text = exported_file.read()
@@ -429,6 +469,7 @@ def validate_x(path, expect_animation):
         raise RuntimeError(
             f"The rigid prototype must contain exactly one mesh: {len(exported_meshes)}"
         )
+    validate_exported_mesh_ground_origin(text, path)
     if "TextureFileName" not in text:
         raise RuntimeError(f"Texture references were not exported: {path}")
     if expect_animation:
