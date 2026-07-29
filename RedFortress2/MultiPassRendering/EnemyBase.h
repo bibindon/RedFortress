@@ -102,6 +102,7 @@ protected:
     virtual bool UpdateSpecialAttack(NSRender::Render& render,
                                      const D3DXVECTOR3& playerPos,
                                      bool playerInvincible);
+    virtual float GetMeshVerticalOffset() const { return 0.0f; }
     bool IsSpecialAttackReady() const;
     void FaceSpecialAttackTarget(const D3DXVECTOR3& targetPos);
     bool MoveForSpecialAttack(const D3DXVECTOR3& velocity);

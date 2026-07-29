@@ -279,7 +279,9 @@ void EnemyBase::SyncMesh(NSRender::Render& render)
         return;
     }
 
-    render.SetMeshMixSkinAnimPos(m_meshId, m_position);
+    D3DXVECTOR3 meshPosition = m_position;
+    meshPosition.y += GetMeshVerticalOffset();
+    render.SetMeshMixSkinAnimPos(m_meshId, meshPosition);
     render.SetMeshMixSkinAnimRotY(m_meshId, m_yaw);
 }
 

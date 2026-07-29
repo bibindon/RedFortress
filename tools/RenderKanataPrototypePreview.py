@@ -67,6 +67,8 @@ def main():
     scene.render.filepath = preview_path
     scene.render.resolution_percentage = 100
 
+    if scene.world is None:
+        scene.world = bpy.data.worlds.new("PreviewWorld")
     scene.world.color = (0.008, 0.012, 0.025)
     add_floor()
 

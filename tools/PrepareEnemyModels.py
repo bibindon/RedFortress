@@ -130,11 +130,11 @@ ASSET_CONFIGS = {
         "texture_filename": "hoshigirl.png",
         "actions": {
             "idle": "idle",
-            "move": "move",
-            "fast_move": "fast_move",
-            "attack": "attack",
-            "hit": "hit",
-            "death": "death",
+            "move": "idle",
+            "fast_move": "idle",
+            "attack": "idle",
+            "hit": "idle",
+            "death": "idle",
         },
     },
 }

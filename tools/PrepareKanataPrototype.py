@@ -5,11 +5,12 @@ import shutil
 import sys
 
 import bpy
+from mathutils import Euler
 
 
 AXIS_FORWARD = "Z"
 AXIS_UP = "Y"
-ANIMATION_START_FRAME = 1
+ANIMATION_START_FRAME = 0
 ANIMATION_MIDDLE_FRAME = 30
 ANIMATION_END_FRAME = 60
 ARMATURE_NAME = "Armature"
@@ -173,13 +174,17 @@ def require_pose_bone(armature, bone_name):
 
 
 def set_pose_rotation(pose_bone, rotation_x, rotation_y, rotation_z, frame):
-    pose_bone.rotation_mode = "XYZ"
-    pose_bone.rotation_euler = (
-        math.radians(rotation_x),
-        math.radians(rotation_y),
-        math.radians(rotation_z),
-    )
-    pose_bone.keyframe_insert(data_path="rotation_euler", frame=frame)
+    pose_bone.rotation_mode = "QUATERNION"
+    pose_bone.rotation_quaternion = Euler(
+        (
+            math.radians(rotation_x),
+            math.radians(rotation_y),
+            math.radians(rotation_z),
+        ),
+        "XYZ",
+    ).to_quaternion()
+    pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
+
 
 
 def create_idle_animation(armature):
@@ -207,34 +212,10 @@ def create_idle_animation(armature):
         set_pose_rotation(chest, -1.0, 0.0, 0.0, frame)
         set_pose_rotation(head, 0.5, 0.0, 0.0, frame)
 
-    set_pose_rotation(
-        left_upper_arm,
-        -66.5,
-        0.0,
-        -3.0,
-        ANIMATION_MIDDLE_FRAME,
-    )
-    set_pose_rotation(
-        right_upper_arm,
-        -66.5,
-        0.0,
-        3.0,
-        ANIMATION_MIDDLE_FRAME,
-    )
-    set_pose_rotation(
-        left_lower_arm,
-        0.0,
-        0.0,
-        -8.0,
-        ANIMATION_MIDDLE_FRAME,
-    )
-    set_pose_rotation(
-        right_lower_arm,
-        0.0,
-        0.0,
-        8.0,
-        ANIMATION_MIDDLE_FRAME,
-    )
+    set_pose_rotation(left_upper_arm, -66.5, 0.0, -3.0, ANIMATION_MIDDLE_FRAME)
+    set_pose_rotation(right_upper_arm, -66.5, 0.0, 3.0, ANIMATION_MIDDLE_FRAME)
+    set_pose_rotation(left_lower_arm, 0.0, 0.0, -8.0, ANIMATION_MIDDLE_FRAME)
+    set_pose_rotation(right_lower_arm, 0.0, 0.0, 8.0, ANIMATION_MIDDLE_FRAME)
     set_pose_rotation(chest, 1.0, 0.0, 0.0, ANIMATION_MIDDLE_FRAME)
     set_pose_rotation(head, -0.5, 0.0, 0.0, ANIMATION_MIDDLE_FRAME)
 
@@ -248,6 +229,68 @@ def create_idle_animation(armature):
     bpy.context.scene.frame_set(ANIMATION_START_FRAME)
     bpy.context.view_layer.update()
     return action
+
+
+def get_pose_bone_world_position(armature, bone_name, use_tail):
+    pose_bone = require_pose_bone(armature, bone_name)
+    position = pose_bone.head
+    if use_tail:
+        position = pose_bone.tail
+    return armature.matrix_world @ position
+
+
+def validate_prepared_pose(armature, meshes):
+    bpy.context.scene.frame_set(ANIMATION_MIDDLE_FRAME)
+    bpy.context.view_layer.update()
+
+    left_shoulder = get_pose_bone_world_position(
+        armature,
+        "J_Bip_L_UpperArm",
+        False,
+    )
+    right_shoulder = get_pose_bone_world_position(
+        armature,
+        "J_Bip_R_UpperArm",
+        False,
+    )
+    left_hand = get_pose_bone_world_position(armature, "J_Bip_L_Hand", True)
+    right_hand = get_pose_bone_world_position(armature, "J_Bip_R_Hand", True)
+    if left_hand.z >= left_shoulder.z - 0.15:
+        raise RuntimeError("Left hand is not below the shoulder in the exported idle pose")
+    if right_hand.z >= right_shoulder.z - 0.15:
+        raise RuntimeError("Right hand is not below the shoulder in the exported idle pose")
+
+    minimum_z = None
+    maximum_z = None
+    dependency_graph = bpy.context.evaluated_depsgraph_get()
+    for mesh in meshes:
+        evaluated_object = mesh.evaluated_get(dependency_graph)
+        evaluated_mesh = evaluated_object.to_mesh()
+        try:
+            for vertex in evaluated_mesh.vertices:
+                world_position = evaluated_object.matrix_world @ vertex.co
+                if minimum_z is None or world_position.z < minimum_z:
+                    minimum_z = world_position.z
+                if maximum_z is None or world_position.z > maximum_z:
+                    maximum_z = world_position.z
+        finally:
+            evaluated_object.to_mesh_clear()
+
+    if minimum_z is None or maximum_z is None:
+        raise RuntimeError("Prepared model has no evaluated vertices")
+    if minimum_z < -0.15 or minimum_z > 0.15:
+        raise RuntimeError(
+            f"Prepared model feet are not near ground level: minimum_z={minimum_z}"
+        )
+    model_height = maximum_z - minimum_z
+    if model_height < 1.4 or model_height > 1.8:
+        raise RuntimeError(f"Unexpected prepared model height: {model_height}")
+
+    armature_rotation = armature.rotation_euler
+    if max(abs(value) for value in armature_rotation) > 0.0001:
+        raise RuntimeError("Armature object rotation must remain zero before X export")
+    if AXIS_FORWARD != "Z" or AXIS_UP != "Y":
+        raise RuntimeError("DirectX X export axes must remain forward Z and up Y")
 
 
 def select_export_objects(armature, meshes):
@@ -279,6 +322,7 @@ def export_x(path, armature, meshes, export_animation):
         export_armature=True,
         export_weights=True,
         export_animation=export_animation,
+        anim_key_format="MATRIX",
         anim_fps=30.0,
         anim_frame_start=ANIMATION_START_FRAME,
         anim_frame_end=ANIMATION_END_FRAME,
@@ -298,8 +342,22 @@ def validate_x(path, expect_animation):
         raise RuntimeError(f"Skin weights were not exported: {path}")
     if "TextureFileName" not in text:
         raise RuntimeError(f"Texture references were not exported: {path}")
-    if expect_animation and "AnimationSet" not in text:
-        raise RuntimeError(f"AnimationSet was not exported: {path}")
+    if expect_animation:
+        if "AnimationSet" not in text:
+            raise RuntimeError(f"AnimationSet was not exported: {path}")
+        animation_key_blocks = re.findall(r"AnimationKey\s*\{(.*?)\}", text, re.DOTALL)
+        if not animation_key_blocks:
+            raise RuntimeError(f"AnimationKey was not exported: {path}")
+        for animation_key_block in animation_key_blocks:
+            matrix_key_at_frame_zero = re.match(
+                r"\s*4;\s*\d+;\s*0;16;",
+                animation_key_block,
+            )
+            if matrix_key_at_frame_zero is None:
+                raise RuntimeError(
+                    "Animations must use matrix keys beginning at frame 0: "
+                    f"{path}"
+                )
 
     with open(path, "rb") as exported_file:
         first_three_bytes = exported_file.read(3)
@@ -333,6 +391,7 @@ def main():
     prepare_object_names(meshes)
     copied_textures = copy_material_textures(meshes, output_directory)
     create_idle_animation(armature)
+    validate_prepared_pose(armature, meshes)
 
     prepared_blend_path = os.path.join(
         output_directory,
