@@ -124,6 +124,19 @@ ASSET_CONFIGS = {
             "death": "Death",
         },
     },
+    "hoshigirl": {
+        "armature": "HoshigirlArmature",
+        "blend_filename": "Hoshigirl.blend",
+        "texture_filename": "hoshigirl.png",
+        "actions": {
+            "idle": "idle",
+            "move": "move",
+            "fast_move": "fast_move",
+            "attack": "attack",
+            "hit": "hit",
+            "death": "death",
+        },
+    },
 }
 
 
