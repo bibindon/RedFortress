@@ -1,0 +1,364 @@
+﻿import math
+import os
+import re
+import shutil
+import sys
+
+import bpy
+
+
+AXIS_FORWARD = "Z"
+AXIS_UP = "Y"
+ANIMATION_START_FRAME = 1
+ANIMATION_MIDDLE_FRAME = 30
+ANIMATION_END_FRAME = 60
+ARMATURE_NAME = "Armature"
+BASE_COLOR_NODE_NAME = "Mtoon1BaseColorTexture.Image"
+PROTOTYPE_SCALE = 1.0
+
+
+def parse_arguments():
+    if "--" not in sys.argv:
+        raise RuntimeError("Expected arguments after --")
+
+    arguments = sys.argv[sys.argv.index("--") + 1 :]
+    if len(arguments) != 2:
+        raise RuntimeError(
+            "Usage: blender --background --python PrepareKanataPrototype.py "
+            "-- <imported.blend> <output-directory>"
+        )
+
+    blend_path = os.path.abspath(arguments[0])
+    output_directory = os.path.abspath(arguments[1])
+    if not os.path.isfile(blend_path):
+        raise RuntimeError(f"Imported Blender file was not found: {blend_path}")
+    if not os.path.isdir(output_directory):
+        raise RuntimeError(f"Output directory was not found: {output_directory}")
+
+    return blend_path, output_directory
+
+
+def require_armature():
+    armatures = [obj for obj in bpy.context.scene.objects if obj.type == "ARMATURE"]
+    if len(armatures) != 1:
+        raise RuntimeError(f"Expected one armature, found {len(armatures)}")
+
+    armature = armatures[0]
+    armature.name = ARMATURE_NAME
+    armature.data.name = ARMATURE_NAME
+    return armature
+
+
+def enable_directx_exporter():
+    result = bpy.ops.preferences.addon_enable(
+        module="bl_ext.user_default.io_directx_x"
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError(f"Failed to enable the DirectX X exporter: {result}")
+
+
+def require_meshes():
+    meshes = [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
+    if len(meshes) == 0:
+        raise RuntimeError("No meshes were found in the imported Blender file")
+    return meshes
+
+
+def sanitize_name(name):
+    sanitized = re.sub(r"[^A-Za-z0-9_]", "_", name)
+    sanitized = re.sub(r"_+", "_", sanitized).strip("_")
+    if len(sanitized) == 0:
+        sanitized = "Unnamed"
+    if sanitized[0].isdigit():
+        sanitized = "N_" + sanitized
+    return sanitized
+
+
+def find_base_color_image(material):
+    if material is None or material.node_tree is None:
+        return None
+
+    node = material.node_tree.nodes.get(BASE_COLOR_NODE_NAME)
+    if node is not None and node.type == "TEX_IMAGE" and node.image is not None:
+        return node.image
+
+    for candidate in material.node_tree.nodes:
+        if candidate.type == "TEX_IMAGE" and candidate.image is not None:
+            return candidate.image
+    return None
+
+
+def copy_material_textures(meshes, output_directory):
+    used_materials = []
+    seen_material_ids = set()
+    for mesh in meshes:
+        for slot in mesh.material_slots:
+            material = slot.material
+            if material is None:
+                continue
+            material_id = material.as_pointer()
+            if material_id in seen_material_ids:
+                continue
+            seen_material_ids.add(material_id)
+            used_materials.append(material)
+
+    texture_directory = os.path.join(output_directory, "textures")
+    os.makedirs(texture_directory, exist_ok=True)
+
+    copied_textures = []
+    for material_index, material in enumerate(used_materials):
+        image = find_base_color_image(material)
+        if image is None:
+            raise RuntimeError(f"Base-color texture was not found: {material.name}")
+
+        source_path = bpy.path.abspath(image.filepath)
+        if not os.path.isfile(source_path):
+            raise RuntimeError(
+                f"Base-color texture file was not found for {material.name}: "
+                f"{source_path}"
+            )
+
+        extension = os.path.splitext(source_path)[1].lower()
+        if extension != ".png":
+            extension = ".png"
+        texture_filename = f"kanata_{material_index:02d}{extension}"
+        destination_path = os.path.join(texture_directory, texture_filename)
+        shutil.copy2(source_path, destination_path)
+
+        material.name = f"KanataMat_{material_index:02d}"
+        material["_x_face_color"] = [1.0, 1.0, 1.0, 1.0]
+        material["_x_power"] = 24.0
+        material["_x_specular"] = [0.15, 0.15, 0.15]
+        material["_x_emissive"] = [0.0, 0.0, 0.0]
+        material["_x_texture_filename"] = (
+            "textures\\" + texture_filename
+        )
+        image.filepath = destination_path
+        copied_textures.append(destination_path)
+
+    if len(copied_textures) == 0:
+        raise RuntimeError("No base-color textures were copied")
+
+    return copied_textures
+
+
+def prepare_object_names(meshes):
+    used_names = set()
+    for index, mesh in enumerate(meshes):
+        base_name = sanitize_name(mesh.name)
+        candidate_name = base_name
+        suffix = 1
+        while candidate_name in used_names:
+            candidate_name = f"{base_name}_{suffix:02d}"
+            suffix += 1
+        used_names.add(candidate_name)
+        mesh.name = candidate_name
+        mesh.data.name = candidate_name + "_Mesh"
+
+        mesh.scale = (
+            mesh.scale.x * PROTOTYPE_SCALE,
+            mesh.scale.y * PROTOTYPE_SCALE,
+            mesh.scale.z * PROTOTYPE_SCALE,
+        )
+
+        for polygon in mesh.data.polygons:
+            polygon.use_smooth = True
+
+
+def require_pose_bone(armature, bone_name):
+    pose_bone = armature.pose.bones.get(bone_name)
+    if pose_bone is None:
+        raise RuntimeError(f"Required VRM humanoid bone was not found: {bone_name}")
+    return pose_bone
+
+
+def set_pose_rotation(pose_bone, rotation_x, rotation_y, rotation_z, frame):
+    pose_bone.rotation_mode = "XYZ"
+    pose_bone.rotation_euler = (
+        math.radians(rotation_x),
+        math.radians(rotation_y),
+        math.radians(rotation_z),
+    )
+    pose_bone.keyframe_insert(data_path="rotation_euler", frame=frame)
+
+
+def create_idle_animation(armature):
+    for action in list(bpy.data.actions):
+        bpy.data.actions.remove(action)
+
+    armature.animation_data_clear()
+    armature.animation_data_create()
+    action = bpy.data.actions.new("idle")
+    action.use_fake_user = True
+    armature.animation_data.action = action
+
+    left_upper_arm = require_pose_bone(armature, "J_Bip_L_UpperArm")
+    right_upper_arm = require_pose_bone(armature, "J_Bip_R_UpperArm")
+    left_lower_arm = require_pose_bone(armature, "J_Bip_L_LowerArm")
+    right_lower_arm = require_pose_bone(armature, "J_Bip_R_LowerArm")
+    chest = require_pose_bone(armature, "J_Bip_C_Chest")
+    head = require_pose_bone(armature, "J_Bip_C_Head")
+
+    for frame in (ANIMATION_START_FRAME, ANIMATION_END_FRAME):
+        set_pose_rotation(left_upper_arm, -68.0, 0.0, -4.0, frame)
+        set_pose_rotation(right_upper_arm, -68.0, 0.0, 4.0, frame)
+        set_pose_rotation(left_lower_arm, 0.0, 0.0, -8.0, frame)
+        set_pose_rotation(right_lower_arm, 0.0, 0.0, 8.0, frame)
+        set_pose_rotation(chest, -1.0, 0.0, 0.0, frame)
+        set_pose_rotation(head, 0.5, 0.0, 0.0, frame)
+
+    set_pose_rotation(
+        left_upper_arm,
+        -66.5,
+        0.0,
+        -3.0,
+        ANIMATION_MIDDLE_FRAME,
+    )
+    set_pose_rotation(
+        right_upper_arm,
+        -66.5,
+        0.0,
+        3.0,
+        ANIMATION_MIDDLE_FRAME,
+    )
+    set_pose_rotation(
+        left_lower_arm,
+        0.0,
+        0.0,
+        -8.0,
+        ANIMATION_MIDDLE_FRAME,
+    )
+    set_pose_rotation(
+        right_lower_arm,
+        0.0,
+        0.0,
+        8.0,
+        ANIMATION_MIDDLE_FRAME,
+    )
+    set_pose_rotation(chest, 1.0, 0.0, 0.0, ANIMATION_MIDDLE_FRAME)
+    set_pose_rotation(head, -0.5, 0.0, 0.0, ANIMATION_MIDDLE_FRAME)
+
+    for fcurve in action.fcurves:
+        for keyframe in fcurve.keyframe_points:
+            keyframe.interpolation = "SINE"
+
+    bpy.context.scene.render.fps = 30
+    bpy.context.scene.frame_start = ANIMATION_START_FRAME
+    bpy.context.scene.frame_end = ANIMATION_END_FRAME
+    bpy.context.scene.frame_set(ANIMATION_START_FRAME)
+    bpy.context.view_layer.update()
+    return action
+
+
+def select_export_objects(armature, meshes):
+    bpy.ops.object.select_all(action="DESELECT")
+    armature.hide_set(False)
+    armature.hide_viewport = False
+    armature.hide_render = False
+    armature.select_set(True)
+    for mesh in meshes:
+        mesh.hide_set(False)
+        mesh.hide_viewport = False
+        mesh.hide_render = False
+        mesh.select_set(True)
+    bpy.context.view_layer.objects.active = armature
+
+
+def export_x(path, armature, meshes, export_animation):
+    select_export_objects(armature, meshes)
+    result = bpy.ops.export_scene.directx_x(
+        filepath=path,
+        check_existing=False,
+        use_selection=True,
+        axis_forward=AXIS_FORWARD,
+        axis_up=AXIS_UP,
+        export_normals=True,
+        export_uvs=True,
+        export_materials=True,
+        export_textures=True,
+        export_armature=True,
+        export_weights=True,
+        export_animation=export_animation,
+        anim_fps=30.0,
+        anim_frame_start=ANIMATION_START_FRAME,
+        anim_frame_end=ANIMATION_END_FRAME,
+        export_format="TEXT_X",
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError(f"DirectX X export failed: {path}")
+
+
+def validate_x(path, expect_animation):
+    with open(path, "r", encoding="utf-8-sig") as exported_file:
+        text = exported_file.read()
+
+    if not text.startswith("xof 0303txt 0032"):
+        raise RuntimeError(f"Unexpected DirectX X header: {path}")
+    if "SkinWeights" not in text:
+        raise RuntimeError(f"Skin weights were not exported: {path}")
+    if "TextureFileName" not in text:
+        raise RuntimeError(f"Texture references were not exported: {path}")
+    if expect_animation and "AnimationSet" not in text:
+        raise RuntimeError(f"AnimationSet was not exported: {path}")
+
+    with open(path, "rb") as exported_file:
+        first_three_bytes = exported_file.read(3)
+    if first_three_bytes == b"\xef\xbb\xbf":
+        raise RuntimeError(f"DirectX X file must not contain a UTF-8 BOM: {path}")
+
+
+def write_animation_csv(output_directory):
+    rows = [
+        'Anim, "000", "enemy.idle.x", default',
+        'Anim, "idle", "enemy.idle.x", loop',
+        'Anim, "walk", "enemy.idle.x", loop',
+        'Anim, "creep", "enemy.idle.x", loop',
+        'Anim, "run", "enemy.idle.x", loop',
+        'Anim, "attack", "enemy.idle.x", stopWhenEnd',
+        'Anim, "hit", "enemy.idle.x", stopWhenEnd',
+        'Anim, "death", "enemy.idle.x", stopWhenEnd',
+    ]
+    csv_path = os.path.join(output_directory, "enemy.csv")
+    with open(csv_path, "wb") as csv_file:
+        csv_file.write(("\r\n".join(rows) + "\r\n").encode("utf-8"))
+
+
+def main():
+    blend_path, output_directory = parse_arguments()
+    bpy.ops.wm.open_mainfile(filepath=blend_path)
+    enable_directx_exporter()
+
+    armature = require_armature()
+    meshes = require_meshes()
+    prepare_object_names(meshes)
+    copied_textures = copy_material_textures(meshes, output_directory)
+    create_idle_animation(armature)
+
+    prepared_blend_path = os.path.join(
+        output_directory,
+        "kanata_prototype.blend",
+    )
+    save_result = bpy.ops.wm.save_as_mainfile(filepath=prepared_blend_path)
+    if "FINISHED" not in save_result:
+        raise RuntimeError(f"Failed to save prepared Blender file: {prepared_blend_path}")
+
+    base_x_path = os.path.join(output_directory, "enemy.x")
+    export_x(base_x_path, armature, meshes, False)
+    validate_x(base_x_path, False)
+
+    idle_x_path = os.path.join(output_directory, "enemy.idle.x")
+    export_x(idle_x_path, armature, meshes, True)
+    validate_x(idle_x_path, True)
+    write_animation_csv(output_directory)
+
+    print(
+        "KANATA_PROTOTYPE_PREPARED "
+        f"meshes={len(meshes)} "
+        f"textures={len(copied_textures)} "
+        f"blend={prepared_blend_path} "
+        f"base_x={base_x_path} "
+        f"idle_x={idle_x_path}"
+    )
+
+
+main()
