@@ -364,8 +364,6 @@ def add_nature(prototypes):
         ("Tree2.blend", "TreeSouthEast", (13.0, -25.0, 0.10), 1.10, -28.0),
         ("Tree4.blend", "TreeWorkshop", (-13.2, -17.0, 0.52), 1.20, 42.0),
         ("Tree1.blend", "TreeMidEast", (13.2, -7.5, 0.18), 1.25, -12.0),
-        ("Tree2.blend", "TreeHillWestA", (-12.2, 11.5, 0.82), 1.35, 20.0),
-        ("Tree4.blend", "TreeHillWestB", (-14.1, 18.0, 0.74), 1.15, -30.0),
         ("Tree1.blend", "TreeHillEastA", (12.4, 13.0, 0.66), 1.30, 35.0),
         ("Tree2.blend", "TreeHillEastB", (14.0, 20.0, 0.48), 1.10, 0.0),
         ("Tree4.blend", "TreePortalWest", (-10.5, 27.0, 0.20), 1.20, 18.0),
@@ -391,9 +389,6 @@ def add_nature(prototypes):
         ("Rock1.blend", "ClimbRockWestSouth", (-13.1, -2.0, 0.25), 1.45, 12.0),
         ("Rock2.blend", "ClimbRockWestMid", (-12.0, 1.0, 0.35), 2.00, 42.0),
         ("Rock1.blend", "ClimbRockWestNorth", (-13.0, 4.2, 0.42), 2.15, -18.0),
-        ("Rock2.blend", "ClimbRockHillWestA", (-11.2, 8.2, 0.58), 1.90, 25.0),
-        ("Rock1.blend", "ClimbRockHillWestB", (-8.7, 11.2, 0.72), 1.65, -35.0),
-        ("Rock2.blend", "ClimbRockHillWestC", (-6.5, 14.0, 0.62), 2.20, 8.0),
         ("Rock1.blend", "ClimbRockHillEastA", (11.8, 10.0, 0.55), 1.55, 32.0),
         ("Rock2.blend", "ClimbRockHillEastB", (9.6, 13.0, 0.68), 2.15, -12.0),
         ("Rock1.blend", "ClimbRockHillEastC", (7.2, 16.2, 0.58), 2.10, 48.0),
@@ -401,6 +396,23 @@ def add_nature(prototypes):
     for file_name, name, location, scale, rotation in climb_rock_layout:
         objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
 
+    hero_rock_layout = (
+        ("Rock1.blend", "HeroRockBase", (-10.0, 15.2, 0.55), 4.20, -12.0),
+        ("Rock2.blend", "HeroRockUpper", (-10.2, 15.4, 5.20), 3.40, 27.0),
+        ("Rock1.blend", "HeroRockCrown", (-9.9, 15.6, 8.10), 1.50, -38.0),
+        ("Rock2.blend", "HeroRockStep01", (-5.9, 7.8, 0.40), 1.65, 18.0),
+        ("Rock1.blend", "HeroRockStep02", (-6.3, 9.1, 1.15), 1.55, -22.0),
+        ("Rock2.blend", "HeroRockStep03", (-6.7, 10.3, 2.00), 1.75, 40.0),
+        ("Rock1.blend", "HeroRockStep04", (-7.1, 11.4, 2.85), 1.55, 10.0),
+        ("Rock2.blend", "HeroRockStep05", (-7.5, 12.4, 3.70), 1.80, -28.0),
+        ("Rock1.blend", "HeroRockStep06", (-7.9, 13.3, 4.55), 1.60, 32.0),
+        ("Rock2.blend", "HeroRockStep07", (-8.3, 14.0, 5.40), 1.75, -8.0),
+        ("Rock1.blend", "HeroRockStep08", (-8.7, 14.6, 6.25), 1.55, 45.0),
+        ("Rock2.blend", "HeroRockStep09", (-9.1, 15.0, 7.10), 1.70, 12.0),
+        ("Rock1.blend", "HeroRockStep10", (-9.5, 15.3, 7.95), 1.45, -25.0),
+    )
+    for file_name, name, location, scale, rotation in hero_rock_layout:
+        objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
     bush_layout = (
         ("Bush1.blend", "BushSouthWest", (-11.5, -28.0, 0.1), 0.85, 0.0),
         ("Bush2.blend", "BushWorkshop", (-12.0, -19.5, 0.45), 0.75, 25.0),
@@ -492,8 +504,6 @@ def create_collision():
         (13.0, -25.0, 0.10, 1.10),
         (-13.2, -17.0, 0.52, 1.20),
         (13.2, -7.5, 0.18, 1.25),
-        (-12.2, 11.5, 0.82, 1.35),
-        (-14.1, 18.0, 0.74, 1.15),
         (12.4, 13.0, 0.66, 1.30),
         (14.0, 20.0, 0.48, 1.10),
         (-10.5, 27.0, 0.20, 1.20),
@@ -514,9 +524,6 @@ def create_collision():
         ("ClimbRockWestSouthCollision", -13.1, -2.0, 0.25, 1.45),
         ("ClimbRockWestMidCollision", -12.0, 1.0, 0.35, 2.00),
         ("ClimbRockWestNorthCollision", -13.0, 4.2, 0.42, 2.15),
-        ("ClimbRockHillWestACollision", -11.2, 8.2, 0.58, 1.90),
-        ("ClimbRockHillWestBCollision", -8.7, 11.2, 0.72, 1.65),
-        ("ClimbRockHillWestCCollision", -6.5, 14.0, 0.62, 2.20),
         ("ClimbRockHillEastACollision", 11.8, 10.0, 0.55, 1.55),
         ("ClimbRockHillEastBCollision", 9.6, 13.0, 0.68, 2.15),
         ("ClimbRockHillEastCCollision", 7.2, 16.2, 0.58, 2.10),
@@ -527,6 +534,28 @@ def create_collision():
                 name,
                 (x, y, z + (0.18 * scale)),
                 (1.75 * scale, 2.10 * scale, 0.92 * scale),
+                collision_material,
+            )
+        )
+    hero_rock_steps = (
+        ("HeroRockStep01Collision", -5.9, 7.8, 0.90, 4.2, 3.2),
+        ("HeroRockStep02Collision", -6.3, 9.1, 1.80, 4.0, 3.2),
+        ("HeroRockStep03Collision", -6.7, 10.3, 2.70, 3.8, 3.2),
+        ("HeroRockStep04Collision", -7.1, 11.4, 3.60, 3.7, 3.1),
+        ("HeroRockStep05Collision", -7.5, 12.4, 4.50, 3.6, 3.1),
+        ("HeroRockStep06Collision", -7.9, 13.3, 5.40, 3.5, 3.0),
+        ("HeroRockStep07Collision", -8.3, 14.0, 6.30, 3.4, 3.0),
+        ("HeroRockStep08Collision", -8.7, 14.6, 7.20, 3.3, 2.9),
+        ("HeroRockStep09Collision", -9.1, 15.0, 8.10, 3.2, 2.8),
+        ("HeroRockStep10Collision", -9.5, 15.3, 9.00, 3.1, 2.7),
+        ("HeroRockSummitCollision", -10.0, 15.5, 9.90, 3.2, 3.0),
+    )
+    for name, x, y, top, width, depth in hero_rock_steps:
+        objects.append(
+            add_cube(
+                name,
+                (x, y, top * 0.5),
+                (width, depth, top),
                 collision_material,
             )
         )
