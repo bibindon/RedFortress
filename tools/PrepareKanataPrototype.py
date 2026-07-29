@@ -173,7 +173,7 @@ def require_pose_bone(armature, bone_name):
     return pose_bone
 
 
-def set_pose_rotation(pose_bone, rotation_x, rotation_y, rotation_z, frame):
+def set_pose_rotation_value(pose_bone, rotation_x, rotation_y, rotation_z):
     pose_bone.rotation_mode = "QUATERNION"
     pose_bone.rotation_quaternion = Euler(
         (
@@ -183,16 +183,107 @@ def set_pose_rotation(pose_bone, rotation_x, rotation_y, rotation_z, frame):
         ),
         "XYZ",
     ).to_quaternion()
-    pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
 
+
+def apply_bake_pose(armature):
+    for action in list(bpy.data.actions):
+        bpy.data.actions.remove(action)
+    armature.animation_data_clear()
+
+    set_pose_rotation_value(
+        require_pose_bone(armature, "J_Bip_L_UpperArm"),
+        -68.0,
+        0.0,
+        -4.0,
+    )
+    set_pose_rotation_value(
+        require_pose_bone(armature, "J_Bip_R_UpperArm"),
+        -68.0,
+        0.0,
+        4.0,
+    )
+    set_pose_rotation_value(
+        require_pose_bone(armature, "J_Bip_L_LowerArm"),
+        0.0,
+        0.0,
+        -8.0,
+    )
+    set_pose_rotation_value(
+        require_pose_bone(armature, "J_Bip_R_LowerArm"),
+        0.0,
+        0.0,
+        8.0,
+    )
+    set_pose_rotation_value(
+        require_pose_bone(armature, "J_Bip_C_Chest"),
+        0.0,
+        0.0,
+        0.0,
+    )
+    set_pose_rotation_value(
+        require_pose_bone(armature, "J_Bip_C_Head"),
+        0.0,
+        0.0,
+        0.0,
+    )
+    bpy.context.view_layer.update()
+
+
+def bake_deformed_meshes(meshes):
+    dependency_graph = bpy.context.evaluated_depsgraph_get()
+    baked_meshes = []
+    for source_object in meshes:
+        evaluated_object = source_object.evaluated_get(dependency_graph)
+        baked_mesh_data = bpy.data.meshes.new_from_object(
+            evaluated_object,
+            preserve_all_data_layers=True,
+            depsgraph=dependency_graph,
+        )
+        baked_object = bpy.data.objects.new(source_object.name, baked_mesh_data)
+        bpy.context.scene.collection.objects.link(baked_object)
+        baked_object.matrix_world = source_object.matrix_world.copy()
+        for polygon in baked_mesh_data.polygons:
+            polygon.use_smooth = True
+        baked_meshes.append(baked_object)
+    return baked_meshes
+
+
+def create_rigid_root_armature(source_armature, source_meshes):
+    apply_bake_pose(source_armature)
+    baked_meshes = bake_deformed_meshes(source_meshes)
+
+    for source_mesh in source_meshes:
+        bpy.data.objects.remove(source_mesh, do_unlink=True)
+    bpy.data.objects.remove(source_armature, do_unlink=True)
+
+    armature_data = bpy.data.armatures.new("GameRootArmature")
+    armature = bpy.data.objects.new(ARMATURE_NAME, armature_data)
+    bpy.context.scene.collection.objects.link(armature)
+
+    bpy.context.view_layer.objects.active = armature
+    armature.select_set(True)
+    bpy.ops.object.mode_set(mode="EDIT")
+    root_bone = armature_data.edit_bones.new("GameRoot")
+    root_bone.head = (0.0, 0.0, 0.0)
+    root_bone.tail = (0.0, 0.0, 1.0)
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+    for mesh in baked_meshes:
+        vertex_group = mesh.vertex_groups.new(name="GameRoot")
+        vertex_group.add(range(len(mesh.data.vertices)), 1.0, "REPLACE")
+        modifier = mesh.modifiers.new(name="GameRootArmature", type="ARMATURE")
+        modifier.object = armature
+
+    bpy.context.view_layer.update()
+    return armature, baked_meshes
+
+
+def set_root_location(root_bone, height, frame):
+    root_bone.location = (0.0, 0.0, height)
+    root_bone.keyframe_insert(data_path="location", frame=frame)
 
 
 def create_idle_animation(armature):
-    # The official X exporter converts these VRM arm-bone local matrices to
-    # DirectX row-vector matrices. The game loader then transposes animation
-    # rotation matrices for Blender 5.1 assets. For this VRM arm basis, the
-    # authored X rotation must therefore use the opposite sign so the final
-    # game-space pose places both arms down.
     for action in list(bpy.data.actions):
         bpy.data.actions.remove(action)
 
@@ -201,28 +292,11 @@ def create_idle_animation(armature):
     action = bpy.data.actions.new("idle")
     action.use_fake_user = True
     armature.animation_data.action = action
+    root_bone = require_pose_bone(armature, "GameRoot")
 
-    left_upper_arm = require_pose_bone(armature, "J_Bip_L_UpperArm")
-    right_upper_arm = require_pose_bone(armature, "J_Bip_R_UpperArm")
-    left_lower_arm = require_pose_bone(armature, "J_Bip_L_LowerArm")
-    right_lower_arm = require_pose_bone(armature, "J_Bip_R_LowerArm")
-    chest = require_pose_bone(armature, "J_Bip_C_Chest")
-    head = require_pose_bone(armature, "J_Bip_C_Head")
-
-    for frame in (ANIMATION_START_FRAME, ANIMATION_END_FRAME):
-        set_pose_rotation(left_upper_arm, 68.0, 0.0, -4.0, frame)
-        set_pose_rotation(right_upper_arm, 68.0, 0.0, 4.0, frame)
-        set_pose_rotation(left_lower_arm, 0.0, 0.0, -8.0, frame)
-        set_pose_rotation(right_lower_arm, 0.0, 0.0, 8.0, frame)
-        set_pose_rotation(chest, -1.0, 0.0, 0.0, frame)
-        set_pose_rotation(head, 0.5, 0.0, 0.0, frame)
-
-    set_pose_rotation(left_upper_arm, 66.5, 0.0, -3.0, ANIMATION_MIDDLE_FRAME)
-    set_pose_rotation(right_upper_arm, 66.5, 0.0, 3.0, ANIMATION_MIDDLE_FRAME)
-    set_pose_rotation(left_lower_arm, 0.0, 0.0, -8.0, ANIMATION_MIDDLE_FRAME)
-    set_pose_rotation(right_lower_arm, 0.0, 0.0, 8.0, ANIMATION_MIDDLE_FRAME)
-    set_pose_rotation(chest, 1.0, 0.0, 0.0, ANIMATION_MIDDLE_FRAME)
-    set_pose_rotation(head, -0.5, 0.0, 0.0, ANIMATION_MIDDLE_FRAME)
+    set_root_location(root_bone, 0.0, ANIMATION_START_FRAME)
+    set_root_location(root_bone, 0.015, ANIMATION_MIDDLE_FRAME)
+    set_root_location(root_bone, 0.0, ANIMATION_END_FRAME)
 
     for fcurve in action.fcurves:
         for keyframe in fcurve.keyframe_points:
@@ -234,7 +308,6 @@ def create_idle_animation(armature):
     bpy.context.scene.frame_set(ANIMATION_START_FRAME)
     bpy.context.view_layer.update()
     return action
-
 
 def validate_prepared_pose(armature, meshes):
     bpy.context.scene.frame_set(ANIMATION_MIDDLE_FRAME)
@@ -370,6 +443,7 @@ def main():
     meshes = require_meshes()
     prepare_object_names(meshes)
     copied_textures = copy_material_textures(meshes, output_directory)
+    armature, meshes = create_rigid_root_armature(armature, meshes)
     create_idle_animation(armature)
     validate_prepared_pose(armature, meshes)
 
