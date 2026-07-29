@@ -12,4 +12,5 @@ public:
 
 protected:
     float GetMeshVerticalOffset() const override { return -1.5f; }
+    float GetMeshYawOffset() const override { return D3DX_PI; }
 };

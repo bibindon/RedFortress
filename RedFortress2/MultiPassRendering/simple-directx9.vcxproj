@@ -186,6 +186,7 @@
     <ClCompile Include="EnemyMushroom.cpp" />
     <ClCompile Include="EnemyGolem.cpp" />
     <ClCompile Include="EnemyKanata.cpp" />
+    <ClCompile Include="EnemyHoshigirl.cpp" />
     <ClCompile Include="EnemyGiantCrab.cpp" />
     <ClCompile Include="EnemySmallGolem.cpp" />
     <ClCompile Include="EnemySmallMushroom.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="EnemyMushroom.h" />
     <ClInclude Include="EnemyGolem.h" />
     <ClInclude Include="EnemyKanata.h" />
+    <ClInclude Include="EnemyHoshigirl.h" />
     <ClInclude Include="EnemyGiantCrab.h" />
     <ClInclude Include="EnemySmallGolem.h" />
     <ClInclude Include="EnemySmallMushroom.h" />

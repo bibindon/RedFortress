@@ -20,6 +20,7 @@
 #include "EnemySmallSkeleton.h"
 #include "EnemySmallSpider.h"
 #include "EnemyKanata.h"
+#include "EnemyHoshigirl.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Camera.h"
@@ -368,6 +369,7 @@ void EnemyManager::RegisterEnemyTypes()
     RegisterEnemyType<EnemyGolem>(L"golem", L"Golem", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemySmallGolem>(L"small_golem", L"Golem", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyKanata>(L"kanata", L"KanataPrototype", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyHoshigirl>(L"hoshigirl", L"Hoshigirl", L"enemy.x", L"enemy.csv");
 }
 
 void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
