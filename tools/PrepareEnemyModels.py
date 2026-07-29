@@ -137,6 +137,22 @@ ASSET_CONFIGS = {
             "death": "death",
         },
     },
+    "kanata": {
+        "armature": "Armature",
+        "blend_filename": "kanata_boss.blend",
+        "actions": {
+            "idle": "Kanata_Idle",
+            "move": "Kanata_Run",
+            "fast_move": "Kanata_Run",
+            "attack": "Kanata_Attack_Hammer",
+            "attack_hammer": "Kanata_Attack_Hammer",
+            "attack_sweep": "Kanata_Attack_Sweep",
+            "attack_barrage": "Kanata_Attack_Barrage",
+            "attack_dive": "Kanata_Attack_Dive",
+            "hit": "Kanata_Hit",
+            "death": "Kanata_Death",
+        },
+    },
 }
 
 
