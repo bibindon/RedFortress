@@ -108,18 +108,7 @@ def apply_shoot_pose(armature, recoil):
     point_bone_at(armature, "Bone_240", gun_hand)
     rotate_bone_local(armature, "Bone_242", 0.0, -8.0, -4.0)
 
-    left_elbow = armature.pose.bones["Bone_153"].head.copy()
-    left_elbow.x += 0.11
-    left_elbow.y -= 0.20 - 0.03 * recoil
-    left_elbow.z -= 0.08
-    point_bone_at(armature, "Bone_153", left_elbow)
 
-    support_hand = armature.pose.bones["Bone_155"].head.copy()
-    support_hand.x -= 0.06
-    support_hand.y -= 0.25 - 0.05 * recoil
-    support_hand.z += 0.08
-    point_bone_at(armature, "Bone_155", support_hand)
-    rotate_bone_local(armature, "Bone_157", 0.0, 8.0, 5.0)
 
 
 def create_shoot_start_action(armature, base_pose):

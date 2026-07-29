@@ -173,12 +173,12 @@ namespace
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
     const std::wstring kQteRewardItemId = L"001";
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
-    const std::wstring kSaberModelPath = L"res\\model\\saber\\saber.x";
-    const std::wstring kGunModelPath = L"res\\model\\gun\\gun.x";
-    const char* kPlayerLeftWristBoneName = "Bone_242";
+    const std::wstring kSaberModelPath = L"res\\model\\piratekit\\cutlass.x";
+    const std::wstring kGunModelPath = L"res\\model\\piratekit\\pistol.x";
+    const char* kPlayerRightWristBoneName = "Bone_242";
     const float kStickModelScale = 0.5f;
-    const float kSaberModelScale = 0.5f;
-    const float kGunModelScale = 0.5f;
+    const float kSaberModelScale = 0.9f;
+    const float kGunModelScale = 0.55f;
     const std::wstring kBombCapacityUpItemId = L"bomb_capacity_up";
     const std::wstring kBusterRapidUpItemId = L"buster_rapid_up";
     const std::wstring kStarPowerUpItemId = L"star_power_up";
@@ -2877,6 +2877,7 @@ void GameApp::ApplyUnlockedAbilities()
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
     settings.doubleJumpEnabled = m_inventoryManager.IsAbilityUnlocked(L"DoubleJump");
     m_playerMover.SetSettings(settings);
+    PhysicsLib::SettingsState::SetDoubleJumpEnabled(settings.doubleJumpEnabled);
 
     PhysicsLib::SettingsState::SetGroundDashEnabled(m_inventoryManager.IsAbilityUnlocked(L"GroundDash"));
     PhysicsLib::SettingsState::SetAirDashEnabled(m_inventoryManager.IsAbilityUnlocked(L"AirDash"));
@@ -6452,7 +6453,7 @@ void GameApp::LoadCurrentStageObjects()
         {
             m_render.SetMeshMixEnabled(m_stickMeshId, false);
             const float kStickLocalRotateZ = D3DX_PI * 0.5f;
-            m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, kPlayerLeftWristBoneName,
+            m_render.AttachMeshToBone(m_stickMeshId, m_playerMeshId, kPlayerRightWristBoneName,
                                       D3DXVECTOR3(0.0f, 0.0f, kStickLocalRotateZ),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
@@ -6464,9 +6465,9 @@ void GameApp::LoadCurrentStageObjects()
         if (m_saberMeshId >= 0)
         {
             m_render.SetMeshMixEnabled(m_saberMeshId, false);
-            const float kSaberLocalRotateZ = D3DX_PI * 0.5f;
-            m_render.AttachMeshToBone(m_saberMeshId, m_playerMeshId, kPlayerLeftWristBoneName,
-                                      D3DXVECTOR3(0.0f, 0.0f, kSaberLocalRotateZ),
+            const float kSaberLocalRotateX = D3DX_PI * 0.5f;
+            m_render.AttachMeshToBone(m_saberMeshId, m_playerMeshId, kPlayerRightWristBoneName,
+                                      D3DXVECTOR3(kSaberLocalRotateX, 0.0f, 0.0f),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
 
@@ -6478,7 +6479,7 @@ void GameApp::LoadCurrentStageObjects()
         {
             m_render.SetMeshMixEnabled(m_gunMeshId, false);
             const float kGunLocalRotateZ = D3DX_PI * 0.5f;
-            m_render.AttachMeshToBone(m_gunMeshId, m_playerMeshId, kPlayerLeftWristBoneName,
+            m_render.AttachMeshToBone(m_gunMeshId, m_playerMeshId, kPlayerRightWristBoneName,
                                       D3DXVECTOR3(0.0f, 0.0f, kGunLocalRotateZ),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
