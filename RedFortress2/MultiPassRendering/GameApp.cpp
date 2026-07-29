@@ -866,11 +866,9 @@ void GameApp::Run()
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
              InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START)))
         {
-            bool returnToStageSelectEnabled = false;
-            if (!IsCurrentStageSelect())
-            {
-                returnToStageSelectEnabled = m_saveDataManager.IsStageCleared(m_stageManager.GetCurrentStage().id);
-            }
+            // ステージセレクト画面以外では、攻略済みかどうかにかかわらず
+            // 「ステージセレクトに戻る」を常時有効にする。
+            const bool returnToStageSelectEnabled = !IsCurrentStageSelect();
             m_pauseMenu.Open(IsCurrentStageSelect(), returnToStageSelectEnabled);
         }
 
