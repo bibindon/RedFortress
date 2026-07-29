@@ -16,6 +16,7 @@ ANIMATION_END_FRAME = 60
 ARMATURE_NAME = "Armature"
 BASE_COLOR_NODE_NAME = "Mtoon1BaseColorTexture.Image"
 PROTOTYPE_SCALE = 1.0
+TARGET_MODEL_HEIGHT = 3.0
 
 
 def parse_arguments():
@@ -271,10 +272,29 @@ def combine_baked_meshes(baked_meshes):
     return [combined_mesh]
 
 
+def normalize_mesh_height(mesh):
+    if len(mesh.data.vertices) == 0:
+        raise RuntimeError("Combined Kanata mesh has no vertices")
+
+    minimum_z = min(vertex.co.z for vertex in mesh.data.vertices)
+    maximum_z = max(vertex.co.z for vertex in mesh.data.vertices)
+    source_height = maximum_z - minimum_z
+    if source_height <= 0.0001:
+        raise RuntimeError(f"Combined Kanata mesh height is invalid: {source_height}")
+
+    uniform_scale = TARGET_MODEL_HEIGHT / source_height
+    for vertex in mesh.data.vertices:
+        vertex.co.x *= uniform_scale
+        vertex.co.y *= uniform_scale
+        vertex.co.z = (vertex.co.z - minimum_z) * uniform_scale
+    mesh.data.update()
+
+
 def create_rigid_root_armature(source_armature, source_meshes):
     apply_bake_pose(source_armature)
     baked_meshes = bake_deformed_meshes(source_meshes)
     baked_meshes = combine_baked_meshes(baked_meshes)
+    normalize_mesh_height(baked_meshes[0])
 
     for source_mesh in source_meshes:
         bpy.data.objects.remove(source_mesh, do_unlink=True)
@@ -360,7 +380,7 @@ def validate_prepared_pose(armature, meshes):
             f"Prepared model feet are not near ground level: minimum_z={minimum_z}"
         )
     model_height = maximum_z - minimum_z
-    if model_height < 1.4 or model_height > 1.8:
+    if abs(model_height - TARGET_MODEL_HEIGHT) > 0.01:
         raise RuntimeError(f"Unexpected prepared model height: {model_height}")
 
     armature_rotation = armature.rotation_euler
@@ -443,7 +463,7 @@ def validate_exported_mesh_ground_origin(text, path):
             f"minimum_y={minimum_y} path={path}"
         )
     model_height = maximum_y - minimum_y
-    if model_height < 1.4 or model_height > 1.8:
+    if abs(model_height - TARGET_MODEL_HEIGHT) > 0.01:
         raise RuntimeError(
             f"Unexpected exported Kanata mesh height: {model_height} path={path}"
         )
