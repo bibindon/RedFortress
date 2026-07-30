@@ -54,6 +54,7 @@ Note: In PowerShell, `$env:PATH` and `$env:Path` are the same variable, so do NO
 - Model characters facing Blender's **-Y axis**, with Blender's **+Z axis** as up.
 - Export to DirectX X with `axis_forward="Z"` and `axis_up="Y"`. These settings match the existing player and wolf assets.
 - Use `tools/PrepareEnemyModels.py` for enemy exports so the axis settings and validation remain consistent.
+- glTF-imported sources keep object transforms (rotation/scale) on the armature and mesh objects, often in quaternion rotation mode where `rotation_euler` reads zero. The exporter ignores mesh object transforms for armature-parented meshes, so they must be baked into the data before export (`apply_mesh_world_transform` in the script config). The script's validation also checks the world matrix for leftover rotation.
 - Do not create or use a custom `.x` exporter, serializer, converter, or post-processing rewrite to make Blender output compatible with the game.
 - If an official Blender-exported `.x` file cannot be loaded, fix the game-side loader or renderer instead of changing the export format.
 

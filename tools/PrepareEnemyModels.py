@@ -4,6 +4,7 @@ import re
 import sys
 
 import bpy
+from mathutils import Matrix
 
 
 DIRECTX_X_AXIS_FORWARD = "Z"
@@ -54,6 +55,7 @@ ASSET_CONFIGS = {
         "texture_filename": "ghost_mist.png",
         "apply_object_scale": True,
         "armature_rotation_x_degrees": -90.0,
+        "apply_mesh_world_transform": True,
         "blend_filename": "Ghost_clean.blend",
         "actions": {
             "idle": "CharacterArmature|Flying_Idle",
@@ -282,6 +284,23 @@ def apply_armature_rotation_x(armature, rotation_degrees):
     bpy.context.view_layer.update()
 
 
+def apply_mesh_world_transforms(armature, mesh_objects):
+    # The DirectX X exporter writes armature-parented meshes with an
+    # identity Frame transform and bakes only the axis conversion into the
+    # vertices. Any rotation/scale left on the mesh object (e.g. the glTF
+    # importer's Y-up -> Z-up compensation, often stored as a quaternion)
+    # is silently dropped, which exports the mesh in the wrong orientation.
+    # Bake the full world transform into the mesh data and reset the object
+    # to identity so mesh data matches the on-screen world orientation.
+    for mesh_object in mesh_objects:
+        world_matrix = mesh_object.matrix_world.copy()
+        mesh_object.data.transform(world_matrix)
+        mesh_object.matrix_parent_inverse = Matrix.Identity(4)
+        mesh_object.matrix_basis = Matrix.Identity(4)
+
+    bpy.context.view_layer.update()
+
+
 def validate_export_objects(armature, mesh_objects):
     export_objects = [armature]
     export_objects.extend(mesh_objects)
@@ -293,6 +312,15 @@ def validate_export_objects(armature, mesh_objects):
                     f"Object rotation must be applied before export: "
                     f"{export_object.name}"
                 )
+
+        # rotation_euler reads zero when the object is in quaternion
+        # rotation mode, so also verify the world matrix has no rotation.
+        world_rotation = export_object.matrix_world.to_quaternion()
+        if 1.0 - abs(world_rotation.w) > TRANSFORM_EPSILON:
+            raise RuntimeError(
+                f"Object world rotation must be applied before export: "
+                f"{export_object.name}"
+            )
 
         for scale in export_object.scale:
             if scale <= TRANSFORM_EPSILON:
@@ -560,6 +588,8 @@ def main():
     armature_rotation_x_degrees = config.get("armature_rotation_x_degrees")
     if armature_rotation_x_degrees is not None:
         apply_armature_rotation_x(armature, armature_rotation_x_degrees)
+    if config.get("apply_mesh_world_transform", False):
+        apply_mesh_world_transforms(armature, mesh_objects)
     validate_export_objects(armature, mesh_objects)
     material_power = config.get("material_power")
     if material_power is not None:
