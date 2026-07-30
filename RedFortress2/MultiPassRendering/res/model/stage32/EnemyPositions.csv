@@ -1,2 +1,6 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-kanata,0.0,1.5,0.0,0
+kanata,0,1.5,0,180
+golem,-24,0.2,-12,0
+ghost,24,0.2,-12,180
+skeleton,-24,0.2,14,0
+bird,24,3,14,180

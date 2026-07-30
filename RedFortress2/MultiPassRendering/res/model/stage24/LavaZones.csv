@@ -1,0 +1,5 @@
+﻿ID,PosX,PosY,PosZ,Radius,Damage
+stage24-lava-01,-26,0,0,5,20
+stage24-lava-02,26,0,0,5,20
+stage24-lava-03,0,0,26,5,20
+stage24-lava-04,0,0,-26,5,20

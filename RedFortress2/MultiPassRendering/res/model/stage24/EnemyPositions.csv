@@ -1,2 +1,4 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-enemy2,0.0,0.2,0.0,0
+golem,0,0.2,0,180
+small_golem,-14,0.2,10,0
+small_golem,14,0.2,-10,180

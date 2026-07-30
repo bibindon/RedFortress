@@ -1,2 +1,7 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-enemy2,0.0,0.2,10.0,0
+ghost,-38,0.2,-52,0
+skeleton,38,0.2,-52,180
+spider,-38,0.2,-18,0
+small_golem,38,0.2,-18,180
+bird,-38,3,18,0
+skeleton,38,0.2,58,180

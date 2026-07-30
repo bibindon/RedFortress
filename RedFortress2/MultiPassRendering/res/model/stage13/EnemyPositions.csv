@@ -1,3 +1,8 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-wolf,5.0,0.2,0.0,0
-enemy3,-5.0,0.2,10.0,0
+skeleton,-30,0.2,-52,0
+spider,30,0.2,-52,180
+ghost,-32,0.2,-16,0
+small_golem,32,0.2,-16,180
+skeleton,-30,0.2,18,0
+bird,30,3,20,180
+golem,0,0.2,42,180

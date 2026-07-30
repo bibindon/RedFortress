@@ -1,2 +1,6 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-enemy3,-5.0,0.2,0.0,0
+bird,-24,3,-42,180
+skeleton,22,0.2,-16,0
+bird,24,3,4,180
+ghost,-22,0.2,22,0
+bird,0,3,44,180

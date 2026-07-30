@@ -1,2 +1,6 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-enemy6,0.0,0.2,10.0,0
+small_spider,-34,0.2,-18,90
+skeleton,-30,0.2,18,90
+spider,28,0.2,-14,270
+small_spider,34,0.2,14,270
+skeleton,2,0.2,30,180
