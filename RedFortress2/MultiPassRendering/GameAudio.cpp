@@ -375,7 +375,7 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         fieldBgm = kStageSelectBgm;
         environmentVolume = 14;
     }
-    else if (stageId == L"base")
+    else if (stageId.length() >= 4 && stageId.substr(0, 4) == L"base")
     {
         if (world >= 3)
         {

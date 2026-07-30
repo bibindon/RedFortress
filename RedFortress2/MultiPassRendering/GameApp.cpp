@@ -330,6 +330,49 @@ namespace
         return stageId.length() >= 6 && stageId.substr(0, 6) == L"select";
     }
 
+    bool IsBaseId(const std::wstring& stageId)
+    {
+        if (stageId == L"base")
+        {
+            return true;
+        }
+        if (stageId == L"base2" || stageId == L"base3" || stageId == L"base4")
+        {
+            return true;
+        }
+        return false;
+    }
+
+    int GetWorldFromStageId(const std::wstring& stageId)
+    {
+        if (stageId.length() >= 2 && stageId.at(1) == L'-')
+        {
+            if (stageId.at(0) >= L'1' && stageId.at(0) <= L'4')
+            {
+                return static_cast<int>(stageId.at(0) - L'0');
+            }
+        }
+        if (stageId.length() == 7 && IsStageSelectId(stageId))
+        {
+            if (stageId.at(6) >= L'1' && stageId.at(6) <= L'4')
+            {
+                return static_cast<int>(stageId.at(6) - L'0');
+            }
+        }
+        if (stageId == L"base")
+        {
+            return 1;
+        }
+        if (stageId.length() == 5 && stageId.substr(0, 4) == L"base")
+        {
+            if (stageId.at(4) >= L'2' && stageId.at(4) <= L'4')
+            {
+                return static_cast<int>(stageId.at(4) - L'0');
+            }
+        }
+        return 0;
+    }
+
     float CalculatePlayerStartYaw(const StageManager::StageData& stage)
     {
         if (IsStageSelectId(stage.id))
@@ -724,7 +767,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     });
     m_destructibleManager.LoadForStage(m_render, initialStage.destructibleCsvPath);
 
-    if (!IsStageSelectId(initialStage.id))
+    if (!IsStageSelectId(initialStage.id) && !IsBaseId(initialStage.id))
     {
         const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
                                   initialStage.clearPosition.y - 0.5f,
@@ -1264,14 +1307,15 @@ void GameApp::Run()
                     std::wstring interactionId;
                     if (m_interactionManager.ConsumeTriggeredInteraction(&interactionId) && !interactionId.empty())
                     {
-                        if (interactionId == L"base-crafting-station-01")
+                        const std::wstring interactionType =
+                            m_interactionManager.GetInteractableType(interactionId);
+                        if (interactionType == L"CraftingStation")
                         {
                             m_craftMenu.SetCurrentWorld(GetCurrentWorld());
                             m_craftMenu.Open();
                         }
                         else
                         {
-                            const std::wstring interactionType = m_interactionManager.GetInteractableType(interactionId);
                             if (interactionType == L"Tree")
                             {
                                 m_interactionManager.RemoveInteractableById(interactionId);
@@ -1327,13 +1371,13 @@ void GameApp::Run()
                         if (portalId.length() > prefixLen && portalId.substr(0, prefixLen) == prefix)
                         {
                             const std::wstring destStageId = portalId.substr(prefixLen);
-                            if (destStageId != L"base" && !m_saveDataManager.IsStageUnlocked(destStageId))
+                            if (!IsBaseId(destStageId) && !m_saveDataManager.IsStageUnlocked(destStageId))
                             {
                                 // 未解放ステージ：表示はするが移動しない
                             }
                             else
                             {
-                                if (destStageId == L"base")
+                                if (IsBaseId(destStageId))
                                 {
                                     const std::wstring& currentId = m_stageManager.GetCurrentStage().id;
                                     if (currentId.length() >= 6 && currentId.substr(0, 6) == L"select")
@@ -1696,7 +1740,9 @@ void GameApp::Run()
                 }
             }
 
-            if (!IsCurrentStageSelect() && IsStageClearReached())
+            if (!IsCurrentStageSelect() &&
+                !IsBaseId(m_stageManager.GetCurrentStage().id) &&
+                IsStageClearReached())
             {
                 ClearBusters();
                 m_gameState = GameState::StageClear;
@@ -3165,6 +3211,37 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
 {
     m_render.ClearPointLights();
     UpdatePlayerPointLight();
+    if (stageId == L"base2")
+    {
+        const D3DXCOLOR lanternColor(1.0f, 0.34f, 0.08f, 1.0f);
+        const D3DXCOLOR crystalColor(0.10f, 0.55f, 1.0f, 1.0f);
+        const D3DXCOLOR portalColor(0.08f, 0.72f, 1.0f, 1.0f);
+        m_render.AddPointLight(D3DXVECTOR3(-8.0f, 2.8f, -18.0f), 3.0f, lanternColor);
+        m_render.AddPointLight(D3DXVECTOR3(8.0f, 1.8f, 3.0f), 2.6f, crystalColor);
+        m_render.AddPointLight(D3DXVECTOR3(0.0f, 3.0f, 26.0f), 3.2f, portalColor);
+        return;
+    }
+    if (stageId == L"base3")
+    {
+        const D3DXCOLOR sunsetColor(1.0f, 0.38f, 0.10f, 1.0f);
+        const D3DXCOLOR relicColor(0.30f, 0.62f, 1.0f, 1.0f);
+        const D3DXCOLOR portalColor(0.18f, 0.48f, 1.0f, 1.0f);
+        m_render.AddPointLight(D3DXVECTOR3(-8.0f, 2.8f, -18.0f), 2.8f, sunsetColor);
+        m_render.AddPointLight(D3DXVECTOR3(9.0f, 3.6f, 7.0f), 2.4f, relicColor);
+        m_render.AddPointLight(D3DXVECTOR3(0.0f, 3.0f, 26.0f), 3.0f, portalColor);
+        return;
+    }
+    if (stageId == L"base4")
+    {
+        const D3DXCOLOR fireColor(1.0f, 0.18f, 0.03f, 1.0f);
+        const D3DXCOLOR commandColor(0.26f, 0.42f, 1.0f, 1.0f);
+        const D3DXCOLOR portalColor(0.08f, 0.30f, 1.0f, 1.0f);
+        m_render.AddPointLight(D3DXVECTOR3(-9.0f, 2.7f, -17.0f), 2.8f, fireColor);
+        m_render.AddPointLight(D3DXVECTOR3(9.0f, 2.7f, -17.0f), 2.8f, fireColor);
+        m_render.AddPointLight(D3DXVECTOR3(0.0f, 2.4f, 2.0f), 2.5f, commandColor);
+        m_render.AddPointLight(D3DXVECTOR3(0.0f, 3.0f, 26.0f), 3.4f, portalColor);
+        return;
+    }
     if (stageId == L"select4")
     {
         const wchar_t* portalDestinationIds[] =
@@ -3178,7 +3255,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
             L"4-6",
             L"4-7",
             L"4-8",
-            L"base"
+            L"base4"
         };
         const D3DXVECTOR3 portalLightPositions[] =
         {
@@ -3201,7 +3278,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         {
             const std::wstring destinationId = portalDestinationIds[i];
             D3DXCOLOR lightColor = unclearedColor;
-            if (destinationId == L"select3" || destinationId == L"base")
+            if (destinationId == L"select3" || IsBaseId(destinationId))
             {
                 lightColor = travelColor;
             }
@@ -3249,7 +3326,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
             L"3-7",
             L"3-8",
             L"select4",
-            L"base"
+            L"base3"
         };
         const D3DXVECTOR3 portalLightPositions[] =
         {
@@ -3273,7 +3350,8 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         {
             const std::wstring destinationId = portalDestinationIds[i];
             D3DXCOLOR lightColor = unclearedColor;
-            if (destinationId == L"select2" || destinationId == L"select4" || destinationId == L"base")
+            if (destinationId == L"select2" || destinationId == L"select4" ||
+                IsBaseId(destinationId))
             {
                 lightColor = travelColor;
             }
@@ -3324,7 +3402,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         L"2-7",
         L"2-8",
         L"select3",
-        L"base"
+        L"base2"
     };
     const D3DXVECTOR3 portalLightPositions[] =
     {
@@ -3348,7 +3426,8 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     {
         const std::wstring destinationId = portalDestinationIds[i];
         D3DXCOLOR lightColor = unclearedColor;
-        if (destinationId == L"select1" || destinationId == L"select3" || destinationId == L"base")
+        if (destinationId == L"select1" || destinationId == L"select3" ||
+            IsBaseId(destinationId))
         {
             lightColor = travelColor;
         }
@@ -3415,12 +3494,13 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
 
 void GameApp::ApplyStageEnvironmentLighting(const std::wstring& stageId)
 {
-    if (stageId.length() < 2 || stageId[1] != L'-')
+    const int world = GetWorldFromStageId(stageId);
+    if (world <= 0)
     {
         return;
     }
 
-    if (stageId[0] == L'2')
+    if (world == 2)
     {
         m_render.SetPostEffectSaturate(0.68f);
         m_render.SetMeshMixShadowDarkness(0.75f);
@@ -3431,7 +3511,7 @@ void GameApp::ApplyStageEnvironmentLighting(const std::wstring& stageId)
         return;
     }
 
-    if (stageId[0] == L'3')
+    if (world == 3)
     {
         m_render.SetPostEffectSaturate(1.0f);
         m_render.SetMeshMixShadowDarkness(0.75f);
@@ -3442,7 +3522,7 @@ void GameApp::ApplyStageEnvironmentLighting(const std::wstring& stageId)
         return;
     }
 
-    if (stageId[0] == L'4')
+    if (world == 4)
     {
         m_render.SetPostEffectSaturate(0.8f);
         m_render.SetMeshMixShadowDarkness(0.75f);
@@ -3513,7 +3593,7 @@ bool GameApp::IsStagePortalSelectable(const std::wstring& portalId) const
     }
 
     const std::wstring destinationId = portalId.substr(prefix.length());
-    if (destinationId == L"base")
+    if (IsBaseId(destinationId))
     {
         return true;
     }
@@ -3723,7 +3803,7 @@ void GameApp::InitializeStageSelectCursor()
         }
 
         const std::wstring destinationId = interactable.id.substr(std::wstring(L"portal-to-").length());
-        const bool isNavigationPortal = destinationId == L"base" ||
+        const bool isNavigationPortal = IsBaseId(destinationId) ||
             (destinationId.length() >= 6 && destinationId.substr(0, 6) == L"select");
         if (isNavigationPortal)
         {
@@ -4388,6 +4468,13 @@ int GameApp::GetCurrentAmmoMax() const
 
 int GameApp::GetCurrentWorld() const
 {
+    const int currentStageWorld =
+        GetWorldFromStageId(m_stageManager.GetCurrentStage().id);
+    if (currentStageWorld > 0)
+    {
+        return currentStageWorld;
+    }
+
     int currentWorld = 1;
     const std::size_t stageCount = m_stageManager.GetStageCount();
     for (std::size_t i = 0; i < stageCount; ++i)
@@ -4759,7 +4846,7 @@ void GameApp::CreateStageSelectCubes()
 
         const std::wstring destinationId = interactable.id.substr(portalPrefix.length());
         std::wstring cubePath;
-        if (destinationId == L"base")
+        if (IsBaseId(destinationId))
         {
             cubePath = kStageSelectCubeBluePath;
         }
@@ -4993,7 +5080,7 @@ bool GameApp::StartStageByIndex(std::size_t stageIndex)
     }
 
     const StageManager::StageData& stage = m_stageManager.GetStage(stageIndex);
-    if (stage.id == L"base")
+    if (IsBaseId(stage.id))
     {
         return StartStageByIndexImmediate(stageIndex);
     }
@@ -5113,7 +5200,7 @@ void GameApp::UpdateStageTransition()
         }
 
         EndStageLoadingScreen();
-        if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
+        if (IsCurrentStageSelect() || IsBaseId(m_stageManager.GetCurrentStage().id))
         {
             m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
             m_stageTransitionAction = StageTransitionAction::FadeIn;
@@ -5235,7 +5322,7 @@ bool GameApp::CompleteStageMove(const std::size_t stageIndex)
     LoadCurrentStageObjects();
     m_render.SetLoadingScreenProgress(90);
     m_render.SetFadeAlpha(1.0f);
-    if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
+    if (IsCurrentStageSelect() || IsBaseId(m_stageManager.GetCurrentStage().id))
     {
         m_gameState = GameState::Playing;
     }
@@ -6392,7 +6479,7 @@ bool GameApp::StartNextStage()
     LoadCurrentStageObjects();
     m_render.SetLoadingScreenProgress(90);
     m_render.SetFadeAlpha(1.0f);
-    if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
+    if (IsCurrentStageSelect() || IsBaseId(m_stageManager.GetCurrentStage().id))
     {
         m_gameState = GameState::Playing;
     }
@@ -6436,7 +6523,7 @@ bool GameApp::MoveToStageAfterClear()
     LoadCurrentStageObjects();
     m_render.SetLoadingScreenProgress(90);
     m_render.SetFadeAlpha(1.0f);
-    if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
+    if (IsCurrentStageSelect() || IsBaseId(m_stageManager.GetCurrentStage().id))
     {
         m_gameState = GameState::Playing;
     }
@@ -6520,7 +6607,7 @@ void GameApp::LoadCurrentStageObjects()
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
     m_render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
 
-    if (!IsStageSelectId(stage.id))
+    if (!IsStageSelectId(stage.id) && !IsBaseId(stage.id))
     {
         const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 0.5f, stage.clearPosition.z);
         m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",

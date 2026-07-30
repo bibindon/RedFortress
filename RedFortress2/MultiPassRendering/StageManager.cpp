@@ -88,6 +88,15 @@ void StageManager::Initialize()
              L"res\\RenderSettings.csv", StageWeather::None, true);
 
     AddStage(L"base", 33, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"base2", 38, L"拠点2", L"base2", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.fog.csv", StageWeather::None, true);
+    AddStage(L"base3", 39, L"拠点3", L"base3", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.evening.csv", StageWeather::None, false);
+    AddStage(L"base4", 40, L"拠点4", L"base4", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.night.csv", StageWeather::None, true);
 
     const D3DXVECTOR3 kSelect1CameraPos(0.0f, 18.0f, -26.0f);
     const D3DXVECTOR3 kSelect1CameraLookAt(0.0f, 2.0f, -2.0f);

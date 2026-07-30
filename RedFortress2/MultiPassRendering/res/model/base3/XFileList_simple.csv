@@ -1,0 +1,4 @@
+﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
+2,base_ground.x,0,0,0,0,0,0,1,normal
+3,base_decor.x,0,0,0,0,0,0,1,normal
+4,../SkySphere_evening/SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
