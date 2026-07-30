@@ -149,6 +149,8 @@ private:
     bool BeginStageTransitionToIndex(std::size_t stageIndex);
     bool BeginStageTransitionToStory(std::size_t stageIndex);
     bool BeginStageTransitionAfterClear();
+    void BeginStageLoadingScreen();
+    void EndStageLoadingScreen();
     void UpdateStageTransition();
     bool CompleteStageMove(std::size_t stageIndex);
     void StartNewGame();
@@ -367,6 +369,7 @@ private:
     std::size_t m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);
     StageTransitionAction m_stageTransitionAction = StageTransitionAction::None;
     std::size_t m_stageTransitionIndex = static_cast<std::size_t>(-1);
+    bool m_stageLoadingScreenActive = false;
     StageEditor m_stageEditor;
     D3DXVECTOR3 m_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

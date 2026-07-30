@@ -321,7 +321,8 @@ namespace
 
     D3DXVECTOR3 GetEnemyAttackTargetPosition(const EnemyBase& enemy)
     {
-        return enemy.GetPosition() + D3DXVECTOR3(0.0f, kEnemyAttackTargetHeight, 0.0f);
+        return enemy.GetPosition() +
+            D3DXVECTOR3(0.0f, enemy.GetAttackTargetHeightOffset(), 0.0f);
     }
 
     bool IsStageSelectId(const std::wstring& stageId)
@@ -5039,6 +5040,31 @@ bool GameApp::BeginStageTransitionAfterClear()
     return true;
 }
 
+void GameApp::BeginStageLoadingScreen()
+{
+    if (m_stageLoadingScreenActive)
+    {
+        return;
+    }
+
+    m_render.StartLoadingScreen();
+    m_render.SetLoadingScreenShowTitle(false);
+    m_render.SetLoadingScreenProgress(0);
+    m_stageLoadingScreenActive = true;
+}
+
+void GameApp::EndStageLoadingScreen()
+{
+    if (!m_stageLoadingScreenActive)
+    {
+        return;
+    }
+
+    m_render.SetLoadingScreenProgress(100);
+    m_render.EndLoadingScreen();
+    m_stageLoadingScreenActive = false;
+}
+
 void GameApp::UpdateStageTransition()
 {
     if (m_stageTransitionAction == StageTransitionAction::WaitForStageLoad)
@@ -5051,6 +5077,7 @@ void GameApp::UpdateStageTransition()
             return;
         }
 
+        EndStageLoadingScreen();
         if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
         {
             m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
@@ -5168,7 +5195,10 @@ bool GameApp::CompleteStageMove(const std::size_t stageIndex)
         return false;
     }
 
+    BeginStageLoadingScreen();
+    m_render.Draw();
     LoadCurrentStageObjects();
+    m_render.SetLoadingScreenProgress(90);
     m_render.SetFadeAlpha(1.0f);
     if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
@@ -5599,6 +5629,11 @@ void GameApp::UpdateStageExit()
     if (m_stageExitFrame == kStageExitFadeStartFrame)
     {
         m_render.StartFadeOut(kStageExitFadeDurationSeconds);
+    }
+
+    if (m_render.GetFadeAlpha() >= 1.0f)
+    {
+        BeginStageLoadingScreen();
     }
 
     if (m_stageExitFrame >= kStageExitTransitionFrame)
@@ -6317,7 +6352,10 @@ bool GameApp::StartNextStage()
         return false;
     }
 
+    BeginStageLoadingScreen();
+    m_render.Draw();
     LoadCurrentStageObjects();
+    m_render.SetLoadingScreenProgress(90);
     m_render.SetFadeAlpha(1.0f);
     if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
@@ -6358,7 +6396,10 @@ bool GameApp::MoveToStageAfterClear()
     }
 
     m_preferredStageSelectPortalId = L"portal-to-" + clearedStageId;
+    BeginStageLoadingScreen();
+    m_render.Draw();
     LoadCurrentStageObjects();
+    m_render.SetLoadingScreenProgress(90);
     m_render.SetFadeAlpha(1.0f);
     if (IsCurrentStageSelect() || m_stageManager.GetCurrentStage().id == L"base")
     {
@@ -6533,9 +6574,9 @@ void GameApp::LoadCurrentStageObjects()
         if (m_saberMeshId >= 0)
         {
             m_render.SetMeshMixEnabled(m_saberMeshId, false);
-            const float kSaberLocalRotateX = D3DX_PI * 0.5f;
+            const float kSaberLocalRotateZ = D3DX_PI * 0.5f;
             m_render.AttachMeshToBone(m_saberMeshId, m_playerMeshId, kPlayerRightWristBoneName,
-                                      D3DXVECTOR3(kSaberLocalRotateX, 0.0f, 0.0f),
+                                      D3DXVECTOR3(0.0f, 0.0f, kSaberLocalRotateZ),
                                       D3DXVECTOR3(0.0f, 0.0f, 0.0f));
         }
 

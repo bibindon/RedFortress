@@ -84,6 +84,8 @@ public:
     virtual bool IsBoss() const { return false; }
     // ボス体力バー上部に表示する表示名。ボス以外は空文字列。
     virtual std::wstring GetBossName() const { return L""; }
+    // 攻撃判定に使う敵座標からの高さ。大型敵は物理判定の中心に合わせて上書きする。
+    virtual float GetAttackTargetHeightOffset() const { return 1.0f; }
 
 protected:
     EnemyBase(const D3DXVECTOR3& startPosition,
