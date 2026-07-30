@@ -8,8 +8,9 @@ EnemySmallGolem::EnemySmallGolem(const D3DXVECTOR3& pos, const int meshId, const
                 30,
                 1.4f,
                 11.0f,
-                0.8f * 0.5f,
-                2.4f * 0.5f,
+                3.90f * 0.5f,
+                2.34f * 0.5f,
+                -2.97f * 0.5f,
                 MovementMode::Ground,
                 true)
 {

@@ -84,8 +84,8 @@ public:
     virtual bool IsBoss() const { return false; }
     // ボス体力バー上部に表示する表示名。ボス以外は空文字列。
     virtual std::wstring GetBossName() const { return L""; }
-    // 攻撃判定に使う敵座標からの高さ。大型敵は物理判定の中心に合わせて上書きする。
-    virtual float GetAttackTargetHeightOffset() const { return 1.0f; }
+    // 敵座標は衝突円柱の中心なので、攻撃判定もその中心を狙う。
+    virtual float GetAttackTargetHeightOffset() const { return 0.0f; }
 
 protected:
     EnemyBase(const D3DXVECTOR3& startPosition,
@@ -97,6 +97,7 @@ protected:
               float viewDistance,
               float contactRadius,
               float height,
+              float meshVerticalOffset,
               MovementMode movementMode = MovementMode::Ground,
               bool usesExtendedAnimations = false,
               HitReactionMode hitReactionMode = HitReactionMode::Normal);
@@ -104,7 +105,7 @@ protected:
     virtual bool UpdateSpecialAttack(NSRender::Render& render,
                                      const D3DXVECTOR3& playerPos,
                                      bool playerInvincible);
-    virtual float GetMeshVerticalOffset() const { return 0.0f; }
+    virtual float GetMeshVerticalOffset() const { return m_meshVerticalOffset; }
     virtual float GetMeshYawOffset() const { return 0.0f; }
     bool IsSpecialAttackReady() const;
     void FaceSpecialAttackTarget(const D3DXVECTOR3& targetPos);
@@ -159,6 +160,7 @@ private:
     float m_retreatDistance = 3.0f;
     float m_contactRadius = 0.5f;
     float m_height = 1.0f;
+    float m_meshVerticalOffset = 0.0f;
     MovementMode m_movementMode = MovementMode::Ground;
     bool m_usesExtendedAnimations = false;
     HitReactionMode m_hitReactionMode = HitReactionMode::Normal;

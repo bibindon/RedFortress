@@ -59,6 +59,7 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
                      const float viewDistance,
                      const float contactRadius,
                      const float height,
+                     const float meshVerticalOffset,
                      const MovementMode movementMode,
                      const bool usesExtendedAnimations,
                      const HitReactionMode hitReactionMode)
@@ -74,6 +75,7 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
     m_viewDistance = viewDistance;
     m_contactRadius = contactRadius;
     m_height = height;
+    m_meshVerticalOffset = meshVerticalOffset;
     m_movementMode = movementMode;
     m_usesExtendedAnimations = usesExtendedAnimations;
     m_hitReactionMode = hitReactionMode;

@@ -33,8 +33,9 @@ EnemySpider::EnemySpider(const D3DXVECTOR3& pos, const int meshId, const float y
                 8,
                 3.5f,
                 12.0f,
-                0.55f,
-                0.4f,
+                1.94f,
+                1.13f,
+                -0.56f,
                 MovementMode::Ground,
                 true,
                 HitReactionMode::SuperArmor)

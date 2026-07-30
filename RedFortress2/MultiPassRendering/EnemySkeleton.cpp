@@ -33,8 +33,9 @@ EnemySkeleton::EnemySkeleton(const D3DXVECTOR3& pos, const int meshId, const flo
                 12,
                 2.5f,
                 13.0f,
-                0.45f,
-                1.7f,
+                1.41f,
+                5.09f,
+                -0.93f,
                 MovementMode::Ground,
                 true,
                 HitReactionMode::SuperArmor)

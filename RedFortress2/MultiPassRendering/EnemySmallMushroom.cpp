@@ -8,8 +8,9 @@ EnemySmallMushroom::EnemySmallMushroom(const D3DXVECTOR3& pos, const int meshId,
                 16,
                 1.6f,
                 10.0f,
-                0.6f * 0.5f,
-                1.1f * 0.5f,
+                1.51f * 0.5f,
+                3.31f * 0.5f,
+                -1.61f * 0.5f,
                 MovementMode::Ground,
                 true)
 {

@@ -16,11 +16,6 @@ public:
     bool IsBoss() const override { return true; }
     std::wstring GetBossName() const override { return L"ホシガール"; }
 
-    // Hoshigirl モデルは足元(最下部頂点)が原点より 0.1m 下に作られており、
-    // offset=0 だと足元が接地基準より下に描画されて地面に埋まる。
-    // 足元を原点の高さまで押し上げるため scale(2.5) * 0.1 = 0.25m 上にずらす。
-    float GetMeshVerticalOffset() const override { return 0.25f; }
-
     // 4種の特殊攻撃を使用する。true を返すと接触ダメージが無効化され、
     // 全ダメージは UpdateSpecialAttack 内の EmitAttackHit 経由で処理される。
     bool UsesSpecialAttacks() const override;

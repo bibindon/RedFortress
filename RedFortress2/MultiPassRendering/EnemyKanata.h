@@ -18,9 +18,6 @@ protected:
                              bool playerInvincible) override;
     static float GetCollisionHeight() { return 3.0f; }
 
-    // EnemyBase stores the center of the collision cylinder, while enemy.x uses the feet as Y=0.
-    float GetMeshVerticalOffset() const override { return -GetCollisionHeight() * 0.5f; }
-
     // The prepared model follows the standard Blender -Y facing convention. Do not rotate it by 180 degrees.
     float GetMeshYawOffset() const override { return 0.0f; }
 
