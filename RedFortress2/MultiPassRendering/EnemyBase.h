@@ -73,6 +73,7 @@ public:
     void SetMeshId(int meshId);
     const std::wstring& GetType() const;
     void SetType(const std::wstring& type);
+    void SetBossName(const std::wstring& bossName);
 
     bool IsTouchingPlayer(const D3DXVECTOR3& playerPos) const;
     bool IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
@@ -81,9 +82,9 @@ public:
                            float playerYVelocity) const;
 
     // ボス敵判定。ボス体力バーの表示対象となる敵は true を返す。
-    virtual bool IsBoss() const { return false; }
+    virtual bool IsBoss() const { return !m_bossName.empty(); }
     // ボス体力バー上部に表示する表示名。ボス以外は空文字列。
-    virtual std::wstring GetBossName() const { return L""; }
+    virtual std::wstring GetBossName() const { return m_bossName; }
     // 敵座標は衝突円柱の中心なので、攻撃判定もその中心を狙う。
     virtual float GetAttackTargetHeightOffset() const { return 0.0f; }
 
@@ -151,6 +152,7 @@ private:
     int m_maxHp = 10;
     int m_meshId = -1;
     std::wstring m_type;
+    std::wstring m_bossName;
     State m_state = State::Idle;
     AnimState m_animState = AnimState::Idle;
 

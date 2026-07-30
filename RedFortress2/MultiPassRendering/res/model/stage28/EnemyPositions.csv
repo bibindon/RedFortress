@@ -1,5 +1,5 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-golem,0,0.2,0,180
+boss_golem,0,0.2,0,180
 bird,-24,3,-12,0
 bird,24,3,12,180
 skeleton,-24,0.2,12,0

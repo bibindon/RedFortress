@@ -17,6 +17,7 @@ struct FactoryEntry
 {
     std::wstring meshPath;
     std::wstring animCsvPath;
+    std::wstring bossName;
     float scale;
     std::function<std::unique_ptr<EnemyBase>(const D3DXVECTOR3&, int, float)> create;
 };
@@ -51,7 +52,8 @@ private:
     void RegisterEnemyType(const std::wstring& type,
                            const std::wstring& folderName,
                            const std::wstring& meshFileName,
-                           const std::wstring& animationFileName);
+                           const std::wstring& animationFileName,
+                           const std::wstring& bossName = L"");
 
     std::vector<std::unique_ptr<EnemyBase>> m_enemies;
     std::unordered_map<std::wstring, FactoryEntry> m_factory;

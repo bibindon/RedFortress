@@ -71,12 +71,14 @@ template<typename T>
 void EnemyManager::RegisterEnemyType(const std::wstring& type,
                                      const std::wstring& folderName,
                                      const std::wstring& meshFileName,
-                                     const std::wstring& animationFileName)
+                                     const std::wstring& animationFileName,
+                                     const std::wstring& bossName)
 {
     const std::wstring basePath = L"res\\model2\\" + folderName + L"\\";
     m_factory[type] = {
         basePath + meshFileName,
         basePath + animationFileName,
+        bossName,
         T::GetScale(),
         [](const D3DXVECTOR3& pos, int meshId, float yaw) {
             return std::make_unique<T>(pos, meshId, yaw);
@@ -351,6 +353,7 @@ void EnemyManager::RegisterEnemyTypes()
     m_factory.clear();
     RegisterEnemyType<EnemyWolf>(L"wolf", L"separatedAnim", L"wolfAnim.x", L"wolfAnim.csv");
     RegisterEnemyType<EnemyBigWolf>(L"enemy2", L"Enemy2", L"wolfAnim.x", L"wolfAnim.csv");
+    RegisterEnemyType<EnemyBigWolf>(L"boss_enemy2", L"Enemy2", L"wolfAnim.x", L"wolfAnim.csv", L"ウェアウルフ");
     RegisterEnemyType<Enemy3>(L"enemy3", L"Enemy3", L"wolfAnim.x", L"wolfAnim.csv");
     RegisterEnemyType<Enemy4>(L"enemy4", L"Enemy4", L"wolfAnim.x", L"wolfAnim.csv");
     RegisterEnemyType<Enemy5>(L"enemy5", L"Enemy5", L"wolfAnim.x", L"wolfAnim.csv");
@@ -359,6 +362,7 @@ void EnemyManager::RegisterEnemyTypes()
     RegisterEnemyType<EnemyBird>(L"bird", L"Bird", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyCrab>(L"crab", L"Crab", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyGiantCrab>(L"giant_crab", L"Crab", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyGiantCrab>(L"boss_giant_crab", L"Crab", L"enemy.x", L"enemy.csv", L"ジャイアントクラブ");
     RegisterEnemyType<EnemyFrog>(L"frog", L"Frog", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemySpider>(L"spider", L"Spider", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemySmallSpider>(L"small_spider", L"Spider", L"enemy.x", L"enemy.csv");
@@ -367,9 +371,12 @@ void EnemyManager::RegisterEnemyTypes()
     RegisterEnemyType<EnemyMushroom>(L"mushroom", L"Mushroom", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemySmallMushroom>(L"small_mushroom", L"Mushroom", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyGolem>(L"golem", L"Golem", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyGolem>(L"boss_golem", L"Golem", L"enemy.x", L"enemy.csv", L"ゴーレム");
     RegisterEnemyType<EnemySmallGolem>(L"small_golem", L"Golem", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyKanata>(L"kanata", L"KanataPrototype", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyKanata>(L"boss_kanata", L"KanataPrototype", L"enemy.x", L"enemy.csv", L"天音かなた");
     RegisterEnemyType<EnemyHoshigirl>(L"hoshigirl", L"Hoshigirl", L"enemy.x", L"enemy.csv");
+    RegisterEnemyType<EnemyHoshigirl>(L"boss_hoshigirl", L"Hoshigirl", L"enemy.x", L"enemy.csv", L"ホシガール");
 }
 
 void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, const std::wstring& type, float yaw)
@@ -396,5 +403,8 @@ void EnemyManager::Spawn(NSRender::Render& render, const D3DXVECTOR3& position, 
         return;
     }
 
-    m_enemies.push_back(entry.create(position, meshId, yaw));
+    std::unique_ptr<EnemyBase> enemy = entry.create(position, meshId, yaw);
+    enemy->SetType(type);
+    enemy->SetBossName(entry.bossName);
+    m_enemies.push_back(std::move(enemy));
 }

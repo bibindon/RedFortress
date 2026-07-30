@@ -13,8 +13,6 @@ class EnemyHoshigirl : public EnemyBase
 public:
     EnemyHoshigirl(const D3DXVECTOR3& pos, int meshId, float yaw);
     static float GetScale() { return 2.5f; }
-    bool IsBoss() const override { return true; }
-    std::wstring GetBossName() const override { return L"ホシガール"; }
 
     // 4種の特殊攻撃を使用する。true を返すと接触ダメージが無効化され、
     // 全ダメージは UpdateSpecialAttack 内の EmitAttackHit 経由で処理される。

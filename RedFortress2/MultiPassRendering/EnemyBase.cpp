@@ -959,6 +959,11 @@ void EnemyBase::SetType(const std::wstring& type)
     m_type = type;
 }
 
+void EnemyBase::SetBossName(const std::wstring& bossName)
+{
+    m_bossName = bossName;
+}
+
 bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos) const
 {
     if (m_state == State::Dead)

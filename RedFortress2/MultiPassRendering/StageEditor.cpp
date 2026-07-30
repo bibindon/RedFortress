@@ -422,6 +422,7 @@ void StageEditor::InitEnemyTypeCombo(HWND hDlg)
     SendMessage(hCombo, CB_RESETCONTENT, 0, 0);
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"wolf"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy2"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"boss_enemy2"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy3"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy4"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"enemy5"));
@@ -430,6 +431,7 @@ void StageEditor::InitEnemyTypeCombo(HWND hDlg)
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"bird"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"crab"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"giant_crab"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"boss_giant_crab"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"frog"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"spider"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"small_spider"));
@@ -438,7 +440,12 @@ void StageEditor::InitEnemyTypeCombo(HWND hDlg)
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"mushroom"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"small_mushroom"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"golem"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"boss_golem"));
     SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"small_golem"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"kanata"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"boss_kanata"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"hoshigirl"));
+    SendMessage(hCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"boss_hoshigirl"));
     SendMessage(hCombo, CB_SETCURSEL, 0, 0);
 }
 

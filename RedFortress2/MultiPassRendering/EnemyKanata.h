@@ -7,8 +7,6 @@ class EnemyKanata : public EnemyBase
 public:
     EnemyKanata(const D3DXVECTOR3& pos, int meshId, float yaw);
     static float GetScale() { return 1.0f; }
-    bool IsBoss() const override { return true; }
-    std::wstring GetBossName() const override { return L"天音かなた"; }
     float GetAttackTargetHeightOffset() const override { return 0.0f; }
     bool UsesSpecialAttacks() const override;
 
