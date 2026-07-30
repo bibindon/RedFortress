@@ -878,6 +878,10 @@ void GameApp::Run()
         {
             GameAudio::PlayEndingMusic();
         }
+        else if (m_gameState == GameState::SlideShow)
+        {
+            GameAudio::PlayStoryMusic();
+        }
 
         if (m_stageTransitionAction != StageTransitionAction::None)
         {

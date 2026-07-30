@@ -10,11 +10,19 @@ const std::wstring kEndingBgm = L"res\\sound\\ending.wav";
 const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
 const std::wstring kKaiganDoukutsuBgm = L"res\\sound\\kaiganDoukutsu.wav";
 const std::wstring kNightBgm = L"res\\sound\\night.wav";
-const std::wstring kStageSelectBgm = L"res\\sound\\stageselect1.wav";
-const std::wstring kStageSelect2Bgm = L"res\\sound\\stageselect2.wav";
-const std::wstring kWorld1Bgm = L"res\\sound\\world1.wav";
-const std::wstring kField2Bgm = L"res\\sound\\field2.wav";
-const std::wstring kField3Bgm = L"res\\sound\\field3.wav";
+const std::wstring kStoryBgm = L"res\\sound\\bgm_story.wav";
+const std::wstring kStageSelectBgm = L"res\\sound\\bgm_select.wav";
+const std::wstring kW1FieldBgm = L"res\\sound\\bgm_w1_field.wav";
+const std::wstring kW1SwampBgm = L"res\\sound\\bgm_w1_swamp.wav";
+const std::wstring kW2CaveBgm = L"res\\sound\\bgm_w2_cave.wav";
+const std::wstring kW2MineBgm = L"res\\sound\\bgm_w2_mine.wav";
+const std::wstring kW3RuinsBgm = L"res\\sound\\bgm_w3_ruins.wav";
+const std::wstring kW3TrailBgm = L"res\\sound\\bgm_w3_trail.wav";
+const std::wstring kW4FortressBgm = L"res\\sound\\bgm_w4_fortress.wav";
+const std::wstring kW4AssaultBgm = L"res\\sound\\bgm_w4_assault.wav";
+const std::wstring kBossBgm = L"res\\sound\\bgm_boss.wav";
+const std::wstring kBoss2Bgm = L"res\\sound\\bgm_boss2.wav";
+const std::wstring kLastBossBgm = L"res\\sound\\bgm_lastboss.wav";
 const std::wstring kForestEnvironment = L"res\\sound\\ENV_forest.wav";
 const std::wstring kSeaEnvironment = L"res\\sound\\ENV_sea.wav";
 const std::wstring kRainEnvironment = L"res\\sound\\ENV_rain.wav";
@@ -50,6 +58,7 @@ const std::wstring kArrow = L"res\\sound\\arrow.wav";
 const int kTitleBgmVolume = 22;
 const int kEndingBgmVolume = 50;
 const int kFieldBgmVolume = 40;
+const int kStoryBgmVolume = 40;
 
 std::wstring g_currentBgm;
 std::wstring g_currentEnvironment;
@@ -344,9 +353,15 @@ void PlayEndingMusic()
     PlayBgmIfChanged(kEndingBgm, kEndingBgmVolume);
 }
 
+void PlayStoryMusic()
+{
+    StopEnvironment();
+    PlayBgmIfChanged(kStoryBgm, kStoryBgmVolume);
+}
+
 void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world)
 {
-    std::wstring fieldBgm = kWorld1Bgm;
+    std::wstring fieldBgm = kW1FieldBgm;
     std::wstring environment = kForestEnvironment;
     int environmentVolume = 18;
     if (useRainEnvironment)
@@ -355,12 +370,7 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         environmentVolume = 18;
     }
 
-    if (stageId == L"select2")
-    {
-        fieldBgm = kStageSelect2Bgm;
-        environmentVolume = 14;
-    }
-    else if (stageId.length() >= 6 && stageId.substr(0, 6) == L"select")
+    if (stageId.length() >= 6 && stageId.substr(0, 6) == L"select")
     {
         fieldBgm = kStageSelectBgm;
         environmentVolume = 14;
@@ -381,14 +391,68 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         }
         environmentVolume = 14;
     }
-    else if (stageNumber >= 9 && stageNumber <= 16)
+    else if (stageNumber == 32)
     {
-        fieldBgm = kField2Bgm;
+        // ラスボス戦 (4-8)
+        fieldBgm = kLastBossBgm;
+        environmentVolume = 14;
+    }
+    else if (stageNumber == 16)
+    {
+        // ボス戦 (2-8)
+        fieldBgm = kBoss2Bgm;
+        environmentVolume = 14;
+    }
+    else if (stageNumber >= 1 && stageNumber % 8 == 0)
+    {
+        // ボス戦 (1-8, 3-8)
+        fieldBgm = kBossBgm;
+        environmentVolume = 14;
+    }
+    else if (stageNumber >= 1 && stageNumber <= 3)
+    {
+        // ワールド1 草原 (1-1～1-3)
+        fieldBgm = kW1FieldBgm;
+    }
+    else if (stageNumber >= 4 && stageNumber <= 7)
+    {
+        // ワールド1 湿地・雨霧 (1-4～1-7)
+        fieldBgm = kW1SwampBgm;
+    }
+    else if (stageNumber >= 9 && stageNumber <= 12)
+    {
+        // ワールド2 洞窟 (2-1～2-4)
+        fieldBgm = kW2CaveBgm;
         environmentVolume = 15;
     }
-    else if (stageNumber >= 17)
+    else if (stageNumber >= 13 && stageNumber <= 15)
     {
-        fieldBgm = kField3Bgm;
+        // ワールド2 鉱山 (2-5～2-7)
+        fieldBgm = kW2MineBgm;
+        environmentVolume = 15;
+    }
+    else if (stageNumber >= 17 && stageNumber <= 20)
+    {
+        // ワールド3 遺跡 (3-1～3-4)
+        fieldBgm = kW3RuinsBgm;
+        environmentVolume = 16;
+    }
+    else if (stageNumber >= 21 && stageNumber <= 23)
+    {
+        // ワールド3 山岳道中 (3-5～3-7)
+        fieldBgm = kW3TrailBgm;
+        environmentVolume = 16;
+    }
+    else if (stageNumber >= 25 && stageNumber <= 28)
+    {
+        // ワールド4 要塞外郭 (4-1～4-4)
+        fieldBgm = kW4FortressBgm;
+        environmentVolume = 16;
+    }
+    else if (stageNumber >= 29 && stageNumber <= 31)
+    {
+        // ワールド4 要塞内部 (4-5～4-7)
+        fieldBgm = kW4AssaultBgm;
         environmentVolume = 16;
     }
     PlayEnvironmentIfChanged(environment, environmentVolume);
