@@ -367,6 +367,16 @@ namespace
         return attackType == PlayerAttackType::BusterStrongAttack;
     }
 
+    bool IsSwordAttackType(const PlayerAttackType attackType)
+    {
+        if (attackType == PlayerAttackType::SwordAttack)
+        {
+            return true;
+        }
+
+        return attackType == PlayerAttackType::SwordStrongAttack;
+    }
+
     bool IsWeakMeleeAttackType(const PlayerAttackType attackType)
     {
         if (attackType == PlayerAttackType::WeakAttack)
@@ -1527,7 +1537,14 @@ void GameApp::Run()
                         const int damagedEnemyCount = DamageEnemiesInAttackRange(attackDefinition);
                         if (damagedEnemyCount > 0)
                         {
-                            GameAudio::PlaySlashHit();
+                            if (IsSwordAttackType(attackType))
+                            {
+                                GameAudio::PlaySlashHit();
+                            }
+                            else
+                            {
+                                GameAudio::PlayAttackHit();
+                            }
                             BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                         }
                         else
@@ -1541,7 +1558,14 @@ void GameApp::Run()
                                 if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
                                 {
                                     m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
-                                    GameAudio::PlaySlashHit();
+                                    if (IsSwordAttackType(attackType))
+                                    {
+                                        GameAudio::PlaySlashHit();
+                                    }
+                                    else
+                                    {
+                                        GameAudio::PlayAttackHit();
+                                    }
                                     BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                                 }
                             }
@@ -2633,7 +2657,14 @@ void GameApp::UpdatePlayerByInput()
         }
         else if (m_playerAttackController.TryStart(requestedAttackType))
         {
-            GameAudio::PlayPlayerAttack();
+            if (IsSwordAttackType(requestedAttackType))
+            {
+                GameAudio::PlaySwordSwing();
+            }
+            else
+            {
+                GameAudio::PlayPlayerAttack();
+            }
             const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
             SetPlayerAnimationState(PlayerAnimState::Attack, attackDefinition.animationSpeed);
         }
@@ -7291,7 +7322,7 @@ void GameApp::UpdateBusters()
                     enemy->StartKnockbackFrom(it->position, 0.3f, 20);
                     m_damagePopupManager.Add(kBusterDamage, enemy->GetPosition(), false);
                     TryDropEnemyItem(*enemy);
-                    GameAudio::PlayAttackHit();
+                    GameAudio::PlayBusterHit();
                     destroyed = true;
                     break;
                 }
@@ -7313,7 +7344,7 @@ void GameApp::UpdateBusters()
                         if (m_destructibleManager.TryDamage(m_render, destructible, kBusterDamage))
                         {
                             m_damagePopupManager.Add(kBusterDamage, destructible.position, false);
-                            GameAudio::PlayAttackHit();
+                            GameAudio::PlayBusterHit();
                             destroyed = true;
                             break;
                         }
