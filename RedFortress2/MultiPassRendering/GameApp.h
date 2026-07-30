@@ -194,6 +194,9 @@ private:
     void EnsureGoalArrow();
     void RemoveGoalArrow();
     void UpdateGoalArrow();
+    void InitializePortal(const D3DXVECTOR3& clearPosition);
+    void RemovePortal();
+    void UpdatePortal();
     void TryDropEnemyItem(const EnemyBase& enemy);
     void InitializeStageSelectCursor();
     void LoadStageSelectNavigation(const std::wstring& csvPath);
@@ -402,8 +405,19 @@ private:
     std::wstring m_lastSelectId;
     std::wstring m_selectedStagePortalId;
     std::wstring m_preferredStageSelectPortalId;
-    D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_hasSelectedStagePortal = false;
+
+    // Portal (stage clear altar)
+    int m_portalStepsMeshId = -1;
+    int m_portalPillarMeshId = -1;
+    int m_portalFlagMeshId = -1;
+    int m_portalCollisionId = -1;
+    bool m_portalPillarShown = false;
+    bool m_portalFlagShown = false;
+    int m_portalClearDelayFrames = 0;
+    D3DXVECTOR3 m_portalBasePosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
     D3DXVECTOR3 m_stageSelectPlayerMoveStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageSelectPlayerMoveTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     float m_stageSelectPlayerMoveElapsed = 0.0f;
