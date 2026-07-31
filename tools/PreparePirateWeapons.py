@@ -1,18 +1,24 @@
-﻿from pathlib import Path
+﻿import math
+from pathlib import Path
 
 import bpy
+from mathutils import Matrix
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIRECTORY = REPOSITORY_ROOT / "RedFortress2" / "MultiPassRendering" / "res" / "model" / "piratekit"
 TEXTURE_NAME = "Atlas_Pirate.png"
+# grip_fix_axis: rotate the weapon 180 degrees around its long axis (Blender world
+# axis) so the grip matches the player's hand. The pistol barrel runs along
+# Blender X, the cutlass blade along Blender Z. The tip/muzzle direction is
+# preserved by a 180-degree roll around the long axis.
 WEAPONS = (
-    ("Weapon_Pistol.blend", "pistol.x", "Weapon_Pistol"),
-    ("Weapon_Cutlass.blend", "cutlass.x", "Weapon_Cutlass"),
+    ("Weapon_Pistol.blend", "pistol.x", "Weapon_Pistol", "X"),
+    ("Weapon_Cutlass.blend", "cutlass.x", "Weapon_Cutlass", "Z"),
 )
 
 
-def export_weapon(source_name, output_name, expected_object_name):
+def export_weapon(source_name, output_name, expected_object_name, grip_fix_axis):
     source_path = ASSET_DIRECTORY / source_name
     output_path = ASSET_DIRECTORY / output_name
     if not source_path.exists():
@@ -44,6 +50,12 @@ def export_weapon(source_name, output_name, expected_object_name):
     bpy.ops.object.select_all(action="DESELECT")
     mesh_object.select_set(True)
     bpy.context.view_layer.objects.active = mesh_object
+
+    grip_fix_matrix = Matrix.Rotation(math.pi, 4, grip_fix_axis)
+    mesh_object.matrix_world = grip_fix_matrix @ mesh_object.matrix_world
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    print("PIRATE_WEAPON_GRIP_FIX", expected_object_name, grip_fix_axis)
+
     result = bpy.ops.export_scene.directx_x(
         filepath=str(output_path),
         check_existing=False,
@@ -73,8 +85,8 @@ def main():
     if not (ASSET_DIRECTORY / TEXTURE_NAME).exists():
         raise FileNotFoundError(ASSET_DIRECTORY / TEXTURE_NAME)
 
-    for source_name, output_name, expected_object_name in WEAPONS:
-        export_weapon(source_name, output_name, expected_object_name)
+    for source_name, output_name, expected_object_name, grip_fix_axis in WEAPONS:
+        export_weapon(source_name, output_name, expected_object_name, grip_fix_axis)
 
 
 if __name__ == "__main__":
