@@ -11,7 +11,10 @@ const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
 const std::wstring kKaiganDoukutsuBgm = L"res\\sound\\kaiganDoukutsu.wav";
 const std::wstring kNightBgm = L"res\\sound\\night.wav";
 const std::wstring kStoryBgm = L"res\\sound\\bgm_story.wav";
-const std::wstring kStageSelectBgm = L"res\\sound\\bgm_select.wav";
+const std::wstring kStageSelect1Bgm = L"res\\sound\\bgm_select1.wav";
+const std::wstring kStageSelect2Bgm = L"res\\sound\\stageselect2.wav";
+const std::wstring kStageSelect3Bgm = L"res\\sound\\bgm_select3.wav";
+const std::wstring kStageSelect4Bgm = L"res\\sound\\bgm_select2.wav";
 const std::wstring kW1FieldBgm = L"res\\sound\\bgm_w1_field.wav";
 const std::wstring kW1SwampBgm = L"res\\sound\\bgm_w1_swamp.wav";
 const std::wstring kW2CaveBgm = L"res\\sound\\bgm_w2_cave.wav";
@@ -20,7 +23,7 @@ const std::wstring kW3RuinsBgm = L"res\\sound\\bgm_w3_ruins.wav";
 const std::wstring kW3TrailBgm = L"res\\sound\\bgm_w3_trail.wav";
 const std::wstring kW4FortressBgm = L"res\\sound\\bgm_w4_fortress.wav";
 const std::wstring kW4AssaultBgm = L"res\\sound\\bgm_w4_assault.wav";
-const std::wstring kBossBgm = L"res\\sound\\bgm_boss.wav";
+const std::wstring kBossBgm = L"res\\sound\\bgm_boss_crazyhill.wav";
 const std::wstring kBoss2Bgm = L"res\\sound\\bgm_boss2.wav";
 const std::wstring kLastBossBgm = L"res\\sound\\bgm_lastboss.wav";
 const std::wstring kForestEnvironment = L"res\\sound\\ENV_forest.wav";
@@ -41,6 +44,7 @@ const std::wstring kPlayerDamage = L"res\\sound\\damage01.wav";
 const std::wstring kPlayerDeath = L"res\\sound\\death.wav";
 const std::wstring kItemGet = L"res\\sound\\itemGet.wav";
 const std::wstring kAmmoMax = L"res\\sound\\ammoMax.wav";
+const std::wstring kAmmoGet = L"res\\sound\\ammoGet.wav";
 const std::wstring kJump = L"res\\sound\\jump_action.wav";
 const std::wstring kPowerUp = L"res\\sound\\powerup.wav";
 const std::wstring kDrink = L"res\\sound\\drink.wav";
@@ -262,7 +266,7 @@ void Initialize()
     const std::wstring effects[] =
     {
         kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSwordSwing, kSlashHit, kAttackHit, kBusterHit,
-        kEnemyAttack, kPlayerDamage, kPlayerDeath, kItemGet, kAmmoMax, kJump, kPowerUp, kDash, kDashBooster,
+        kEnemyAttack, kPlayerDamage, kPlayerDeath, kItemGet, kAmmoGet, kAmmoMax, kJump, kPowerUp, kDash, kDashBooster,
         kExplosion, kBombPlace, kStomp, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
         kDrink, kQte, kQteBest, kArrow
     };
@@ -372,7 +376,22 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
 
     if (stageId.length() >= 6 && stageId.substr(0, 6) == L"select")
     {
-        fieldBgm = kStageSelectBgm;
+        if (world == 2)
+        {
+            fieldBgm = kStageSelect2Bgm;
+        }
+        else if (world == 3)
+        {
+            fieldBgm = kStageSelect3Bgm;
+        }
+        else if (world == 4)
+        {
+            fieldBgm = kStageSelect4Bgm;
+        }
+        else
+        {
+            fieldBgm = kStageSelect1Bgm;
+        }
         environmentVolume = 14;
     }
     else if (stageId.length() >= 4 && stageId.substr(0, 4) == L"base")
@@ -474,6 +493,7 @@ void PlayPlayerDamage() { PlayEffect(kPlayerDamage, 88); }
 void PlayPlayerDeath() { PlayEffect(kPlayerDeath, 88); }
 void PlayItemGet() { PlayEffect(kItemGet, 82); }
 void PlayAmmoMax() { PlayEffect(kAmmoMax, 78); }
+void PlayAmmoGet() { PlayEffect(kAmmoGet, 80); }
 void PlayJump() { PlayEffect(kJump, 62); }
 void PlayPowerUp() { PlayEffect(kPowerUp, 82); }
 void PlayDrink() { PlayEffect(kDrink, 80); }

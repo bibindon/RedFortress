@@ -4612,6 +4612,10 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         {
             GameAudio::PlayAmmoMax();
         }
+        else
+        {
+            GameAudio::PlayAmmoGet();
+        }
         return true;
     }
 
@@ -4630,6 +4634,10 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         {
             GameAudio::PlayAmmoMax();
         }
+        else
+        {
+            GameAudio::PlayAmmoGet();
+        }
         return true;
     }
 
@@ -4646,6 +4654,10 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         {
             GameAudio::PlayAmmoMax();
         }
+        else
+        {
+            GameAudio::PlayAmmoGet();
+        }
         return true;
     }
 
@@ -4661,6 +4673,10 @@ bool GameApp::RecoverWeaponAmmoFromPickup()
         if (m_bombAmmo >= kBombAmmoMax)
         {
             GameAudio::PlayAmmoMax();
+        }
+        else
+        {
+            GameAudio::PlayAmmoGet();
         }
         return true;
     }
@@ -6716,11 +6732,6 @@ void GameApp::LoadCurrentStageObjects()
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
     m_render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
 
-    if (!IsStageSelectId(stage.id) && !IsBaseId(stage.id))
-    {
-        InitializePortal(stage.clearPosition);
-    }
-
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
     m_interactionManager.LoadForStage(stage.interactableCsvPath);
     LoadStageSelectNavigation(stage.stageSelectNavigationCsvPath);
@@ -6738,6 +6749,11 @@ void GameApp::LoadCurrentStageObjects()
 
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
+
+    if (!IsStageSelectId(stage.id) && !IsBaseId(stage.id))
+    {
+        InitializePortal(stage.clearPosition);
+    }
 
     m_prevMovingPlatformPositions.clear();
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

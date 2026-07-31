@@ -33,6 +33,7 @@ void PlayPlayerDamage();
 void PlayPlayerDeath();
 void PlayItemGet();
 void PlayAmmoMax();
+void PlayAmmoGet();
 void PlayJump();
 void PlayPowerUp();
 void PlayDrink();
