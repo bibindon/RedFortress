@@ -1221,13 +1221,14 @@ void GameApp::Run()
                     if (m_render.GetFadeAlpha() >= 1.0f)
                     {
                         CompletePlayerDeath();
-                        if (m_playerDeathPending)
+                        if (m_gameState == GameState::GameOver)
                         {
-                            // GameOver でなければ CompletePlayerDeath 内でフラグが戻る。
-                            // ここには来ないはずだが安全のため描画して継続。
+                            // GameOver へ移行。以降は UpdateGameOver がフェードを担当する。
                             m_render.Draw();
                             continue;
                         }
+                        // 通常リスポーン: m_playerDeathPending は true のままなので、
+                        // 次フレーム以降もこのブロックで HoldBlack → FadeIn を進める。
                         m_respawnPhase = RespawnPhase::HoldBlack;
                         m_respawnFadeFrames = kRespawnBlackHoldFrames;
                     }
@@ -1247,7 +1248,9 @@ void GameApp::Run()
                     --m_respawnFadeFrames;
                     if (m_respawnFadeFrames <= 0 && m_render.GetFadeAlpha() <= 0.0f)
                     {
+                        // フェードイン完了。死亡シーケンス終了。
                         m_respawnPhase = RespawnPhase::None;
+                        m_playerDeathPending = false;
                     }
                 }
 
@@ -6341,16 +6344,21 @@ void GameApp::HandlePlayerDeath()
 void GameApp::CompletePlayerDeath()
 {
     m_player.Die();
-    m_playerDeathPending = false;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
-    m_respawnPhase = RespawnPhase::None;
 
     if (m_player.IsGameOver())
     {
+        // GameOver へ移行。以降は UpdateGameOver がフェードを担当する。
+        m_playerDeathPending = false;
+        m_respawnPhase = RespawnPhase::None;
         StartGameOverSequence();
         return;
     }
+
+    // 通常リスポーン時は m_playerDeathPending を true のまま残す。
+    // メインループの死亡ブロックが HoldBlack → FadeIn を駆動し、
+    // フェードイン完了時にフラグを戻す（ここで戻すと暗転が解除されない）。
 
     // 暗転中にスタート地点へ瞬間移動でリスポーン
     const D3DXVECTOR3 respawnPos = m_stageManager.GetCurrentStage().playerStartPosition;
@@ -6374,6 +6382,11 @@ void GameApp::CompletePlayerDeath()
     m_playerAttackController.Reset();
     ResetBusterAimState();
     m_damagePopupManager.Clear();
+
+    // 真っ暗のうちにメッシュとカメラをリスポーン位置へ即時同期する。
+    // 死亡ブロック中は通常更新（UpdatePlayerMeshAndCamera）が走らないため、
+    // ここで同期しないと暗転解除後にプレイヤーが死亡位置から移動して見える。
+    UpdatePlayerMeshAndCamera(respawnPos);
 }
 
 void GameApp::StartGameOverSequence()
