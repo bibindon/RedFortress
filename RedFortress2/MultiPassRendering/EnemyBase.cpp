@@ -219,7 +219,7 @@ void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, b
     }
     else if (m_state == State::Retreat)
     {
-        UpdateRetreatBehavior(playerPos);
+        UpdateRetreatBehavior(render, playerPos);
         nextAnim = AnimState::Walk;
     }
     else if (m_state == State::Chase)
