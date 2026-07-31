@@ -192,6 +192,12 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
             continue;
         }
 
+        // ボスは頭上の緑HPバーではなく、専用の BossHpBar（画面下部）を表示する。
+        if (enemy->IsBoss())
+        {
+            continue;
+        }
+
         const int hp = enemy->GetHp();
         const int maxHp = enemy->GetMaxHp();
         if (maxHp <= 0)
