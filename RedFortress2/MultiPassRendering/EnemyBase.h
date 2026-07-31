@@ -65,7 +65,12 @@ public:
     int GetHp() const;
     int GetMaxHp() const;
     D3DXVECTOR3 GetPosition() const;
+    // スポーン座標系（足元基準）の座標を返す。コンストラクタで行う円柱中心座標への
+    // 変換と対になる逆変換であり、CSV保存や敵種差し替えの際に使う。
+    D3DXVECTOR3 GetSpawnPosition() const;
     void SetPosition(const D3DXVECTOR3& pos);
+    // 足元基準のスポーン座標を受け取り、円柱中心座標へ変換して設定する。
+    void SetSpawnPosition(const D3DXVECTOR3& pos);
     void StartKnockbackFrom(const D3DXVECTOR3& sourcePosition, float distance, int durationFrames);
     float GetYaw() const;
     void SetYaw(float yaw);

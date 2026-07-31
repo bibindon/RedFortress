@@ -283,7 +283,9 @@ void EnemyManager::ReplaceEnemyType(NSRender::Render& render,
         return;
     }
 
-    const D3DXVECTOR3 position = m_enemies[index]->GetPosition();
+    // 座標は足元基準のスポーン座標で引き継ぐ。円柱中心座標のまま渡すと、
+    // Spawn 内の足元→中心変換で二重に持ち上がってしまう。
+    const D3DXVECTOR3 position = m_enemies[index]->GetSpawnPosition();
     const float yaw = m_enemies[index]->GetYaw();
     RemoveEnemy(render, index);
     Spawn(render, position, type, yaw);
@@ -341,9 +343,11 @@ void EnemyManager::SaveToCsv(const std::wstring& csvPath) const
 
         std::vector<std::wstring> row;
         row.push_back(enemy->GetType());
-        row.push_back(std::to_wstring(enemy->GetPosition().x));
-        row.push_back(std::to_wstring(enemy->GetPosition().y));
-        row.push_back(std::to_wstring(enemy->GetPosition().z));
+        // CSV のY座標は足元基準なので、円柱中心座標ではなくスポーン座標を保存する。
+        const D3DXVECTOR3 spawnPos = enemy->GetSpawnPosition();
+        row.push_back(std::to_wstring(spawnPos.x));
+        row.push_back(std::to_wstring(spawnPos.y));
+        row.push_back(std::to_wstring(spawnPos.z));
 
         const float rotYDeg = enemy->GetYaw() * 180.0f / D3DX_PI;
         row.push_back(std::to_wstring(rotYDeg));

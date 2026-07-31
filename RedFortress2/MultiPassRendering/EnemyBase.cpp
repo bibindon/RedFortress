@@ -66,8 +66,18 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
                      const float physicsRadius)
     : m_position(startPosition)
 {
-    m_homePosition = startPosition;
-    m_lastKnownPlayerPosition = startPosition;
+    // スポーンCSV等のY座標は足元付近の高さを想定した値である。敵座標は
+    // 衝突円柱の中心なので、そのまま使うと背の高い地上敵は円柱の下半分が
+    // 地面へめり込み、下向きレイが地面上面に当たらず半埋まりのまま固定される。
+    // そのため地上敵は円柱の半分の高さを加えて中心座標へ変換する。
+    // 飛行敵はY座標を飛行高度としてそのまま使うため補正しない。
+    if (movementMode == MovementMode::Ground ||
+        movementMode == MovementMode::Frog)
+    {
+        m_position.y += height * 0.5f;
+    }
+    m_homePosition = m_position;
+    m_lastKnownPlayerPosition = m_position;
     m_meshId = meshId;
     m_type = type;
     m_maxHp = maxHp;
@@ -565,9 +575,33 @@ D3DXVECTOR3 EnemyBase::GetPosition() const
     return m_position;
 }
 
+D3DXVECTOR3 EnemyBase::GetSpawnPosition() const
+{
+    D3DXVECTOR3 pos = m_position;
+    // 地上敵はコンストラクタで足元基準→円柱中心へ変換しているため、
+    // 同じ量を引いて足元基準のスポーン座標へ戻す。
+    if (m_movementMode == MovementMode::Ground ||
+        m_movementMode == MovementMode::Frog)
+    {
+        pos.y -= m_height * 0.5f;
+    }
+    return pos;
+}
+
 void EnemyBase::SetPosition(const D3DXVECTOR3& pos)
 {
     m_position = pos;
+}
+
+void EnemyBase::SetSpawnPosition(const D3DXVECTOR3& pos)
+{
+    m_position = pos;
+    // コンストラクタと同じ変換で、足元基準の座標を円柱中心座標へ変換する。
+    if (m_movementMode == MovementMode::Ground ||
+        m_movementMode == MovementMode::Frog)
+    {
+        m_position.y += m_height * 0.5f;
+    }
 }
 
 void EnemyBase::StartKnockbackFrom(const D3DXVECTOR3& sourcePosition,

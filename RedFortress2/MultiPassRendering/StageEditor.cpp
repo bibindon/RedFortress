@@ -251,7 +251,8 @@ void StageEditor::PopulateList(HWND hDlg)
             lvi.pszText = const_cast<LPWSTR>(enemy->GetType().c_str());
             const int index = ListView_InsertItem(hList, &lvi);
 
-            const D3DXVECTOR3 pos = enemy->GetPosition();
+            // 一覧にはCSVと同じ足元基準のスポーン座標を表示する。
+            const D3DXVECTOR3 pos = enemy->GetSpawnPosition();
             const float rotYDeg = enemy->GetYaw() * 180.0f / D3DX_PI;
 
             std::wstring posX = std::to_wstring(pos.x);
@@ -531,7 +532,8 @@ void StageEditor::OnEnemyListSelChange(HWND hDlg)
     }
 
     const auto& enemy = enemies[index];
-    const D3DXVECTOR3 pos = enemy->GetPosition();
+    // 編集欄にはCSVと同じ足元基準のスポーン座標を表示する。
+    const D3DXVECTOR3 pos = enemy->GetSpawnPosition();
     const float rotYDeg = enemy->GetYaw() * 180.0f / D3DX_PI;
 
     SetDlgItemText(hDlg, IDC_EDIT_POS_X, std::to_wstring(pos.x).c_str());
@@ -599,7 +601,8 @@ void StageEditor::OnUpdateEnemy(HWND hDlg)
     const float rotYDeg = static_cast<float>(std::wcstod(buf, nullptr));
     const float rotY = D3DXToRadian(rotYDeg);
 
-    enemies[index]->SetPosition(D3DXVECTOR3(posX, posY, posZ));
+    // 編集欄の座標は足元基準なので、円柱中心座標へ変換して設定する。
+    enemies[index]->SetSpawnPosition(D3DXVECTOR3(posX, posY, posZ));
     enemies[index]->SetYaw(rotY);
     enemies[index]->SyncMesh(*m_render);
 
