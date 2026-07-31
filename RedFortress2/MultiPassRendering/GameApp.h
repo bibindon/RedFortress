@@ -252,6 +252,7 @@ private:
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash, BusterAim, BusterLower };
     enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageExit, StageClear, GameOver, Ending, EndingFin };
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
+    enum class RespawnPhase { None, FadeOut, HoldBlack, FadeIn };
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
     enum class QteVisualPhase { None, Active, Restoring };
@@ -356,8 +357,8 @@ private:
     int m_playerKnockbackFrames = 0;
     int m_playerSlowFrames = 0;
     D3DXVECTOR3 m_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    int m_respawnCameraDelayFrames = 0;
-    int m_respawnCameraMoveFrames = 0;
+    int m_respawnFadeFrames = 0;
+    RespawnPhase m_respawnPhase = RespawnPhase::None;
     bool m_playerDeathPending = false;
     bool m_playerFallingDead = false;
     int m_fallDeathFrames = 0;
@@ -378,10 +379,6 @@ private:
     std::size_t m_stageTransitionIndex = static_cast<std::size_t>(-1);
     bool m_stageLoadingScreenActive = false;
     StageEditor m_stageEditor;
-    D3DXVECTOR3 m_respawnCameraFromPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR3 m_respawnCameraFromTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR3 m_respawnCameraToPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR3 m_respawnCameraToTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     NSCommand::Command m_command;
 
     int m_commandFontId = -1;

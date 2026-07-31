@@ -234,8 +234,9 @@ namespace
     const int kRespawnInvincibleFrames = 180;
     const int kKnockbackDurationFrames = 60;
     const float kKnockbackSpeed = 1.0f;
-    const int kRespawnCameraDelayFrames = 120;
-    const int kRespawnCameraMoveFrames = 30;
+    const int kRespawnFadeOutFrames = 30;
+    const int kRespawnBlackHoldFrames = 12;
+    const int kRespawnFadeInFrames = 24;
     const int kStageTitleFrameMax = 180;
     const int kGameOverFadeFrames = 18;
     const float kFallDeathY = -10.0f;
@@ -507,10 +508,6 @@ GameApp::GameApp()
     : m_slideShowManager(m_render)
     , m_pendingMove(0.0f, 0.0f, 0.0f)
     , m_playerKnockbackDir(0.0f, 0.0f, 0.0f)
-    , m_respawnCameraFromPos(0.0f, 0.0f, 0.0f)
-    , m_respawnCameraFromTarget(0.0f, 0.0f, 0.0f)
-    , m_respawnCameraToPos(0.0f, 0.0f, 0.0f)
-    , m_respawnCameraToTarget(0.0f, 0.0f, 0.0f)
 {
     SYSTEMTIME st;
     GetLocalTime(&st);
@@ -1219,15 +1216,41 @@ void GameApp::Run()
 
             if (m_playerDeathPending)
             {
-                if (m_respawnCameraDelayFrames > 0)
+                // フェードアウト中はプレイヤー/敵の更新をスキップし、暗転を進める。
+                // 完全暗転（フェードα=1）になったら瞬間移動でリスポーンし、黒保持を経てフェードインする。
+                if (m_respawnPhase == RespawnPhase::FadeOut)
                 {
-                    --m_respawnCameraDelayFrames;
+                    if (m_render.GetFadeAlpha() >= 1.0f)
+                    {
+                        CompletePlayerDeath();
+                        if (m_playerDeathPending)
+                        {
+                            // GameOver でなければ CompletePlayerDeath 内でフラグが戻る。
+                            // ここには来ないはずだが安全のため描画して継続。
+                            m_render.Draw();
+                            continue;
+                        }
+                        m_respawnPhase = RespawnPhase::HoldBlack;
+                        m_respawnFadeFrames = kRespawnBlackHoldFrames;
+                    }
                 }
-
-                if (m_respawnCameraDelayFrames <= 0)
+                else if (m_respawnPhase == RespawnPhase::HoldBlack)
                 {
-                    CompletePlayerDeath();
-                    continue;
+                    --m_respawnFadeFrames;
+                    if (m_respawnFadeFrames <= 0)
+                    {
+                        m_respawnPhase = RespawnPhase::FadeIn;
+                        m_respawnFadeFrames = kRespawnFadeInFrames;
+                        m_render.StartFadeIn(static_cast<float>(kRespawnFadeInFrames) / 60.0f);
+                    }
+                }
+                else if (m_respawnPhase == RespawnPhase::FadeIn)
+                {
+                    --m_respawnFadeFrames;
+                    if (m_respawnFadeFrames <= 0 && m_render.GetFadeAlpha() <= 0.0f)
+                    {
+                        m_respawnPhase = RespawnPhase::None;
+                    }
                 }
 
                 if (!IsCurrentStageSelect())
@@ -1562,7 +1585,6 @@ void GameApp::Run()
                     if (m_fallDeathFrames >= kFallDeathFrames)
                     {
                         HandlePlayerDeath();
-                        m_respawnCameraDelayFrames = 0;
                     }
                 }
 
@@ -3079,16 +3101,6 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
     if (m_useFixedCamera)
     {
         m_render.SetCamera(m_fixedCameraPos, m_fixedCameraLookAt);
-        return;
-    }
-
-    if (m_respawnCameraMoveFrames > 0)
-    {
-        const float t = 1.0f - (static_cast<float>(m_respawnCameraMoveFrames) / static_cast<float>(kRespawnCameraMoveFrames));
-        const D3DXVECTOR3 cameraPosition = LerpVector3(m_respawnCameraFromPos, m_respawnCameraToPos, t);
-        const D3DXVECTOR3 cameraTarget = LerpVector3(m_respawnCameraFromTarget, m_respawnCameraToTarget, t);
-        m_render.SetCamera(cameraPosition, cameraTarget);
-        --m_respawnCameraMoveFrames;
         return;
     }
 
@@ -6315,10 +6327,6 @@ void GameApp::HandlePlayerDeath()
 
     GameAudio::PlayPlayerDeath();
 
-    // カメラ移動開始位置を保存（プレイヤー位置を変更する前に行う）
-    m_respawnCameraFromPos = m_render.GetCameraPos();
-    m_respawnCameraFromTarget = m_render.GetLookAtPos();
-    m_respawnCameraDelayFrames = kRespawnCameraDelayFrames;
     m_playerDeathPending = true;
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
@@ -6338,7 +6346,13 @@ void GameApp::HandlePlayerDeath()
     RefillWeaponAmmo();
     ClearBombs();
     ClearBusters();
-    m_render.SetSceneUpdatePaused(true);
+
+    // フェードアウト開始。シーン更新は止めず（SetSceneUpdatePaused は使わない）、
+    // メインループの m_playerDeathPending による continue でプレイヤー/敵の処理をスキップしつつ
+    // Render::UpdateFade を進める。暗転完了後に瞬間移動でリスポーンする。
+    m_respawnPhase = RespawnPhase::FadeOut;
+    m_respawnFadeFrames = kRespawnFadeOutFrames;
+    m_render.StartFadeOut(static_cast<float>(kRespawnFadeOutFrames) / 60.0f);
 }
 
 void GameApp::CompletePlayerDeath()
@@ -6347,17 +6361,15 @@ void GameApp::CompletePlayerDeath()
     m_playerDeathPending = false;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
-    m_respawnCameraDelayFrames = 0;
-    m_render.SetSceneUpdatePaused(false);
+    m_respawnPhase = RespawnPhase::None;
 
     if (m_player.IsGameOver())
     {
         StartGameOverSequence();
-        m_respawnCameraMoveFrames = 0;
         return;
     }
 
-    // 現在のステージ開始位置からリスポーン
+    // 暗転中にスタート地点へ瞬間移動でリスポーン
     const D3DXVECTOR3 respawnPos = m_stageManager.GetCurrentStage().playerStartPosition;
     m_playerMover.Reset(respawnPos);
     m_player.ResetHp();
@@ -6372,16 +6384,6 @@ void GameApp::CompletePlayerDeath()
 
     // 敵を再配置
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
-
-    // リスポーン位置を向いたままカメラを高速移動
-    const D3DXVECTOR3 cameraTarget = respawnPos + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
-    const float horizontalDistance = m_cameraDistance * cosf(m_cameraPitch);
-    const D3DXVECTOR3 offset(sinf(m_cameraYaw) * horizontalDistance,
-                              sinf(m_cameraPitch) * m_cameraDistance,
-                              -cosf(m_cameraYaw) * horizontalDistance);
-    m_respawnCameraToPos = cameraTarget + offset;
-    m_respawnCameraToTarget = cameraTarget;
-    m_respawnCameraMoveFrames = kRespawnCameraMoveFrames;
 
     // 各種状態リセット
     m_playerKnockbackFrames = 0;
@@ -6408,8 +6410,6 @@ void GameApp::StartGameOverSequence()
     m_playerKnockbackFrames = 0;
     m_playerSlowFrames = 0;
     m_playerInvincibleFrames = 0;
-    m_respawnCameraDelayFrames = 0;
-    m_respawnCameraMoveFrames = 0;
     m_playerAttackController.Reset();
     ResetBusterAimState();
     m_damagePopupManager.Clear();
@@ -6760,8 +6760,6 @@ void GameApp::LoadCurrentStageObjects()
     m_playerAttackController.Reset();
     ResetBusterAimState();
     m_playerAttackController.SelectClubCategory();
-    m_respawnCameraDelayFrames = 0;
-    m_respawnCameraMoveFrames = 0;
     m_playerDeathPending = false;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
