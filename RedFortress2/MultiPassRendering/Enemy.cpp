@@ -75,6 +75,7 @@ void Enemy::Initialize(const D3DXVECTOR3& startPosition,
     m_moveSpeed = moveSpeed;
     m_viewDistance = viewDistance;
     m_contactRadius = contactRadius;
+    m_physicsRadius = contactRadius;
     m_height = height;
     m_state = State::Idle;
     m_animState = AnimState::Idle;
@@ -782,7 +783,7 @@ bool Enemy::MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outHitNo
     D3DXVECTOR3 resolvedPosition = m_position;
     D3DXVECTOR3 resolvedVelocity = velocity;
     D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
-    const float radius = m_contactRadius;
+    const float radius = m_physicsRadius;
     const float height = m_height;
 
     const bool collided = PhysicsLib::PhysicsLib::CheckCollide(m_position,

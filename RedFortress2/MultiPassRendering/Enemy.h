@@ -101,6 +101,7 @@ private:
     float m_moveSpeed = 2.5f;
     float m_retreatDistance = 3.0f;
     float m_contactRadius = 0.5f;
+    float m_physicsRadius = 0.5f;
     float m_height = 1.0f;
     float m_verticalVelocity = 0.0f;
     bool m_isGrounded = false;

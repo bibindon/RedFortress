@@ -80,6 +80,8 @@ public:
                            const D3DXVECTOR3& playerPos,
                            bool playerIsJumping,
                            float playerYVelocity) const;
+    // 物理円柱の半径（自己移動の衝突解決に使う）。接触攻撃判定とは別に設定できる。
+    float GetPhysicsRadius() const { return m_physicsRadius; }
 
     // ボス敵判定。ボス体力バーの表示対象となる敵は true を返す。
     virtual bool IsBoss() const { return !m_bossName.empty(); }
@@ -101,7 +103,9 @@ protected:
               float meshVerticalOffset,
               MovementMode movementMode = MovementMode::Ground,
               bool usesExtendedAnimations = false,
-              HitReactionMode hitReactionMode = HitReactionMode::Normal);
+              HitReactionMode hitReactionMode = HitReactionMode::Normal,
+              // 物理円柱の半径。負の値は contactRadius と同じ（後方互換）を意味する。
+              float physicsRadius = -1.0f);
 
     virtual bool UpdateSpecialAttack(NSRender::Render& render,
                                      const D3DXVECTOR3& playerPos,
@@ -161,6 +165,8 @@ private:
     float m_moveSpeed = 2.5f;
     float m_retreatDistance = 3.0f;
     float m_contactRadius = 0.5f;
+    // 物理円柱の半径。enemy->player の接触攻撃には使わず、自己移動の衝突解決のみに使う。
+    float m_physicsRadius = 0.5f;
     float m_height = 1.0f;
     float m_meshVerticalOffset = 0.0f;
     MovementMode m_movementMode = MovementMode::Ground;
