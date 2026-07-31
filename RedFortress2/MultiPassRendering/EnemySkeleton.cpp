@@ -35,7 +35,7 @@ EnemySkeleton::EnemySkeleton(const D3DXVECTOR3& pos, const int meshId, const flo
                 13.0f,
                 1.41f,
                 5.09f,
-                -0.93f,
+                -2.545f,
                 MovementMode::Ground,
                 true,
                 HitReactionMode::SuperArmor)
@@ -200,6 +200,10 @@ void EnemySkeleton::BeginActivePhase(NSRender::Render& render, const D3DXVECTOR3
         m_phaseFrames = 1;
         m_boneProjectileActive = true;
         m_boneProjectilePosition = GetPosition();
+        // 発射高さは足元+1.1m（プレイヤー体幹の高さ）で水平飛行させる。
+        // GetPosition() は円柱の中心（スケルトンで 2.545m）のため、そのまま
+        // 使うと頭上を通過して当たらない。
+        m_boneProjectilePosition.y -= GetHeight() * 0.5f;
         m_boneProjectilePosition.y += 1.1f;
         m_boneProjectileDirection = HorizontalDirection(m_boneProjectilePosition, playerPos);
         m_boneProjectileFrames = 90;

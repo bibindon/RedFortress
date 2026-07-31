@@ -87,13 +87,13 @@ public:
                            float playerYVelocity) const;
     // 物理円柱の半径（自己移動の衝突解決に使う）。接触攻撃判定とは別に設定できる。
     float GetPhysicsRadius() const { return m_physicsRadius; }
+    // 物理円柱の高さ。プレイヤー攻撃の食らい判定（体全体との重なり）に使う。
+    float GetHeight() const { return m_height; }
 
     // ボス敵判定。ボス体力バーの表示対象となる敵は true を返す。
     virtual bool IsBoss() const { return !m_bossName.empty(); }
     // ボス体力バー上部に表示する表示名。ボス以外は空文字列。
     virtual std::wstring GetBossName() const { return m_bossName; }
-    // 敵座標は衝突円柱の中心なので、攻撃判定もその中心を狙う。
-    virtual float GetAttackTargetHeightOffset() const { return 0.0f; }
 
 protected:
     EnemyBase(const D3DXVECTOR3& startPosition,

@@ -10,7 +10,7 @@ EnemySmallSkeleton::EnemySmallSkeleton(const D3DXVECTOR3& pos, const int meshId,
                 13.0f,
                 1.41f * 0.5f,
                 5.09f * 0.5f,
-                -0.93f * 0.5f,
+                -2.545f * 0.5f,
                 MovementMode::Ground,
                 true)
 {

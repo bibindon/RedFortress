@@ -324,12 +324,6 @@ namespace
     const int kWeakAttackHitStopFrames = 8;
     const int kStrongAttackHitStopFrames = 8;
 
-    D3DXVECTOR3 GetEnemyAttackTargetPosition(const EnemyBase& enemy)
-    {
-        return enemy.GetPosition() +
-            D3DXVECTOR3(0.0f, enemy.GetAttackTargetHeightOffset(), 0.0f);
-    }
-
     bool IsStageSelectId(const std::wstring& stageId)
     {
         return stageId.length() >= 6 && stageId.substr(0, 6) == L"select";
@@ -2929,6 +2923,8 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
     const float attackCenterY = playerPos.y + kEnemyAttackTargetHeight;
+    const float attackMinY = attackCenterY - attackDefinition.verticalRange;
+    const float attackMaxY = attackCenterY + attackDefinition.verticalRange;
     int damagedCount = 0;
 
     for (auto& enemy : m_enemyManager.GetEnemies())
@@ -2938,20 +2934,23 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
             continue;
         }
 
-        const D3DXVECTOR3 targetPos = GetEnemyAttackTargetPosition(*enemy);
-        if (fabsf(targetPos.y - attackCenterY) > attackDefinition.verticalRange)
+        // 食らい判定は敵の衝突円柱全体。攻撃の垂直帯と体が重なるかで判定する。
+        const D3DXVECTOR3 enemyPos = enemy->GetPosition();
+        const float enemyHalfHeight = enemy->GetHeight() * 0.5f;
+        if (attackMaxY < enemyPos.y - enemyHalfHeight ||
+            attackMinY > enemyPos.y + enemyHalfHeight)
         {
             continue;
         }
 
-        D3DXVECTOR3 dir = targetPos - playerPos;
+        D3DXVECTOR3 dir = enemyPos - playerPos;
+        dir.y = 0.0f;
         const float dist = D3DXVec3Length(&dir);
         if (dist > attackDefinition.range)
         {
             continue;
         }
 
-        dir.y = 0.0f;
         if (D3DXVec3LengthSq(&dir) > 0.0001f)
         {
             D3DXVec3Normalize(&dir, &dir);
@@ -7328,7 +7327,20 @@ void GameApp::UpdateBombs()
                     continue;
                 }
 
-                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(*enemy) - bombPos;
+                // 食らい判定は敵の衝突円柱全体。爆発位置の高さを体の範囲にクランプして距離判定する。
+                const D3DXVECTOR3 enemyPos = enemy->GetPosition();
+                const float enemyHalfHeight = enemy->GetHeight() * 0.5f;
+                float targetY = bombPos.y;
+                if (targetY < enemyPos.y - enemyHalfHeight)
+                {
+                    targetY = enemyPos.y - enemyHalfHeight;
+                }
+                else if (targetY > enemyPos.y + enemyHalfHeight)
+                {
+                    targetY = enemyPos.y + enemyHalfHeight;
+                }
+
+                D3DXVECTOR3 dir = D3DXVECTOR3(enemyPos.x, targetY, enemyPos.z) - bombPos;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBombExplosionRadius)
                 {
@@ -7473,7 +7485,20 @@ void GameApp::UpdateBusters()
                     continue;
                 }
 
-                D3DXVECTOR3 dir = GetEnemyAttackTargetPosition(*enemy) - it->position;
+                // 食らい判定は敵の衝突円柱全体。弾の高さを体の範囲にクランプして距離判定する。
+                const D3DXVECTOR3 enemyPos = enemy->GetPosition();
+                const float enemyHalfHeight = enemy->GetHeight() * 0.5f;
+                float targetY = it->position.y;
+                if (targetY < enemyPos.y - enemyHalfHeight)
+                {
+                    targetY = enemyPos.y - enemyHalfHeight;
+                }
+                else if (targetY > enemyPos.y + enemyHalfHeight)
+                {
+                    targetY = enemyPos.y + enemyHalfHeight;
+                }
+
+                D3DXVECTOR3 dir = D3DXVECTOR3(enemyPos.x, targetY, enemyPos.z) - it->position;
                 const float dist = D3DXVec3Length(&dir);
                 if (dist <= kBusterHitRadius)
                 {
