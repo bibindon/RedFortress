@@ -133,7 +133,7 @@ private:
     void ApplyGravity(NSRender::Render& render);
     void BeginAlert(const D3DXVECTOR3& playerPos, bool faceImmediately);
     void UpdateChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
-    void UpdateRetreatBehavior();
+    void UpdateRetreatBehavior(NSRender::Render& render, const D3DXVECTOR3& playerPos);
     void UpdateFlyingIdleBehavior();
     void UpdateFlyingChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
     void UpdateFrogMovement(const D3DXVECTOR3& moveDirection, float speedMultiplier);

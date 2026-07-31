@@ -182,7 +182,7 @@ void Enemy::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool 
     }
     else if (m_state == State::Retreat)
     {
-        UpdateRetreatBehavior();
+        UpdateRetreatBehavior(render, playerPos);
         nextAnim = AnimState::Walk;
     }
     else if (m_state == State::Chase)
@@ -572,9 +572,13 @@ void Enemy::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool playerI
     MoveWithCollision(moveDir * (m_moveSpeed * speedMultiplier));
 }
 
-void Enemy::UpdateRetreatBehavior()
+void Enemy::UpdateRetreatBehavior(NSRender::Render& render, const D3DXVECTOR3& playerPos)
 {
-    UpdateFacing(m_position + m_retreatDirection);
+    UpdateFacing(playerPos);
+    if (m_meshId >= 0)
+    {
+        render.SetMeshMixSkinAnimSpeed(m_meshId, -1.0f);
+    }
     MoveWithCollision(m_retreatDirection * (m_moveSpeed * 0.42f));
 
     if (m_retreatFrames > 0)
@@ -584,6 +588,10 @@ void Enemy::UpdateRetreatBehavior()
 
     if (m_retreatFrames <= 0)
     {
+        if (m_meshId >= 0)
+        {
+            render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
+        }
         BeginAlert(m_lastKnownPlayerPosition, false);
     }
 }

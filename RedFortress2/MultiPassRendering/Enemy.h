@@ -73,7 +73,7 @@ private:
     void ApplyGravity(NSRender::Render& render);
     void BeginAlert(const D3DXVECTOR3& playerPos, bool faceImmediately);
     void UpdateChaseBehavior(const D3DXVECTOR3& playerPos, bool playerInvincible);
-    void UpdateRetreatBehavior();
+    void UpdateRetreatBehavior(NSRender::Render& render, const D3DXVECTOR3& playerPos);
     void ApplyAnimation(NSRender::Render& render, AnimState nextAnim);
     void FaceTargetImmediately(const D3DXVECTOR3& targetPos);
     void StartFacePlayerTurn();

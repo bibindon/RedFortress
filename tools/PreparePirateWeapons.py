@@ -1,24 +1,22 @@
-﻿import math
-from pathlib import Path
+﻿from pathlib import Path
 
 import bpy
-from mathutils import Matrix
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIRECTORY = REPOSITORY_ROOT / "RedFortress2" / "MultiPassRendering" / "res" / "model" / "piratekit"
 TEXTURE_NAME = "Atlas_Pirate.png"
-# grip_fix_axis: rotate the weapon 180 degrees around its long axis (Blender world
-# axis) so the grip matches the player's hand. The pistol barrel runs along
-# Blender X, the cutlass blade along Blender Z. The tip/muzzle direction is
-# preserved by a 180-degree roll around the long axis.
+# The grip orientation fix (180-degree roll around the weapon's long axis) is
+# baked into the .blend sources by tools/BakePirateWeaponGripFix.py and marked
+# with the custom property below. Export refuses unbaked sources.
+GRIP_FIX_FLAG = "grip_fix_baked"
 WEAPONS = (
-    ("Weapon_Pistol.blend", "pistol.x", "Weapon_Pistol", "X"),
-    ("Weapon_Cutlass.blend", "cutlass.x", "Weapon_Cutlass", "Z"),
+    ("Weapon_Pistol.blend", "pistol.x", "Weapon_Pistol"),
+    ("Weapon_Cutlass.blend", "cutlass.x", "Weapon_Cutlass"),
 )
 
 
-def export_weapon(source_name, output_name, expected_object_name, grip_fix_axis):
+def export_weapon(source_name, output_name, expected_object_name):
     source_path = ASSET_DIRECTORY / source_name
     output_path = ASSET_DIRECTORY / output_name
     if not source_path.exists():
@@ -35,6 +33,10 @@ def export_weapon(source_name, output_name, expected_object_name, grip_fix_axis)
     if mesh_object.name != expected_object_name:
         raise RuntimeError("Unexpected weapon object: " + mesh_object.name)
 
+    if not mesh_object.get(GRIP_FIX_FLAG):
+        raise RuntimeError(source_name + " is missing the baked grip fix. "
+                           "Run tools/BakePirateWeaponGripFix.py first.")
+
     texture_found = False
     for image in bpy.data.images:
         if image.name == TEXTURE_NAME or image.filepath.lower().endswith(TEXTURE_NAME.lower()):
@@ -50,11 +52,6 @@ def export_weapon(source_name, output_name, expected_object_name, grip_fix_axis)
     bpy.ops.object.select_all(action="DESELECT")
     mesh_object.select_set(True)
     bpy.context.view_layer.objects.active = mesh_object
-
-    grip_fix_matrix = Matrix.Rotation(math.pi, 4, grip_fix_axis)
-    mesh_object.matrix_world = grip_fix_matrix @ mesh_object.matrix_world
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    print("PIRATE_WEAPON_GRIP_FIX", expected_object_name, grip_fix_axis)
 
     result = bpy.ops.export_scene.directx_x(
         filepath=str(output_path),
@@ -85,8 +82,8 @@ def main():
     if not (ASSET_DIRECTORY / TEXTURE_NAME).exists():
         raise FileNotFoundError(ASSET_DIRECTORY / TEXTURE_NAME)
 
-    for source_name, output_name, expected_object_name, grip_fix_axis in WEAPONS:
-        export_weapon(source_name, output_name, expected_object_name, grip_fix_axis)
+    for source_name, output_name, expected_object_name in WEAPONS:
+        export_weapon(source_name, output_name, expected_object_name)
 
 
 if __name__ == "__main__":
