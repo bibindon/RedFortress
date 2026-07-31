@@ -263,11 +263,9 @@ namespace
     const int kStageClearSlashFrame = 28;
     const int kStageClearSlashEndFrame = 82;
     const int kStageClearTitleFrame = 58;
-    const int kStageClearInputFrame = 135;
     const int kStageClearFinalAutoFrame = 240;
     const int kStageClearLetterboxHeight = 90;
     const int kStageClearReplayTitleFrame = 8;
-    const int kStageClearReplayInputFrame = 28;
     const int kStageClearReplayFinalAutoFrame = 90;
     const int kStageClearReplayLetterboxHeight = 40;
     const int kStageClearReplayJumpDurationFrames = 30;
@@ -5805,30 +5803,15 @@ void GameApp::UpdateStageClear()
 
     UpdateStageClearVisual();
 
-    int inputFrame = kStageClearInputFrame;
-    if (!m_stageClearWasFirstClear)
-    {
-        inputFrame = kStageClearReplayInputFrame;
-    }
+    const bool isFinalStage = m_stageManager.GetCurrentStage().id == L"4-8";
 
     bool proceedToNextScene = false;
-    if (m_stageClearFrame >= inputFrame)
-    {
-        if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
-            InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
-        {
-            proceedToNextScene = true;
-        }
-    }
-
-    const bool isFinalStage = m_stageManager.GetCurrentStage().id == L"4-8";
-    int finalAutoFrame = kStageClearFinalAutoFrame;
+    int autoFrame = kStageClearFinalAutoFrame;
     if (!m_stageClearWasFirstClear)
     {
-        finalAutoFrame = kStageClearReplayFinalAutoFrame;
+        autoFrame = kStageClearReplayFinalAutoFrame;
     }
-    if (isFinalStage && m_stageClearFrame >= finalAutoFrame)
+    if (m_stageClearFrame >= autoFrame)
     {
         proceedToNextScene = true;
     }
@@ -7079,22 +7062,6 @@ void GameApp::DrawStageClear()
                                     sparklesAlpha);
         }
 
-        if (m_stageClearFrame >= kStageClearReplayInputFrame)
-        {
-            std::wstring promptText = L"Space / Enter / A でステージセレクトへ";
-            if (m_stageManager.GetCurrentStage().id == L"4-8")
-            {
-                promptText = L"Space / Enter / A でエンディングへ";
-            }
-            m_render.DrawTextCenter(m_stageClearHintFontId,
-                                    promptText,
-                                    0,
-                                    735,
-                                    NSRender::Common::BASE_W,
-                                    42,
-                                    D3DCOLOR_RGBA(255, 255, 255, 220));
-        }
-
         const float letterboxRawT = static_cast<float>(m_stageClearFrame) / 10.0f;
         const float letterboxT = SmoothStep01(letterboxRawT);
         const int letterboxHeight = static_cast<int>(static_cast<float>(kStageClearReplayLetterboxHeight) * letterboxT);
@@ -7208,22 +7175,6 @@ void GameApp::DrawStageClear()
                                     40,
                                     D3DCOLOR_RGBA(255, 210, 90, frameAlpha));
         }
-    }
-
-    if (m_stageClearFrame >= kStageClearInputFrame)
-    {
-        std::wstring promptText = L"Space / Enter / A でステージセレクトへ";
-        if (m_stageManager.GetCurrentStage().id == L"4-8")
-        {
-            promptText = L"Space / Enter / A でエンディングへ";
-        }
-        m_render.DrawTextCenter(m_stageClearHintFontId,
-                                promptText,
-                                0,
-                                735,
-                                NSRender::Common::BASE_W,
-                                42,
-                                D3DCOLOR_RGBA(255, 255, 255, 225));
     }
 
     const float letterboxRawT = static_cast<float>(m_stageClearFrame) / 28.0f;
