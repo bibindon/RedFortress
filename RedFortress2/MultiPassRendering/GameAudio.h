@@ -17,7 +17,7 @@ void PlayLoadingEnvironment();
 void PlayTitleMusic();
 void PlayEndingMusic();
 void PlayStoryMusic();
-void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world);
+void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world, const bool isCleared);
 void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();

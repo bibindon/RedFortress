@@ -359,7 +359,7 @@ void PlayStoryMusic()
     PlayBgmIfChanged(kStoryBgm, kStoryBgmVolume);
 }
 
-void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world)
+void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world, const bool isCleared)
 {
     std::wstring fieldBgm = kW1FieldBgm;
     std::wstring environment = kForestEnvironment;
@@ -391,19 +391,19 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         }
         environmentVolume = 14;
     }
-    else if (stageNumber == 32)
+    else if (stageNumber == 32 && !isCleared)
     {
         // ラスボス戦 (4-8)
         fieldBgm = kLastBossBgm;
         environmentVolume = 14;
     }
-    else if (stageNumber == 16)
+    else if (stageNumber == 16 && !isCleared)
     {
         // ボス戦 (2-8)
         fieldBgm = kBoss2Bgm;
         environmentVolume = 14;
     }
-    else if (stageNumber >= 1 && stageNumber % 8 == 0)
+    else if (stageNumber >= 1 && stageNumber % 8 == 0 && !isCleared)
     {
         // ボス戦 (1-8, 3-8)
         fieldBgm = kBossBgm;

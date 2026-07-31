@@ -123,6 +123,10 @@ private:
     bool StartStageAfterClear();
     bool MoveToStageAfterClear();
     void LoadCurrentStageObjects();
+    // ボスステージの敵CSVパスを返す。未クリアならボス用(EnemyPositions.csv)、
+    // クリア済みなら雑魚用(EnemyPositionsCleared.csv) を選ぶ。
+    std::wstring GetEnemyCsvPathForStage(const StageManager::StageData& stage) const;
+    static bool IsBossStageNumber(int stageNumber);
     void BeginStageIntro();
     void UpdateStageIntro();
     void DamagePlayerHp(int amount);

@@ -759,7 +759,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     UpdatePlayerMeshAndCamera(initialStage.playerStartPosition);
     UpdatePlayerMeshVisibility();
     m_enemyManager.Initialize();
-    m_enemyManager.LoadForStage(m_render, initialStage.enemyCsvPath);
+    m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(initialStage));
 
     m_destructibleManager.Initialize(m_render);
     m_destructibleManager.SetStarDropCallback([this]() {
@@ -911,7 +911,8 @@ void GameApp::Run()
         {
             const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
             const bool useRainEnvironment = audioStage.weather == StageManager::StageWeather::Rain;
-            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, useRainEnvironment, GetCurrentWorld());
+            const bool stageCleared = m_saveDataManager.IsStageCleared(audioStage.id);
+            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, useRainEnvironment, GetCurrentWorld(), stageCleared);
         }
         else if (m_gameState == GameState::Ending || m_gameState == GameState::EndingFin)
         {
@@ -6370,7 +6371,7 @@ void GameApp::CompletePlayerDeath()
     }
 
     // 敵を再配置
-    m_enemyManager.LoadForStage(m_render, m_stageManager.GetCurrentStage().enemyCsvPath);
+    m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
 
     // リスポーン位置を向いたままカメラを高速移動
     const D3DXVECTOR3 cameraTarget = respawnPos + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
@@ -6633,6 +6634,25 @@ bool GameApp::MoveToStageAfterClear()
     return true;
 }
 
+bool GameApp::IsBossStageNumber(int stageNumber)
+{
+    return stageNumber >= 8 && stageNumber % 8 == 0;
+}
+
+std::wstring GameApp::GetEnemyCsvPathForStage(const StageManager::StageData& stage) const
+{
+    if (IsBossStageNumber(stage.number) &&
+        !IsStageSelectId(stage.id) &&
+        !IsBaseId(stage.id) &&
+        m_saveDataManager.IsStageCleared(stage.id))
+    {
+        // クリア済みのボスステージは雑魚のみの配置にする。
+        const std::wstring folder = stage.enemyCsvPath.substr(0, stage.enemyCsvPath.rfind(L"\\"));
+        return folder + L"\\EnemyPositionsCleared.csv";
+    }
+    return stage.enemyCsvPath;
+}
+
 void GameApp::LoadCurrentStageObjects()
 {
     RestoreQteVisualEffectImmediate();
@@ -6754,7 +6774,7 @@ void GameApp::LoadCurrentStageObjects()
     m_render.ClearParticleEffect();
     m_player.ResetHp();
     m_hpBar.Reset();
-    m_enemyManager.LoadForStage(m_render, stage.enemyCsvPath);
+    m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(stage));
 
     m_destructibleManager.LoadForStage(m_render, stage.destructibleCsvPath);
     m_collectibleManager.RefreshVisibility(m_destructibleManager);
