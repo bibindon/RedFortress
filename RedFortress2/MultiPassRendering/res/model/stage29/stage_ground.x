@@ -3,12 +3,12 @@ xof 0303txt 0032
 AnimTicksPerSecond {
 	30;
 }
-Material StageGroundTop {
+Material StageGroundTopWorld4 {
 	 0.640000; 0.640000; 0.640000; 1.000000;;
 	 0.000000;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"../field.png";}
+	TextureFileName {"../ground/tex/field_world4_fortress.jpg";}
 }
 Material StageGroundSide {
 	 0.420000; 0.420000; 0.420000; 1.000000;;
@@ -1025,7 +1025,7 @@ Frame Stage4_5Ground {
 			1,
 			1,
 			1;
-			{StageGroundTop}
+			{StageGroundTopWorld4}
 			{StageGroundSide}
 		}
 	}

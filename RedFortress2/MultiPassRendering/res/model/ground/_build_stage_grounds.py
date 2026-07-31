@@ -9,10 +9,35 @@ import bpy
 GROUND_DIR = Path(__file__).resolve().parent
 MODEL_DIR = GROUND_DIR.parent
 BLEND_PATH = GROUND_DIR / "stage_grounds.blend"
-FIELD_TEXTURE_PATH = MODEL_DIR / "field.png"
 SIDE_TEXTURE_PATH = MODEL_DIR / "whiteWall.png"
 SLAB_BOTTOM = -20.0
 PIT_BOTTOM = -18.0
+
+# Per-world top-surface textures (CC0 from Poly Haven, see tex/POLYHAVEN_CC0.md).
+# stage_ground.x lives in res/model/<folder>/ and references the texture as
+# "../ground/tex/<file>", which resolves to res/model/ground/tex/<file>.
+TEX_DIR = GROUND_DIR / "tex"
+WORLD_TOP_TEXTURES = {
+    1: TEX_DIR / "field_world1_grassland.jpg",
+    2: TEX_DIR / "field_world2_cave.jpg",
+    3: TEX_DIR / "field_world3_ruins.jpg",
+    4: TEX_DIR / "field_world4_fortress.jpg",
+}
+
+# Map a stage folder name (e.g. "stage17") to its world number (1..4).
+# folders: W1=stage1-4,17-20  W2=stage5-8,21-24  W3=stage9-12,25-28  W4=stage13-16,29-32
+def world_for_folder(folder):
+    digits = "".join(ch for ch in folder if ch.isdigit())
+    if not digits:
+        return 1
+    n = int(digits)
+    if n in (1, 2, 3, 4, 17, 18, 19, 20):
+        return 1
+    if n in (5, 6, 7, 8, 21, 22, 23, 24):
+        return 2
+    if n in (9, 10, 11, 12, 25, 26, 27, 28):
+        return 3
+    return 4
 
 
 STAGES = (
@@ -437,18 +462,25 @@ def main():
 
     bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
     clear_scene()
-    top_material = create_material(
-        "StageGroundTop",
-        FIELD_TEXTURE_PATH,
-        "../field.png",
-        (0.64, 0.64, 0.64, 1.0),
-    )
     side_material = create_material(
         "StageGroundSide",
         SIDE_TEXTURE_PATH,
         "../whiteWall.png",
         (0.42, 0.42, 0.42, 1.0),
     )
+
+    # One top-surface material per world (texture differs per world).
+    top_materials = {}
+    for world, texture_path in WORLD_TOP_TEXTURES.items():
+        if not texture_path.exists():
+            raise RuntimeError("Missing world top texture: " + str(texture_path))
+        relative_name = ".." / texture_path.relative_to(MODEL_DIR)
+        top_materials[world] = create_material(
+            "StageGroundTopWorld" + str(world),
+            texture_path,
+            str(relative_name).replace("\\", "/"),
+            (0.64, 0.64, 0.64, 1.0),
+        )
 
     validation_errors = []
     for stage in STAGES:
@@ -460,7 +492,8 @@ def main():
 
     objects = []
     for stage in STAGES:
-        obj = create_stage_ground(stage, top_material, side_material)
+        world = world_for_folder(stage["folder"])
+        obj = create_stage_ground(stage, top_materials[world], side_material)
         objects.append((stage, obj))
 
     bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))

@@ -3,12 +3,12 @@ xof 0303txt 0032
 AnimTicksPerSecond {
 	30;
 }
-Material StageGroundTop {
+Material StageGroundTopWorld2 {
 	 0.640000; 0.640000; 0.640000; 1.000000;;
 	 0.000000;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"../field.png";}
+	TextureFileName {"../ground/tex/field_world2_cave.jpg";}
 }
 Material StageGroundSide {
 	 0.420000; 0.420000; 0.420000; 1.000000;;
@@ -129,7 +129,7 @@ Frame Stage2_8Ground {
 			1,
 			1,
 			1;
-			{StageGroundTop}
+			{StageGroundTopWorld2}
 			{StageGroundSide}
 		}
 	}
