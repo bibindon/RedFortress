@@ -18,10 +18,10 @@ PIT_BOTTOM = -18.0
 # "../ground/tex/<file>", which resolves to res/model/ground/tex/<file>.
 TEX_DIR = GROUND_DIR / "tex"
 WORLD_TOP_TEXTURES = {
-    1: TEX_DIR / "field_world1_grassland.jpg",
-    2: TEX_DIR / "field_world2_cave.jpg",
-    3: TEX_DIR / "field_world3_ruins.jpg",
-    4: TEX_DIR / "field_world4_fortress.jpg",
+    1: TEX_DIR / "world1.png",
+    2: TEX_DIR / "world2.png",
+    3: TEX_DIR / "world3.png",
+    4: TEX_DIR / "world4.png",
 }
 
 # Map a stage folder name (e.g. "stage17") to its world number (1..4).

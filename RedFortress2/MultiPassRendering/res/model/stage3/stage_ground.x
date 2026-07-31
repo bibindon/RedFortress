@@ -8,7 +8,7 @@ Material StageGroundTopWorld1 {
 	 0.000000;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"../ground/tex/field_world1_grassland.jpg";}
+	TextureFileName {"../ground/tex/world1.png";}
 }
 Material StageGroundSide {
 	 0.420000; 0.420000; 0.420000; 1.000000;;

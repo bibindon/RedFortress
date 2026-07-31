@@ -8,7 +8,7 @@ Material StageGroundTopWorld3 {
 	 0.000000;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"../ground/tex/field_world3_ruins.jpg";}
+	TextureFileName {"../ground/tex/world3.png";}
 }
 Material StageGroundSide {
 	 0.420000; 0.420000; 0.420000; 1.000000;;

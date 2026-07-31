@@ -8,7 +8,7 @@ Material StageGroundTopWorld4 {
 	 0.000000;
 	 0.000000; 0.000000; 0.000000;;
 	 0.000000; 0.000000; 0.000000;;
-	TextureFileName {"../ground/tex/field_world4_fortress.jpg";}
+	TextureFileName {"../ground/tex/world4.png";}
 }
 Material StageGroundSide {
 	 0.420000; 0.420000; 0.420000; 1.000000;;
