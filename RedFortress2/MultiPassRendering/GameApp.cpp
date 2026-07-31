@@ -142,6 +142,12 @@ namespace
     const float kPlayerWalkAnimationSpeed = 1.3f;
     const float kTitleSaturationLevel = 0.85f;
     const float kTitleShadowDarkness = 0.75f;
+    const std::wstring kPortalStepsModelPath = L"res\\model\\portal\\stone_steps.x";
+    const std::wstring kPortalStepsCollisionPath = L"res\\model\\portal\\stone_steps_collision.x";
+    const std::wstring kPortalPillarModelPath = L"res\\model\\portal\\light_pillar.x";
+    const std::wstring kPortalFlagModelPath = L"res\\model\\portal\\black_flag.x";
+    const std::wstring kPortalFlagAnimCsvPath = L"res\\model\\portal\\black_flag.csv";
+    const int kPortalClearDelayFrames = 150;
     const float kTitleSunLightIntensity = 0.45f;
     const float kTitleAmbientLightIntensity = 0.14f;
     const float kStagePortalClickRadius = 48.0f;
@@ -769,17 +775,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
 
     if (!IsStageSelectId(initialStage.id) && !IsBaseId(initialStage.id))
     {
-        const D3DXVECTOR3 goalPos(initialStage.clearPosition.x,
-                                  initialStage.clearPosition.y - 0.5f,
-                                  initialStage.clearPosition.z);
-        m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
-                                                 goalPos,
-                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                 1.0f,
-                                                 -1.0f,
-                                                 false,
-                                                 false,
-                                                 false);
+        InitializePortal(initialStage.clearPosition);
     }
 
     InputDevice::Initialize(m_hInstance, m_hWnd);
@@ -1739,6 +1735,8 @@ void GameApp::Run()
                     continue;
                 }
             }
+
+            UpdatePortal();
 
             if (!IsCurrentStageSelect() &&
                 !IsBaseId(m_stageManager.GetCurrentStage().id) &&
@@ -5864,11 +5862,6 @@ void GameApp::BeginStageClearVisual()
     {
         m_stageClearCameraEndPos = m_stageClearCameraStartPos;
         m_stageClearCameraEndTarget = m_stageClearCameraStartTarget;
-        if (m_goalMarkerMeshId >= 0)
-        {
-            m_render.RemoveMeshMix(m_goalMarkerMeshId);
-            m_goalMarkerMeshId = -1;
-        }
         RemoveGoalArrow();
         if (m_playerMeshId >= 0)
         {
@@ -5897,11 +5890,6 @@ void GameApp::BeginStageClearVisual()
     m_stageClearCameraEndPos = m_cameraMover.ResolvePosition(m_stageClearCameraEndTarget,
                                                              desiredCameraPosition);
 
-    if (m_goalMarkerMeshId >= 0)
-    {
-        m_render.RemoveMeshMix(m_goalMarkerMeshId);
-        m_goalMarkerMeshId = -1;
-    }
     RemoveGoalArrow();
 
     if (m_playerMeshId >= 0)
@@ -6027,22 +6015,132 @@ std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId,
     return std::wstring();
 }
 
-bool GameApp::IsStageClearReached()
+void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
 {
-    if (!m_stageManager.IsClearReached(m_playerMover.GetPosition()))
+    m_portalBasePosition = D3DXVECTOR3(clearPosition.x, clearPosition.y - 1.0f, clearPosition.z);
+
+    m_portalStepsMeshId = m_render.AddMeshMix(kPortalStepsModelPath,
+                                               m_portalBasePosition,
+                                               D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                               1.0f,
+                                               -1.0f,
+                                               false,
+                                               false,
+                                               false);
+
+    m_portalCollisionId = PhysicsWorld::Load(kPortalStepsCollisionPath.c_str(),
+                                              PhysicsWorld::ObjectType::Slide,
+                                              0.5f);
+    if (m_portalCollisionId >= 0)
     {
-        return false;
+        PhysicsWorld::SetTransform(m_portalCollisionId, m_portalBasePosition);
     }
 
-    for (const auto& enemy : m_enemyManager.GetEnemies())
+    m_portalPillarShown = false;
+    m_portalFlagShown = false;
+    m_portalClearDelayFrames = 0;
+}
+
+
+void GameApp::RemovePortal()
+{
+    if (m_portalStepsMeshId >= 0)
     {
-        if (!enemy->IsDead())
+        m_render.RemoveMeshMix(m_portalStepsMeshId);
+        m_portalStepsMeshId = -1;
+    }
+    if (m_portalPillarMeshId >= 0)
+    {
+        m_render.RemoveMeshMix(m_portalPillarMeshId);
+        m_portalPillarMeshId = -1;
+    }
+    if (m_portalFlagMeshId >= 0)
+    {
+        m_render.RemoveMeshMixSkinAnim(m_portalFlagMeshId);
+        m_portalFlagMeshId = -1;
+    }
+    m_portalCollisionId = -1;
+    m_portalPillarShown = false;
+    m_portalFlagShown = false;
+    m_portalClearDelayFrames = 0;
+}
+
+
+void GameApp::UpdatePortal()
+{
+    if (m_portalStepsMeshId < 0)
+    {
+        return;
+    }
+
+    // Step 1: Show the light pillar when all enemies are dead.
+    if (!m_portalPillarShown)
+    {
+        bool allDead = true;
+        for (const auto& enemy : m_enemyManager.GetEnemies())
         {
-            return false;
+            if (!enemy->IsDead())
+            {
+                allDead = false;
+                break;
+            }
+        }
+        if (allDead)
+        {
+            const D3DXVECTOR3 pillarPos = m_portalBasePosition;
+            m_portalPillarMeshId = m_render.AddMeshMix(kPortalPillarModelPath,
+                                                        pillarPos,
+                                                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                        1.0f,
+                                                        -1.0f,
+                                                        false,
+                                                        false,
+                                                        false);
+            m_portalPillarShown = true;
         }
     }
 
-    return true;
+    // Step 2: When the pillar is visible and the player stands on the top
+    // tier, show the flag and start the clear countdown.
+    if (m_portalPillarShown && !m_portalFlagShown)
+    {
+        const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
+        const float dx = playerPos.x - m_portalBasePosition.x;
+        const float dz = playerPos.z - m_portalBasePosition.z;
+        const float topY = m_portalBasePosition.y + 1.5f;
+        if (dx * dx + dz * dz <= 0.6f * 0.6f && playerPos.y >= topY - 0.2f)
+        {
+            const D3DXVECTOR3 flagPos = m_portalBasePosition;
+            m_portalFlagMeshId = m_render.AddMeshMixSkinAnim2(
+                kPortalFlagModelPath,
+                kPortalFlagAnimCsvPath,
+                flagPos,
+                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                1.0f,
+                NSRender::AnimSetMap(),
+                -1.0f,
+                false,
+                false);
+            if (m_portalFlagMeshId >= 0)
+            {
+                m_render.PlayMeshMixSkinAnimAnimation(m_portalFlagMeshId, L"wave");
+            }
+            m_portalFlagShown = true;
+            m_portalClearDelayFrames = kPortalClearDelayFrames;
+        }
+    }
+
+    // Step 3: Count down after the flag has appeared.
+    if (m_portalFlagShown && m_portalClearDelayFrames > 0)
+    {
+        --m_portalClearDelayFrames;
+    }
+}
+
+
+bool GameApp::IsStageClearReached()
+{
+    return m_portalFlagShown && m_portalClearDelayFrames <= 0;
 }
 
 void GameApp::ProcessEnemyAttackHits()
@@ -6569,12 +6667,6 @@ void GameApp::LoadCurrentStageObjects()
         m_qte = nullptr;
     }
 
-    if (m_goalMarkerMeshId >= 0)
-    {
-        m_render.RemoveMeshMix(m_goalMarkerMeshId);
-        m_goalMarkerMeshId = -1;
-    }
-
     m_pickupManager.Clear();
     m_dashBoosterManager.Clear();
     ClearBombs();
@@ -6602,6 +6694,8 @@ void GameApp::LoadCurrentStageObjects()
 
     LoadPlayerMeshForStage(IsStageSelectId(stage.id), stage.playerStartPosition);
 
+    RemovePortal();
+
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
     m_render.LoadXFileListFromCsv(stage.renderCsvPath);
@@ -6609,15 +6703,7 @@ void GameApp::LoadCurrentStageObjects()
 
     if (!IsStageSelectId(stage.id) && !IsBaseId(stage.id))
     {
-        const D3DXVECTOR3 goalPos(stage.clearPosition.x, stage.clearPosition.y - 0.5f, stage.clearPosition.z);
-        m_goalMarkerMeshId = m_render.AddMeshMix(L"res\\model\\cube_red.x",
-                                                 goalPos,
-                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                 1.0f,
-                                                 -1.0f,
-                                                 false,
-                                                 false,
-                                                 false);
+        InitializePortal(stage.clearPosition);
     }
 
     m_collectibleManager.LoadForStage(stage.collectibleCsvPath);

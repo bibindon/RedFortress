@@ -975,7 +975,17 @@ bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos) const
     const float horizontalDist = sqrtf(diff.x * diff.x + diff.z * diff.z);
     const float verticalDist = fabsf(diff.y);
 
-    return horizontalDist <= m_contactRadius && verticalDist <= m_height * 0.75f;
+    float verticalTolerance = m_height * 0.75f;
+    if (m_movementMode == MovementMode::Hover ||
+        m_movementMode == MovementMode::Swoop)
+    {
+        // 飛行敵は空中から急降下してくるため、上下方向の接触許容を広く取る。
+        // さもないと Swoop の高度差（約 0.8〜0.95m）が小さな m_height の許容
+        // を常に上回り、接触攻撃が一切発動しなくなる。
+        verticalTolerance = 1.5f;
+    }
+
+    return horizontalDist <= m_contactRadius && verticalDist <= verticalTolerance;
 }
 
 bool EnemyBase::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
