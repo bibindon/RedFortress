@@ -14,7 +14,6 @@ const int kDashBoosterChargeFrames = 30;
 const int kDashBoosterDamageFlashFrames = 10;
 const int kDashBoosterContactGrowFrames = 24;
 const float kDashBoosterVisualScale = 3.0f;
-const float kDashBoosterModelYawOffset = D3DX_PI / 6.0f;
 const float kDashBoosterContactScale = 1.35f;
 
 D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
@@ -22,7 +21,7 @@ D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
     D3DXVECTOR3 normalizedDirection = direction;
     if (D3DXVec3LengthSq(&normalizedDirection) <= 0.0001f)
     {
-        return D3DXVECTOR3(0.0f, -kDashBoosterModelYawOffset, 0.0f);
+        return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     }
 
     D3DXVec3Normalize(&normalizedDirection, &normalizedDirection);
@@ -38,7 +37,8 @@ D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
     }
 
     const float pitch = std::atan2(normalizedDirection.y, horizontalLength);
-    return D3DXVECTOR3(pitch, yaw - kDashBoosterModelYawOffset, 0.0f);
+    // dashBooster_alt.x の銃口軸は、座標補正後のローカル +Z 軸に一致する。
+    return D3DXVECTOR3(pitch, yaw, 0.0f);
 }
 }
 

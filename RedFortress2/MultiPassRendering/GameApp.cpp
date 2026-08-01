@@ -1186,6 +1186,9 @@ void GameApp::Run()
                     if (IsCurrentStageSelect())
                     {
                         m_saveDataManager.Save();
+                        m_itemPickupMessage = L"セーブが完了しました";
+                        m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
+                        GameAudio::PlaySaveComplete();
                     }
                 }
                 if (m_pauseMenu.ConsumeReturnToStageSelectRequested())
@@ -1201,6 +1204,7 @@ void GameApp::Run()
                     DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
+                DrawItemPickupMessage();
                 m_pauseMenu.Render(m_stageManager.GetCurrentStageDisplayName(), m_player.GetLives());
                 m_render.Draw();
                 continue;

@@ -32,6 +32,7 @@ const std::wstring kRainEnvironment = L"res\\sound\\ENV_rain.wav";
 const std::wstring kMenuMove = L"res\\sound\\menu_cursor_move.wav";
 const std::wstring kMenuConfirm = L"res\\sound\\menu_cursor_confirm.wav";
 const std::wstring kMenuCancel = L"res\\sound\\menu_cursor_cancel.wav";
+const std::wstring kSaveComplete = L"res\\sound\\save_complete.wav";
 const std::wstring kStageSelectMove = L"res\\sound\\cursor_move.wav";
 const std::wstring kStageSelectConfirm = L"res\\sound\\cursor_confirm.wav";
 const std::wstring kPlayerAttack = L"res\\sound\\attack01.wav";
@@ -265,7 +266,7 @@ void Initialize()
     ResetTrackingState();
     const std::wstring effects[] =
     {
-        kMenuMove, kMenuConfirm, kMenuCancel, kPlayerAttack, kSwordSwing, kSlashHit, kAttackHit, kBusterHit,
+        kMenuMove, kMenuConfirm, kMenuCancel, kSaveComplete, kPlayerAttack, kSwordSwing, kSlashHit, kAttackHit, kBusterHit,
         kEnemyAttack, kPlayerDamage, kPlayerDeath, kItemGet, kAmmoGet, kAmmoMax, kJump, kPowerUp, kDash, kDashBooster,
         kExplosion, kBombPlace, kStomp, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
         kDrink, kQte, kQteBest, kArrow
@@ -481,6 +482,7 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
 void PlayMenuMove() { PlayEffect(kMenuMove, 70); }
 void PlayMenuConfirm() { PlayEffect(kMenuConfirm, 78); }
 void PlayMenuCancel() { PlayEffect(kMenuCancel, 72); }
+void PlaySaveComplete() { PlayEffect(kSaveComplete, 78); }
 void PlayStageSelectMove() { PlayEffect(kStageSelectMove, 72); }
 void PlayStageSelectConfirm() { PlayEffect(kStageSelectConfirm, 78); }
 void PlayPlayerAttack() { PlayEffect(kPlayerAttack, 82); }

@@ -1,0 +1,8 @@
+﻿save_complete.wav
+
+Source: Kenney UI Audio, switch1.wav
+https://github.com/Calinou/kenney-ui-audio/blob/master/addons/kenney_ui_audio/switch1.wav
+Official asset page: https://kenney.nl/assets/interface-sounds
+License: Creative Commons CC0 1.0 Universal
+
+The source asset is released under CC0. Attribution is not required.
