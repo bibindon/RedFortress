@@ -190,6 +190,9 @@ private:
     D3DXVECTOR3 m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int m_knockbackFrames = 0;
     int m_removalFrames = 0;
+    float m_deathFallStartY = 0.0f;
+    float m_deathFallTargetY = 0.0f;
+    int m_deathFallFrames = 0;
     int m_facePlayerTurnFrames = 0;
     int m_alertFrames = 0;
     int m_idleWaitFrames = 0;
