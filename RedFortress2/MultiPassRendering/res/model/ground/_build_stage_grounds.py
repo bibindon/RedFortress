@@ -12,6 +12,7 @@ BLEND_PATH = GROUND_DIR / "stage_grounds.blend"
 SIDE_TEXTURE_PATH = MODEL_DIR / "whiteWall.png"
 SLAB_BOTTOM = -20.0
 PIT_BOTTOM = -18.0
+VISUAL_GROUND_HALF_SIZE = 500.0
 
 # Per-world top-surface textures (CC0 from Poly Haven, see tex/POLYHAVEN_CC0.md).
 # stage_ground.x lives in res/model/<folder>/ and references the texture as
@@ -339,6 +340,97 @@ def add_quad(vertices, faces, uvs, material_indices, coordinates, quad_uvs, mate
     material_indices.append(material_index)
 
 
+def create_visual_ground_extension(world, top_material, play_half_size):
+    play_half_width, play_half_depth = play_half_size
+    outer_half_size = VISUAL_GROUND_HALF_SIZE
+    vertices = []
+    faces = []
+    uvs = []
+    material_indices = []
+
+    add_quad(
+        vertices,
+        faces,
+        uvs,
+        material_indices,
+        ((-outer_half_size, play_half_depth, 0.0),
+         (outer_half_size, play_half_depth, 0.0),
+         (outer_half_size, outer_half_size, 0.0),
+         (-outer_half_size, outer_half_size, 0.0)),
+        ((-outer_half_size / 8.0, play_half_depth / 8.0),
+         (outer_half_size / 8.0, play_half_depth / 8.0),
+         (outer_half_size / 8.0, outer_half_size / 8.0),
+         (-outer_half_size / 8.0, outer_half_size / 8.0)),
+        0,
+    )
+    add_quad(
+        vertices,
+        faces,
+        uvs,
+        material_indices,
+        ((-outer_half_size, -outer_half_size, 0.0),
+         (outer_half_size, -outer_half_size, 0.0),
+         (outer_half_size, -play_half_depth, 0.0),
+         (-outer_half_size, -play_half_depth, 0.0)),
+        ((-outer_half_size / 8.0, -outer_half_size / 8.0),
+         (outer_half_size / 8.0, -outer_half_size / 8.0),
+         (outer_half_size / 8.0, -play_half_depth / 8.0),
+         (-outer_half_size / 8.0, -play_half_depth / 8.0)),
+        0,
+    )
+    add_quad(
+        vertices,
+        faces,
+        uvs,
+        material_indices,
+        ((-outer_half_size, -play_half_depth, 0.0),
+         (-play_half_width, -play_half_depth, 0.0),
+         (-play_half_width, play_half_depth, 0.0),
+         (-outer_half_size, play_half_depth, 0.0)),
+        ((-outer_half_size / 8.0, -play_half_depth / 8.0),
+         (-play_half_width / 8.0, -play_half_depth / 8.0),
+         (-play_half_width / 8.0, play_half_depth / 8.0),
+         (-outer_half_size / 8.0, play_half_depth / 8.0)),
+        0,
+    )
+    add_quad(
+        vertices,
+        faces,
+        uvs,
+        material_indices,
+        ((play_half_width, -play_half_depth, 0.0),
+         (outer_half_size, -play_half_depth, 0.0),
+         (outer_half_size, play_half_depth, 0.0),
+         (play_half_width, play_half_depth, 0.0)),
+        ((play_half_width / 8.0, -play_half_depth / 8.0),
+         (outer_half_size / 8.0, -play_half_depth / 8.0),
+         (outer_half_size / 8.0, play_half_depth / 8.0),
+         (play_half_width / 8.0, play_half_depth / 8.0)),
+        0,
+    )
+
+    object_name = "StageVisualGroundWorld" + str(world)
+    mesh = bpy.data.meshes.new(object_name + "Geo")
+    mesh.from_pydata(vertices, (), faces)
+    mesh.update(calc_edges=True)
+    mesh.materials.append(top_material)
+
+    for polygon_index, polygon in enumerate(mesh.polygons):
+        polygon.use_smooth = False
+        polygon.material_index = material_indices[polygon_index]
+
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            uv_layer.data[loop_index].uv = uvs[vertex_index]
+
+    obj = bpy.data.objects.new(object_name, mesh)
+    bpy.context.collection.objects.link(obj)
+    obj["_x_frame_name"] = object_name
+    obj["_x_mesh_name"] = object_name + "Geo"
+    return obj
+
 def create_stage_ground(stage, top_material, side_material):
     half_width, half_depth = stage["size"]
     pits = stage["pits"]
@@ -498,6 +590,20 @@ def main():
             (0.64, 0.64, 0.64, 1.0),
         )
 
+    visual_ground_objects = []
+    world_play_half_sizes = {
+        1: (16.0, 32.0),
+        2: (60.0, 60.0),
+        3: (60.0, 120.0),
+        4: (60.0, 120.0),
+    }
+    for world, play_half_size in world_play_half_sizes.items():
+        visual_ground = create_visual_ground_extension(
+            world,
+            top_materials[world],
+            play_half_size,
+        )
+        visual_ground_objects.append((world, visual_ground))
     validation_errors = []
     for stage in STAGES:
         conflicts = validate_stage(stage)
@@ -518,6 +624,10 @@ def main():
         export_object(obj, output_path)
         print("EXPORTED", stage["display"], output_path)
 
+    for world, obj in visual_ground_objects:
+        output_path = GROUND_DIR / ("stage_visual_ground_world" + str(world) + ".x")
+        export_object(obj, output_path)
+        print("EXPORTED_VISUAL", world, output_path)
     print("BLEND_PATH", BLEND_PATH)
     print("EXPORTED_STAGE_GROUNDS", len(objects))
 

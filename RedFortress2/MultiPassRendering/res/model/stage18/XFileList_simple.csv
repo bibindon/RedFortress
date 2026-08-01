@@ -1,4 +1,5 @@
 ﻿ID,FileName,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,loadType
+1,../ground/stage_visual_ground_world1.x,0,0,0,0,0,0,1,meshmix2
 2,stage_ground.x,0,0,0,0,0,0,1,meshmix2
 103,../collision_wall/collision_wall.x,-4,1.5,10,0,90,0,1,meshmix2
 104,../collision_wall/collision_wall.x,4,1.5,-10,0,90,0,1,meshmix2
