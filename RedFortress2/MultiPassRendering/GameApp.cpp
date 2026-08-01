@@ -5371,6 +5371,7 @@ void GameApp::StartNewGame()
     m_inventoryManager.Reset();
     m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
     m_inventoryManager.Save();
+    ApplyUnlockedAbilities();
     m_baseBombCapacity = 1;
     m_baseBusterRapidLevel = 1;
     m_bombCapacity = 1;
@@ -5444,6 +5445,7 @@ void GameApp::ExecuteDeleteSaveData()
     m_saveDataManager.DeleteSaveData();
     m_inventoryManager.Reset();
     DeleteFileW((NSRender::Util::GetExeDir() + L"res\\savedata\\inventory.csv").c_str());
+    ApplyUnlockedAbilities();
     ExitDeleteConfirmation();
 }
 

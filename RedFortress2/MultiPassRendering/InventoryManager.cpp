@@ -336,6 +336,7 @@ void InventoryManager::Reset()
     m_itemCounts.clear();
     m_weaponCounts.clear();
     m_collectedWeaponCollectibleIds.clear();
+    m_unlockedAbilityIds.clear();
 }
 
 void InventoryManager::ResetAbilities()

@@ -45,7 +45,10 @@ private:
     bool CanCraft(const Recipe& recipe) const;
     std::wstring GetName(const std::wstring& id) const;
     void MoveSelection(int direction);
+    void MoveSelectionTo(std::size_t index);
     void EnsureSelectionVisible();
+    bool TryGetRecipeIndexFromPoint(long x, long y, std::size_t* outIndex) const;
+    static bool IsPointInRect(long x, long y, int left, int top, int width, int height);
     void SetMouseCursorVisible(bool visible);
 
     NSRender::Render* m_render = nullptr;

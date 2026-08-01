@@ -6,6 +6,7 @@
 #include "GameAudio.h"
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
+#include "../../RedFortressRender/Render/Common.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
 
@@ -19,6 +20,8 @@ const int kMaskedGaussianSampleSize = 25;
 const std::size_t kVisibleRecipeCount = 11;
 const int kRecipeStartY = 260;
 const int kRecipeLineHeight = 42;
+const int kRecipeListX = 155;
+const int kRecipeListWidth = 575;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(220, 232, 245, 235);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
@@ -106,9 +109,27 @@ void CraftMenu::Update()
         MoveSelection(1);
     }
 
+    // マウス操作。解像度に依存しないよう、マウス位置をベース解像度(1600x900)座標に変換して判定する。
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+
+    std::size_t hoveredIndex = m_recipes.size();
+    if (TryGetRecipeIndexFromPoint(baseMouseX, baseMouseY, &hoveredIndex) &&
+        hoveredIndex != m_selectedIndex)
+    {
+        MoveSelectionTo(hoveredIndex);
+    }
+
     const bool confirmPressed = InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
                                 InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-                                InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B);
+                                InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B) ||
+                                (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) &&
+                                 hoveredIndex < m_recipes.size());
     if (!confirmPressed)
     {
         return;
@@ -208,9 +229,9 @@ void CraftMenu::Render()
         }
         m_render->DrawTextExCenter(m_textFontId,
                                    text,
-                                   155,
+                                   kRecipeListX,
                                    kRecipeStartY + row * kRecipeLineHeight,
-                                   575,
+                                   kRecipeListWidth,
                                    38,
                                    color);
     }
@@ -452,6 +473,64 @@ void CraftMenu::EnsureSelectionVisible()
     {
         m_scrollOffset = m_selectedIndex - kVisibleRecipeCount + 1;
     }
+}
+
+void CraftMenu::MoveSelectionTo(const std::size_t index)
+{
+    if (index >= m_recipes.size())
+    {
+        return;
+    }
+
+    if (m_selectedIndex != index)
+    {
+        m_selectedIndex = index;
+        GameAudio::PlayMenuMove();
+    }
+
+    m_statusMessage.clear();
+    EnsureSelectionVisible();
+}
+
+bool CraftMenu::TryGetRecipeIndexFromPoint(const long x,
+                                           const long y,
+                                           std::size_t* outIndex) const
+{
+    if (outIndex == nullptr)
+    {
+        return false;
+    }
+
+    const std::size_t endIndex = (std::min)(m_recipes.size(), m_scrollOffset + kVisibleRecipeCount);
+    for (std::size_t i = m_scrollOffset; i < endIndex; ++i)
+    {
+        const int row = static_cast<int>(i - m_scrollOffset);
+        if (IsPointInRect(x,
+                          y,
+                          kRecipeListX,
+                          kRecipeStartY + row * kRecipeLineHeight,
+                          kRecipeListWidth,
+                          kRecipeLineHeight))
+        {
+            *outIndex = i;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool CraftMenu::IsPointInRect(const long x,
+                              const long y,
+                              const int left,
+                              const int top,
+                              const int width,
+                              const int height)
+{
+    return left <= x &&
+           x <= left + width &&
+           top <= y &&
+           y <= top + height;
 }
 
 void CraftMenu::SetMouseCursorVisible(const bool visible)
