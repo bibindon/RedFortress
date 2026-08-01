@@ -6088,7 +6088,7 @@ void GameApp::UpdatePortal()
     }
 
     // Step 1: Show the light pillar when all enemies are dead.
-    if (!m_portalPillarShown)
+    if (!m_portalPillarShown && !m_portalFlagShown)
     {
         bool allDead = true;
         for (const auto& enemy : m_enemyManager.GetEnemies())
@@ -6115,36 +6115,51 @@ void GameApp::UpdatePortal()
     }
 
     // Step 2: When the pillar is visible and the player stands on the top
-    // tier, show the flag and start the clear countdown.
-    if (m_portalPillarShown && !m_portalFlagShown)
+    // tier, show the flag at the top of the stone steps and start the
+    // clear countdown.
+    const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
+    const float dx = playerPos.x - m_portalBasePosition.x;
+    const float dz = playerPos.z - m_portalBasePosition.z;
+    const float topY = m_portalBasePosition.y + 1.5f;
+    const bool playerOnTopTier =
+        (dx * dx + dz * dz <= 0.6f * 0.6f && playerPos.y >= topY - 0.2f);
+
+    if (m_portalPillarShown && !m_portalFlagShown && playerOnTopTier)
     {
-        const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
-        const float dx = playerPos.x - m_portalBasePosition.x;
-        const float dz = playerPos.z - m_portalBasePosition.z;
-        const float topY = m_portalBasePosition.y + 1.5f;
-        if (dx * dx + dz * dz <= 0.6f * 0.6f && playerPos.y >= topY - 0.2f)
+        // The flag stands at the center of the top tier. The small upward
+        // offset keeps the flag base from z-fighting with the step surface.
+        const D3DXVECTOR3 flagPos(m_portalBasePosition.x,
+                                  topY + 0.02f,
+                                  m_portalBasePosition.z);
+        m_portalFlagMeshId = m_render.AddMeshMixSkinAnim2(
+            kPortalFlagModelPath,
+            kPortalFlagAnimCsvPath,
+            flagPos,
+            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+            1.0f,
+            NSRender::AnimSetMap(),
+            -1.0f,
+            false,
+            false);
+        if (m_portalFlagMeshId >= 0)
         {
-            const D3DXVECTOR3 flagPos = m_portalBasePosition;
-            m_portalFlagMeshId = m_render.AddMeshMixSkinAnim2(
-                kPortalFlagModelPath,
-                kPortalFlagAnimCsvPath,
-                flagPos,
-                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                1.0f,
-                NSRender::AnimSetMap(),
-                -1.0f,
-                false,
-                false);
-            if (m_portalFlagMeshId >= 0)
-            {
-                m_render.PlayMeshMixSkinAnimAnimation(m_portalFlagMeshId, L"wave");
-            }
-            m_portalFlagShown = true;
-            m_portalClearDelayFrames = kPortalClearDelayFrames;
+            m_render.PlayMeshMixSkinAnimAnimation(m_portalFlagMeshId, L"wave");
         }
+        m_portalFlagShown = true;
+        m_portalClearDelayFrames = kPortalClearDelayFrames;
     }
 
-    // Step 3: Count down after the flag has appeared.
+    // Step 3: When the player touches the black flag, the light pillar
+    // disappears.
+    if (m_portalFlagShown && m_portalPillarShown && playerOnTopTier &&
+        m_portalPillarMeshId >= 0)
+    {
+        m_render.RemoveMeshMix(m_portalPillarMeshId);
+        m_portalPillarMeshId = -1;
+        m_portalPillarShown = false;
+    }
+
+    // Step 4: Count down after the flag has appeared.
     if (m_portalFlagShown && m_portalClearDelayFrames > 0)
     {
         --m_portalClearDelayFrames;

@@ -134,6 +134,11 @@ EnemyBase::EnemyBase(const D3DXVECTOR3& startPosition,
     m_behaviorSeed = seed;
     m_personalityBias = NextRandom01() * 2.0f - 1.0f;
     StartIdleBehavior();
+    // スポーン直後から待機アニメーション（例: 鳥の羽ばたき）を再生する。
+    // ApplyAnimation は nextAnim == m_animState かつ refresh 不要だと early-return するため、
+    // このフラグが無いと初期状態のまま最初の Update で何も再生されず、
+    // default ポーズ（静止）のままになってしまう。
+    m_animationNeedsRefresh = true;
 }
 
 void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible)
@@ -852,13 +857,58 @@ void EnemyBase::UpdateFlyingIdleBehavior()
         hoverSpeed = 0.065f;
     }
 
+    // 待機中もホーム付近を巡回する（待機/移動フェーズは地上敵の UpdateIdleBehavior と同様）。
+    // 移動フェーズ中は Update() 側で nextAnim = Walk になり、
+    // bird の walk(=enemy.move.x) は羽ばたきアニメーションなので移動中の見た目も自然になる。
+    if (m_idleWaitFrames > 0)
+    {
+        --m_idleWaitFrames;
+        if (m_idleWaitFrames <= 0)
+        {
+            m_idleMoveFrames = NextRandomInt(50, 100);
+            m_idleMoveYaw = m_yaw + (NextRandom01() * 2.0f - 1.0f) * (D3DX_PI * 0.5f);
+        }
+    }
+    else if (m_idleMoveFrames > 0)
+    {
+        --m_idleMoveFrames;
+        if (m_idleMoveFrames <= 0)
+        {
+            StartIdleBehavior();
+        }
+    }
+    else
+    {
+        StartIdleBehavior();
+    }
+
+    // 巡回先: ホーム位置 + ランダム方位・半径。ホームから離れすぎたら引き戻す。
     D3DXVECTOR3 target = m_homePosition;
+    if (m_idleMoveFrames > 0)
+    {
+        const float wanderRadius = 2.5f;
+        target.x += sinf(m_idleMoveYaw) * wanderRadius;
+        target.z += cosf(m_idleMoveYaw) * wanderRadius;
+
+        D3DXVECTOR3 fromHome = m_position - m_homePosition;
+        fromHome.y = 0.0f;
+        if (D3DXVec3LengthSq(&fromHome) > 16.0f)
+        {
+            target = m_homePosition;
+        }
+    }
     target.y += sinf(static_cast<float>(m_flightFrame) * hoverSpeed) * hoverAmplitude;
+
     D3DXVECTOR3 direction = target - m_position;
     const float distance = D3DXVec3Length(&direction);
     if (distance > 0.01f)
     {
         D3DXVec3Normalize(&direction, &direction);
+        // 移動中は進行方向（巡回先）を向く。ホバー中は向きを変えない。
+        if (m_idleMoveFrames > 0)
+        {
+            UpdateFacing(target);
+        }
         float speed = m_moveSpeed * 0.35f;
         if (distance < 0.5f)
         {
