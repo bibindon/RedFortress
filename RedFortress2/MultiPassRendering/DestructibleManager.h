@@ -42,6 +42,7 @@ struct DroppedRedCube
     D3DXVECTOR3 velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int pickupWaitFrames = 0;
     DestructibleDropType type = DestructibleDropType::RedCube;
+    std::wstring itemId = L"001";
     bool isGrounded = false;
 };
 
@@ -72,7 +73,7 @@ public:
     void RemoveDroppedRedCube(NSRender::Render& render, std::size_t index);
 
 private:
-    bool DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos);
+    bool DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos, const std::wstring& itemId);
     bool DropAmmoHeart(NSRender::Render& render, const D3DXVECTOR3& pos);
     void TryDropItem(NSRender::Render& render, const D3DXVECTOR3& pos);
 

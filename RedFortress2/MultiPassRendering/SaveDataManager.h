@@ -16,6 +16,11 @@ public:
     bool Load();
     void Save();
 
+    void SetStageSelectPosition(const std::wstring& stageSelectId, const std::wstring& portalId);
+    bool HasStageSelectPosition() const;
+    const std::wstring& GetStageSelectId() const;
+    const std::wstring& GetStageSelectPortalId() const;
+
     void MarkStageCleared(const std::wstring& stageId);
     bool IsStageCleared(const std::wstring& stageId) const;
 
@@ -43,5 +48,7 @@ private:
     std::unordered_set<std::wstring> m_clearedStageIds;
     std::unordered_set<std::wstring> m_unlockedStageIds;
     std::wstring m_filePath;
+    std::wstring m_stageSelectId;
+    std::wstring m_stageSelectPortalId;
     bool m_hasSaveFile;
 };

@@ -24,6 +24,13 @@ namespace
     const float kDroppedItemSpawnHeight = 1.0f;
     const float kPlayerAttackCenterHeight = 1.0f;
     const float kDestructibleAttackTargetHeight = 0.5f;
+    const std::wstring kCraftMaterialItemIds[] =
+    {
+        L"001", L"002", L"003", L"004", L"005", L"006", L"009",
+        L"010", L"011", L"012", L"013", L"014", L"015", L"016"
+    };
+    const int kCraftMaterialItemCount =
+        static_cast<int>(sizeof(kCraftMaterialItemIds) / sizeof(kCraftMaterialItemIds[0]));
 
     std::wstring Trim(const std::wstring& str)
     {
@@ -57,6 +64,13 @@ namespace
         static std::mt19937 rng(std::random_device{}());
         static std::uniform_int_distribution<int> dist(0, 99);
         return dist(rng);
+    }
+
+    std::wstring GetRandomCraftMaterialItemId()
+    {
+        static std::mt19937 rng(std::random_device{}());
+        static std::uniform_int_distribution<int> dist(0, kCraftMaterialItemCount - 1);
+        return kCraftMaterialItemIds[dist(rng)];
     }
 
     void DisablePhysicsObject(const int physicsId)
@@ -374,7 +388,7 @@ bool DestructibleManager::TryDropRedCube(NSRender::Render& render,
         return false;
     }
 
-    return DropRedCube(render, pos);
+    return DropRedCube(render, pos, GetRandomCraftMaterialItemId());
 }
 
 bool DestructibleManager::TryDropAmmoHeart(NSRender::Render& render,
@@ -410,12 +424,13 @@ void DestructibleManager::RemoveDroppedRedCube(NSRender::Render& render, const s
     }
 }
 
-bool DestructibleManager::DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos)
+bool DestructibleManager::DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos, const std::wstring& itemId)
 {
     DroppedRedCube cube;
     cube.position = D3DXVECTOR3(pos.x, pos.y + kDroppedItemSpawnHeight, pos.z);
     cube.pickupWaitFrames = kDroppedRedCubePickupDelayFrames;
     cube.type = DestructibleDropType::RedCube;
+    cube.itemId = itemId;
     cube.meshId = render.AddMeshMix(kRedCubeModelPath,
                                      cube.position,
                                      D3DXVECTOR3(0.0f, 0.0f, 0.0f),
@@ -483,5 +498,5 @@ void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR
         return;
     }
 
-    DropRedCube(render, pos);
+    DropRedCube(render, pos, GetRandomCraftMaterialItemId());
 }

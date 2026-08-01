@@ -201,10 +201,10 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
             }
             else
             {
-                m_inventory->AddItem(L"001");
+                m_inventory->AddItem(cubes[i].itemId);
                 if (m_itemCollectedCallback)
                 {
-                    m_itemCollectedCallback(L"001", 1);
+                    m_itemCollectedCallback(cubes[i].itemId, 1);
                 }
                 m_inventory->Save();
                 GameAudio::PlayItemGet();

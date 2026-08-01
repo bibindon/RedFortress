@@ -57,6 +57,8 @@ bool SaveDataManager::Load()
 {
     m_clearedStageIds.clear();
     m_unlockedStageIds.clear();
+    m_stageSelectId.clear();
+    m_stageSelectPortalId.clear();
     m_hasSaveFile = false;
 
     if (m_stageManager == nullptr)
@@ -105,6 +107,11 @@ bool SaveDataManager::Load()
         }
 
         const std::wstring& stageId = row.at(0);
+        if (row.size() >= 4 && !row.at(3).empty())
+        {
+            m_stageSelectId = stageId;
+            m_stageSelectPortalId = row.at(3);
+        }
         const std::wstring& clearedText = row.at(1);
         if (clearedText == L"1")
         {
@@ -159,6 +166,7 @@ void SaveDataManager::Save()
     header.push_back(L"StageId");
     header.push_back(L"Cleared");
     header.push_back(L"Unlocked");
+    header.push_back(L"SelectedPortalId");
     csvData.push_back(header);
 
     const std::size_t stageCount = m_stageManager->GetStageCount();
@@ -188,11 +196,41 @@ void SaveDataManager::Save()
             row.push_back(L"0");
         }
 
+        if (stage.id == m_stageSelectId)
+        {
+            row.push_back(m_stageSelectPortalId);
+        }
+        else
+        {
+            row.push_back(L"");
+        }
+
         csvData.push_back(row);
     }
 
     csv::Write(m_filePath, csvData);
     m_hasSaveFile = true;
+}
+
+void SaveDataManager::SetStageSelectPosition(const std::wstring& stageSelectId, const std::wstring& portalId)
+{
+    m_stageSelectId = stageSelectId;
+    m_stageSelectPortalId = portalId;
+}
+
+bool SaveDataManager::HasStageSelectPosition() const
+{
+    return !m_stageSelectId.empty() && !m_stageSelectPortalId.empty();
+}
+
+const std::wstring& SaveDataManager::GetStageSelectId() const
+{
+    return m_stageSelectId;
+}
+
+const std::wstring& SaveDataManager::GetStageSelectPortalId() const
+{
+    return m_stageSelectPortalId;
 }
 
 void SaveDataManager::MarkStageCleared(const std::wstring& stageId)
@@ -311,6 +349,8 @@ void SaveDataManager::ResetToDefaults()
 {
     m_clearedStageIds.clear();
     m_unlockedStageIds.clear();
+    m_stageSelectId.clear();
+    m_stageSelectPortalId.clear();
     m_hasSaveFile = false;
     InitializeDefaultUnlocks();
 }

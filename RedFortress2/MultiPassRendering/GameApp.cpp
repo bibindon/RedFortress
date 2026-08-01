@@ -6,6 +6,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <iomanip>
+#include <random>
 #include <sstream>
 #include <stdexcept>
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
@@ -192,7 +193,22 @@ namespace
     const std::wstring kAmmoBeadFullImagePath = L"res\\2D_Image\\ammo_bead_full.png";
     const std::wstring kAmmoBeadEmptyImagePath = L"res\\2D_Image\\ammo_bead_empty.png";
     const std::wstring kItemNameCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
-    const std::wstring kQteRewardItemId = L"001";
+
+    const std::wstring kCraftMaterialItemIds[] =
+    {
+        L"001", L"002", L"003", L"004", L"005", L"006", L"009",
+        L"010", L"011", L"012", L"013", L"014", L"015", L"016"
+    };
+    const int kCraftMaterialItemCount =
+        static_cast<int>(sizeof(kCraftMaterialItemIds) / sizeof(kCraftMaterialItemIds[0]));
+
+    std::wstring GetRandomCraftMaterialItemId()
+    {
+        static std::mt19937 rng(std::random_device{}());
+        static std::uniform_int_distribution<int> dist(0, kCraftMaterialItemCount - 1);
+        return kCraftMaterialItemIds[dist(rng)];
+    }
+
     const std::wstring kStickModelPath = L"res\\model\\stick\\stick.x";
     const std::wstring kSaberModelPath = L"res\\model\\piratekit\\cutlass.x";
     const std::wstring kGunModelPath = L"res\\model\\piratekit\\pistol.x";
@@ -1195,6 +1211,12 @@ void GameApp::Run()
                 {
                     if (IsCurrentStageSelect())
                     {
+                        if (m_hasSelectedStagePortal)
+                        {
+                            m_saveDataManager.SetStageSelectPosition(
+                                m_stageManager.GetCurrentStage().id,
+                                m_selectedStagePortalId);
+                        }
                         m_saveDataManager.Save();
                         m_itemPickupMessage = L"セーブが完了しました";
                         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
@@ -1472,9 +1494,10 @@ void GameApp::Run()
                         {
                             GameAudio::PlayQteNormal();
                         }
-                        m_inventoryManager.AddItem(kQteRewardItemId, 1);
+                        const std::wstring qteRewardItemId = GetRandomCraftMaterialItemId();
+                        m_inventoryManager.AddItem(qteRewardItemId, 1);
                         m_inventoryManager.Save();
-                        ShowItemPickupMessage(kQteRewardItemId, 1);
+                        ShowItemPickupMessage(qteRewardItemId, 1);
                     }
                     else
                     {
@@ -5502,6 +5525,7 @@ bool GameApp::CompleteStageMove(const std::size_t stageIndex)
 void GameApp::StartNewGame()
 {
     m_saveDataManager.ResetToDefaults();
+    m_preferredStageSelectPortalId.clear();
     m_inventoryManager.Reset();
     m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
     m_inventoryManager.Save();
@@ -5597,7 +5621,14 @@ void GameApp::ExecuteTitleCommand(const std::wstring& commandId)
     else if (commandId == L"continue")
     {
         m_saveDataManager.Load();
-        StartStageByIndex(GetContinueStartStageIndex());
+        const std::size_t continueStageIndex = GetContinueStartStageIndex();
+        m_preferredStageSelectPortalId.clear();
+        if (m_saveDataManager.HasStageSelectPosition() &&
+            m_stageManager.GetStage(continueStageIndex).id == m_saveDataManager.GetStageSelectId())
+        {
+            m_preferredStageSelectPortalId = m_saveDataManager.GetStageSelectPortalId();
+        }
+        StartStageByIndex(continueStageIndex);
     }
     else if (commandId == L"delete")
     {
@@ -5626,6 +5657,18 @@ void GameApp::ExecuteTitleCommand(const std::wstring& commandId)
 
 std::size_t GameApp::GetContinueStartStageIndex() const
 {
+    const std::wstring& savedStageSelectId = m_saveDataManager.GetStageSelectId();
+    if (!savedStageSelectId.empty() &&
+        m_saveDataManager.IsStageUnlocked(savedStageSelectId))
+    {
+        const std::size_t savedStageSelectIndex = m_stageManager.FindStageIndexById(savedStageSelectId);
+        if (savedStageSelectIndex < m_stageManager.GetStageCount() &&
+            IsStageSelectId(m_stageManager.GetStage(savedStageSelectIndex).id))
+        {
+            return savedStageSelectIndex;
+        }
+    }
+
     if (m_saveDataManager.IsStageUnlocked(L"select4"))
     {
         return m_stageManager.FindStageIndexById(L"select4");
