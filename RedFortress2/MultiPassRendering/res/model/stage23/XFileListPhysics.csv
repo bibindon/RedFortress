@@ -15,3 +15,4 @@
 2712,res/model/cubeWood/cube_wood_collision.x,-30,0,-30,0,0,0,1,Collision,n,
 2713,res/model/cubeWood/cube_wood_collision.x,30,0,-30,0,0,0,1,Collision,n,
 2714,res/model/plateLava.x,-18,0.02,-30,0,0,0,1,NonCollision,n,
+2715,res/model/plateLava.x,18,0.02,-30,0,0,0,1,NonCollision,n,
