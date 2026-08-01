@@ -7,7 +7,3 @@
 3804,res/model/collision_wall/collision_wall_collision.x,28,1.5,22,0,0,0,1,Collision,n,
 3805,res/model/collision_wall/collision_wall_collision.x,-38,1.5,0,0,90,0,1,Collision,n,
 3806,res/model/collision_wall/collision_wall_collision.x,38,1.5,0,0,90,0,1,Collision,n,
-3807,res/model/cubeWood/cube_wood_collision.x,-42,0,-38,0,0,0,1,Collision,n,
-3808,res/model/cubeWood/cube_wood_collision.x,42,0,-38,0,0,0,1,Collision,n,
-3809,res/model/cubeWood/cube_wood_collision.x,-42,0,38,0,0,0,1,Collision,n,
-3810,res/model/cubeWood/cube_wood_collision.x,42,0,38,0,0,0,1,Collision,n,

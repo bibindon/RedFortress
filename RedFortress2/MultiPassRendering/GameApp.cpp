@@ -1649,7 +1649,7 @@ void GameApp::Run()
             }
 
             // 溶岩床によるダメージ（無敵モード中は歩ける）
-            if (m_playerInvincibleFrames <= 0)
+            if (m_playerInvincibleFrames <= 0 && !m_pickupManager.IsStarActive())
             {
                 const int lavaDamage = m_lavaZoneManager.GetContactDamage(m_playerMover.GetPosition());
                 if (lavaDamage > 0)
@@ -1754,11 +1754,25 @@ void GameApp::Run()
                 }
             }
 
-            UpdatePortal();
+            const bool isBossStage = IsBossStageNumber(m_stageManager.GetCurrentStageNumber());
+            if (!isBossStage)
+            {
+                UpdatePortal();
+            }
+
+            bool isStageClearReached = false;
+            if (isBossStage)
+            {
+                isStageClearReached = IsBossStageClearReached();
+            }
+            else
+            {
+                isStageClearReached = IsStageClearReached();
+            }
 
             if (!IsCurrentStageSelect() &&
                 !IsBaseId(m_stageManager.GetCurrentStage().id) &&
-                IsStageClearReached())
+                isStageClearReached)
             {
                 ClearBusters();
                 m_gameState = GameState::StageClear;
@@ -3628,6 +3642,37 @@ bool GameApp::AreAllStageEnemiesDefeated() const
     return true;
 }
 
+bool GameApp::IsBossStageClearReached() const
+{
+    const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+    if (!IsBossStageNumber(stage.number))
+    {
+        return false;
+    }
+
+    if (m_saveDataManager.IsStageCleared(stage.id))
+    {
+        return AreAllStageEnemiesDefeated();
+    }
+
+    bool hasBoss = false;
+    for (const auto& enemy : m_enemyManager.GetEnemies())
+    {
+        if (!enemy->IsBoss())
+        {
+            continue;
+        }
+
+        hasBoss = true;
+        if (!enemy->IsDead())
+        {
+            return false;
+        }
+    }
+
+    return hasBoss;
+}
+
 bool GameApp::ShouldShowGoalArrow() const
 {
     if (m_gameState != GameState::Playing)
@@ -3642,6 +3687,11 @@ bool GameApp::ShouldShowGoalArrow() const
 
     const int stageNumber = m_stageManager.GetCurrentStage().number;
     if (stageNumber < 1 || stageNumber > 32)
+    {
+        return false;
+    }
+
+    if (IsBossStageNumber(stageNumber))
     {
         return false;
     }
@@ -6716,6 +6766,10 @@ void GameApp::LoadCurrentStageObjects()
     const std::wstring currentRenderQuality = m_render.GetRenderQuality();
     m_render.ReloadSettingsCsv(renderSettingsPath);
     m_render.SetRenderQuality(currentRenderQuality);
+    if (stage.weather == StageManager::StageWeather::Rain)
+    {
+        m_render.SetPostEffectGodRay(false);
+    }
     ApplyStageEnvironmentLighting(stage.id);
     ConfigureStagePointLights(stage.id);
 
@@ -6783,7 +6837,9 @@ void GameApp::LoadCurrentStageObjects()
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
 
-    if (!IsStageSelectId(stage.id) && !IsBaseId(stage.id))
+    if (!IsStageSelectId(stage.id) &&
+        !IsBaseId(stage.id) &&
+        !IsBossStageNumber(stage.number))
     {
         InitializePortal(stage.clearPosition);
     }

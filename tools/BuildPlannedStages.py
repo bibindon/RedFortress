@@ -125,11 +125,8 @@ STAGES = (
     {"display": "2-8", "folder": "stage24", "world": 2, "theme": "地底湖の主",
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-22, 22), wall(22, 22), wall(-22, -22), wall(22, -22)),
-     "crates": (crate(-30, 30), crate(30, 30), crate(-30, -30), crate(30, -30)),
      "lava": (lava(-26, 0, 5), lava(26, 0, 5), lava(0, 26, 5), lava(0, -26, 5)),
-     "enemies": (enemy("golem", 0, 0, 180), enemy("small_golem", -14, 10),
-                 enemy("small_golem", 14, -10, 180)),
-     "items": (item("001", -34, 32), item("002", 34, 32), item("014", 34, -32), item("009", -34, -32))},
+     "enemies": (enemy("golem", 0, 0, 180),)},
 
     # World 3: 夕暮れの山岳遺跡
     {"display": "3-1", "folder": "stage9", "world": 3, "theme": "山麓の遺跡",
@@ -204,11 +201,7 @@ STAGES = (
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-28, -22), wall(28, -22), wall(-28, 22), wall(28, 22),
                wall(-38, 0, 90), wall(38, 0, 90)),
-     "crates": (crate(-42, -38), crate(42, -38), crate(-42, 38), crate(42, 38)),
-     "enemies": (enemy("golem", 0, 0, 180), enemy("bird", -24, -12, 0, 3),
-                 enemy("bird", 24, 12, 180, 3), enemy("skeleton", -24, 12),
-                 enemy("skeleton", 24, -12, 180)),
-     "items": (item("001", -46, -42), item("002", 46, -42), item("009", -46, 42), item("014", 46, 42))},
+     "enemies": (enemy("golem", 0, 0, 180),)},
 
     # World 4: 夜の要塞
     {"display": "4-1", "folder": "stage13", "world": 4, "theme": "外城門",
@@ -299,12 +292,7 @@ STAGES = (
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-34, -28), wall(34, -28), wall(-34, 28), wall(34, 28),
                wall(-44, 0, 90), wall(44, 0, 90)),
-     "crates": (crate(-46, -42), crate(46, -42), crate(-46, 42), crate(46, 42),
-                crate(-52, 0), crate(52, 0)),
-     "enemies": (enemy("kanata", 0, 0, 180, 1.5), enemy("golem", -24, -12),
-                 enemy("ghost", 24, -12, 180), enemy("skeleton", -24, 14),
-                 enemy("bird", 24, 14, 180, 3)),
-     "items": (item("001", -50, -44), item("002", 50, -44), item("003", -50, 44), item("004", 50, 44))},
+     "enemies": (enemy("kanata", 0, 0, 180, 1.5),)},
 )
 
 
@@ -337,8 +325,8 @@ def validate_stage(stage):
     world = stage["world"]
     enemy_count = len(stage["enemies"])
     if stage["display"].endswith("-8"):
-        if enemy_count < 3 or enemy_count > 10:
-            raise ValueError(stage["display"] + ": ボス戦の敵数が範囲外です")
+        if enemy_count != 1:
+            raise ValueError(stage["display"] + ": ボス戦はボス1体のみです")
     else:
         minimum = 4
         maximum = 6

@@ -5,10 +5,6 @@
 2802,../collision_wall/collision_wall.x,22,1.5,22,0,0,0,1,meshmix2
 2803,../collision_wall/collision_wall.x,-22,1.5,-22,0,0,0,1,meshmix2
 2804,../collision_wall/collision_wall.x,22,1.5,-22,0,0,0,1,meshmix2
-2805,../cubeWood/cube_wood.x,-30,0,30,0,0,0,1,normal
-2806,../cubeWood/cube_wood.x,30,0,30,0,0,0,1,normal
-2807,../cubeWood/cube_wood.x,-30,0,-30,0,0,0,1,normal
-2808,../cubeWood/cube_wood.x,30,0,-30,0,0,0,1,normal
 2809,../plateLava.x,-26,0.02,0,0,0,0,1.25,meshmix2
 2810,../plateLava.x,26,0.02,0,0,0,0,1.25,meshmix2
 2811,../plateLava.x,0,0.02,26,0,0,0,1.25,meshmix2
