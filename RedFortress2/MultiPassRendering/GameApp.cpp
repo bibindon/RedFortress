@@ -6077,14 +6077,17 @@ void GameApp::UpdateStageClear()
             return;
         }
 
-        const std::wstring storyScriptPath = GetStageStoryScriptPath(clearedStageId, L"After");
-        if (!storyScriptPath.empty())
+        if (m_stageClearWasFirstClear)
         {
-            m_slideShowManager.Start(storyScriptPath);
-            m_slideShowManager.SetStopOnFinish(false);
-            m_startStageAfterSlideShow = true;
-            m_gameState = GameState::SlideShow;
-            return;
+            const std::wstring storyScriptPath = GetStageStoryScriptPath(clearedStageId, L"After");
+            if (!storyScriptPath.empty())
+            {
+                m_slideShowManager.Start(storyScriptPath);
+                m_slideShowManager.SetStopOnFinish(false);
+                m_startStageAfterSlideShow = true;
+                m_gameState = GameState::SlideShow;
+                return;
+            }
         }
         if (StartStageAfterClear())
         {
@@ -6918,7 +6921,18 @@ bool GameApp::MoveToStageAfterClear()
 {
     const std::wstring clearedStageId = m_stageManager.GetCurrentStage().id;
     const int stageNumber = m_stageManager.GetCurrentStageNumber();
-    const std::size_t destinationIndex = m_stageManager.GetClearDestinationIndex(stageNumber);
+    std::size_t destinationIndex = m_stageManager.GetClearDestinationIndex(stageNumber);
+
+    if (IsBaseId(clearedStageId))
+    {
+        const int world = GetWorldFromStageId(clearedStageId);
+        if (world <= 0)
+        {
+            return false;
+        }
+        const std::wstring stageSelectId = L"select" + std::to_wstring(world);
+        destinationIndex = m_stageManager.FindStageIndexById(stageSelectId);
+    }
 
     if (destinationIndex >= m_stageManager.GetStageCount())
     {
