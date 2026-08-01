@@ -2553,6 +2553,10 @@ void GameApp::InitializeCameraFromRenderSettings()
     m_cameraPitch = asinf(ClampFloat(offset.y / distance, -1.0f, 1.0f));
     m_cameraPitch = ClampFloat(m_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
     m_cameraYaw = atan2f(offset.x, -offset.z);
+
+    // リスポーン時にカメラを初期位置へ戻すための初期値を保存する。
+    m_initialCameraDistance = m_cameraDistance;
+    m_initialCameraPitch = m_cameraPitch;
 }
 
 void GameApp::UpdateCameraByInput()
@@ -6391,7 +6395,8 @@ void GameApp::CompletePlayerDeath()
     // フェードイン完了時にフラグを戻す（ここで戻すと暗転が解除されない）。
 
     // 暗転中にスタート地点へ瞬間移動でリスポーン
-    const D3DXVECTOR3 respawnPos = m_stageManager.GetCurrentStage().playerStartPosition;
+    const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+    const D3DXVECTOR3 respawnPos = stage.playerStartPosition;
     m_playerMover.Reset(respawnPos);
     m_player.ResetHp();
     m_hpBar.Reset();
@@ -6412,6 +6417,17 @@ void GameApp::CompletePlayerDeath()
     m_playerAttackController.Reset();
     ResetBusterAimState();
     m_damagePopupManager.Clear();
+
+    // リスポーン時はカメラもステージ開始時と同じ初期位置（プレイヤー背後の視点）に戻す。
+    // 死亡直前にマウスで回転したカメラ角度が残っていると、暗転明けにカメラが
+    // 初期位置と異なる位置に見えるため、ステージ開始時と同じ yaw/pitch/距離 にリセットする。
+    m_playerYaw = CalculatePlayerStartYaw(stage);
+    if (!m_useFixedCamera)
+    {
+        m_cameraYaw = D3DX_PI - m_playerYaw;
+        m_cameraPitch = m_initialCameraPitch;
+        m_cameraDistance = m_initialCameraDistance;
+    }
 
     // 真っ暗のうちにメッシュとカメラをリスポーン位置へ即時同期する。
     // 死亡ブロック中は通常更新（UpdatePlayerMeshAndCamera）が走らないため、

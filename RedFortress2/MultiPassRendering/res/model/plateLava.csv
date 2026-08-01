@@ -1,0 +1,9 @@
+MeshType,Emit
+EmitIntensity,2.0
+EmitColor,255,255,255
+EmitPointLightIntensity,0.4
+EmitPointLightRange,10.0
+Wave,1
+WaveIntensity,0.05
+WaveSpeed,1.5
+WaveDensity,2.0

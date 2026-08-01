@@ -314,6 +314,10 @@ private:
     float m_cameraYaw = 0.0f;
     float m_cameraPitch = D3DXToRadian(18.0f);
     float m_cameraDistance = 10.0f;
+
+    // リスポーン時にカメラをステージ開始時の初期位置へ戻すための初期値。
+    float m_initialCameraPitch = D3DXToRadian(18.0f);
+    float m_initialCameraDistance = 10.0f;
     bool m_useFixedCamera = false;
     D3DXVECTOR3 m_fixedCameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_fixedCameraLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
