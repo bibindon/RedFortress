@@ -149,6 +149,7 @@ namespace
     const std::wstring kPortalFlagModelPath = L"res\\model\\portal\\black_flag.x";
     const std::wstring kPortalFlagAnimCsvPath = L"res\\model\\portal\\black_flag.csv";
     const int kPortalClearDelayFrames = 150;
+    const float kPortalPillarTouchRadius = 0.9f;
     const float kTitleSunLightIntensity = 0.45f;
     const float kTitleAmbientLightIntensity = 0.14f;
     const float kStagePortalClickRadius = 48.0f;
@@ -6392,20 +6393,16 @@ void GameApp::UpdatePortal()
         }
     }
 
-    // Step 2: When the pillar is visible and the player stands on the top
-    // tier, show the flag at the top of the stone steps and start the
-    // clear countdown.
+    // Step 2: When the player touches the light pillar, show the flag.
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const float dx = playerPos.x - m_portalBasePosition.x;
     const float dz = playerPos.z - m_portalBasePosition.z;
-    const float topY = m_portalBasePosition.y + 1.5f;
-    const bool playerOnTopTier =
-        (dx * dx + dz * dz <= 0.6f * 0.6f && playerPos.y >= topY - 0.2f);
+    const bool playerTouchingPillar =
+        dx * dx + dz * dz <= kPortalPillarTouchRadius * kPortalPillarTouchRadius;
 
-    if (m_portalPillarShown && !m_portalFlagShown && playerOnTopTier)
+    if (m_portalPillarShown && !m_portalFlagShown && playerTouchingPillar)
     {
-        // The flag stands at the center of the top tier. The small upward
-        // offset keeps the flag base from z-fighting with the step surface.
+        const float topY = m_portalBasePosition.y + 1.5f;
         const D3DXVECTOR3 flagPos(m_portalBasePosition.x,
                                   topY + 0.02f,
                                   m_portalBasePosition.z);
@@ -6427,16 +6424,13 @@ void GameApp::UpdatePortal()
         m_portalClearDelayFrames = kPortalClearDelayFrames;
     }
 
-    // Step 3: When the player touches the black flag, the light pillar
-    // disappears.
-    if (m_portalFlagShown && m_portalPillarShown && playerOnTopTier &&
-        m_portalPillarMeshId >= 0)
+    // Step 3: Remove the light pillar automatically after the flag appears.
+    if (m_portalFlagShown && m_portalPillarShown && m_portalPillarMeshId >= 0)
     {
         m_render.RemoveMeshMix(m_portalPillarMeshId);
         m_portalPillarMeshId = -1;
         m_portalPillarShown = false;
     }
-
     // Step 4: Count down after the flag has appeared.
     if (m_portalFlagShown && m_portalClearDelayFrames > 0)
     {
