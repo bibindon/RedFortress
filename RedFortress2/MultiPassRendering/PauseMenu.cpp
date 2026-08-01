@@ -56,12 +56,14 @@ const int kConfirmPromptX = 970;
 const int kConfirmPromptY = 650;
 const int kConfirmPromptWidth = 400;
 const int kConfirmPromptHeight = 36;
-const int kExitPanelReturnIndex = 0;
-const int kExitPanelGameIndex = 1;
+const int kExitPanelStageSelectIndex = 0;
+const int kExitPanelTitleIndex = 1;
+const int kExitPanelGameIndex = 2;
 const int kExitPanelButtonX = 980;
 const int kExitPanelButtonWidth = 460;
 const int kExitPanelButtonHeight = 56;
-const int kExitPanelReturnY = 510;
+const int kExitPanelStageSelectY = 450;
+const int kExitPanelTitleY = 525;
 const int kExitPanelGameY = 600;
 const std::size_t kVisibleItemCount = 11;
 const int kItemListX = 205;
@@ -180,10 +182,10 @@ void PauseMenu::Toggle()
         return;
     }
 
-    Open(m_saveEnabled, m_returnToStageSelectEnabled);
+    Open(m_saveEnabled, m_returnToStageSelectEnabled, m_returnToTitleEnabled);
 }
 
-void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabled)
+void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabled, const bool returnToTitleEnabled)
 {
     if (m_render == nullptr)
     {
@@ -197,17 +199,24 @@ void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabl
     m_saveRequested = false;
     m_saveEnabled = saveEnabled;
     m_returnToStageSelectRequested = false;
+    m_returnToTitleRequested = false;
     m_returnToStageSelectEnabled = returnToStageSelectEnabled;
+    m_returnToTitleEnabled = returnToTitleEnabled;
     m_skipInputFrame = true;
     m_focusArea = FocusArea::TopMenu;
     m_selectedSettingsRow = SettingsRow::Resolution;
     m_selectedTopMenuIndex = 0;
     m_activeTopMenuIndex = -1;
     m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+    m_exitConfirmAction = ExitConfirmAction::Game;
     m_selectedExitPanelIndex = kExitPanelGameIndex;
+    if (m_returnToTitleEnabled)
+    {
+        m_selectedExitPanelIndex = kExitPanelTitleIndex;
+    }
     if (m_returnToStageSelectEnabled)
     {
-        m_selectedExitPanelIndex = kExitPanelReturnIndex;
+        m_selectedExitPanelIndex = kExitPanelStageSelectIndex;
     }
     m_selectedResolutionIndex = 0;
     m_selectedWindowModeIndex = 0;
@@ -426,9 +435,13 @@ void PauseMenu::UpdateTopMenu()
             {
                 m_focusArea = FocusArea::ExitPanel;
                 m_selectedExitPanelIndex = kExitPanelGameIndex;
+                if (m_returnToTitleEnabled)
+                {
+                    m_selectedExitPanelIndex = kExitPanelTitleIndex;
+                }
                 if (m_returnToStageSelectEnabled)
                 {
-                    m_selectedExitPanelIndex = kExitPanelReturnIndex;
+                    m_selectedExitPanelIndex = kExitPanelStageSelectIndex;
                 }
             }
             return;
@@ -468,9 +481,13 @@ void PauseMenu::UpdateTopMenu()
         {
             m_focusArea = FocusArea::ExitPanel;
             m_selectedExitPanelIndex = kExitPanelGameIndex;
+            if (m_returnToTitleEnabled)
+            {
+                m_selectedExitPanelIndex = kExitPanelTitleIndex;
+            }
             if (m_returnToStageSelectEnabled)
             {
-                m_selectedExitPanelIndex = kExitPanelReturnIndex;
+                m_selectedExitPanelIndex = kExitPanelStageSelectIndex;
             }
         }
     }
@@ -484,20 +501,26 @@ void PauseMenu::UpdateTopMenu()
 
 void PauseMenu::UpdateExitPanel()
 {
-    if (IsMenuUpPressed() && m_returnToStageSelectEnabled)
+    int firstIndex = kExitPanelTitleIndex;
+    if (m_returnToStageSelectEnabled)
     {
-        if (m_selectedExitPanelIndex != kExitPanelReturnIndex)
+        firstIndex = kExitPanelStageSelectIndex;
+    }
+
+    if (IsMenuUpPressed())
+    {
+        if (m_selectedExitPanelIndex > firstIndex)
         {
-            m_selectedExitPanelIndex = kExitPanelReturnIndex;
+            --m_selectedExitPanelIndex;
             GameAudio::PlayMenuMove();
         }
     }
 
     if (IsMenuDownPressed())
     {
-        if (m_selectedExitPanelIndex != kExitPanelGameIndex)
+        if (m_selectedExitPanelIndex < kExitPanelGameIndex)
         {
-            m_selectedExitPanelIndex = kExitPanelGameIndex;
+            ++m_selectedExitPanelIndex;
             GameAudio::PlayMenuMove();
         }
     }
@@ -516,13 +539,29 @@ void PauseMenu::UpdateExitPanel()
             IsPointInRect(baseMouseX,
                           baseMouseY,
                           kExitPanelButtonX,
-                          kExitPanelReturnY,
+                          kExitPanelStageSelectY,
                           kExitPanelButtonWidth,
                           kExitPanelButtonHeight))
         {
             GameAudio::PlayMenuConfirm();
             m_returnToStageSelectRequested = true;
             Close();
+            return;
+        }
+
+        if (m_returnToTitleEnabled &&
+            IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitPanelButtonX,
+                          kExitPanelTitleY,
+                          kExitPanelButtonWidth,
+                          kExitPanelButtonHeight))
+        {
+            GameAudio::PlayMenuConfirm();
+            m_selectedExitPanelIndex = kExitPanelTitleIndex;
+            m_exitConfirmAction = ExitConfirmAction::Title;
+            m_showExitConfirm = true;
+            m_selectedExitConfirmIndex = kExitConfirmNoIndex;
             return;
         }
 
@@ -535,6 +574,7 @@ void PauseMenu::UpdateExitPanel()
         {
             GameAudio::PlayMenuConfirm();
             m_selectedExitPanelIndex = kExitPanelGameIndex;
+            m_exitConfirmAction = ExitConfirmAction::Game;
             m_showExitConfirm = true;
             m_selectedExitConfirmIndex = kExitConfirmNoIndex;
             return;
@@ -543,7 +583,8 @@ void PauseMenu::UpdateExitPanel()
 
     if (IsMenuConfirmPressed())
     {
-        if (m_selectedExitPanelIndex == kExitPanelReturnIndex && m_returnToStageSelectEnabled)
+        if (m_selectedExitPanelIndex == kExitPanelStageSelectIndex &&
+            m_returnToStageSelectEnabled)
         {
             GameAudio::PlayMenuConfirm();
             m_returnToStageSelectRequested = true;
@@ -551,7 +592,18 @@ void PauseMenu::UpdateExitPanel()
             return;
         }
 
+        if (m_selectedExitPanelIndex == kExitPanelTitleIndex &&
+            m_returnToTitleEnabled)
+        {
+            GameAudio::PlayMenuConfirm();
+            m_exitConfirmAction = ExitConfirmAction::Title;
+            m_showExitConfirm = true;
+            m_selectedExitConfirmIndex = kExitConfirmNoIndex;
+            return;
+        }
+
         GameAudio::PlayMenuConfirm();
+        m_exitConfirmAction = ExitConfirmAction::Game;
         m_showExitConfirm = true;
         m_selectedExitConfirmIndex = kExitConfirmNoIndex;
         return;
@@ -564,7 +616,6 @@ void PauseMenu::UpdateExitPanel()
         m_activeTopMenuIndex = -1;
     }
 }
-
 void PauseMenu::UpdateItemList()
 {
     if (IsMenuCancelPressed())
@@ -926,7 +977,14 @@ void PauseMenu::UpdateExitConfirm()
                           kExitConfirmButtonHeight))
         {
             GameAudio::PlayMenuConfirm();
-            m_exitRequested = true;
+            if (m_exitConfirmAction == ExitConfirmAction::Title)
+            {
+                m_returnToTitleRequested = true;
+            }
+            else
+            {
+                m_exitRequested = true;
+            }
             Close();
             return;
         }
@@ -950,7 +1008,14 @@ void PauseMenu::UpdateExitConfirm()
         if (m_selectedExitConfirmIndex == kExitConfirmYesIndex)
         {
             GameAudio::PlayMenuConfirm();
-            m_exitRequested = true;
+            if (m_exitConfirmAction == ExitConfirmAction::Title)
+            {
+                m_returnToTitleRequested = true;
+            }
+            else
+            {
+                m_exitRequested = true;
+            }
             Close();
             return;
         }
@@ -967,7 +1032,6 @@ void PauseMenu::UpdateExitConfirm()
         m_selectedExitConfirmIndex = kExitConfirmNoIndex;
     }
 }
-
 void PauseMenu::EnsureSelectedWeaponVisible()
 {
     if (m_selectedWeaponIndex < m_weaponScrollOffset)
@@ -1070,17 +1134,33 @@ void PauseMenu::RenderExitPanel()
     if (m_returnToStageSelectEnabled)
     {
         UINT returnColor = kInactiveTextColor;
-        if (m_selectedExitPanelIndex == kExitPanelReturnIndex)
+        if (m_selectedExitPanelIndex == kExitPanelStageSelectIndex)
         {
             returnColor = kSelectedTextColor;
         }
         m_render->DrawTextExCenter(m_menuItemFontId,
                                    L"ステージセレクトに戻る",
                                    kExitPanelButtonX,
-                                   kExitPanelReturnY,
+                                   kExitPanelStageSelectY,
                                    kExitPanelButtonWidth,
                                    kExitPanelButtonHeight,
                                    returnColor);
+    }
+
+    if (m_returnToTitleEnabled)
+    {
+        UINT titleColor = kInactiveTextColor;
+        if (m_selectedExitPanelIndex == kExitPanelTitleIndex)
+        {
+            titleColor = kSelectedTextColor;
+        }
+        m_render->DrawTextExCenter(m_menuItemFontId,
+                                   L"タイトルに戻る",
+                                   kExitPanelButtonX,
+                                   kExitPanelTitleY,
+                                   kExitPanelButtonWidth,
+                                   kExitPanelButtonHeight,
+                                   titleColor);
     }
 
     UINT gameExitColor = kInactiveTextColor;
@@ -1096,7 +1176,6 @@ void PauseMenu::RenderExitPanel()
                                kExitPanelButtonHeight,
                                gameExitColor);
 }
-
 void PauseMenu::RenderTopMenu()
 {
     for (std::size_t i = 0; i < kTopMenuItems.size(); ++i)
@@ -1424,8 +1503,14 @@ void PauseMenu::RenderExitConfirm()
         noColor = kSelectedTextColor;
     }
 
+    const wchar_t* confirmMessage = L"ゲームを終了しますか？";
+    if (m_exitConfirmAction == ExitConfirmAction::Title)
+    {
+        confirmMessage = L"タイトルに戻りますか？";
+    }
+
     m_render->DrawTextExCenter(m_qualityFontId,
-                               L"ゲームを終了しますか？",
+                               confirmMessage,
                                kConfirmPromptX,
                                kConfirmPromptY,
                                kConfirmPromptWidth,
@@ -1967,6 +2052,13 @@ bool PauseMenu::ConsumeReturnToStageSelectRequested()
 {
     const bool requested = m_returnToStageSelectRequested;
     m_returnToStageSelectRequested = false;
+    return requested;
+}
+
+bool PauseMenu::ConsumeReturnToTitleRequested()
+{
+    const bool requested = m_returnToTitleRequested;
+    m_returnToTitleRequested = false;
     return requested;
 }
 

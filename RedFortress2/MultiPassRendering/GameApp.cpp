@@ -929,7 +929,7 @@ void GameApp::Run()
             // ステージセレクト画面以外では、攻略済みかどうかにかかわらず
             // 「ステージセレクトに戻る」を常時有効にする。
             const bool returnToStageSelectEnabled = !IsCurrentStageSelect();
-            m_pauseMenu.Open(IsCurrentStageSelect(), returnToStageSelectEnabled);
+            m_pauseMenu.Open(IsCurrentStageSelect(), returnToStageSelectEnabled, true);
         }
 
         if (m_gameState != GameState::EndingFin &&
@@ -1194,6 +1194,11 @@ void GameApp::Run()
                 if (m_pauseMenu.ConsumeReturnToStageSelectRequested())
                 {
                     BeginStageExit();
+                    continue;
+                }
+                if (m_pauseMenu.ConsumeReturnToTitleRequested())
+                {
+                    BeginReturnToTitle();
                     continue;
                 }
                 if (!IsCurrentStageSelect())
@@ -5274,6 +5279,52 @@ void GameApp::EndStageLoadingScreen()
 
 void GameApp::UpdateStageTransition()
 {
+    if (m_stageTransitionAction == StageTransitionAction::ReturnToTitle)
+    {
+        if (m_render.GetFadeAlpha() < 1.0f)
+        {
+            if (IsCurrentStageSelect())
+            {
+                DrawStageSelectCursor();
+            }
+            m_render.Draw();
+            return;
+        }
+
+        BeginStageLoadingScreen();
+        const std::size_t titleStageIndex = m_stageManager.FindStageIndexById(L"select1");
+        if (titleStageIndex >= m_stageManager.GetStageCount())
+        {
+            throw std::runtime_error("Title stage was not found.");
+        }
+        if (!m_stageManager.MoveToStage(titleStageIndex))
+        {
+            throw std::runtime_error("Failed to move to the title stage.");
+        }
+
+        m_render.Draw();
+        LoadCurrentStageObjects();
+        m_render.SetLoadingScreenProgress(90);
+        m_render.SetFadeAlpha(1.0f);
+        m_stageTransitionAction = StageTransitionAction::WaitForTitleLoad;
+        return;
+    }
+
+    if (m_stageTransitionAction == StageTransitionAction::WaitForTitleLoad)
+    {
+        m_render.SetFadeAlpha(1.0f);
+        m_render.Draw();
+        if (!m_render.IsAllMeshLoaded())
+        {
+            return;
+        }
+
+        EndStageLoadingScreen();
+        CompleteReturnToTitle();
+        m_render.StartFadeIn(kStageSelectTransitionFadeDuration);
+        return;
+    }
+
     if (m_stageTransitionAction == StageTransitionAction::WaitForStageLoad)
     {
         m_render.SetFadeAlpha(1.0f);
@@ -6643,7 +6694,48 @@ void GameApp::ApplyTitleRenderSettings()
     m_render.SetAmbientLightBrightness(kTitleAmbientLightIntensity);
 }
 
-void GameApp::ReturnToTitleFromGameOver()
+void GameApp::BeginReturnToTitle()
+{
+    if (m_stageTransitionAction != StageTransitionAction::None)
+    {
+        return;
+    }
+
+    m_pauseMenu.Close();
+    if (m_craftMenu.IsOpen())
+    {
+        m_craftMenu.Close();
+    }
+
+    RestoreQteVisualEffectImmediate();
+    if (m_qte != nullptr)
+    {
+        m_qte->Finalize();
+        delete m_qte;
+        m_qte = nullptr;
+    }
+
+    m_render.SetSceneUpdatePaused(false);
+    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_pendingJump = false;
+    m_stageExitFrame = 0;
+    m_stageExitVisualOffsetY = 0.0f;
+    m_stageClearProcessed = false;
+    m_stageClearFrame = 0;
+    m_stageClearVisualOffsetY = 0.0f;
+    m_playerDeathPending = false;
+    m_playerFallingDead = false;
+    m_fallDeathFrames = 0;
+    m_gameOverPhase = GameOverPhase::None;
+    m_gameOverFadeFrames = 0;
+    m_startStageAfterSlideShow = false;
+    m_pendingStageIndexAfterSlideShow = static_cast<std::size_t>(-1);
+    m_stageTransitionIndex = static_cast<std::size_t>(-1);
+    m_stageTransitionAction = StageTransitionAction::ReturnToTitle;
+    m_render.StartFadeOut(kStageSelectTransitionFadeDuration);
+}
+
+void GameApp::CompleteReturnToTitle()
 {
     m_gameOverPhase = GameOverPhase::None;
     m_gameOverFadeFrames = 0;
@@ -6660,10 +6752,18 @@ void GameApp::ReturnToTitleFromGameOver()
     BuildTitleMainCommands();
     RefreshTitleCommands();
     ApplyTitleRenderSettings();
-    m_render.StartFadeIn(0.3f);
+    m_mouseCursorVisible = true;
+    InputDevice::Mouse::SetVisible(true);
+    ApplyMouseCursor();
     m_gameState = GameState::Title;
+    m_stageTransitionAction = StageTransitionAction::None;
+    m_stageTransitionIndex = static_cast<std::size_t>(-1);
 }
 
+void GameApp::ReturnToTitleFromGameOver()
+{
+    BeginReturnToTitle();
+}
 bool GameApp::StartNextStage()
 {
     if (!m_stageManager.MoveNextStage())

@@ -21,13 +21,14 @@ public:
                     bool& mouseCursorVisible,
                     InventoryManager& inventory);
     void Toggle();
-    void Open(bool saveEnabled, bool returnToStageSelectEnabled);
+    void Open(bool saveEnabled, bool returnToStageSelectEnabled, bool returnToTitleEnabled);
     void Close();
     void Update();
     void Render(const std::wstring& stageName, int lives);
     bool ConsumeExitRequested();
     bool ConsumeSaveRequested();
     bool ConsumeReturnToStageSelectRequested();
+    bool ConsumeReturnToTitleRequested();
     bool IsOpen() const;
     bool BlocksGameInput() const;
     void SetItemUseCallback(std::function<bool(const std::wstring&)> callback);
@@ -67,6 +68,12 @@ private:
         Resolution,
         WindowMode,
         Quality,
+    };
+
+    enum class ExitConfirmAction
+    {
+        Game,
+        Title,
     };
 
     void LoadItems();
@@ -127,13 +134,16 @@ private:
     bool m_saveEnabled = false;
     bool m_showSaveConfirm = false;
     bool m_returnToStageSelectRequested = false;
+    bool m_returnToTitleRequested = false;
     bool m_returnToStageSelectEnabled = false;
+    bool m_returnToTitleEnabled = false;
     int m_selectedSaveConfirmIndex = 0;
     FocusArea m_focusArea = FocusArea::TopMenu;
     SettingsRow m_selectedSettingsRow = SettingsRow::Resolution;
     int m_selectedTopMenuIndex = 0;
     int m_activeTopMenuIndex = -1;
     int m_selectedExitConfirmIndex = 0;
+    ExitConfirmAction m_exitConfirmAction = ExitConfirmAction::Game;
     int m_selectedExitPanelIndex = 0;
     int m_selectedResolutionIndex = 0;
     int m_selectedWindowModeIndex = 0;
