@@ -9,3 +9,6 @@
 320,res/model/cubeWood/cube_wood_collision.x,-10,0,10,0,0,0,1,Collision,n
 321,res/model/cubeWood/cube_wood_collision.x,10,0,-5,0,0,0,1,Collision,n
 322,res/model/cubeWood/cube_wood_collision.x,-10,0,-18,0,0,0,1,Collision,n
+350,res/model/plateLava.x,4,0.02,12,0,0,0,0.75,NonCollision,n
+351,res/model/plateLava.x,-5,0.02,-4,0,0,0,0.75,NonCollision,n
+352,res/model/plateLava.x,5,0.02,-17,0,0,0,0.75,NonCollision,n

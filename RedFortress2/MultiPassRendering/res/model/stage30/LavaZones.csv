@@ -1,5 +1,5 @@
-﻿ID,PosX,PosY,PosZ,Radius,Damage
-stage30-lava-01,-12,0,-22,4,25
-stage30-lava-02,12,0,-22,4,25
-stage30-lava-03,-12,0,22,4,25
-stage30-lava-04,12,0,22,4,25
+﻿ID,PhysicsID,Damage
+stage30-lava-01,4617,25
+stage30-lava-02,4618,25
+stage30-lava-03,4619,25
+stage30-lava-04,4620,25

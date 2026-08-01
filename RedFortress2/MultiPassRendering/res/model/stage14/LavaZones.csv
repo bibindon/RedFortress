@@ -1,5 +1,5 @@
-﻿ID,PosX,PosY,PosZ,Radius,Damage
-stage14-lava-01,-24,0,44,5,25
-stage14-lava-02,-10,0,44,5,25
-stage14-lava-03,10,0,44,5,25
-stage14-lava-04,24,0,44,5,25
+﻿ID,PhysicsID,Damage
+stage14-lava-01,4210,25
+stage14-lava-02,4211,25
+stage14-lava-03,4212,25
+stage14-lava-04,4213,25

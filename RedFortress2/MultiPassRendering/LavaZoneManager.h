@@ -10,8 +10,7 @@ public:
     struct LavaZone
     {
         std::wstring id;
-        D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        float radius = 0.0f;
+        int physicsCsvId = 0;
         int damage = 0;
     };
 

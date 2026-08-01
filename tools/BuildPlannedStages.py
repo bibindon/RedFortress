@@ -15,7 +15,7 @@ MOVE_HEADER = ("ID", "RenderID", "PhysicsID", "PosX", "PosY", "PosZ", "RotX", "R
 ENEMY_HEADER = ("Type", "PosX", "PosY", "PosZ", "RotY")
 DESTRUCTIBLE_HEADER = ("PosX", "PosY", "PosZ", "HP")
 COLLECTIBLE_HEADER = ("CollectibleID", "Type", "DataID", "PosX", "PosY", "PosZ", "Scale")
-LAVA_HEADER = ("ID", "PosX", "PosY", "PosZ", "Radius", "Damage")
+LAVA_HEADER = ("ID", "PhysicsID", "Damage")
 BOOSTER_HEADER = ("DashBoosterID", "PosX", "PosY", "PosZ", "DirX", "DirY", "DirZ",
                   "Speed", "Duration", "Radius", "Scale")
 SPEED_HEADER = ("PosX", "PosY", "PosZ")
@@ -403,11 +403,15 @@ def build_stage(stage):
                              x, y, z, 0, 0, 0, 1, "Collision", "y", ""))
         move_rows.append((platform_index, next_id, next_id, x, y, z, 0, 0, 0, 1,
                           x, y, z, end_x, end_y, end_z, duration))
+    lava_physics_ids = []
     for lava_index, values in enumerate(stage.get("lava", ()), start=1):
         x, y, z, radius, unused_damage = values
         next_id += 1
+        lava_physics_ids.append(next_id)
         render_rows.append((next_id, "../plateLava.x", x, y + 0.02, z, 0, 0, 0,
                             radius / 4.0, "meshmix2"))
+        physics_rows.append((next_id, "res/model/plateLava.x", x, y + 0.02, z, 0, 0, 0,
+                             radius / 4.0, "NonCollision", "n", ""))
 
     next_id += 1
     render_rows.append((next_id, sky_model, 0, 0.01, 0, 0, 0, 0, 1, "normal"))
@@ -426,7 +430,7 @@ def build_stage(stage):
     lava_rows = []
     for index, values in enumerate(stage.get("lava", ()), start=1):
         x, y, z, radius, damage = values
-        lava_rows.append((folder + "-lava-" + str(index).zfill(2), x, y, z, radius, damage))
+        lava_rows.append((folder + "-lava-" + str(index).zfill(2), lava_physics_ids[index - 1], damage))
     booster_rows = []
     for index, values in enumerate(stage.get("boosters", ()), start=1):
         booster_rows.append((folder + "-dashbooster-" + str(index).zfill(2),) + values)

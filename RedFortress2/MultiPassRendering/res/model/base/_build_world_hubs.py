@@ -337,7 +337,7 @@ def write_hub_csvs(hub):
     write_csv(output_dir / "SpeedUps.csv", ("PosX", "PosY", "PosZ"), ())
     write_csv(output_dir / "Destructibles.csv", ("PosX", "PosY", "PosZ", "HP"), ())
     write_csv(output_dir / "DashBoosters.csv", ("DashBoosterID", "PosX", "PosY", "PosZ", "DirX", "DirY", "DirZ", "Speed", "Duration", "Radius", "Scale"), ())
-    write_csv(output_dir / "LavaZones.csv", ("ID", "PosX", "PosY", "PosZ", "Radius", "Damage"), ())
+    write_csv(output_dir / "LavaZones.csv", ("ID", "PhysicsID", "Damage"), ())
 
 
 def main():

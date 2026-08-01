@@ -1,3 +1,2 @@
-﻿ID,PosX,PosY,PosZ,Radius,Damage
-stage23-lava-01,-18,0,-30,4,20
-stage23-lava-02,18,0,-30,4,20
+﻿ID,PhysicsID,Damage
+stage23-lava-01,2714,20

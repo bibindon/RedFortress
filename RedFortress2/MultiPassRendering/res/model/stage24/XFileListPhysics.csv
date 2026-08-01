@@ -9,3 +9,7 @@
 2806,res/model/cubeWood/cube_wood_collision.x,30,0,30,0,0,0,1,Collision,n,
 2807,res/model/cubeWood/cube_wood_collision.x,-30,0,-30,0,0,0,1,Collision,n,
 2808,res/model/cubeWood/cube_wood_collision.x,30,0,-30,0,0,0,1,Collision,n,
+2809,res/model/plateLava.x,-26,0.02,0,0,0,0,1.25,NonCollision,n,
+2810,res/model/plateLava.x,26,0.02,0,0,0,0,1.25,NonCollision,n,
+2811,res/model/plateLava.x,0,0.02,26,0,0,0,1.25,NonCollision,n,
+2812,res/model/plateLava.x,0,0.02,-26,0,0,0,1.25,NonCollision,n,

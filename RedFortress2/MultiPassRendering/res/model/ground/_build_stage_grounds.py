@@ -256,12 +256,28 @@ def rectangle_intersects_pit(rectangle, pit, margin=0.0):
 
 def load_lava_zones(stage):
     zones = []
-    lava_path = MODEL_DIR / stage["folder"] / "LavaZones.csv"
-    if not lava_path.exists():
+    stage_dir = MODEL_DIR / stage["folder"]
+    lava_path = stage_dir / "LavaZones.csv"
+    physics_path = stage_dir / "XFileListPhysics.csv"
+    if not lava_path.exists() or not physics_path.exists():
         return zones
+
+    plate_bounds = {}
+    with physics_path.open("r", encoding="utf-8-sig", newline="") as file:
+        for row in csv.DictReader(file):
+            filename = row.get("FileName", "").lower()
+            if "platelava" not in filename:
+                continue
+            csv_id = int(row["ID"])
+            scale = float(row["Scale"])
+            plate_bounds[csv_id] = (float(row["PosX"]), float(row["PosZ"]), 4.0 * scale)
+
     with lava_path.open("r", encoding="utf-8-sig", newline="") as file:
         for row in csv.DictReader(file):
-            zones.append((float(row["PosX"]), float(row["PosZ"]), float(row["Radius"])))
+            physics_id = int(row["PhysicsID"])
+            if physics_id in plate_bounds:
+                x, z, half_size = plate_bounds[physics_id]
+                zones.append((x, z, half_size))
     return zones
 
 
