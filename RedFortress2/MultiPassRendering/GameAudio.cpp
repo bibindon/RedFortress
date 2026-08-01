@@ -72,6 +72,9 @@ int g_hyperModeId = -1;
 int g_currentBgmVolume = 0;
 int g_effectiveBgmVolume = -1;
 bool g_initialized = false;
+bool g_bgmFadeOutActive = false;
+int g_bgmFadeOutFramesRemaining = 0;
+int g_bgmFadeOutTotalFrames = 0;
 bool g_recoveryPending = false;
 bool g_hyperModeRequested = false;
 ULONGLONG g_nextRecoveryTick = 0;
@@ -85,6 +88,9 @@ void ResetTrackingState()
     g_hyperModeId = -1;
     g_currentBgmVolume = 0;
     g_effectiveBgmVolume = -1;
+    g_bgmFadeOutActive = false;
+    g_bgmFadeOutFramesRemaining = 0;
+    g_bgmFadeOutTotalFrames = 0;
 }
 
 void BeginAudioDeviceRecovery()
@@ -147,6 +153,9 @@ void PlayBgmIfChanged(const std::wstring& path, const int volume)
     if (g_currentBgm == path)
     {
         g_currentBgmVolume = volume;
+        g_bgmFadeOutActive = false;
+        g_bgmFadeOutFramesRemaining = 0;
+        g_bgmFadeOutTotalFrames = 0;
         ApplyCurrentBgmVolume();
         return;
     }
@@ -164,6 +173,9 @@ void PlayBgmIfChanged(const std::wstring& path, const int volume)
     g_currentBgm = path;
     g_currentBgmVolume = volume;
     g_effectiveBgmVolume = effectiveVolume;
+    g_bgmFadeOutActive = false;
+    g_bgmFadeOutFramesRemaining = 0;
+    g_bgmFadeOutTotalFrames = 0;
 }
 
 void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
@@ -195,6 +207,9 @@ void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
 
 void StopBgmIfPlaying()
 {
+    g_bgmFadeOutActive = false;
+    g_bgmFadeOutFramesRemaining = 0;
+    g_bgmFadeOutTotalFrames = 0;
     if (!g_initialized)
     {
         return;
@@ -238,6 +253,61 @@ void StopEnvironment()
         g_environmentId = -1;
     }
     g_currentEnvironment.clear();
+}
+
+void BeginBgmFadeOutInternal(const int frames)
+{
+    if (!g_initialized || g_currentBgm.empty())
+    {
+        return;
+    }
+
+    if (frames <= 0)
+    {
+        StopBgmIfPlaying();
+        return;
+    }
+
+    g_bgmFadeOutActive = true;
+    g_bgmFadeOutFramesRemaining = frames;
+    g_bgmFadeOutTotalFrames = frames;
+}
+
+void UpdateBgmFadeOutInternal()
+{
+    if (!g_bgmFadeOutActive)
+    {
+        return;
+    }
+
+    if (!g_initialized || g_currentBgm.empty())
+    {
+        g_bgmFadeOutActive = false;
+        return;
+    }
+
+    if (g_bgmFadeOutFramesRemaining > 0)
+    {
+        --g_bgmFadeOutFramesRemaining;
+    }
+
+    const int volume = g_currentBgmVolume * g_bgmFadeOutFramesRemaining /
+                       g_bgmFadeOutTotalFrames;
+    try
+    {
+        SoundLib::SoundLib::SetBgmVolume(volume);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
+    g_effectiveBgmVolume = volume;
+
+    if (g_bgmFadeOutFramesRemaining <= 0)
+    {
+        StopBgmIfPlaying();
+    }
 }
 
 void PlayEffect(const std::wstring& path, const int volume)
@@ -483,6 +553,9 @@ void PlayMenuMove() { PlayEffect(kMenuMove, 70); }
 void PlayMenuConfirm() { PlayEffect(kMenuConfirm, 78); }
 void PlayMenuCancel() { PlayEffect(kMenuCancel, 72); }
 void PlaySaveComplete() { PlayEffect(kSaveComplete, 78); }
+void BeginBgmFadeOut(const int frames) { BeginBgmFadeOutInternal(frames); }
+void UpdateBgmFadeOut() { UpdateBgmFadeOutInternal(); }
+void PlayBossDefeat() { PlayEffect(kPlayerDeath, 92); }
 void PlayStageSelectMove() { PlayEffect(kStageSelectMove, 72); }
 void PlayStageSelectConfirm() { PlayEffect(kStageSelectConfirm, 78); }
 void PlayPlayerAttack() { PlayEffect(kPlayerAttack, 82); }

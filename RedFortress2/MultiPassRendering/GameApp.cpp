@@ -282,6 +282,12 @@ namespace
     const float kStageExitRiseHeight = 1.2f;
     const float kStageExitAnimationSpeed = 1.2f;
     const float kStageExitFadeDurationSeconds = 0.35f;
+    const int kBossDefeatDurationFrames = 120;
+    const int kBossDefeatCameraMoveFrames = 42;
+    const int kBossDefeatBgmFadeFrames = 36;
+    const int kBossDefeatSoundFrame = 42;
+    const int kBossDefeatFogRefreshFrame = 28;
+    const float kBossDefeatTargetFovDegrees = 64.0f;
     const int kQteVisualRestoreFrames = 24;
     const float kQteVisualMinSaturate = 0.10f;
     const float kQteVisualMaxFovReduction = 18.0f;
@@ -1117,6 +1123,10 @@ void GameApp::Run()
         {
             UpdateStageExit();
         }
+        else if (m_gameState == GameState::BossDefeat)
+        {
+            UpdateBossDefeat();
+        }
         else if (m_gameState == GameState::GameOver)
         {
             UpdateGameOver();
@@ -1784,9 +1794,26 @@ void GameApp::Run()
                 isStageClearReached)
             {
                 ClearBusters();
-                m_gameState = GameState::StageClear;
-                m_stageClearProcessed = false;
-                m_stageClearFrame = 0;
+                if (isBossStage &&
+                    !m_saveDataManager.IsStageCleared(m_stageManager.GetCurrentStage().id))
+                {
+                    D3DXVECTOR3 defeatedBossPosition = m_playerMover.GetPosition();
+                    for (const auto& enemy : m_enemyManager.GetEnemies())
+                    {
+                        if (enemy->IsBoss() && enemy->IsDead())
+                        {
+                            defeatedBossPosition = enemy->GetPosition();
+                            break;
+                        }
+                    }
+                    BeginBossDefeat(defeatedBossPosition);
+                }
+                else
+                {
+                    m_gameState = GameState::StageClear;
+                    m_stageClearProcessed = false;
+                    m_stageClearFrame = 0;
+                }
             }
 
             if (m_playerMover.JustJumped())
@@ -2205,6 +2232,8 @@ const char* GameApp::GetDebugGameStateName() const
         return "Playing";
     case GameState::StageExit:
         return "StageExit";
+    case GameState::BossDefeat:
+        return "BossDefeat";
     case GameState::StageClear:
         return "StageClear";
     case GameState::GameOver:
@@ -5908,6 +5937,98 @@ void GameApp::UpdateStageExit()
 
     m_render.Draw();
     ++m_stageExitFrame;
+}
+
+void GameApp::BeginBossDefeat(const D3DXVECTOR3& bossPosition)
+{
+    m_pauseMenu.Close();
+    m_mouseCursorVisible = false;
+    InputDevice::Mouse::SetVisible(false);
+    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_pendingJump = false;
+    m_bossDefeatFrame = 0;
+    m_bossDefeatPosition = bossPosition;
+    m_bossDefeatCameraStartPos = m_render.GetCameraPos();
+    m_bossDefeatCameraStartTarget = m_render.GetLookAtPos();
+    m_bossDefeatStoredFovDegrees = m_render.GetCameraHorizontalFovDegrees();
+    m_bossDefeatUsesFixedCamera = m_useFixedCamera;
+    m_bossDefeatCameraEndTarget = bossPosition + D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+    m_bossDefeatCameraEndPos = m_bossDefeatCameraStartPos;
+
+    if (!m_bossDefeatUsesFixedCamera)
+    {
+        D3DXVECTOR3 cameraOffset = m_bossDefeatCameraStartPos - m_bossDefeatCameraStartTarget;
+        if (D3DXVec3LengthSq(&cameraOffset) <= 0.0001f)
+        {
+            cameraOffset = D3DXVECTOR3(0.0f, 2.0f, 5.0f);
+        }
+        m_bossDefeatCameraEndPos = m_cameraMover.ResolvePosition(
+            m_bossDefeatCameraEndTarget,
+            m_bossDefeatCameraEndTarget + cameraOffset);
+    }
+
+    m_render.SetCameraShakeDuration(0.24f);
+    m_render.SetCameraShakeIntensity(0.045f);
+    m_render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Fog,
+                                 bossPosition + D3DXVECTOR3(0.0f, 0.8f, 0.0f));
+    GameAudio::BeginBgmFadeOut(kBossDefeatBgmFadeFrames);
+    SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+    m_gameState = GameState::BossDefeat;
+}
+
+void GameApp::UpdateBossDefeat()
+{
+    if (m_bossDefeatFrame == kBossDefeatFogRefreshFrame)
+    {
+        m_render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Fog,
+                                     m_bossDefeatPosition + D3DXVECTOR3(0.0f, 1.2f, 0.0f));
+    }
+
+    if (m_bossDefeatFrame == kBossDefeatSoundFrame)
+    {
+        GameAudio::PlayBossDefeat();
+    }
+
+    GameAudio::UpdateBgmFadeOut();
+    m_enemyManager.Update(m_render, m_playerMover.GetPosition(), true);
+    m_enemyManager.SyncMeshes(m_render);
+    UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+
+    if (!m_bossDefeatUsesFixedCamera)
+    {
+        float rawCameraT = static_cast<float>(m_bossDefeatFrame + 1) /
+                           static_cast<float>(kBossDefeatCameraMoveFrames);
+        if (rawCameraT > 1.0f)
+        {
+            rawCameraT = 1.0f;
+        }
+        const float cameraT = SmoothStep01(rawCameraT);
+        const D3DXVECTOR3 cameraPosition = LerpVector3(m_bossDefeatCameraStartPos,
+                                                       m_bossDefeatCameraEndPos,
+                                                       cameraT);
+        const D3DXVECTOR3 cameraTarget = LerpVector3(m_bossDefeatCameraStartTarget,
+                                                     m_bossDefeatCameraEndTarget,
+                                                     cameraT);
+        const float fovDegrees = LerpFloat(m_bossDefeatStoredFovDegrees,
+                                           kBossDefeatTargetFovDegrees,
+                                           cameraT);
+        m_render.SetCamera(cameraPosition, cameraTarget);
+        m_render.SetCameraHorizontalFovDegrees(fovDegrees);
+    }
+
+    if (m_bossDefeatFrame >= kBossDefeatDurationFrames)
+    {
+        m_render.SetCameraShakeDuration(0.0f);
+        m_render.SetCameraShakeIntensity(0.0f);
+        m_render.SetCameraHorizontalFovDegrees(m_bossDefeatStoredFovDegrees);
+        m_gameState = GameState::StageClear;
+        m_stageClearProcessed = false;
+        m_stageClearFrame = 0;
+        return;
+    }
+
+    m_render.Draw();
+    ++m_bossDefeatFrame;
 }
 
 void GameApp::UpdateStageClear()

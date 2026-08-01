@@ -112,6 +112,8 @@ private:
     void UpdateTitleByInput();
     void BeginStageExit();
     void UpdateStageExit();
+    void BeginBossDefeat(const D3DXVECTOR3& bossPosition);
+    void UpdateBossDefeat();
     void UpdateStageClear();
     bool IsStageClearReached();
     void BeginStageClearVisual();
@@ -253,7 +255,7 @@ private:
     int GetHitStopFrames(PlayerAttackType attackType) const;
 
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash, BusterAim, BusterLower };
-    enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageExit, StageClear, GameOver, Ending, EndingFin };
+    enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageExit, BossDefeat, StageClear, GameOver, Ending, EndingFin };
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
     enum class RespawnPhase { None, FadeOut, HoldBlack, FadeIn };
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
@@ -371,6 +373,14 @@ private:
     int m_fallDeathFrames = 0;
     int m_stageExitFrame = 0;
     float m_stageExitVisualOffsetY = 0.0f;
+    int m_bossDefeatFrame = 0;
+    D3DXVECTOR3 m_bossDefeatPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_bossDefeatCameraStartPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_bossDefeatCameraStartTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_bossDefeatCameraEndPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 m_bossDefeatCameraEndTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    float m_bossDefeatStoredFovDegrees = 90.0f;
+    bool m_bossDefeatUsesFixedCamera = false;
     bool m_stageClearProcessed = false;
     bool m_stageClearWasFirstClear = false;
     int m_stageClearFrame = 0;
