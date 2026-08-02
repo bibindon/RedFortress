@@ -181,6 +181,12 @@ void DestructibleManager::LoadForStage(NSRender::Render& render, const std::wstr
             obj.hp = hp;
         }
 
+        if (cells.size() >= 5)
+        {
+            obj.dropItemId = cells.at(4);
+            obj.hasExplicitDrop = true;
+        }
+
         obj.meshId = m_render->AddMeshMix(kModelPath,
                                            obj.position,
                                            kDefaultRotation,
@@ -250,7 +256,7 @@ void DestructibleManager::Update(NSRender::Render& render)
                     obj.isDead = true;
                     render.RemoveMeshMix(obj.meshId);
                     DisablePhysicsObject(obj.physicsId);
-                    TryDropItem(render, obj.position);
+                    TryDropItem(render, obj);
                 }
                 else
                 {
@@ -471,8 +477,19 @@ bool DestructibleManager::DropAmmoHeart(NSRender::Render& render, const D3DXVECT
     return true;
 }
 
-void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR3& pos)
+void DestructibleManager::TryDropItem(NSRender::Render& render, const DestructibleObject& obj)
 {
+    if (obj.hasExplicitDrop)
+    {
+        if (obj.dropItemId.empty() || obj.dropItemId == L"None")
+        {
+            return;
+        }
+
+        DropRedCube(render, obj.position, obj.dropItemId);
+        return;
+    }
+
     const int r = GetRandomPercent();
 
     if (r < 80)
@@ -498,5 +515,5 @@ void DestructibleManager::TryDropItem(NSRender::Render& render, const D3DXVECTOR
         return;
     }
 
-    DropRedCube(render, pos, GetRandomCraftMaterialItemId());
+    DropRedCube(render, obj.position, GetRandomCraftMaterialItemId());
 }

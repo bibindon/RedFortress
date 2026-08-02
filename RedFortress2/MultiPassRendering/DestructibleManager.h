@@ -22,6 +22,8 @@ struct DestructibleObject
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int maxHp = kDestructibleDefaultHp;
     int hp = kDestructibleDefaultHp;
+    std::wstring dropItemId;
+    bool hasExplicitDrop = false;
     int blinkFrames = 0;
     bool isDead = false;
 };
@@ -75,7 +77,7 @@ public:
 private:
     bool DropRedCube(NSRender::Render& render, const D3DXVECTOR3& pos, const std::wstring& itemId);
     bool DropAmmoHeart(NSRender::Render& render, const D3DXVECTOR3& pos);
-    void TryDropItem(NSRender::Render& render, const D3DXVECTOR3& pos);
+    void TryDropItem(NSRender::Render& render, const DestructibleObject& obj);
 
     NSRender::Render* m_render = nullptr;
     std::vector<DestructibleObject> m_objects;

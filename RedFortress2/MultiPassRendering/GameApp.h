@@ -434,6 +434,7 @@ D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_portalPillarShown = false;
     bool m_portalFlagShown = false;
     int m_portalClearDelayFrames = 0;
+    bool m_stageClearInputLocked = false;
     D3DXVECTOR3 m_portalBasePosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
     D3DXVECTOR3 m_stageSelectPlayerMoveStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

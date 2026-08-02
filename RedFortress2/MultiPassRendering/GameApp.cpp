@@ -945,6 +945,7 @@ void GameApp::Run()
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
+            !m_stageClearInputLocked &&
             !IsHitStopActive() &&
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
              InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_START)))
@@ -960,6 +961,7 @@ void GameApp::Run()
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
+            !m_stageClearInputLocked &&
             !IsHitStopActive() &&
             (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LCONTROL) ||
              InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RCONTROL)))
@@ -973,6 +975,7 @@ void GameApp::Run()
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
             !m_playerDeathPending &&
+            !m_stageClearInputLocked &&
             !IsHitStopActive() &&
             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_R))
         {
@@ -1335,13 +1338,16 @@ void GameApp::Run()
             {
                 // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
                 // 固定カメラ時もマウスによる回転を無効化する。
-                if (!m_mouseCursorVisible && !m_useFixedCamera)
+                if (!m_stageClearInputLocked && !m_mouseCursorVisible && !m_useFixedCamera)
                 {
                     UpdateCameraByInput();
                 }
 
                 // 入力処理 → メッシュ位置・カメラ設定（衝突判定前）
-                UpdatePlayerByInput();
+                if (!m_stageClearInputLocked)
+                {
+                    UpdatePlayerByInput();
+                }
 
                 // 敵の更新
                 if (m_debugEnemyUpdateEnabled)
@@ -1357,7 +1363,7 @@ void GameApp::Run()
                 {
                     UpdateStageSelectCursorByInput();
                 }
-                else
+                else if (!m_stageClearInputLocked)
                 {
                     // インタラクト通知とQTE起動判定
                     m_interactionManager.Update(m_playerMover.GetPosition());
@@ -1417,7 +1423,7 @@ void GameApp::Run()
                     }
                 }
 
-                if (!isStageSelect && m_stagePortalCooldownFrames <= 0)
+                if (!isStageSelect && !m_stageClearInputLocked && m_stagePortalCooldownFrames <= 0)
                 {
                     const std::wstring portalId = m_interactionManager.GetNearestOfType(
                         m_playerMover.GetPosition(), L"StagePortal");
@@ -1626,7 +1632,9 @@ void GameApp::Run()
                     }
                 }
 
-                if (m_qte == nullptr && m_playerAttackController.ConsumeHitRequested())
+                if (!m_stageClearInputLocked &&
+                    m_qte == nullptr &&
+                    m_playerAttackController.ConsumeHitRequested())
                 {
                     const PlayerAttackDefinition& attackDefinition = m_playerAttackController.GetCurrentDefinition();
                     const PlayerAttackType attackType = m_playerAttackController.GetCurrentAttackType();
@@ -6332,6 +6340,7 @@ void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
     m_portalPillarShown = false;
     m_portalFlagShown = false;
     m_portalClearDelayFrames = 0;
+    m_stageClearInputLocked = false;
 }
 
 
@@ -6356,6 +6365,7 @@ void GameApp::RemovePortal()
     m_portalPillarShown = false;
     m_portalFlagShown = false;
     m_portalClearDelayFrames = 0;
+    m_stageClearInputLocked = false;
 }
 
 
@@ -6422,6 +6432,9 @@ void GameApp::UpdatePortal()
         }
         m_portalFlagShown = true;
         m_portalClearDelayFrames = kPortalClearDelayFrames;
+        m_stageClearInputLocked = true;
+        m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        m_pendingJump = false;
     }
 
     // Step 3: Remove the light pillar automatically after the flag appears.
