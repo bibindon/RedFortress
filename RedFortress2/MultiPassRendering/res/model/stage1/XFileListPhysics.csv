@@ -9,3 +9,6 @@
 22,res/model/cubeWood/cube_wood_collision.x,-5,0,8,0,0,0,1,Collision,n
 23,res/model/cubeWood/cube_wood_collision.x,7,0,19,0,0,0,1,Collision,n
 27,res/model/tree2Physics/tree_cylinder_collision.x,10,0,22,0,0,0,1,Collision,n
+303,res/model/collision_wall/collision_wall_tall_collision.x,-10,1.5,-20,0,90,0,1,Collision,n
+304,res/model/collision_wall/collision_wall_tall_collision.x,10,1.5,0,0,90,0,1,Collision,n
+305,res/model/collision_wall/collision_wall_tall_collision.x,-10,1.5,20,0,90,0,1,Collision,n

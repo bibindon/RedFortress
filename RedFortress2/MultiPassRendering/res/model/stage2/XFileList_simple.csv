@@ -53,3 +53,6 @@
 1323,../cubeWood/cube_wood.x,0,0,-10,0,15,0,1,normal
 1324,../cubeWood/cube_wood.x,0,0,10,0,-15,0,1,normal
 1325,../cubeWood/cube_wood.x,7,0,22,0,10,0,1,normal
+1326,../collision_wall/collision_wall_tall.x,-10,1.5,-20,0,90,0,1,meshmix2
+1327,../collision_wall/collision_wall_tall.x,10,1.5,0,0,90,0,1,meshmix2
+1328,../collision_wall/collision_wall_tall.x,-10,1.5,20,0,90,0,1,meshmix2

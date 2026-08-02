@@ -27,3 +27,6 @@
 3823,res/model/cubeWood/cube_wood_collision.x,-4,0,2,0,15,0,1,Collision,n
 3824,res/model/cubeWood/cube_wood_collision.x,5,0,-4,0,-15,0,1,Collision,n
 3825,res/model/cubeWood/cube_wood_collision.x,0,0,-20,0,0,0,1,Collision,n
+3826,res/model/collision_wall/collision_wall_tall_collision.x,-42,1.5,-42,0,0,0,1,Collision,n
+3827,res/model/collision_wall/collision_wall_tall_collision.x,0,1.5,0,0,90,0,1,Collision,n
+3828,res/model/collision_wall/collision_wall_tall_collision.x,42,1.5,42,0,0,0,1,Collision,n

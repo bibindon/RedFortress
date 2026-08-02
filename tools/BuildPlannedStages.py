@@ -321,6 +321,14 @@ def add_boundaries(render_rows, half_width, half_depth):
         z += 8
 
 
+def additional_tall_walls(stage, half_depth):
+    if stage["folder"] in ("stage1", "stage2", "stage3", "stage4"):
+        return (wall(-10, -20, 90), wall(10, 0, 90), wall(-10, 20, 90))
+    depth_offset = 42
+    if half_depth >= 120:
+        depth_offset = 72
+    return (wall(-42, -depth_offset), wall(0, 0, 90), wall(42, depth_offset))
+
 def validate_stage(stage):
     world = stage["world"]
     enemy_count = len(stage["enemies"])
@@ -404,7 +412,12 @@ def build_stage(stage):
     next_id += 1
     render_rows.append((next_id, sky_model, 0, 0.01, 0, 0, 0, 0, 1, "normal"))
     add_boundaries(render_rows, half_width, half_depth)
-
+    next_id = max(next_id, 9000)
+    for x, y, z, rotation in additional_tall_walls(stage, half_depth):
+        next_id += 1
+        render_rows.append((next_id, "../collision_wall/collision_wall_tall.x", x, y, z, 0, rotation, 0, 1, "meshmix2"))
+        physics_rows.append((next_id, "res/model/collision_wall/collision_wall_tall_collision.x",
+                             x, y, z, 0, rotation, 0, 1, "Collision", "n", ""))
     enemy_rows = list(stage["enemies"])
     destructible_rows = []
     for index, values in enumerate(stage.get("crates", ())):

@@ -30,3 +30,6 @@
 222,../fence.x,15,0.5,14,0,90,0,1,normal
 223,../fence.x,15,0.5,22,0,90,0,1,normal
 224,../fence.x,15,0.5,30,0,90,0,1,normal
+327,../collision_wall/collision_wall_tall.x,-42,1.5,-42,0,0,0,1,meshmix2
+328,../collision_wall/collision_wall_tall.x,0,1.5,0,0,90,0,1,meshmix2
+329,../collision_wall/collision_wall_tall.x,42,1.5,42,0,0,0,1,meshmix2

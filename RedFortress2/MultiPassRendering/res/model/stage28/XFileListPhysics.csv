@@ -7,3 +7,6 @@
 3804,res/model/collision_wall/collision_wall_collision.x,28,1.5,22,0,0,0,1,Collision,n,
 3805,res/model/collision_wall/collision_wall_collision.x,-38,1.5,0,0,90,0,1,Collision,n,
 3806,res/model/collision_wall/collision_wall_collision.x,38,1.5,0,0,90,0,1,Collision,n,
+8090,res/model/collision_wall/collision_wall_tall_collision.x,-42,1.5,-72,0,0,0,1,Collision,n
+8091,res/model/collision_wall/collision_wall_tall_collision.x,0,1.5,0,0,90,0,1,Collision,n
+8092,res/model/collision_wall/collision_wall_tall_collision.x,42,1.5,72,0,0,0,1,Collision,n

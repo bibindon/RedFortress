@@ -15,3 +15,6 @@
 2412,res/model/plateLava.x,-12,0.02,-8,0,0,0,1.25,NonCollision,n,
 2413,res/model/plateLava.x,0,0.02,-8,0,0,0,1.25,NonCollision,n,
 2414,res/model/plateLava.x,12,0.02,-8,0,0,0,1.25,NonCollision,n,
+8060,res/model/collision_wall/collision_wall_tall_collision.x,-42,1.5,-42,0,0,0,1,Collision,n
+8061,res/model/collision_wall/collision_wall_tall_collision.x,0,1.5,0,0,90,0,1,Collision,n
+8062,res/model/collision_wall/collision_wall_tall_collision.x,42,1.5,42,0,0,0,1,Collision,n

@@ -102,3 +102,6 @@
 8087,../fence.x,60,0.5,108,0,90,0,1,normal
 8088,../fence.x,-60,0.5,116,0,90,0,1,normal
 8089,../fence.x,60,0.5,116,0,90,0,1,normal
+8090,../collision_wall/collision_wall_tall.x,-42,1.5,-72,0,0,0,1,meshmix2
+8091,../collision_wall/collision_wall_tall.x,0,1.5,0,0,90,0,1,meshmix2
+8092,../collision_wall/collision_wall_tall.x,42,1.5,72,0,0,0,1,meshmix2

@@ -52,3 +52,6 @@
 3823,../cubeWood/cube_wood.x,-4,0,2,0,15,0,1,normal
 3824,../cubeWood/cube_wood.x,5,0,-4,0,-15,0,1,normal
 3825,../cubeWood/cube_wood.x,0,0,-20,0,0,0,1,normal
+3826,../collision_wall/collision_wall_tall.x,-42,1.5,-42,0,0,0,1,meshmix2
+3827,../collision_wall/collision_wall_tall.x,0,1.5,0,0,90,0,1,meshmix2
+3828,../collision_wall/collision_wall_tall.x,42,1.5,42,0,0,0,1,meshmix2
