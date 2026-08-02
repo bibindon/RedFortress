@@ -47,7 +47,30 @@ STAGES = (
     {"display": "1-3", "folder": "stage3", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-2.0, 2.0, -6.0, 6.0),)},
     {"display": "1-4", "folder": "stage4", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-13.0, -9.0, -15.0, -11.0), (8.0, 12.0, -20.0, -12.0))},
     {"display": "1-5", "folder": "stage17", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-13.0, -10.0, 4.0, 9.0), (10.0, 13.0, -8.0, -2.0))},
-    {"display": "1-6", "folder": "stage18", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-13.0, -10.0, -12.0, -4.0), (10.0, 13.0, 4.0, 12.0))},
+    {"display": "1-6", "folder": "stage18", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0),
+     "pits": ((-14.8, -9.5, -29.8, -6.0), (-14.8, -11.5, 6.0, 29.8),
+              (-11.5, -9.5, 9.0, 10.5), (-11.5, -10.0, 13.0, 29.8),
+              (-10.0, -2.0, 26.0, 29.8), (-9.5, -8.0, -29.8, 12.5),
+              (-8.0, 1.0, -29.8, -27.0), (-8.0, -6.5, -15.0, 14.0),
+              (-6.5, -4.0, -15.0, -13.5), (-6.5, -5.0, -11.0, 14.0),
+              (-5.0, -4.0, -11.0, -10.0), (-5.0, -4.0, -7.5, 14.0),
+              (-4.0, -2.5, -15.0, -10.0), (-4.0, -3.5, -7.5, -3.0),
+              (-4.0, -2.0, 12.5, 14.0), (-3.5, -2.5, -7.5, -6.5),
+              (-3.5, -1.0, -4.0, -3.0), (-2.5, -1.0, -15.0, -6.5),
+              (-2.0, 4.0, 7.0, 29.8), (-1.0, 1.0, -15.0, -3.0),
+              (1.0, 4.0, -29.8, -19.0), (1.0, 2.0, -16.0, -3.0),
+              (2.0, 3.5, -13.0, -3.0), (3.5, 4.0, -10.5, -3.0),
+              (4.0, 5.0, -29.8, -16.5), (4.0, 5.0, -10.5, 29.8),
+              (5.0, 6.5, -29.8, -14.0), (5.0, 7.0, -6.0, 29.8), (7.0, 8.0, 7.0, 29.8),
+              (6.5, 9.0, -29.8, -11.5), (8.0, 14.8, 7.0, 29.8),
+              (9.0, 14.8, -29.8, -8.0)),
+     "jump_links": (((-10.0, 8.0), (-10.0, 11.0)),
+                    ((-10.0, 12.0), (-9.0, 14.0)),
+                    ((-3.0, 15.0), (-3.0, 12.0)),
+                    ((-2.0, -2.0), (-2.0, -5.0)),
+                    ((-3.0, -6.0), (-3.0, -8.0)),
+                    ((-4.0, -9.0), (-5.0, -12.0)),
+                    ((-5.0, -13.0), (-5.0, -16.0)))},
     {"display": "1-7", "folder": "stage19", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-14.8, 14.8, -5.0, 5.0),)},
     {"display": "1-8", "folder": "stage20", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-14.0, -11.0, -4.0, 4.0), (11.0, 14.0, -4.0, 4.0))},
 
@@ -313,6 +336,14 @@ def has_safe_route(stage, rectangles):
     pits = stage["pits"]
     lava_zones = load_lava_zones(stage)
     moving_platform_sweeps = load_moving_platform_sweeps(stage)
+    jump_links = {}
+    for jump_link in stage.get("jump_links", ()):
+        first = jump_link[0]
+        second = jump_link[1]
+        first_key = (round(first[0], 3), round(first[1], 3))
+        second_key = (round(second[0], 3), round(second[1], 3))
+        jump_links.setdefault(first_key, []).append(second)
+        jump_links.setdefault(second_key, []).append(first)
     grid_step = 1.0
     player_margin = 0.45
 
@@ -360,6 +391,17 @@ def has_safe_route(stage, rectangles):
         for delta_x, delta_y in directions:
             next_x = x + delta_x
             next_y = y + delta_y
+            key = (round(next_x, 3), round(next_y, 3))
+            if key in visited:
+                continue
+            if blocked(next_x, next_y):
+                continue
+            visited.add(key)
+            queue.append((next_x, next_y))
+        current_key = (round(x, 3), round(y, 3))
+        for destination in jump_links.get(current_key, ()):
+            next_x = destination[0]
+            next_y = destination[1]
             key = (round(next_x, 3), round(next_y, 3))
             if key in visited:
                 continue
