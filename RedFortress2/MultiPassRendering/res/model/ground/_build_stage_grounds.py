@@ -492,23 +492,24 @@ def create_stage_ground(stage, top_material, side_material):
              ((half_width, -half_depth, 0.0), (half_width, -half_depth, SLAB_BOTTOM), (half_width, half_depth, SLAB_BOTTOM), (half_width, half_depth, 0.0)),
              ((0.0, 0.0), (0.0, 2.5), (half_depth / 4.0, 2.5), (half_depth / 4.0, 0.0)), 1)
 
+    # Pit walls and bottoms use the same world texture as the ground surface.
     for pit in pits:
         x_min, x_max, y_min, y_max = pit
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_min, y_min, 0.0), (x_min, y_min, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM), (x_min, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 1)
+                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_max, y_max, 0.0), (x_max, y_max, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 1)
+                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_max, y_min, 0.0), (x_max, y_min, PIT_BOTTOM), (x_min, y_min, PIT_BOTTOM), (x_min, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 1)
+                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_min, y_max, 0.0), (x_min, y_max, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_max, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 1)
+                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_min, y_min, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM)),
-                 ((0.0, 0.0), ((x_max - x_min) / 4.0, 0.0), ((x_max - x_min) / 4.0, (y_max - y_min) / 4.0), (0.0, (y_max - y_min) / 4.0)), 1)
+                 ((0.0, 0.0), ((x_max - x_min) / 4.0, 0.0), ((x_max - x_min) / 4.0, (y_max - y_min) / 4.0), (0.0, (y_max - y_min) / 4.0)), 0)
 
     object_name = "Stage" + stage["display"].replace("-", "_") + "Ground"
     mesh = bpy.data.meshes.new(object_name + "Geo")
