@@ -1,6 +1,6 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-small_spider,-22,0.2,20,0
-skeleton,22,0.2,14,180
-spider,-22,0.2,0,0
-small_skeleton,22,0.2,-12,180
-spider,-14,0.2,-22,0
+small_spider,-53,0.2,13,45
+small_spider,-47,0.2,8,225
+spider,47,0.2,-7,45
+skeleton,53,0.2,-12,225
+small_skeleton,-50,0.2,-27,180
