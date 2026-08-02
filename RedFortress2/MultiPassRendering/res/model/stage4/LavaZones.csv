@@ -1,4 +1,1 @@
-﻿ID,PhysicsID,Damage
-stage4-lava-01,350,15
-stage4-lava-02,351,15
-stage4-lava-03,352,20
+﻿LavaID,PhysicsID,DamagePerHit,HitIntervalSeconds,HalfHeight,Enabled

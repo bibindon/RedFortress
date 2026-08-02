@@ -1,1 +1,4 @@
 ﻿ID,RenderID,PhysicsID,PosX,PosY,PosZ,RotX,RotY,RotZ,Scale,StartX,StartY,StartZ,EndX,EndY,EndZ,Duration
+1,150,150,4,1.26,15,0,0,0,1.2,4,1.26,15,4,4.26,15,3.5
+2,151,151,-5,7.76,0,0,0,0,1.2,-5,7.76,0,6,7.76,0,4.5
+3,152,152,6,8.76,-10,0,0,0,1.2,6,8.76,-10,6,11.76,-10,3.5
