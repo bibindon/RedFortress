@@ -88,7 +88,7 @@ STAGES = (
     {"display": "1-8", "folder": "stage20", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-14.0, -11.0, -4.0, 4.0), (11.0, 14.0, -4.0, 4.0))},
 
     {"display": "2-1", "folder": "stage5", "size": (60.0, 60.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ()},
-    {"display": "2-2", "folder": "stage6", "size": (60.0, 60.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-38.0, -28.0, -12.0, 12.0),)},
+    {"display": "2-2", "folder": "stage6", "size": (60.0, 60.0), "start": (-38.0, 0.0), "goal": (38.0, 0.0), "pits": (), "elevated_route": True},
     {"display": "2-3", "folder": "stage7", "size": (60.0, 60.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-38.0, -30.0, -30.0, -10.0), (30.0, 38.0, 10.0, 30.0), (-8.0, 8.0, 40.0, 48.0))},
     {"display": "2-4", "folder": "stage8", "size": (60.0, 60.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ()},
     {"display": "2-5", "folder": "stage21", "size": (60.0, 60.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ()},
@@ -361,11 +361,38 @@ def load_moving_platform_sweeps(stage):
     return sweeps
 
 
+def load_static_platform_footprints(stage):
+    footprints = []
+    physics_path = MODEL_DIR / stage["folder"] / "XFileListPhysics.csv"
+    if not physics_path.exists():
+        return footprints
+
+    with physics_path.open("r", encoding="utf-8-sig", newline="") as file:
+        for row in csv.DictReader(file):
+            filename = row.get("FileName", "").lower()
+            if "collision_moving_platform" not in filename:
+                continue
+            if row.get("Move", "").lower() == "y":
+                continue
+            scale = float(row["Scale"])
+            half_size = 1.5 * scale
+            center_x = float(row["PosX"])
+            center_z = float(row["PosZ"])
+            footprints.append((
+                center_x - half_size,
+                center_x + half_size,
+                center_z - half_size,
+                center_z + half_size,
+            ))
+    return footprints
+
+
 def has_safe_route(stage, rectangles):
     half_width, half_depth = stage["size"]
     pits = stage["pits"]
     lava_zones = load_lava_zones(stage)
     moving_platform_sweeps = load_moving_platform_sweeps(stage)
+    static_platform_footprints = load_static_platform_footprints(stage)
     jump_links = {}
     for jump_link in stage.get("jump_links", ()):
         first = jump_link[0]
@@ -391,7 +418,13 @@ def has_safe_route(stage, rectangles):
         return False
 
     def supported_by_static_platform(x, y):
-        return point_on_static_platform(x, y, stage, margin=-player_margin)
+        if point_on_static_platform(x, y, stage, margin=-player_margin):
+            return True
+        for footprint in static_platform_footprints:
+            if x >= footprint[0] + player_margin and x <= footprint[1] - player_margin:
+                if y >= footprint[2] + player_margin and y <= footprint[3] - player_margin:
+                    return True
+        return False
 
     def blocked(x, y):
         if x < -half_width + player_margin or x > half_width - player_margin:
@@ -406,12 +439,15 @@ def has_safe_route(stage, rectangles):
             delta_y = y - zone_y
             safe_radius = radius + player_margin
             if delta_x * delta_x + delta_y * delta_y <= safe_radius * safe_radius:
-                return True
+                if not supported_by_static_platform(x, y):
+                    return True
         for rectangle in rectangles:
             if rectangle[5]:
                 continue
             if x >= rectangle[0] - player_margin and x <= rectangle[1] + player_margin:
                 if y >= rectangle[2] - player_margin and y <= rectangle[3] + player_margin:
+                    if stage.get("elevated_route", False) and supported_by_static_platform(x, y):
+                        continue
                     return True
         return False
 

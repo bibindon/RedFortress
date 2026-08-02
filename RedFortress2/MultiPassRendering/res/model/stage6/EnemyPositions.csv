@@ -1,6 +1,8 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-small_spider,-34,0.2,-18,90
-skeleton,-30,0.2,18,90
-spider,28,0.2,-14,270
-small_spider,34,0.2,14,270
-skeleton,2,0.2,30,180
+frog,-10,3.5,-3,90
+small_mushroom,-8,3.5,-3,270
+wolf,8,3.2,-1,90
+crab,10,3.2,-1,270
+frog,17,3.2,0,180
+crab,33,3.2,3,90
+wolf,35,3.2,3,270

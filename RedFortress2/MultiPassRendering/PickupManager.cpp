@@ -67,10 +67,13 @@ void PickupManager::Clear()
 {
     if (m_render != nullptr)
     {
-        if (m_starMeshId >= 0)
+        for (StarPickup& pickup : m_starPickups)
         {
-            m_render->RemoveMeshMix(m_starMeshId);
-            m_starMeshId = -1;
+            if (pickup.meshId >= 0)
+            {
+                m_render->RemoveMeshMix(pickup.meshId);
+                pickup.meshId = -1;
+            }
         }
 
         if (m_speedUpMeshId >= 0)
@@ -79,6 +82,8 @@ void PickupManager::Clear()
             m_speedUpMeshId = -1;
         }
     }
+
+    m_starPickups.clear();
 }
 
 void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wstring& speedUpCsvPath)
@@ -89,16 +94,13 @@ void PickupManager::LoadForStage(const std::wstring& starCsvPath, const std::wst
         return;
     }
 
-    if (LoadPickupPosition(starCsvPath, &m_starPosition))
+    const std::vector<D3DXVECTOR3> starPositions = LoadPickupPositions(starCsvPath);
+    for (const D3DXVECTOR3& position : starPositions)
     {
-        m_starMeshId = m_render->AddMeshMix(kStarModelPath,
-                                            m_starPosition,
-                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                            kPickupIconScale,
-                                            -1.0f,
-                                            false,
-                                            false,
-                                            false);
+        StarPickup pickup;
+        pickup.position = position;
+        pickup.meshId = AddStarMesh(position);
+        m_starPickups.push_back(pickup);
     }
 
     if (LoadPickupPosition(speedUpCsvPath, &m_speedUpPosition))
@@ -120,6 +122,22 @@ void PickupManager::ResetPlayerEffects()
     GameAudio::StopHyperMode();
     m_baseSpeedLevel = 1;
     m_speedLevel = 1;
+}
+
+void PickupManager::RespawnStars()
+{
+    if (m_render == nullptr)
+    {
+        return;
+    }
+
+    for (StarPickup& pickup : m_starPickups)
+    {
+        if (pickup.meshId < 0)
+        {
+            pickup.meshId = AddStarMesh(pickup.position);
+        }
+    }
 }
 
 void PickupManager::ResetTemporaryEffects()
@@ -151,14 +169,20 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         return;
     }
 
-    if (m_starMeshId >= 0)
+    for (StarPickup& pickup : m_starPickups)
     {
-        const D3DXVECTOR3 diff = playerPosition - m_starPosition;
+        if (pickup.meshId < 0)
+        {
+            continue;
+        }
+
+        const D3DXVECTOR3 diff = playerPosition - pickup.position;
         if (D3DXVec3Length(&diff) <= kStarPickupDistance)
         {
-            m_render->RemoveMeshMix(m_starMeshId);
-            m_starMeshId = -1;
+            m_render->RemoveMeshMix(pickup.meshId);
+            pickup.meshId = -1;
             ActivateStar(playerMeshId);
+            break;
         }
     }
 
@@ -394,4 +418,62 @@ bool PickupManager::LoadPickupPosition(const std::wstring& csvPath, D3DXVECTOR3*
 
     *outPosition = D3DXVECTOR3(posX, posY, posZ);
     return true;
+}
+
+std::vector<D3DXVECTOR3> PickupManager::LoadPickupPositions(const std::wstring& csvPath) const
+{
+    std::vector<D3DXVECTOR3> positions;
+    if (csvPath.empty())
+    {
+        return positions;
+    }
+
+    std::wifstream file(NSRender::Util::GetExeDir() + csvPath);
+    if (!file.is_open())
+    {
+        return positions;
+    }
+
+    std::wstring line;
+    std::getline(file, line);
+    while (std::getline(file, line))
+    {
+        std::wstringstream ss(line);
+        std::wstring cell;
+        D3DXVECTOR3 position(0.0f, 0.0f, 0.0f);
+
+        if (!std::getline(ss, cell, L',') || !TryParseFloat(cell, &position.x))
+        {
+            continue;
+        }
+        if (!std::getline(ss, cell, L',') || !TryParseFloat(cell, &position.y))
+        {
+            continue;
+        }
+        if (!std::getline(ss, cell, L',') || !TryParseFloat(cell, &position.z))
+        {
+            continue;
+        }
+
+        positions.push_back(position);
+    }
+
+    return positions;
+}
+
+int PickupManager::AddStarMesh(const D3DXVECTOR3& position) const
+{
+    if (m_render == nullptr)
+    {
+        return -1;
+    }
+
+    return m_render->AddMeshMix(kStarModelPath,
+                                position,
+                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                kPickupIconScale,
+                                -1.0f,
+                                false,
+                                false,
+                                false);
 }

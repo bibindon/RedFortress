@@ -1,5 +1,5 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-small_spider,-10,0.2,-12,0
-spider,12,0.2,-4,180
-small_spider,-12,0.2,10,0
-spider,14,0.2,20,180
+small_spider,-6,0.2,-16,0
+spider,3,0.2,-16,180
+small_spider,0,0.2,16,0
+spider,10,0.2,16,180

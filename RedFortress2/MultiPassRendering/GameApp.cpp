@@ -6689,8 +6689,9 @@ void GameApp::CompletePlayerDeath()
         m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kRespawnInvincibleFrames, 4);
     }
 
-    // 敵を再配置
+    // 敵と取得済みスターを再配置
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
+    m_pickupManager.RespawnStars();
 
     // 各種状態リセット
     m_playerKnockbackFrames = 0;
