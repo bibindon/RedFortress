@@ -46,7 +46,20 @@ STAGES = (
     {"display": "1-2", "folder": "stage2", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((3.0, 7.0, -17.0, -11.0),)},
     {"display": "1-3", "folder": "stage3", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-2.0, 2.0, -6.0, 6.0),)},
     {"display": "1-4", "folder": "stage4", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-13.0, -9.0, -15.0, -11.0), (8.0, 12.0, -20.0, -12.0))},
-    {"display": "1-5", "folder": "stage17", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-13.0, -10.0, 4.0, 9.0), (10.0, 13.0, -8.0, -2.0))},
+    {"display": "1-5", "folder": "stage17", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0),
+     "pits": ((-14.8, 14.8, -23.0, 23.0),),
+     "static_platforms": ((-8.0, -18.0, 3.6), (8.0, -12.0, 3.6),
+                          (-8.0, -6.0, 3.6), (8.0, 0.0, 3.6),
+                          (-8.0, 6.0, 3.6), (8.0, 12.0, 3.6),
+                          (-8.0, 18.0, 3.6)),
+     "booster_links": (((0.0, -24.0), (-8.0, -20.0)),
+                       ((-5.0, -20.0), (8.0, -14.0)),
+                       ((5.0, -14.0), (-8.0, -8.0)),
+                       ((-5.0, -8.0), (8.0, -2.0)),
+                       ((5.0, -2.0), (-8.0, 4.0)),
+                       ((-5.0, 4.0), (8.0, 10.0)),
+                       ((5.0, 10.0), (-8.0, 16.0)),
+                       ((-5.0, 16.0), (0.0, 24.0)))},
     {"display": "1-6", "folder": "stage18", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0),
      "pits": ((-14.8, -9.5, -29.8, -6.0), (-14.8, -11.5, 6.0, 29.8),
               (-11.5, -9.5, 9.0, 10.5), (-11.5, -10.0, 13.0, 29.8),
@@ -156,6 +169,15 @@ def point_in_pit(x, y, pits, margin=0.0):
     return False
 
 
+def point_on_static_platform(x, y, stage, margin=0.0):
+    for platform in stage.get("static_platforms", ()):
+        center_x, center_y, half_size = platform
+        if x >= center_x - half_size - margin and x <= center_x + half_size + margin:
+            if y >= center_y - half_size - margin and y <= center_y + half_size + margin:
+                return True
+    return False
+
+
 def validate_stage(stage):
     half_width, half_depth = stage["size"]
     pits = stage["pits"]
@@ -197,7 +219,9 @@ def validate_stage(stage):
                     continue
                 x = float(row["PosX"])
                 y = float(row["PosZ"])
-                if point_in_pit(x, y, pits, margin=0.8):
+                position_y = float(row.get("PosY", "0"))
+                elevated_and_supported = position_y > 0.5 and point_on_static_platform(x, y, stage, margin=0.8)
+                if point_in_pit(x, y, pits, margin=0.8) and not elevated_and_supported:
                     conflicts.append(csv_name + ":" + str(row_index))
 
     render_path = stage_dir / "XFileList_simple.csv"
@@ -216,13 +240,18 @@ def validate_stage(stage):
                     continue
                 x = float(row["PosX"])
                 y = float(row["PosZ"])
-                if point_in_pit(x, y, pits, margin=0.8):
+                position_y = float(row.get("PosY", "0"))
+                elevated_and_supported = position_y > 0.5 and point_on_static_platform(x, y, stage, margin=0.8)
+                if point_in_pit(x, y, pits, margin=0.8) and not elevated_and_supported:
                     conflicts.append("XFileList_simple.csv:" + str(row_index))
 
     collision_rectangles = load_collision_rectangles(stage)
     for rectangle in collision_rectangles:
         for pit in pits:
-            if rectangle_intersects_pit(rectangle, pit, margin=0.2):
+            center_x = (rectangle[0] + rectangle[1]) * 0.5
+            center_y = (rectangle[2] + rectangle[3]) * 0.5
+            elevated_and_supported = rectangle[6] > 0.5 and point_on_static_platform(center_x, center_y, stage, margin=0.8)
+            if rectangle_intersects_pit(rectangle, pit, margin=0.2) and not elevated_and_supported:
                 conflicts.append("XFileListPhysics.csv:" + str(rectangle[4]))
                 break
 
@@ -269,6 +298,7 @@ def load_collision_rectangles(stage):
                 center_y + half_y,
                 row_index,
                 is_climbable,
+                float(row.get("PosY", "0")),
             ))
     return rectangles
 
@@ -344,6 +374,12 @@ def has_safe_route(stage, rectangles):
         second_key = (round(second[0], 3), round(second[1], 3))
         jump_links.setdefault(first_key, []).append(second)
         jump_links.setdefault(second_key, []).append(first)
+    booster_links = {}
+    for booster_link in stage.get("booster_links", ()):
+        first = booster_link[0]
+        second = booster_link[1]
+        first_key = (round(first[0], 3), round(first[1], 3))
+        booster_links.setdefault(first_key, []).append(second)
     grid_step = 1.0
     player_margin = 0.45
 
@@ -354,13 +390,16 @@ def has_safe_route(stage, rectangles):
                     return True
         return False
 
+    def supported_by_static_platform(x, y):
+        return point_on_static_platform(x, y, stage, margin=-player_margin)
+
     def blocked(x, y):
         if x < -half_width + player_margin or x > half_width - player_margin:
             return True
         if y < -half_depth + player_margin or y > half_depth - player_margin:
             return True
         if point_in_pit(x, y, pits, margin=player_margin):
-            if not supported_by_moving_platform(x, y):
+            if not supported_by_moving_platform(x, y) and not supported_by_static_platform(x, y):
                 return True
         for zone_x, zone_y, radius in lava_zones:
             delta_x = x - zone_x
@@ -400,6 +439,16 @@ def has_safe_route(stage, rectangles):
             queue.append((next_x, next_y))
         current_key = (round(x, 3), round(y, 3))
         for destination in jump_links.get(current_key, ()):
+            next_x = destination[0]
+            next_y = destination[1]
+            key = (round(next_x, 3), round(next_y, 3))
+            if key in visited:
+                continue
+            if blocked(next_x, next_y):
+                continue
+            visited.add(key)
+            queue.append((next_x, next_y))
+        for destination in booster_links.get(current_key, ()):
             next_x = destination[0]
             next_y = destination[1]
             key = (round(next_x, 3), round(next_y, 3))
