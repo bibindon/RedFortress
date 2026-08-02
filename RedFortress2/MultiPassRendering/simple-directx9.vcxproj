@@ -202,6 +202,7 @@
     <ClCompile Include="PickupManager.cpp" />
     <ClCompile Include="DashBooster.cpp" />
     <ClCompile Include="DashBoosterManager.cpp" />
+    <ClCompile Include="SkullManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameAudio.cpp" />
   </ItemGroup>
@@ -249,6 +250,7 @@
     <ClInclude Include="PickupManager.h" />
     <ClInclude Include="DashBooster.h" />
     <ClInclude Include="DashBoosterManager.h" />
+    <ClInclude Include="SkullManager.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GameAudio.h" />
   </ItemGroup>

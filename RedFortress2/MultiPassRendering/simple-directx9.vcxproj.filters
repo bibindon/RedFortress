@@ -84,6 +84,9 @@
     <ClCompile Include="DashBoosterManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="SkullManager.cpp">
+      <Filter>??? ????</Filter>
+    </ClCompile>
     <ClCompile Include="DestructibleManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="EnemyManager.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SkullManager.h">
+      <Filter>???? ????</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBase.h">
       <Filter>ヘッダー ファイル</Filter>

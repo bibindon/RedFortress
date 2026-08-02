@@ -773,6 +773,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_enemyManager.Initialize();
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(initialStage));
 
+    m_skullManager.Initialize(m_render);
+    m_skullManager.LoadForStage(m_render, initialStage.skullCsvPath);
+
     m_destructibleManager.Initialize(m_render);
     m_destructibleManager.SetStarDropCallback([this]() {
         m_pickupManager.ActivateStar(m_playerMeshId);
@@ -1786,6 +1789,18 @@ void GameApp::Run()
 
             UpdateBombs();
             UpdateBusters();
+            m_skullManager.Update(
+                m_render,
+                m_enemyManager.GetEnemies(),
+                [this](EnemyBase& enemy, const D3DXVECTOR3& sourcePosition)
+                {
+                    const int kSkullDamage = 3;
+                    enemy.TakeDamageWithoutFacing(m_render, kSkullDamage);
+                    enemy.StartKnockbackFrom(sourcePosition, 0.7f, 24);
+                    m_damagePopupManager.Add(kSkullDamage, enemy.GetPosition(), false);
+                    TryDropEnemyItem(enemy);
+                    GameAudio::PlayAttackHit();
+                });
 
             if (m_busterCooldownFrames > 0)
             {
@@ -2311,6 +2326,7 @@ void GameApp::Finalize()
     m_interactionManager.Clear();
     m_lavaZoneManager.Clear();
     m_collectibleManager.Clear();
+    m_skullManager.Clear(m_render);
     m_render.Finalize();
     PhysicsWorld::Finalize();
     GameAudio::Finalize();
@@ -2755,6 +2771,21 @@ void GameApp::UpdatePlayerByInput()
         UpdateHeldWeaponVisibility();
     }
 
+    bool skullActionTriggered = false;
+    if (!IsCurrentStageSelect() &&
+        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        skullActionTriggered = m_skullManager.HandleLeftClick(m_render,
+                                                               m_playerMover.GetPosition(),
+                                                               m_playerYaw,
+                                                               m_playerMeshId,
+                                                               kPlayerRightWristBoneName);
+        if (skullActionTriggered)
+        {
+            UpdateHeldWeaponVisibility();
+        }
+    }
+
     const PlayerAttackType requestedAttackType = m_playerAttackController.GetAttackType(shiftPressed);
     if (!IsBusterAttackType(requestedAttackType))
     {
@@ -2762,6 +2793,7 @@ void GameApp::UpdatePlayerByInput()
     }
 
     if (!IsCurrentStageSelect() &&
+        !skullActionTriggered &&
         InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) &&
         IsAttackCategoryOwned(requestedAttackType))
     {
@@ -3226,7 +3258,7 @@ void GameApp::UpdateHeldWeaponVisibility()
     bool saberVisible = false;
     bool gunVisible = false;
 
-    if (m_debugPlayerRenderEnabled && !IsCurrentStageSelect())
+    if (m_debugPlayerRenderEnabled && !IsCurrentStageSelect() && !m_skullManager.IsHolding())
     {
         const PlayerAttackType attackType = m_playerAttackController.GetAttackType(false);
         if (IsAttackCategoryOwned(attackType))
@@ -6647,6 +6679,7 @@ void GameApp::HandlePlayerDeath()
     RefillWeaponAmmo();
     ClearBombs();
     ClearBusters();
+    m_skullManager.ReleaseHeld(m_render, m_playerMover.GetPosition());
 
     // フェードアウト開始。シーン更新は止めず（SetSceneUpdatePaused は使わない）、
     // メインループの m_playerDeathPending による continue でプレイヤー/敵の処理をスキップしつつ
@@ -7079,6 +7112,7 @@ void GameApp::LoadCurrentStageObjects()
     m_dashBoosterManager.Clear();
     ClearBombs();
     ClearBusters();
+    m_skullManager.Clear(m_render);
     RemoveGoalArrow();
 
     if (m_stickMeshId >= 0)
@@ -7126,6 +7160,7 @@ void GameApp::LoadCurrentStageObjects()
 
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
+    m_skullManager.LoadForStage(m_render, stage.skullCsvPath);
 
     if (!IsStageSelectId(stage.id) &&
         !IsBaseId(stage.id) &&

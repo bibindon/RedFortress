@@ -31,6 +31,7 @@ public:
         std::wstring destructibleCsvPath;
         std::wstring dashBoosterCsvPath;
         std::wstring lavaCsvPath;
+        std::wstring skullCsvPath;
         std::wstring renderSettingsCsvPath;
         StageWeather weather = StageWeather::None;
         bool playerPointLightEnabled = false;

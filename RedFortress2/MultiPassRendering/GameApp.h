@@ -33,6 +33,7 @@
 #include "PlayerAttackController.h"
 #include "PickupManager.h"
 #include "DashBoosterManager.h"
+#include "SkullManager.h"
 #include "DebugRpc.h"
 
 struct ActiveBomb
@@ -359,6 +360,7 @@ private:
     DestructibleManager m_destructibleManager;
     PickupManager m_pickupManager;
     DashBoosterManager m_dashBoosterManager;
+    SkullManager m_skullManager;
     int m_playerInvincibleFrames = 0;
     int m_stickMeshId = -1;
     int m_saberMeshId = -1;
