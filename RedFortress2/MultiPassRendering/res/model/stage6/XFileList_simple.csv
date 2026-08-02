@@ -7,11 +7,11 @@
 2204,../collision_wall/collision_wall.x,14,1.5,-10,0,0,0,1,meshmix2
 2205,../collision_wall/collision_wall.x,-28,1.5,-28,0,90,0,1,meshmix2
 2206,../collision_wall/collision_wall.x,-28,1.5,28,0,90,0,1,meshmix2
-2207,../cubeWood/cube_wood.x,28,0,-22,0,0,0,1,normal
-2208,../cubeWood/cube_wood.x,34,0,-22,0,0,0,1,normal
-2209,../cubeWood/cube_wood.x,28,0,22,0,0,0,1,normal
-2210,../cubeWood/cube_wood.x,34,0,22,0,0,0,1,normal
-2211,../cubeWood/cube_wood.x,-36,0,30,0,0,0,1,normal
+2207,../cubeWoodSmall/cube_wood_small.x,28,0,-22,0,0,0,1,normal
+2208,../cubeWoodSmall/cube_wood_small.x,34,0,-22,0,0,0,1,normal
+2209,../cubeWoodSmall/cube_wood_small.x,28,0,22,0,0,0,1,normal
+2210,../cubeWoodSmall/cube_wood_small.x,34,0,22,0,0,0,1,normal
+2211,../cubeWoodSmall/cube_wood_small.x,-36,0,30,0,0,0,1,normal
 2212,../SkySphere_cave/SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
 8000,../fence.x,-56,0.5,-60,0,0,0,1,normal
 8001,../fence.x,-56,0.5,60,0,0,0,1,normal

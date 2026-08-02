@@ -16,12 +16,12 @@
 16,collision_moving_platform/collision_moving_platform.x, 5,0.85,16, 0, 0, 0, 1, meshmix2
 17,collision_moving_platform/collision_moving_platform.x, -2,0.86,22, 0, 0, 0, 1, meshmix2
 18,collision_moving_platform/collision_moving_platform.x, 2,0.87,28, 0, 0, 0, 1, meshmix2
-19,cubeWood/cube_wood.x, -3,0,-26, 0, 0, 0, 1, normal
-20,cubeWood/cube_wood.x, 3,0.01,-18, 0, 0, 0, 1, normal
-21,cubeWood/cube_wood.x, -2,0.02,-6, 0, 0, 0, 1, normal
-22,cubeWood/cube_wood.x, 3,0.03,6, 0, 0, 0, 1, normal
-23,cubeWood/cube_wood.x, -3,0.04,18, 0, 0, 0, 1, normal
-24,cubeWood/cube_wood.x, 3,0.05,26, 0, 0, 0, 1, normal
+19,cubeWoodSmall/cube_wood_small.x, -3,0,-26, 0, 0, 0, 1, normal
+20,cubeWoodSmall/cube_wood_small.x, 3,0.005,-18, 0, 0, 0, 1, normal
+21,cubeWoodSmall/cube_wood_small.x, -2,0.01,-6, 0, 0, 0, 1, normal
+22,cubeWoodSmall/cube_wood_small.x, 3,0.015,6, 0, 0, 0, 1, normal
+23,cubeWoodSmall/cube_wood_small.x, -3,0.02,18, 0, 0, 0, 1, normal
+24,cubeWoodSmall/cube_wood_small.x, 3,0.025,26, 0, 0, 0, 1, normal
 26,SkySphere/SkySphere.blend.x, 0,0.01,0, 0, 0, 0, 1, normal
 201,fence.x,-11,0.5,-30,0,0,0,1,normal
 202,fence.x,-3,0.5,-30,0,0,0,1,normal

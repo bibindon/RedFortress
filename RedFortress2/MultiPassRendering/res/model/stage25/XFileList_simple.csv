@@ -5,10 +5,10 @@
 3502,../collision_wall/collision_wall.x,32,1.5,-18,0,90,0,1,meshmix2
 3503,../collision_wall/collision_wall.x,-32,1.5,18,0,90,0,1,meshmix2
 3504,../collision_wall/collision_wall.x,32,1.5,18,0,90,0,1,meshmix2
-3505,../cubeWood/cube_wood.x,-40,0,-30,0,0,0,1,normal
-3506,../cubeWood/cube_wood.x,40,0,-30,0,0,0,1,normal
-3507,../cubeWood/cube_wood.x,-40,0,30,0,0,0,1,normal
-3508,../cubeWood/cube_wood.x,40,0,30,0,0,0,1,normal
+3505,../cubeWoodSmall/cube_wood_small.x,-40,0,-30,0,0,0,1,normal
+3506,../cubeWoodSmall/cube_wood_small.x,40,0,-30,0,0,0,1,normal
+3507,../cubeWoodSmall/cube_wood_small.x,-40,0,30,0,0,0,1,normal
+3508,../cubeWoodSmall/cube_wood_small.x,40,0,30,0,0,0,1,normal
 3509,../collision_moving_platform/collision_moving_platform.x,-18,0.4,50,0,0,0,1,meshmix2
 3510,../collision_moving_platform/collision_moving_platform.x,18,0.42,54,0,0,0,1,meshmix2
 3511,../SkySphere_evening/SkySphere.blend.x,0,0.01,0,0,0,0,1,normal

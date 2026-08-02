@@ -5,10 +5,10 @@
 4202,../collision_wall/collision_wall.x,32,1.5,-28,0,90,0,1,meshmix2
 4203,../collision_wall/collision_wall.x,-32,1.5,28,0,90,0,1,meshmix2
 4204,../collision_wall/collision_wall.x,32,1.5,28,0,90,0,1,meshmix2
-4205,../cubeWood/cube_wood.x,-42,0,-34,0,0,0,1,normal
-4206,../cubeWood/cube_wood.x,42,0,-34,0,0,0,1,normal
-4207,../cubeWood/cube_wood.x,-42,0,34,0,0,0,1,normal
-4208,../cubeWood/cube_wood.x,42,0,34,0,0,0,1,normal
+4205,../cubeWoodSmall/cube_wood_small.x,-42,0,-34,0,0,0,1,normal
+4206,../cubeWoodSmall/cube_wood_small.x,42,0,-34,0,0,0,1,normal
+4207,../cubeWoodSmall/cube_wood_small.x,-42,0,34,0,0,0,1,normal
+4208,../cubeWoodSmall/cube_wood_small.x,42,0,34,0,0,0,1,normal
 4209,../collision_moving_platform/collision_moving_platform.x,-16,0.4,44,0,0,0,1,meshmix2
 4210,../plateLava.x,-24,0.02,44,0,0,0,1.25,meshmix2
 4211,../plateLava.x,-10,0.02,44,0,0,0,1.25,meshmix2

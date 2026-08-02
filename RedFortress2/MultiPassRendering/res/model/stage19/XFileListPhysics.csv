@@ -7,10 +7,10 @@
 204,res/model/collision_wall/collision_wall_collision.x,0,1.5,-19,0,90,0,1,Collision,n
 213,res/model/collision_moving_platform.x,0,0.4,-4,0,0,0,1,Collision,y
 214,res/model/collision_moving_platform.x,0,0.42,4,0,0,0,1,Collision,y
-219,res/model/cubeWood/cube_wood_collision.x,9,0,20,0,0,0,1,Collision,n
-220,res/model/cubeWood/cube_wood_collision.x,-9,0,4,0,0,0,1,Collision,n
-221,res/model/cubeWood/cube_wood_collision.x,9,0,-4,0,0,0,1,Collision,n
-222,res/model/cubeWood/cube_wood_collision.x,-9,0,-21,0,0,0,1,Collision,n
+219,res/model/cubeWoodSmall/cube_wood_small_collision.x,9,0,20,0,0,0,1,Collision,n
+220,res/model/cubeWoodSmall/cube_wood_small_collision.x,-9,0,4,0,0,0,1,Collision,n
+221,res/model/cubeWoodSmall/cube_wood_small_collision.x,9,0,-4,0,0,0,1,Collision,n
+222,res/model/cubeWoodSmall/cube_wood_small_collision.x,-9,0,-21,0,0,0,1,Collision,n
 250,res/model/plateLava.x,-9,0.02,12,0,0,0,0.75,NonCollision,n
 251,res/model/plateLava.x,9,0.02,-12,0,0,0,0.75,NonCollision,n
 
@@ -24,11 +24,11 @@
 3913,res/model/collision_wall/collision_wall_collision.x,-7,1.5,1,0,0,0,1,Collision,n
 3914,res/model/collision_wall/collision_wall_collision.x,7,1.5,-12,0,0,0,1,Collision,n
 3915,res/model/collision_wall/collision_wall_collision.x,-7,1.5,-24,0,90,0,1,Collision,n
-3921,res/model/cubeWood/cube_wood_collision.x,-10,0,22,0,0,0,1,Collision,n
-3922,res/model/cubeWood/cube_wood_collision.x,-10,1.8,22,0,35,0,1,Collision,n
-3923,res/model/cubeWood/cube_wood_collision.x,7,0,9,0,-20,0,1,Collision,n
-3924,res/model/cubeWood/cube_wood_collision.x,-7,0,-2,0,20,0,1,Collision,n
-3925,res/model/cubeWood/cube_wood_collision.x,2,0,-16,0,0,0,1,Collision,n
+3921,res/model/cubeWoodSmall/cube_wood_small_collision.x,-10,0,22,0,0,0,1,Collision,n
+3922,res/model/cubeWoodSmall/cube_wood_small_collision.x,-10,0.9,22,0,35,0,1,Collision,n
+3923,res/model/cubeWoodSmall/cube_wood_small_collision.x,7,0,9,0,-20,0,1,Collision,n
+3924,res/model/cubeWoodSmall/cube_wood_small_collision.x,-7,0,-2,0,20,0,1,Collision,n
+3925,res/model/cubeWoodSmall/cube_wood_small_collision.x,2,0,-16,0,0,0,1,Collision,n
 3926,res/model/collision_wall/collision_wall_tall_collision.x,-42,1.5,-42,0,0,0,1,Collision,n
 3927,res/model/collision_wall/collision_wall_tall_collision.x,0,1.5,0,0,90,0,1,Collision,n
 3928,res/model/collision_wall/collision_wall_tall_collision.x,42,1.5,42,0,0,0,1,Collision,n

@@ -4,10 +4,10 @@
 10,res/model/collision_wall/collision_wall_collision.x,-7,1.5,-8,0,0,0,1,Collision,n
 11,res/model/collision_wall/collision_wall_collision.x,7,1.5,4,0,0,0,1,Collision,n
 12,res/model/collision_wall/collision_wall_collision.x,0,1.5,14,0,90,0,1,Collision,n
-20,res/model/cubeWood/cube_wood_collision.x,-4,0,-18,0,0,0,1,Collision,n
-21,res/model/cubeWood/cube_wood_collision.x,5,0,-5,0,0,0,1,Collision,n
-22,res/model/cubeWood/cube_wood_collision.x,-5,0,8,0,0,0,1,Collision,n
-23,res/model/cubeWood/cube_wood_collision.x,7,0,19,0,0,0,1,Collision,n
+20,res/model/cubeWoodSmall/cube_wood_small_collision.x,-4,0,-18,0,0,0,1,Collision,n
+21,res/model/cubeWoodSmall/cube_wood_small_collision.x,5,0,-5,0,0,0,1,Collision,n
+22,res/model/cubeWoodSmall/cube_wood_small_collision.x,-5,0,8,0,0,0,1,Collision,n
+23,res/model/cubeWoodSmall/cube_wood_small_collision.x,7,0,19,0,0,0,1,Collision,n
 27,res/model/tree2Physics/tree_cylinder_collision.x,10,0,22,0,0,0,1,Collision,n
 303,res/model/collision_wall/collision_wall_tall_collision.x,-10,1.5,-20,0,90,0,1,Collision,n
 304,res/model/collision_wall/collision_wall_tall_collision.x,10,1.5,0,0,90,0,1,Collision,n
