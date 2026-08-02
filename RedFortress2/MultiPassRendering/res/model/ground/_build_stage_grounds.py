@@ -48,7 +48,7 @@ STAGES = (
     {"display": "1-4", "folder": "stage4", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-13.0, -9.0, -15.0, -11.0), (8.0, 12.0, -20.0, -12.0))},
     {"display": "1-5", "folder": "stage17", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-13.0, -10.0, 4.0, 9.0), (10.0, 13.0, -8.0, -2.0))},
     {"display": "1-6", "folder": "stage18", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-13.0, -10.0, -12.0, -4.0), (10.0, 13.0, 4.0, 12.0))},
-    {"display": "1-7", "folder": "stage19", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-2.0, 2.0, -6.0, 6.0),)},
+    {"display": "1-7", "folder": "stage19", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-14.8, 14.8, -5.0, 5.0),)},
     {"display": "1-8", "folder": "stage20", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-14.0, -11.0, -4.0, 4.0), (11.0, 14.0, -4.0, 4.0))},
 
     {"display": "2-1", "folder": "stage5", "size": (60.0, 60.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ()},
@@ -219,6 +219,7 @@ def load_collision_rectangles(stage):
                 continue
             half_x = None
             half_y = None
+            is_climbable = False
             if "collision_wall" in filename:
                 rotation = int(float(row.get("RotY", "0"))) % 180
                 if rotation == 0:
@@ -230,6 +231,7 @@ def load_collision_rectangles(stage):
             elif "cube_wood" in filename:
                 half_x = 1.25
                 half_y = 1.25
+                is_climbable = True
             elif "tree_cylinder" in filename:
                 half_x = 1.2
                 half_y = 1.2
@@ -243,6 +245,7 @@ def load_collision_rectangles(stage):
                 center_y - half_y,
                 center_y + half_y,
                 row_index,
+                is_climbable,
             ))
     return rectangles
 
@@ -282,12 +285,43 @@ def load_lava_zones(stage):
     return zones
 
 
+def load_moving_platform_sweeps(stage):
+    sweeps = []
+    move_path = MODEL_DIR / stage["folder"] / "XFileListMove.csv"
+    if not move_path.exists():
+        return sweeps
+
+    with move_path.open("r", encoding="utf-8-sig", newline="") as file:
+        for row in csv.DictReader(file):
+            scale = float(row["Scale"])
+            half_size = 1.5 * scale
+            start_x = float(row["StartX"])
+            start_z = float(row["StartZ"])
+            end_x = float(row["EndX"])
+            end_z = float(row["EndZ"])
+            sweeps.append((
+                min(start_x, end_x) - half_size,
+                max(start_x, end_x) + half_size,
+                min(start_z, end_z) - half_size,
+                max(start_z, end_z) + half_size,
+            ))
+    return sweeps
+
+
 def has_safe_route(stage, rectangles):
     half_width, half_depth = stage["size"]
     pits = stage["pits"]
     lava_zones = load_lava_zones(stage)
+    moving_platform_sweeps = load_moving_platform_sweeps(stage)
     grid_step = 1.0
     player_margin = 0.45
+
+    def supported_by_moving_platform(x, y):
+        for sweep in moving_platform_sweeps:
+            if x >= sweep[0] - player_margin and x <= sweep[1] + player_margin:
+                if y >= sweep[2] - player_margin and y <= sweep[3] + player_margin:
+                    return True
+        return False
 
     def blocked(x, y):
         if x < -half_width + player_margin or x > half_width - player_margin:
@@ -295,7 +329,8 @@ def has_safe_route(stage, rectangles):
         if y < -half_depth + player_margin or y > half_depth - player_margin:
             return True
         if point_in_pit(x, y, pits, margin=player_margin):
-            return True
+            if not supported_by_moving_platform(x, y):
+                return True
         for zone_x, zone_y, radius in lava_zones:
             delta_x = x - zone_x
             delta_y = y - zone_y
@@ -303,6 +338,8 @@ def has_safe_route(stage, rectangles):
             if delta_x * delta_x + delta_y * delta_y <= safe_radius * safe_radius:
                 return True
         for rectangle in rectangles:
+            if rectangle[5]:
+                continue
             if x >= rectangle[0] - player_margin and x <= rectangle[1] + player_margin:
                 if y >= rectangle[2] - player_margin and y <= rectangle[3] + player_margin:
                     return True
@@ -569,6 +606,13 @@ def main():
     if len(folders) != 32:
         raise RuntimeError("Stage ground folder names must be unique")
 
+    selected_display = os.environ.get("RED_FORTRESS_STAGE_GROUND", "").strip()
+    stages_to_build = STAGES
+    if selected_display != "":
+        stages_to_build = tuple(stage for stage in STAGES if stage["display"] == selected_display)
+        if len(stages_to_build) != 1:
+            raise RuntimeError("Unknown stage ground selection: " + selected_display)
+
     bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
     clear_scene()
     side_material = create_material(
@@ -606,7 +650,7 @@ def main():
         )
         visual_ground_objects.append((world, visual_ground))
     validation_errors = []
-    for stage in STAGES:
+    for stage in stages_to_build:
         conflicts = validate_stage(stage)
         if conflicts:
             validation_errors.append(stage["display"] + ": " + ", ".join(conflicts))
@@ -614,22 +658,24 @@ def main():
         raise RuntimeError("Stage ground conflicts:\n" + "\n".join(validation_errors))
 
     objects = []
-    for stage in STAGES:
+    for stage in stages_to_build:
         world = world_for_folder(stage["folder"])
         obj = create_stage_ground(stage, top_materials[world], side_material)
         objects.append((stage, obj))
 
-    bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))
+    if selected_display == "":
+        bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))
     for stage, obj in objects:
         output_path = MODEL_DIR / stage["folder"] / "stage_ground.x"
         export_object(obj, output_path)
         print("EXPORTED", stage["display"], output_path)
 
-    for world, obj in visual_ground_objects:
-        output_path = GROUND_DIR / ("stage_visual_ground_world" + str(world) + ".x")
-        export_object(obj, output_path)
-        print("EXPORTED_VISUAL", world, output_path)
-    print("BLEND_PATH", BLEND_PATH)
+    if selected_display == "":
+        for world, obj in visual_ground_objects:
+            output_path = GROUND_DIR / ("stage_visual_ground_world" + str(world) + ".x")
+            export_object(obj, output_path)
+            print("EXPORTED_VISUAL", world, output_path)
+        print("BLEND_PATH", BLEND_PATH)
     print("EXPORTED_STAGE_GROUNDS", len(objects))
 
 
