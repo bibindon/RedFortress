@@ -116,6 +116,11 @@ protected:
                                      const D3DXVECTOR3& playerPos,
                                      bool playerInvincible);
     virtual float GetMeshVerticalOffset() const { return m_meshVerticalOffset; }
+    // モデル原点から見た見た目の中心を、回転に追従させて補正する。
+    virtual D3DXVECTOR3 GetMeshPositionOffset() const
+    {
+        return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
     virtual float GetMeshYawOffset() const { return 0.0f; }
     bool IsSpecialAttackReady() const;
     void FaceSpecialAttackTarget(const D3DXVECTOR3& targetPos);

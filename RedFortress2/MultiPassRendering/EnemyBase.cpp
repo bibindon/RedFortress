@@ -317,10 +317,17 @@ void EnemyBase::SyncMesh(NSRender::Render& render)
         return;
     }
 
+    const float meshYaw = m_yaw + GetMeshYawOffset();
     D3DXVECTOR3 meshPosition = m_position;
     meshPosition.y += GetMeshVerticalOffset();
+    const D3DXVECTOR3 meshOffset = GetMeshPositionOffset();
+    D3DXMATRIX rotationMatrix;
+    D3DXMatrixRotationY(&rotationMatrix, meshYaw);
+    D3DXVECTOR3 rotatedMeshOffset;
+    D3DXVec3TransformNormal(&rotatedMeshOffset, &meshOffset, &rotationMatrix);
+    meshPosition += rotatedMeshOffset;
     render.SetMeshMixSkinAnimPos(m_meshId, meshPosition);
-    render.SetMeshMixSkinAnimRotY(m_meshId, m_yaw + GetMeshYawOffset());
+    render.SetMeshMixSkinAnimRotY(m_meshId, meshYaw);
 }
 
 bool EnemyBase::ConsumeAttackHit(AttackHit* outHit)
@@ -791,7 +798,10 @@ void EnemyBase::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool pla
     }
 
     float strafeWeight = 0.0f;
-    if (distance < 5.0f && distance > 1.0f)
+    const bool isGolemType = m_type == L"golem" ||
+        m_type == L"boss_golem" ||
+        m_type == L"small_golem";
+    if (!isGolemType && distance < 5.0f && distance > 1.0f)
     {
         strafeWeight = 0.18f + fabsf(m_personalityBias) * 0.12f;
         if (distance < 2.4f)

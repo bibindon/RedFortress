@@ -322,6 +322,12 @@ def add_boundaries(render_rows, half_width, half_depth):
 
 
 def additional_tall_walls(stage, half_depth):
+    if stage["folder"] == "stage15":
+        return (wall(-42, -72), wall(0, -72, 90), wall(42, 72))
+    if stage["folder"] == "stage24":
+        return (wall(-42, -42), wall(0, 42, 90), wall(42, 42))
+    if stage["folder"] == "stage28":
+        return (wall(-42, -72), wall(0, 72, 90), wall(42, 72))
     if stage["folder"] in ("stage1", "stage2", "stage3", "stage4"):
         return (wall(-10, -20, 90), wall(10, 0, 90), wall(-10, 20, 90))
     depth_offset = 42
