@@ -44,7 +44,7 @@ def world_for_folder(folder):
 STAGES = (
     {"display": "1-1", "folder": "stage1", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-13.0, -10.0, -3.0, 7.0),)},
     {"display": "1-2", "folder": "stage2", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((3.0, 7.0, -17.0, -11.0),)},
-    {"display": "1-3", "folder": "stage3", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-2.0, 2.0, -6.0, 6.0),)},
+    {"display": "1-3", "folder": "stage3", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ()},
     {"display": "1-4", "folder": "stage4", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-10.0, -24.0), "pits": ()},
     {"display": "1-5", "folder": "stage17", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0),
      "pits": ((-14.8, 14.8, -23.0, 23.0),),
