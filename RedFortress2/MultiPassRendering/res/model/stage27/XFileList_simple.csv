@@ -15,7 +15,14 @@
 3712,../cubeWoodSmall/cube_wood_small.x,26,0,0,0,0,0,1,normal
 3713,../cubeWoodSmall/cube_wood_small.x,-38,0,60,0,0,0,1,normal
 3714,../cubeWoodSmall/cube_wood_small.x,38,0,60,0,0,0,1,normal
-3715,../collision_moving_platform/collision_moving_platform.x,-20,0.4,52,0,0,0,1,meshmix2
+3720,../base/base_rock1.x,-4,0,38,0,25,0,0.65,normal
+3721,../base/base_rock2.x,20,0,40,0,130,0,0.55,normal
+3722,../base/base_rock1.x,30,0,26,0,70,0,0.7,normal
+3723,../base/base_rock2.x,40,0,6,0,200,0,0.55,normal
+3724,../base/base_rock1.x,-30,0,-6,0,290,0,0.65,normal
+3725,../base/base_rock2.x,-40,0,-26,0,150,0,0.6,normal
+3726,../base/base_rock1.x,-28,0,-42,0,35,0,0.7,normal
+3727,../base/base_rock2.x,28,0,-42,0,220,0,0.6,normal
 3716,../SkySphere_evening/SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
 8000,../fence.x,-56,0.5,-120,0,0,0,1,normal
 8001,../fence.x,-56,0.5,120,0,0,0,1,normal

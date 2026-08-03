@@ -58,7 +58,7 @@ void StageManager::Initialize()
     AddStage(L"3-3", 19, L"Stage 3-3", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
     AddStage(L"3-4", 20, L"Stage 3-4", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
     AddStage(L"3-5", 21, L"Stage 3-5", L"stage25", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
-    AddStage(L"3-6", 22, L"Stage 3-6", L"stage26", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"3-6", 22, L"Stage 3-6", L"stage26", D3DXVECTOR3(-36.8f, 0.2f, -36.8f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
     AddStage(L"3-7", 23, L"Stage 3-7", L"stage27", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
     AddStage(L"3-8", 24, L"Stage 3-8", L"stage28", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 

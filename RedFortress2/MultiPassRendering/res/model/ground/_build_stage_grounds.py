@@ -1,4 +1,5 @@
 ﻿import csv
+import math
 import os
 from collections import deque
 from pathlib import Path
@@ -131,7 +132,13 @@ STAGES = (
     {"display": "3-3", "folder": "stage11", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-35.0, -25.0, -50.0, 50.0),)},
     {"display": "3-4", "folder": "stage12", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-38.0, -26.0, 30.0, 50.0), (-6.0, 6.0, 55.0, 70.0), (26.0, 38.0, -50.0, -30.0))},
     {"display": "3-5", "folder": "stage25", "size": (60.0, 120.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-30.0, 30.0, 45.0, 55.0),)},
-    {"display": "3-6", "folder": "stage26", "size": (60.0, 120.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-40.0, -30.0, 20.0, 45.0), (30.0, 40.0, -45.0, -20.0), (-5.0, 5.0, 60.0, 75.0))},
+    {"display": "3-6", "folder": "stage26", "size": (60.0, 120.0), "start": (-36.8, -36.8), "goal": (0.0, 0.0), "pits": (),
+     "ground_shape": "spiral", "spiral_center": (0.0, 0.0),
+     "spiral_start_radius": 52.0, "spiral_end_radius": 2.5,
+     "spiral_start_angle": -2.35619449, "spiral_turns": 2.25,
+     "spiral_width": 5.5, "spiral_core_radius": 5.0,
+     "spiral_samples": 260,
+     "static_platforms": ((-17.0, 16.0, 1.65), (-12.0, 15.0, 1.65), (-7.0, 14.0, 1.65))},
     {"display": "3-7", "folder": "stage27", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-40.0, -30.0, -12.0, 12.0), (30.0, 40.0, -12.0, 12.0), (-18.0, -8.0, 48.0, 64.0), (8.0, 18.0, -64.0, -48.0))},
     {"display": "3-8", "folder": "stage28", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ()},
 
@@ -199,6 +206,49 @@ def point_in_pit(x, y, pits, margin=0.0):
     return False
 
 
+def point_on_spiral_ground(x, y, stage, margin=0.0):
+    center_x, center_y = stage.get("spiral_center", (0.0, 0.0))
+    delta_x = x - center_x
+    delta_y = y - center_y
+    radius_from_center = math.sqrt(delta_x * delta_x + delta_y * delta_y)
+    core_radius = stage["spiral_core_radius"]
+    if radius_from_center <= core_radius + margin:
+        return True
+
+    start_radius = stage["spiral_start_radius"]
+    end_radius = stage["spiral_end_radius"]
+    start_angle = stage["spiral_start_angle"]
+    total_angle = stage["spiral_turns"] * math.pi * 2.0
+    half_width = stage["spiral_width"] * 0.5 + margin
+    if total_angle <= 0.0:
+        raise RuntimeError(stage["display"] + " has an invalid spiral angle")
+
+    point_angle = math.atan2(delta_y, delta_x)
+    for revolution in range(-4, 5):
+        angle = point_angle + revolution * math.pi * 2.0
+        progress = (angle - start_angle) / total_angle
+        if progress < -0.0001 or progress > 1.0001:
+            continue
+        if progress < 0.0:
+            progress = 0.0
+        if progress > 1.0:
+            progress = 1.0
+        expected_radius = start_radius + (end_radius - start_radius) * progress
+        expected_x = center_x + expected_radius * math.cos(angle)
+        expected_y = center_y + expected_radius * math.sin(angle)
+        distance_x = x - expected_x
+        distance_y = y - expected_y
+        if distance_x * distance_x + distance_y * distance_y <= half_width * half_width:
+            return True
+    return False
+
+
+def point_on_stage_ground(x, y, stage, margin=0.0):
+    if stage.get("ground_shape") == "spiral":
+        return point_on_spiral_ground(x, y, stage, margin)
+    return not point_in_pit(x, y, stage["pits"], margin)
+
+
 def point_on_static_platform(x, y, stage, margin=0.0):
     for platform in stage.get("static_platforms", ()):
         center_x, center_y, half_size = platform
@@ -230,8 +280,8 @@ def validate_stage(stage):
 
     for label in ("start", "goal"):
         point = stage[label]
-        if point_in_pit(point[0], point[1], pits, margin=1.0):
-            raise RuntimeError(stage["display"] + " " + label + " overlaps a pit")
+        if not point_on_stage_ground(point[0], point[1], stage, margin=1.0):
+            raise RuntimeError(stage["display"] + " " + label + " is outside the playable ground")
 
     stage_dir = MODEL_DIR / stage["folder"]
     conflicts = []
@@ -251,7 +301,7 @@ def validate_stage(stage):
                 y = float(row["PosZ"])
                 position_y = float(row.get("PosY", "0"))
                 elevated_and_supported = position_y > 0.5 and point_on_static_platform(x, y, stage, margin=0.8)
-                if point_in_pit(x, y, pits, margin=0.8) and not elevated_and_supported:
+                if not point_on_stage_ground(x, y, stage, margin=0.8) and not elevated_and_supported:
                     conflicts.append(csv_name + ":" + str(row_index))
 
     render_path = stage_dir / "XFileList_simple.csv"
@@ -272,7 +322,7 @@ def validate_stage(stage):
                 y = float(row["PosZ"])
                 position_y = float(row.get("PosY", "0"))
                 elevated_and_supported = position_y > 0.5 and point_on_static_platform(x, y, stage, margin=0.8)
-                if point_in_pit(x, y, pits, margin=0.8) and not elevated_and_supported:
+                if not point_on_stage_ground(x, y, stage, margin=0.8) and not elevated_and_supported:
                     conflicts.append("XFileList_simple.csv:" + str(row_index))
 
     collision_rectangles = load_collision_rectangles(stage)
@@ -461,7 +511,7 @@ def has_safe_route(stage, rectangles):
             return True
         if y < -half_depth + player_margin or y > half_depth - player_margin:
             return True
-        if point_in_pit(x, y, pits, margin=player_margin):
+        if not point_on_stage_ground(x, y, stage, margin=player_margin):
             if not supported_by_moving_platform(x, y) and not supported_by_static_platform(x, y):
                 return True
         for zone_x, zone_y, radius in lava_zones:
@@ -625,7 +675,182 @@ def create_visual_ground_extension(world, top_material, play_half_size):
     obj["_x_mesh_name"] = object_name + "Geo"
     return obj
 
+def add_triangle(vertices, faces, uvs, material_indices, coordinates, triangle_uvs, material_index):
+    start = len(vertices)
+    vertices.extend(coordinates)
+    uvs.extend(triangle_uvs)
+    faces.append((start, start + 1, start + 2))
+    material_indices.append(material_index)
+
+
+def create_spiral_stage_ground(stage, top_material, side_material):
+    center_x, center_y = stage.get("spiral_center", (0.0, 0.0))
+    start_radius = stage["spiral_start_radius"]
+    end_radius = stage["spiral_end_radius"]
+    start_angle = stage["spiral_start_angle"]
+    turns = stage["spiral_turns"]
+    strip_width = stage["spiral_width"]
+    sample_count = int(stage["spiral_samples"])
+    if sample_count < 8 or turns <= 0.0 or strip_width <= 0.0:
+        raise RuntimeError(stage["display"] + " has invalid spiral geometry settings")
+
+    vertices = []
+    faces = []
+    uvs = []
+    material_indices = []
+    centerline = []
+    total_angle = turns * math.pi * 2.0
+    radius_per_angle = (end_radius - start_radius) / total_angle
+
+    for sample_index in range(sample_count):
+        progress = sample_index / float(sample_count - 1)
+        angle = start_angle + total_angle * progress
+        radius = start_radius + (end_radius - start_radius) * progress
+        position_x = center_x + radius * math.cos(angle)
+        position_y = center_y + radius * math.sin(angle)
+        derivative_x = radius_per_angle * math.cos(angle) - radius * math.sin(angle)
+        derivative_y = radius_per_angle * math.sin(angle) + radius * math.cos(angle)
+        derivative_length = math.sqrt(derivative_x * derivative_x + derivative_y * derivative_y)
+        if derivative_length <= 0.0001:
+            raise RuntimeError(stage["display"] + " has a zero-length spiral tangent")
+        tangent_x = derivative_x / derivative_length
+        tangent_y = derivative_y / derivative_length
+        normal_x = -tangent_y
+        normal_y = tangent_x
+        half_width = strip_width * 0.5
+        left = (position_x + normal_x * half_width, position_y + normal_y * half_width)
+        right = (position_x - normal_x * half_width, position_y - normal_y * half_width)
+        centerline.append((left, right))
+
+    for sample_index in range(sample_count - 1):
+        left_a, right_a = centerline[sample_index]
+        left_b, right_b = centerline[sample_index + 1]
+        distance_u = sample_index / 8.0
+        segment_length = math.sqrt(
+            (left_b[0] - left_a[0]) * (left_b[0] - left_a[0])
+            + (left_b[1] - left_a[1]) * (left_b[1] - left_a[1])
+        )
+        add_quad(
+            vertices,
+            faces,
+            uvs,
+            material_indices,
+            ((left_a[0], left_a[1], 0.0),
+             (right_a[0], right_a[1], 0.0),
+             (right_b[0], right_b[1], 0.0),
+             (left_b[0], left_b[1], 0.0)),
+            ((distance_u, 0.0),
+             (distance_u, 0.7),
+             (distance_u + segment_length / 8.0, 0.7),
+             (distance_u + segment_length / 8.0, 0.0)),
+            0,
+        )
+        add_quad(
+            vertices,
+            faces,
+            uvs,
+            material_indices,
+            ((left_a[0], left_a[1], 0.0),
+             (left_b[0], left_b[1], 0.0),
+             (left_b[0], left_b[1], SLAB_BOTTOM),
+             (left_a[0], left_a[1], SLAB_BOTTOM)),
+            ((0.0, 0.0),
+             (segment_length / 4.0, 0.0),
+             (segment_length / 4.0, 2.25),
+             (0.0, 2.25)),
+            1,
+        )
+        add_quad(
+            vertices,
+            faces,
+            uvs,
+            material_indices,
+            ((right_b[0], right_b[1], 0.0),
+             (right_a[0], right_a[1], 0.0),
+             (right_a[0], right_a[1], SLAB_BOTTOM),
+             (right_b[0], right_b[1], SLAB_BOTTOM)),
+            ((0.0, 0.0),
+             (segment_length / 4.0, 0.0),
+             (segment_length / 4.0, 2.25),
+             (0.0, 2.25)),
+            1,
+        )
+
+    first_left, first_right = centerline[0]
+    add_quad(
+        vertices,
+        faces,
+        uvs,
+        material_indices,
+        ((first_right[0], first_right[1], 0.0),
+         (first_left[0], first_left[1], 0.0),
+         (first_left[0], first_left[1], SLAB_BOTTOM),
+         (first_right[0], first_right[1], SLAB_BOTTOM)),
+        ((0.0, 0.0), (0.7, 0.0), (0.7, 2.25), (0.0, 2.25)),
+        1,
+    )
+
+    core_radius = stage["spiral_core_radius"]
+    core_segments = 48
+    for segment_index in range(core_segments):
+        angle_a = math.pi * 2.0 * segment_index / float(core_segments)
+        angle_b = math.pi * 2.0 * (segment_index + 1) / float(core_segments)
+        core_a = (center_x + core_radius * math.cos(angle_a), center_y + core_radius * math.sin(angle_a))
+        core_b = (center_x + core_radius * math.cos(angle_b), center_y + core_radius * math.sin(angle_b))
+        add_triangle(
+            vertices,
+            faces,
+            uvs,
+            material_indices,
+            ((center_x, center_y, 0.0),
+             (core_a[0], core_a[1], 0.0),
+             (core_b[0], core_b[1], 0.0)),
+            ((center_x / 8.0, center_y / 8.0),
+             (core_a[0] / 8.0, core_a[1] / 8.0),
+             (core_b[0] / 8.0, core_b[1] / 8.0)),
+            0,
+        )
+        add_quad(
+            vertices,
+            faces,
+            uvs,
+            material_indices,
+            ((core_a[0], core_a[1], 0.0),
+             (core_b[0], core_b[1], 0.0),
+             (core_b[0], core_b[1], SLAB_BOTTOM),
+             (core_a[0], core_a[1], SLAB_BOTTOM)),
+            ((0.0, 0.0), (0.7, 0.0), (0.7, 2.25), (0.0, 2.25)),
+            1,
+        )
+
+    object_name = "Stage" + stage["display"].replace("-", "_") + "Ground"
+    mesh = bpy.data.meshes.new(object_name + "Geo")
+    mesh.from_pydata(vertices, (), faces)
+    mesh.update(calc_edges=True)
+    mesh.materials.append(top_material)
+    mesh.materials.append(side_material)
+
+    for polygon_index, polygon in enumerate(mesh.polygons):
+        polygon.use_smooth = False
+        polygon.material_index = material_indices[polygon_index]
+
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            uv_layer.data[loop_index].uv = uvs[vertex_index]
+
+    obj = bpy.data.objects.new(object_name, mesh)
+    bpy.context.collection.objects.link(obj)
+    obj["_x_frame_name"] = object_name
+    obj["_x_mesh_name"] = object_name + "Geo"
+    return obj
+
+
 def create_stage_ground(stage, top_material, side_material):
+    if stage.get("ground_shape") == "spiral":
+        return create_spiral_stage_ground(stage, top_material, side_material)
+
     half_width, half_depth = stage["size"]
     pits = stage["pits"]
     vertices = []

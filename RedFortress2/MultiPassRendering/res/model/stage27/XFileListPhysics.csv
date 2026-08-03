@@ -15,7 +15,14 @@
 3712,res/model/cubeWoodSmall/cube_wood_small_collision.x,26,0,0,0,0,0,1,Collision,n,
 3713,res/model/cubeWoodSmall/cube_wood_small_collision.x,-38,0,60,0,0,0,1,Collision,n,
 3714,res/model/cubeWoodSmall/cube_wood_small_collision.x,38,0,60,0,0,0,1,Collision,n,
-3715,res/model/collision_moving_platform.x,-20,0.4,52,0,0,0,1,Collision,y,
+3720,res/model/base/base_rock1_collision.x,-4,0,38,0,25,0,0.65,Collision,n,
+3721,res/model/base/base_rock2_collision.x,20,0,40,0,130,0,0.55,Collision,n,
+3722,res/model/base/base_rock1_collision.x,30,0,26,0,70,0,0.7,Collision,n,
+3723,res/model/base/base_rock2_collision.x,40,0,6,0,200,0,0.55,Collision,n,
+3724,res/model/base/base_rock1_collision.x,-30,0,-6,0,290,0,0.65,Collision,n,
+3725,res/model/base/base_rock2_collision.x,-40,0,-26,0,150,0,0.6,Collision,n,
+3726,res/model/base/base_rock1_collision.x,-28,0,-42,0,35,0,0.7,Collision,n,
+3727,res/model/base/base_rock2_collision.x,28,0,-42,0,220,0,0.6,Collision,n,
 8090,res/model/collision_wall/collision_wall_tall_collision.x,-42,1.5,-72,0,0,0,1,Collision,n
 8091,res/model/collision_wall/collision_wall_tall_collision.x,0,1.5,0,0,90,0,1,Collision,n
 8092,res/model/collision_wall/collision_wall_tall_collision.x,42,1.5,72,0,0,0,1,Collision,n
