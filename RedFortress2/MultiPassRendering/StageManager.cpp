@@ -62,7 +62,7 @@ void StageManager::Initialize()
     AddStage(L"3-7", 23, L"Stage 3-7", L"stage27", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
     AddStage(L"3-8", 24, L"Stage 3-8", L"stage28", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    AddStage(L"4-1", 25, L"Stage 4-1", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"4-1", 25, L"Stage 4-1", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -80.0f), D3DXVECTOR3(0.0f, 1.0f, 80.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
     AddStage(L"4-2", 26, L"Stage 4-2", L"stage14", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
