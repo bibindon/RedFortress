@@ -34,6 +34,7 @@ public:
     void Update(NSRender::Render& render, float deltaSeconds);
 
     AttackTriggerActivation TryActivateInAttackRange(
+        NSRender::Render& render,
         const D3DXVECTOR3& playerPosition,
         float playerYaw,
         float range,
@@ -49,11 +50,16 @@ private:
         AttackTriggerType type = AttackTriggerType::Lever;
         int targetCsvId = -1;
         int targetPhysicsId = -1;
+        bool hasTarget = false;
         int visualMeshId = -1;
         int activeVisualMeshId = -1;
         bool leverActive = false;
         bool buttonActive = false;
         float buttonElapsed = 0.0f;
+        float lightBrightness = 2.8f;
+        float lightRange = 10.0f;
+        D3DXCOLOR lightColor = D3DXCOLOR(1.0f, 0.86f, 0.62f, 1.0f);
+        std::wstring lightOwnerTag;
         bool ropeUsed = false;
         bool stopSoundPlayed = false;
         D3DXVECTOR3 triggerPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -76,6 +82,10 @@ private:
                        float deltaSeconds);
     void ApplyTargetTransform(NSRender::Render& render,
                               const Trigger& trigger);
+    void ActivateButtonLight(NSRender::Render& render,
+                             const Trigger& trigger);
+    void DeactivateButtonLight(NSRender::Render& render,
+                               const Trigger& trigger);
     void PlayMovementStartSound(const Trigger& trigger);
     void PlayMovementStopSound();
 

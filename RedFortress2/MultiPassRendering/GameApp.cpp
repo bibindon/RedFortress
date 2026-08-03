@@ -1689,6 +1689,7 @@ void GameApp::Run()
                         {
                             const AttackTriggerActivation triggerActivation =
                                 m_attackTriggerManager.TryActivateInAttackRange(
+                                    m_render,
                                     m_playerMover.GetPosition(), m_playerYaw,
                                     attackDefinition.range, attackDefinition.verticalRange,
                                     attackDefinition.halfAngleRadians);
@@ -3692,6 +3693,17 @@ void GameApp::ApplyStageEnvironmentLighting(const std::wstring& stageId)
         m_render.SetLightColor(D3DXCOLOR(0.16f, 0.20f, 0.36f, 1.0f));
         m_render.SetAmbientLightBrightness(0.055f);
         m_render.SetAmbientLightColor(D3DXCOLOR(0.10f, 0.15f, 0.28f, 1.0f));
+        return;
+    }
+
+    if (stageId == L"3-1")
+    {
+        m_render.SetPostEffectSaturate(0.82f);
+        m_render.SetMeshMixShadowDarkness(0.92f);
+        m_render.SetLightBrightness(0.018f);
+        m_render.SetLightColor(D3DXCOLOR(0.10f, 0.12f, 0.20f, 1.0f));
+        m_render.SetAmbientLightBrightness(0.022f);
+        m_render.SetAmbientLightColor(D3DXCOLOR(0.035f, 0.045f, 0.090f, 1.0f));
         return;
     }
 

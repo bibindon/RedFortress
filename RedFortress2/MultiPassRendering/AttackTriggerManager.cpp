@@ -23,6 +23,7 @@ namespace
     const std::wstring kButtonActiveModelPath =
         L"res\\model\\pressure_plate\\pressure_plate_green.x";
     const float kTimedButtonDurationSeconds = 10.0f;
+    const float kButtonLightOffsetY = 2.5f;
     const float kTargetAngle = D3DX_PI * 0.5f;
     const float kRotationSpeed = D3DX_PI * 0.5f;
     const float kPlayerAttackCenterHeight = 1.0f;
@@ -149,20 +150,49 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
         const float targetScale = std::stof(cells[10]);
         trigger.targetScale = D3DXVECTOR3(targetScale, targetScale, targetScale);
 
-        if (!loadedTriggerIds.insert(trigger.id).second ||
-            !loadedTargetIds.insert(trigger.targetCsvId).second)
+        if (trigger.type == AttackTriggerType::Button)
+        {
+            if (cells.size() >= 16)
+            {
+                trigger.lightBrightness = std::stof(cells[11]);
+                trigger.lightRange = std::stof(cells[12]);
+                trigger.lightColor.r = std::stof(cells[13]);
+                trigger.lightColor.g = std::stof(cells[14]);
+                trigger.lightColor.b = std::stof(cells[15]);
+                if (trigger.lightBrightness <= 0.0f || trigger.lightRange <= 0.0f)
+                {
+                    std::abort();
+                }
+            }
+            trigger.lightOwnerTag =
+                std::wstring(L"attack-trigger-button-") + std::to_wstring(trigger.id);
+        }
+
+        if (!loadedTriggerIds.insert(trigger.id).second)
         {
             std::abort();
         }
 
-        if (!render.TryGetCsvMeshPosition(trigger.targetCsvId, &trigger.targetPosition))
+        if (trigger.targetCsvId >= 0)
         {
-            std::abort();
-        }
+            if (!loadedTargetIds.insert(trigger.targetCsvId).second)
+            {
+                std::abort();
+            }
+            if (!render.TryGetCsvMeshPosition(trigger.targetCsvId, &trigger.targetPosition))
+            {
+                std::abort();
+            }
 
-        trigger.targetPhysicsId =
-            PhysicsLib::PhysicsLib::GetCsvObjectId(trigger.targetCsvId);
-        if (trigger.targetPhysicsId < 0)
+            trigger.targetPhysicsId =
+                PhysicsLib::PhysicsLib::GetCsvObjectId(trigger.targetCsvId);
+            if (trigger.targetPhysicsId < 0)
+            {
+                std::abort();
+            }
+            trigger.hasTarget = true;
+        }
+        else if (trigger.type != AttackTriggerType::Button)
         {
             std::abort();
         }
@@ -226,6 +256,10 @@ void AttackTriggerManager::Clear(NSRender::Render& render)
 {
     for (Trigger& trigger : m_triggers)
     {
+        if (trigger.type == AttackTriggerType::Button)
+        {
+            DeactivateButtonLight(render, trigger);
+        }
         if (trigger.visualMeshId >= 0)
         {
             render.RemoveMeshMix(trigger.visualMeshId);
@@ -255,6 +289,7 @@ void AttackTriggerManager::Update(NSRender::Render& render,
 }
 
 AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
+    NSRender::Render& render,
     const D3DXVECTOR3& playerPosition,
     const float playerYaw,
     const float range,
@@ -316,6 +351,7 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
         trigger.buttonActive = true;
         trigger.buttonElapsed = 0.0f;
         trigger.stopSoundPlayed = false;
+        ActivateButtonLight(render, trigger);
         PlayMovementStartSound(trigger);
         return AttackTriggerActivation::Button;
     }
@@ -389,7 +425,13 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
             {
                 trigger.buttonActive = false;
                 trigger.buttonElapsed = 0.0f;
+                DeactivateButtonLight(render, trigger);
                 trigger.stopSoundPlayed = false;
+                if (!trigger.hasTarget)
+                {
+                    PlayMovementStopSound();
+                    trigger.stopSoundPlayed = true;
+                }
             }
         }
         render.SetMeshMixEnabled(trigger.visualMeshId, !trigger.buttonActive);
@@ -408,7 +450,9 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
     {
         targetAngle = kTargetAngle;
     }
-    else if (trigger.type == AttackTriggerType::Button && trigger.buttonActive)
+    else if (trigger.type == AttackTriggerType::Button &&
+             trigger.hasTarget &&
+             trigger.buttonActive)
     {
         targetAngle = kTargetAngle;
     }
@@ -424,12 +468,13 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
         trigger.currentAngle = (std::max)(trigger.currentAngle - angleStep, targetAngle);
     }
 
-    if (trigger.currentAngle != previousAngle)
+    if (trigger.currentAngle != previousAngle && trigger.hasTarget)
     {
         ApplyTargetTransform(render, trigger);
     }
 
-    if (trigger.currentAngle == targetAngle &&
+    if (trigger.hasTarget &&
+        trigger.currentAngle == targetAngle &&
         previousAngle != trigger.currentAngle &&
         !trigger.stopSoundPlayed)
     {
@@ -474,6 +519,30 @@ void AttackTriggerManager::ApplyTargetTransform(NSRender::Render& render,
                                                trigger.targetScale);
     PhysicsLib::PhysicsLib::SetVelocity(trigger.targetPhysicsId,
                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+}
+
+void AttackTriggerManager::ActivateButtonLight(NSRender::Render& render,
+                                                const Trigger& trigger)
+{
+    render.RemovePointLightsByOwnerTag(trigger.lightOwnerTag);
+    const D3DXVECTOR3 lightPosition =
+        trigger.triggerPosition + D3DXVECTOR3(0.0f, kButtonLightOffsetY, 0.0f);
+    render.AddPointLight(lightPosition,
+                         trigger.lightBrightness,
+                         trigger.lightColor,
+                         NSRender::PointLightShape::Point,
+                         12.0f,
+                         10.0f,
+                         10.0f,
+                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                         trigger.lightRange,
+                         trigger.lightOwnerTag);
+}
+
+void AttackTriggerManager::DeactivateButtonLight(NSRender::Render& render,
+                                                  const Trigger& trigger)
+{
+    render.RemovePointLightsByOwnerTag(trigger.lightOwnerTag);
 }
 
 void AttackTriggerManager::PlayMovementStartSound(const Trigger& trigger)

@@ -105,5 +105,10 @@
 8088,../fence.x,-60,0.5,116,0,90,0,1,normal
 8089,../fence.x,60,0.5,116,0,90,0,1,normal
 8090,../collision_wall/collision_wall_tall.x,-42,1.5,-72,0,0,0,1,meshmix2
-8091,../collision_wall/collision_wall_tall.x,0,1.5,0,0,90,0,1,meshmix2
 8092,../collision_wall/collision_wall_tall.x,42,1.5,72,0,0,0,1,meshmix2
+3201,../collision_moving_platform/collision_moving_platform.x,0,0.4,-8,0,0,0,2,meshmix2
+3202,../cubeEmitYellow.x,0,1.0,-24,0,0,0,0.5,normal
+3203,../cubeEmitYellow.x,-9,1.0,-12,0,0,0,0.5,normal
+3204,../cubeEmitYellow.x,0,1.0,4,0,0,0,0.5,normal
+3205,../cubeEmitYellow.x,0,1.0,14,0,0,0,0.5,normal
+3206,../cubeEmitYellow.x,0,1.0,22,0,0,0,0.5,normal
