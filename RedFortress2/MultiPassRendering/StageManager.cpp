@@ -163,6 +163,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.pressurePlateCsvPath = basePath + L"PressurePlates.csv";
     stage.pushableBoxCsvPath = basePath + L"PushableBoxes.csv";
     stage.attackTriggerCsvPath = basePath + L"AttackTriggers.csv";
+    stage.warpBearCsvPath = basePath + L"WarpBears.csv";
     stage.renderSettingsCsvPath = renderSettingsCsvPath;
     stage.weather = weather;
     stage.playerPointLightEnabled = playerPointLightEnabled;

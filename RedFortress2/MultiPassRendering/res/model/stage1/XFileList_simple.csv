@@ -41,3 +41,5 @@
 305,../collision_wall/collision_wall_tall.x,-10,1.5,20,0,90,0,1,meshmix2
 310,../attack_block/attack_wall.x,0,1.5,-20,0,0,0,1,meshmix2
 311,../attack_block/attack_floor.x,0,0,-8,0,0,0,1,meshmix2
+5000,../warp_bear/warp_bear.x,-4,0.2,-10,0,0,0,1,meshmix2
+5001,../warp_bear/warp_bear.x,4,0.2,12,0,180,0,1,meshmix2

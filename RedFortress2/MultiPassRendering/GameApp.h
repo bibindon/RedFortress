@@ -39,6 +39,7 @@
 #include "PressurePlateManager.h"
 #include "PushableBoxManager.h"
 #include "AttackTriggerManager.h"
+#include "WarpBearManager.h"
 #include "DebugRpc.h"
 
 struct ActiveBomb
@@ -137,6 +138,8 @@ private:
     static bool IsBossStageNumber(int stageNumber);
     void BeginStageIntro();
     void UpdateStageIntro();
+    void UpdateWarp();
+    void BeginWarp(const D3DXVECTOR3& targetPosition, float targetRotationY);
     void DamagePlayerHp(int amount);
     void ProcessEnemyAttackHits();
     void ApplyLavaDamageToEnemies();
@@ -265,6 +268,7 @@ private:
     enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageExit, BossDefeat, StageClear, GameOver, Ending, EndingFin };
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
     enum class RespawnPhase { None, FadeOut, HoldBlack, FadeIn };
+    enum class WarpPhase { None, FadeOut, HoldBlack, FadeIn };
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
     enum class QteVisualPhase { None, Active, Restoring };
@@ -372,6 +376,7 @@ private:
     PressurePlateManager m_pressurePlateManager;
     PushableBoxManager m_pushableBoxManager;
     AttackTriggerManager m_attackTriggerManager;
+    WarpBearManager m_warpBearManager;
     int m_playerInvincibleFrames = 0;
     int m_stickMeshId = -1;
     int m_saberMeshId = -1;
@@ -381,6 +386,10 @@ private:
     D3DXVECTOR3 m_playerKnockbackDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int m_respawnFadeFrames = 0;
     RespawnPhase m_respawnPhase = RespawnPhase::None;
+    WarpPhase m_warpPhase = WarpPhase::None;
+    int m_warpFadeFrames = 0;
+    D3DXVECTOR3 m_warpTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    float m_warpTargetRotationY = 0.0f;
     bool m_playerDeathPending = false;
     bool m_playerFallingDead = false;
     int m_fallDeathFrames = 0;

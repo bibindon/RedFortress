@@ -208,6 +208,7 @@
     <ClCompile Include="PressurePlateManager.cpp" />
     <ClCompile Include="PushableBoxManager.cpp" />
     <ClCompile Include="AttackTriggerManager.cpp" />
+    <ClCompile Include="WarpBearManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameAudio.cpp" />
   </ItemGroup>
@@ -261,6 +262,7 @@
     <ClInclude Include="PressurePlateManager.h" />
     <ClInclude Include="PushableBoxManager.h" />
     <ClInclude Include="AttackTriggerManager.h" />
+    <ClInclude Include="WarpBearManager.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GameAudio.h" />
   </ItemGroup>

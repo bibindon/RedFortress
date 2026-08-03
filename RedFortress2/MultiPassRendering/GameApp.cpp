@@ -254,6 +254,10 @@ namespace
     const int kRespawnFadeOutFrames = 30;
     const int kRespawnBlackHoldFrames = 12;
     const int kRespawnFadeInFrames = 24;
+    const int kWarpFadeOutFrames = 15;
+    const int kWarpBlackHoldFrames = 6;
+    const int kWarpFadeInFrames = 15;
+    const float kWarpFadeDurationSeconds = 0.25f;
     const int kStageTitleFrameMax = 180;
     const int kGameOverFadeFrames = 18;
     const float kFallDeathY = -10.0f;
@@ -781,6 +785,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_pushableBoxManager.LoadForStage(m_render, initialStage.pushableBoxCsvPath);
     m_attackTriggerManager.Initialize();
     m_attackTriggerManager.LoadForStage(m_render, initialStage.attackTriggerCsvPath);
+    m_warpBearManager.LoadForStage(initialStage.warpBearCsvPath);
 
     m_destructibleManager.Initialize(m_render);
     m_destructibleManager.SetStarDropCallback([this]() {
@@ -1196,6 +1201,12 @@ void GameApp::Run()
         {
             UpdateStageIntro();
         }
+        else if (m_warpPhase != WarpPhase::None)
+        {
+            UpdateWarp();
+            m_render.Draw();
+            continue;
+        }
         else
         {
             if (m_craftMenu.BlocksGameInput())
@@ -1303,6 +1314,8 @@ void GameApp::Run()
                         // フェードイン完了。死亡シーケンス終了。
                         m_respawnPhase = RespawnPhase::None;
                         m_playerDeathPending = false;
+    m_warpPhase = WarpPhase::None;
+    m_warpFadeFrames = 0;
                     }
                 }
 
@@ -1630,6 +1643,19 @@ void GameApp::Run()
                 {
                     m_playerMover.Update(m_pendingMove, m_pendingJump);
                 }
+
+                m_warpBearManager.Update(m_playerMover.GetPosition());
+                D3DXVECTOR3 warpTargetPosition;
+                float warpTargetRotationY = 0.0f;
+                if (m_warpBearManager.TryGetWarpTarget(m_playerMover.GetPosition(),
+                                                         &warpTargetPosition,
+                                                         &warpTargetRotationY))
+                {
+                    BeginWarp(warpTargetPosition, warpTargetRotationY);
+                    m_render.Draw();
+                    continue;
+                }
+
                 UpdateDashParticleEffect();
                 m_dashBoosterManager.Update(m_playerMover.GetPosition(), m_playerMover);
                 m_collectibleManager.Update(m_playerMover.GetPosition(), m_destructibleManager);
@@ -6812,6 +6838,8 @@ void GameApp::CompletePlayerDeath()
     {
         // GameOver へ移行。以降は UpdateGameOver がフェードを担当する。
         m_playerDeathPending = false;
+    m_warpPhase = WarpPhase::None;
+    m_warpFadeFrames = 0;
         m_respawnPhase = RespawnPhase::None;
         StartGameOverSequence();
         return;
@@ -7045,6 +7073,8 @@ void GameApp::BeginReturnToTitle()
     m_stageClearFrame = 0;
     m_stageClearVisualOffsetY = 0.0f;
     m_playerDeathPending = false;
+    m_warpPhase = WarpPhase::None;
+    m_warpFadeFrames = 0;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
     m_gameOverPhase = GameOverPhase::None;
@@ -7284,6 +7314,7 @@ void GameApp::LoadCurrentStageObjects()
     m_pressurePlateManager.LoadForStage(m_render, stage.pressurePlateCsvPath);
     m_pushableBoxManager.LoadForStage(m_render, stage.pushableBoxCsvPath);
     m_attackTriggerManager.LoadForStage(m_render, stage.attackTriggerCsvPath);
+    m_warpBearManager.LoadForStage(stage.warpBearCsvPath);
 
     if (!IsStageSelectId(stage.id) &&
         !IsBaseId(stage.id) &&
@@ -7309,6 +7340,8 @@ void GameApp::LoadCurrentStageObjects()
     ResetBusterAimState();
     m_playerAttackController.SelectClubCategory();
     m_playerDeathPending = false;
+    m_warpPhase = WarpPhase::None;
+    m_warpFadeFrames = 0;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
     m_render.SetSceneUpdatePaused(false);
@@ -7546,6 +7579,64 @@ void GameApp::UpdateStageIntro()
     }
 }
 
+void GameApp::BeginWarp(const D3DXVECTOR3& targetPosition, const float targetRotationY)
+{
+    if (m_warpPhase != WarpPhase::None)
+    {
+        return;
+    }
+
+    m_warpTargetPosition = targetPosition;
+    m_warpTargetRotationY = targetRotationY;
+    m_warpPhase = WarpPhase::FadeOut;
+    m_warpFadeFrames = kWarpFadeOutFrames;
+    m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_pendingJump = false;
+    m_playerAttackController.Reset();
+    m_playerKnockbackFrames = 0;
+    m_playerSlowFrames = 0;
+    m_render.StartFadeOut(kWarpFadeDurationSeconds);
+}
+
+void GameApp::UpdateWarp()
+{
+    if (m_warpPhase == WarpPhase::FadeOut)
+    {
+        --m_warpFadeFrames;
+        if (m_warpFadeFrames <= 0 && m_render.GetFadeAlpha() >= 1.0f)
+        {
+            m_playerMover.Reset(m_warpTargetPosition);
+            m_playerYaw = m_warpTargetRotationY;
+            m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            m_pendingJump = false;
+            UpdatePlayerMeshAndCamera(m_warpTargetPosition);
+            m_warpPhase = WarpPhase::HoldBlack;
+            m_warpFadeFrames = kWarpBlackHoldFrames;
+        }
+        return;
+    }
+
+    if (m_warpPhase == WarpPhase::HoldBlack)
+    {
+        --m_warpFadeFrames;
+        if (m_warpFadeFrames <= 0)
+        {
+            m_warpPhase = WarpPhase::FadeIn;
+            m_warpFadeFrames = kWarpFadeInFrames;
+            m_render.StartFadeIn(kWarpFadeDurationSeconds);
+        }
+        return;
+    }
+
+    if (m_warpPhase == WarpPhase::FadeIn)
+    {
+        --m_warpFadeFrames;
+        if (m_warpFadeFrames <= 0 && m_render.GetFadeAlpha() <= 0.0f)
+        {
+            m_warpPhase = WarpPhase::None;
+        }
+    }
+}
 void GameApp::DrawStageTitle()
 {
     if (m_stageTitleFrame <= 0)

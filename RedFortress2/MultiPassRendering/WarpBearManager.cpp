@@ -1,8 +1,10 @@
-#include "WarpBearManager.h"
+﻿#include "WarpBearManager.h"
 
 #include "../../RedFortressRender/Render/Util.h"
 
+#include <cmath>
 #include <cstdlib>
+#include <cwchar>
 #include <fstream>
 #include <sstream>
 
@@ -53,7 +55,7 @@ float ParseFloat(const std::wstring& value)
 
     wchar_t* end = nullptr;
     const float parsed = std::wcstof(trimmed.c_str(), &end);
-    if (end == trimmed.c_str() || *end != L' ' && *end != L'\t' && *end != L'\r' && *end != L'\0')
+    if (end == trimmed.c_str() || *end != L'\0')
     {
         std::abort();
     }
