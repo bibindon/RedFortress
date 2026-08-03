@@ -13,14 +13,16 @@ class Render;
 enum class AttackTriggerType
 {
     Lever,
-    Rope
+    Rope,
+    Button
 };
 
 enum class AttackTriggerActivation
 {
     None,
     Lever,
-    Rope
+    Rope,
+    Button
 };
 
 class AttackTriggerManager
@@ -48,7 +50,10 @@ private:
         int targetCsvId = -1;
         int targetPhysicsId = -1;
         int visualMeshId = -1;
+        int activeVisualMeshId = -1;
         bool leverActive = false;
+        bool buttonActive = false;
+        float buttonElapsed = 0.0f;
         bool ropeUsed = false;
         bool stopSoundPlayed = false;
         D3DXVECTOR3 triggerPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

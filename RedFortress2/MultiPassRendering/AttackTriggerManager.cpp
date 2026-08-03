@@ -18,6 +18,11 @@ namespace
         L"res\\model\\attack_trigger\\lever.x";
     const std::wstring kRopeModelPath =
         L"res\\model\\attack_trigger\\rope.x";
+    const std::wstring kButtonInactiveModelPath =
+        L"res\\model\\pressure_plate\\pressure_plate_black.x";
+    const std::wstring kButtonActiveModelPath =
+        L"res\\model\\pressure_plate\\pressure_plate_green.x";
+    const float kTimedButtonDurationSeconds = 10.0f;
     const float kTargetAngle = D3DX_PI * 0.5f;
     const float kRotationSpeed = D3DX_PI * 0.5f;
     const float kPlayerAttackCenterHeight = 1.0f;
@@ -60,6 +65,10 @@ namespace
         if (value == L"Rope")
         {
             return AttackTriggerType::Rope;
+        }
+        if (value == L"Button" || value == L"TimedButton")
+        {
+            return AttackTriggerType::Button;
         }
         std::abort();
     }
@@ -158,26 +167,55 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
             std::abort();
         }
 
-        std::wstring visualModelPath;
-        if (trigger.type == AttackTriggerType::Lever)
+        if (trigger.type == AttackTriggerType::Button)
         {
-            visualModelPath = kLeverModelPath;
+            trigger.visualMeshId = render.AddMeshMix(
+                kButtonInactiveModelPath,
+                trigger.triggerPosition,
+                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                1.0f,
+                -1.0f,
+                false,
+                false,
+                false);
+            trigger.activeVisualMeshId = render.AddMeshMix(
+                kButtonActiveModelPath,
+                trigger.triggerPosition,
+                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                1.0f,
+                -1.0f,
+                false,
+                false,
+                false);
+            if (trigger.visualMeshId < 0 || trigger.activeVisualMeshId < 0)
+            {
+                std::abort();
+            }
+            render.SetMeshMixEnabled(trigger.activeVisualMeshId, false);
         }
         else
         {
-            visualModelPath = kRopeModelPath;
-        }
-        trigger.visualMeshId = render.AddMeshMix(visualModelPath,
-                                                 trigger.triggerPosition,
-                                                 D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                 1.0f,
-                                                 -1.0f,
-                                                 false,
-                                                 false,
-                                                 false);
-        if (trigger.visualMeshId < 0)
-        {
-            std::abort();
+            std::wstring visualModelPath;
+            if (trigger.type == AttackTriggerType::Lever)
+            {
+                visualModelPath = kLeverModelPath;
+            }
+            else
+            {
+                visualModelPath = kRopeModelPath;
+            }
+            trigger.visualMeshId = render.AddMeshMix(visualModelPath,
+                                                     trigger.triggerPosition,
+                                                     D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                                     1.0f,
+                                                     -1.0f,
+                                                     false,
+                                                     false,
+                                                     false);
+            if (trigger.visualMeshId < 0)
+            {
+                std::abort();
+            }
         }
 
         m_triggers.push_back(trigger);
@@ -192,6 +230,11 @@ void AttackTriggerManager::Clear(NSRender::Render& render)
         {
             render.RemoveMeshMix(trigger.visualMeshId);
             trigger.visualMeshId = -1;
+        }
+        if (trigger.activeVisualMeshId >= 0)
+        {
+            render.RemoveMeshMix(trigger.activeVisualMeshId);
+            trigger.activeVisualMeshId = -1;
         }
     }
     m_triggers.clear();
@@ -268,6 +311,15 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
         return AttackTriggerActivation::Lever;
     }
 
+    if (trigger.type == AttackTriggerType::Button)
+    {
+        trigger.buttonActive = true;
+        trigger.buttonElapsed = 0.0f;
+        trigger.stopSoundPlayed = false;
+        PlayMovementStartSound(trigger);
+        return AttackTriggerActivation::Button;
+    }
+
     trigger.ropeUsed = true;
     trigger.stopSoundPlayed = false;
     PlayMovementStartSound(trigger);
@@ -328,6 +380,22 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
                                           Trigger& trigger,
                                           const float deltaSeconds)
 {
+    if (trigger.type == AttackTriggerType::Button)
+    {
+        if (trigger.buttonActive)
+        {
+            trigger.buttonElapsed += deltaSeconds;
+            if (trigger.buttonElapsed >= kTimedButtonDurationSeconds)
+            {
+                trigger.buttonActive = false;
+                trigger.buttonElapsed = 0.0f;
+                trigger.stopSoundPlayed = false;
+            }
+        }
+        render.SetMeshMixEnabled(trigger.visualMeshId, !trigger.buttonActive);
+        render.SetMeshMixEnabled(trigger.activeVisualMeshId, trigger.buttonActive);
+    }
+
     float targetAngle = 0.0f;
     if (trigger.type == AttackTriggerType::Lever)
     {
@@ -336,7 +404,11 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
             targetAngle = kTargetAngle;
         }
     }
-    else if (trigger.ropeUsed)
+    else if (trigger.type == AttackTriggerType::Rope && trigger.ropeUsed)
+    {
+        targetAngle = kTargetAngle;
+    }
+    else if (trigger.type == AttackTriggerType::Button && trigger.buttonActive)
     {
         targetAngle = kTargetAngle;
     }
@@ -406,7 +478,7 @@ void AttackTriggerManager::ApplyTargetTransform(NSRender::Render& render,
 
 void AttackTriggerManager::PlayMovementStartSound(const Trigger& trigger)
 {
-    if (trigger.type == AttackTriggerType::Lever)
+    if (trigger.type == AttackTriggerType::Lever || trigger.type == AttackTriggerType::Button)
     {
         GameAudio::PlayLeverToggle();
     }
