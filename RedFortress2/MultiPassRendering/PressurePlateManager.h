@@ -11,6 +11,7 @@ class Render;
 }
 
 class SkullManager;
+class PushableBoxManager;
 
 class PressurePlateManager
 {
@@ -21,6 +22,7 @@ public:
     void Update(NSRender::Render& render,
                 const D3DXVECTOR3& playerPosition,
                 const SkullManager& skullManager,
+                const PushableBoxManager& pushableBoxManager,
                 float deltaSeconds);
     std::size_t GetPairCount() const;
 
@@ -44,6 +46,8 @@ private:
                          const D3DXVECTOR3& playerPosition) const;
     bool IsSkullOnPlate(const PressurePlatePair& pair,
                         const SkullManager& skullManager) const;
+    bool IsBoxOnPlate(const PressurePlatePair& pair,
+                      const PushableBoxManager& pushableBoxManager) const;
     void SetPlateActive(NSRender::Render& render,
                         PressurePlatePair& pair,
                         bool active);

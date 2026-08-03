@@ -35,6 +35,7 @@
 #include "DashBoosterManager.h"
 #include "SkullManager.h"
 #include "PressurePlateManager.h"
+#include "PushableBoxManager.h"
 #include "AttackTriggerManager.h"
 #include "DebugRpc.h"
 
@@ -364,6 +365,7 @@ private:
     DashBoosterManager m_dashBoosterManager;
     SkullManager m_skullManager;
     PressurePlateManager m_pressurePlateManager;
+    PushableBoxManager m_pushableBoxManager;
     AttackTriggerManager m_attackTriggerManager;
     int m_playerInvincibleFrames = 0;
     int m_stickMeshId = -1;

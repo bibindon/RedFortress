@@ -1,6 +1,7 @@
 ﻿#include "PressurePlateManager.h"
 
 #include "SkullManager.h"
+#include "PushableBoxManager.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
@@ -177,6 +178,7 @@ void PressurePlateManager::Clear(NSRender::Render& render)
 void PressurePlateManager::Update(NSRender::Render& render,
                                   const D3DXVECTOR3& playerPosition,
                                   const SkullManager& skullManager,
+                                  const PushableBoxManager& pushableBoxManager,
                                   const float deltaSeconds)
 {
     if (deltaSeconds <= 0.0f)
@@ -187,7 +189,9 @@ void PressurePlateManager::Update(NSRender::Render& render,
     for (PressurePlatePair& pair : m_pairs)
     {
         const bool active =
-            IsPlayerOnPlate(pair, playerPosition) || IsSkullOnPlate(pair, skullManager);
+            IsPlayerOnPlate(pair, playerPosition) ||
+            IsSkullOnPlate(pair, skullManager) ||
+            IsBoxOnPlate(pair, pushableBoxManager);
         SetPlateActive(render, pair, active);
 
         float targetY = pair.wallClosedPosition.y;
@@ -265,6 +269,14 @@ bool PressurePlateManager::IsSkullOnPlate(
     return false;
 }
 
+bool PressurePlateManager::IsBoxOnPlate(
+    const PressurePlatePair& pair,
+    const PushableBoxManager& pushableBoxManager) const
+{
+    return pushableBoxManager.IsAnyBoxOnPlate(pair.platePosition,
+                                               kPlateHalfWidth,
+                                               kPlateHalfDepth);
+}
 void PressurePlateManager::SetPlateActive(NSRender::Render& render,
                                           PressurePlatePair& pair,
                                           const bool active)

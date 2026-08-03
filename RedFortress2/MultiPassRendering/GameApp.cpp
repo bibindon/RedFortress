@@ -777,6 +777,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_skullManager.LoadForStage(m_render, initialStage.skullCsvPath);
     m_pressurePlateManager.Initialize(m_render);
     m_pressurePlateManager.LoadForStage(m_render, initialStage.pressurePlateCsvPath);
+    m_pushableBoxManager.Initialize(m_render);
+    m_pushableBoxManager.LoadForStage(m_render, initialStage.pushableBoxCsvPath);
     m_attackTriggerManager.Initialize();
     m_attackTriggerManager.LoadForStage(m_render, initialStage.attackTriggerCsvPath);
 
@@ -1597,9 +1599,13 @@ void GameApp::Run()
                 }
             }
 
+            m_pushableBoxManager.Update(m_playerMover.GetPosition(),
+                                         m_playerMover.GetVelocity(),
+                                         kTargetFrameSeconds);
             m_pressurePlateManager.Update(m_render,
                                           m_playerMover.GetPosition(),
                                           m_skullManager,
+                                          m_pushableBoxManager,
                                           kTargetFrameSeconds);
             m_attackTriggerManager.Update(m_render, kTargetFrameSeconds);
 
@@ -2347,6 +2353,7 @@ void GameApp::Finalize()
 
     m_interactionManager.Clear();
     m_pressurePlateManager.Clear(m_render);
+    m_pushableBoxManager.Clear();
     m_attackTriggerManager.Clear(m_render);
     m_lavaZoneManager.Clear();
     m_collectibleManager.Clear();
@@ -7135,6 +7142,7 @@ void GameApp::LoadCurrentStageObjects()
     m_pickupManager.Clear();
     m_dashBoosterManager.Clear();
     m_pressurePlateManager.Clear(m_render);
+    m_pushableBoxManager.Clear();
     m_attackTriggerManager.Clear(m_render);
     ClearBombs();
     ClearBusters();
@@ -7188,6 +7196,7 @@ void GameApp::LoadCurrentStageObjects()
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
     m_skullManager.LoadForStage(m_render, stage.skullCsvPath);
     m_pressurePlateManager.LoadForStage(m_render, stage.pressurePlateCsvPath);
+    m_pushableBoxManager.LoadForStage(m_render, stage.pushableBoxCsvPath);
     m_attackTriggerManager.LoadForStage(m_render, stage.attackTriggerCsvPath);
 
     if (!IsStageSelectId(stage.id) &&
