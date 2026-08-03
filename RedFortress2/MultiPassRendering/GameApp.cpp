@@ -820,6 +820,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_interactionManager.LoadForStage(initialStage.interactableCsvPath);
     LoadStageSelectNavigation(initialStage.stageSelectNavigationCsvPath);
     m_lavaZoneManager.LoadForStage(initialStage.lavaCsvPath);
+    m_lavaFloodManager.Initialize(m_render);
+    m_lavaFloodManager.LoadForStage(m_render, initialStage.lavaFloodCsvPath);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     m_pauseMenu.SetItemUseCallback([this](const std::wstring& itemId) {
         return HandleInventoryItemUse(itemId);
@@ -1599,6 +1601,7 @@ void GameApp::Run()
                 }
             }
 
+            m_lavaFloodManager.Update(m_render, kTargetFrameSeconds);
             m_pushableBoxManager.Update(m_playerMover.GetPosition(),
                                          m_playerMover.GetVelocity(),
                                          kTargetFrameSeconds);
@@ -1733,7 +1736,13 @@ void GameApp::Run()
             // 溶岩床によるダメージ（無敵モード中は歩ける）
             if (m_playerInvincibleFrames <= 0 && !m_pickupManager.IsStarActive())
             {
-                const int lavaDamage = m_lavaZoneManager.GetContactDamage(m_playerMover.GetPosition());
+                int lavaDamage = m_lavaZoneManager.GetContactDamage(m_playerMover.GetPosition());
+                const int lavaFloodDamage =
+                    m_lavaFloodManager.GetContactDamage(m_playerMover.GetPosition());
+                if (lavaFloodDamage > lavaDamage)
+                {
+                    lavaDamage = lavaFloodDamage;
+                }
                 if (lavaDamage > 0)
                 {
                     DamagePlayerHp(lavaDamage);
@@ -2356,6 +2365,7 @@ void GameApp::Finalize()
     m_pushableBoxManager.Clear();
     m_attackTriggerManager.Clear(m_render);
     m_lavaZoneManager.Clear();
+    m_lavaFloodManager.Clear();
     m_collectibleManager.Clear();
     m_skullManager.Clear(m_render);
     m_render.Finalize();
@@ -7192,8 +7202,10 @@ void GameApp::LoadCurrentStageObjects()
     m_mouseCursorVisible = IsCurrentStageSelect();
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
 
+    m_lavaFloodManager.Clear();
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
+    m_lavaFloodManager.LoadForStage(m_render, stage.lavaFloodCsvPath);
     m_skullManager.LoadForStage(m_render, stage.skullCsvPath);
     m_pressurePlateManager.LoadForStage(m_render, stage.pressurePlateCsvPath);
     m_pushableBoxManager.LoadForStage(m_render, stage.pushableBoxCsvPath);

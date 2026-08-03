@@ -31,6 +31,7 @@ public:
         std::wstring destructibleCsvPath;
         std::wstring dashBoosterCsvPath;
         std::wstring lavaCsvPath;
+        std::wstring lavaFloodCsvPath;
         std::wstring skullCsvPath;
         std::wstring pressurePlateCsvPath;
         std::wstring pushableBoxCsvPath;

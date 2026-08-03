@@ -24,6 +24,7 @@
 #include "CollectibleManager.h"
 #include "InteractionManager.h"
 #include "LavaZoneManager.h"
+#include "LavaFloodManager.h"
 #include "CraftMenu.h"
 #include "../../QTE_Module/QTE_Module/QTE_Module.h"
 #include "StageEditor.h"
@@ -306,6 +307,7 @@ private:
     CollectibleManager m_collectibleManager;
     InteractionManager m_interactionManager;
     LavaZoneManager m_lavaZoneManager;
+    LavaFloodManager m_lavaFloodManager;
     CraftMenu m_craftMenu;
     NS_QTE_Module::QTE_Module* m_qte = nullptr;
     QteVisualPhase m_qteVisualPhase = QteVisualPhase::None;
