@@ -777,6 +777,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_skullManager.LoadForStage(m_render, initialStage.skullCsvPath);
     m_pressurePlateManager.Initialize(m_render);
     m_pressurePlateManager.LoadForStage(m_render, initialStage.pressurePlateCsvPath);
+    m_attackTriggerManager.Initialize();
+    m_attackTriggerManager.LoadForStage(m_render, initialStage.attackTriggerCsvPath);
 
     m_destructibleManager.Initialize(m_render);
     m_destructibleManager.SetStarDropCallback([this]() {
@@ -1599,6 +1601,8 @@ void GameApp::Run()
                                           m_playerMover.GetPosition(),
                                           m_skullManager,
                                           kTargetFrameSeconds);
+            m_attackTriggerManager.Update(m_render, kTargetFrameSeconds);
+
             // 衝突判定（動く床の最新位置を反映）
             const bool isStageSelect = IsCurrentStageSelect();
             const D3DXVECTOR3 playerPositionBeforePhysicsUpdate = m_playerMover.GetPosition();
@@ -1671,24 +1675,36 @@ void GameApp::Run()
                         }
                         else
                         {
-                            const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
-                                m_playerMover.GetPosition(), m_playerYaw,
-                                attackDefinition.range, attackDefinition.verticalRange,
-                                attackDefinition.halfAngleRadians);
-                            if (destructible != nullptr)
+                            const AttackTriggerActivation triggerActivation =
+                                m_attackTriggerManager.TryActivateInAttackRange(
+                                    m_playerMover.GetPosition(), m_playerYaw,
+                                    attackDefinition.range, attackDefinition.verticalRange,
+                                    attackDefinition.halfAngleRadians);
+                            if (triggerActivation != AttackTriggerActivation::None)
                             {
-                                if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
+                                BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
+                            }
+                            else
+                            {
+                                const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
+                                    m_playerMover.GetPosition(), m_playerYaw,
+                                    attackDefinition.range, attackDefinition.verticalRange,
+                                    attackDefinition.halfAngleRadians);
+                                if (destructible != nullptr)
                                 {
-                                    m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
-                                    if (IsSwordAttackType(attackType))
+                                    if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
                                     {
-                                        GameAudio::PlaySlashHit();
+                                        m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
+                                        if (IsSwordAttackType(attackType))
+                                        {
+                                            GameAudio::PlaySlashHit();
+                                        }
+                                        else
+                                        {
+                                            GameAudio::PlayAttackHit();
+                                        }
+                                        BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                                     }
-                                    else
-                                    {
-                                        GameAudio::PlayAttackHit();
-                                    }
-                                    BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                                 }
                             }
                         }
@@ -2331,6 +2347,7 @@ void GameApp::Finalize()
 
     m_interactionManager.Clear();
     m_pressurePlateManager.Clear(m_render);
+    m_attackTriggerManager.Clear(m_render);
     m_lavaZoneManager.Clear();
     m_collectibleManager.Clear();
     m_skullManager.Clear(m_render);
@@ -7118,6 +7135,7 @@ void GameApp::LoadCurrentStageObjects()
     m_pickupManager.Clear();
     m_dashBoosterManager.Clear();
     m_pressurePlateManager.Clear(m_render);
+    m_attackTriggerManager.Clear(m_render);
     ClearBombs();
     ClearBusters();
     m_skullManager.Clear(m_render);
@@ -7170,6 +7188,7 @@ void GameApp::LoadCurrentStageObjects()
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
     m_skullManager.LoadForStage(m_render, stage.skullCsvPath);
     m_pressurePlateManager.LoadForStage(m_render, stage.pressurePlateCsvPath);
+    m_attackTriggerManager.LoadForStage(m_render, stage.attackTriggerCsvPath);
 
     if (!IsStageSelectId(stage.id) &&
         !IsBaseId(stage.id) &&

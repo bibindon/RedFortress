@@ -39,3 +39,5 @@
 303,../collision_wall/collision_wall_tall.x,-10,1.5,-20,0,90,0,1,meshmix2
 304,../collision_wall/collision_wall_tall.x,10,1.5,0,0,90,0,1,meshmix2
 305,../collision_wall/collision_wall_tall.x,-10,1.5,20,0,90,0,1,meshmix2
+310,../attack_block/attack_wall.x,0,1.5,-20,0,0,0,1,meshmix2
+311,../attack_block/attack_floor.x,0,0,-8,0,0,0,1,meshmix2

@@ -85,12 +85,15 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="SkullManager.cpp">
-      <Filter>??? ????</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DestructibleManager.cpp">
-    <ClCompile Include="PressurePlateManager.cpp">
-      <Filter>??? ????</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="PressurePlateManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackTriggerManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Enemy3.cpp">
@@ -192,12 +195,15 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="SkullManager.h">
-      <Filter>???? ????</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBase.h">
-    <ClInclude Include="PressurePlateManager.h">
-      <Filter>???? ????</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="PressurePlateManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackTriggerManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBird.h">

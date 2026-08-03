@@ -204,6 +204,7 @@
     <ClCompile Include="DashBoosterManager.cpp" />
     <ClCompile Include="SkullManager.cpp" />
     <ClCompile Include="PressurePlateManager.cpp" />
+    <ClCompile Include="AttackTriggerManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameAudio.cpp" />
   </ItemGroup>
@@ -253,6 +254,7 @@
     <ClInclude Include="DashBoosterManager.h" />
     <ClInclude Include="SkullManager.h" />
     <ClInclude Include="PressurePlateManager.h" />
+    <ClInclude Include="AttackTriggerManager.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GameAudio.h" />
   </ItemGroup>
