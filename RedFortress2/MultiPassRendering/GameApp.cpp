@@ -6573,6 +6573,15 @@ void GameApp::ApplyLavaDamageToEnemies()
         {
             lavaDamage = lavaFloodDamage;
         }
+        const int lavaRiseDamage =
+            m_lavaRiseManager.GetContactDamageForCylinder(
+                enemyPosition,
+                enemyRadius,
+                enemyHeight);
+        if (lavaRiseDamage > lavaDamage)
+        {
+            lavaDamage = lavaRiseDamage;
+        }
 
         if (lavaDamage > 0)
         {

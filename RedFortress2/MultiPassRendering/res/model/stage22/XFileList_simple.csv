@@ -75,3 +75,12 @@
 8060,../collision_wall/collision_wall_tall.x,-42,1.5,-42,0,0,0,1,meshmix2
 8061,../collision_wall/collision_wall_tall.x,0,1.5,0,0,90,0,1,meshmix2
 8062,../collision_wall/collision_wall_tall.x,42,1.5,42,0,0,0,1,meshmix2
+3301,../collision_moving_platform/collision_moving_platform.x,-8,0.8,-20,0,0,0,2,meshmix2
+3302,../collision_moving_platform/collision_moving_platform.x,-8,2.0,-14,0,0,0,2,meshmix2
+3303,../collision_moving_platform/collision_moving_platform.x,8,3.2,-8,0,0,0,2,meshmix2
+3304,../collision_moving_platform/collision_moving_platform.x,8,4.4,-2,0,0,0,2,meshmix2
+3305,../collision_moving_platform/collision_moving_platform.x,-8,5.6,4,0,0,0,2,meshmix2
+3306,../collision_moving_platform/collision_moving_platform.x,-8,6.8,10,0,0,0,2,meshmix2
+3307,../collision_moving_platform/collision_moving_platform.x,8,8.0,16,0,0,0,2,meshmix2
+3320,../collision_wall/collision_wall_tall.x,0,5.8,7,0,0,0,1,meshmix2
+3330,../attack_block/attack_wall.x,0,8.4,14,0,0,0,1,meshmix2

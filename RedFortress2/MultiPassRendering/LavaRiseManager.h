@@ -18,6 +18,9 @@ public:
     void Clear();
     void Update(NSRender::Render& render, float deltaSeconds);
     int GetContactDamage(const D3DXVECTOR3& playerPosition) const;
+    int GetContactDamageForCylinder(const D3DXVECTOR3& position,
+                                     float radius,
+                                     float height) const;
     std::size_t GetLavaCount() const;
 
 private:

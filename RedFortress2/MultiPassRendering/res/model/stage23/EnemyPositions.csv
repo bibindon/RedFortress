@@ -1,7 +1,11 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-small_spider,-28,0.2,28,0
-spider,26,0.2,28,180
-skeleton,-26,0.2,0,0
-ghost,26,0.2,0,180
-small_golem,-24,0.2,-28,0
-skeleton,24,0.2,-26,180
+small_spider,-18,0.2,28,0
+spider,18,0.2,28,180
+small_spider,26,0.2,14,180
+skeleton,-26,0.2,10,0
+ghost,18,0.2,0,180
+small_skeleton,-18,0.2,0,0
+spider,24,0.2,-8,180
+small_golem,-24,0.2,-14,0
+skeleton,-24,0.2,-24,0
+small_golem,24,0.2,-24,180

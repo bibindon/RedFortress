@@ -14,3 +14,12 @@
 8060,res/model/collision_wall/collision_wall_tall_collision.x,-42,1.5,-42,0,0,0,1,Collision,n
 8061,res/model/collision_wall/collision_wall_tall_collision.x,0,1.5,0,0,90,0,1,Collision,n
 8062,res/model/collision_wall/collision_wall_tall_collision.x,42,1.5,42,0,0,0,1,Collision,n
+3301,res/model/collision_moving_platform.x,-8,0.8,-20,0,0,0,2,Collision,n,
+3302,res/model/collision_moving_platform.x,-8,2.0,-14,0,0,0,2,Collision,y,
+3303,res/model/collision_moving_platform.x,8,3.2,-8,0,0,0,2,Collision,n,
+3304,res/model/collision_moving_platform.x,8,4.4,-2,0,0,0,2,Collision,y,
+3305,res/model/collision_moving_platform.x,-8,5.6,4,0,0,0,2,Collision,n,
+3306,res/model/collision_moving_platform.x,-8,6.8,10,0,0,0,2,Collision,y,
+3307,res/model/collision_moving_platform.x,8,8.0,16,0,0,0,2,Collision,n,
+3320,res/model/collision_wall/collision_wall_tall_collision.x,0,5.8,7,0,0,0,1,Collision,n
+3330,res/model/attack_block/attack_wall.x,0,8.4,14,0,0,0,1,Collision,y
