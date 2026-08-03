@@ -88,6 +88,9 @@
       <Filter>??? ????</Filter>
     </ClCompile>
     <ClCompile Include="DestructibleManager.cpp">
+    <ClCompile Include="PressurePlateManager.cpp">
+      <Filter>??? ????</Filter>
+    </ClCompile>
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Enemy3.cpp">
@@ -192,6 +195,9 @@
       <Filter>???? ????</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBase.h">
+    <ClInclude Include="PressurePlateManager.h">
+      <Filter>???? ????</Filter>
+    </ClInclude>
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBird.h">

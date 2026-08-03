@@ -64,6 +64,7 @@ public:
     void ReleaseHeld(NSRender::Render& render, const D3DXVECTOR3& position);
     bool IsHolding() const;
     std::size_t GetSkullCount() const;
+    const std::vector<SkullObject>& GetSkulls() const;
 
 private:
     bool SpawnAtPoint(NSRender::Render& render, SkullSpawnPoint& spawnPoint);

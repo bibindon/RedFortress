@@ -775,6 +775,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
 
     m_skullManager.Initialize(m_render);
     m_skullManager.LoadForStage(m_render, initialStage.skullCsvPath);
+    m_pressurePlateManager.Initialize(m_render);
+    m_pressurePlateManager.LoadForStage(m_render, initialStage.pressurePlateCsvPath);
 
     m_destructibleManager.Initialize(m_render);
     m_destructibleManager.SetStarDropCallback([this]() {
@@ -1593,6 +1595,10 @@ void GameApp::Run()
                 }
             }
 
+            m_pressurePlateManager.Update(m_render,
+                                          m_playerMover.GetPosition(),
+                                          m_skullManager,
+                                          kTargetFrameSeconds);
             // 衝突判定（動く床の最新位置を反映）
             const bool isStageSelect = IsCurrentStageSelect();
             const D3DXVECTOR3 playerPositionBeforePhysicsUpdate = m_playerMover.GetPosition();
@@ -2324,6 +2330,7 @@ void GameApp::Finalize()
     }
 
     m_interactionManager.Clear();
+    m_pressurePlateManager.Clear(m_render);
     m_lavaZoneManager.Clear();
     m_collectibleManager.Clear();
     m_skullManager.Clear(m_render);
@@ -7110,6 +7117,7 @@ void GameApp::LoadCurrentStageObjects()
 
     m_pickupManager.Clear();
     m_dashBoosterManager.Clear();
+    m_pressurePlateManager.Clear(m_render);
     ClearBombs();
     ClearBusters();
     m_skullManager.Clear(m_render);
@@ -7161,6 +7169,7 @@ void GameApp::LoadCurrentStageObjects()
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
     m_skullManager.LoadForStage(m_render, stage.skullCsvPath);
+    m_pressurePlateManager.LoadForStage(m_render, stage.pressurePlateCsvPath);
 
     if (!IsStageSelectId(stage.id) &&
         !IsBaseId(stage.id) &&

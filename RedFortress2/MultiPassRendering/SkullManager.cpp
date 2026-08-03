@@ -291,6 +291,11 @@ std::size_t SkullManager::GetSkullCount() const
 {
     return m_skulls.size();
 }
+const std::vector<SkullObject>& SkullManager::GetSkulls() const
+{
+    return m_skulls;
+}
+
 
 bool SkullManager::SpawnAtPoint(NSRender::Render& render, SkullSpawnPoint& spawnPoint)
 {
