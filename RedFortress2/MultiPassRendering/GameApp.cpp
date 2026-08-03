@@ -822,6 +822,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_lavaZoneManager.LoadForStage(initialStage.lavaCsvPath);
     m_lavaFloodManager.Initialize(m_render);
     m_lavaFloodManager.LoadForStage(m_render, initialStage.lavaFloodCsvPath);
+    m_lavaRiseManager.Initialize(m_render);
+    m_lavaRiseManager.LoadForStage(m_render, initialStage.lavaRiseCsvPath);
     m_pauseMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     m_pauseMenu.SetItemUseCallback([this](const std::wstring& itemId) {
         return HandleInventoryItemUse(itemId);
@@ -1602,6 +1604,7 @@ void GameApp::Run()
             }
 
             m_lavaFloodManager.Update(m_render, kTargetFrameSeconds);
+            m_lavaRiseManager.Update(m_render, kTargetFrameSeconds);
             m_pushableBoxManager.Update(m_playerMover.GetPosition(),
                                          m_playerMover.GetVelocity(),
                                          kTargetFrameSeconds);
@@ -1743,6 +1746,12 @@ void GameApp::Run()
                 {
                     lavaDamage = lavaFloodDamage;
                 }
+                const int lavaRiseDamage =
+                    m_lavaRiseManager.GetContactDamage(m_playerMover.GetPosition());
+                if (lavaRiseDamage > lavaDamage)
+                {
+                    lavaDamage = lavaRiseDamage;
+                }
                 if (lavaDamage > 0)
                 {
                     DamagePlayerHp(lavaDamage);
@@ -1753,6 +1762,8 @@ void GameApp::Run()
                     }
                 }
             }
+
+            ApplyLavaDamageToEnemies();
 
             if (m_stagePortalCooldownFrames > 0)
             {
@@ -2366,6 +2377,7 @@ void GameApp::Finalize()
     m_attackTriggerManager.Clear(m_render);
     m_lavaZoneManager.Clear();
     m_lavaFloodManager.Clear();
+    m_lavaRiseManager.Clear();
     m_collectibleManager.Clear();
     m_skullManager.Clear(m_render);
     m_render.Finalize();
@@ -6530,6 +6542,45 @@ bool GameApp::IsStageClearReached()
     return m_portalFlagShown && m_portalClearDelayFrames <= 0;
 }
 
+void GameApp::ApplyLavaDamageToEnemies()
+{
+    for (const auto& enemy : m_enemyManager.GetEnemies())
+    {
+        if (enemy == nullptr || enemy->IsDead())
+        {
+            continue;
+        }
+
+        const D3DXVECTOR3 enemyPosition = enemy->GetPosition();
+        const float enemyRadius = enemy->GetPhysicsRadius();
+        const float enemyHeight = enemy->GetHeight();
+        if (enemyRadius <= 0.0f || enemyHeight <= 0.0f)
+        {
+            continue;
+        }
+
+        int lavaDamage =
+            m_lavaZoneManager.GetContactDamageForCylinder(
+                enemyPosition,
+                enemyRadius,
+                enemyHeight);
+        const int lavaFloodDamage =
+            m_lavaFloodManager.GetContactDamageForCylinder(
+                enemyPosition,
+                enemyRadius,
+                enemyHeight);
+        if (lavaFloodDamage > lavaDamage)
+        {
+            lavaDamage = lavaFloodDamage;
+        }
+
+        if (lavaDamage > 0)
+        {
+            enemy->TakeDamageWithoutFacing(m_render, enemy->GetHp());
+        }
+    }
+}
+
 void GameApp::ProcessEnemyAttackHits()
 {
     for (auto& enemy : m_enemyManager.GetEnemies())
@@ -7203,9 +7254,11 @@ void GameApp::LoadCurrentStageObjects()
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
 
     m_lavaFloodManager.Clear();
+    m_lavaRiseManager.Clear();
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
     m_lavaFloodManager.LoadForStage(m_render, stage.lavaFloodCsvPath);
+    m_lavaRiseManager.LoadForStage(m_render, stage.lavaRiseCsvPath);
     m_skullManager.LoadForStage(m_render, stage.skullCsvPath);
     m_pressurePlateManager.LoadForStage(m_render, stage.pressurePlateCsvPath);
     m_pushableBoxManager.LoadForStage(m_render, stage.pushableBoxCsvPath);

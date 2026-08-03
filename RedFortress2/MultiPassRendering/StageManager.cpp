@@ -158,6 +158,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.dashBoosterCsvPath = basePath + L"DashBoosters.csv";
     stage.lavaCsvPath = basePath + L"LavaZones.csv";
     stage.lavaFloodCsvPath = basePath + L"LavaFlood.csv";
+    stage.lavaRiseCsvPath = basePath + L"LavaRise.csv";
     stage.skullCsvPath = basePath + L"Skulls.csv";
     stage.pressurePlateCsvPath = basePath + L"PressurePlates.csv";
     stage.pushableBoxCsvPath = basePath + L"PushableBoxes.csv";

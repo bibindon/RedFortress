@@ -243,6 +243,37 @@ int LavaFloodManager::GetContactDamage(
     return damage;
 }
 
+int LavaFloodManager::GetContactDamageForCylinder(
+    const D3DXVECTOR3& position,
+    const float radius,
+    const float height) const
+{
+    int damage = 0;
+
+    for (const Flood& flood : m_floods)
+    {
+        if (flood.physicsId < 0)
+        {
+            continue;
+        }
+
+        if (PhysicsLib::PhysicsLib::CheckContactShape(
+                flood.physicsId,
+                position,
+                PhysicsLib::PhysicsLib::ShapeType::Cylinder,
+                radius,
+                height))
+        {
+            if (flood.damage > damage)
+            {
+                damage = flood.damage;
+            }
+        }
+    }
+
+    return damage;
+}
+
 std::size_t LavaFloodManager::GetFloodCount() const
 {
     return m_floods.size();

@@ -169,6 +169,7 @@
     <ClCompile Include="InteractionManager.cpp" />
     <ClCompile Include="LavaZoneManager.cpp" />
     <ClCompile Include="LavaFloodManager.cpp" />
+    <ClCompile Include="LavaRiseManager.cpp" />
     <ClCompile Include="StageEditor.cpp" />
     <ClCompile Include="SlideShowManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="InteractionManager.h" />
     <ClInclude Include="LavaZoneManager.h" />
     <ClInclude Include="LavaFloodManager.h" />
+    <ClInclude Include="LavaRiseManager.h" />
     <ClInclude Include="StageEditor.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBase.h" />

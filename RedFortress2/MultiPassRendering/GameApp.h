@@ -25,6 +25,7 @@
 #include "InteractionManager.h"
 #include "LavaZoneManager.h"
 #include "LavaFloodManager.h"
+#include "LavaRiseManager.h"
 #include "CraftMenu.h"
 #include "../../QTE_Module/QTE_Module/QTE_Module.h"
 #include "StageEditor.h"
@@ -138,6 +139,7 @@ private:
     void UpdateStageIntro();
     void DamagePlayerHp(int amount);
     void ProcessEnemyAttackHits();
+    void ApplyLavaDamageToEnemies();
     void HealPlayerHp(int amount);
     void HandlePlayerDeath();
     void CompletePlayerDeath();
@@ -308,6 +310,7 @@ private:
     InteractionManager m_interactionManager;
     LavaZoneManager m_lavaZoneManager;
     LavaFloodManager m_lavaFloodManager;
+    LavaRiseManager m_lavaRiseManager;
     CraftMenu m_craftMenu;
     NS_QTE_Module::QTE_Module* m_qte = nullptr;
     QteVisualPhase m_qteVisualPhase = QteVisualPhase::None;

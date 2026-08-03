@@ -16,6 +16,9 @@ public:
 
     void LoadForStage(const std::wstring& csvPath);
     int GetContactDamage(const D3DXVECTOR3& playerPosition) const;
+    int GetContactDamageForCylinder(const D3DXVECTOR3& position,
+                                     float radius,
+                                     float height) const;
     void Clear();
 
 private:

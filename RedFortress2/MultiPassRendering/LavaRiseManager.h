@@ -10,7 +10,7 @@ namespace NSRender
 class Render;
 }
 
-class LavaFloodManager
+class LavaRiseManager
 {
 public:
     void Initialize(NSRender::Render& render);
@@ -18,30 +18,28 @@ public:
     void Clear();
     void Update(NSRender::Render& render, float deltaSeconds);
     int GetContactDamage(const D3DXVECTOR3& playerPosition) const;
-    int GetContactDamageForCylinder(const D3DXVECTOR3& position,
-                                     float radius,
-                                     float height) const;
-    std::size_t GetFloodCount() const;
+    std::size_t GetLavaCount() const;
 
 private:
-    struct Flood
+    struct Lava
     {
         std::wstring id;
         int meshId = -1;
         int physicsId = -1;
         int damage = 0;
-        D3DXVECTOR3 anchor = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        float directionZ = -1.0f;
-        float startWidth = 0.0f;
-        float startLength = 0.0f;
-        float endWidth = 0.0f;
-        float endLength = 0.0f;
+        float minX = 0.0f;
+        float maxX = 0.0f;
+        float minZ = 0.0f;
+        float maxZ = 0.0f;
+        float startY = 0.0f;
+        float endY = 0.0f;
+        float delay = 0.0f;
         float duration = 0.0f;
         float elapsed = 0.0f;
     };
 
-    void ApplyFloodTransform(NSRender::Render& render, Flood& flood);
+    void ApplyTransform(NSRender::Render& render, Lava& lava);
 
     NSRender::Render* m_render = nullptr;
-    std::vector<Flood> m_floods;
+    std::vector<Lava> m_lavas;
 };

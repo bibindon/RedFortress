@@ -89,6 +89,39 @@ int LavaZoneManager::GetContactDamage(const D3DXVECTOR3& playerPosition) const
     return damage;
 }
 
+int LavaZoneManager::GetContactDamageForCylinder(
+    const D3DXVECTOR3& position,
+    const float radius,
+    const float height) const
+{
+    int damage = 0;
+
+    for (std::size_t i = 0; i < m_lavaZones.size(); ++i)
+    {
+        const LavaZone& zone = m_lavaZones.at(i);
+        const int objectId = PhysicsWorld::GetCsvObjectId(zone.physicsCsvId);
+        if (objectId < 0)
+        {
+            continue;
+        }
+
+        if (PhysicsWorld::CheckContactShape(
+                objectId,
+                position,
+                PhysicsWorld::ShapeType::Cylinder,
+                radius,
+                height))
+        {
+            if (zone.damage > damage)
+            {
+                damage = zone.damage;
+            }
+        }
+    }
+
+    return damage;
+}
+
 void LavaZoneManager::Clear()
 {
     m_lavaZones.clear();
