@@ -55,7 +55,6 @@ private:
         int activeVisualMeshId = -1;
         bool leverActive = false;
         bool buttonActive = false;
-        float buttonElapsed = 0.0f;
         float lightBrightness = 2.8f;
         float lightRange = 10.0f;
         D3DXCOLOR lightColor = D3DXCOLOR(1.0f, 0.86f, 0.62f, 1.0f);
@@ -95,4 +94,6 @@ private:
     void PlayMovementStopSound();
 
     std::vector<Trigger> m_triggers;
+    bool m_buttonLightsActive = false;
+    float m_buttonLightsElapsed = 0.0f;
 };

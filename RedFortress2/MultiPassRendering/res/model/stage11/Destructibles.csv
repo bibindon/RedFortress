@@ -1,4 +1,10 @@
-﻿PosX,PosY,PosZ,HP
-37,0,58,3
-37,0,8,3
-37,0,-42,3
+﻿PosX,PosY,PosZ,HP,DropItemId
+-4,0,-12,3,None
+-3,0,-12,3,None
+-2,0,-12,3,None
+-1,0,-12,3,None
+0,0,-12,3,None
+1,0,-12,3,None
+2,0,-12,3,None
+3,0,-12,3,None
+4,0,-12,3,None

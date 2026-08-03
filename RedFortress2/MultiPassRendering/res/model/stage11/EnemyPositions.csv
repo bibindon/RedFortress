@@ -1,7 +1,7 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-bird,-38,3,62,180
-skeleton,34,0.2,44,0
-ghost,-38,0.2,18,0
-bird,36,3,-16,0
-skeleton,-38,0.2,-44,0
-small_golem,36,0.2,-64,180
+bird,-48,4,12,180
+skeleton,-48,0.2,8,0
+ghost,-17,0.2,-4,180
+skeleton,8,0.2,-8,180
+bird,10,4,-18,0
+small_golem,-48,2.2,-24,0

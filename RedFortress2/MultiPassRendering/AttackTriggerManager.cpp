@@ -97,6 +97,8 @@ namespace
 void AttackTriggerManager::Initialize()
 {
     m_triggers.clear();
+    m_buttonLightsActive = false;
+    m_buttonLightsElapsed = 0.0f;
 }
 
 void AttackTriggerManager::LoadForStage(NSRender::Render& render,
@@ -277,6 +279,8 @@ void AttackTriggerManager::Clear(NSRender::Render& render)
             trigger.activeVisualMeshId = -1;
         }
     }
+    m_buttonLightsActive = false;
+    m_buttonLightsElapsed = 0.0f;
     m_triggers.clear();
 }
 
@@ -286,6 +290,26 @@ void AttackTriggerManager::Update(NSRender::Render& render,
     if (deltaSeconds <= 0.0f)
     {
         std::abort();
+    }
+
+    if (m_buttonLightsActive)
+    {
+        m_buttonLightsElapsed += deltaSeconds;
+        if (m_buttonLightsElapsed >= kTimedButtonDurationSeconds)
+        {
+            m_buttonLightsActive = false;
+            m_buttonLightsElapsed = 0.0f;
+            for (Trigger& candidate : m_triggers)
+            {
+                if (candidate.type != AttackTriggerType::Button)
+                {
+                    continue;
+                }
+                candidate.buttonActive = false;
+                DeactivateButtonLight(render, candidate);
+            }
+            PlayMovementStopSound();
+        }
     }
 
     for (Trigger& trigger : m_triggers)
@@ -354,10 +378,18 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
 
     if (trigger.type == AttackTriggerType::Button)
     {
-        trigger.buttonActive = true;
-        trigger.buttonElapsed = 0.0f;
-        trigger.stopSoundPlayed = false;
-        ActivateButtonLight(render, trigger);
+        m_buttonLightsActive = true;
+        m_buttonLightsElapsed = 0.0f;
+        for (Trigger& candidate : m_triggers)
+        {
+            if (candidate.type != AttackTriggerType::Button)
+            {
+                continue;
+            }
+            candidate.buttonActive = true;
+            candidate.stopSoundPlayed = false;
+            ActivateButtonLight(render, candidate);
+        }
         PlayMovementStartSound(trigger);
         return AttackTriggerActivation::Button;
     }
@@ -424,22 +456,6 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
 {
     if (trigger.type == AttackTriggerType::Button)
     {
-        if (trigger.buttonActive)
-        {
-            trigger.buttonElapsed += deltaSeconds;
-            if (trigger.buttonElapsed >= kTimedButtonDurationSeconds)
-            {
-                trigger.buttonActive = false;
-                trigger.buttonElapsed = 0.0f;
-                DeactivateButtonLight(render, trigger);
-                trigger.stopSoundPlayed = false;
-                if (!trigger.hasTarget)
-                {
-                    PlayMovementStopSound();
-                    trigger.stopSoundPlayed = true;
-                }
-            }
-        }
         render.SetMeshMixEnabled(trigger.visualMeshId, !trigger.buttonActive);
         render.SetMeshMixEnabled(trigger.activeVisualMeshId, trigger.buttonActive);
     }
