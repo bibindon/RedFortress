@@ -24,6 +24,8 @@ namespace
         L"res\\model\\pressure_plate\\pressure_plate_green.x";
     const float kTimedButtonDurationSeconds = 10.0f;
     const float kButtonLightOffsetY = 2.5f;
+    const float kButtonLocatorBrightness = 0.10f;
+    const float kButtonLocatorRange = 2.0f;
     const float kTargetAngle = D3DX_PI * 0.5f;
     const float kRotationSpeed = D3DX_PI * 0.5f;
     const float kPlayerAttackCenterHeight = 1.0f;
@@ -166,6 +168,8 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
             }
             trigger.lightOwnerTag =
                 std::wstring(L"attack-trigger-button-") + std::to_wstring(trigger.id);
+            trigger.locatorOwnerTag =
+                std::wstring(L"attack-trigger-button-locator-") + std::to_wstring(trigger.id);
         }
 
         if (!loadedTriggerIds.insert(trigger.id).second)
@@ -222,6 +226,7 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
                 std::abort();
             }
             render.SetMeshMixEnabled(trigger.activeVisualMeshId, false);
+            AddButtonLocatorLight(render, trigger);
         }
         else
         {
@@ -259,6 +264,7 @@ void AttackTriggerManager::Clear(NSRender::Render& render)
         if (trigger.type == AttackTriggerType::Button)
         {
             DeactivateButtonLight(render, trigger);
+            DeactivateButtonLocatorLight(render, trigger);
         }
         if (trigger.visualMeshId >= 0)
         {
@@ -521,6 +527,24 @@ void AttackTriggerManager::ApplyTargetTransform(NSRender::Render& render,
                                         D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
+void AttackTriggerManager::AddButtonLocatorLight(NSRender::Render& render,
+                                                  const Trigger& trigger)
+{
+    render.RemovePointLightsByOwnerTag(trigger.locatorOwnerTag);
+    const D3DXVECTOR3 lightPosition =
+        trigger.triggerPosition + D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+    render.AddPointLight(lightPosition,
+                         kButtonLocatorBrightness,
+                         D3DXCOLOR(1.0f, 0.30f, 0.08f, 1.0f),
+                         NSRender::PointLightShape::Point,
+                         12.0f,
+                         10.0f,
+                         10.0f,
+                         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                         kButtonLocatorRange,
+                         trigger.locatorOwnerTag);
+}
+
 void AttackTriggerManager::ActivateButtonLight(NSRender::Render& render,
                                                 const Trigger& trigger)
 {
@@ -543,6 +567,12 @@ void AttackTriggerManager::DeactivateButtonLight(NSRender::Render& render,
                                                   const Trigger& trigger)
 {
     render.RemovePointLightsByOwnerTag(trigger.lightOwnerTag);
+}
+
+void AttackTriggerManager::DeactivateButtonLocatorLight(NSRender::Render& render,
+                                                         const Trigger& trigger)
+{
+    render.RemovePointLightsByOwnerTag(trigger.locatorOwnerTag);
 }
 
 void AttackTriggerManager::PlayMovementStartSound(const Trigger& trigger)

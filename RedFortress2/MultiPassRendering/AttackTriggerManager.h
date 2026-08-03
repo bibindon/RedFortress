@@ -60,6 +60,7 @@ private:
         float lightRange = 10.0f;
         D3DXCOLOR lightColor = D3DXCOLOR(1.0f, 0.86f, 0.62f, 1.0f);
         std::wstring lightOwnerTag;
+        std::wstring locatorOwnerTag;
         bool ropeUsed = false;
         bool stopSoundPlayed = false;
         D3DXVECTOR3 triggerPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -82,10 +83,14 @@ private:
                        float deltaSeconds);
     void ApplyTargetTransform(NSRender::Render& render,
                               const Trigger& trigger);
+    void AddButtonLocatorLight(NSRender::Render& render,
+                               const Trigger& trigger);
     void ActivateButtonLight(NSRender::Render& render,
                              const Trigger& trigger);
     void DeactivateButtonLight(NSRender::Render& render,
                                const Trigger& trigger);
+    void DeactivateButtonLocatorLight(NSRender::Render& render,
+                                      const Trigger& trigger);
     void PlayMovementStartSound(const Trigger& trigger);
     void PlayMovementStopSound();
 
