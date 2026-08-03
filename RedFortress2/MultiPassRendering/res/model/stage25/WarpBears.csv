@@ -1,0 +1,15 @@
+﻿WarpID,PairID,PosX,PosY,PosZ,RotY
+warp_01_a,pair01,0,0.2,-20,0
+warp_01_b,pair01,-38,0.2,2,180
+warp_02_a,pair02,-38,0.2,8,0
+warp_02_b,pair02,38,0.2,18,180
+warp_03_a,pair03,38,0.2,28,0
+warp_03_b,pair03,-38,0.2,38,180
+warp_04_a,pair04,-38,0.2,48,0
+warp_04_b,pair04,38,0.2,58,180
+warp_05_a,pair05,38,0.2,68,0
+warp_05_b,pair05,-38,0.2,78,180
+warp_06_a,pair06,-38,0.2,88,0
+warp_06_b,pair06,38,0.2,98,180
+warp_07_a,pair07,38,0.2,103,0
+warp_07_b,pair07,0,0.2,112,180
