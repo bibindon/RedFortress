@@ -20,7 +20,8 @@
 ## ステージの基本ルール
 
 * プレイヤーは開始地点からスタートし、指定されたゴールを目指す。
-* ステージ内の敵をすべて倒すとゴールポータルが使用可能になる。ゴールポータルに触れるとステージクリアとなる。
+* 通常ステージでは、ステージ内の敵をすべて倒すとゴールポータルが使用可能になる。ゴールポータルに触れるとステージクリアとなる。
+* ボスステージにはゴールポータルが生成されず、ボスを倒すとステージクリアになる。
 * 落下穴に落ちると死亡する。
 * 正規ルートは、ダッシュ、二段ジャンプ、空中ダッシュがなくてもクリアできるようにする。
 * 座標はXを左右、Yを上方向、Zを奥行きとして扱い、1ユニットを1mとする。
@@ -38,14 +39,6 @@
   * ワールド4
     * 120x240m
       * 草原・夜
-
-
-## 正しい情報の参照元
-
-* ステージ名、ステージフォルダー、開始地点、ゴール地点は`RedFortress2/MultiPassRendering/StageManager.cpp`を正とする。
-* 既存の配置は、各ステージフォルダー内にある現在のCSVを正とする。
-* `STAGE_PLAN.md`、`STAGE_THEME.md`、`tools/BuildPlannedStages.py`などの内容が現在の実装と異なる場合は、古い計画を無条件に適用しない。
-* 既存ステージを修正するときは対象ステージだけを書き換え、他のステージのCSVや地面モデルを再生成しない。
 
 ### ステージ番号とフォルダーの対応
 
@@ -66,6 +59,38 @@
   * 木箱
     * 描画用 : res/model/cubeWoodSmall/cube_wood_small.x
     * 衝突判定用 : res/model/cubeWoodSmall/cube_wood_small_collision.x
+  * 岩1
+    * 描画用 : `res/model/base/base_rock1.x`
+    * 衝突判定用 : `res/model/base/base_rock1_collision.x`
+  * 岩2
+    * 描画用 : `res/model/base/base_rock2.x`
+    * 衝突判定用 : `res/model/base/base_rock2_collision.x`
+  * 柵
+    * 描画用 : `res/model/fence.x`
+    * 衝突判定はない。落とし穴やステージ外周の縁を見せるための目印として使用し、プレイヤーを止める壁としては使用しない。
+  * 壁
+    * 描画用 : `res/model/collision_wall/collision_wall.x`
+    * 衝突判定用 : `res/model/collision_wall/collision_wall_collision.x`
+    * `XFileList_simple.csv`と`XFileListPhysics.csv`へ、同じCSV ID、座標、回転、倍率で登録する。
+    * 描画側は`loadType=meshmix2`、物理側は`Type=Collision`、`Move=n`を指定する。
+  * 高さが2倍の壁
+    * 描画用 : `res/model/collision_wall/collision_wall_tall.x`
+    * 衝突判定用 : `res/model/collision_wall/collision_wall_tall_collision.x`
+    * 通常の壁より高く、強化能力を使っても越えさせたくない境界や高い防壁に使用する。
+    * `XFileList_simple.csv`と`XFileListPhysics.csv`へ、同じCSV ID、座標、回転、倍率で登録する。
+    * 描画側は`loadType=meshmix2`、物理側は`Type=Collision`、`Move=n`を指定する。
+  * ゴールポータル
+    * 通常ステージ専用であり、`XFileList_simple.csv`や専用の配置CSVへは登録しない。
+    * 位置は`StageManager.cpp`の`AddStage()`へ渡す`clearPosition`で指定する。石段の基準位置は`clearPosition`のY座標から1m下になる。
+    * 石段の描画用 : `res/model/portal/stone_steps.x`
+    * 石段の衝突判定用 : `res/model/portal/stone_steps_collision.x`
+    * 敵が残っている間は石段だけが表示される。すべての敵を倒すと光の柱とゴール方向を示す矢印が表示される。
+    * 光の柱の描画用 : `res/model/portal/light_pillar.x`
+    * ゴール矢印の描画用 : `res/model/arrow/arrow.x`
+    * 光の柱の中心から水平方向0.9m以内に入ると旗が出現し、プレイヤーの操作が止まる。150フレーム後にステージクリアとなる。
+    * 旗の描画用 : `res/model/portal/black_flag.x`
+    * 旗のアニメーション設定 : `res/model/portal/black_flag.csv`
+    * ボスステージでは生成しない。ボスステージのクリアはボス撃破によって判定する。
   * 移動しない床(3x3m)
     * 描画用 : res/model/static_platform/static_platform_1x1.x
     * 衝突判定用 : res/model/static_platform/static_platform_1x1.x
@@ -79,7 +104,7 @@
     * 描画用 : res/model/static_platform/static_platform_2x2.x
     * 衝突判定用 : res/model/static_platform/static_platform_2x2.x
   * 移動床
-    * 水平移動、昇降、往復、斜め移動する床
+    * 水平移動、昇降、往復、斜め移動する床。圧死判定がある。
       * 描画用 : res/model/collision_moving_platform/collision_moving_platform.x
       * 衝突判定用 : res/model/collision_moving_platform.x
 * 落とし穴
@@ -106,6 +131,11 @@
     * `Type=Rope`を指定する。攻撃すると一度だけ切断され、連動対象が指定軸で90度回転する。
     * 有効な`TargetID`が必須である。
     * 描画用モデル : `res/model/attack_trigger/rope.x`
+  * 連動対象に使用できる床と壁
+    * 床モデル : `res/model/attack_block/attack_floor.x`
+    * 壁モデル : `res/model/attack_block/attack_wall.x`
+    * 描画用と衝突判定用に同じモデルを使用し、両方のCSVへ同じCSV ID、座標、回転、倍率で登録する。
+    * スイッチから動かす場合は、`AttackTriggers.csv`の`TargetID`にこのCSV IDを指定する。
 * 敵
   * 共通仕様
     * 配置情報は`EnemyPositions.csv`に記述する
@@ -250,6 +280,8 @@
   * 判定半径内に入ったプレイヤーを、指定した方向、速度、効果時間で射出する。
   * `ChargeEnabled`を省略した場合は有効になる。既存CSVにこの列がある場合は列構成を維持する。
 * ダメージ床
+  * 描画用・衝突判定用 : `res/model/plateLava.x`
+  * `XFileList_simple.csv`と`XFileListPhysics.csv`へ同じCSV ID、座標、回転、倍率で登録する。
   * `LavaZones.csv`で対象の物理オブジェクトを指定し、触れたプレイヤーへダメージを与える。
 * 迫る溶岩
   * `LavaFlood.csv`で生成する。アンカー位置からZ方向へ進みながら、開始時の幅と長さから終了時の幅と長さまで変化する。
@@ -328,7 +360,7 @@
 
 ## 気を付けること
 
-* ステージの中央にだけギミックが配置されてあり、中央以外に何も配置されていないのはダメ。
+* 「ステージの中央にだけギミックが配置されてあり、中央以外に何も配置されていない」はダメ。
 
 ## 各ステージのテーマ
 
@@ -569,8 +601,11 @@
 * 通常の走行、通常ジャンプ、近接攻撃だけで開始地点から全必須敵を倒し、ゴールへ到達できる。
 * 必須敵が隠し場所、落とし穴上、到達困難な場所にいない。
 * 開始地点とゴール地点に、出現直後や到達直後の回避不能なダメージ判定が重なっていない。
+* 通常ステージの`clearPosition`が地形に埋まらず、通常操作で石段と光の柱へ近づける位置にある。
 * 移動床の待機場所と着地点に敵やダメージ床がある場合も、危険を視認でき、通常操作で回避または突破できる。
 * 描画用CSVと物理用CSVの座標、回転、倍率が一致している。
+* 壁、高さが2倍の壁、岩、ダメージ床が、描画用CSVと物理用CSVの両方へ同じCSV IDで登録されている。
+* 柵は当たり判定を持たないため、進行を止める境界として使っていない。
 * 移動床のCSV ID、`RenderID`、`PhysicsID`が一致している。
 * `AttackTriggers.csv`の有効な`TargetID`と`PressurePlates.csv`の`WallID`が、描画・物理CSVの両方に存在する。
 * `LavaZones.csv`の`PhysicsID`が対象の物理オブジェクトと一致している。
