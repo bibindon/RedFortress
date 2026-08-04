@@ -759,3 +759,105 @@
 * 敵全滅後に敵探しや長い逆走が発生しない。
 * CSVはBOM付きUTF-8、CRLFで保存する。`.x`と`.fx`はBOMなしUTF-8、CRLFで保存する。
 * `Debug|x64`ビルドが成功し、出力先へ`res`がコピーされる。
+
+## AIが記憶を失ってからステージを作るときの早見表
+
+この節は、初めてこのメモを読むAIが、過去の実例を調べ直さずにステージを作れるようにするための早見表である。実在するステージのCSVを調査して判明した事実をまとめている。
+
+### オブジェクトごとの登録先クイックリファレンス
+
+各オブジェクトがどのCSVへ何を書けばよいかの一覧。**⚠️必要**はそのCSVへ行を追加する必要があることを示す。**❌**は登録しないことを示す。
+
+| オブジェクト | XFileList_simple.csv | XFileListPhysics.csv | 専用CSV | 補足 |
+|---|:---:|:---:|---|---|
+| 木箱・岩・壁・高さ2倍の壁 | ⚠️必要 | ⚠️必要 | なし | 描画・物理へ同じID・座標・回転・倍率で登録する |
+| 移動しない床（静的床） | ⚠️必要 | ⚠️必要 | なし | 描画側は`loadType=normal`、物理側は衝突判定ファイルに`_collision`サフィックスが付く |
+| 移動床 | ⚠️必要 | ⚠️必要 | XFileListMove.csv | 3ファイルすべてに同じCSV IDを登録する。物理側は`Move=y` |
+| ダメージ床（溶岩プレート） | ⚠️必要 | ⚠️必要(NonCollision) | LavaZones.csv | 物理側は`Type=NonCollision`。LavaZones.csvの`PhysicsID`に物理CSVのIDを指定する |
+| QTE木 | ⚠️必要 | ⚠️必要 | Interactables.csv | 3ファイルの座標を一致させる。描画は`../tree2/lemonTree.x`、物理は`../tree2Physics/tree_cylinder_collision.x` |
+| ワープオブジェクト | ⚠️**必要** | ❌ | WarpBears.csv | 描画CSVへ`../warp_bear/warp_bear.x`を登録する。物理CSVへは登録しない |
+| レバー・ロープ | ❌（自動生成） | ❌ | AttackTriggers.csv | トリガー本体はプログラムが自動生成する。ただし連動対象を両CSVへ登録する |
+| ボタン | ❌（自動生成） | ❌ | AttackTriggers.csv | 同上。ライト専用の場合は`TargetID=-1`を指定できる |
+| レバー・ロープの連動対象 | ⚠️必要 | ⚠️必要(Move=y) | AttackTriggers.csvのTargetIDで指定 | 連動対象に`attack_wall.x`や`attack_floor.x`を使う。物理側は`Move=y`にする |
+| 感圧板の連動扉 | ⚠️必要 | ⚠️必要 | PressurePlates.csvのWallIDで指定 | 扉を両CSVへ登録し、`WallID`で紐付ける |
+| 押せる箱 | ❌ | ❌ | PushableBoxes.csv | 専用CSVのみに記述する |
+| 頭蓋骨 | ❌ | ❌ | Skulls.csv | 専用CSVのみに記述する |
+| ダッシュブースター | ❌ | ❌ | DashBoosters.csv | 専用CSVのみに記述する |
+| 破壊可能木箱 | ❌ | ❌ | Destructibles.csv | 専用CSVのみに記述する |
+| 収集物・アイテム | ❌ | ❌ | Collectibles.csv | 専用CSVのみに記述する |
+| スター | ❌ | ❌ | Stars.csv | 専用CSVのみに記述する |
+| スピードアップ | ❌ | ❌ | SpeedUps.csv | 専用CSVのみに記述する。実装上はヘッダー直後の1行だけ読み込まれる |
+| ポイントライト | ❌ | ❌ | PointLights.csv | 専用CSVのみに記述する |
+
+### CSV IDの慣習的な範囲
+
+IDはステージごとに自由に付けてよいが、既存ステージでは以下の範囲が使われている。これらを参考にすると、既存データと衝突しにくい。
+
+| 範囲 | 用途 | 備考 |
+|---|---|---|
+| 1 | 地面・空モデル | 描画・物理で共通して使われる |
+| 2 | ステージ専用地面モデル | |
+| 35xx | 壁・木箱・移動床・静的床・ダメージ床 | `world * 1000 + stage * 100` から連番 |
+| 36xx | Y座標3以上の静的床 | |
+| 37xx | ダメージ床（溶岩プレート） | |
+| 38xx | QTE木などの特殊オブジェクト | |
+| 5xxx | ワープオブジェクト | 描画CSVのみ。WarpBears.csvとペアで使う |
+| 8xxx | 柵（80xx）・高さ2倍の壁（82xx） | 柵は描画専用。高さ2倍の壁は両CSVへ登録 |
+| 9xxx | 空モデル・景観用オブジェクト・インスタンシング | |
+| 11xxx | レバー・ロープの連動対象（attack_wall/attack_floor） | |
+
+### ステージの座標範囲
+
+| ワールド | サイズ | X範囲 | Z範囲 |
+|---|---|---|---|
+| World 1 | 30×60m | -15〜+15 | -30〜+30 |
+| World 2 | 120×120m | -60〜+60 | -60〜+60 |
+| World 3 | 120×240m | -60〜+60 | -120〜+120 |
+| World 4 | 120×240m | -60〜+60 | -120〜+120 |
+
+### スタート位置とゴール位置の変更方法
+
+スタート位置とゴール位置はCSVではなく、`RedFortress2/MultiPassRendering/StageManager.cpp`の`AddStage()`呼び出しで指定する。変更するにはこのソースファイルを直接編集する。第5引数がスタート位置、第6引数がゴール位置（`clearPosition`）の`D3DXVECTOR3`である。編集後、ビルドが必要である。
+
+```
+AddStage(L"3-5", 21, L"3-5 ひゅんひゅんワープめいろ", L"stage_3_5",
+    D3DXVECTOR3(0.0f, 0.2f, -112.0f),   // スタート位置
+    D3DXVECTOR3(0.0f, 1.0f, 112.0f));    // ゴール位置（clearPosition）
+```
+
+ゴールの石段の基準位置は`clearPosition`のY座標から1m下になる。
+
+### 敵のY座標の慣習
+
+| 種類 | PosY | 備考 |
+|---|---|---|
+| 地上敵（wolf, skeleton, ghost, spider, golem, crab, frog, mushroom等） | 0.2 | 地面すれすれ |
+| 飛行敵（bird） | 3.0 | 空中に浮遊 |
+
+### 既存の生成スクリプト
+
+`tools/BuildPlannedStages.py` が、2-1〜4-8の全ステージの初期配置データ（XFileList_simple.csv, XFileListPhysics.csv, XFileListMove.csv, EnemyPositions.csv, Collectibles.csv, Destructibles.csv, DashBoosters.csv, LavaZones.csv, SpeedUps.csv）を一括生成する。各ステージの定義は`STAGES`タプル内にPython辞書として書かれている。新しいステージをこのスクリプトの定義へ追加・編集することで、複数CSVの整合性を保ちながら配置を作成・更新できる。ただし、ワープオブジェクト、感圧板、レバー、QTE木、ポイントライトなどはこのスクリプトでは生成されないため、手動でCSVを作成する必要がある。
+
+### インスタンシング配置CSVの書式と配置場所
+
+草と木の大量配置（インスタンシング）に使用する配置CSVは、モデルと同じフォルダーに置く。
+
+* 草の配置CSV
+  * 配置場所 : `res/model/grass/` フォルダー内
+  * ファイル名 : `grass<ステージ名>.csv`（例 : `grass3-5.csv`）
+  * 1行目 : `sway,wave`
+  * 2行目 : `AutoHide,n`
+  * 3行目以降 : `X,Y,Z,RotY,Scale` を1行につき1個
+  * XFileList_simple.csvへの登録例 : `9200,../grass/grass.x,0,0,0,0,0,0,1,instancing,../grass/grass3-5.csv`
+
+* 木の配置CSV
+  * 配置場所 : `res/model/tree2/` フォルダー内
+  * ファイル名 : `lemonTree.Instancing.<ステージ名>.csv`（例 : `lemonTree.Instancing.3-5.csv`）
+  * 1行目 : `AutoHide,n`
+  * 2行目 : `#x,y,z,RotY,Scale`
+  * 3行目以降 : `X,Y,Z,RotY,Scale` を1行につき1本
+  * XFileList_simple.csvへの登録例 : `9201,../tree2/lemonTree.Instancing.x,0,0,0,0,0,0,1,instancing,../tree2/lemonTree.Instancing.3-5.csv`
+
+### 地面モデルの形状確認方法
+
+既存の`stage_ground.x`に落とし穴や窪みがすでにあるかを確認するには、Xファイルの頂点データを解析する。Xファイルはテキスト形式なので、Python等で`Mesh`ブロック内の頂点座標を読み取り、Y座標が0より低い頂点（底面）とY座標が0付近の頂点（上面）を分類することで、上面の形状から足場の範囲と落とし穴の位置を把握できる。XファイルのFrameTransformMatrixに回転が含まれている場合があるため、行列の確認も必要である。
