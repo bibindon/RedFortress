@@ -56,6 +56,30 @@
   * 地面
     * 描画用 : stage_ground.x
     * 衝突判定用 : stage_ground.x
+  * 水面
+    * 水面は描画専用であり、`XFileListPhysics.csv`には登録しない。水面そのものに足場、ダメージ、遊泳の判定はない。
+    * ステージフォルダー内に、水面の形に合わせた水平なメッシュを`stage_water.x`などの名前で用意する。Blenderから公式DirectX Xエクスポーターを使用して出力する。
+    * 水面モデルと同じフォルダーに、拡張子だけを`.csv`へ変えた設定ファイルを置く。たとえば`stage_water.x`には`stage_water.csv`を対応させる。名前が一致しない設定ファイルは読み込まれない。
+    * `XFileList_simple.csv`へ未使用のCSV IDで登録し、`loadType=meshmix2`を指定する。拠点1では`base_water.x`をY=0.04mに配置している。地面と同じ高さへ置く場合も、ちらつきを避けるため水面を少し上に配置する。
+    * 登録例 : `<未使用ID>,stage_water.x,0,0.04,0,0,0,0,1,meshmix2`
+    * 設定CSVは、拠点1の`res/model/base/base_water.csv`と同じ次の内容を標準とする。
+
+      ```csv
+      MeshType,WaterMirror
+      Wave,1
+      WaveIntensity,0.025
+      WaveSpeed,0.35
+      WaveDensity,2.5
+      Fresnel,1
+      FresnelIntensity,0.65
+      WaterReflectionStrength,0.38
+      WaterReflectionTint,0.12
+      Shadow,0
+      SSAO,0
+      LambertShadow,0
+      ```
+
+    * 水面を落下場所や危険地帯として使う場合は、地面モデル側に穴を作るか、別のダメージ判定を配置する。水面モデルを物理用CSVへ追加して代用しない。
   * 木箱
     * 描画用 : res/model/cubeWoodSmall/cube_wood_small.x
     * 衝突判定用 : res/model/cubeWoodSmall/cube_wood_small_collision.x
@@ -65,6 +89,15 @@
   * 岩2
     * 描画用 : `res/model/base/base_rock2.x`
     * 衝突判定用 : `res/model/base/base_rock2_collision.x`
+  * 拠点1と同じ木
+    * 装飾と固定障害物に使用する木であり、QTE用の`res/model/tree2/lemonTree.x`とは別物である。配置しただけではQTEは発生しない。
+    * 元モデルは`res/model/base/source_quaternius/Tree1.blend`、`Tree2.blend`、`Tree4.blend`の3種類である。ステージの景観に合わせて種類、向き、倍率を変え、同じ木を均等に並べるだけの配置にしない。
+    * `res/model/base/base_decor.x`を各ステージへ直接配置しない。このモデルには拠点1の木、岩、草などが拠点1の座標でまとめて入っている。
+    * 対象ステージのBlenderファイルまたは生成スクリプトへ必要な木を読み込み、配置を反映した`stage_trees.x`などのステージ専用描画モデルとしてまとめる。公式DirectX Xエクスポーターを使用し、`axis_forward="Z"`、`axis_up="Y"`で出力する。
+    * 衝突判定も同じ配置で`stage_trees_collision.x`などへまとめる。拠点1と同じ基準では、木1本につき幹の中心へ半径`0.30 × 木の倍率`m、高さ`2.2 × 木の倍率`mの円柱を置く。円柱の中心Y座標は木の根元から`1.1 × 木の倍率`m上にする。
+    * 描画モデルと衝突判定モデルを、`XFileList_simple.csv`と`XFileListPhysics.csv`へ同じCSV ID、座標、回転、倍率で登録する。モデル内に配置を反映した場合は、CSV側を座標0、回転0、倍率1にする。
+    * 描画側は`loadType=normal`、物理側は`Type=Collision`、`Move=n`を指定する。
+    * 木を足場として使うことを前提にしない。幹の衝突判定は通り抜け防止用であり、枝葉には衝突判定を付けない。
   * 柵
     * 描画用 : `res/model/fence.x`
     * 衝突判定はない。落とし穴やステージ外周の縁を見せるための目印として使用し、プレイヤーを止める壁としては使用しない。
@@ -361,6 +394,7 @@
 ## 気を付けること
 
 * 「ステージの中央にだけギミックが配置されてあり、中央以外に何も配置されていない」はダメ。
+* ステージの詳細を書くときはこのファイルに書くのではなく、「STAGE_1_1.md」のようなファイルを作って書くこと。
 
 ## 各ステージのテーマ
 
@@ -496,6 +530,7 @@
     * プレイヤー自身、押せる箱、ドクロなど複数の重しを使い分け、扉ごとに異なる解き方を用意する。
     * 開いた扉の先には敵や移動床を配置し、仕掛けを解いた後も気を抜けない構成にする。
     * 重しを落としても進行不能にならないよう、戻せる地形か別の解法を用意する。
+    * ステージ全体を水面にして「ウユニ塩湖」のような見た目にする。
 * 3-3「切ってつないでがけの橋」
   * 短い説明：ロープを切断して橋を作り、障害物を突破するステージ。
   * 詳しい説明
@@ -604,7 +639,9 @@
 * 通常ステージの`clearPosition`が地形に埋まらず、通常操作で石段と光の柱へ近づける位置にある。
 * 移動床の待機場所と着地点に敵やダメージ床がある場合も、危険を視認でき、通常操作で回避または突破できる。
 * 描画用CSVと物理用CSVの座標、回転、倍率が一致している。
+* 水面モデルと同名の設定CSVが存在し、描画側の`loadType`が`meshmix2`になっている。水面を物理用CSVへ登録していない。
 * 壁、高さが2倍の壁、岩、ダメージ床が、描画用CSVと物理用CSVの両方へ同じCSV IDで登録されている。
+* 拠点1と同じ木を使用した場合、描画モデルと幹の衝突判定が同じ配置になっており、QTE用の木と混同していない。
 * 柵は当たり判定を持たないため、進行を止める境界として使っていない。
 * 移動床のCSV ID、`RenderID`、`PhysicsID`が一致している。
 * `AttackTriggers.csv`の有効な`TargetID`と`PressurePlates.csv`の`WallID`が、描画・物理CSVの両方に存在する。
