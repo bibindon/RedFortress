@@ -39,6 +39,7 @@
     * 120x240m
       * 草原・夜
 
+
 ## 正しい情報の参照元
 
 * ステージ名、ステージフォルダー、開始地点、ゴール地点は`RedFortress2/MultiPassRendering/StageManager.cpp`を正とする。
@@ -81,6 +82,9 @@
     * 水平移動、昇降、往復、斜め移動する床
       * 描画用 : res/model/collision_moving_platform/collision_moving_platform.x
       * 衝突判定用 : res/model/collision_moving_platform/collision_moving_platform.x
+* 落とし穴
+  * 落とし穴は設置できない。地面として、各ステージ専用のstage_ground.xが用意されている。  
+    これを編集し窪みを追加することで落とし穴を作成する。
 * スイッチ系オブジェクト
   * レバー
     * 攻撃するたびにON/OFFが切り替えられる
@@ -201,6 +205,22 @@
 * アイテム
   * クラフト素材
   * クラフト素材以外
+* QTEオブジェクト
+  * 現在実装されている通常ステージ用QTEオブジェクトは、`Type`が`Tree`の木である。
+  * プレイヤーが木の`PromptDistance`以内に入ると「Fキー or ○ボタン」と表示され、Fキーまたはゲームパッドの○ボタンでQTEを開始する。
+  * QTE中は、拡大する円が目標の円に重なったタイミングでSpaceキーまたはゲームパッドの×ボタンを押す。
+  * 判定が`Success`または`Normal`なら、ランダムなクラフト素材を1個獲得する。`Failure`ではアイテムを獲得できない。
+  * `Tree`はQTE開始時に`Interactables.csv`から取り除かれるため、成否にかかわらず1回だけ使用できる。見た目と衝突判定の木はその場に残る。
+  * 配置には次の3つのCSVを使用する。3ファイルの座標を一致させ、描画用と衝突判定用では回転と倍率も一致させる。
+    * `XFileList_simple.csv`：描画用の木。`res/model/tree2/lemonTree.x`を使用する。
+    * `XFileListPhysics.csv`：衝突判定用の木。`res/model/tree2Physics/tree_cylinder_collision.x`を使用する。
+    * `Interactables.csv`：QTEの起動位置と反応距離を指定する。
+  * `Interactables.csv`の列は`InteractionID,Type,PosX,PosY,PosZ,PromptDistance`とする。
+  * 例：`stage1-tree-01,Tree,10,0,22,2.5`
+  * `InteractionID`はステージ内で重複しない名前にする。`PromptDistance`は木の中心へ無理なく近づける範囲とし、既存例では2.5mを使用している。
+  * QTE中はプレイヤー、カメラ、敵、インタラクトの更新が止まる。敵の攻撃範囲内やダメージ床の近くなど、開始前後に危険となる場所へ配置しない。
+  * QTEの成功をクリア必須条件にしない。失敗しても正規ルートの進行や必須敵の撃破が可能な構成にする。
+  * ボスステージには配置しない。
 
 ## 配置データの出力先
 
@@ -216,6 +236,7 @@
 | `PressurePlates.csv` | 感圧板と連動扉 | 感圧板の座標、`WallID`、扉の回転と倍率 |
 | `PushableBoxes.csv` | 押せる箱 | `ID`、座標、`RotY`、`Scale` |
 | `AttackTriggers.csv` | レバー、ボタン、ロープ | `Type`、トリガー座標、`TargetID`、回転軸 |
+| `Interactables.csv` | QTEオブジェクトなど | `InteractionID`、`Type`、座標、`PromptDistance`。通常ステージのQTE用木は`Type=Tree` |
 | `Skulls.csv` | 頭蓋骨 | `ID`、座標、`RotY` |
 | `WarpBears.csv` | ワープオブジェクト | `WarpID`、`PairID`、座標、`RotY` |
 | `DashBoosters.csv` | ダッシュブースター | 座標、方向、速度、効果時間、判定半径、倍率 |
@@ -342,6 +363,7 @@
 * 移動床のCSV ID、`RenderID`、`PhysicsID`が一致している。
 * `LavaZones.csv`の`PhysicsID`が対象の物理オブジェクトと一致している。
 * 敵、アイテム、破壊可能オブジェクトが地形や落とし穴内に埋まっていない。
+* QTEオブジェクトの描画、衝突判定、インタラクト位置が一致し、安全な場所から起動できる。
 * ダメージ床と落とし穴がカメラから判別できる。
 * 強化能力を使った場合もステージ外や壁の裏へ侵入できない。
 * 敵全滅後に敵探しや長い逆走が発生しない。
