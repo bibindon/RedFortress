@@ -15,7 +15,7 @@ void StageManager::Initialize()
     AddStage(L"1-4", 4, L"1-4 風に削られた登り塔", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-10.0f, 14.0f, -24.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
-    AddStage(L"1-5", 5, L"1-5 ドカンと樽砲回廊", L"stage17", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"1-5", 5, L"1-5 ドカンと大砲回廊", L"stage17", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
     AddStage(L"1-6", 6, L"1-6 沈み砦の砲台渡り", L"stage18", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
@@ -56,7 +56,7 @@ void StageManager::Initialize()
     AddStage(L"3-1", 17, L"3-1 ポチポチ空中回廊", L"stage9", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
     AddStage(L"3-2", 18, L"3-2 ポチッと水上扉回廊", L"stage10", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
     AddStage(L"3-3", 19, L"3-3 切ってつないで断崖橋", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
-    AddStage(L"3-4", 20, L"3-4 ドカン！夕焼け樽砲峡谷", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"3-4", 20, L"3-4 ドカン！夕焼け大砲峡谷", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
     AddStage(L"3-5", 21, L"3-5 ひゅんひゅんワープ迷宮", L"stage25", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 114.0f));
     AddStage(L"3-6", 22, L"3-6 ぐるぐる奈落スパイラル", L"stage26", D3DXVECTOR3(-36.8f, 0.2f, -36.8f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
     AddStage(L"3-7", 23, L"3-7 うじゃうじゃ魔獣の八の字遺跡", L"stage27", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
