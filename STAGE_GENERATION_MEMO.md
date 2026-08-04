@@ -142,16 +142,16 @@
     * ボスステージでは生成しない。ボスステージのクリアはボス撃破によって判定する。
   * 移動しない床(3x3m)
     * 描画用 : res/model/static_platform/static_platform_1x1.x
-    * 衝突判定用 : res/model/static_platform/static_platform_1x1.x
+    * 衝突判定用 : res/model/static_platform/static_platform_1x1_collision.x
   * 移動しない床(3x6m)
     * 描画用 : res/model/static_platform/static_platform_1x2.x
-    * 衝突判定用 : res/model/static_platform/static_platform_1x2.x
+    * 衝突判定用 : res/model/static_platform/static_platform_1x2_collision.x
   * 移動しない床(6x3m)
     * 描画用 : res/model/static_platform/static_platform_2x1.x
-    * 衝突判定用 : res/model/static_platform/static_platform_2x1.x
+    * 衝突判定用 : res/model/static_platform/static_platform_2x1_collision.x
   * 移動しない床(6x6m)
     * 描画用 : res/model/static_platform/static_platform_2x2.x
-    * 衝突判定用 : res/model/static_platform/static_platform_2x2.x
+    * 衝突判定用 : res/model/static_platform/static_platform_2x2_collision.x
   * 移動床
     * 水平移動、昇降、往復、斜め移動する床。圧死判定がある。
       * 描画用 : res/model/collision_moving_platform/collision_moving_platform.x
@@ -191,11 +191,11 @@
     * `Type`で敵の種類を指定する
     * 描画にはアニメーション付きXファイルを使用する
     * 専用の衝突判定用Xファイルは使用せず、プログラム側の円柱判定を使用する
-    * 通常ステージ1つあたりの配置数は、`EnemyPositions.csv`に記述するすべての雑魚敵を合計して次の体数を目安にする。ステージの地形や仕掛けに合わせて多少増減してよい。
+    * 通常ステージ1つあたりの配置数は、`EnemyPositions.csv`に記述するすべての雑魚敵を合計して次の体数を超えること。
       * World 1 : 10体
       * World 2 : 15体
       * World 3、World 4 : 20体
-    * ボスステージはこの目安の対象外とし、既存のボスステージ用ルールに従って雑魚敵を配置しない。
+    * ボスステージはこの対象外とし、既存のボスステージ用ルールに従って雑魚敵を配置しない。
   * オオカミ
     * Type : `wolf`
     * 描画用 : `res/model2/separatedAnim/wolfAnim.x`
@@ -420,6 +420,9 @@
 * **「ステージの中央にだけギミックが配置されてあり、中央以外に何も配置されていない」はダメ。**
 * **ステージの詳細を書くときはこのファイルに書くのではなく、「STAGE_1_1.md」のようなファイルを作って書くこと。**
 * **まず、スタート位置とゴール位置を考え直してください。古いデータが残っている可能性があるため。**
+
+### ボスステージ以外
+
 * **各ステージにQTE木を1つ以上使うこと。**
 * **各ステージにダッシュ床を1つ以上使うこと。**
   * 上記のギミックで以下のどれかが達成できること
@@ -457,6 +460,7 @@
   * World 1 : 10体
   * World 2 : 15体
   * World 3、World 4 : 20体
+* ステージの端にギミックを2つ以上配置してください。
 
 ## 各ステージのテーマ
 
