@@ -148,14 +148,7 @@ void CraftMenu::Update()
     {
         GameAudio::PlayMenuCancel();
         const int requiredWorld = GetRecipeRequiredWorld(recipe);
-        if (requiredWorld <= 2)
-        {
-            m_statusMessage = L"ワールド2になるまで武器はクラフトできない";
-        }
-        else
-        {
-            m_statusMessage = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
-        }
+        m_statusMessage = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
         m_statusColor = kMissingTextColor;
         return;
     }
@@ -266,14 +259,7 @@ void CraftMenu::Render()
     else if (!IsRecipeUnlocked(selectedRecipe))
     {
         const int requiredWorld = GetRecipeRequiredWorld(selectedRecipe);
-        if (requiredWorld <= 2)
-        {
-            availability = L"ワールド2になるまで武器はクラフトできない";
-        }
-        else
-        {
-            availability = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
-        }
+        availability = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
     }
     else if (CanCraft(selectedRecipe))
     {
@@ -381,20 +367,21 @@ bool CraftMenu::IsRecipeAlreadyCrafted(const Recipe& recipe) const
         return false;
     }
 
-    if (recipe.resultType != L"Weapon")
+    if (recipe.resultType == L"Weapon")
     {
-        return false;
+        return m_inventory->GetWeaponCount(recipe.resultId) > 0;
     }
 
-    return m_inventory->GetWeaponCount(recipe.resultId) > 0;
+    if (recipe.resultType == L"Ability")
+    {
+        return m_inventory->IsAbilityUnlocked(recipe.resultId);
+    }
+
+    return false;
 }
 
 int CraftMenu::GetRecipeRequiredWorld(const Recipe& recipe) const
 {
-    if (recipe.resultType != L"Weapon" && recipe.resultType != L"Item")
-    {
-        return 1;
-    }
 
     if (recipe.resultId == L"W002")
     {
@@ -423,7 +410,7 @@ int CraftMenu::GetRecipeRequiredWorld(const Recipe& recipe) const
 
     if (recipe.resultId == L"DoubleJump")
     {
-        return 3;
+        return 4;
     }
 
     return 1;
