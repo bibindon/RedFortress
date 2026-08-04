@@ -25,7 +25,6 @@
 * 座標はXを左右、Yを上方向、Zを奥行きとして扱い、1ユニットを1mとする。
 * ボスステージではQTE、移動床、頭蓋骨、押せる箱、感圧板、ダッシュブースター、ワープオブジェクト、破壊可能オブジェクト、雑魚敵を配置しない。
 * ステージの広さは以下のようになっている
-  * ただし、ボスステージのサイズはすべて60x60m
   * ワールド1
     * 30x60m
       * 草原・昼
@@ -81,29 +80,31 @@
   * 移動床
     * 水平移動、昇降、往復、斜め移動する床
       * 描画用 : res/model/collision_moving_platform/collision_moving_platform.x
-      * 衝突判定用 : res/model/collision_moving_platform/collision_moving_platform.x
+      * 衝突判定用 : res/model/collision_moving_platform.x
 * 落とし穴
-  * 落とし穴は設置できない。地面として、各ステージ専用のstage_ground.xが用意されている。  
-    これを編集し窪みを追加することで落とし穴を作成する。
+  * 落とし穴は別オブジェクトとして設置できない。各ステージ専用の`stage_ground.x`へ穴や窪みを設けて作成する。
+  * `stage_ground.x`を手書きで編集したり、独自のXファイル変換・シリアライズ処理を作成したりしない。
+  * 地面モデルはBlenderで編集し、公式DirectX Xエクスポーターの`bpy.ops.export_scene.directx_x`を使用して、`axis_forward="Z"`、`axis_up="Y"`で直接エクスポートする。
 * スイッチ系オブジェクト
+  * 共通仕様
+    * 配置情報は`AttackTriggers.csv`に記述する。トリガーの表示モデルはプログラムが自動生成するため、トリガー本体を`XFileList_simple.csv`や`XFileListPhysics.csv`へ追加しない。
+    * トリガー本体に専用の物理モデルはなく、プレイヤーの攻撃範囲と`TriggerX`、`TriggerY`、`TriggerZ`の距離で反応する。
+    * `TargetID`で連動対象を指定する場合、対象オブジェクトを`XFileList_simple.csv`と`XFileListPhysics.csv`の両方へ同じCSV IDで登録する。存在しないIDを指定すると異常終了する。
+    * `Axis`には`X`、`Y`、`Z`のいずれかを指定する。連動対象は`BaseRotX`、`BaseRotY`、`BaseRotZ`を基準に、その軸で90度回転する。
   * レバー
-    * 攻撃するたびにON/OFFが切り替えられる
-    * 連動する壁がY軸で90度回転する。
-      * 描画用 : res/model/attack_trigger/lever.x
-      * 衝突判定用 : res/model/attack_trigger/lever.x
+    * `Type=Lever`を指定する。攻撃するたびにON/OFFが切り替わる。
+    * 有効な`TargetID`が必須である。
+    * 描画用モデル : `res/model/attack_trigger/lever.x`
   * ボタン
-    * 攻撃するとONになるが10秒後にOFFになる
-      * OFF
-        * 描画用 : res/model/pressure_plate/pressure_plate_black.x
-        * 衝突判定用 : res/model/pressure_plate/pressure_plate_black.x
-      * ON
-        * 描画用 : res/model/pressure_plate/pressure_plate_green.x
-        * 衝突判定用 : res/model/pressure_plate/pressure_plate_green.x
+    * `Type=Button`または`Type=TimedButton`を指定する。いずれかのボタンを攻撃するとステージ内の全ボタンがONになり、10秒後にOFFになる。
+    * 連動対象を動かさずライトだけを操作する場合は`TargetID=-1`を指定できる。
+    * ライトを設定する場合は、`LightBrightness`、`LightRange`、`LightR`、`LightG`、`LightB`の5列をすべて指定する。
+    * OFF描画用モデル : `res/model/pressure_plate/pressure_plate_black.x`
+    * ON描画用モデル : `res/model/pressure_plate/pressure_plate_green.x`
   * ロープ
-    * 攻撃すると切断される。一度きり。
-    * 連動する床がX軸で90度回転する
-      * 描画用 : res/model/attack_trigger/rope.x
-      * 衝突判定用 : res/model/attack_trigger/rope.x
+    * `Type=Rope`を指定する。攻撃すると一度だけ切断され、連動対象が指定軸で90度回転する。
+    * 有効な`TargetID`が必須である。
+    * 描画用モデル : `res/model/attack_trigger/rope.x`
 * 敵
   * 共通仕様
     * 配置情報は`EnemyPositions.csv`に記述する
@@ -214,6 +215,8 @@
   * 掴んで投げることができる。
 * アイテム
   * クラフト素材とクラフト素材以外の収集物は`Collectibles.csv`へ配置する。
+  * `Collectibles.csv`の`Type`には`Item`または`Weapon`だけを指定する。
+  * `Type=Item`では、クラフト専用アイテムIDの`007`と`008`を`DataID`に指定しない。指定すると異常終了する。
   * スターは`Stars.csv`へ配置する。取得すると一定時間無敵になり、移動速度が最大になる。1ステージに複数配置できる。
   * スピードアップは`SpeedUps.csv`へ配置する。取得すると基礎移動速度の段階が1つ上がる。現在の実装が読み込む配置は、ヘッダー直後の1行だけである。
 * QTEオブジェクト
@@ -244,9 +247,9 @@
 | `XFileListMove.csv` | 移動床 | `ID`、`RenderID`、`PhysicsID`、`Start`、`End`、`Duration` |
 | `EnemyPositions.csv` | 敵 | `Type`、`PosX`、`PosY`、`PosZ`、`RotY` |
 | `Destructibles.csv` | 破壊可能オブジェクト | 座標、`HP`。既存ヘッダーに`DropItemId`がある場合だけドロップも指定する |
-| `PressurePlates.csv` | 感圧板と連動扉 | 感圧板の座標、`WallID`、扉の回転と倍率 |
+| `PressurePlates.csv` | 感圧板と連動扉 | 感圧板の座標、`WallID`、扉の回転と倍率。`WallID`は描画・物理CSVの両方に必要 |
 | `PushableBoxes.csv` | 押せる箱 | `ID`、座標、`RotY`、`Scale` |
-| `AttackTriggers.csv` | レバー、ボタン、ロープ | `Type`、トリガー座標、`TargetID`、回転軸 |
+| `AttackTriggers.csv` | レバー、ボタン、ロープ | `ID`、`Type`、トリガー座標、`TargetID`、`Axis`、基準回転、倍率。ボタンでは任意のライト5列を末尾に追加 |
 | `Interactables.csv` | QTEオブジェクトなど | `InteractionID`、`Type`、座標、`PromptDistance`。通常ステージのQTE用木は`Type=Tree` |
 | `Skulls.csv` | 頭蓋骨 | `ID`、座標、`RotY` |
 | `WarpBears.csv` | ワープオブジェクト | `WarpID`、`PairID`、座標、`RotY` |
@@ -254,11 +257,13 @@
 | `LavaZones.csv` | 溶岩・ダメージ床 | `ID`、対象となる`PhysicsID`、`Damage` |
 | `LavaFlood.csv` | 迫る溶岩 | `ID`、`Damage`、アンカー座標、`DirectionZ`、開始・終了時の幅と長さ、`Duration` |
 | `LavaRise.csv` | せり上がる溶岩 | `ID`、`Damage`、XZ範囲、`StartY`、`EndY`、`Delay`、`Duration` |
-| `Collectibles.csv` | アイテム・収集物 | `CollectibleID`、`Type`、`DataID`、座標、倍率 |
+| `Collectibles.csv` | アイテム・収集物 | `CollectibleID`、`Type`、`DataID`、座標、倍率。`Type`は`Item`または`Weapon` |
 | `Stars.csv` | 一時無敵・最高速スター | `PosX`、`PosY`、`PosZ`。複数行を配置可能 |
 | `SpeedUps.csv` | 基礎移動速度アップ | `PosX`、`PosY`、`PosZ`。現在の実装ではヘッダー直後の1行だけを読み込む |
 
 移動床を追加するときは、`XFileList_simple.csv`、`XFileListPhysics.csv`、`XFileListMove.csv`の3ファイルに同じCSV IDの行を追加する。`RenderID`と`PhysicsID`も対応するIDと一致させる。
+
+`AttackTriggers.csv`の`TargetID`と`PressurePlates.csv`の`WallID`で連動対象を指定するときは、対象を`XFileList_simple.csv`と`XFileListPhysics.csv`の両方へ同じCSV IDで登録する。レバーとロープでは`TargetID=-1`を使用できない。ボタンだけはライト専用として`TargetID=-1`を使用できる。
 
 ## 配置設計の基準
 
@@ -382,6 +387,7 @@
 * 移動床の待機場所と着地点に敵やダメージ床がある場合も、危険を視認でき、通常操作で回避または突破できる。
 * 描画用CSVと物理用CSVの座標、回転、倍率が一致している。
 * 移動床のCSV ID、`RenderID`、`PhysicsID`が一致している。
+* `AttackTriggers.csv`の有効な`TargetID`と`PressurePlates.csv`の`WallID`が、描画・物理CSVの両方に存在する。
 * `LavaZones.csv`の`PhysicsID`が対象の物理オブジェクトと一致している。
 * 敵、アイテム、破壊可能オブジェクトが地形や落とし穴内に埋まっていない。
 * QTEオブジェクトの描画、衝突判定、インタラクト位置が一致し、プロンプトを確認して意図的に起動できる。周囲に敵やダメージ床があってもよい。
