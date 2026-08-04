@@ -36,6 +36,7 @@ RedFortress2/MultiPassRendering/res/model2/marine/untitled.blend1
 /.zcode/plans/plan-sess_b0e39d94-31b4-4d86-a2eb-6e24d2599638.md
 /.zcode/plans/plan-sess_bb7e9950-1d0c-4602-9b48-ee61291463ad.md
 /tools/*
+!/tools/CreateStaticPlatformModels.py
 !/tools/PrepareSkullModel.py
 /tools/BuildPortalModels.py
 /tools/ImportAndSaveBlend.py
