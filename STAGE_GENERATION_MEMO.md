@@ -60,7 +60,35 @@
     * 描画用 : stage_ground.x
     * 衝突判定用 : stage_ground.x
   * ポイントライト
-    * ステージごとの固定配置は`GameApp.cpp`の`ConfigureStagePointLights()`へハードコードされており、CSVや配置ファイルから自由に増やすことはできない。新しいステージへ灯りを追加したい場合は、この関数へステージIDごとの分岐を追記し、`AddPointLight(座標, 範囲, 色)`を呼び出す。
+    * ステージフォルダー内に`PointLights.csv`を配置することで、ポイントライトを自由に設置できる。ファイルが存在しない場合は何も読み込まれない（エラーなし）。
+    * `ConfigureStagePointLights()`（GameApp.cpp）によるステージ固定ライト（拠点やセレクト画面のポータル灯など）は従来通り動作し、その後に`PointLights.csv`のライトが追加で読み込まれる。両立可能。
+    * CSVヘッダー（1行目）:
+
+      ```csv
+      PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA,Shape,LineLength,SquareWidth,SquareHeight,RotX,RotY,RotZ,Range,OwnerTag
+      ```
+    * 必須列は`PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA`（8列）。以降の列は省略可能で、省略時はデフォルト値が使われる。
+    * 各列の意味:
+
+      | 列 | 説明 | デフォルト |
+      |---|---|---|
+      | PosX,PosY,PosZ | ライトの座標 | （必須） |
+      | Brightness | 明るさ（0.0〜） | （必須） |
+      | ColorR,ColorG,ColorB,ColorA | 色（0.0〜1.0） | （必須） |
+      | Shape | ライト形状:`Point`,`Line`,`Square`,`Cube`,`Sphere` | `Point` |
+      | LineLength | Line形状の長さ | 12.0 |
+      | SquareWidth | Square/Cube形状の幅 | 10.0 |
+      | SquareHeight | Square/Cube形状の高さ | 10.0 |
+      | RotX,RotY,RotZ | 回転（度） | 0,0,0 |
+      | Range | ライトの影響範囲 | 12.0 |
+      | OwnerTag | 所有者タグ（空欄可） | （空欄） |
+    * 記述例:
+
+      ```csv
+      PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA,Shape,LineLength,SquareWidth,SquareHeight,RotX,RotY,RotZ,Range,OwnerTag
+      -8.0,2.8,-18.0,1.0,1.0,0.34,0.08,1.0,Point,12.0,10.0,10.0,0.0,0.0,0.0,12.0,
+      0.0,3.0,26.0,1.0,0.08,0.72,1.0,1.0,Point,12.0,10.0,10.0,0.0,0.0,0.0,3.2,
+      ```
   * 水面
     * 水面は描画専用であり、`XFileListPhysics.csv`には登録しない。水面そのものに足場、ダメージ、遊泳の判定はない。
     * ステージフォルダー内に、水面の形に合わせた水平なメッシュを`stage_water.x`などの名前で用意する。Blenderから公式DirectX Xエクスポーターを使用して出力する。

@@ -38,6 +38,7 @@ public:
         std::wstring pushableBoxCsvPath;
         std::wstring attackTriggerCsvPath;
         std::wstring warpBearCsvPath;
+        std::wstring pointLightCsvPath;
         std::wstring renderSettingsCsvPath;
         StageWeather weather = StageWeather::None;
         bool playerPointLightEnabled = false;

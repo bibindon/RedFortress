@@ -3703,6 +3703,144 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                            kStageSelectPlayerLightOwnerTag);
 }
 
+void GameApp::LoadPointLightsFromCsv(const std::wstring& csvPath)
+{
+    if (csvPath.empty())
+    {
+        return;
+    }
+
+    const std::wstring fullCsvPath = NSRender::Util::GetExeDir() + csvPath;
+    std::wifstream file(fullCsvPath);
+    if (!file.is_open())
+    {
+        return;
+    }
+    file.close();
+
+    std::vector<std::vector<std::wstring>> csvData;
+    try
+    {
+        csvData = csv::Read(fullCsvPath);
+    }
+    catch (...)
+    {
+        return;
+    }
+
+    for (std::size_t i = 0; i < csvData.size(); ++i)
+    {
+        const std::vector<std::wstring>& row = csvData.at(i);
+        if (row.size() < 5 || row.at(0) == L"PosX")
+        {
+            continue;
+        }
+
+        try
+        {
+            D3DXVECTOR3 pos;
+            pos.x = std::stof(row.at(0));
+            pos.y = std::stof(row.at(1));
+            pos.z = std::stof(row.at(2));
+
+            const float brightness = std::stof(row.at(3));
+
+            D3DXCOLOR color(1.0f, 1.0f, 1.0f, 1.0f);
+            if (row.size() > 4)
+            {
+                color.r = std::stof(row.at(4));
+            }
+            if (row.size() > 5)
+            {
+                color.g = std::stof(row.at(5));
+            }
+            if (row.size() > 6)
+            {
+                color.b = std::stof(row.at(6));
+            }
+            if (row.size() > 7)
+            {
+                color.a = std::stof(row.at(7));
+            }
+
+            NSRender::PointLightShape shape = NSRender::PointLightShape::Point;
+            if (row.size() > 8)
+            {
+                const std::wstring shapeStr = row.at(8);
+                if (shapeStr == L"Line")
+                {
+                    shape = NSRender::PointLightShape::Line;
+                }
+                else if (shapeStr == L"Square")
+                {
+                    shape = NSRender::PointLightShape::Square;
+                }
+                else if (shapeStr == L"Cube")
+                {
+                    shape = NSRender::PointLightShape::Cube;
+                }
+                else if (shapeStr == L"Sphere")
+                {
+                    shape = NSRender::PointLightShape::Sphere;
+                }
+            }
+
+            float lineLength = 12.0f;
+            if (row.size() > 9)
+            {
+                lineLength = std::stof(row.at(9));
+            }
+
+            float squareWidth = 10.0f;
+            if (row.size() > 10)
+            {
+                squareWidth = std::stof(row.at(10));
+            }
+
+            float squareHeight = 10.0f;
+            if (row.size() > 11)
+            {
+                squareHeight = std::stof(row.at(11));
+            }
+
+            D3DXVECTOR3 rotation(0.0f, 0.0f, 0.0f);
+            if (row.size() > 14)
+            {
+                rotation.x = std::stof(row.at(12));
+                rotation.y = std::stof(row.at(13));
+                rotation.z = std::stof(row.at(14));
+            }
+
+            float range = 12.0f;
+            if (row.size() > 15)
+            {
+                range = std::stof(row.at(15));
+            }
+
+            std::wstring ownerTag;
+            if (row.size() > 16)
+            {
+                ownerTag = row.at(16);
+            }
+
+            m_render.AddPointLight(pos,
+                                   brightness,
+                                   color,
+                                   shape,
+                                   lineLength,
+                                   squareWidth,
+                                   squareHeight,
+                                   rotation,
+                                   range,
+                                   ownerTag);
+        }
+        catch (...)
+        {
+            continue;
+        }
+    }
+}
+
 void GameApp::ApplyStageEnvironmentLighting(const std::wstring& stageId)
 {
     const int world = GetWorldFromStageId(stageId);
@@ -7238,6 +7376,7 @@ void GameApp::LoadCurrentStageObjects()
     }
     ApplyStageEnvironmentLighting(stage.id);
     ConfigureStagePointLights(stage.id);
+    LoadPointLightsFromCsv(stage.pointLightCsvPath);
 
     m_useFixedCamera = stage.useFixedCamera;
     m_fixedCameraPos = stage.fixedCameraPos;
