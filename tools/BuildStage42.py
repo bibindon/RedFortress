@@ -1,4 +1,4 @@
-﻿"""Build stage 4-2 (stage14) with Blender's official DirectX X exporter."""
+﻿"""Build stage 4-2 (stage_4_2) with Blender's official DirectX X exporter."""
 
 import csv
 import math
@@ -10,7 +10,7 @@ import bpy
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MODEL_DIR = REPO_ROOT / "RedFortress2" / "MultiPassRendering" / "res" / "model"
-STAGE_DIR = MODEL_DIR / "stage14"
+STAGE_DIR = MODEL_DIR / "stage_4_2"
 GROUND_TEXTURE = MODEL_DIR / "ground" / "tex" / "world4.png"
 SIDE_TEXTURE = MODEL_DIR / "whiteWall.png"
 
@@ -410,7 +410,7 @@ def build_csv_files():
     ]
     physics_rows = [
         (1, "res/model/cubeNormalInverse120x240.x", 0, 0, 0, 0, 0, 0, 1, "Collision", "n", ""),
-        (2, "res/model/stage14/stage_ground.x", 0, 0, 0, 0, 0, 0, 1, "Collision", "n", ""),
+        (2, "res/model/stage_4_2/stage_ground.x", 0, 0, 0, 0, 0, 0, 1, "Collision", "n", ""),
     ]
     static_id = 3000
     for deck_x, deck_z in SHARED_DECKS:
@@ -498,7 +498,7 @@ def main():
     bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
     build_ground_model()
     build_csv_files()
-    print("Stage 4-2 generated: stage14")
+    print("Stage 4-2 generated: stage_4_2")
     print("Enemies:", len(ENEMIES))
     print("Moving platforms:", len(MOVING_PLATFORMS))
     print("Start:", START_POSITION)

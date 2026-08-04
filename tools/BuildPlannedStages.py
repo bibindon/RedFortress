@@ -51,7 +51,7 @@ def booster(x, z, direction_x, direction_y, direction_z, speed=20, duration=1.4)
 
 STAGES = (
     # World 2: 洞窟と鉱山
-    {"display": "2-1", "folder": "stage5", "world": 2, "theme": "洞窟の入口",
+    {"display": "2-1", "folder": "stage_2_1", "world": 2, "theme": "洞窟の入口",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-22, -12), wall(-22, 12), wall(22, -12), wall(22, 12),
                wall(-10, 0, 90), wall(10, 0, 90)),
@@ -59,7 +59,7 @@ STAGES = (
      "enemies": (enemy("small_spider", -10, -12), enemy("spider", 12, -4, 180),
                  enemy("small_spider", -12, 10), enemy("spider", 14, 20, 180)),
      "items": (item("005", -34, -24), item("006", 34, 24), item("009", -30, 30))},
-    {"display": "2-2", "folder": "stage6", "world": 2, "theme": "分かれ道",
+    {"display": "2-2", "folder": "stage_2_2", "world": 2, "theme": "分かれ道",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(0, -18, 90), wall(0, 18, 90), wall(-14, 10), wall(14, -10),
                wall(-28, -28, 90), wall(-28, 28, 90)),
@@ -68,7 +68,7 @@ STAGES = (
                  enemy("spider", 28, -14, 270), enemy("small_spider", 34, 14, 270),
                  enemy("skeleton", 2, 30, 180)),
      "items": (item("001", 32, -26), item("002", 38, 22), item("011", -40, 32))},
-    {"display": "2-3", "folder": "stage7", "world": 2, "theme": "昇降坑",
+    {"display": "2-3", "folder": "stage_2_3", "world": 2, "theme": "昇降坑",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-18, 18), wall(18, 8), wall(-18, -8), wall(18, -18),
                wall(-34, 0, 90), wall(34, 0, 90)),
@@ -80,7 +80,7 @@ STAGES = (
                  enemy("spider", -22, 0), enemy("small_skeleton", 22, -12, 180),
                  enemy("spider", -14, -22)),
      "items": (item("005", -8, 12, y=3.6), item("009", 8, 0, y=3.6), item("006", 30, -30))},
-    {"display": "2-4", "folder": "stage8", "world": 2, "theme": "地下溶岩湖",
+    {"display": "2-4", "folder": "stage_2_4", "world": 2, "theme": "地下溶岩湖",
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-18, 18, 90), wall(18, 18, 90), wall(-18, -18, 90), wall(18, -18, 90)),
      "crates": (crate(32, 30), crate(-32, 28), crate(32, -28), crate(-32, -30)),
@@ -90,7 +90,7 @@ STAGES = (
                  enemy("spider", -28, -12), enemy("small_spider", 28, -18, 180),
                  enemy("ghost", 0, -24)),
      "items": (item("001", 38, 32), item("010", -38, 30), item("014", 38, -32))},
-    {"display": "2-5", "folder": "stage21", "world": 2, "theme": "木箱迷路",
+    {"display": "2-5", "folder": "stage_2_5", "world": 2, "theme": "木箱迷路",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-24, -16), wall(-8, -16), wall(16, -16), wall(28, 0, 90),
                wall(16, 16), wall(0, 16), wall(-24, 16), wall(-30, 0, 90)),
@@ -100,7 +100,7 @@ STAGES = (
                  enemy("ghost", 30, 14, 270), enemy("spider", -14, 10),
                  enemy("ghost", 12, 24, 180)),
      "items": (item("005", -32, 30), item("006", 36, -30), item("011", 28, 24))},
-    {"display": "2-6", "folder": "stage22", "world": 2, "theme": "採掘砲台",
+    {"display": "2-6", "folder": "stage_2_6", "world": 2, "theme": "採掘砲台",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(-34, -22, 90), wall(-34, 22, 90), wall(34, -22, 90), wall(34, 22, 90),
                wall(0, -34), wall(0, 34)),
@@ -111,7 +111,7 @@ STAGES = (
                  enemy("spider", 32, 20, 180), enemy("ghost", 34, -24, 270),
                  enemy("small_spider", 36, 28, 180)),
      "items": (item("009", -46, -24), item("010", 46, 24), item("006", 0, 38))},
-    {"display": "2-7", "folder": "stage23", "world": 2, "theme": "三つの採掘区",
+    {"display": "2-7", "folder": "stage_2_7", "world": 2, "theme": "三つの採掘区",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-32, 18, 90), wall(-8, 18, 90), wall(20, 18, 90),
                wall(-20, -18, 90), wall(8, -18, 90), wall(32, -18, 90)),
@@ -122,14 +122,14 @@ STAGES = (
                  enemy("skeleton", -26, 0), enemy("ghost", 26, 0, 180),
                  enemy("small_golem", -24, -28), enemy("skeleton", 24, -26, 180)),
      "items": (item("001", -42, 34), item("006", 40, 32), item("011", 0, -36))},
-    {"display": "2-8", "folder": "stage24", "world": 2, "theme": "地底湖の主",
+    {"display": "2-8", "folder": "stage_2_8", "world": 2, "theme": "地底湖の主",
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-22, 22), wall(22, 22), wall(-22, -22), wall(22, -22)),
      "lava": (lava(-26, 0, 5), lava(26, 0, 5), lava(0, 26, 5), lava(0, -26, 5)),
      "enemies": (enemy("golem", 0, 0, 180),)},
 
     # World 3: 夕暮れの山岳遺跡
-    {"display": "3-1", "folder": "stage9", "world": 3, "theme": "山麓の遺跡",
+    {"display": "3-1", "folder": "stage_3_1", "world": 3, "theme": "山麓の遺跡",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-24, -10), wall(24, -10), wall(-24, 16), wall(24, 16),
                wall(0, -48, 90), wall(0, 48, 90)),
@@ -138,7 +138,7 @@ STAGES = (
                  enemy("bird", 24, 4, 180, 3), enemy("ghost", -22, 22),
                  enemy("bird", 0, 44, 180, 3)),
      "items": (item("005", -34, -52), item("009", 34, 8), item("011", -34, 52))},
-    {"display": "3-2", "folder": "stage10", "world": 3, "theme": "崩れた段丘",
+    {"display": "3-2", "folder": "stage_3_2", "world": 3, "theme": "崩れた段丘",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(-22, -30, 90), wall(22, -30, 90), wall(-22, 30, 90), wall(22, 30, 90)),
      "crates": (crate(-36, -32), crate(36, -32), crate(-36, 0), crate(36, 0), crate(-36, 32), crate(36, 32)),
@@ -147,7 +147,7 @@ STAGES = (
                  enemy("ghost", -36, 0), enemy("skeleton", 36, 0, 180),
                  enemy("bird", -34, 30, 0, 3), enemy("small_golem", 34, 30, 180)),
      "items": (item("001", -42, -36), item("006", 42, 0), item("014", -42, 36))},
-    {"display": "3-3", "folder": "stage11", "world": 3, "theme": "大砲の峡谷",
+    {"display": "3-3", "folder": "stage_3_3", "world": 3, "theme": "大砲の峡谷",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-18, -54, 90), wall(18, -54, 90), wall(-18, 0, 90), wall(18, 0, 90),
                wall(-18, 54, 90), wall(18, 54, 90)),
@@ -157,7 +157,7 @@ STAGES = (
                  enemy("ghost", -38, 18), enemy("bird", 36, -16, 0, 3),
                  enemy("skeleton", -38, -44), enemy("small_golem", 36, -64, 180)),
      "items": (item("009", -48, 48), item("010", 48, -48), item("011", 40, 68))},
-    {"display": "3-4", "folder": "stage12", "world": 3, "theme": "上層と下層",
+    {"display": "3-4", "folder": "stage_3_4", "world": 3, "theme": "上層と下層",
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-22, -44), wall(22, -22), wall(-22, 0), wall(22, 22), wall(-22, 44)),
      "crates": (crate(-36, -42), crate(-36, -42, 1.8), crate(34, -18), crate(34, -18, 1.8),
@@ -166,7 +166,7 @@ STAGES = (
                  enemy("bird", -30, -10, 0, 3), enemy("skeleton", 30, 12, 180),
                  enemy("ghost", -18, 38), enemy("bird", 30, 60, 180, 3)),
      "items": (item("005", -36, -42, 4.0), item("009", 34, -18, 4.0), item("014", 34, 42, 4.0))},
-    {"display": "3-5", "folder": "stage25", "world": 3, "theme": "動く石橋",
+    {"display": "3-5", "folder": "stage_3_5", "world": 3, "theme": "動く石橋",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-32, -18, 90), wall(32, -18, 90), wall(-32, 18, 90), wall(32, 18, 90)),
      "crates": (crate(-40, -30), crate(40, -30), crate(-40, 30), crate(40, 30)),
@@ -176,7 +176,7 @@ STAGES = (
                  enemy("ghost", -34, 0), enemy("small_golem", 34, 0, 180),
                  enemy("bird", -34, 36, 0, 3), enemy("skeleton", 34, 68, 180)),
      "items": (item("001", -46, -42), item("006", 46, 0), item("011", 0, 58))},
-    {"display": "3-6", "folder": "stage26", "world": 3, "theme": "亡霊の回廊",
+    {"display": "3-6", "folder": "stage_3_6", "world": 3, "theme": "亡霊の回廊",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(-24, -54), wall(8, -54), wall(24, -28), wall(-8, -28),
                wall(-24, 0), wall(8, 0), wall(24, 28), wall(-8, 28), wall(-24, 54), wall(8, 54)),
@@ -185,7 +185,7 @@ STAGES = (
                  enemy("ghost", -34, -22), enemy("skeleton", 34, 4, 180),
                  enemy("ghost", -24, 34), enemy("skeleton", 34, 64, 180)),
      "items": (item("005", -44, -68), item("009", 44, 8), item("014", -44, 38))},
-    {"display": "3-7", "folder": "stage27", "world": 3, "theme": "八の字遺跡",
+    {"display": "3-7", "folder": "stage_3_7", "world": 3, "theme": "八の字遺跡",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-28, -46, 90), wall(28, -46, 90), wall(-18, -16), wall(18, -16),
                wall(-18, 16), wall(18, 16), wall(-28, 46, 90), wall(28, 46, 90)),
@@ -197,14 +197,14 @@ STAGES = (
                  enemy("bird", -34, 48, 0, 3), enemy("skeleton", 34, 66, 180),
                  enemy("ghost", 0, 0)),
      "items": (item("009", -48, -52), item("010", 0, 54), item("014", 44, 68))},
-    {"display": "3-8", "folder": "stage28", "world": 3, "theme": "山頂の守護者",
+    {"display": "3-8", "folder": "stage_3_8", "world": 3, "theme": "山頂の守護者",
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-28, -22), wall(28, -22), wall(-28, 22), wall(28, 22),
                wall(-38, 0, 90), wall(38, 0, 90)),
      "enemies": (enemy("golem", 0, 0, 180),)},
 
     # World 4: 夜の要塞
-    {"display": "4-1", "folder": "stage13", "world": 4, "theme": "外城門",
+    {"display": "4-1", "folder": "stage_4_1", "world": 4, "theme": "外城門",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-34, -40), wall(-18, -40), wall(18, -40), wall(34, -40),
                wall(-24, -4, 90), wall(24, -4, 90), wall(-34, 36), wall(34, 36)),
@@ -215,7 +215,7 @@ STAGES = (
                  enemy("skeleton", -30, 18), enemy("bird", 30, 20, 180, 3),
                  enemy("golem", 0, 42, 180)),
      "items": (item("005", -42, -56), item("009", 42, -18), item("011", -42, 40))},
-    {"display": "4-2", "folder": "stage14", "world": 4, "theme": "危険な堀",
+    {"display": "4-2", "folder": "stage_4_2", "world": 4, "theme": "危険な堀",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(-32, -28, 90), wall(32, -28, 90), wall(-32, 28, 90), wall(32, 28, 90)),
      "crates": (crate(-42, -34), crate(42, -34), crate(-42, 34), crate(42, 34)),
@@ -225,7 +225,7 @@ STAGES = (
                  enemy("spider", -38, -18), enemy("small_golem", 38, -18, 180),
                  enemy("bird", -38, 18, 0, 3), enemy("skeleton", 38, 58, 180)),
      "items": (item("001", -46, -56), item("010", 46, 0), item("014", 0, 52))},
-    {"display": "4-3", "folder": "stage15", "world": 4, "theme": "二つの監視塔",
+    {"display": "4-3", "folder": "stage_4_3", "world": 4, "theme": "二つの監視塔",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-34, -42), wall(-34, -26), wall(34, -42), wall(34, -26),
                wall(-34, 26), wall(-34, 42), wall(34, 26), wall(34, 42)),
@@ -236,7 +236,7 @@ STAGES = (
                  enemy("skeleton", 38, 14, 180), enemy("bird", -38, 54, 0, 4),
                  enemy("ghost", 38, 56, 180)),
      "items": (item("009", -40, -34, 4.0), item("010", 40, -34, 4.0), item("014", -40, 34, 4.0))},
-    {"display": "4-4", "folder": "stage16", "world": 4, "theme": "地下搬入口",
+    {"display": "4-4", "folder": "stage_4_4", "world": 4, "theme": "地下搬入口",
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-28, -54), wall(4, -54), wall(28, -26), wall(-4, -26),
                wall(-28, 2), wall(4, 2), wall(28, 30), wall(-4, 30), wall(-28, 58), wall(4, 58)),
@@ -247,7 +247,7 @@ STAGES = (
                  enemy("ghost", -38, -20), enemy("spider", 38, 8, 180),
                  enemy("small_golem", -38, 38), enemy("skeleton", 38, 66, 180)),
      "items": (item("005", -46, -64), item("006", 46, 18), item("009", -46, 52), item("014", 46, 70))},
-    {"display": "4-5", "folder": "stage29", "world": 4, "theme": "城壁砲台",
+    {"display": "4-5", "folder": "stage_4_5", "world": 4, "theme": "城壁砲台",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-38, -54, 90), wall(38, -54, 90), wall(-38, 0, 90), wall(38, 0, 90),
                wall(-38, 54, 90), wall(38, 54, 90)),
@@ -260,7 +260,7 @@ STAGES = (
                  enemy("spider", -38, 24), enemy("bird", 38, 48, 180, 3),
                  enemy("skeleton", 0, 72, 180)),
      "items": (item("009", -50, -58), item("010", 50, 0), item("014", -50, 58))},
-    {"display": "4-6", "folder": "stage30", "world": 4, "theme": "機関中庭",
+    {"display": "4-6", "folder": "stage_4_6", "world": 4, "theme": "機関中庭",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(-22, -54), wall(22, -54), wall(-22, -18), wall(22, -18),
                wall(-22, 18), wall(22, 18), wall(-22, 54), wall(22, 54)),
@@ -273,7 +273,7 @@ STAGES = (
                  enemy("spider", -36, 34), enemy("bird", 36, 52, 180, 3),
                  enemy("golem", 0, 70, 180)),
      "items": (item("001", -46, -70), item("009", 46, 0), item("014", -46, 70))},
-    {"display": "4-7", "folder": "stage31", "world": 4, "theme": "四つの区画",
+    {"display": "4-7", "folder": "stage_4_7", "world": 4, "theme": "四つの区画",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-36, -42, 90), wall(0, -42, 90), wall(36, -42, 90),
                wall(-36, 0, 90), wall(0, 0, 90), wall(36, 0, 90),
@@ -288,7 +288,7 @@ STAGES = (
                  enemy("ghost", -34, 18), enemy("small_golem", 34, 30, 180),
                  enemy("golem", 0, 70, 180), enemy("bird", -34, 66, 0, 3)),
      "items": (item("001", -48, -70), item("006", 48, -24), item("010", -48, 24), item("014", 48, 70))},
-    {"display": "4-8", "folder": "stage32", "world": 4, "theme": "最終決戦",
+    {"display": "4-8", "folder": "stage_4_8", "world": 4, "theme": "最終決戦",
      "start": (14, 28), "goal": (-14, -28),
      "walls": (wall(-34, -28), wall(34, -28), wall(-34, 28), wall(34, 28),
                wall(-44, 0, 90), wall(44, 0, 90)),
@@ -322,13 +322,13 @@ def add_boundaries(render_rows, half_width, half_depth):
 
 
 def additional_tall_walls(stage, half_depth):
-    if stage["folder"] == "stage15":
+    if stage["folder"] == "stage_4_3":
         return (wall(-42, -72), wall(0, -72, 90), wall(42, 72))
-    if stage["folder"] == "stage24":
+    if stage["folder"] == "stage_2_8":
         return (wall(-42, -42), wall(0, 42, 90), wall(42, 42))
-    if stage["folder"] == "stage28":
+    if stage["folder"] == "stage_3_8":
         return (wall(-42, -72), wall(0, 72, 90), wall(42, 72))
-    if stage["folder"] in ("stage1", "stage2", "stage3", "stage4"):
+    if stage["folder"] in ("stage_1_1", "stage_1_2", "stage_1_3", "stage_1_4"):
         return (wall(-10, -20, 90), wall(10, 0, 90), wall(-10, 20, 90))
     depth_offset = 42
     if half_depth >= 120:

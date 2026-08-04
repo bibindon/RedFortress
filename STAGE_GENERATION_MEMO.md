@@ -42,12 +42,14 @@
 
 ### ステージ番号とフォルダーの対応
 
+通常ステージのフォルダー名は、stage_<ワールド番号>_<ステージ番号>の形式に統一する。たとえば2-8はstage_2_8、4-2はstage_4_2とする。
+
 | ワールド | ステージとフォルダー |
 |---|---|
-| World 1 | 1-1=`stage1`、1-2=`stage2`、1-3=`stage3`、1-4=`stage4`、1-5=`stage17`、1-6=`stage18`、1-7=`stage19`、1-8=`stage20` |
-| World 2 | 2-1=`stage5`、2-2=`stage6`、2-3=`stage7`、2-4=`stage8`、2-5=`stage21`、2-6=`stage22`、2-7=`stage23`、2-8=`stage24` |
-| World 3 | 3-1=`stage9`、3-2=`stage10`、3-3=`stage11`、3-4=`stage12`、3-5=`stage25`、3-6=`stage26`、3-7=`stage27`、3-8=`stage28` |
-| World 4 | 4-1=`stage13`、4-2=`stage14`、4-3=`stage15`、4-4=`stage16`、4-5=`stage29`、4-6=`stage30`、4-7=`stage31`、4-8=`stage32` |
+| World 1 | 1-1=`stage_1_1`、1-2=`stage_1_2`、1-3=`stage_1_3`、1-4=`stage_1_4`、1-5=`stage_1_5`、1-6=`stage_1_6`、1-7=`stage_1_7`、1-8=`stage_1_8` |
+| World 2 | 2-1=`stage_2_1`、2-2=`stage_2_2`、2-3=`stage_2_3`、2-4=`stage_2_4`、2-5=`stage_2_5`、2-6=`stage_2_6`、2-7=`stage_2_7`、2-8=`stage_2_8` |
+| World 3 | 3-1=`stage_3_1`、3-2=`stage_3_2`、3-3=`stage_3_3`、3-4=`stage_3_4`、3-5=`stage_3_5`、3-6=`stage_3_6`、3-7=`stage_3_7`、3-8=`stage_3_8` |
+| World 4 | 4-1=`stage_4_1`、4-2=`stage_4_2`、4-3=`stage_4_3`、4-4=`stage_4_4`、4-5=`stage_4_5`、4-6=`stage_4_6`、4-7=`stage_4_7`、4-8=`stage_4_8` |
 
 
 ## 設置可能なギミック
@@ -356,7 +358,7 @@
     * `XFileListPhysics.csv`：衝突判定用の木。`res/model/tree2Physics/tree_cylinder_collision.x`を使用する。
     * `Interactables.csv`：QTEの起動位置と反応距離を指定する。
   * `Interactables.csv`の列は`InteractionID,Type,PosX,PosY,PosZ,PromptDistance`とする。
-  * 例：`stage1-tree-01,Tree,10,0,22,2.5`
+  * 例：`stage_1_1-tree-01,Tree,10,0,22,2.5`
   * `InteractionID`はステージ内で重複しない名前にする。`PromptDistance`は木の中心へ無理なく近づける範囲とし、既存例では2.5mを使用している。
   * QTE中はプレイヤー、カメラ、敵、インタラクトの更新が止まる。敵やダメージ床の近くに配置して開始前後の緊張感を作ってよいが、プロンプトを確認して意図的に起動できる位置にする。
   * QTEの成功をクリア必須条件にしない。失敗しても正規ルートの進行や必須敵の撃破が可能な構成にする。

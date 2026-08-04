@@ -8,7 +8,7 @@
 
 ## 📋 全体サマリー（何を作っているか）
 
-ステージ3-8（`stage28`）に配置するボス敵 **ホシガール（Hoshigirl）** を実装する。
+ステージ3-8（`stage_3_8`）に配置するボス敵 **ホシガール（Hoshigirl）** を実装する。
 黒い布ゴースト型のデザイン。4種類の攻撃パターンを持つ本格的なボス。
 
 **現状**: モデル・配置・基本ボスクラス・4攻撃AIすべて実装完了。ビルド成功済み。残作業は実機テスト（挙動・バランス確認）のみ。
@@ -26,7 +26,7 @@
 - [x] `EnemyHoshigirl.h` / `.cpp` 新規作成（基本ボスクラス）
 - [x] `EnemyManager.cpp` に `#include "EnemyHoshigirl.h"` とファクトリ登録追加
 - [x] `simple-directx9.vcxproj` / `.filters` に `EnemyHoshigirl.cpp/.h` 追加
-- [x] `stage28/EnemyPositions.csv`（3-8ステージ）を `hoshigirl,0.0,0.2,0.0,180` に編集
+- [x] `stage_3_8/EnemyPositions.csv`（3-8ステージ）を `hoshigirl,0.0,0.2,0.0,180` に編集
 - [x] ビルド成功（MSBuild Debug x64）
 - [x] 地面埋まりバグ修正: `GetMeshVerticalOffset() { return 0.25f; }` を追加
   - 原因: モデル足元が原点より-0.1m下に作られていた。scale(2.5)×0.1=0.25m押し上げ

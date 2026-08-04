@@ -5,85 +5,85 @@ void StageManager::Initialize()
     m_stages.clear();
     m_currentStageIndex = 0;
 
-    AddStage(L"1-1", 1, L"1-1 はじまりのとりで", L"stage1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
-    AddStage(L"1-2", 2, L"1-2 木箱ごろごろとうげ", L"stage2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
+    AddStage(L"1-1", 1, L"1-1 はじまりのとりで", L"stage_1_1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"1-2", 2, L"1-2 木箱ごろごろとうげ", L"stage_1_2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv");
-    AddStage(L"1-3", 3, L"1-3 ガレキでふさがれた道", L"stage3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"1-3", 3, L"1-3 ガレキでふさがれた道", L"stage_1_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv");
-    AddStage(L"1-4", 4, L"1-4 風の中の登りタワー", L"stage4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-10.0f, 14.0f, -24.0f),
+    AddStage(L"1-4", 4, L"1-4 風の中の登りタワー", L"stage_1_4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-10.0f, 14.0f, -24.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
-    AddStage(L"1-5", 5, L"1-5 ドカンと大砲通路", L"stage17", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"1-5", 5, L"1-5 ドカンと大砲通路", L"stage_1_5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
-    AddStage(L"1-6", 6, L"1-6 しずむとりでの大砲わたり", L"stage18", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
+    AddStage(L"1-6", 6, L"1-6 しずむとりでの大砲わたり", L"stage_1_6", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
-    AddStage(L"1-7", 7, L"1-7 つながれ！バラバラとりで", L"stage19", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"1-7", 7, L"1-7 つながれ！バラバラとりで", L"stage_1_7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog);
-    AddStage(L"1-8", 8, L"1-8 とりでを食べる大ボス", L"stage20", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
+    AddStage(L"1-8", 8, L"1-8 とりでを食べる大ボス", L"stage_1_8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog);
 
-    AddStage(L"2-1", 9, L"2-1 チクチク床の飛び石", L"stage5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"2-1", 9, L"2-1 チクチク床の飛び石", L"stage_2_1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog, true);
-    AddStage(L"2-2", 10, L"2-2 あつあつ飛び石ロード", L"stage6", D3DXVECTOR3(-38.0f, 3.2f, 0.0f), D3DXVECTOR3(38.0f, 4.0f, 0.0f),
+    AddStage(L"2-2", 10, L"2-2 あつあつ飛び石ロード", L"stage_2_2", D3DXVECTOR3(-38.0f, 3.2f, 0.0f), D3DXVECTOR3(38.0f, 4.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-3", 11, L"2-3 無敵でゴーゴー火の道", L"stage7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"2-3", 11, L"2-3 無敵でゴーゴー火の道", L"stage_2_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-4", 12, L"2-4 空飛ぶ足場を乗りつごう", L"stage8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
+    AddStage(L"2-4", 12, L"2-4 空飛ぶ足場を乗りつごう", L"stage_2_4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-5", 13, L"2-5 鳥だらけ巣だらけ", L"stage21", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 48.0f),
+    AddStage(L"2-5", 13, L"2-5 鳥だらけ巣だらけ", L"stage_2_5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 48.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-6", 14, L"2-6 ゴゴゴ！せまるマグマタワー", L"stage22", D3DXVECTOR3(0.0f, 0.2f, -26.0f), D3DXVECTOR3(8.0f, 8.4f, 16.0f),
+    AddStage(L"2-6", 14, L"2-6 ゴゴゴ！せまるマグマタワー", L"stage_2_6", D3DXVECTOR3(0.0f, 0.2f, -26.0f), D3DXVECTOR3(8.0f, 8.4f, 16.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-7", 15, L"2-7 追ってくるマグマの道", L"stage23", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"2-7", 15, L"2-7 追ってくるマグマの道", L"stage_2_7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-8", 16, L"2-8 マグマ王のあつあつ城", L"stage24", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
+    AddStage(L"2-8", 16, L"2-8 マグマ王のあつあつ城", L"stage_2_8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
 
-    AddStage(L"3-1", 17, L"3-1 ポチポチ空の通路", L"stage9", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
-    AddStage(L"3-2", 18, L"3-2 ポチッと水上ドアの通路", L"stage10", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
-    AddStage(L"3-3", 19, L"3-3 切ってつないでがけの橋", L"stage11", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
-    AddStage(L"3-4", 20, L"3-4 ドカン！夕焼け大砲の谷", L"stage12", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
-    AddStage(L"3-5", 21, L"3-5 ひゅんひゅんワープめいろ", L"stage25", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 114.0f));
-    AddStage(L"3-6", 22, L"3-6 ぐるぐる落とし穴", L"stage26", D3DXVECTOR3(-36.8f, 0.2f, -36.8f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-    AddStage(L"3-7", 23, L"3-7 うじゃうじゃモンスターの八の字いせき", L"stage27", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
-    AddStage(L"3-8", 24, L"3-8 八の字いせきのボス", L"stage28", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"3-1", 17, L"3-1 ポチポチ空の通路", L"stage_3_1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"3-2", 18, L"3-2 ポチッと水上ドアの通路", L"stage_3_2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f));
+    AddStage(L"3-3", 19, L"3-3 切ってつないでがけの橋", L"stage_3_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"3-4", 20, L"3-4 ドカン！夕焼け大砲の谷", L"stage_3_4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
+    AddStage(L"3-5", 21, L"3-5 ひゅんひゅんワープめいろ", L"stage_3_5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 114.0f));
+    AddStage(L"3-6", 22, L"3-6 ぐるぐる落とし穴", L"stage_3_6", D3DXVECTOR3(-36.8f, 0.2f, -36.8f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+    AddStage(L"3-7", 23, L"3-7 うじゃうじゃモンスターの八の字いせき", L"stage_3_7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f));
+    AddStage(L"3-8", 24, L"3-8 八の字いせきのボス", L"stage_3_8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f));
 
-    AddStage(L"4-1", 25, L"4-1 押して運んで箱だらけ", L"stage13", D3DXVECTOR3(0.0f, 0.2f, -80.0f), D3DXVECTOR3(0.0f, 1.0f, 80.0f),
+    AddStage(L"4-1", 25, L"4-1 押して運んで箱だらけ", L"stage_4_1", D3DXVECTOR3(0.0f, 0.2f, -80.0f), D3DXVECTOR3(0.0f, 1.0f, 80.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-2", 26, L"4-2 マグマの海をわたるデッキ", L"stage14", D3DXVECTOR3(0.0f, 0.2f, -108.0f), D3DXVECTOR3(0.0f, 1.0f, 108.0f),
+    AddStage(L"4-2", 26, L"4-2 マグマの海をわたるデッキ", L"stage_4_2", D3DXVECTOR3(0.0f, 0.2f, -108.0f), D3DXVECTOR3(0.0f, 1.0f, 108.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-3", 27, L"4-3 くずれた左右の谷", L"stage15", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"4-3", 27, L"4-3 くずれた左右の谷", L"stage_4_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-4", 28, L"4-4 ふたつの壁をくぐるとりで", L"stage16", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
+    AddStage(L"4-4", 28, L"4-4 ふたつの壁をくぐるとりで", L"stage_4_4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-5", 29, L"4-5 空の足場を七つジャンプ", L"stage29", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"4-5", 29, L"4-5 空の足場を七つジャンプ", L"stage_4_5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-6", 30, L"4-6 木箱めいろのせまい道", L"stage30", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
+    AddStage(L"4-6", 30, L"4-6 木箱めいろのせまい道", L"stage_4_6", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-7", 31, L"4-7 ゆれるマグマの水路", L"stage31", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"4-7", 31, L"4-7 ゆれるマグマの水路", L"stage_4_7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-8", 32, L"4-8 赤いとりでの番人", L"stage32", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
+    AddStage(L"4-8", 32, L"4-8 赤いとりでの番人", L"stage_4_8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
 
