@@ -98,6 +98,18 @@
     * 描画モデルと衝突判定モデルを、`XFileList_simple.csv`と`XFileListPhysics.csv`へ同じCSV ID、座標、回転、倍率で登録する。モデル内に配置を反映した場合は、CSV側を座標0、回転0、倍率1にする。
     * 描画側は`loadType=normal`、物理側は`Type=Collision`、`Move=n`を指定する。
     * 木を足場として使うことを前提にしない。幹の衝突判定は通り抜け防止用であり、枝葉には衝突判定を付けない。
+  * 草と木の大量配置（1-1方式）
+    * 柵の外など、接触しない景観用の草と木を大量に置く場合は、1-1と同じインスタンシングを使用する。オブジェクトごとに`XFileList_simple.csv`へ1行ずつ追加しない。
+    * `XFileList_simple.csv`の末尾に`PlacementCsv`列を設け、モデルの行で`loadType=instancing`と配置CSVの相対パスを指定する。
+    * 草モデル : `res/model/grass/grass.x`
+    * 木モデル : `res/model/tree2/lemonTree.Instancing.x`
+    * 1-1の草の登録例 : `301,../grass/grass.x,0,0,0,0,0,0,1,instancing,../grass/grass1-1.csv`
+    * 1-1の木の登録例 : `302,../tree2/lemonTree.Instancing.x,0,0,0,0,0,0,1,instancing,../tree2/lemonTree.Instancing.1-1.csv`
+    * 配置CSVでは、1行につき1個を`X,Y,Z,RotY,Scale`の順で記述する。Xモデル側の配置座標を0にすれば、配置CSVの座標をワールド座標として扱える。
+    * 草の配置CSVの先頭には`sway,wave`と`AutoHide,n`を記述する。木では`AutoHide,n`を記述し、その次に`#x,y,z,RotY,Scale`という見出しを置いてよい。
+    * 1-1では配置行として草を約1,862個、木を120本登録している。これはインスタンシングによって多数の同一モデルを描画する参考例であり、各ステージでは広さと見える範囲に合わせて数を調整する。
+    * 回転と倍率をばらつかせ、均等な格子状ではなく、密集する場所と空く場所がある自然な配置にする。
+    * この方法で置く草と木は描画専用であり、`XFileListPhysics.csv`や`Interactables.csv`には登録しない。プレイヤーが触れられる木、固定障害物にする木、QTE用の木には使用しない。
   * 柵
     * 描画用 : `res/model/fence.x`
     * 衝突判定はない。落とし穴やステージ外周の縁を見せるための目印として使用し、プレイヤーを止める壁としては使用しない。
@@ -175,6 +187,11 @@
     * `Type`で敵の種類を指定する
     * 描画にはアニメーション付きXファイルを使用する
     * 専用の衝突判定用Xファイルは使用せず、プログラム側の円柱判定を使用する
+    * 通常ステージ1つあたりの配置数は、`EnemyPositions.csv`に記述するすべての雑魚敵を合計して次の体数を目安にする。ステージの地形や仕掛けに合わせて多少増減してよい。
+      * World 1 : 10体
+      * World 2 : 15体
+      * World 3、World 4 : 20体
+    * ボスステージはこの目安の対象外とし、既存のボスステージ用ルールに従って雑魚敵を配置しない。
   * オオカミ
     * Type : `wolf`
     * 描画用 : `res/model2/separatedAnim/wolfAnim.x`
@@ -351,7 +368,7 @@
 
 | CSV | 用途 | 主な列・注意点 |
 |---|---|---|
-| `XFileList_simple.csv` | 描画モデル | `ID`、`FileName`、座標、回転、`Scale`、`loadType` |
+| `XFileList_simple.csv` | 描画モデル | `ID`、`FileName`、座標、回転、`Scale`、`loadType`。インスタンシングでは末尾の`PlacementCsv`も使用する |
 | `XFileListPhysics.csv` | 衝突判定 | `ID`、`FileName`、座標、回転、`Scale`、`Type`、`Move` |
 | `XFileListMove.csv` | 移動床 | `ID`、`RenderID`、`PhysicsID`、`Start`、`End`、`Duration` |
 | `EnemyPositions.csv` | 敵 | `Type`、`PosX`、`PosY`、`PosZ`、`RotY` |
@@ -389,6 +406,9 @@
 * ダメージ床と落とし穴は、床材、光、柵、石などを使って範囲と縁を判別できるようにする。
 * ダッシュ、二段ジャンプ、空中ダッシュは、近道や任意の収集物に使う。正規ルートでは要求しない。
 * ギミックを外周や壁の隙間から無視できないか確認する。
+* 柵の外側を何もない空間にせず、景観用の木、岩、草を大量に配置する。柵のすぐ外だけへ一列に並べず、奥まで続くように密度、向き、倍率を変えて配置する。
+* World 1、World 3、World 4の柵外には木、岩、草を組み合わせる。World 2の柵外は岩だけを配置し、木と草は配置しない。
+* 柵外の装飾はプレイヤーが触れないため描画専用とする。カメラを遮ったり、進める道があるように誤解させたり、柵の内側の敵やギミックを見えにくくしたりしない。
 * ボスステージでは複雑な地形を避け、ボスの攻撃を見て回避できる空間を確保する。
 
 ## 気を付けること
@@ -642,6 +662,8 @@
 * 水面モデルと同名の設定CSVが存在し、描画側の`loadType`が`meshmix2`になっている。水面を物理用CSVへ登録していない。
 * 壁、高さが2倍の壁、岩、ダメージ床が、描画用CSVと物理用CSVの両方へ同じCSV IDで登録されている。
 * 拠点1と同じ木を使用した場合、描画モデルと幹の衝突判定が同じ配置になっており、QTE用の木と混同していない。
+* 草や木をインスタンシングで大量配置した場合、`PlacementCsv`のファイルが存在し、各行が`X,Y,Z,RotY,Scale`の順になっている。描画専用の配置を物理用CSVや`Interactables.csv`へ登録していない。
+* 柵外に十分な景観用オブジェクトがあり、World 2では岩だけ、それ以外のワールドでは木、岩、草が使われている。
 * 柵は当たり判定を持たないため、進行を止める境界として使っていない。
 * 移動床のCSV ID、`RenderID`、`PhysicsID`が一致している。
 * `AttackTriggers.csv`の有効な`TargetID`と`PressurePlates.csv`の`WallID`が、描画・物理CSVの両方に存在する。
