@@ -1,0 +1,3 @@
+﻿PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA,Shape,LineLength,SquareWidth,SquareHeight,RotX,RotY,RotZ,Range,OwnerTag
+0,2.2,24,0.9,1.0,0.95,0.8,1.0,Point,12,10,10,0,0,0,10,
+0,2.2,-20,0.9,1.0,0.95,0.8,1.0,Point,12,10,10,0,0,0,10,
