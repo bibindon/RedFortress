@@ -48,6 +48,8 @@ namespace
     const float kEnemyMaxFallSpeed = 30.0f;
     const float kEnemyFallDeathY = -10.0f;
     const float kGroundNormalYThreshold = 0.3f;
+    // 接地中の重力レイ実行間隔（フレーム数）。
+    const int kGroundedCheckIntervalFrames = 5;
 }
 
 Enemy::Enemy()
@@ -762,6 +764,15 @@ void Enemy::ApplyGravity(NSRender::Render& render)
         m_verticalVelocity = -kEnemyMaxFallSpeed;
     }
 
+    // 接地中は重力レイを毎フレーム投げず、数フレームに1回に間引く。
+    // 接地状態は安定しているため、間引いたフレームでも落下判定は不要。
+    if (m_isGrounded && m_groundedCheckCooldownFrames > 0)
+    {
+        --m_groundedCheckCooldownFrames;
+        m_verticalVelocity = 0.0f;
+        return;
+    }
+
     D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
     const bool collided = MoveWithCollision(D3DXVECTOR3(0.0f, m_verticalVelocity, 0.0f), &hitNormal);
     m_isGrounded = false;
@@ -769,6 +780,7 @@ void Enemy::ApplyGravity(NSRender::Render& render)
     {
         m_isGrounded = true;
         m_verticalVelocity = 0.0f;
+        m_groundedCheckCooldownFrames = kGroundedCheckIntervalFrames;
     }
 
     if (m_position.y < kEnemyFallDeathY)

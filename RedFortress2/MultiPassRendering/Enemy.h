@@ -105,6 +105,7 @@ private:
     float m_height = 1.0f;
     float m_verticalVelocity = 0.0f;
     bool m_isGrounded = false;
+    int m_groundedCheckCooldownFrames = 0;
     int m_blinkFrames = 0;
     int m_hitStunFrames = 0;
     D3DXVECTOR3 m_knockbackPerFrame = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

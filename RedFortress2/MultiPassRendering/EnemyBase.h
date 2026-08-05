@@ -184,6 +184,7 @@ private:
     HitReactionMode m_hitReactionMode = HitReactionMode::Normal;
     float m_verticalVelocity = 0.0f;
     bool m_isGrounded = false;
+    int m_groundedCheckCooldownFrames = 0;
     int m_frogJumpCooldownFrames = 0;
     bool m_frogJumpActive = false;
     D3DXVECTOR3 m_frogJumpDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
