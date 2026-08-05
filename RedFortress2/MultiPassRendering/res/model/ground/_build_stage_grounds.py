@@ -27,11 +27,17 @@ WORLD_TOP_TEXTURES = {
 }
 
 # Map a stage folder name (e.g. "stage_1_5") to its world number (1..4).
-# folders: W1=stage_1_1-4,17-20  W2=stage_2_1-8,21-24  W3=stage_3_1-12,25-28  W4=stage_4_1-16,29-32
+# Folder names use the new "stage_<world>_<stage>" convention (e.g. stage_3_5 -> World 3).
 def world_for_folder(folder):
     digits = "".join(ch for ch in folder if ch.isdigit())
     if not digits:
         return 1
+    if folder.startswith("stage_"):
+        world_digits = "".join(ch for ch in folder.split("_")[1] if ch.isdigit())
+        if world_digits:
+            world = int(world_digits)
+            if 1 <= world <= 4:
+                return world
     n = int(digits)
     if n in (1, 2, 3, 4, 17, 18, 19, 20):
         return 1
@@ -131,7 +137,17 @@ STAGES = (
     {"display": "3-2", "folder": "stage_3_2", "size": (60.0, 120.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-32.0, -6.0, -52.0, -44.0), (6.0, 32.0, -52.0, -44.0), (-32.0, -6.0, 44.0, 52.0), (6.0, 32.0, 44.0, 52.0))},
     {"display": "3-3", "folder": "stage_3_3", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-35.0, -25.0, -50.0, 50.0),)},
     {"display": "3-4", "folder": "stage_3_4", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ((-38.0, -26.0, 30.0, 50.0), (-6.0, 6.0, 55.0, 70.0), (26.0, 38.0, -50.0, -30.0))},
-    {"display": "3-5", "folder": "stage_3_5", "size": (60.0, 120.0), "start": (0.0, -28.0), "goal": (0.0, 28.0), "pits": ((-30.0, 30.0, 45.0, 55.0),)},
+    {"display": "3-5", "folder": "stage_3_5", "size": (60.0, 120.0), "start": (0.0, -112.0), "goal": (0.0, 112.0),
+     "pits": ((-20.0, -10.0, -78.0, -70.0), (-10.0, 0.0, 5.0, 15.0)),
+     "jump_links": (((0.0, -100.0), (-30.0, -60.0)),
+                    ((30.0, -50.0), (-30.0, -20.0)),
+                    ((30.0, -10.0), (-30.0, 20.0)),
+                    ((30.0, 30.0), (-30.0, 60.0)),
+                    ((30.0, 70.0), (0.0, 95.0)),
+                    ((0.0, -105.0), (0.0, -25.0)),
+                    ((0.0, -65.0), (-30.0, 15.0)),
+                    ((0.0, -5.0), (20.0, 60.0)),
+                    ((-50.0, -100.0), (50.0, 100.0)))},
     {"display": "3-6", "folder": "stage_3_6", "size": (60.0, 120.0), "start": (-36.8, -36.8), "goal": (0.0, 0.0), "pits": (),
      "ground_shape": "spiral", "spiral_center": (0.0, 0.0),
      "spiral_start_radius": 52.0, "spiral_end_radius": 2.5,
