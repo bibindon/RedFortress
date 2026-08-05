@@ -165,6 +165,5 @@
 8088,../fence.x,-60.0,0.5,116.0,0,90,0,1,normal,
 8089,../fence.x,60.0,0.5,116.0,0,90,0,1,normal,
 9001,../grass/grass.x,0,0,0,0,0,0,1,instancing,stage14_grass.csv
-9002,../tree2/lemonTree.Instancing.x,0,0,0,0,0,0,1,instancing,stage14_trees.csv
 9003,../base/base_rock1.x,0,0,0,0,0,0,1,instancing,stage14_rocks1.csv
 9004,../base/base_rock2.x,0,0,0,0,0,0,1,instancing,stage14_rocks2.csv
