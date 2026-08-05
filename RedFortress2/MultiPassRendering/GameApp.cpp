@@ -2201,6 +2201,42 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         return "{\"ok\":true,\"stageId\":\"" + NarrowDebugIdentifier(wideStageId) + "\"}";
     }
 
+    if (commandName == "SET_RENDER_QUALITY")
+    {
+        std::string qualityName;
+        commandStream >> qualityName;
+        std::transform(qualityName.begin(), qualityName.end(), qualityName.begin(), [](const unsigned char value) {
+            return static_cast<char>(toupper(value));
+        });
+
+        std::wstring renderQuality = L"LOW";
+        if (qualityName == "MIDDLE")
+        {
+            renderQuality = L"MIDDLE";
+        }
+        else if (qualityName == "HIGH")
+        {
+            renderQuality = L"HIGH";
+        }
+        else if (qualityName != "LOW")
+        {
+            return "{\"ok\":false,\"error\":\"invalid_render_quality\"}";
+        }
+
+        m_render.SetRenderQuality(renderQuality);
+        return "{\"ok\":true,\"quality\":\"" + qualityName + "\"}";
+    }
+
+    if (commandName == "QUIT")
+    {
+        m_close = true;
+        if (m_hWnd != NULL)
+        {
+            DestroyWindow(m_hWnd);
+        }
+        return "{\"ok\":true}";
+    }
+
     if (commandName == "GET_STATE")
     {
         const StageManager::StageData& stage = m_stageManager.GetCurrentStage();

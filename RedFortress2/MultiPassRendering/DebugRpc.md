@@ -9,6 +9,8 @@ Supported commands are:
 - `GET_FPS`
 - `GET_STATE`
 - `LOAD_STAGE <stage-id>`
+- `SET_RENDER_QUALITY <LOW|MIDDLE|HIGH>`
+- `QUIT`
 - `KEY_DOWN <key>`
 - `KEY_UP <key>`
 - `MOUSE_DOWN <button>`
@@ -50,4 +52,10 @@ Launch the game directly into a stage without navigating the title screen. The l
 
 ```powershell
 .\tools\LaunchDebugStage.ps1 4-8
+```
+
+Launch stage 4-2 with LOW render quality, wait 10 seconds, then quit the game:
+
+```powershell
+.\tools\MeasureStage42LowQuality.ps1
 ```
