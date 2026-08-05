@@ -2195,6 +2195,8 @@ void GameApp::ProcessDebugRpc()
         m_debugProfileMainPassMilliseconds += renderProfile.mainPassMilliseconds;
         m_debugProfileMainPassSkinAnimMilliseconds += renderProfile.mainPassSkinAnimMilliseconds;
         m_debugProfileMainPassMeshMix2Milliseconds += renderProfile.mainPassMeshMix2Milliseconds;
+        m_debugProfileMainPassMeshMix2ParameterMilliseconds += renderProfile.mainPassMeshMix2ParameterMilliseconds;
+        m_debugProfileMainPassMeshMix2DrawMilliseconds += renderProfile.mainPassMeshMix2DrawMilliseconds;
         m_debugProfileMainPassInstancingMilliseconds += renderProfile.mainPassInstancingMilliseconds;
         m_debugProfileMainPassOtherMeshMilliseconds += renderProfile.mainPassOtherMeshMilliseconds;
         m_debugProfileMainPassSkinAnimDraws += renderProfile.mainPassSkinAnimDraws;
@@ -2314,6 +2316,8 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         m_debugProfileMainPassMilliseconds = 0.0;
         m_debugProfileMainPassSkinAnimMilliseconds = 0.0;
         m_debugProfileMainPassMeshMix2Milliseconds = 0.0;
+        m_debugProfileMainPassMeshMix2ParameterMilliseconds = 0.0;
+        m_debugProfileMainPassMeshMix2DrawMilliseconds = 0.0;
         m_debugProfileMainPassInstancingMilliseconds = 0.0;
         m_debugProfileMainPassOtherMeshMilliseconds = 0.0;
         m_debugProfileMainPassSkinAnimDraws = 0;
@@ -2397,6 +2401,8 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
                  << ",\"mainPassMs\":" << m_debugProfileMainPassMilliseconds / renderSampleDivisor
                  << ",\"mainPassSkinAnimMs\":" << m_debugProfileMainPassSkinAnimMilliseconds / renderSampleDivisor
                  << ",\"mainPassMeshMix2Ms\":" << m_debugProfileMainPassMeshMix2Milliseconds / renderSampleDivisor
+                 << ",\"mainPassMeshMix2ParamMs\":" << m_debugProfileMainPassMeshMix2ParameterMilliseconds / renderSampleDivisor
+                 << ",\"mainPassMeshMix2DrawMs\":" << m_debugProfileMainPassMeshMix2DrawMilliseconds / renderSampleDivisor
                  << ",\"mainPassInstancingMs\":" << m_debugProfileMainPassInstancingMilliseconds / renderSampleDivisor
                  << ",\"mainPassOtherMeshMs\":" << m_debugProfileMainPassOtherMeshMilliseconds / renderSampleDivisor
                  << ",\"mainPassSkinAnimDraws\":" << m_debugProfileMainPassSkinAnimDraws

@@ -71,6 +71,17 @@ def create_bear(material):
     bear.name = "WarpBear"
     bear["_x_frame_name"] = "WarpBear"
     bear["_x_mesh_name"] = "WarpBearGeo"
+
+    # 頂点数を削減して負荷を下げる。目標は200面程度。
+    # 元のUV球9個（32x20セグメント）は約5,760面あるため、COLLAPSEで約2%に減らす。
+    decimate = bear.modifiers.new("Decimate", "DECIMATE")
+    decimate.decimate_type = "COLLAPSE"
+    decimate.ratio = 0.02
+    bpy.context.view_layer.update()
+    print("WARP_BEAR_FACES_AFTER_DECIMATE", decimate.face_count)
+    bpy.context.view_layer.objects.active = bear
+    bear.select_set(True)
+    bpy.ops.object.modifier_apply(modifier="Decimate")
     return bear
 
 
@@ -92,7 +103,9 @@ def export_x(bear):
         export_armature=False,
         export_weights=False,
         export_animation=False,
-        unweld_on_export=False,
+        # Decimate 後のメッシュは面が共有頂点として書き出されると欠落するため、
+        # 面ごとに頂点を分離して全ポリゴンを保持する。
+        unweld_on_export=True,
         export_format="TEXT_X",
         triangulate=True,
     )

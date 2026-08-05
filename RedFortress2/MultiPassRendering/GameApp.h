@@ -309,6 +309,8 @@ private:
     double m_debugProfileOtherMilliseconds = 0.0;
     double m_debugProfileMainPassSkinAnimMilliseconds = 0.0;
     double m_debugProfileMainPassMeshMix2Milliseconds = 0.0;
+    double m_debugProfileMainPassMeshMix2ParameterMilliseconds = 0.0;
+    double m_debugProfileMainPassMeshMix2DrawMilliseconds = 0.0;
     double m_debugProfileMainPassInstancingMilliseconds = 0.0;
     double m_debugProfileMainPassOtherMeshMilliseconds = 0.0;
     unsigned int m_debugProfileMainPassSkinAnimDraws = 0;

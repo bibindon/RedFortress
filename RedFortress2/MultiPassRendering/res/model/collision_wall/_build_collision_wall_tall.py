@@ -113,9 +113,6 @@ def add_rivet(name, location, material, radius=0.044):
 
 def build_tall_wall():
     wood = make_material("Tall_Wall_Aged_Walnut", (0.56, 0.31, 0.18), 0.42, 0.0, TEXTURE_PATH)
-    dark_wood = make_material("Tall_Wall_Dark_Oak", (0.24, 0.095, 0.045), 0.34, 0.0, TEXTURE_PATH)
-    iron = make_material("Tall_Wall_Forged_Iron", (0.12, 0.14, 0.15), 0.14, 0.90)
-    brass = make_material("Tall_Wall_Brass_Rivets", (0.58, 0.28, 0.055), 0.10, 0.90)
 
     plank_offsets = (-0.026, 0.018, -0.012, 0.028, -0.020, 0.010, -0.030, 0.022, -0.008, 0.016, -0.024, 0.012, -0.018, 0.026, -0.010, 0.020, -0.014)
     plank_depths = (0.69, 0.72, 0.70, 0.73, 0.71, 0.69, 0.72, 0.70, 0.71, 0.70, 0.73, 0.69, 0.72, 0.71, 0.70, 0.73, 0.71)
@@ -138,7 +135,7 @@ def build_tall_wall():
             f"Tall_Massive_Oak_Post_{index + 1:02d}",
             (0.0, y, 0.0),
             (0.89, width, 5.74),
-            dark_wood,
+            wood,
         )
 
     brace_angle = math.radians(36.0)
@@ -156,7 +153,7 @@ def build_tall_wall():
                 f"Tall_Diagonal_Brace_{face_index + 1}_{brace_index + 1}",
                 (x, y, z),
                 (0.135, 3.95, 0.205),
-                dark_wood,
+                wood,
                 rotation=(angle, 0.0, 0.0),
             )
 
@@ -166,7 +163,7 @@ def build_tall_wall():
                 f"Tall_Iron_Band_{band_index + 1}_{face_index + 1}",
                 (x, 0.0, z),
                 (0.065, 7.48, 0.125),
-                iron,
+                wood,
             )
 
     for z, label in ((2.85, "Top"), (-2.85, "Bottom")):
@@ -174,7 +171,7 @@ def build_tall_wall():
             f"Tall_{label}_Forged_Cap",
             (0.0, 0.0, z),
             (0.97, 7.90, 0.105),
-            iron,
+            wood,
         )
 
     for face_index, x in enumerate((-0.450, 0.450)):
@@ -183,7 +180,7 @@ def build_tall_wall():
                 add_rivet(
                     f"Tall_Band_Rivet_{face_index + 1}_{band_index + 1}_{rivet_index + 1:02d}",
                     (x, y, z),
-                    brass,
+                    wood,
                 )
 
 
