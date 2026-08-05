@@ -1,9 +1,9 @@
 ﻿CollectibleID,Type,DataID,PosX,PosY,PosZ,Scale
-stage34-C01,Item,001,6.0,3.45,-37.0,1
-stage34-C02,Item,002,0.0,3.45,15.0,1
-stage34-C03,Item,003,0.0,3.45,99.0,1
-stage34-C04,Item,004,-4.0,1.45,-50.0,1
-stage34-C05,Item,005,-4.0,1.45,28.0,1
+stage34-C01,Item,001,-12.0,3.45,-40.0,1
+stage34-C02,Item,002,28.0,3.45,22.0,1
+stage34-C03,Item,003,0.0,3.45,96.0,1
+stage34-C04,Item,004,-28.0,1.45,-52.0,1
+stage34-C05,Item,005,-4.0,1.45,46.0,1
 stage34-C06,Item,006,-40.0,0.45,-119.0,1
 stage34-C07,Item,010,55.0,0.45,117.0,1
 stage34-C08,Item,011,52.0,0.45,118.0,1
