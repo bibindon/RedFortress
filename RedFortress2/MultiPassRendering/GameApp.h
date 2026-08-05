@@ -342,6 +342,12 @@ private:
     double m_debugProfileInputMilliseconds = 0.0;
     double m_debugProfileUiDrawMilliseconds = 0.0;
     double m_debugProfileOtherManagersMilliseconds = 0.0;
+    double m_debugProfileEnemyContactMilliseconds = 0.0;
+    double m_debugProfileBombSkullMilliseconds = 0.0;
+    double m_debugProfileCollectibleMilliseconds = 0.0;
+    double m_debugEnemyContactAccumulatedMilliseconds = 0.0;
+    double m_debugBombSkullAccumulatedMilliseconds = 0.0;
+    double m_debugCollectibleAccumulatedMilliseconds = 0.0;
 #endif
     bool m_debugPlayerRenderEnabled = true;
     bool m_debugPlayerPhysicsEnabled = true;

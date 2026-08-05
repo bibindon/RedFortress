@@ -1747,9 +1747,19 @@ void GameApp::Run()
                     continue;
                 }
 
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+                const ULONGLONG collectibleStartTick = GetTickCount64();
+#endif
                 UpdateDashParticleEffect();
                 m_dashBoosterManager.Update(m_playerMover.GetPosition(), m_playerMover);
                 m_collectibleManager.Update(m_playerMover.GetPosition(), m_destructibleManager);
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+                if (m_debugProfileStartTick != 0)
+                {
+                    m_debugCollectibleAccumulatedMilliseconds +=
+                        static_cast<double>(GetTickCount64() - collectibleStartTick);
+                }
+#endif
                 if (m_playerMover.IsCrushed())
                 {
                     DamagePlayerHp(m_player.GetHp());
@@ -1894,6 +1904,9 @@ void GameApp::Run()
             }
 
             // 敵との接触・踏みつけ判定（QTE 中は無効）
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            const ULONGLONG enemyContactStartTick = GetTickCount64();
+#endif
             if (m_qte == nullptr)
             {
                 for (auto& enemy : m_enemyManager.GetEnemies())
@@ -1952,7 +1965,17 @@ void GameApp::Run()
                     }
                 }
             }
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            if (m_debugProfileStartTick != 0)
+            {
+                m_debugEnemyContactAccumulatedMilliseconds +=
+                    static_cast<double>(GetTickCount64() - enemyContactStartTick);
+            }
+#endif
 
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            const ULONGLONG bombSkullStartTick = GetTickCount64();
+#endif
             UpdateBombs();
             UpdateBusters();
             m_skullManager.Update(
@@ -1976,6 +1999,14 @@ void GameApp::Run()
             m_pickupManager.UpdatePickups(m_playerMover.GetPosition(),
                                           m_playerMeshId,
                                           m_destructibleManager);
+
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            if (m_debugProfileStartTick != 0)
+            {
+                m_debugBombSkullAccumulatedMilliseconds +=
+                    static_cast<double>(GetTickCount64() - bombSkullStartTick);
+            }
+#endif
 
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
             if (m_debugProfileStartTick != 0 && otherManagersStartTick != 0)
@@ -2189,6 +2220,9 @@ void GameApp::ProcessDebugRpc()
         m_debugProfileInputMilliseconds += m_debugInputAccumulatedMilliseconds;
         m_debugProfileUiDrawMilliseconds += m_debugUiDrawAccumulatedMilliseconds;
         m_debugProfileOtherManagersMilliseconds += m_debugOtherManagersAccumulatedMilliseconds;
+        m_debugProfileEnemyContactMilliseconds += m_debugEnemyContactAccumulatedMilliseconds;
+        m_debugProfileBombSkullMilliseconds += m_debugBombSkullAccumulatedMilliseconds;
+        m_debugProfileCollectibleMilliseconds += m_debugCollectibleAccumulatedMilliseconds;
         const double sectionTotalMilliseconds =
             m_debugPlayerPhysicsAccumulatedMilliseconds +
             m_debugEnemyUpdateAccumulatedMilliseconds +
@@ -2211,6 +2245,9 @@ void GameApp::ProcessDebugRpc()
         m_debugInputAccumulatedMilliseconds = 0.0;
         m_debugUiDrawAccumulatedMilliseconds = 0.0;
         m_debugOtherManagersAccumulatedMilliseconds = 0.0;
+        m_debugEnemyContactAccumulatedMilliseconds = 0.0;
+        m_debugBombSkullAccumulatedMilliseconds = 0.0;
+        m_debugCollectibleAccumulatedMilliseconds = 0.0;
         m_debugFrameTotalAccumulatedMilliseconds = 0.0;
     }
 
@@ -2308,10 +2345,16 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         m_debugInputAccumulatedMilliseconds = 0.0;
         m_debugUiDrawAccumulatedMilliseconds = 0.0;
         m_debugOtherManagersAccumulatedMilliseconds = 0.0;
+        m_debugEnemyContactAccumulatedMilliseconds = 0.0;
+        m_debugBombSkullAccumulatedMilliseconds = 0.0;
+        m_debugCollectibleAccumulatedMilliseconds = 0.0;
         m_debugProfileAudioMilliseconds = 0.0;
         m_debugProfileInputMilliseconds = 0.0;
         m_debugProfileUiDrawMilliseconds = 0.0;
         m_debugProfileOtherManagersMilliseconds = 0.0;
+        m_debugProfileEnemyContactMilliseconds = 0.0;
+        m_debugProfileBombSkullMilliseconds = 0.0;
+        m_debugProfileCollectibleMilliseconds = 0.0;
         m_debugFrameTotalAccumulatedMilliseconds = 0.0;
         m_debugPhysicsRayCastObjectCount = 0;
         m_debugPhysicsRayCastShapeObjectCount = 0;
@@ -2373,6 +2416,9 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
                  << ",\"inputMs\":" << m_debugProfileInputMilliseconds / renderSampleDivisor
                  << ",\"uiDrawMs\":" << m_debugProfileUiDrawMilliseconds / renderSampleDivisor
                  << ",\"otherManagersMs\":" << m_debugProfileOtherManagersMilliseconds / renderSampleDivisor
+                 << ",\"enemyContactMs\":" << m_debugProfileEnemyContactMilliseconds / renderSampleDivisor
+                 << ",\"bombSkullMs\":" << m_debugProfileBombSkullMilliseconds / renderSampleDivisor
+                 << ",\"collectibleMs\":" << m_debugProfileCollectibleMilliseconds / renderSampleDivisor
                  << ",\"otherMs\":" << m_debugProfileOtherMilliseconds / renderSampleDivisor
                  << ",\"physicsRayCastObjectCount\":" << m_debugProfilePhysicsRayCastObjectCount
                  << ",\"physicsRayCastShapeObjectCount\":" << m_debugProfilePhysicsRayCastShapeObjectCount
