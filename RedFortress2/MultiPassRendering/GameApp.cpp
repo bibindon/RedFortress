@@ -1378,14 +1378,18 @@ void GameApp::Run()
                 // 敵の更新
                 if (m_debugEnemyUpdateEnabled)
                 {
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
                     const ULONGLONG enemyUpdateStartTick = GetTickCount64();
+#endif
                     m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
                     ProcessEnemyAttackHits();
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
                     if (m_debugProfileStartTick != 0)
                     {
                         m_debugEnemyUpdateAccumulatedMilliseconds +=
                             static_cast<double>(GetTickCount64() - enemyUpdateStartTick);
                     }
+#endif
                 }
 
                 m_destructibleManager.Update(m_render);
@@ -1594,7 +1598,9 @@ void GameApp::Run()
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
             {
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
                 const ULONGLONG platformSyncStartTick = GetTickCount64();
+#endif
                 const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
                 const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
 
@@ -1621,14 +1627,18 @@ void GameApp::Run()
                         PhysicsWorld::SetVelocity(physicsId, platformVelocity);
                     }
                 }
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
                 if (m_debugProfileStartTick != 0)
                 {
                     m_debugPlatformSyncAccumulatedMilliseconds +=
                         static_cast<double>(GetTickCount64() - platformSyncStartTick);
                 }
+#endif
             }
 
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
             const ULONGLONG managerUpdateStartTick = GetTickCount64();
+#endif
             m_lavaFloodManager.Update(m_render, kTargetFrameSeconds);
             m_lavaRiseManager.Update(m_render, kTargetFrameSeconds);
             m_pushableBoxManager.Update(m_playerMover.GetPosition(),
@@ -1640,11 +1650,13 @@ void GameApp::Run()
                                           m_pushableBoxManager,
                                           kTargetFrameSeconds);
             m_attackTriggerManager.Update(m_render, kTargetFrameSeconds);
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
             if (m_debugProfileStartTick != 0)
             {
                 m_debugManagerUpdateAccumulatedMilliseconds +=
                     static_cast<double>(GetTickCount64() - managerUpdateStartTick);
             }
+#endif
 
             // 衝突判定（動く床の最新位置を反映）
             const bool isStageSelect = IsCurrentStageSelect();
@@ -1659,13 +1671,17 @@ void GameApp::Run()
                 }
                 if (m_debugPlayerPhysicsEnabled)
                 {
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
                     const ULONGLONG physicsStartTick = GetTickCount64();
+#endif
                     m_playerMover.Update(m_pendingMove, m_pendingJump);
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
                     if (m_debugProfileStartTick != 0)
                     {
                         m_debugPlayerPhysicsAccumulatedMilliseconds +=
                             static_cast<double>(GetTickCount64() - physicsStartTick);
                     }
+#endif
                 }
 
                 m_warpBearManager.Update(m_playerMover.GetPosition());
