@@ -920,18 +920,38 @@ void GameApp::Run()
             break;
         }
 
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+        const ULONGLONG inputStartTick = GetTickCount64();
+#endif
         InputDevice::Update();
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+        if (m_debugProfileStartTick != 0)
+        {
+            m_debugInputAccumulatedMilliseconds +=
+                static_cast<double>(GetTickCount64() - inputStartTick);
+        }
+#endif
 
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
         ProcessDebugRpc();
 #endif
 
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+        const ULONGLONG audioStartTick = GetTickCount64();
+#endif
         const D3DXVECTOR3 audioPlayerPosition = m_playerMover.GetPosition();
         const D3DXVECTOR3 audioListenerForward = GetCameraPlanarForward();
         SoundLib::Vector3 listenerPosition { audioPlayerPosition.x, audioPlayerPosition.y, audioPlayerPosition.z };
         SoundLib::Vector3 listenerFront { audioListenerForward.x, audioListenerForward.y, audioListenerForward.z };
         SoundLib::Vector3 listenerTop { 0.0f, 1.0f, 0.0f };
         GameAudio::Update(m_hWnd, listenerPosition, listenerFront, listenerTop);
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+        if (m_debugProfileStartTick != 0)
+        {
+            m_debugAudioAccumulatedMilliseconds +=
+                static_cast<double>(GetTickCount64() - audioStartTick);
+        }
+#endif
 
         if (m_gameState == GameState::Title)
         {
@@ -1559,6 +1579,9 @@ void GameApp::Run()
             UpdateGoalArrow();
 
             // 描画（動く床の位置が更新される）
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            const ULONGLONG uiDrawStartTick = GetTickCount64();
+#endif
             if (!IsCurrentStageSelect())
             {
                 m_hpBar.Draw();
@@ -1587,6 +1610,13 @@ void GameApp::Run()
             }
             DrawStageSelectCursor();
             DrawItemPickupMessage();
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            if (m_debugProfileStartTick != 0)
+            {
+                m_debugUiDrawAccumulatedMilliseconds +=
+                    static_cast<double>(GetTickCount64() - uiDrawStartTick);
+            }
+#endif
             m_render.Draw();
 
             if (m_pendingHitStopFrames > 0)
@@ -2126,12 +2156,20 @@ void GameApp::ProcessDebugRpc()
         m_debugProfileManagerUpdateMilliseconds += m_debugManagerUpdateAccumulatedMilliseconds;
         m_debugProfilePlatformSyncMilliseconds += m_debugPlatformSyncAccumulatedMilliseconds;
         m_debugProfileGameLogicMilliseconds += m_debugGameLogicAccumulatedMilliseconds;
+        m_debugProfileAudioMilliseconds += m_debugAudioAccumulatedMilliseconds;
+        m_debugProfileInputMilliseconds += m_debugInputAccumulatedMilliseconds;
+        m_debugProfileUiDrawMilliseconds += m_debugUiDrawAccumulatedMilliseconds;
+        m_debugProfileOtherManagersMilliseconds += m_debugOtherManagersAccumulatedMilliseconds;
         const double sectionTotalMilliseconds =
             m_debugPlayerPhysicsAccumulatedMilliseconds +
             m_debugEnemyUpdateAccumulatedMilliseconds +
             m_debugManagerUpdateAccumulatedMilliseconds +
             m_debugPlatformSyncAccumulatedMilliseconds +
             m_debugGameLogicAccumulatedMilliseconds +
+            m_debugAudioAccumulatedMilliseconds +
+            m_debugInputAccumulatedMilliseconds +
+            m_debugUiDrawAccumulatedMilliseconds +
+            m_debugOtherManagersAccumulatedMilliseconds +
             renderProfile.totalMilliseconds;
         m_debugProfileOtherMilliseconds +=
             m_debugFrameTotalAccumulatedMilliseconds - sectionTotalMilliseconds;
@@ -2140,6 +2178,10 @@ void GameApp::ProcessDebugRpc()
         m_debugManagerUpdateAccumulatedMilliseconds = 0.0;
         m_debugPlatformSyncAccumulatedMilliseconds = 0.0;
         m_debugGameLogicAccumulatedMilliseconds = 0.0;
+        m_debugAudioAccumulatedMilliseconds = 0.0;
+        m_debugInputAccumulatedMilliseconds = 0.0;
+        m_debugUiDrawAccumulatedMilliseconds = 0.0;
+        m_debugOtherManagersAccumulatedMilliseconds = 0.0;
         m_debugFrameTotalAccumulatedMilliseconds = 0.0;
     }
 
@@ -2233,6 +2275,14 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         m_debugManagerUpdateAccumulatedMilliseconds = 0.0;
         m_debugPlatformSyncAccumulatedMilliseconds = 0.0;
         m_debugGameLogicAccumulatedMilliseconds = 0.0;
+        m_debugAudioAccumulatedMilliseconds = 0.0;
+        m_debugInputAccumulatedMilliseconds = 0.0;
+        m_debugUiDrawAccumulatedMilliseconds = 0.0;
+        m_debugOtherManagersAccumulatedMilliseconds = 0.0;
+        m_debugProfileAudioMilliseconds = 0.0;
+        m_debugProfileInputMilliseconds = 0.0;
+        m_debugProfileUiDrawMilliseconds = 0.0;
+        m_debugProfileOtherManagersMilliseconds = 0.0;
         m_debugFrameTotalAccumulatedMilliseconds = 0.0;
         m_debugPhysicsRayCastObjectCount = 0;
         m_debugPhysicsRayCastShapeObjectCount = 0;
@@ -2290,6 +2340,10 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
                  << ",\"managerUpdateMs\":" << m_debugProfileManagerUpdateMilliseconds / renderSampleDivisor
                  << ",\"platformSyncMs\":" << m_debugProfilePlatformSyncMilliseconds / renderSampleDivisor
                  << ",\"gameLogicMs\":" << m_debugProfileGameLogicMilliseconds / renderSampleDivisor
+                 << ",\"audioMs\":" << m_debugProfileAudioMilliseconds / renderSampleDivisor
+                 << ",\"inputMs\":" << m_debugProfileInputMilliseconds / renderSampleDivisor
+                 << ",\"uiDrawMs\":" << m_debugProfileUiDrawMilliseconds / renderSampleDivisor
+                 << ",\"otherManagersMs\":" << m_debugProfileOtherManagersMilliseconds / renderSampleDivisor
                  << ",\"otherMs\":" << m_debugProfileOtherMilliseconds / renderSampleDivisor
                  << ",\"physicsRayCastObjectCount\":" << m_debugProfilePhysicsRayCastObjectCount
                  << ",\"physicsRayCastShapeObjectCount\":" << m_debugProfilePhysicsRayCastShapeObjectCount

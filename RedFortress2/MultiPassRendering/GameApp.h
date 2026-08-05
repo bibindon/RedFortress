@@ -334,6 +334,14 @@ private:
     double m_debugPlatformSyncAccumulatedMilliseconds = 0.0;
     double m_debugGameLogicAccumulatedMilliseconds = 0.0;
     double m_debugFrameTotalAccumulatedMilliseconds = 0.0;
+    double m_debugAudioAccumulatedMilliseconds = 0.0;
+    double m_debugInputAccumulatedMilliseconds = 0.0;
+    double m_debugUiDrawAccumulatedMilliseconds = 0.0;
+    double m_debugOtherManagersAccumulatedMilliseconds = 0.0;
+    double m_debugProfileAudioMilliseconds = 0.0;
+    double m_debugProfileInputMilliseconds = 0.0;
+    double m_debugProfileUiDrawMilliseconds = 0.0;
+    double m_debugProfileOtherManagersMilliseconds = 0.0;
 #endif
     bool m_debugPlayerRenderEnabled = true;
     bool m_debugPlayerPhysicsEnabled = true;
