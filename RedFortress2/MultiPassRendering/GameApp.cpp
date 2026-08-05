@@ -1380,8 +1380,14 @@ void GameApp::Run()
             }
 
             // QTE 中はプレイヤー/カメラ/敵/インタラクト入力を止める
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            ULONGLONG gameLogicStartTick = 0;
+#endif
             if (m_qte == nullptr)
             {
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+                gameLogicStartTick = GetTickCount64();
+#endif
                 // マウスカーソル表示中はUI操作を優先し、カメラ回転を止める。
                 // 固定カメラ時もマウスによる回転を無効化する。
                 if (!m_stageClearInputLocked && !m_mouseCursorVisible && !m_useFixedCamera)
@@ -1394,6 +1400,15 @@ void GameApp::Run()
                 {
                     UpdatePlayerByInput();
                 }
+
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+                if (m_debugProfileStartTick != 0 && gameLogicStartTick != 0)
+                {
+                    m_debugGameLogicAccumulatedMilliseconds +=
+                        static_cast<double>(GetTickCount64() - gameLogicStartTick);
+                }
+                gameLogicStartTick = 0;
+#endif
 
                 // 敵の更新
                 if (m_debugEnemyUpdateEnabled)
@@ -1691,6 +1706,9 @@ void GameApp::Run()
             // 衝突判定（動く床の最新位置を反映）
             const bool isStageSelect = IsCurrentStageSelect();
             const D3DXVECTOR3 playerPositionBeforePhysicsUpdate = m_playerMover.GetPosition();
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            ULONGLONG otherManagersStartTick = 0;
+#endif
             if (!isStageSelect)
             {
                 // 落下死演出中は入力を無効化し自由落下させる
@@ -1714,6 +1732,9 @@ void GameApp::Run()
 #endif
                 }
 
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+                otherManagersStartTick = GetTickCount64();
+#endif
                 m_warpBearManager.Update(m_playerMover.GetPosition());
                 D3DXVECTOR3 warpTargetPosition;
                 float warpTargetRotationY = 0.0f;
@@ -1955,6 +1976,14 @@ void GameApp::Run()
             m_pickupManager.UpdatePickups(m_playerMover.GetPosition(),
                                           m_playerMeshId,
                                           m_destructibleManager);
+
+#if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
+            if (m_debugProfileStartTick != 0 && otherManagersStartTick != 0)
+            {
+                m_debugOtherManagersAccumulatedMilliseconds +=
+                    static_cast<double>(GetTickCount64() - otherManagersStartTick);
+            }
+#endif
 
             if (m_player.IsHpZero())
             {
