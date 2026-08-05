@@ -432,8 +432,81 @@
 
 `AttackTriggers.csv`の`TargetID`と`PressurePlates.csv`の`WallID`で連動対象を指定するときは、対象を`XFileList_simple.csv`と`XFileListPhysics.csv`の両方へ同じCSV IDで登録する。レバーとロープでは`TargetID=-1`を使用できない。ボタンだけはライト専用として`TargetID=-1`を使用できる。
 
+## 地面モデルの生成と検証
+
+### 生成手順（`_build_stage_grounds.py`）
+
+* `stage_ground.x`はカスタムシリアライザで生成しない。`res/model/ground/_build_stage_grounds.py`をBlenderで実行して生成する。
+* 1ステージだけを再生成・検証する場合は環境変数`RED_FORTRESS_STAGE_GROUND`に`"<表示名>"`（例 : `3-5`）を設定して実行する。
+
+  ```powershell
+  $env:RED_FORTRESS_STAGE_GROUND='3-5'
+  & "C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" --background --factory-startup --python "res\model\ground\_build_stage_grounds.py"
+  ```
+
+* このスクリプトは**検証と地面出力を同時に実行**する。検証に失敗するとエラーで停止し、`stage_ground.x`は出力されない。
+* 環境変数を設定せずに実行すると、全32ステージの検証・再生成と`stage_grounds.blend`の保存が行われる。
+* 出力先は`res/model/<フォルダー名>/stage_ground.x`（BOMなしUTF-8・CRLF）。
+* 検証は既存の描画CSV・物理CSV・敵CSV等を読み込むため、**CSV生成 → 地面生成 → ビルド**の順で実行する。
+
+### `validate_stage()`の通過条件（失敗するとビルド停止）
+
+* スタート位置とゴール位置がピット（落とし穴）の上にないこと。
+* 敵・破壊物・収集物・SpeedUps・DashBoostersの座標がピット内にないこと（`PosY>0.5`かつ静的プラットフォーム上なら例外）。
+* `XFileList_simple.csv`の各オブジェクトがピット内にないこと（ground/platefield/skysphere/fence/移動床はスキップ）。
+* 壁・木箱・木の衝突矩形（物理CSVのIDから算出）がピットと交差しないこと。
+* スタート→ゴールの安全ルート（BFS）が存在すること。
+* **ワープで区画を密封する設計では、STAGES定義に`jump_links`（ワープペアの座標組）を追加しないと「no safe route」で失敗する。**
+* ピットはSTAGES定義の`pits`に`(x0, x1, z0, z1)`で指定する。ピットは外周の壁（X/Z境界）に触れてはならない。
+
+#### 参考：stage_3_5のSTAGES定義
+
+```python
+{"display": "3-5", "folder": "stage_3_5", "size": (60.0, 120.0), "start": (0.0, -112.0), "goal": (0.0, 112.0),
+ "pits": ((-20.0, -10.0, -78.0, -70.0), (-10.0, 0.0, 5.0, 15.0)),
+ "jump_links": (((0.0, -100.0), (-30.0, -60.0)),
+                ((30.0, -50.0), (-30.0, -20.0)),
+                ((30.0, -10.0), (-30.0, 20.0)),
+                ((30.0, 30.0), (-30.0, 60.0)),
+                ((30.0, 70.0), (0.0, 95.0)),
+                ((0.0, -105.0), (0.0, -25.0)),
+                ((0.0, -65.0), (-30.0, 15.0)),
+                ((0.0, -5.0), (20.0, 60.0)),
+                ((-50.0, -100.0), (50.0, 100.0)))},
+```
+
+### `world_for_folder()`の罠
+
+* フォルダー名`stage_3_5`の桁をそのまま読むと`35`になり、旧番号ベースの判定では誤ってWorld 4扱いになる。
+* 新命名`stage_<w>_<s>`は`stage_`直後の数字をワールド番号として使う（修正済み）。
+* 誤判定すると地面の天面テクスチャ（world1〜world4.png）が誤ったワールドになる事故が起きるため、フォルダー名→ワールドの判定ルールを確認すること。
+
+## ギミックの配線ルールとモデル寸法
+
+### 配線ルール
+
+* レバー・ロープの連動対象は、描画CSVと物理CSVの両方に同じIDで登録し、物理側は`Move=y`にする。
+* ボタンは`TargetID=-1`でライト専用にできる。その場合`LightBrightness`〜`LightB`の5列を末尾に付加する。
+* トリガーが連動対象を回転させる角度は90度固定（`kTargetAngle = π/2`）。
+* ワープオブジェクトは描画CSVのみに登録し、物理CSVへは登録しない。
+* 移動床の物理モデルのパスは`res/model/collision_moving_platform.x`（描画用とはパスが異なる）。
+
+### モデル寸法一覧（配置設計の基準）
+
+| モデル | 寸法（メートル） | 備考 |
+|---|---|---|
+| `attack_wall` | 幅4 × 奥行3 × 高さ0.6 | レバー連動の壁（メッシュ実測） |
+| `attack_floor` | 水平スラブ 幅4 × 奥行3、厚み0.45 | ロープ切断でX軸回転→橋（メッシュ実測） |
+| `collision_wall` / `collision_wall_tall` | 衝突矩形 1.8 × 8.8 | `_build_stage_grounds.py`の`load_collision_rectangles`基準。RotY=90で幅・奥行が入れ替わる |
+| `static_platform_2x2` | 6 × 6 | 床の上面は配置Y付近 |
+| 移動床（衝突判定） | 3 × 0.4 × 3 | `Scale`で拡大。昇降・高台との重なりに注意 |
+| `plateLava` | 半径 4.0 × Scale | `_build_stage_grounds.py`の`load_lava_zones`基準 |
+
 ## 配置設計の基準
 
+* **区画数は必達要件。設計開始時に区画数を決めてから各ギミックを配置する。**
+  * 区画数が不足する設計（ワールド3/4で18区画未満など）は要件を満たさないため、ステージとして完成と見なさない。
+  * 区画は3〜18個の範囲で分ける。1区画に複数の主目的を詰め込まず、区画ごとに主目的を1つに絞る。
 * **ステージを広い一枚の平面として使わず、3～18個の区画に分ける。**
   * ステージ1-1 ~ 1-7 : 約3区画
   * ステージ2-1 ~ 2-7 : 約12区画
@@ -773,6 +846,7 @@
 * 強化能力を使った場合もステージ外や壁の裏へ侵入できない。
 * 【通常ステージ】QTE木、ダッシュブースター、移動床、ロープ・レバー・ボタンのいずれか、感圧板・ワープオブジェクト・ダメージ床・押せる箱のいずれか、Y座標3以上の動かない床がそれぞれ1つ以上配置されている。
 * 【通常ステージ】敵数がWorld 1は10体以上、World 2は15体以上、World 3・World 4は20体以上配置されている。
+* 【通常ステージ】区画数がワールド別の目安を満たしている（World 1: 約3、World 2: 約12、World 3・4: 約18）。不足する設計は要件不達と見なす。
 * 【通常ステージ】ステージの端にギミックが2つ以上配置されている。ただし開始地点とゴール地点の周囲を除く。
 * 【ボスステージ】`EnemyPositions.csv`（ボス1体）と`EnemyPositionsCleared.csv`（雑魚敵）の両方が存在する。
 * 敵全滅後に敵探しや長い逆走が発生しない。
@@ -880,3 +954,23 @@ AddStage(L"3-5", 21, L"3-5 ひゅんひゅんワープめいろ", L"stage_3_5",
 ### 地面モデルの形状確認方法
 
 既存の`stage_ground.x`に落とし穴や窪みがすでにあるかを確認するには、Xファイルの頂点データを解析する。Xファイルはテキスト形式なので、Python等で`Mesh`ブロック内の頂点座標を読み取り、Y座標が0より低い頂点（底面）とY座標が0付近の頂点（上面）を分類することで、上面の形状から足場の範囲と落とし穴の位置を把握できる。XファイルのFrameTransformMatrixに回転が含まれている場合があるため、行列の確認も必要である。
+
+### ビルド手順と参考ステージ
+
+* MSBuildは`C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe`にあり、常に**x64**でビルドする。
+
+  ```powershell
+  & "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" RedFortress2\MultiPassRendering.sln /p:Configuration=Debug /p:Platform=x64
+  ```
+
+* **PowerShellで`PATH`環境変数を削除してはいけない。**`$env:PATH`と`$env:Path`は同一の変数のため、削除するとpost-buildの`res`コピー（xcopy）が壊れる。
+* ビルド成功後、`RedFortress2\x64\Debug\res\`へ`res`がコピーされることを確認する。
+
+#### ギミック実装の参考ステージ
+
+| ギミック | 参考ステージ |
+|---|---|
+| ロープ橋 | stage_3_3 |
+| レバー | stage_2_7 |
+| ワープオブジェクト | stage_1_1 |
+| ボタン | stage_3_1 |
