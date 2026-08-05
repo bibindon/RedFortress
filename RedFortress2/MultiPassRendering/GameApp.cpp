@@ -1378,8 +1378,14 @@ void GameApp::Run()
                 // 敵の更新
                 if (m_debugEnemyUpdateEnabled)
                 {
+                    const ULONGLONG enemyUpdateStartTick = GetTickCount64();
                     m_enemyManager.Update(m_render, m_playerMover.GetPosition(), m_playerInvincibleFrames > 0);
                     ProcessEnemyAttackHits();
+                    if (m_debugProfileStartTick != 0)
+                    {
+                        m_debugEnemyUpdateAccumulatedMilliseconds +=
+                            static_cast<double>(GetTickCount64() - enemyUpdateStartTick);
+                    }
                 }
 
                 m_destructibleManager.Update(m_render);
@@ -1588,6 +1594,7 @@ void GameApp::Run()
 
             // 動く床の位置を描画エンジンから取得し、物理エンジンに反映する。
             {
+                const ULONGLONG platformSyncStartTick = GetTickCount64();
                 const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
                 const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
 
@@ -1614,8 +1621,14 @@ void GameApp::Run()
                         PhysicsWorld::SetVelocity(physicsId, platformVelocity);
                     }
                 }
+                if (m_debugProfileStartTick != 0)
+                {
+                    m_debugPlatformSyncAccumulatedMilliseconds +=
+                        static_cast<double>(GetTickCount64() - platformSyncStartTick);
+                }
             }
 
+            const ULONGLONG managerUpdateStartTick = GetTickCount64();
             m_lavaFloodManager.Update(m_render, kTargetFrameSeconds);
             m_lavaRiseManager.Update(m_render, kTargetFrameSeconds);
             m_pushableBoxManager.Update(m_playerMover.GetPosition(),
@@ -1627,6 +1640,11 @@ void GameApp::Run()
                                           m_pushableBoxManager,
                                           kTargetFrameSeconds);
             m_attackTriggerManager.Update(m_render, kTargetFrameSeconds);
+            if (m_debugProfileStartTick != 0)
+            {
+                m_debugManagerUpdateAccumulatedMilliseconds +=
+                    static_cast<double>(GetTickCount64() - managerUpdateStartTick);
+            }
 
             // 衝突判定（動く床の最新位置を反映）
             const bool isStageSelect = IsCurrentStageSelect();
@@ -1641,7 +1659,13 @@ void GameApp::Run()
                 }
                 if (m_debugPlayerPhysicsEnabled)
                 {
+                    const ULONGLONG physicsStartTick = GetTickCount64();
                     m_playerMover.Update(m_pendingMove, m_pendingJump);
+                    if (m_debugProfileStartTick != 0)
+                    {
+                        m_debugPlayerPhysicsAccumulatedMilliseconds +=
+                            static_cast<double>(GetTickCount64() - physicsStartTick);
+                    }
                 }
 
                 m_warpBearManager.Update(m_playerMover.GetPosition());
@@ -2008,6 +2032,15 @@ void GameApp::ProcessDebugRpc()
 {
     ++m_debugFrameNumber;
 
+    // 前回のフレーム終了時刻から今回までの経過時間をフレーム全体として記録する。
+    const ULONGLONG frameStartTick = GetTickCount64();
+    if (m_debugProfileStartTick != 0 && m_debugGameLoopEndTick != 0)
+    {
+        m_debugFrameTotalAccumulatedMilliseconds +=
+            static_cast<double>(frameStartTick - m_debugGameLoopEndTick);
+    }
+    m_debugGameLoopStartTick = frameStartTick;
+
     if (m_debugInvincible)
     {
         m_playerInvincibleFrames = 120;
@@ -2015,17 +2048,83 @@ void GameApp::ProcessDebugRpc()
 
     if (m_debugProfileStartTick != 0)
     {
+        int rayCastObjectCount = 0;
+        int rayCastShapeObjectCount = 0;
+        int checkCollideCount = 0;
+        double rayCastObjectMilliseconds = 0.0;
+        double rayCastShapeObjectMilliseconds = 0.0;
+        double checkCollideMilliseconds = 0.0;
+        PhysicsWorld::GetProfileCounters(&rayCastObjectCount,
+                                         &rayCastShapeObjectCount,
+                                         &checkCollideCount,
+                                         &rayCastObjectMilliseconds,
+                                         &rayCastShapeObjectMilliseconds,
+                                         &checkCollideMilliseconds);
+
+        // 前回取得時からの差分を今回のフレーム分として加算する。
+        m_debugProfilePhysicsRayCastObjectCount +=
+            rayCastObjectCount - m_debugPhysicsRayCastObjectCount;
+        m_debugProfilePhysicsRayCastShapeObjectCount +=
+            rayCastShapeObjectCount - m_debugPhysicsRayCastShapeObjectCount;
+        m_debugProfilePhysicsCheckCollideCount +=
+            checkCollideCount - m_debugPhysicsCheckCollideCount;
+        m_debugProfilePhysicsRayCastObjectMilliseconds +=
+            rayCastObjectMilliseconds - m_debugPhysicsRayCastObjectMilliseconds;
+        m_debugProfilePhysicsRayCastShapeObjectMilliseconds +=
+            rayCastShapeObjectMilliseconds - m_debugPhysicsRayCastShapeObjectMilliseconds;
+        m_debugProfilePhysicsCheckCollideMilliseconds +=
+            checkCollideMilliseconds - m_debugPhysicsCheckCollideMilliseconds;
+        m_debugPhysicsRayCastObjectCount = rayCastObjectCount;
+        m_debugPhysicsRayCastShapeObjectCount = rayCastShapeObjectCount;
+        m_debugPhysicsCheckCollideCount = checkCollideCount;
+        m_debugPhysicsRayCastObjectMilliseconds = rayCastObjectMilliseconds;
+        m_debugPhysicsRayCastShapeObjectMilliseconds = rayCastShapeObjectMilliseconds;
+        m_debugPhysicsCheckCollideMilliseconds = checkCollideMilliseconds;
+
         const NSRender::RenderFrameProfile& renderProfile = m_render.GetLastFrameProfile();
         ++m_debugProfileRenderSamples;
         m_debugProfileSceneUpdateMilliseconds += renderProfile.sceneUpdateMilliseconds;
         m_debugProfileGBufferMilliseconds += renderProfile.gBufferMilliseconds;
         m_debugProfileMirrorMilliseconds += renderProfile.mirrorMilliseconds;
         m_debugProfileMainPassMilliseconds += renderProfile.mainPassMilliseconds;
+        m_debugProfileMainPassSkinAnimMilliseconds += renderProfile.mainPassSkinAnimMilliseconds;
+        m_debugProfileMainPassMeshMix2Milliseconds += renderProfile.mainPassMeshMix2Milliseconds;
+        m_debugProfileMainPassInstancingMilliseconds += renderProfile.mainPassInstancingMilliseconds;
+        m_debugProfileMainPassOtherMeshMilliseconds += renderProfile.mainPassOtherMeshMilliseconds;
+        m_debugProfileMainPassSkinAnimDraws += renderProfile.mainPassSkinAnimDraws;
+        m_debugProfileMainPassMeshMix2Draws += renderProfile.mainPassMeshMix2Draws;
+        m_debugProfileMainPassInstancingDraws += renderProfile.mainPassInstancingDraws;
         m_debugProfilePostEffectMilliseconds += renderProfile.postEffectMilliseconds;
         m_debugProfileDraw2DMilliseconds += renderProfile.draw2DMilliseconds;
         m_debugProfileFrameWaitMilliseconds += renderProfile.frameWaitMilliseconds;
         m_debugProfilePresentMilliseconds += renderProfile.presentMilliseconds;
         m_debugProfileRenderTotalMilliseconds += renderProfile.totalMilliseconds;
+        m_debugProfilePhysicsRayCastObjectCount += m_debugPhysicsRayCastObjectCount;
+        m_debugProfilePhysicsRayCastShapeObjectCount += m_debugPhysicsRayCastShapeObjectCount;
+        m_debugProfilePhysicsCheckCollideCount += m_debugPhysicsCheckCollideCount;
+        m_debugProfilePhysicsRayCastObjectMilliseconds += m_debugPhysicsRayCastObjectMilliseconds;
+        m_debugProfilePhysicsRayCastShapeObjectMilliseconds += m_debugPhysicsRayCastShapeObjectMilliseconds;
+        m_debugProfilePhysicsCheckCollideMilliseconds += m_debugPhysicsCheckCollideMilliseconds;
+        m_debugProfilePlayerPhysicsMilliseconds += m_debugPlayerPhysicsAccumulatedMilliseconds;
+        m_debugProfileEnemyUpdateMilliseconds += m_debugEnemyUpdateAccumulatedMilliseconds;
+        m_debugProfileManagerUpdateMilliseconds += m_debugManagerUpdateAccumulatedMilliseconds;
+        m_debugProfilePlatformSyncMilliseconds += m_debugPlatformSyncAccumulatedMilliseconds;
+        m_debugProfileGameLogicMilliseconds += m_debugGameLogicAccumulatedMilliseconds;
+        const double sectionTotalMilliseconds =
+            m_debugPlayerPhysicsAccumulatedMilliseconds +
+            m_debugEnemyUpdateAccumulatedMilliseconds +
+            m_debugManagerUpdateAccumulatedMilliseconds +
+            m_debugPlatformSyncAccumulatedMilliseconds +
+            m_debugGameLogicAccumulatedMilliseconds +
+            renderProfile.totalMilliseconds;
+        m_debugProfileOtherMilliseconds +=
+            m_debugFrameTotalAccumulatedMilliseconds - sectionTotalMilliseconds;
+        m_debugPlayerPhysicsAccumulatedMilliseconds = 0.0;
+        m_debugEnemyUpdateAccumulatedMilliseconds = 0.0;
+        m_debugManagerUpdateAccumulatedMilliseconds = 0.0;
+        m_debugPlatformSyncAccumulatedMilliseconds = 0.0;
+        m_debugGameLogicAccumulatedMilliseconds = 0.0;
+        m_debugFrameTotalAccumulatedMilliseconds = 0.0;
     }
 
     const ULONGLONG currentTick = GetTickCount64();
@@ -2042,6 +2141,8 @@ void GameApp::ProcessDebugRpc()
     m_debugRpc.Poll([this](const std::string& command) {
         return HandleDebugRpcCommand(command);
     });
+
+    m_debugGameLoopEndTick = GetTickCount64();
 }
 
 bool GameApp::LoadStageForDebug(const std::wstring& stageId)
@@ -2087,11 +2188,43 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
         m_debugProfileGBufferMilliseconds = 0.0;
         m_debugProfileMirrorMilliseconds = 0.0;
         m_debugProfileMainPassMilliseconds = 0.0;
+        m_debugProfileMainPassSkinAnimMilliseconds = 0.0;
+        m_debugProfileMainPassMeshMix2Milliseconds = 0.0;
+        m_debugProfileMainPassInstancingMilliseconds = 0.0;
+        m_debugProfileMainPassOtherMeshMilliseconds = 0.0;
+        m_debugProfileMainPassSkinAnimDraws = 0;
+        m_debugProfileMainPassMeshMix2Draws = 0;
+        m_debugProfileMainPassInstancingDraws = 0;
         m_debugProfilePostEffectMilliseconds = 0.0;
         m_debugProfileDraw2DMilliseconds = 0.0;
         m_debugProfileFrameWaitMilliseconds = 0.0;
         m_debugProfilePresentMilliseconds = 0.0;
         m_debugProfileRenderTotalMilliseconds = 0.0;
+        m_debugProfilePlayerPhysicsMilliseconds = 0.0;
+        m_debugProfileEnemyUpdateMilliseconds = 0.0;
+        m_debugProfileManagerUpdateMilliseconds = 0.0;
+        m_debugProfilePlatformSyncMilliseconds = 0.0;
+        m_debugProfileGameLogicMilliseconds = 0.0;
+        m_debugProfileOtherMilliseconds = 0.0;
+        m_debugProfilePhysicsRayCastObjectCount = 0;
+        m_debugProfilePhysicsRayCastShapeObjectCount = 0;
+        m_debugProfilePhysicsCheckCollideCount = 0;
+        m_debugProfilePhysicsRayCastObjectMilliseconds = 0.0;
+        m_debugProfilePhysicsRayCastShapeObjectMilliseconds = 0.0;
+        m_debugProfilePhysicsCheckCollideMilliseconds = 0.0;
+        m_debugPlayerPhysicsAccumulatedMilliseconds = 0.0;
+        m_debugEnemyUpdateAccumulatedMilliseconds = 0.0;
+        m_debugManagerUpdateAccumulatedMilliseconds = 0.0;
+        m_debugPlatformSyncAccumulatedMilliseconds = 0.0;
+        m_debugGameLogicAccumulatedMilliseconds = 0.0;
+        m_debugFrameTotalAccumulatedMilliseconds = 0.0;
+        m_debugPhysicsRayCastObjectCount = 0;
+        m_debugPhysicsRayCastShapeObjectCount = 0;
+        m_debugPhysicsCheckCollideCount = 0;
+        m_debugPhysicsRayCastObjectMilliseconds = 0.0;
+        m_debugPhysicsRayCastShapeObjectMilliseconds = 0.0;
+        m_debugPhysicsCheckCollideMilliseconds = 0.0;
+        PhysicsWorld::ResetProfileAccumulators();
         return "{\"ok\":true}";
     }
 
@@ -2124,11 +2257,30 @@ std::string GameApp::HandleDebugRpcCommand(const std::string& command)
                  << ",\"gBufferMs\":" << m_debugProfileGBufferMilliseconds / renderSampleDivisor
                  << ",\"mirrorMs\":" << m_debugProfileMirrorMilliseconds / renderSampleDivisor
                  << ",\"mainPassMs\":" << m_debugProfileMainPassMilliseconds / renderSampleDivisor
+                 << ",\"mainPassSkinAnimMs\":" << m_debugProfileMainPassSkinAnimMilliseconds / renderSampleDivisor
+                 << ",\"mainPassMeshMix2Ms\":" << m_debugProfileMainPassMeshMix2Milliseconds / renderSampleDivisor
+                 << ",\"mainPassInstancingMs\":" << m_debugProfileMainPassInstancingMilliseconds / renderSampleDivisor
+                 << ",\"mainPassOtherMeshMs\":" << m_debugProfileMainPassOtherMeshMilliseconds / renderSampleDivisor
+                 << ",\"mainPassSkinAnimDraws\":" << m_debugProfileMainPassSkinAnimDraws
+                 << ",\"mainPassMeshMix2Draws\":" << m_debugProfileMainPassMeshMix2Draws
+                 << ",\"mainPassInstancingDraws\":" << m_debugProfileMainPassInstancingDraws
                  << ",\"postEffectMs\":" << m_debugProfilePostEffectMilliseconds / renderSampleDivisor
                  << ",\"draw2DMs\":" << m_debugProfileDraw2DMilliseconds / renderSampleDivisor
                  << ",\"frameWaitMs\":" << m_debugProfileFrameWaitMilliseconds / renderSampleDivisor
                  << ",\"presentMs\":" << m_debugProfilePresentMilliseconds / renderSampleDivisor
                  << ",\"renderTotalMs\":" << m_debugProfileRenderTotalMilliseconds / renderSampleDivisor
+                 << ",\"playerPhysicsMs\":" << m_debugProfilePlayerPhysicsMilliseconds / renderSampleDivisor
+                 << ",\"enemyUpdateMs\":" << m_debugProfileEnemyUpdateMilliseconds / renderSampleDivisor
+                 << ",\"managerUpdateMs\":" << m_debugProfileManagerUpdateMilliseconds / renderSampleDivisor
+                 << ",\"platformSyncMs\":" << m_debugProfilePlatformSyncMilliseconds / renderSampleDivisor
+                 << ",\"gameLogicMs\":" << m_debugProfileGameLogicMilliseconds / renderSampleDivisor
+                 << ",\"otherMs\":" << m_debugProfileOtherMilliseconds / renderSampleDivisor
+                 << ",\"physicsRayCastObjectCount\":" << m_debugProfilePhysicsRayCastObjectCount
+                 << ",\"physicsRayCastShapeObjectCount\":" << m_debugProfilePhysicsRayCastShapeObjectCount
+                 << ",\"physicsCheckCollideCount\":" << m_debugProfilePhysicsCheckCollideCount
+                 << ",\"physicsRayCastObjectMs\":" << m_debugProfilePhysicsRayCastObjectMilliseconds / renderSampleDivisor
+                 << ",\"physicsRayCastShapeObjectMs\":" << m_debugProfilePhysicsRayCastShapeObjectMilliseconds / renderSampleDivisor
+                 << ",\"physicsCheckCollideMs\":" << m_debugProfilePhysicsCheckCollideMilliseconds / renderSampleDivisor
                  << "}";
         return response.str();
     }
