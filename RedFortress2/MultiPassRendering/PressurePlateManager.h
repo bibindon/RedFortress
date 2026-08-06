@@ -40,6 +40,7 @@ private:
         D3DXVECTOR3 wallPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 wallRotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 wallScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+        float travelDistance = 3.0f;
     };
 
     bool IsPlayerOnPlate(const PressurePlatePair& pair,

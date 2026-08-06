@@ -15,3 +15,7 @@
 9002,res/model/attack_trigger/lever_box_door.x,0,0,7,0,0,0,0.98,Collision,y,
 9003,res/model/attack_trigger/lever_box3.x,0,0,-5,0,0,0,1,Collision,n,
 9004,res/model/attack_trigger/lever_box3_door.x,0,0,-5,0,0,0,0.98,Collision,y,
+9011,res/model/attack_trigger/lever_box.x,12,0,-18,0,180,0,1,Collision,n,
+9012,res/model/attack_trigger/lever_box_door.x,12,0,-15,0,0,0,0.98,Collision,y,
+9013,res/model/attack_trigger/lever_box3.x,-12,0,10,0,0,0,1,Collision,n,
+9014,res/model/attack_trigger/lever_box3_door.x,-12,0,10,0,0,0,0.98,Collision,y,

@@ -385,6 +385,12 @@
   * プレイヤーが踏むか、「押せる箱」を乗せるか、ドクロを乗せると反応する。
   * 連動扉が上に移動する。
   * 連動扉はトリガーが有効な間だけ開き、離すと2m/sで閉じる。扉のみが出入り口の完全密閉部屋は、中で扉が閉じると閉じ込めになるため、ドクロ/押せる箱を板に載せて開きっぱなしにする遊びを近くに置くか、退路を残す。
+  * `TravelDistance`列（10列目）を指定すると、連動扉の上昇量（メートル）を変更できる。省略時は3.0m（既存動作のまま）。
+  * 感圧板2・感圧板3（箱と上昇扉のセット）
+    * レバー2・レバー3と同じ箱ギミックを感圧板で起動するもの。`TravelDistance=6`を指定する（扉6mを開ける）。
+    * 感圧板2 : 箱`res/model/attack_trigger/lever_box.x`＋扉1枚`lever_box_door.x`。**扉は感圧板の目の前の面に配置する**（感圧板と反対側に置かない）。箱は開口部が感圧板側を向くよう`RotY=180`等で回転させる（例: 感圧板が+Z側なら箱をRotY=180にして扉は箱の+Z側に+3した位置）。
+    * 感圧板3 : 箱`res/model/attack_trigger/lever_box3.x`＋扉2枚`lever_box3_door.x`（両開き）。扉は箱と同じ座標。
+    * 扉は`XFileListPhysics.csv`で`Move=y`にする。扉の`Scale`は0.98（2%縮小）で、`XFileList_simple.csv`・`XFileListPhysics.csv`・`PressurePlates.csv`の3ファイルすべて同じ値にする。
 * 押せる箱
   * 押して移動する。
 * ワープオブジェクト
@@ -440,7 +446,7 @@
 | `XFileListMove.csv` | 移動床 | `ID`、`RenderID`、`PhysicsID`、`Start`、`End`、`Duration` |
 | `EnemyPositions.csv` | 敵 | `Type`、`PosX`、`PosY`、`PosZ`、`RotY` |
 | `Destructibles.csv` | 破壊可能オブジェクト | 座標、`HP`。既存ヘッダーに`DropItemId`がある場合だけドロップも指定する |
-| `PressurePlates.csv` | 感圧板と連動扉 | 感圧板の座標、`WallID`、扉の回転と倍率。`WallID`は描画・物理CSVの両方に必要 |
+| `PressurePlates.csv` | 感圧板と連動扉 | 感圧板の座標、`WallID`、扉の回転と倍率。`WallID`は描画・物理CSVの両方に必要。10列目に`TravelDistance`（上昇量、省略時3.0m） |
 | `PushableBoxes.csv` | 押せる箱 | `ID`、座標、`RotY`、`Scale` |
 | `AttackTriggers.csv` | レバー、ボタン、ロープ | `ID`、`Type`、トリガー座標、`TargetID`、`Axis`、基準回転、倍率。ボタンでは任意のライト5列を末尾に追加 |
 | `Interactables.csv` | QTEオブジェクトなど | `InteractionID`、`Type`、座標、`PromptDistance`。通常ステージのQTE用木は`Type=Tree` |

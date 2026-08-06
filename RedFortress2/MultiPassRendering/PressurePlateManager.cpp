@@ -115,6 +115,15 @@ void PressurePlateManager::LoadForStage(NSRender::Render& render, const std::wst
         const float wallScale = std::stof(cells[8]);
         pair.wallScale = D3DXVECTOR3(wallScale, wallScale, wallScale);
 
+        if (cells.size() >= 10)
+        {
+            pair.travelDistance = std::stof(cells[9]);
+            if (pair.travelDistance <= 0.0f)
+            {
+                std::abort();
+            }
+        }
+
         if (!loadedPairIds.insert(pair.id).second ||
             !loadedWallIds.insert(pair.wallCsvId).second)
         {
@@ -197,7 +206,7 @@ void PressurePlateManager::Update(NSRender::Render& render,
         float targetY = pair.wallClosedPosition.y;
         if (active)
         {
-            targetY += kWallTravelDistance;
+            targetY += pair.travelDistance;
         }
 
         const float previousY = pair.wallPosition.y;
