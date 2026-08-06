@@ -392,6 +392,7 @@
   * クラフト素材とクラフト素材以外の収集物は`Collectibles.csv`へ配置する。
   * `Collectibles.csv`の`Type`には`Item`または`Weapon`だけを指定する。
   * `Type=Item`では、クラフト専用アイテムIDの`007`と`008`を`DataID`に指定しない。指定すると異常終了する。
+  * `DataID`はゼロ埋め3桁（`001`〜`017`）で指定する。`9`や`10`のような非ゼロ埋めは、拾得時にアイテム名カタログ（`res/script/hoshigirl_item_ideas.csv`）のキーと不一致となり`GetItemDisplayName()`が`std::abort()`で異常終了する（2026-08にステージ1-2で実害発生。1-3・1-6・1-7・1-8も同バグがあった）。カタログのID、`CraftRecipes.csv`の素材ID、敵・破壊物のドロップIDはすべてゼロ埋め3桁で統一されている。
   * スターは`Stars.csv`へ配置する。取得すると一定時間無敵になり、移動速度が最大になる。1ステージに複数配置できる。
   * スピードアップは`SpeedUps.csv`へ配置する。取得すると基礎移動速度の段階が1つ上がる。現在の実装が読み込む配置は、ヘッダー直後の1行だけである。
 * QTEオブジェクト
@@ -432,7 +433,7 @@
 | `LavaZones.csv` | 溶岩・ダメージ床 | `ID`、対象となる`PhysicsID`、`Damage` |
 | `LavaFlood.csv` | 迫る溶岩 | `ID`、`Damage`、アンカー座標、`DirectionZ`、開始・終了時の幅と長さ、`Duration` |
 | `LavaRise.csv` | せり上がる溶岩 | `ID`、`Damage`、XZ範囲、`StartY`、`EndY`、`Delay`、`Duration` |
-| `Collectibles.csv` | アイテム・収集物 | `CollectibleID`、`Type`、`DataID`、座標、倍率。`Type`は`Item`または`Weapon` |
+| `Collectibles.csv` | アイテム・収集物 | `CollectibleID`、`Type`、`DataID`、座標、倍率。`Type`は`Item`または`Weapon`。`DataID`はゼロ埋め3桁（`001`〜`017`）で指定する（非ゼロ埋めは拾得時に異常終了） |
 | `Stars.csv` | 一時無敵・最高速スター | `PosX`、`PosY`、`PosZ`。複数行を配置可能 |
 | `SpeedUps.csv` | 基礎移動速度アップ | `PosX`、`PosY`、`PosZ`。現在の実装ではヘッダー直後の1行だけを読み込む |
 
