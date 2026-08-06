@@ -13,6 +13,7 @@ class Render;
 enum class AttackTriggerType
 {
     Lever,
+    LeverLift,
     Rope,
     Button
 };
@@ -68,6 +69,8 @@ private:
         D3DXVECTOR3 targetScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
         D3DXVECTOR3 targetAxis = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
         float currentAngle = 0.0f;
+        float liftHeight = 0.0f;
+        float currentLift = 0.0f;
     };
 
     bool IsTargetInAttackRange(const Trigger& trigger,

@@ -209,6 +209,23 @@
     * `Type=Lever`を指定する。攻撃するたびにON/OFFが切り替わる。
     * 有効な`TargetID`が必須である。
     * 描画用モデル : `res/model/attack_trigger/lever.x`
+  * レバー2（上昇扉レバー）
+    * `Type=LeverLift`を指定する。攻撃するたびにON/OFFが切り替わり、ONの間`TargetID`のオブジェクトがY方向に上昇する（OFFで元の位置に戻る）。
+    * `Scale`の直後の列（12列目）に`LiftHeight`（上昇量・メートル）を指定する。
+    * 有効な`TargetID`が必須である。対象は`XFileList_simple.csv`と`XFileListPhysics.csv`の両方へ同じCSV IDで登録し、物理側は`Move=y`にする（動く壁として扱われ、プレイヤーを押す）。
+    * 描画用モデル（レバー本体） : `res/model/attack_trigger/lever.x`（既存レバーと同じものを自動配置）
+    * セットの箱モデル : `res/model/attack_trigger/lever_box.x`（外寸6x6x6m・壁厚0.5m・底面中心原点・-Z側が開口部）
+    * 扉モデル : `res/model/attack_trigger/lever_box_door.x`（6x6x0.5m・下端原点・厚さ0.5m）
+    * 扉と箱のポリゴンが重なって点滅しないよう、扉の`Scale`は**0.98（2%縮小）**で登録する。`XFileList_simple.csv`・`XFileListPhysics.csv`・`AttackTriggers.csv`の3ファイルすべて同じ値にする（LeverLiftが`AttackTriggers.csv`のScaleで上書きするため）。
+    * 箱の内側にアイテムを置く場合は箱の中央付近に置く。壁の外からアイテム取得距離（0.55m）に入らないため、レバーで扉を開けるまで取得できない。
+    * 扉を箱の開口部（箱の-Z側）に合わせる場合、扉のCSV座標は箱の座標-Zに-3した位置にする（例: 箱がz=10なら扉はz=7）。
+  * レバー3（両開き上昇扉レバー）
+    * `Type=LeverLift`のバリエーションで、上下する壁が**2枚セット**になったもの。
+    * 箱モデル : `res/model/attack_trigger/lever_box3.x`（外寸6x6x6m・壁厚0.5m・底面中心原点。±X側が壁、**+Zと-Zの2面が開口部**）
+    * 扉モデル : `res/model/attack_trigger/lever_box3_door.x`（**2枚の扉が1つのモデルにまとまっている**。+Z側と-Z側に各1枚・下端原点・厚さ0.5m）
+    * 扉のCSV座標は**箱と同じ座標**にする（モデル内で±Zに扉が配置済みのため）。
+    * レバーで2枚の扉が**同時に上昇**し、箱を通り抜けられる（両側が開く）。
+    * 扉の`Scale`は0.98（2%縮小）で、`XFileList_simple.csv`・`XFileListPhysics.csv`・`AttackTriggers.csv`の3ファイルすべて同じ値にする。
   * ボタン
     * `Type=Button`または`Type=TimedButton`を指定する。いずれかのボタンを攻撃するとステージ内の全ボタンがONになり、10秒後にOFFになる。
     * 連動対象を動かさずライトだけを操作する場合は`TargetID=-1`を指定できる。

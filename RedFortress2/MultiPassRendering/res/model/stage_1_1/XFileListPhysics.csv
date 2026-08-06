@@ -11,3 +11,7 @@
 3701,res/model/plateLava.x,0,0.02,16,0,0,0,0.5,NonCollision,n,
 3801,res/model/tree2Physics/tree_cylinder_collision.x,-6,0,-8,0,0,0,1,Collision,n,
 11001,res/model/attack_block/attack_wall.x,6,0.6,-8,0,0,0,1,Collision,y,
+9001,res/model/attack_trigger/lever_box.x,0,0,10,0,0,0,1,Collision,n,
+9002,res/model/attack_trigger/lever_box_door.x,0,0,7,0,0,0,0.98,Collision,y,
+9003,res/model/attack_trigger/lever_box3.x,0,0,-5,0,0,0,1,Collision,n,
+9004,res/model/attack_trigger/lever_box3_door.x,0,0,-5,0,0,0,0.98,Collision,y,

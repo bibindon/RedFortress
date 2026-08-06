@@ -40,3 +40,7 @@
 8024,../fence.x,15,0.5,30,0,90,0,1,normal,
 9200,../grass/grass.x,0,0,0,0,0,0,1,instancing,../grass/grass1-1.csv
 9201,../tree2/lemonTree.Instancing.x,0,0,0,0,0,0,1,instancing,../tree2/lemonTree.Instancing.1-1.csv
+9001,../attack_trigger/lever_box.x,0,0,10,0,0,0,1,normal,
+9002,../attack_trigger/lever_box_door.x,0,0,7,0,0,0,0.98,normal,
+9003,../attack_trigger/lever_box3.x,0,0,-5,0,0,0,1,normal,
+9004,../attack_trigger/lever_box3_door.x,0,0,-5,0,0,0,0.98,normal,

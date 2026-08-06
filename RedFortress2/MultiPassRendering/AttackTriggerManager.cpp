@@ -28,6 +28,7 @@ namespace
     const float kButtonLocatorRange = 2.0f;
     const float kTargetAngle = D3DX_PI * 0.5f;
     const float kRotationSpeed = D3DX_PI * 0.5f;
+    const float kLiftSpeed = 3.0f;
     const float kPlayerAttackCenterHeight = 1.0f;
 
     std::wstring Trim(const std::wstring& value)
@@ -64,6 +65,10 @@ namespace
         if (value == L"Lever")
         {
             return AttackTriggerType::Lever;
+        }
+        if (value == L"LeverLift")
+        {
+            return AttackTriggerType::LeverLift;
         }
         if (value == L"Rope")
         {
@@ -154,6 +159,19 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
         const float targetScale = std::stof(cells[10]);
         trigger.targetScale = D3DXVECTOR3(targetScale, targetScale, targetScale);
 
+        if (trigger.type == AttackTriggerType::LeverLift)
+        {
+            if (cells.size() < 12)
+            {
+                std::abort();
+            }
+            trigger.liftHeight = std::stof(cells[11]);
+            if (trigger.liftHeight <= 0.0f)
+            {
+                std::abort();
+            }
+        }
+
         if (trigger.type == AttackTriggerType::Button)
         {
             if (cells.size() >= 16)
@@ -233,7 +251,8 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
         else
         {
             std::wstring visualModelPath;
-            if (trigger.type == AttackTriggerType::Lever)
+            if (trigger.type == AttackTriggerType::Lever ||
+                trigger.type == AttackTriggerType::LeverLift)
             {
                 visualModelPath = kLeverModelPath;
             }
@@ -368,7 +387,8 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
     }
 
     Trigger& trigger = m_triggers.at(static_cast<std::size_t>(nearestIndex));
-    if (trigger.type == AttackTriggerType::Lever)
+    if (trigger.type == AttackTriggerType::Lever ||
+        trigger.type == AttackTriggerType::LeverLift)
     {
         trigger.leverActive = !trigger.leverActive;
         trigger.stopSoundPlayed = false;
@@ -460,44 +480,82 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
         render.SetMeshMixEnabled(trigger.activeVisualMeshId, trigger.buttonActive);
     }
 
+    const float previousAngle = trigger.currentAngle;
+    const float previousLift = trigger.currentLift;
+
     float targetAngle = 0.0f;
-    if (trigger.type == AttackTriggerType::Lever)
+    if (trigger.type == AttackTriggerType::LeverLift)
     {
+        float targetLift = 0.0f;
         if (trigger.leverActive)
+        {
+            targetLift = trigger.liftHeight;
+        }
+        const float liftStep = kLiftSpeed * deltaSeconds;
+        if (trigger.currentLift < targetLift)
+        {
+            trigger.currentLift = (std::min)(trigger.currentLift + liftStep, targetLift);
+        }
+        else if (trigger.currentLift > targetLift)
+        {
+            trigger.currentLift = (std::max)(trigger.currentLift - liftStep, targetLift);
+        }
+    }
+    else
+    {
+        if (trigger.type == AttackTriggerType::Lever)
+        {
+            if (trigger.leverActive)
+            {
+                targetAngle = kTargetAngle;
+            }
+        }
+        else if (trigger.type == AttackTriggerType::Rope && trigger.ropeUsed)
         {
             targetAngle = kTargetAngle;
         }
-    }
-    else if (trigger.type == AttackTriggerType::Rope && trigger.ropeUsed)
-    {
-        targetAngle = kTargetAngle;
-    }
-    else if (trigger.type == AttackTriggerType::Button &&
-             trigger.hasTarget &&
-             trigger.buttonActive)
-    {
-        targetAngle = kTargetAngle;
+        else if (trigger.type == AttackTriggerType::Button &&
+                 trigger.hasTarget &&
+                 trigger.buttonActive)
+        {
+            targetAngle = kTargetAngle;
+        }
+
+        const float angleStep = kRotationSpeed * deltaSeconds;
+        if (trigger.currentAngle < targetAngle)
+        {
+            trigger.currentAngle = (std::min)(trigger.currentAngle + angleStep, targetAngle);
+        }
+        else if (trigger.currentAngle > targetAngle)
+        {
+            trigger.currentAngle = (std::max)(trigger.currentAngle - angleStep, targetAngle);
+        }
     }
 
-    const float previousAngle = trigger.currentAngle;
-    const float angleStep = kRotationSpeed * deltaSeconds;
-    if (trigger.currentAngle < targetAngle)
-    {
-        trigger.currentAngle = (std::min)(trigger.currentAngle + angleStep, targetAngle);
-    }
-    else if (trigger.currentAngle > targetAngle)
-    {
-        trigger.currentAngle = (std::max)(trigger.currentAngle - angleStep, targetAngle);
-    }
-
-    if (trigger.currentAngle != previousAngle && trigger.hasTarget)
+    const bool angleChanged = trigger.currentAngle != previousAngle;
+    const bool liftChanged = trigger.currentLift != previousLift;
+    if ((angleChanged || liftChanged) && trigger.hasTarget)
     {
         ApplyTargetTransform(render, trigger);
     }
 
+    bool atTarget = false;
+    if (trigger.type == AttackTriggerType::LeverLift)
+    {
+        float targetLift = 0.0f;
+        if (trigger.leverActive)
+        {
+            targetLift = trigger.liftHeight;
+        }
+        atTarget = (trigger.currentLift == targetLift);
+    }
+    else
+    {
+        atTarget = (trigger.currentAngle == targetAngle);
+    }
     if (trigger.hasTarget &&
-        trigger.currentAngle == targetAngle &&
-        previousAngle != trigger.currentAngle &&
+        atTarget &&
+        (angleChanged || liftChanged) &&
         !trigger.stopSoundPlayed)
     {
         PlayMovementStopSound();
@@ -508,10 +566,19 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
 void AttackTriggerManager::ApplyTargetTransform(NSRender::Render& render,
                                                 const Trigger& trigger)
 {
+    D3DXVECTOR3 position = trigger.targetPosition;
+    if (trigger.type == AttackTriggerType::LeverLift)
+    {
+        position.y += trigger.currentLift;
+    }
+
     D3DXVECTOR3 rotation = trigger.targetRotation;
-    rotation.x += trigger.targetAxis.x * trigger.currentAngle;
-    rotation.y += trigger.targetAxis.y * trigger.currentAngle;
-    rotation.z += trigger.targetAxis.z * trigger.currentAngle;
+    if (trigger.type != AttackTriggerType::LeverLift)
+    {
+        rotation.x += trigger.targetAxis.x * trigger.currentAngle;
+        rotation.y += trigger.targetAxis.y * trigger.currentAngle;
+        rotation.z += trigger.targetAxis.z * trigger.currentAngle;
+    }
 
     D3DXMATRIX scaleMatrix;
     D3DXMatrixScaling(&scaleMatrix,
@@ -525,9 +592,9 @@ void AttackTriggerManager::ApplyTargetTransform(NSRender::Render& render,
                                    rotation.z);
     D3DXMATRIX translationMatrix;
     D3DXMatrixTranslation(&translationMatrix,
-                          trigger.targetPosition.x,
-                          trigger.targetPosition.y,
-                          trigger.targetPosition.z);
+                          position.x,
+                          position.y,
+                          position.z);
     const D3DXMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
 
     if (!render.SetCsvMeshWorldMatrix(trigger.targetCsvId, worldMatrix))
@@ -536,11 +603,14 @@ void AttackTriggerManager::ApplyTargetTransform(NSRender::Render& render,
     }
 
     PhysicsLib::PhysicsLib::UpdateCsvTransform(trigger.targetCsvId,
-                                               trigger.targetPosition,
+                                               position,
                                                rotation,
                                                trigger.targetScale);
-    PhysicsLib::PhysicsLib::SetVelocity(trigger.targetPhysicsId,
-                                        D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    if (trigger.type != AttackTriggerType::LeverLift)
+    {
+        PhysicsLib::PhysicsLib::SetVelocity(trigger.targetPhysicsId,
+                                            D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    }
 }
 
 void AttackTriggerManager::AddButtonLocatorLight(NSRender::Render& render,
@@ -593,7 +663,9 @@ void AttackTriggerManager::DeactivateButtonLocatorLight(NSRender::Render& render
 
 void AttackTriggerManager::PlayMovementStartSound(const Trigger& trigger)
 {
-    if (trigger.type == AttackTriggerType::Lever || trigger.type == AttackTriggerType::Button)
+    if (trigger.type == AttackTriggerType::Lever ||
+        trigger.type == AttackTriggerType::LeverLift ||
+        trigger.type == AttackTriggerType::Button)
     {
         GameAudio::PlayLeverToggle();
     }
