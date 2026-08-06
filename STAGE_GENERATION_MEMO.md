@@ -599,6 +599,7 @@
   * 区画のX座標が中央（-15m〜+15m）に偏りすぎている。
     - 例: ワールド3のステージはX方向が-60m〜+60mの広さ。しかし区画のX座標が-15m〜+15mに集中し、-15m以下・+15m以上には区画がほとんど存在しない。
 * スタートからゴールまでの区画が一本道ではなく分岐があること。
+* スタートとゴールの周囲には最低でも3m x 3mの陸地があること
 
 ## 各ステージのテーマ
 
@@ -974,6 +975,24 @@ AddStage(L"3-5", 21, L"3-5 ひゅんひゅんワープめいろ", L"stage_3_5",
 
 * **PowerShellで`PATH`環境変数を削除してはいけない。**`$env:PATH`と`$env:Path`は同一の変数のため、削除するとpost-buildの`res`コピー（xcopy）が壊れる。
 * ビルド成功後、`RedFortress2\x64\Debug\res\`へ`res`がコピーされることを確認する。
+
+### 起動確認（ステージが実際に起動するかの確認）
+
+* Debug ビルド（`_DEBUG` 定義あり）はコマンドライン引数 `--stage <ステージID>` で、起動直後に指定ステージを直接ロードできる（`main.cpp` の `GetDebugStartupStageId()` → `GameApp::LoadStageForDebug()`）。ステージ ID は `1-1` などの形式。
+
+  ```
+  cd RedFortress2\x64\Debug
+  simple-directx9.exe --stage 1-1
+  ```
+
+  * 通常の Release ビルド（`REDFORTRESS_ENABLE_RPC` 未定義）ではこの引数は無効。Release で確認する場合はステージセレクトからの手動操作になる。
+
+* 起動確認の手順:
+  1. exe の配置ディレクトリ（`RedFortress2\x64\Debug` など）を作業ディレクトリにして起動する（`RenderSettings.csv` が相対パスで読まれるため）。
+  2. プロセスが生存し、メインウィンドウ（クラス名 `Window1`、タイトル「ホシガール」）が応答していることを確認する。`--stage` 指定でステージロードに失敗した場合は `abort()` するため、ウィンドウが表示されてフレームが回っていればロード成功とみなせる。
+  3. 画面の確認はスクリーンショットで行う。ゲームウィンドウがほかのウィンドウの背後にあっても、`PrintWindow(hwnd, hdc, PW_RENDERFULLCONTENT=2)` で直接キャプチャできる。
+
+* **起動確認が完了したら、必ずゲームを終了する。** 確認用に起動した `simple-directx9.exe` は放置せず閉じること（例: `taskkill /IM simple-directx9.exe /F`）。
 
 #### ギミック実装の参考ステージ
 
