@@ -800,15 +800,19 @@ bool Enemy::MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outHitNo
         return false;
     }
 
-    D3DXVECTOR3 resolvedPosition = m_position;
+    // 衝突判定を足部1点（Point）にする。円の中心ではなく足底（center - height/2）を判定位置にする。
+    D3DXVECTOR3 castPosition = m_position;
+    castPosition.y -= m_height * 0.5f;
+
+    D3DXVECTOR3 resolvedPosition = castPosition;
     D3DXVECTOR3 resolvedVelocity = velocity;
     D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
     const float radius = m_physicsRadius;
     const float height = m_height;
 
-    const bool collided = PhysicsLib::PhysicsLib::CheckCollide(m_position,
+    const bool collided = PhysicsLib::PhysicsLib::CheckCollide(castPosition,
                                                                velocity,
-                                                               PhysicsLib::PhysicsLib::ShapeType::Cylinder,
+                                                               PhysicsLib::PhysicsLib::ShapeType::Point,
                                                                &resolvedPosition,
                                                                &resolvedVelocity,
                                                                nullptr,
@@ -824,6 +828,7 @@ bool Enemy::MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outHitNo
                                                                nullptr,
                                                                nullptr);
 
+    resolvedPosition.y += m_height * 0.5f;
     m_position = resolvedPosition;
     if (outHitNormal != nullptr)
     {

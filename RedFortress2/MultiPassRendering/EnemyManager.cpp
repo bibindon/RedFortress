@@ -37,6 +37,11 @@ namespace
     const int kHpBarWidth = 96;
     const int kHpBarHeight = 3;
 
+    // プレイヤーよりこの水平距離（2乗）以上遠い生存敵は更新をスキップして静止させる軽量化。
+    // 20m = 400.0f。遠方でも死亡敵は死亡アニメと削除タイマーを進める必要があるため対象外。
+    const float kEnemySleepDistanceMeters = 20.0f;
+    const float kEnemySleepDistanceSq = kEnemySleepDistanceMeters * kEnemySleepDistanceMeters;
+
     std::wstring Trim(const std::wstring& str)
     {
         size_t start = 0;
@@ -151,6 +156,18 @@ void EnemyManager::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos
 {
     for (auto& enemy : m_enemies)
     {
+        // 生存敵がプレイヤーから kEnemySleepDistanceMeters 以上離れている間は更新をスキップして静止させる。
+        // 水平距離（XZ）で判定する。死亡敵は死亡アニメと削除タイマーを進める必要があるため常に更新する。
+        if (!enemy->IsDead())
+        {
+            const D3DXVECTOR3 diff = enemy->GetPosition() - playerPos;
+            const float distSqXZ = diff.x * diff.x + diff.z * diff.z;
+            if (distSqXZ > kEnemySleepDistanceSq)
+            {
+                continue;
+            }
+        }
+
         enemy->Update(render, playerPos, playerInvincible);
     }
 

@@ -1246,15 +1246,25 @@ bool EnemyBase::MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outH
         return false;
     }
 
-    D3DXVECTOR3 resolvedPosition = m_position;
+    // 衝突判定を足部1点（Point）にする。円柱の中心ではなく足底（center - height/2）を
+    // 判定位置にするため、接地時の重心高さ（center = ground + height/2）は従来と変わらない。
+    // 飛行敵は中心そのものを判定位置にする（接地しないため）。
+    D3DXVECTOR3 castPosition = m_position;
+    if (m_movementMode == MovementMode::Ground ||
+        m_movementMode == MovementMode::Frog)
+    {
+        castPosition.y -= m_height * 0.5f;
+    }
+
+    D3DXVECTOR3 resolvedPosition = castPosition;
     D3DXVECTOR3 resolvedVelocity = velocity;
     D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
     const float radius = m_physicsRadius;
     const float height = m_height;
 
-    const bool collided = PhysicsLib::PhysicsLib::CheckCollide(m_position,
+    const bool collided = PhysicsLib::PhysicsLib::CheckCollide(castPosition,
                                                                velocity,
-                                                               PhysicsLib::PhysicsLib::ShapeType::Cylinder,
+                                                               PhysicsLib::PhysicsLib::ShapeType::Point,
                                                                &resolvedPosition,
                                                                &resolvedVelocity,
                                                                nullptr,
@@ -1270,6 +1280,11 @@ bool EnemyBase::MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outH
                                                                nullptr,
                                                                nullptr);
 
+    if (m_movementMode == MovementMode::Ground ||
+        m_movementMode == MovementMode::Frog)
+    {
+        resolvedPosition.y += m_height * 0.5f;
+    }
     m_position = resolvedPosition;
     if (outHitNormal != nullptr)
     {

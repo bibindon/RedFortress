@@ -52,7 +52,7 @@ ASSET_CONFIGS = {
     },
     "ghost": {
         "armature": "CharacterArmature",
-        "texture_filename": "ghost_mist.png",
+        "texture_filename": "ghost_unified.png",
         "apply_object_scale": True,
         "armature_rotation_x_degrees": -90.0,
         "apply_mesh_world_transform": True,
