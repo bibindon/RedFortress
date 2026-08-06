@@ -179,7 +179,7 @@ STAGES = (
      "spiral_start_angle": -2.35619449, "spiral_turns": 2.25,
      "spiral_width": 5.5, "spiral_core_radius": 5.0,
      "spiral_samples": 260,
-     "static_platforms": ((-4.8, 9.5, 3.0),)},
+     "static_platforms": ((-4.8, 9.5, 3.2),)},
     {"display": "3-7", "folder": "stage_3_7", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-40.0, -30.0, -12.0, 12.0), (30.0, 40.0, -12.0, 12.0), (-18.0, -8.0, 48.0, 64.0), (8.0, 18.0, -64.0, -48.0))},
     {"display": "3-8", "folder": "stage_3_8", "size": (60.0, 120.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ()},
 
