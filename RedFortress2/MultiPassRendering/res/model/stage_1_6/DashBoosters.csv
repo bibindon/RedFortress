@@ -1,2 +1,4 @@
 ﻿DashBoosterID,PosX,PosY,PosZ,DirX,DirY,DirZ,Speed,Duration,Radius,Scale
-stage18-dashbooster-01,-11,0.5,2,0.351,0,0.936,16,1.1,1.1,0.6
+stage16-booster-01,4,0.5,-5,0.37,0.93,0,16,0.9,1.25,0.55
+stage16-booster-02,4,0.5,3,0.997,0.075,0,14,0.6,1.5,0.6
+stage16-booster-03,-10,0.5,7,0,0.93,0.37,16,0.9,1.25,0.55

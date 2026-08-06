@@ -1,1 +1,11 @@
-Type,PosX,PosY,PosZ,RotY
+﻿Type,PosX,PosY,PosZ,RotY
+wolf,-10,0.2,14,0
+wolf,10,0.2,14,0
+small_mushroom,-8,0.2,-8,0
+small_mushroom,8,0.2,-8,0
+crab,-4,0.2,18,0
+crab,4,0.2,18,0
+frog,-12,0.2,-16,0
+frog,12,0.2,-16,0
+wolf,0,0.2,10,0
+small_mushroom,0,0.2,-14,0
