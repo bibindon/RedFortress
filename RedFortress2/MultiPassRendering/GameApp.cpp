@@ -1980,6 +1980,8 @@ void GameApp::Run()
             UpdateBusters();
             m_skullManager.Update(
                 m_render,
+                m_playerMover.GetPosition(),
+                m_playerYaw,
                 m_enemyManager.GetEnemies(),
                 [this](EnemyBase& enemy, const D3DXVECTOR3& sourcePosition)
                 {
@@ -3213,9 +3215,7 @@ void GameApp::UpdatePlayerByInput()
     {
         skullActionTriggered = m_skullManager.HandleLeftClick(m_render,
                                                                m_playerMover.GetPosition(),
-                                                               m_playerYaw,
-                                                               m_playerMeshId,
-                                                               kPlayerRightWristBoneName);
+                                                               m_playerYaw);
         if (skullActionTriggered)
         {
             UpdateHeldWeaponVisibility();
@@ -8111,6 +8111,7 @@ void GameApp::BeginWarp(const D3DXVECTOR3& targetPosition, const float targetRot
     m_warpTargetPosition = targetPosition;
     m_warpTargetRotationY = targetRotationY;
     m_warpPhase = WarpPhase::FadeOut;
+    GameAudio::PlayWarp();
     m_warpFadeFrames = kWarpFadeOutFrames;
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;

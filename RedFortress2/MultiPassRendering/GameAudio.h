@@ -54,6 +54,7 @@ void PlayStomp();
 void PlayBuster();
 void PlayWeaponChange();
 void PlayArrow();
+void PlayWarp();
 void PlayStageClear();
 void PlayQteStart();
 void PlayQteStop();

@@ -53,14 +53,14 @@ public:
     void LoadForStage(NSRender::Render& render, const std::wstring& csvPath);
     void Clear(NSRender::Render& render);
     void Update(NSRender::Render& render,
+                const D3DXVECTOR3& playerPosition,
+                float playerYaw,
                 const std::vector<std::unique_ptr<EnemyBase>>& enemies,
                 const EnemyHitCallback& enemyHitCallback);
 
     bool HandleLeftClick(NSRender::Render& render,
                          const D3DXVECTOR3& playerPosition,
-                         float playerYaw,
-                         int playerMeshId,
-                         const char* handBoneName);
+                         float playerYaw);
     void ReleaseHeld(NSRender::Render& render, const D3DXVECTOR3& position);
     bool IsHolding() const;
     std::size_t GetSkullCount() const;

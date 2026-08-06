@@ -22,14 +22,11 @@ namespace
     const float kThrowUpSpeed = 3.5f;
     const float kThrowStartForwardOffset = 0.8f;
     const float kThrowStartHeight = 1.15f;
-    const float kBounceRestitution = 0.25f;
-    const float kBounceDamping = 0.75f;
-    const float kRestSpeed = 2.5f;
+    const float kHeldForwardOffset = 0.65f;
+    const float kHeldHeightOffset = 1.0f;
     const float kFallRemovalY = -50.0f;
     const int kRespawnFrames = 600;
     const std::size_t kMaximumSkullCount = 10;
-    const D3DXVECTOR3 kHeldLocalRotation(0.0f, D3DX_PI, 0.0f);
-    const D3DXVECTOR3 kHeldLocalOffset(0.0f, 0.0f, 0.0f);
 
     std::wstring Trim(const std::wstring& value)
     {
@@ -138,15 +135,6 @@ void SkullManager::LoadForStage(NSRender::Render& render, const std::wstring& cs
 
 void SkullManager::Clear(NSRender::Render& render)
 {
-    if (m_heldSkullSerial != 0)
-    {
-        SkullObject* heldSkull = FindHeldSkull();
-        if (heldSkull != nullptr && heldSkull->meshId >= 0)
-        {
-            render.DetachMeshFromBone(heldSkull->meshId);
-        }
-    }
-
     for (SkullObject& skull : m_skulls)
     {
         if (skull.meshId >= 0)
@@ -161,6 +149,8 @@ void SkullManager::Clear(NSRender::Render& render)
 }
 
 void SkullManager::Update(NSRender::Render& render,
+                          const D3DXVECTOR3& playerPosition,
+                          const float playerYaw,
                           const std::vector<std::unique_ptr<EnemyBase>>& enemies,
                           const EnemyHitCallback& enemyHitCallback)
 {
@@ -196,35 +186,34 @@ void SkullManager::Update(NSRender::Render& render,
         }
         ++index;
     }
+
+    SkullObject* heldSkull = FindHeldSkull();
+    if (heldSkull != nullptr)
+    {
+        const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
+        heldSkull->position = playerPosition + forward * kHeldForwardOffset;
+        heldSkull->position.y += kHeldHeightOffset;
+        UpdateWorldMatrix(render, *heldSkull);
+    }
 }
 
 bool SkullManager::HandleLeftClick(NSRender::Render& render,
                                    const D3DXVECTOR3& playerPosition,
-                                   const float playerYaw,
-                                   const int playerMeshId,
-                                   const char* handBoneName)
+                                   const float playerYaw)
 {
     SkullObject* heldSkull = FindHeldSkull();
     if (heldSkull != nullptr)
     {
-        render.DetachMeshFromBone(heldSkull->meshId);
-
         const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
         heldSkull->position = playerPosition + forward * kThrowStartForwardOffset;
         heldSkull->position.y += kThrowStartHeight;
         heldSkull->velocity = forward * kThrowForwardSpeed;
         heldSkull->velocity.y = kThrowUpSpeed;
-        heldSkull->angularVelocity = D3DXVECTOR3(5.0f, 7.0f, 4.0f);
         heldSkull->state = SkullState::Flying;
         heldSkull->hitEnemyDuringFlight = false;
         m_heldSkullSerial = 0;
         UpdateWorldMatrix(render, *heldSkull);
         return true;
-    }
-
-    if (playerMeshId < 0 || handBoneName == nullptr)
-    {
-        return false;
     }
 
     SkullObject* nearestSkull = nullptr;
@@ -255,11 +244,11 @@ bool SkullManager::HandleLeftClick(NSRender::Render& render,
     nearestSkull->angularVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     nearestSkull->state = SkullState::Held;
     m_heldSkullSerial = nearestSkull->serial;
-    render.AttachMeshToBone(nearestSkull->meshId,
-                            playerMeshId,
-                            handBoneName,
-                            kHeldLocalRotation,
-                            kHeldLocalOffset);
+
+    const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
+    nearestSkull->position = playerPosition + forward * kHeldForwardOffset;
+    nearestSkull->position.y += kHeldHeightOffset;
+    UpdateWorldMatrix(render, *nearestSkull);
     return true;
 }
 
@@ -271,7 +260,6 @@ void SkullManager::ReleaseHeld(NSRender::Render& render, const D3DXVECTOR3& posi
         return;
     }
 
-    render.DetachMeshFromBone(heldSkull->meshId);
     heldSkull->position = position;
     heldSkull->velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     heldSkull->rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -442,18 +430,22 @@ void SkullManager::UpdateFlyingSkull(
     if (collided)
     {
         const float velocityIntoSurface = D3DXVec3Dot(&skull.velocity, &hitNormal);
-        if (velocityIntoSurface < 0.0f)
+        if (hitNormal.y > 0.5f)
         {
-            skull.velocity -= hitNormal * ((1.0f + kBounceRestitution) * velocityIntoSurface);
-        }
-        skull.velocity *= kBounceDamping;
-
-        const float speed = D3DXVec3Length(&skull.velocity);
-        if (hitNormal.y > 0.5f && speed <= kRestSpeed)
-        {
+            // 地面・オブジェクトの上面に着地したら即停止
             skull.state = SkullState::Resting;
             skull.velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
             skull.angularVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        }
+        else
+        {
+            // 壁などの側面: めり込み方向の速度だけ打ち消して落ちる
+            if (velocityIntoSurface < 0.0f)
+            {
+                skull.velocity -= hitNormal * velocityIntoSurface;
+            }
+            skull.velocity.x *= 0.25f;
+            skull.velocity.z *= 0.25f;
         }
     }
 
@@ -480,7 +472,6 @@ void SkullManager::UpdateFlyingSkull(
         }
     }
 
-    skull.rotation += skull.angularVelocity * kTargetFrameSeconds;
     UpdateWorldMatrix(render, skull);
 }
 
