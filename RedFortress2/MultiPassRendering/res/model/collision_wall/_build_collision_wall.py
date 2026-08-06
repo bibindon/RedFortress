@@ -148,9 +148,6 @@ def add_camera_and_lights():
 
 def build_wall():
     wood = make_material("Aged_Walnut_Planks", (0.56, 0.31, 0.18), 0.42, 0.0, TEXTURE_PATH)
-    dark_wood = make_material("Dark_Oak_Bracing", (0.24, 0.095, 0.045), 0.34, 0.0, TEXTURE_PATH)
-    iron = make_material("Forged_Iron", (0.12, 0.14, 0.15), 0.14, 0.90)
-    brass = make_material("Brass_Rivets", (0.58, 0.28, 0.055), 0.10, 0.90)
 
     plank_offsets = (-0.025, 0.018, -0.010, 0.030, -0.018, 0.012, -0.030, 0.022, -0.008)
     plank_depths = (0.69, 0.72, 0.70, 0.73, 0.71, 0.69, 0.72, 0.70, 0.71)
@@ -172,7 +169,7 @@ def build_wall():
             f"Massive_Oak_Post_{index + 1:02d}",
             (0.0, y, 0.0),
             (0.89, width, 2.86),
-            dark_wood,
+            wood,
         )
 
     brace_angle = math.radians(36.0)
@@ -188,7 +185,7 @@ def build_wall():
                 f"Diagonal_Brace_{face_index + 1}_{brace_index + 1}",
                 (x, y, 0.0),
                 (0.135, 4.05, 0.205),
-                dark_wood,
+                wood,
                 rotation=(angle, 0.0, 0.0),
             )
 
@@ -198,7 +195,7 @@ def build_wall():
                 f"Iron_Band_{z_index + 1}_{face_index + 1}",
                 (x, 0.0, z),
                 (0.065, 7.48, 0.125),
-                iron,
+                wood,
             )
 
     for z, label in ((1.425, "Top"), (-1.425, "Bottom")):
@@ -206,7 +203,7 @@ def build_wall():
             f"{label}_Forged_Cap",
             (0.0, 0.0, z),
             (0.97, 7.90, 0.105),
-            iron,
+            wood,
         )
 
     rivet_y_positions = (-2.80, 0.0, 2.80)
@@ -216,7 +213,7 @@ def build_wall():
                 add_rivet(
                     f"Band_Rivet_{face_index + 1}_{band_index + 1}_{rivet_index + 1:02d}",
                     (x, y, z),
-                    brass,
+                    wood,
                 )
 
 def configure_scene():

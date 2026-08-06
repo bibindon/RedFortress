@@ -1,0 +1,3 @@
+﻿ID,Type,TriggerX,TriggerY,TriggerZ,TargetID,Axis,BaseRotX,BaseRotY,BaseRotZ,Scale,LightBrightness,LightRange,LightR,LightG,LightB
+stage42-lever-01,Lever,3.0,0.6,-34.0,11001,Y,0,0,0,1,2.0,8,0.9,0.7,0.3
+stage42-btn-01,Button,-27.0,0.4,-53.0,-1,Y,0,0,0,1,2.4,10,0.4,0.9,1.0

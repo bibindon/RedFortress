@@ -65,7 +65,7 @@ void StageManager::Initialize()
     AddStage(L"4-1", 25, L"4-1 押して運んで箱だらけ", L"stage_4_1", D3DXVECTOR3(0.0f, 0.2f, -80.0f), D3DXVECTOR3(0.0f, 1.0f, 80.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"4-2", 26, L"4-2 マグマの海をわたるデッキ", L"stage_4_2", D3DXVECTOR3(0.0f, 0.2f, -108.0f), D3DXVECTOR3(0.0f, 1.0f, 108.0f),
+    AddStage(L"4-2", 26, L"4-2 マグマの海をわたるデッキ", L"stage_4_2", D3DXVECTOR3(-40.0f, 0.4f, -114.0f), D3DXVECTOR3(16.0f, 1.0f, 110.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
     AddStage(L"4-3", 27, L"4-3 くずれた左右の谷", L"stage_4_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
