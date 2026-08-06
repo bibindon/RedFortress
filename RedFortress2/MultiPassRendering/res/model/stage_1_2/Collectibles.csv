@@ -1,7 +1,7 @@
 ﻿CollectibleID,Type,DataID,PosX,PosY,PosZ,Scale
-stage12-I01,Item,1,-9,0.45,-8,1
-stage12-I02,Item,2,-7,1.45,-13,1
-stage12-I03,Item,3,14,0.45,14,1
-stage12-I04,Item,5,10,3.85,-4,1
-stage12-I05,Item,6,0,1.45,22,1
-stage12-I06,Item,9,11,0.45,16,1
+stage12-I01,Item,001,-9,0.45,-8,1
+stage12-I02,Item,002,-7,1.45,-13,1
+stage12-I03,Item,003,14,0.45,14,1
+stage12-I04,Item,005,10,3.85,-4,1
+stage12-I05,Item,006,0,1.45,22,1
+stage12-I06,Item,009,11,0.45,16,1
