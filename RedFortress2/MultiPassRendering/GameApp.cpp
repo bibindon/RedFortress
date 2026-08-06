@@ -3187,12 +3187,29 @@ void GameApp::UpdatePlayerByInput()
                 GameAudio::PlayWeaponChange();
             }
         }
+        else if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_L2))
+        {
+            // ゲームパッド: L2 で前の攻撃カテゴリへ
+            if (CycleOwnedAttackCategory(-1))
+            {
+                GameAudio::PlayWeaponChange();
+            }
+        }
+        else if (InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_R2))
+        {
+            // ゲームパッド: R2 で次の攻撃カテゴリへ
+            if (CycleOwnedAttackCategory(1))
+            {
+                GameAudio::PlayWeaponChange();
+            }
+        }
         UpdateHeldWeaponVisibility();
     }
 
     bool skullActionTriggered = false;
+    const bool padXTriggered = InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_X);
     if (!IsCurrentStageSelect() &&
-        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+        (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) || padXTriggered))
     {
         skullActionTriggered = m_skullManager.HandleLeftClick(m_render,
                                                                m_playerMover.GetPosition(),
@@ -3213,7 +3230,7 @@ void GameApp::UpdatePlayerByInput()
 
     if (!IsCurrentStageSelect() &&
         !skullActionTriggered &&
-        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) &&
+        (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) || padXTriggered) &&
         IsAttackCategoryOwned(requestedAttackType))
     {
         const bool isBombCategory = (m_playerAttackController.GetCurrentCategoryName() == std::wstring(L"海賊爆弾"));
@@ -3279,16 +3296,41 @@ void GameApp::UpdatePlayerByInput()
     const D3DXVECTOR3 cameraRight   = GetCameraPlanarRight(cameraForward);
 
     D3DXVECTOR3 localMove(0.0f, 0.0f, 0.0f);
+    const InputDevice::GamePadStick padMoveStick = InputDevice::GamePad::GetStickL();
+    const float kPadMoveStickThreshold = 0.35f;
     if (m_playerKnockbackFrames <= 0)
     {
         if (InputDevice::SKeyBoard::IsDown(DIK_W)) localMove.z += 1.0f;
         if (InputDevice::SKeyBoard::IsDown(DIK_S)) localMove.z -= 1.0f;
         if (InputDevice::SKeyBoard::IsDown(DIK_D)) localMove.x += 1.0f;
         if (InputDevice::SKeyBoard::IsDown(DIK_A)) localMove.x -= 1.0f;
+
+        // ゲームパッド: 左スティックの倒れ方向で移動
+        if (padMoveStick.power >= kPadMoveStickThreshold)
+        {
+            if (fabsf(padMoveStick.x) >= fabsf(padMoveStick.y))
+            {
+                if (padMoveStick.x >= 0.0f) localMove.x += 1.0f;
+                else localMove.x -= 1.0f;
+            }
+            else
+            {
+                if (padMoveStick.y >= 0.0f) localMove.z += 1.0f;
+                else localMove.z -= 1.0f;
+            }
+        }
+
+        // ゲームパッド: POV 十字キーでも移動可能
+        if (InputDevice::GamePad::IsDown(InputDevice::GAMEPAD_POV_UP)) localMove.z += 1.0f;
+        if (InputDevice::GamePad::IsDown(InputDevice::GAMEPAD_POV_DOWN)) localMove.z -= 1.0f;
+        if (InputDevice::GamePad::IsDown(InputDevice::GAMEPAD_POV_LEFT)) localMove.x -= 1.0f;
+        if (InputDevice::GamePad::IsDown(InputDevice::GAMEPAD_POV_RIGHT)) localMove.x += 1.0f;
     }
 
     const bool isMoving  = (localMove.x != 0.0f || localMove.z != 0.0f);
-    const bool isWalking = isMoving && InputDevice::SKeyBoard::IsDown(DIK_LCONTROL);
+    const bool isWalking = isMoving &&
+        (InputDevice::SKeyBoard::IsDown(DIK_LCONTROL) ||
+         (padMoveStick.power > 0.05f && padMoveStick.power < 0.5f));
 
     PhysicsLib::CharacterMover::Settings settings = m_playerMover.GetSettings();
     const float walkSpeed = 1.125f;
@@ -3424,8 +3466,10 @@ void GameApp::UpdatePlayerByInput()
     m_pendingMove = move;
 
     const bool dashModifierPressed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT)
-        || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT);
-    const bool jumpPressed = InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE);
+        || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT)
+        || InputDevice::GamePad::IsDown(InputDevice::GAMEPAD_L1);
+    const bool jumpPressed = InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE)
+        || InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A);
     if (jumpPressed && dashModifierPressed)
     {
         const D3DXVECTOR3 dashForward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
