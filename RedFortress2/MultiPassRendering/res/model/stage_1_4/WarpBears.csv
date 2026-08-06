@@ -1,0 +1,3 @@
+﻿WarpID,PairID,PosX,PosY,PosZ,RotY
+warp_a,pair01,7.0,0.2,22.0,0
+warp_b,pair01,-5.0,12.0,-2.0,180

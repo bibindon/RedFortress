@@ -1,5 +1,11 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-wolf,-5,0.2,-10,0
-small_mushroom,5,0.2,0,180
-wolf,-5,0.2,11,0
-crab,5,0.2,20,180
+wolf,-6,0.2,14,180
+small_mushroom,6,0.2,15,0
+wolf,3,0.2,18,180
+crab,-4,0.2,20,0
+small_mushroom,7,0.2,22,180
+frog,-7,0.2,23,0
+wolf,2,0.2,24,180
+crab,5,0.2,26,0
+small_mushroom,-3,0.2,26,180
+frog,9,0.2,24,0

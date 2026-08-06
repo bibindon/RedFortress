@@ -1,0 +1,2 @@
+﻿ID,Type,TriggerX,TriggerY,TriggerZ,TargetID,Axis,BaseRotX,BaseRotY,BaseRotZ,Scale
+1,Lever,12.0,0,16.0,90,Y,0,0,0,1
