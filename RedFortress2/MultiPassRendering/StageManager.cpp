@@ -15,7 +15,7 @@ void StageManager::Initialize()
     AddStage(L"1-4", 4, L"1-4 風の中の登りタワー", L"stage_1_4", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 14.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
-    AddStage(L"1-5", 5, L"1-5 ドカンと大砲通路", L"stage_1_5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"1-5", 5, L"1-5 ドカンと大砲通路", L"stage_1_5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 20.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.rain.csv", StageWeather::Rain);
     AddStage(L"1-6", 6, L"1-6 しずむとりでの大砲わたり", L"stage_1_6", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
