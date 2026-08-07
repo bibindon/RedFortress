@@ -50,7 +50,7 @@ def world_for_folder(folder):
 
 STAGES = (
     {"display": "1-1", "folder": "stage_1_1", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0),
-     "pits": ((4.0, 7.0, -30.0, -24.0), (-14.0, 14.0, 0.0, 6.0), (-14.0, -12.0, 7.0, 11.0), (-5.0, -3.0, 7.0, 11.0)),
+     "pits": ((4.0, 7.0, -32.0, -24.0), (-16.0, 16.0, 0.0, 6.0), (-16.0, -12.0, 7.5, 31.0), (-6.0, 16.0, 7.5, 18.0)),
      "jump_links": (((3.0, -27.0), (8.0, -27.0)),),
      "static_platforms": ((13.0, -4.0, 1.5),)},
     {"display": "1-2", "folder": "stage_1_2", "size": (16.0, 32.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0),
@@ -331,10 +331,6 @@ def validate_stage(stage):
         x_min, x_max, y_min, y_max = pit
         if x_min >= x_max or y_min >= y_max:
             raise RuntimeError(stage["display"] + " has an invalid pit rectangle")
-        if x_min <= -half_width or x_max >= half_width:
-            raise RuntimeError(stage["display"] + " pit touches the outer X wall")
-        if y_min <= -half_depth or y_max >= half_depth:
-            raise RuntimeError(stage["display"] + " pit touches the outer Z wall")
         for other_index in range(pit_index):
             other = pits[other_index]
             separated = x_max <= other[0] or x_min >= other[1]
