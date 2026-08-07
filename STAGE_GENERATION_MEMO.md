@@ -222,6 +222,7 @@
     * セットの箱モデル : `res/model/attack_trigger/lever_box.x`（外寸6x6x6m・壁厚0.5m・底面中心原点・-Z側が開口部）
     * 扉モデル : `res/model/attack_trigger/lever_box_door.x`（6x6x0.5m・下端原点・厚さ0.5m）
     * 床モデル : `res/model/attack_trigger/lever_box_floor.x`（10x10x0.1m・原点=下面中心）。箱の下に敷き、**箱・扉・レバーは床の上（PosY=0.1）に配置**する。レバーは床の範囲内に置く。
+    * 扉は**箱の開口部側（-Z側）**に配置する（箱のPosZ - 3の位置）。壁側（+Z側）に置かないこと。
     * 扉と箱のポリゴンが重なって点滅しないよう、扉の`Scale`は**0.98（2%縮小）**で登録する。`XFileList_simple.csv`・`XFileListPhysics.csv`・`AttackTriggers.csv`の3ファイルすべて同じ値にする（LeverLiftが`AttackTriggers.csv`のScaleで上書きするため）。
     * 箱の内側にアイテムを置く場合は箱の中央付近に置く。壁の外からアイテム取得距離（0.55m）に入らないため、レバーで扉を開けるまで取得できない。
     * 扉を箱の開口部（箱の-Z側）に合わせる場合、扉のCSV座標は箱の座標-Zに-3した位置にする（例: 箱がz=10なら扉はz=7）。
@@ -236,6 +237,7 @@
     * いずれも「6x6x6mの箱＋上下する壁（扉）」のセット。箱でアイテムを囲み、操作しないと取得できない（感圧板3/レバー3は「門」として通路を塞ぐ）。
     * 共通ルール
       * 箱・扉・操作装置（レバー/感圧板）は**床の上に配置**する。箱・扉は`PosY=0.1`、感圧板は`PlatePosY=0.11`、床は`PosY=0`。
+      * レバーの`TriggerY`は**箱のPosY + 0.6**（例: 箱0.7→TriggerY=1.3、箱0.1→TriggerY=0.7）。
       * 扉の`Scale`は**0.98（2%縮小）**。`XFileList_simple.csv`・`XFileListPhysics.csv`・`AttackTriggers.csv`（または`PressurePlates.csv`）のすべてで同じ値にする。
       * 扉は`XFileListPhysics.csv`で`Move=y`にする。
       * アイテムは箱の中央（`PosY=0.55`）に置く。
@@ -950,6 +952,8 @@
 | ボタン | ❌（自動生成） | ❌ | AttackTriggers.csv | 同上。ライト専用の場合は`TargetID=-1`を指定できる |
 | レバー・ロープの連動対象 | ⚠️必要 | ⚠️必要(Move=y) | AttackTriggers.csvのTargetIDで指定 | 連動対象に`attack_wall.x`や`attack_floor.x`を使う。物理側は`Move=y`にする |
 | 感圧板の連動扉 | ⚠️必要 | ⚠️必要 | PressurePlates.csvのWallIDで指定 | 扉を両CSVへ登録し、`WallID`で紐付ける |
+| レバー2/3・感圧板2/3の箱・床 | ⚠️必要 | ⚠️必要(Collision,n) | — | `lever_box.x`/`lever_box3.x`/`lever_box_floor.x`等を両CSVへ登録する |
+| レバー2/3・感圧板2/3の扉 | ⚠️必要 | ⚠️必要(Collision,**y**) | AttackTriggers.csv/PressurePlates.csv | 扉は物理CSVで`Move=y`。`Scale=0.98`を3ファイル（simple/physics/AttackTriggersまたはPressurePlates）で一致させる |
 | 押せる箱 | ❌ | ❌ | PushableBoxes.csv | 専用CSVのみに記述する |
 | 頭蓋骨 | ❌ | ❌ | Skulls.csv | 専用CSVのみに記述する |
 | ダッシュブースター | ❌ | ❌ | DashBoosters.csv | 専用CSVのみに記述する |
