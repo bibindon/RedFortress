@@ -1,5 +1,2 @@
 ﻿ID,Type,TriggerX,TriggerY,TriggerZ,TargetID,Axis,BaseRotX,BaseRotY,BaseRotZ,Scale,LightBrightness,LightRange,LightR,LightG,LightB
-1,Lever,4,0.6,-8,11001,Y,0,0,0,1,2.0,8,0.8,0.7,0.3
-2,LeverLift,4,0.7,10,9002,Y,0,0,0,0.98,6
-3,LeverLift,0,0.7,-0.5,9004,Y,0,0,0,0.98,6
-4,LeverLift,0,0.7,-9.5,9004,Y,0,0,0,0.98,6
+1,Lever,-9,0.6,8,11001,Y,0,0,0,1.5,2.0,8,0.8,0.7,0.3
