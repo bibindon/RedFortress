@@ -9,7 +9,7 @@ void StageManager::Initialize()
     AddStage(L"1-2", 2, L"1-2 木箱ごろごろとうげ", L"stage_1_2", D3DXVECTOR3(-14.0f, 0.2f, 0.0f), D3DXVECTOR3(14.0f, 1.0f, 0.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv");
-    AddStage(L"1-3", 3, L"1-3 ガレキでふさがれた道", L"stage_1_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"1-3", 3, L"1-3 ガレキでふさがれた道", L"stage_1_3", D3DXVECTOR3(0.0f, 0.5f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv");
     AddStage(L"1-4", 4, L"1-4 風の中の登りタワー", L"stage_1_4", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-10.0f, 14.0f, -24.0f),

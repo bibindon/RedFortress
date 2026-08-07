@@ -23,7 +23,7 @@ namespace
     const float kPlateHalfDepth = 1.0f;
     const float kPlayerRadius = 0.3f;
     const float kSkullRadius = 0.38f;
-    const float kMinimumContactY = -0.2f;
+    const float kMinimumContactY = -1.0f;
     const float kMaximumContactY = 0.6f;
     const float kWallTravelDistance = 3.0f;
     const float kWallMoveSpeed = 2.0f;
