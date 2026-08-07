@@ -392,6 +392,22 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
     {
         trigger.leverActive = !trigger.leverActive;
         trigger.stopSoundPlayed = false;
+        // 同じ TargetID を共有する LeverLift (複数レバーで同じ扉を操作) に状態を同期する。
+        // どちらのレバーを操作しても両方の扉が同じように開閉する。
+        if (trigger.type == AttackTriggerType::LeverLift && trigger.hasTarget)
+        {
+            for (Trigger& other : m_triggers)
+            {
+                if (&other != &trigger &&
+                    other.type == AttackTriggerType::LeverLift &&
+                    other.hasTarget &&
+                    other.targetCsvId == trigger.targetCsvId)
+                {
+                    other.leverActive = trigger.leverActive;
+                    other.stopSoundPlayed = false;
+                }
+            }
+        }
         PlayMovementStartSound(trigger);
         return AttackTriggerActivation::Lever;
     }
