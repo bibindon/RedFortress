@@ -1,2 +1,2 @@
-﻿InteractionID,Type,PosX,PosY,PosZ,PromptDistance
-stage15-tree-01,Tree,10,0,-6,2.5
+﻿InteractableID,Type,PosX,PosY,PosZ,PromptDistance
+stage15-tree-01,Tree,-13,0,-26.5,2.5
