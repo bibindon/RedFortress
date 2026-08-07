@@ -197,11 +197,41 @@ void PressurePlateManager::Update(NSRender::Render& render,
 
     for (PressurePlatePair& pair : m_pairs)
     {
-        const bool active =
+        const bool selfActive =
             IsPlayerOnPlate(pair, playerPosition) ||
             IsSkullOnPlate(pair, skullManager) ||
             IsBoxOnPlate(pair, pushableBoxManager);
-        SetPlateActive(render, pair, active);
+        SetPlateActive(render, pair, selfActive);
+
+        // 同じ WallID を共有する他の感圧板もアクティブなら、連動壁は開いたままにする。
+        // (複数の感圧板で1つの連動壁を共有する「門」ギミック用)
+        bool active = selfActive;
+        for (const PressurePlatePair& other : m_pairs)
+        {
+            if (&other != &pair && other.wallCsvId == pair.wallCsvId)
+            {
+                active = active ||
+                         IsPlayerOnPlate(other, playerPosition) ||
+                         IsSkullOnPlate(other, skullManager) ||
+                         IsBoxOnPlate(other, pushableBoxManager);
+            }
+        }
+
+        // 壁の位置更新は、同じ WallID の感圧板のうち最初のものだけが行う
+        // (複数の感圧板が同じ壁を更新すると位置が競合するため)。
+        bool controlsWall = true;
+        for (const PressurePlatePair& other : m_pairs)
+        {
+            if (&other != &pair && other.wallCsvId == pair.wallCsvId)
+            {
+                controlsWall = false;
+                break;
+            }
+        }
+        if (!controlsWall)
+        {
+            continue;
+        }
 
         float targetY = pair.wallClosedPosition.y;
         if (active)

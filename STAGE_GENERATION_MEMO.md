@@ -392,8 +392,8 @@
   * 感圧板2・感圧板3（箱と上昇扉のセット）
     * レバー2・レバー3と同じ箱ギミックを感圧板で起動するもの。`TravelDistance=6`を指定する（扉6mを開ける）。
     * 感圧板2 : 箱`res/model/attack_trigger/lever_box.x`＋扉1枚`lever_box_door.x`。**扉は感圧板の目の前の面に配置する**（感圧板と反対側に置かない）。箱は開口部が感圧板側を向くよう`RotY=180`等で回転させる（例: 感圧板が+Z側なら箱をRotY=180にして扉は箱の+Z側に+3した位置）。
-    * 感圧板3 : 箱`res/model/attack_trigger/lever_box3.x`＋扉2枚`lever_box3_door.x`（両開き）。扉は箱と同じ座標。
-    * 床モデル : `res/model/attack_trigger/lever_box_floor.x`（10x10x0.1m・原点=下面中心）。箱の下に敷き、**箱・扉・感圧板は床の上（PosY=0.1、感圧板はPlatePosY=0.11）に配置**する。感圧板は床の範囲内に置く。
+    * 感圧板3 : 箱`res/model/attack_trigger/lever_box3.x`＋扉2枚`lever_box3_door.x`（両開き）。扉は箱と同じ座標。**感圧板は2つ配置し、各連動壁の前に1つずつ置く**（同じ`WallID`を共有）。どちらの感圧板に乗っても**両方の扉が同時に開く**（どちらか一方がアクティブな間は開いたまま）。レバー3と同じ**「門」**になる。
+    * 床モデル : 感圧板2は`res/model/attack_trigger/lever_box_floor.x`（10x10x0.1m）、感圧板3は`res/model/attack_trigger/lever_box3_floor14.x`（5x14x0.1m・X=5m/Z=14m）。いずれも原点=下面中心。箱の下に敷き、**箱・扉・感圧板は床の上（PosY=0.1、感圧板はPlatePosY=0.11）に配置**する。感圧板は床の範囲内に置く。
     * 扉は`XFileListPhysics.csv`で`Move=y`にする。扉の`Scale`は0.98（2%縮小）で、`XFileList_simple.csv`・`XFileListPhysics.csv`・`PressurePlates.csv`の3ファイルすべて同じ値にする。
 * 押せる箱
   * 押して移動する。
