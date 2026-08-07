@@ -123,7 +123,6 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
     }
 
     std::unordered_set<int> loadedTriggerIds;
-    std::unordered_set<int> loadedTargetIds;
     std::wstring line;
     bool isFirstLine = true;
     while (std::getline(file, line))
@@ -199,10 +198,7 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
 
         if (trigger.targetCsvId >= 0)
         {
-            if (!loadedTargetIds.insert(trigger.targetCsvId).second)
-            {
-                std::abort();
-            }
+            // 同じ TargetID を複数のトリガーで共有できる（レバー3: どちらのレバーでも扉が開く）。
             if (!render.TryGetCsvMeshPosition(trigger.targetCsvId, &trigger.targetPosition))
             {
                 std::abort();

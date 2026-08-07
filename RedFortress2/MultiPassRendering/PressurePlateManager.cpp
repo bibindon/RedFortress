@@ -81,7 +81,6 @@ void PressurePlateManager::LoadForStage(NSRender::Render& render, const std::wst
     }
 
     std::unordered_set<int> loadedPairIds;
-    std::unordered_set<int> loadedWallIds;
     std::wstring line;
     bool isFirstLine = true;
     while (std::getline(file, line))
@@ -124,8 +123,8 @@ void PressurePlateManager::LoadForStage(NSRender::Render& render, const std::wst
             }
         }
 
-        if (!loadedPairIds.insert(pair.id).second ||
-            !loadedWallIds.insert(pair.wallCsvId).second)
+        // 同じ WallID を複数の感圧板で共有できる（門ギミック: どちらの感圧板に乗っても壁が開く）。
+        if (!loadedPairIds.insert(pair.id).second)
         {
             std::abort();
         }

@@ -57,8 +57,14 @@ STAGES = (
      "jump_links": (((-7.0, -19.0), (-7.0, -15.0)),),
      "static_platforms": ((10.0, -4.0, 3.0),)},
     {"display": "1-3", "folder": "stage_1_3", "size": (16.0, 32.0), "start": (0.0, 28.0), "goal": (0.0, -28.0),
-     "pits": ((-11.0, 11.0, -13.0, -7.0),),
-     "static_platforms": ((10.0, -10.0, 3.0),)},
+     "pits": ((-14.5, 14.5, -30.5, 30.5),),
+     "elevated_route": True,
+     "jump_links": (((0.0, 24.0), (0.0, 22.0)), ((0.0, 20.0), (0.0, 17.0)), ((0.0, 15.0), (0.0, 12.0)),
+                    ((0.0, 2.0), (0.0, 0.0)), ((0.0, -22.0), (0.0, -24.0))),
+     "static_platforms": ((0.0, 26.0, 3.0), (0.0, 21.0, 1.5), (0.0, 16.0, 1.5), (0.0, 11.0, 1.5),
+                          (0.0, 6.0, 5.0), (0.0, -1.0, 1.5), (0.0, -5.0, 1.5),
+                          (0.0, -14.0, 7.0), (0.0, -21.0, 1.5), (0.0, -26.0, 3.0),
+                          (-6.0, 24.0, 1.5), (6.0, 11.0, 1.5), (8.0, -10.0, 1.5), (8.0, -14.0, 1.5))},
     {"display": "1-4", "folder": "stage_1_4", "size": (16.0, 32.0), "start": (14.0, 28.0), "goal": (-10.0, -24.0), "pits": (),
      "static_platforms": ((13.0, 25.0, 2.25), (10.0, 23.0, 2.25), (7.0, 21.0, 2.25), (4.0, 19.0, 2.25),
                           (2.0, 17.0, 2.25), (1.0, 14.0, 2.25), (0.0, 12.5, 2.25), (0.0, 3.0, 2.25),
@@ -326,7 +332,11 @@ def validate_stage(stage):
 
     for label in ("start", "goal"):
         point = stage[label]
-        if not point_on_stage_ground(point[0], point[1], stage, margin=1.0):
+        # 地面なしステージ（全面ピット）では start/goal が静的プラットフォームの上に来るため、
+        # 「ピット外の地面」または「静的プラットフォームの上」のどちらかで許容する。
+        on_ground = point_on_stage_ground(point[0], point[1], stage, margin=1.0)
+        on_platform = point_on_static_platform(point[0], point[1], stage, margin=1.0)
+        if not on_ground and not on_platform:
             raise RuntimeError(stage["display"] + " " + label + " is outside the playable ground")
 
     stage_dir = MODEL_DIR / stage["folder"]
@@ -346,7 +356,9 @@ def validate_stage(stage):
                 x = float(row["PosX"])
                 y = float(row["PosZ"])
                 position_y = float(row.get("PosY", "0"))
-                elevated_and_supported = position_y > 0.5 and point_on_static_platform(x, y, stage, margin=0.8)
+                # 地面なしステージ（全面ピット）ではオブジェクトが静的プラットフォームの上に置かれるため、
+                # 「ピット外の地面」または「静的プラットフォームの上」のどちらかで許容する（PosY不問）。
+                elevated_and_supported = point_on_static_platform(x, y, stage, margin=0.8)
                 if not point_on_stage_ground(x, y, stage, margin=0.8) and not elevated_and_supported:
                     conflicts.append(csv_name + ":" + str(row_index))
 
@@ -357,6 +369,8 @@ def validate_stage(stage):
                 filename = row.get("FileName", "")
                 lowered = filename.lower()
                 if "ground" in lowered or "platefield" in lowered:
+                    continue
+                if "static_platform" in lowered:
                     continue
                 if "skysphere" in lowered or "fence.x" in lowered:
                     continue
@@ -369,7 +383,7 @@ def validate_stage(stage):
                 x = float(row["PosX"])
                 y = float(row["PosZ"])
                 position_y = float(row.get("PosY", "0"))
-                elevated_and_supported = position_y > 0.5 and point_on_static_platform(x, y, stage, margin=0.8)
+                elevated_and_supported = point_on_static_platform(x, y, stage, margin=0.8)
                 if not point_on_stage_ground(x, y, stage, margin=0.8) and not elevated_and_supported:
                     conflicts.append("XFileList_simple.csv:" + str(row_index))
 
@@ -378,7 +392,7 @@ def validate_stage(stage):
         for pit in pits:
             center_x = (rectangle[0] + rectangle[1]) * 0.5
             center_y = (rectangle[2] + rectangle[3]) * 0.5
-            elevated_and_supported = rectangle[6] > 0.5 and point_on_static_platform(center_x, center_y, stage, margin=0.8)
+            elevated_and_supported = point_on_static_platform(center_x, center_y, stage, margin=0.8)
             if rectangle_intersects_pit(rectangle, pit, margin=0.2) and not elevated_and_supported:
                 conflicts.append("XFileListPhysics.csv:" + str(rectangle[4]))
                 break

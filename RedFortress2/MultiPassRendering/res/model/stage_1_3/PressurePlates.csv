@@ -1,2 +1,3 @@
-﻿ID,PlatePosX,PlatePosY,PlatePosZ,WallID,WallRotX,WallRotY,WallRotZ,WallScale
-1,0,0.01,-19,3106,0,90,0,1
+﻿ID,PlatePosX,PlatePosY,PlatePosZ,WallID,WallRotX,WallRotY,WallRotZ,WallScale,TravelDistance
+1,0,0.71,-11,9114,0,0,0,1,6
+2,0,0.71,-17,9114,0,0,0,1,6
