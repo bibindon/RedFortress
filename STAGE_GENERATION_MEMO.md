@@ -228,7 +228,22 @@
     * 床モデル : `res/model/attack_trigger/lever_box_floor.x`（10x10x0.1m・原点=下面中心）。箱の下に敷き、**箱・扉・レバーは床の上（PosY=0.1）に配置**する。レバーは床の範囲内に置く。
     * 扉のCSV座標は**箱と同じ座標**にする（モデル内で±Zに扉が配置済みのため）。
     * レバーで2枚の扉が**同時に上昇**し、箱を通り抜けられる（両側が開く）。
-    * 扉の`Scale`は0.98（2%縮小）で、`XFileList_simple.csv`・`XFileListPhysics.csv`・`AttackTriggers.csv`の3ファイルすべて同じ値にする。
+  * レバー2・レバー3・感圧板2・感圧板3 まとめ（箱＋上下する壁のセット）
+    * いずれも「6x6x6mの箱＋上下する壁（扉）」のセット。箱でアイテムを囲み、操作しないと取得できない（感圧板3/レバー3は「門」として通路を塞ぐ）。
+    * 共通ルール
+      * 箱・扉・操作装置（レバー/感圧板）は**床の上に配置**する。箱・扉は`PosY=0.1`、感圧板は`PlatePosY=0.11`、床は`PosY=0`。
+      * 扉の`Scale`は**0.98（2%縮小）**。`XFileList_simple.csv`・`XFileListPhysics.csv`・`AttackTriggers.csv`（または`PressurePlates.csv`）のすべてで同じ値にする。
+      * 扉は`XFileListPhysics.csv`で`Move=y`にする。
+      * アイテムは箱の中央（`PosY=0.55`）に置く。
+      * 扉の上昇量は6m（レバーは`LiftHeight=6`、感圧板は`TravelDistance=6`）。
+
+| ギミック | 箱モデル | 扉 | 操作装置 | 床 | 動作 |
+|---|---|---|---|---|---|
+| レバー2 | `lever_box.x` | 1枚 `lever_box_door.x` | レバー1つ | `lever_box_floor.x`（10x10x0.1） | レバーを攻撃するたびに扉が上昇⇔下降（トグル） |
+| レバー3 | `lever_box3.x` | 2枚 `lever_box3_door.x` | レバー2つ（各扉の前） | `lever_box3_floor.x`（5x10x0.1） | どちらのレバーでも両扉が同時に上昇⇔下降（共有トグル）。**門** |
+| 感圧板2 | `lever_box.x` | 1枚 `lever_box_door.x` | 感圧板1つ（扉の前） | `lever_box_floor.x`（10x10x0.1） | 感圧板に乗ると扉が上昇、離れると下降 |
+| 感圧板3 | `lever_box3.x` | 2枚 `lever_box3_door.x` | 感圧板2つ（各扉の前） | `lever_box3_floor14.x`（5x14x0.1） | どちらの感圧板でも両扉が同時に開く（共有WallID・OR）。**門** |
+
   * ボタン
     * `Type=Button`または`Type=TimedButton`を指定する。いずれかのボタンを攻撃するとステージ内の全ボタンがONになり、10秒後にOFFになる。
     * 連動対象を動かさずライトだけを操作する場合は`TargetID=-1`を指定できる。
