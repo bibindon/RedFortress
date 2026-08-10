@@ -3,6 +3,7 @@
 
 import csv
 import io
+import math
 from pathlib import Path
 
 
@@ -30,6 +31,20 @@ def add_pair(simple, physics, csv_id, render_path, physics_path, x, y, z,
     physics.append([csv_id, physics_path, x, y, z, 0, rotation_y, 0, scale, physics_type, move, ""])
 
 
+def add_static_platform(simple, physics, csv_id, model, x, y, z):
+    add_pair(simple, physics, csv_id,
+             "../static_platform/" + model + ".x",
+             "res/model/static_platform/" + model + "_collision.x",
+             x, y, z)
+
+
+def add_island(simple, physics, next_id, pieces):
+    for model, x, y, z in pieces:
+        add_static_platform(simple, physics, next_id, model, x, y, z)
+        next_id += 1
+    return next_id
+
+
 def build_render_and_physics():
     simple = [SIMPLE_HEADER]
     physics = [PHYSICS_HEADER]
@@ -39,120 +54,109 @@ def build_render_and_physics():
     physics.append([1, "res/model/cubeNormalInverse120x120.x", 0, 0, 0, 0, 0, 0, 1, "Collision", "n", ""])
     physics.append([2, "res/model/stage_2_1/stage_ground.x", 0, 0.01, 0, 0, 0, 0, 1, "Collision", "n", ""])
 
-    # 外周の洞窟壁。内側の柵を越えても、この壁でステージ外へ出られない。
-    wall_id = 3001
-    wall_steps = (-48, -32, -16, 0, 16, 32, 48)
-    for z in wall_steps:
-        add_pair(simple, physics, wall_id, "../collision_wall/collision_wall_tall.x",
-                 "res/model/collision_wall/collision_wall_tall_collision.x", -58, 3, z,
-                 scale=2, load_type="meshmix2")
-        wall_id += 1
-        add_pair(simple, physics, wall_id, "../collision_wall/collision_wall_tall.x",
-                 "res/model/collision_wall/collision_wall_tall_collision.x", 58, 3, z,
-                 scale=2, load_type="meshmix2")
-        wall_id += 1
-    for x in wall_steps:
-        add_pair(simple, physics, wall_id, "../collision_wall/collision_wall_tall.x",
-                 "res/model/collision_wall/collision_wall_tall_collision.x", x, 3, -58,
-                 rotation_y=90, scale=2, load_type="meshmix2")
-        wall_id += 1
-        add_pair(simple, physics, wall_id, "../collision_wall/collision_wall_tall.x",
-                 "res/model/collision_wall/collision_wall_tall_collision.x", x, 3, 58,
-                 rotation_y=90, scale=2, load_type="meshmix2")
-        wall_id += 1
-
-    # 区画10のレバー3門。左右をステージ幅いっぱいまで壁で塞ぐ。
-    gate_wall_x = (-50, -34, -12, 5, 22, 39, 52)
-    for x in gate_wall_x:
-        add_pair(simple, physics, wall_id, "../collision_wall/collision_wall_tall.x",
-                 "res/model/collision_wall/collision_wall_tall_collision.x", x, 3, 24,
-                 rotation_y=90, scale=2, load_type="meshmix2")
-        wall_id += 1
-
-    # 4本のダメージ床帯。半径4mの円盤を連続させ、外周迂回を防ぐ。
+    # 20m四方のplateLavaを6x6枚、隙間なく並べて120x120m全体を覆う。
     lava_ids = []
     lava_id = 4001
-    for z in (-44, -25, 2, 36):
-        for x in range(-56, 57, 8):
-            simple.append([lava_id, "../plateLava.x", x, 0.02, z, 0, 0, 0, 1, "meshmix2"])
-            physics.append([lava_id, "res/model/plateLava.x", x, 0.02, z, 0, 0, 0, 1, "NonCollision", "n", ""])
+    for z in (-50, -30, -10, 10, 30, 50):
+        for x in (-50, -30, -10, 10, 30, 50):
+            simple.append([lava_id, "../plateLava.x", x, 0.02, z, 0, 0, 0, 2.5, "meshmix2"])
+            physics.append([lava_id, "res/model/plateLava.x", x, 0.02, z, 0, 0, 0, 2.5, "NonCollision", "n", ""])
             lava_ids.append(lava_id)
             lava_id += 1
 
-    # 通常ジャンプ用の安全な飛び石。3x3m、中心間隔は最大6.4mだが斜め区間は2石に分ける。
-    stone_positions = (
-        (-43, 0.35, -46), (-39, 0.35, -42),
-        (-7, 0.35, -28), (-7, 0.35, -22),
-        (26, 0.35, -2), (29, 0.35, 3), (32, 0.35, 8),
-        (-29, 0.35, 32), (-35, 0.65, 36), (-41, 0.35, 40),
+    # 12区画。大区画は12x12mと6x6mを継ぎ目で接続して戦闘面積を確保する。
+    platform_id = 5001
+    islands = (
+        (("static_platform_4x4", -50, 0.35, -50),),
+        (("static_platform_4x4", -37, 0.35, -39),),
+        (("static_platform_4x4", -18, 0.35, -43),
+         ("static_platform_2x2", -9, 0.35, -46),
+         ("static_platform_2x2", -9, 0.35, -40)),
+        (("static_platform_4x4", 8, 0.35, -31),),
+        (("static_platform_4x4", 31, 3.2, -44),),
+        (("static_platform_4x4", 39, 0.35, -17),
+         ("static_platform_2x2", 48, 0.35, -20),
+         ("static_platform_2x2", 48, 0.35, -14)),
+        (("static_platform_4x4", 32, 0.35, 4),),
+        (("static_platform_4x4", 14, 0.35, 20),),
+        (("static_platform_4x4", -11, 0.35, 17),
+         ("static_platform_2x2", -2, 0.35, 14),
+         ("static_platform_2x2", -2, 0.35, 20)),
+        (),
+        (("static_platform_4x4", -42, 0.35, 40),
+         ("static_platform_2x2", -33, 0.35, 40)),
+        (("static_platform_4x4", -51, 0.35, 53),),
     )
-    stone_id = 5001
-    for x, y, z in stone_positions:
-        add_pair(simple, physics, stone_id, "../static_platform/static_platform_1x1.x",
-                 "res/model/static_platform/static_platform_1x1_collision.x", x, y, z)
-        stone_id += 1
+    for pieces in islands:
+        platform_id = add_island(simple, physics, platform_id, pieces)
 
-    # 区画4: 第2ダメージ帯を横断する6x6mの移動床。
+    # 通常ジャンプ用の固定飛び石。全て3x3mで、縁から縁の間隔を4.1m以下にする。
+    stones = (
+        (-27.5, 0.35, -41),
+        (-3, 0.35, -36), (0, 0.35, -36),
+        (18, 0.35, -27), (23, 0.35, -23), (28, 0.35, -20),
+        (35, 0.35, -6.5),
+        (23.5, 0.35, 11.5),
+        (4, 0.35, 20),
+        (-29.5, 0.35, 33),
+        (0, 0.35, 28.5), (3, 0.35, 33.5), (6, 0.35, 38.5), (8, 0.35, 44),
+        (49, 0.35, -7), (52, 0.35, -4.5),
+    )
+    for x, y, z in stones:
+        add_static_platform(simple, physics, platform_id, "static_platform_1x1", x, y, z)
+        platform_id += 1
+
+    # 区画5への往復階段。0.8mずつ上がり、終端の足場はY=3.2m。
+    staircase = (
+        (17, 0.8, -35),
+        (21.5, 1.6, -38),
+        (26, 2.4, -41),
+    )
+    for x, y, z in staircase:
+        add_static_platform(simple, physics, platform_id, "static_platform_2x2", x, y, z)
+        platform_id += 1
+
+    # 東端の報酬足場と北端のQTE木足場。どちらも行き止まりで同じ道を戻る。
+    add_static_platform(simple, physics, platform_id, "static_platform_2x2", 54, 0.35, -1)
+    platform_id += 1
+    add_static_platform(simple, physics, platform_id, "static_platform_4x4", 8, 0.35, 52)
+    platform_id += 1
+
+    # 区画3→4の移動床は、固定飛び石と並行する任意の近道。
     add_pair(simple, physics, 6001, "../collision_moving_platform/collision_moving_platform.x",
-             "res/model/collision_moving_platform.x", 4, 0.4, -31,
-             scale=2, load_type="meshmix2", move="y")
+             "res/model/collision_moving_platform.x", -5, 0.65, -40,
+             scale=1, load_type="meshmix2", move="y")
 
-    # 区画5: 通常ジャンプで登れる0.8m刻みの高台。最上段はY=3.2m。
-    high_platforms = (
-        (6101, "static_platform_2x2", 18, 0.8, -40),
-        (6102, "static_platform_2x2", 23, 1.6, -40),
-        (6103, "static_platform_2x2", 28, 2.4, -40),
-        (6104, "static_platform_4x4", 35, 3.2, -40),
-    )
-    for csv_id, model, x, y, z in high_platforms:
-        add_pair(simple, physics, csv_id, "../static_platform/" + model + ".x",
-                 "res/model/static_platform/" + model + "_collision.x", x, y, z)
-
-    # QTE木。World 2の柵外装飾には木を使わず、これは攻略対象として柵内に置く。
+    # QTE木は北端の専用足場に置く。
     add_pair(simple, physics, 7001, "../tree2/lemonTree.x",
-             "res/model/tree2Physics/tree_cylinder_collision.x", -52, 0, -31)
+             "res/model/tree2Physics/tree_cylinder_collision.x", 8, 0.85, 52)
 
-    # レバー2: 高台上の報酬箱。
+    # 高所のレバー2。箱の中のアイテムは扉を上げないと取得できない。
     add_pair(simple, physics, 9001, "../attack_trigger/lever_box_floor.x",
-             "res/model/attack_trigger/lever_box_floor.x", 35, 3.25, -40)
+             "res/model/attack_trigger/lever_box_floor.x", 31, 3.7, -44)
     add_pair(simple, physics, 9002, "../attack_trigger/lever_box.x",
-             "res/model/attack_trigger/lever_box.x", 35, 3.35, -40)
+             "res/model/attack_trigger/lever_box.x", 31, 3.8, -44)
     add_pair(simple, physics, 9003, "../attack_trigger/lever_box_door.x",
-             "res/model/attack_trigger/lever_box_door.x", 35, 3.35, -43,
+             "res/model/attack_trigger/lever_box_door.x", 31, 3.8, -47,
              scale=0.98, move="y")
 
-    # レバー3: 南北を接続する両開き門。
+    # 区画9と11の間をつなぐレバー3門。床そのものが区画10の橋になる。
+    gate_rotation = -53.13
     add_pair(simple, physics, 9101, "../attack_trigger/lever_box3_floor.x",
-             "res/model/attack_trigger/lever_box3_floor.x", -24, 0.05, 24)
+             "res/model/attack_trigger/lever_box3_floor.x", -24, 0.85, 27,
+             rotation_y=gate_rotation)
     add_pair(simple, physics, 9102, "../attack_trigger/lever_box3.x",
-             "res/model/attack_trigger/lever_box3.x", -24, 0.15, 24)
+             "res/model/attack_trigger/lever_box3.x", -24, 0.95, 27,
+             rotation_y=gate_rotation)
     add_pair(simple, physics, 9103, "../attack_trigger/lever_box3_door.x",
-             "res/model/attack_trigger/lever_box3_door.x", -24, 0.15, 24,
-             scale=0.98, move="y")
+             "res/model/attack_trigger/lever_box3_door.x", -24, 0.95, 27,
+             rotation_y=gate_rotation, scale=0.98, move="y")
 
-    # 柵は境界の視認用。衝突は外周壁が担当する。
-    fence_id = 8001
-    fence_steps = range(-52, 53, 8)
-    for value in fence_steps:
-        simple.append([fence_id, "../fence.x", -55, 0.5, value, 0, 0, 0, 1, "normal"])
-        fence_id += 1
-        simple.append([fence_id, "../fence.x", 55, 0.5, value, 0, 0, 0, 1, "normal"])
-        fence_id += 1
-        simple.append([fence_id, "../fence.x", value, 0.5, -55, 0, 90, 0, 1, "normal"])
-        fence_id += 1
-        simple.append([fence_id, "../fence.x", value, 0.5, 55, 0, 90, 0, 1, "normal"])
-        fence_id += 1
-
-    # 柵外の洞窟景観は岩だけを使用する。
+    # 洞窟の外周装飾。攻略足場と誤認しないよう、触れない外周だけに置く。
     rock_positions = (
-        (-57, -49, 25, 0.8, 1), (-57, -34, 80, 1.1, 2), (-57, -15, 150, 0.9, 1),
-        (-57, 5, 230, 1.2, 2), (-57, 26, 310, 0.8, 1), (-57, 47, 35, 1.0, 2),
-        (57, -47, 190, 1.0, 2), (57, -28, 270, 0.8, 1), (57, -8, 340, 1.2, 2),
-        (57, 13, 60, 0.9, 1), (57, 33, 130, 1.1, 2), (57, 49, 215, 0.8, 1),
-        (-47, -57, 10, 1.0, 2), (-27, -57, 95, 0.8, 1), (-7, -57, 170, 1.1, 2),
-        (14, -57, 250, 0.9, 1), (35, -57, 325, 1.2, 2), (49, -57, 45, 0.8, 1),
-        (-49, 57, 205, 1.1, 1), (-31, 57, 285, 0.9, 2), (-10, 57, 355, 1.2, 1),
-        (12, 57, 70, 0.8, 2), (33, 57, 145, 1.0, 1), (49, 57, 225, 1.1, 2),
+        (-57, -34, 80, 1.0, 1), (-57, 2, 150, 0.9, 2), (-57, 28, 230, 1.1, 1),
+        (57, -42, 190, 1.0, 2), (57, 20, 310, 0.9, 1), (57, 42, 40, 1.1, 2),
+        (-24, -57, 120, 0.9, 2), (18, -57, 250, 1.0, 1), (34, 57, 145, 1.0, 2),
     )
     rock_id = 7201
     for x, z, rotation_y, scale, variant in rock_positions:
@@ -171,62 +175,69 @@ def main():
     simple, physics, lava_ids = build_render_and_physics()
 
     move = [MOVE_HEADER,
-            [1, 6001, 6001, 4, 0.4, -31, 0, 0, 0, 2, 4, 0.4, -31, 4, 0.4, -19, 6.0]]
+            [1, 6001, 6001, -5, 0.65, -40, 0, 0, 0, 1,
+             -5, 0.65, -40, 1, 0.65, -34, 5.0]]
 
     enemies = [["Type", "PosX", "PosY", "PosZ", "RotY"],
-               ["small_spider", -20, 0.2, -37, 30], ["spider", -14, 0.2, -34, 210],
-               ["small_golem", -8, 0.2, -31, 180], ["small_spider", 11, 0.2, -36, 90],
-               ["spider", 18, 0.2, -33, 270], ["small_golem", 42, 0.2, -17, 180],
-               ["small_spider", 48, 0.2, -13, 240], ["spider", 35, 0.2, -15, 90],
-               ["small_spider", 24, 0.2, -12, 0], ["small_golem", 26, 0.2, 12, 180],
-               ["small_spider", 18, 0.2, 15, 90], ["spider", 8, 0.2, 17, 270],
-               ["small_spider", -4, 0.2, 16, 0], ["small_golem", -12, 0.2, 20, 180],
-               ["spider", -18, 0.2, 29, 180], ["small_spider", -30, 0.2, 30, 45],
-               ["small_golem", -43, 0.2, 29, 315]]
+               ["small_spider", -20, 0.9, -46, 35], ["spider", -14, 0.9, -46, 210],
+               ["small_golem", -20, 0.9, -40, 120], ["small_spider", -14, 0.9, -40, 300],
+               ["small_golem", 38, 0.9, -20, 30], ["small_spider", 44, 0.9, -20, 200],
+               ["spider", 38, 0.9, -14, 110], ["small_spider", 44, 0.9, -14, 290],
+               ["small_golem", -13, 0.9, 14, 20], ["small_spider", -7, 0.9, 14, 190],
+               ["spider", -13, 0.9, 20, 100], ["small_spider", -7, 0.9, 20, 280],
+               ["small_golem", -43, 0.9, 38, 20], ["spider", -37, 0.9, 40, 200],
+               ["small_spider", -43, 0.9, 44, 300]]
 
     collectibles = [["CollectibleID", "Type", "DataID", "PosX", "PosY", "PosZ", "Scale"],
-                    ["stage21-I01", "Item", "005", -54, 0.45, -31, 1],
-                    ["stage21-I02", "Item", "006", 35, 3.9, -40, 1],
-                    ["stage21-I03", "Item", "009", 53, 0.45, -13, 1],
-                    ["stage21-I04", "Item", "010", 42, 0.45, 9, 1],
-                    ["stage21-I05", "Item", "014", -24, 0.55, 24, 1],
-                    ["stage21-I06", "Item", "016", -50, 0.45, 44, 1]]
+                    ["stage21-I01", "Item", "006", 31, 4.35, -44, 1],
+                    ["stage21-I02", "Item", "009", 54, 1.1, -1, 1],
+                    ["stage21-I03", "Item", "010", 8, 1.1, -29, 1],
+                    ["stage21-I04", "Item", "014", 32, 1.1, 4, 1],
+                    ["stage21-I05", "Item", "016", 14, 1.1, 20, 1],
+                    ["stage21-I06", "Item", "005", -55, 1.1, 55, 1]]
 
     destructibles = [["PosX", "PosY", "PosZ", "HP", "DropItemId"],
-                     [-25, 0.45, -35, 2, "None"], [-22, 0.45, -33, 2, "014"],
-                     [50, 0.45, -18, 3, "None"], [47, 0.45, -20, 2, "016"],
-                     [4, 0.45, 12, 2, "None"], [-16, 0.45, 31, 3, "010"]]
+                     [-21, 1.05, -43, 2, "None"], [-12, 1.05, -43, 2, "014"],
+                     [39, 1.05, -20, 3, "None"], [45, 1.05, -14, 2, "016"],
+                     [-14, 1.05, 17, 2, "None"], [-39, 1.05, 40, 3, "010"]]
 
     lava = [["ID", "PhysicsID", "Damage"]]
     for index, physics_id in enumerate(lava_ids, start=1):
         lava.append(["stage21-lava-%02d" % index, physics_id, 20])
 
+    direction_x = -12.0
+    direction_z = 13.0
+    direction_length = math.hypot(direction_x, direction_z)
     boosters = [["DashBoosterID", "PosX", "PosY", "PosZ", "DirX", "DirY", "DirZ",
                  "Speed", "Duration", "Radius", "Scale", "ChargeEnabled"],
-                ["stage21-booster-01", 34, 0.5, -6, 0, 0.08, 1, 20, 0.8, 1.2, 0.6, "n"]]
+                ["stage21-booster-01", 44, 1.0, -10,
+                 round(direction_x / direction_length, 4), 0.08, round(direction_z / direction_length, 4),
+                 20, 0.85, 1.2, 0.6, "n"]]
 
     interactables = [["InteractionID", "Type", "PosX", "PosY", "PosZ", "PromptDistance"],
-                     ["stage21-tree-01", "Tree", -52, 0, -31, 2.5]]
+                     ["stage21-tree-01", "Tree", 8, 0.85, 52, 2.5]]
 
+    gate_direction_x = -0.8
+    gate_direction_z = 0.6
     triggers = [["ID", "Type", "TriggerX", "TriggerY", "TriggerZ", "TargetID", "Axis",
                  "BaseRotX", "BaseRotY", "BaseRotZ", "Scale", "LiftHeight"],
-                [1, "LeverLift", 35, 3.95, -45, 9003, "Y", 0, 0, 0, 0.98, 6],
-                [2, "LeverLift", -24, 0.75, 20.5, 9103, "Y", 0, 0, 0, 0.98, 6],
-                [3, "LeverLift", -24, 0.75, 27.5, 9103, "Y", 0, 0, 0, 0.98, 6]]
+                [1, "LeverLift", 31, 4.4, -48.2, 9003, "Y", 0, 0, 0, 0.98, 6],
+                [2, "LeverLift", -24 - gate_direction_x * 4.2, 1.55,
+                 27 - gate_direction_z * 4.2, 9103, "Y", 0, -53.13, 0, 0.98, 6],
+                [3, "LeverLift", -24 + gate_direction_x * 4.2, 1.55,
+                 27 + gate_direction_z * 4.2, 9103, "Y", 0, -53.13, 0, 0.98, 6]]
 
     point_lights = [["PosX", "PosY", "PosZ", "Brightness", "ColorR", "ColorG", "ColorB", "ColorA",
                      "Shape", "LineLength", "SquareWidth", "SquareHeight", "RotX", "RotY", "RotZ", "Range", "OwnerTag"],
-                    [-48, 3.0, -52, 1.0, 0.20, 0.55, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage21-start"],
-                    [-36, 2.5, -40, 0.9, 1.0, 0.35, 0.12, 1.0, "Point", 12, 10, 10, 0, 0, 0, 10, "stage21-lava1"],
-                    [-12, 2.5, -34, 0.8, 0.45, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 10, "stage21-battle1"],
-                    [4, 2.8, -25, 0.9, 1.0, 0.35, 0.12, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage21-moving"],
-                    [35, 6.8, -40, 0.9, 0.25, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-high"],
-                    [44, 2.6, -15, 0.8, 0.50, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 10, "stage21-east"],
-                    [34, 2.5, 2, 1.0, 1.0, 0.30, 0.10, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-booster"],
-                    [15, 2.5, 15, 0.8, 0.20, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 10, "stage21-zigzag"],
-                    [-24, 3.0, 24, 1.0, 0.70, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-gate"],
-                    [-35, 2.5, 36, 1.0, 1.0, 0.30, 0.10, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-lava4"],
-                    [-48, 3.0, 52, 1.0, 0.15, 0.70, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage21-goal"]]
+                    [-50, 3.0, -50, 1.0, 0.20, 0.55, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage21-start"],
+                    [-15, 3.0, -43, 0.9, 0.55, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-battle-a"],
+                    [31, 7.0, -44, 0.9, 0.25, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-high"],
+                    [42, 3.0, -17, 0.9, 0.50, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-battle-b"],
+                    [32, 3.0, 4, 1.0, 1.0, 0.30, 0.10, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-booster"],
+                    [-8, 3.0, 17, 0.9, 0.20, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-battle-c"],
+                    [-24, 3.2, 27, 1.0, 0.70, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-gate"],
+                    [8, 3.0, 52, 0.9, 0.25, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-qte"],
+                    [-51, 3.0, 53, 1.0, 0.15, 0.70, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage21-goal"]]
 
     empty_files = {
         "PressurePlates.csv": [["ID", "PlatePosX", "PlatePosY", "PlatePosZ", "WallID", "WallRotX", "WallRotY", "WallRotZ", "WallScale", "TravelDistance"]],
