@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env python3
-"""STAGE_PLAN.md に従って 2-1～4-8 のステージ CSV を生成する。"""
+"""STAGE_PLAN.md に従って、専用生成の2-1を除く2-2～4-8のステージCSVを生成する。"""
 
 import csv
 from pathlib import Path
@@ -464,8 +464,10 @@ def build_stage(stage):
 
 def main():
     for stage in STAGES:
+        if stage["folder"] == "stage_2_1":
+            continue
         build_stage(stage)
-    print("2-1～4-8 の24ステージを生成しました。")
+    print("2-1を除く2-2～4-8のステージを生成しました。2-1は専用スクリプトを使用してください。")
 
 
 if __name__ == "__main__":

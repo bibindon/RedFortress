@@ -28,7 +28,7 @@ void StageManager::Initialize()
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog);
 
-    AddStage(L"2-1", 9, L"2-1 チクチク床の飛び石", L"stage_2_1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"2-1", 9, L"2-1 チクチク床の飛び石", L"stage_2_1", D3DXVECTOR3(-48.0f, 0.2f, -52.0f), D3DXVECTOR3(-48.0f, 1.0f, 52.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog, true);
     AddStage(L"2-2", 10, L"2-2 あつあつ飛び石ロード", L"stage_2_2", D3DXVECTOR3(-38.0f, 3.2f, 0.0f), D3DXVECTOR3(38.0f, 4.0f, 0.0f),
