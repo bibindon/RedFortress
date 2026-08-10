@@ -1,0 +1,2 @@
+﻿ID,Type,TriggerX,TriggerY,TriggerZ,TargetID,Axis,BaseRotX,BaseRotY,BaseRotZ,Scale,LiftHeight
+1,LeverLift,5,1.35,-51.8,7103,Y,0,0,0,0.98,6
