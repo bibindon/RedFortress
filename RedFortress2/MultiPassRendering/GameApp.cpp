@@ -7110,6 +7110,11 @@ void GameApp::ApplyLavaDamageToEnemies()
             continue;
         }
 
+        if (enemy->GetType() == L"bird")
+        {
+            continue;
+        }
+
         const D3DXVECTOR3 enemyPosition = enemy->GetPosition();
         const float enemyRadius = enemy->GetPhysicsRadius();
         const float enemyHeight = enemy->GetHeight();
