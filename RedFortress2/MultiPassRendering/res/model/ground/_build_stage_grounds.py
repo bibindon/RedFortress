@@ -266,9 +266,8 @@ STAGES = (
                     ((52.0, 40.0), (52.0, 46.0)),
                     ((52.0, 46.0), (52.0, 52.0)))},
     {"display": "2-4", "folder": "stage_2_4", "size": (60.0, 60.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ()},
-    {"display": "2-1", "folder": "stage_2_1", "size": (60.0, 60.0), "start": (0.0, -28.0), "goal": (0.0, 48.0),
-     "pits": ((18.5, 25.5, -2.0, 18.0), (-18.0, 18.0, 22.0, 32.0)),
-     "booster_links": (((0.0, 18.0), (0.0, 36.0)),)},
+    {"display": "2-1", "folder": "stage_2_1", "size": (30.0, 60.0), "start": (-20.0, -54.0), "goal": (20.0, 54.0),
+     "pits": (), "dedicated_ground": True},
     {"display": "2-2", "folder": "stage_2_2", "size": (60.0, 60.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-24.0, 24.0, -28.0, -20.0), (-24.0, 24.0, 20.0, 28.0))},
     {"display": "2-3", "folder": "stage_2_3", "size": (60.0, 60.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-48.0, -40.0, 8.0, 22.0), (40.0, 48.0, -22.0, -8.0))},
     {"display": "2-8", "folder": "stage_2_8", "size": (60.0, 60.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ()},
@@ -1197,11 +1196,13 @@ def main():
         raise RuntimeError("Stage ground folder names must be unique")
 
     selected_display = os.environ.get("RED_FORTRESS_STAGE_GROUND", "").strip()
-    stages_to_build = STAGES
+    stages_to_build = tuple(stage for stage in STAGES if not stage.get("dedicated_ground", False))
     if selected_display != "":
         stages_to_build = tuple(stage for stage in STAGES if stage["display"] == selected_display)
         if len(stages_to_build) != 1:
             raise RuntimeError("Unknown stage ground selection: " + selected_display)
+        if stages_to_build[0].get("dedicated_ground", False):
+            raise RuntimeError("Stage " + selected_display + " uses tools/BuildStage21Ground.py")
 
     bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
     clear_scene()
