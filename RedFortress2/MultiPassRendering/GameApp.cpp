@@ -7739,11 +7739,66 @@ std::wstring GameApp::GetEnemyCsvPathForStage(const StageManager::StageData& sta
     return stage.enemyCsvPath;
 }
 
+std::wstring GameApp::GetBossClearedCsvPath(
+    const StageManager::StageData& stage,
+    const std::wstring& defaultCsvPath) const
+{
+    if (!IsBossStageNumber(stage.number) ||
+        IsStageSelectId(stage.id) ||
+        IsBaseId(stage.id) ||
+        !m_saveDataManager.IsStageCleared(stage.id))
+    {
+        return defaultCsvPath;
+    }
+
+    const std::wstring extension = L".csv";
+    const std::size_t extensionPosition = defaultCsvPath.rfind(extension);
+    if (extensionPosition == std::wstring::npos)
+    {
+        std::abort();
+    }
+
+    const std::wstring clearedPath =
+        defaultCsvPath.substr(0, extensionPosition) + L"Cleared.csv";
+    std::wifstream file(NSRender::Util::GetExeDir() + clearedPath);
+    if (file.is_open())
+    {
+        return clearedPath;
+    }
+    return defaultCsvPath;
+}
+
+StageManager::StageData GameApp::GetStageDataForLoad(
+    const StageManager::StageData& stage) const
+{
+    StageManager::StageData result = stage;
+    result.renderCsvPath = GetBossClearedCsvPath(stage, stage.renderCsvPath);
+    result.physicsCsvPath = GetBossClearedCsvPath(stage, stage.physicsCsvPath);
+    result.moveCsvPath = GetBossClearedCsvPath(stage, stage.moveCsvPath);
+    result.collectibleCsvPath = GetBossClearedCsvPath(stage, stage.collectibleCsvPath);
+    result.interactableCsvPath = GetBossClearedCsvPath(stage, stage.interactableCsvPath);
+    result.starCsvPath = GetBossClearedCsvPath(stage, stage.starCsvPath);
+    result.speedUpCsvPath = GetBossClearedCsvPath(stage, stage.speedUpCsvPath);
+    result.destructibleCsvPath = GetBossClearedCsvPath(stage, stage.destructibleCsvPath);
+    result.dashBoosterCsvPath = GetBossClearedCsvPath(stage, stage.dashBoosterCsvPath);
+    result.lavaCsvPath = GetBossClearedCsvPath(stage, stage.lavaCsvPath);
+    result.lavaFloodCsvPath = GetBossClearedCsvPath(stage, stage.lavaFloodCsvPath);
+    result.lavaRiseCsvPath = GetBossClearedCsvPath(stage, stage.lavaRiseCsvPath);
+    result.skullCsvPath = GetBossClearedCsvPath(stage, stage.skullCsvPath);
+    result.pressurePlateCsvPath = GetBossClearedCsvPath(stage, stage.pressurePlateCsvPath);
+    result.pushableBoxCsvPath = GetBossClearedCsvPath(stage, stage.pushableBoxCsvPath);
+    result.attackTriggerCsvPath = GetBossClearedCsvPath(stage, stage.attackTriggerCsvPath);
+    result.warpBearCsvPath = GetBossClearedCsvPath(stage, stage.warpBearCsvPath);
+    result.pointLightCsvPath = GetBossClearedCsvPath(stage, stage.pointLightCsvPath);
+    return result;
+}
+
 void GameApp::LoadCurrentStageObjects()
 {
     RestoreQteVisualEffectImmediate();
 
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+    const StageManager::StageData loadStage = GetStageDataForLoad(stage);
 
     std::wstring renderSettingsPath;
     if (stage.renderSettingsCsvPath.empty())
@@ -7764,7 +7819,7 @@ void GameApp::LoadCurrentStageObjects()
     }
     ApplyStageEnvironmentLighting(stage.id);
     ConfigureStagePointLights(stage.id);
-    LoadPointLightsFromCsv(stage.pointLightCsvPath);
+    LoadPointLightsFromCsv(loadStage.pointLightCsvPath);
 
     m_useFixedCamera = stage.useFixedCamera;
     m_fixedCameraPos = stage.fixedCameraPos;
@@ -7813,16 +7868,16 @@ void GameApp::LoadCurrentStageObjects()
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
-    m_render.LoadXFileListFromCsv(stage.renderCsvPath);
-    m_render.LoadXFileListMoveFromCsv(stage.moveCsvPath);
+    m_render.LoadXFileListFromCsv(loadStage.renderCsvPath);
+    m_render.LoadXFileListMoveFromCsv(loadStage.moveCsvPath);
 
-    m_collectibleManager.LoadForStage(stage.collectibleCsvPath);
-    m_interactionManager.LoadForStage(stage.interactableCsvPath);
+    m_collectibleManager.LoadForStage(loadStage.collectibleCsvPath);
+    m_interactionManager.LoadForStage(loadStage.interactableCsvPath);
     LoadStageSelectNavigation(stage.stageSelectNavigationCsvPath);
-    m_lavaZoneManager.LoadForStage(stage.lavaCsvPath);
+    m_lavaZoneManager.LoadForStage(loadStage.lavaCsvPath);
 
-    m_pickupManager.LoadForStage(stage.starCsvPath, stage.speedUpCsvPath);
-    m_dashBoosterManager.LoadForStage(stage.dashBoosterCsvPath);
+    m_pickupManager.LoadForStage(loadStage.starCsvPath, loadStage.speedUpCsvPath);
+    m_dashBoosterManager.LoadForStage(loadStage.dashBoosterCsvPath);
 
     CreateStageSelectCubes();
     m_playerMover.Reset(stage.playerStartPosition);
@@ -7834,14 +7889,14 @@ void GameApp::LoadCurrentStageObjects()
     m_lavaFloodManager.Clear();
     m_lavaRiseManager.Clear();
     PhysicsWorld::ClearObjects();
-    LoadPhysicsObjectsFromCsv(stage.physicsCsvPath);
-    m_lavaFloodManager.LoadForStage(m_render, stage.lavaFloodCsvPath);
-    m_lavaRiseManager.LoadForStage(m_render, stage.lavaRiseCsvPath);
-    m_skullManager.LoadForStage(m_render, stage.skullCsvPath);
-    m_pressurePlateManager.LoadForStage(m_render, stage.pressurePlateCsvPath);
-    m_pushableBoxManager.LoadForStage(m_render, stage.pushableBoxCsvPath);
-    m_attackTriggerManager.LoadForStage(m_render, stage.attackTriggerCsvPath);
-    m_warpBearManager.LoadForStage(stage.warpBearCsvPath);
+    LoadPhysicsObjectsFromCsv(loadStage.physicsCsvPath);
+    m_lavaFloodManager.LoadForStage(m_render, loadStage.lavaFloodCsvPath);
+    m_lavaRiseManager.LoadForStage(m_render, loadStage.lavaRiseCsvPath);
+    m_skullManager.LoadForStage(m_render, loadStage.skullCsvPath);
+    m_pressurePlateManager.LoadForStage(m_render, loadStage.pressurePlateCsvPath);
+    m_pushableBoxManager.LoadForStage(m_render, loadStage.pushableBoxCsvPath);
+    m_attackTriggerManager.LoadForStage(m_render, loadStage.attackTriggerCsvPath);
+    m_warpBearManager.LoadForStage(loadStage.warpBearCsvPath);
 
     if (!IsStageSelectId(stage.id) &&
         !IsBaseId(stage.id) &&
@@ -7882,7 +7937,7 @@ void GameApp::LoadCurrentStageObjects()
     m_hpBar.Reset();
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(stage));
 
-    m_destructibleManager.LoadForStage(m_render, stage.destructibleCsvPath);
+    m_destructibleManager.LoadForStage(m_render, loadStage.destructibleCsvPath);
     m_collectibleManager.RefreshVisibility(m_destructibleManager);
 
     if (m_playerMeshId >= 0)

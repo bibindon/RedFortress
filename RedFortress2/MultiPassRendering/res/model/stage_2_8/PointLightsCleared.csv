@@ -1,0 +1,5 @@
+﻿PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA,Shape,LineLength,SquareWidth,SquareHeight,RotX,RotY,RotZ,Range,OwnerTag
+-26,4,0,1.0,1.0,0.2,0.05,1.0,Point,12,10,10,0,0,0,14,stage28-cleared-west
+26,4,0,1.0,1.0,0.2,0.05,1.0,Point,12,10,10,0,0,0,14,stage28-cleared-east
+-52,4,0,1.0,0.25,0.7,1.0,1.0,Point,12,10,10,0,0,0,12,stage28-cleared-qte
+0,4,44,1.0,0.15,0.75,1.0,1.0,Point,12,10,10,0,0,0,12,stage28-cleared-north

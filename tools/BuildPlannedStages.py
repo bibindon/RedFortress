@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env python3
-"""STAGE_PLAN.md に従って、専用生成の2-1～2-3・2-5～2-7を除くステージCSVを生成する。"""
+"""STAGE_PLAN.md に従って、専用生成の2-1～2-3・2-5～2-8を除くステージCSVを生成する。"""
 
 import csv
 from pathlib import Path
@@ -464,10 +464,10 @@ def build_stage(stage):
 
 def main():
     for stage in STAGES:
-        if stage["folder"] in {"stage_2_1", "stage_2_2", "stage_2_3", "stage_2_5", "stage_2_6", "stage_2_7"}:
+        if stage["folder"] in {"stage_2_1", "stage_2_2", "stage_2_3", "stage_2_5", "stage_2_6", "stage_2_7", "stage_2_8"}:
             continue
         build_stage(stage)
-    print("専用生成の2-1～2-3・2-5～2-7を除くステージCSVを生成しました。")
+    print("専用生成の2-1～2-3・2-5～2-8を除くステージCSVを生成しました。")
 
 
 if __name__ == "__main__":

@@ -135,6 +135,10 @@ private:
     // ボスステージの敵CSVパスを返す。未クリアならボス用(EnemyPositions.csv)、
     // クリア済みなら雑魚用(EnemyPositionsCleared.csv) を選ぶ。
     std::wstring GetEnemyCsvPathForStage(const StageManager::StageData& stage) const;
+    // クリア済みボス用の「Cleared.csv」が存在すれば、その配置一式へ切り替える。
+    StageManager::StageData GetStageDataForLoad(const StageManager::StageData& stage) const;
+    std::wstring GetBossClearedCsvPath(const StageManager::StageData& stage,
+                                       const std::wstring& defaultCsvPath) const;
     static bool IsBossStageNumber(int stageNumber);
     void BeginStageIntro();
     void UpdateStageIntro();

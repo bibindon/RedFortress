@@ -49,7 +49,7 @@ void StageManager::Initialize()
     AddStage(L"2-7", 15, L"2-7 無敵でゴーゴー火の道", L"stage_2_7", D3DXVECTOR3(-52.0f, 0.9f, -50.0f), D3DXVECTOR3(52.0f, 6.75f, 52.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-8", 16, L"2-8 マグマ王のあつあつ城", L"stage_2_8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),
+    AddStage(L"2-8", 16, L"2-8 マグマ王のあつあつ城", L"stage_2_8", D3DXVECTOR3(0.0f, 0.9f, -42.0f), D3DXVECTOR3(0.0f, 0.9f, 44.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
 
