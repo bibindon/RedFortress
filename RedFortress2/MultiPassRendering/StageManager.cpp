@@ -31,7 +31,7 @@ void StageManager::Initialize()
     AddStage(L"2-1", 9, L"2-1 チクチク床の飛び石", L"stage_2_1", D3DXVECTOR3(-50.0f, 0.9f, -50.0f), D3DXVECTOR3(-51.0f, 1.85f, 53.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog, true);
-    AddStage(L"2-2", 10, L"2-2 あつあつ飛び石ロード", L"stage_2_2", D3DXVECTOR3(-38.0f, 3.2f, 0.0f), D3DXVECTOR3(38.0f, 4.0f, 0.0f),
+    AddStage(L"2-2", 10, L"2-2 あつあつ飛び石ロード", L"stage_2_2", D3DXVECTOR3(-52.0f, 0.9f, -49.0f), D3DXVECTOR3(52.0f, 1.85f, 49.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
     AddStage(L"2-3", 11, L"2-3 無敵でゴーゴー火の道", L"stage_2_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
