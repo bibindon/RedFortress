@@ -28,10 +28,10 @@ void StageManager::Initialize()
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog);
 
-    AddStage(L"2-1", 9, L"2-1 鳥だらけ巣だらけ", L"stage_2_1", D3DXVECTOR3(-20.0f, 0.9f, -54.0f), D3DXVECTOR3(20.0f, 0.9f, 54.0f),
+    AddStage(L"2-1", 9, L"2-1 鳥だらけ", L"stage_2_1", D3DXVECTOR3(-20.0f, 0.9f, -54.0f), D3DXVECTOR3(20.0f, 0.9f, 54.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-2", 10, L"2-2 ゴゴゴ！せまるマグマタワー", L"stage_2_2", D3DXVECTOR3(0.0f, 0.2f, -26.0f), D3DXVECTOR3(8.0f, 8.4f, 16.0f),
+    AddStage(L"2-2", 10, L"2-2 上に逃げろ！", L"stage_2_2", D3DXVECTOR3(-20.0f, 0.9f, -54.0f), D3DXVECTOR3(20.0f, 13.5f, 54.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
     AddStage(L"2-3", 11, L"2-3 追ってくるマグマの道", L"stage_2_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),

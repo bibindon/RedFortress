@@ -1,2 +1,2 @@
 ﻿ID,Damage,MinX,MaxX,MinZ,MaxZ,StartY,EndY,Delay,Duration
-stage22-rise-01,20,-32,32,-32,32,-4,48,6,120
+stage22-rise-01,20,-30,30,-60,60,-2,11.5,12,190

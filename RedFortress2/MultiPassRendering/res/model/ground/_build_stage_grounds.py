@@ -268,7 +268,8 @@ STAGES = (
     {"display": "2-4", "folder": "stage_2_4", "size": (60.0, 60.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ()},
     {"display": "2-1", "folder": "stage_2_1", "size": (30.0, 60.0), "start": (-20.0, -54.0), "goal": (20.0, 54.0),
      "pits": (), "dedicated_ground": True},
-    {"display": "2-2", "folder": "stage_2_2", "size": (60.0, 60.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-24.0, 24.0, -28.0, -20.0), (-24.0, 24.0, 20.0, 28.0))},
+    {"display": "2-2", "folder": "stage_2_2", "size": (30.0, 60.0), "start": (-20.0, -54.0), "goal": (20.0, 54.0),
+     "pits": (), "dedicated_ground": True},
     {"display": "2-3", "folder": "stage_2_3", "size": (60.0, 60.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-48.0, -40.0, 8.0, 22.0), (40.0, 48.0, -22.0, -8.0))},
     {"display": "2-8", "folder": "stage_2_8", "size": (60.0, 60.0), "start": (14.0, 28.0), "goal": (-14.0, -28.0), "pits": ()},
 
