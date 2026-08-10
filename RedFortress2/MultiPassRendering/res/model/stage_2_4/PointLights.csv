@@ -1,0 +1,8 @@
+﻿PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA,Shape,LineLength,SquareWidth,SquareHeight,RotX,RotY,RotZ,Range,OwnerTag
+-50,4.0,-50,1.0,0.15,0.65,1.0,1.0,Point,12,10,10,0,0,0,13,stage24-start
+-46,6.0,16,0.9,0.25,0.55,1.0,1.0,Point,12,10,10,0,0,0,14,stage24-west-stairs
+-15,12.0,50,0.9,0.35,0.25,1.0,1.0,Point,12,10,10,0,0,0,14,stage24-north
+50,20.0,15,0.9,1.0,0.35,0.1,1.0,Point,12,10,10,0,0,0,15,stage24-east
+15,20.0,-45,0.9,1.0,0.25,0.12,1.0,Point,12,10,10,0,0,0,14,stage24-south
+5,28.0,5,0.9,0.45,0.25,1.0,1.0,Point,12,10,10,0,0,0,15,stage24-high
+-50,33.0,-50,1.1,1.0,0.2,0.45,1.0,Point,12,10,10,0,0,0,13,stage24-goal

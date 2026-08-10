@@ -1,1 +1,2 @@
-﻿DashBoosterID,PosX,PosY,PosZ,DirX,DirY,DirZ,Speed,Duration,Radius,Scale
+﻿DashBoosterID,PosX,PosY,PosZ,DirX,DirY,DirZ,Speed,Duration,Radius,Scale,ChargeEnabled
+stage24-booster-01,49,16.8,4,-0.3011,0.02,-0.9536,20,1.0,1.2,0.6,n
