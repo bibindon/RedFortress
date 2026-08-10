@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-"""ステージ2-2の4陸地、折り返し経路、高低差、CSV整合性を検証する。"""
+"""ステージ2-6の4陸地、折り返し経路、高低差、CSV整合性を検証する。"""
 
 import csv
 import math
@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-STAGE_DIR = ROOT / "res" / "model" / "stage_2_2"
+STAGE_DIR = ROOT / "res" / "model" / "stage_2_6"
 START = (-52.0, -49.0)
 GOAL = (52.0, 49.0)
 MAX_JUMP_DISTANCE = 4.1
@@ -254,7 +254,7 @@ def main():
             print(" -", error)
         return 1
 
-    print("PASS: stage 2-2 folded-route checks OK")
+    print("PASS: stage 2-6 folded-route checks OK")
     print(" zones=12 lands=4 enemies=%d lava=%d dead_ends=4 edge_gimmicks=%d" %
           (len(enemies), len(lava_zones), edge_gimmicks))
     return 0

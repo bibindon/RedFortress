@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-"""ステージ2-1の配置要件、全面ダメージ床、通常ジャンプ経路を検証する。"""
+"""ステージ2-5の配置要件、全面ダメージ床、通常ジャンプ経路を検証する。"""
 
 import csv
 import math
@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-STAGE_DIR = ROOT / "res" / "model" / "stage_2_1"
+STAGE_DIR = ROOT / "res" / "model" / "stage_2_5"
 START = (-50.0, -50.0)
 GOAL = (-51.0, 53.0)
 MAX_JUMP_DISTANCE = 4.1
@@ -234,7 +234,7 @@ def main():
             print(" -", error)
         return 1
 
-    print("PASS: stage 2-1 safe-island checks OK")
+    print("PASS: stage 2-5 safe-island checks OK")
     print(" zones=12 enemies=%d lava=%d dead_ends=3 edge_gimmicks=%d" %
           (len(enemies), len(lava_rows), edge_gimmicks))
     return 0

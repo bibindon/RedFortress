@@ -28,25 +28,25 @@ void StageManager::Initialize()
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::Fog);
 
-    AddStage(L"2-1", 9, L"2-1 チクチク床の飛び石", L"stage_2_1", D3DXVECTOR3(-50.0f, 0.9f, -50.0f), D3DXVECTOR3(-51.0f, 1.85f, 53.0f),
-             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"res\\RenderSettings.fog.csv", StageWeather::Fog, true);
-    AddStage(L"2-2", 10, L"2-2 あつあつ飛び石ロード", L"stage_2_2", D3DXVECTOR3(-52.0f, 0.9f, -49.0f), D3DXVECTOR3(52.0f, 1.85f, 49.0f),
+    AddStage(L"2-1", 9, L"2-1 鳥だらけ巣だらけ", L"stage_2_1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 48.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-3", 11, L"2-3 無敵でゴーゴー火の道", L"stage_2_3", D3DXVECTOR3(-52.0f, 0.9f, -50.0f), D3DXVECTOR3(52.0f, 6.75f, 52.0f),
+    AddStage(L"2-2", 10, L"2-2 ゴゴゴ！せまるマグマタワー", L"stage_2_2", D3DXVECTOR3(0.0f, 0.2f, -26.0f), D3DXVECTOR3(8.0f, 8.4f, 16.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.csv", StageWeather::None, true);
+    AddStage(L"2-3", 11, L"2-3 追ってくるマグマの道", L"stage_2_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
     AddStage(L"2-4", 12, L"2-4 空飛ぶ足場を乗りつごう", L"stage_2_4", D3DXVECTOR3(-50.0f, 0.9f, -50.0f), D3DXVECTOR3(-50.0f, 30.85f, -50.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-5", 13, L"2-5 鳥だらけ巣だらけ", L"stage_2_5", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 48.0f),
+    AddStage(L"2-5", 13, L"2-5 チクチク床の飛び石", L"stage_2_5", D3DXVECTOR3(-50.0f, 0.9f, -50.0f), D3DXVECTOR3(-51.0f, 1.85f, 53.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.fog.csv", StageWeather::Fog, true);
+    AddStage(L"2-6", 14, L"2-6 あつあつ飛び石ロード", L"stage_2_6", D3DXVECTOR3(-52.0f, 0.9f, -49.0f), D3DXVECTOR3(52.0f, 1.85f, 49.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-6", 14, L"2-6 ゴゴゴ！せまるマグマタワー", L"stage_2_6", D3DXVECTOR3(0.0f, 0.2f, -26.0f), D3DXVECTOR3(8.0f, 8.4f, 16.0f),
-             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-             L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-7", 15, L"2-7 追ってくるマグマの道", L"stage_2_7", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"2-7", 15, L"2-7 無敵でゴーゴー火の道", L"stage_2_7", D3DXVECTOR3(-52.0f, 0.9f, -50.0f), D3DXVECTOR3(52.0f, 6.75f, 52.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
     AddStage(L"2-8", 16, L"2-8 マグマ王のあつあつ城", L"stage_2_8", D3DXVECTOR3(14.0f, 0.2f, 28.0f), D3DXVECTOR3(-14.0f, 1.0f, -28.0f),

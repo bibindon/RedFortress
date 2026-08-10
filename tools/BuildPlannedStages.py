@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env python3
-"""STAGE_PLAN.md に従って、専用生成の2-1を除く2-2～4-8のステージCSVを生成する。"""
+"""STAGE_PLAN.md に従って、専用生成の2-5～2-7を除くステージCSVを生成する。"""
 
 import csv
 from pathlib import Path
@@ -51,7 +51,7 @@ def booster(x, z, direction_x, direction_y, direction_z, speed=20, duration=1.4)
 
 STAGES = (
     # World 2: 洞窟と鉱山
-    {"display": "2-1", "folder": "stage_2_1", "world": 2, "theme": "洞窟の入口",
+    {"display": "2-5", "folder": "stage_2_5", "world": 2, "theme": "洞窟の入口",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-22, -12), wall(-22, 12), wall(22, -12), wall(22, 12),
                wall(-10, 0, 90), wall(10, 0, 90)),
@@ -59,7 +59,7 @@ STAGES = (
      "enemies": (enemy("small_spider", -10, -12), enemy("spider", 12, -4, 180),
                  enemy("small_spider", -12, 10), enemy("spider", 14, 20, 180)),
      "items": (item("005", -34, -24), item("006", 34, 24), item("009", -30, 30))},
-    {"display": "2-2", "folder": "stage_2_2", "world": 2, "theme": "分かれ道",
+    {"display": "2-6", "folder": "stage_2_6", "world": 2, "theme": "分かれ道",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(0, -18, 90), wall(0, 18, 90), wall(-14, 10), wall(14, -10),
                wall(-28, -28, 90), wall(-28, 28, 90)),
@@ -68,7 +68,7 @@ STAGES = (
                  enemy("spider", 28, -14, 270), enemy("small_spider", 34, 14, 270),
                  enemy("skeleton", 2, 30, 180)),
      "items": (item("001", 32, -26), item("002", 38, 22), item("011", -40, 32))},
-    {"display": "2-3", "folder": "stage_2_3", "world": 2, "theme": "昇降坑",
+    {"display": "2-7", "folder": "stage_2_7", "world": 2, "theme": "昇降坑",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-18, 18), wall(18, 8), wall(-18, -8), wall(18, -18),
                wall(-34, 0, 90), wall(34, 0, 90)),
@@ -90,7 +90,7 @@ STAGES = (
                  enemy("spider", -28, -12), enemy("small_spider", 28, -18, 180),
                  enemy("ghost", 0, -24)),
      "items": (item("001", 38, 32), item("010", -38, 30), item("014", 38, -32))},
-    {"display": "2-5", "folder": "stage_2_5", "world": 2, "theme": "木箱迷路",
+    {"display": "2-1", "folder": "stage_2_1", "world": 2, "theme": "木箱迷路",
      "start": (0, -28), "goal": (0, 28),
      "walls": (wall(-24, -16), wall(-8, -16), wall(16, -16), wall(28, 0, 90),
                wall(16, 16), wall(0, 16), wall(-24, 16), wall(-30, 0, 90)),
@@ -100,7 +100,7 @@ STAGES = (
                  enemy("ghost", 30, 14, 270), enemy("spider", -14, 10),
                  enemy("ghost", 12, 24, 180)),
      "items": (item("005", -32, 30), item("006", 36, -30), item("011", 28, 24))},
-    {"display": "2-6", "folder": "stage_2_6", "world": 2, "theme": "採掘砲台",
+    {"display": "2-2", "folder": "stage_2_2", "world": 2, "theme": "採掘砲台",
      "start": (-14, 0), "goal": (14, 0),
      "walls": (wall(-34, -22, 90), wall(-34, 22, 90), wall(34, -22, 90), wall(34, 22, 90),
                wall(0, -34), wall(0, 34)),
@@ -111,7 +111,7 @@ STAGES = (
                  enemy("spider", 32, 20, 180), enemy("ghost", 34, -24, 270),
                  enemy("small_spider", 36, 28, 180)),
      "items": (item("009", -46, -24), item("010", 46, 24), item("006", 0, 38))},
-    {"display": "2-7", "folder": "stage_2_7", "world": 2, "theme": "三つの採掘区",
+    {"display": "2-3", "folder": "stage_2_3", "world": 2, "theme": "三つの採掘区",
      "start": (0, 28), "goal": (0, -28),
      "walls": (wall(-32, 18, 90), wall(-8, 18, 90), wall(20, 18, 90),
                wall(-20, -18, 90), wall(8, -18, 90), wall(32, -18, 90)),
@@ -464,10 +464,10 @@ def build_stage(stage):
 
 def main():
     for stage in STAGES:
-        if stage["folder"] == "stage_2_1":
+        if stage["folder"] in {"stage_2_5", "stage_2_6", "stage_2_7"}:
             continue
         build_stage(stage)
-    print("2-1を除く2-2～4-8のステージを生成しました。2-1は専用スクリプトを使用してください。")
+    print("専用生成の2-5～2-7を除くステージCSVを生成しました。")
 
 
 if __name__ == "__main__":

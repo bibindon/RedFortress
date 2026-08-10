@@ -1,4 +1,4 @@
-﻿# ステージ2-1「チクチク床の飛び石」設計書
+﻿# ステージ2-5「チクチク床の飛び石」設計書
 
 ## 目的
 
@@ -54,8 +54,8 @@ World 2で初めて、ダメージ床の範囲を見分け、安全な飛び石�
 ## 再生成と検証
 
 ```powershell
-python RedFortress2\MultiPassRendering\tools\build_stage_2_1.py
-python RedFortress2\MultiPassRendering\tools\check_stage_2_1.py
+python RedFortress2\MultiPassRendering\tools\build_stage_2_5.py
+python RedFortress2\MultiPassRendering\tools\check_stage_2_5.py
 ```
 
-CSV生成後、`RED_FORTRESS_STAGE_GROUND=2-1`を指定してBlenderの地面生成・検証を実行する。
+CSV生成後、`RED_FORTRESS_STAGE_GROUND=2-5`を指定してBlenderの地面生成・検証を実行する。

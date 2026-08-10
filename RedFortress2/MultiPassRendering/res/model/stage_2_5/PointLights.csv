@@ -1,0 +1,10 @@
+﻿PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA,Shape,LineLength,SquareWidth,SquareHeight,RotX,RotY,RotZ,Range,OwnerTag
+-50,3.0,-50,1.0,0.2,0.55,1.0,1.0,Point,12,10,10,0,0,0,11,stage25-start
+-15,3.0,-43,0.9,0.55,0.25,1.0,1.0,Point,12,10,10,0,0,0,12,stage25-battle-a
+31,7.0,-44,0.9,0.25,0.65,1.0,1.0,Point,12,10,10,0,0,0,12,stage25-high
+42,3.0,-17,0.9,0.5,0.25,1.0,1.0,Point,12,10,10,0,0,0,12,stage25-battle-b
+32,3.0,4,1.0,1.0,0.3,0.1,1.0,Point,12,10,10,0,0,0,12,stage25-booster
+-8,3.0,17,0.9,0.2,0.65,1.0,1.0,Point,12,10,10,0,0,0,12,stage25-battle-c
+-24,3.2,27,1.0,0.7,0.25,1.0,1.0,Point,12,10,10,0,0,0,12,stage25-gate
+8,3.0,52,0.9,0.25,0.65,1.0,1.0,Point,12,10,10,0,0,0,12,stage25-qte
+-51,3.0,53,1.0,0.15,0.7,1.0,1.0,Point,12,10,10,0,0,0,11,stage25-goal

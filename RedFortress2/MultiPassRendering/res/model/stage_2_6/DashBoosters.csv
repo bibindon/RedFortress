@@ -1,3 +1,2 @@
-﻿DashBoosterID,PosX,PosY,PosZ,DirX,DirY,DirZ,Speed,Duration,Radius,Scale
-stage22-dashbooster-01,-38,0.5,-24,1,0.08,0,24,1.8,1.1,0.6
-stage22-dashbooster-02,38,0.5,24,-1,0.08,0,24,1.8,1.1,0.6
+﻿DashBoosterID,PosX,PosY,PosZ,DirX,DirY,DirZ,Speed,Duration,Radius,Scale,ChargeEnabled
+stage26-booster-01,10,4.0,10,-0.9015,0.04,0.4327,20,1.0,1.2,0.6,n

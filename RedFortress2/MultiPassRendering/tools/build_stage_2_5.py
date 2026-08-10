@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-"""ステージ2-1「チクチク床の飛び石」のCSVを一括生成する。"""
+"""ステージ2-5「チクチク床の飛び石」のCSVを一括生成する。"""
 
 import csv
 import io
@@ -7,7 +7,7 @@ import math
 from pathlib import Path
 
 
-BASE = Path(__file__).resolve().parents[1] / "res" / "model" / "stage_2_1"
+BASE = Path(__file__).resolve().parents[1] / "res" / "model" / "stage_2_5"
 
 SIMPLE_HEADER = ["ID", "FileName", "PosX", "PosY", "PosZ", "RotX", "RotY", "RotZ", "Scale", "loadType"]
 PHYSICS_HEADER = ["ID", "FileName", "PosX", "PosY", "PosZ", "RotX", "RotY", "RotZ", "Scale", "Type", "Move", "Instancing"]
@@ -52,7 +52,7 @@ def build_render_and_physics():
     simple.append([1, "../ground/stage_visual_ground_world2.x", 0, 0, 0, 0, 0, 0, 1, "meshmix2"])
     simple.append([2, "stage_ground.x", 0, 0, 0, 0, 0, 0, 1, "meshmix2"])
     physics.append([1, "res/model/cubeNormalInverse120x120.x", 0, 0, 0, 0, 0, 0, 1, "Collision", "n", ""])
-    physics.append([2, "res/model/stage_2_1/stage_ground.x", 0, 0.01, 0, 0, 0, 0, 1, "Collision", "n", ""])
+    physics.append([2, "res/model/stage_2_5/stage_ground.x", 0, 0.01, 0, 0, 0, 0, 1, "Collision", "n", ""])
 
     # 20m四方のplateLavaを6x6枚、隙間なく並べて120x120m全体を覆う。
     lava_ids = []
@@ -189,12 +189,12 @@ def main():
                ["small_spider", -43, 0.9, 44, 300]]
 
     collectibles = [["CollectibleID", "Type", "DataID", "PosX", "PosY", "PosZ", "Scale"],
-                    ["stage21-I01", "Item", "006", 31, 4.35, -44, 1],
-                    ["stage21-I02", "Item", "009", 54, 1.1, -1, 1],
-                    ["stage21-I03", "Item", "010", 8, 1.1, -29, 1],
-                    ["stage21-I04", "Item", "014", 32, 1.1, 4, 1],
-                    ["stage21-I05", "Item", "016", 14, 1.1, 20, 1],
-                    ["stage21-I06", "Item", "005", -55, 1.1, 55, 1]]
+                    ["stage25-I01", "Item", "006", 31, 4.35, -44, 1],
+                    ["stage25-I02", "Item", "009", 54, 1.1, -1, 1],
+                    ["stage25-I03", "Item", "010", 8, 1.1, -29, 1],
+                    ["stage25-I04", "Item", "014", 32, 1.1, 4, 1],
+                    ["stage25-I05", "Item", "016", 14, 1.1, 20, 1],
+                    ["stage25-I06", "Item", "005", -55, 1.1, 55, 1]]
 
     destructibles = [["PosX", "PosY", "PosZ", "HP", "DropItemId"],
                      [-21, 1.05, -43, 2, "None"], [-12, 1.05, -43, 2, "014"],
@@ -203,19 +203,19 @@ def main():
 
     lava = [["ID", "PhysicsID", "Damage"]]
     for index, physics_id in enumerate(lava_ids, start=1):
-        lava.append(["stage21-lava-%02d" % index, physics_id, 20])
+        lava.append(["stage25-lava-%02d" % index, physics_id, 20])
 
     direction_x = -12.0
     direction_z = 13.0
     direction_length = math.hypot(direction_x, direction_z)
     boosters = [["DashBoosterID", "PosX", "PosY", "PosZ", "DirX", "DirY", "DirZ",
                  "Speed", "Duration", "Radius", "Scale", "ChargeEnabled"],
-                ["stage21-booster-01", 44, 1.0, -10,
+                ["stage25-booster-01", 44, 1.0, -10,
                  round(direction_x / direction_length, 4), 0.08, round(direction_z / direction_length, 4),
                  20, 0.85, 1.2, 0.6, "n"]]
 
     interactables = [["InteractionID", "Type", "PosX", "PosY", "PosZ", "PromptDistance"],
-                     ["stage21-tree-01", "Tree", 8, 0.85, 52, 2.5]]
+                     ["stage25-tree-01", "Tree", 8, 0.85, 52, 2.5]]
 
     gate_direction_x = -0.8
     gate_direction_z = 0.6
@@ -229,15 +229,15 @@ def main():
 
     point_lights = [["PosX", "PosY", "PosZ", "Brightness", "ColorR", "ColorG", "ColorB", "ColorA",
                      "Shape", "LineLength", "SquareWidth", "SquareHeight", "RotX", "RotY", "RotZ", "Range", "OwnerTag"],
-                    [-50, 3.0, -50, 1.0, 0.20, 0.55, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage21-start"],
-                    [-15, 3.0, -43, 0.9, 0.55, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-battle-a"],
-                    [31, 7.0, -44, 0.9, 0.25, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-high"],
-                    [42, 3.0, -17, 0.9, 0.50, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-battle-b"],
-                    [32, 3.0, 4, 1.0, 1.0, 0.30, 0.10, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-booster"],
-                    [-8, 3.0, 17, 0.9, 0.20, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-battle-c"],
-                    [-24, 3.2, 27, 1.0, 0.70, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-gate"],
-                    [8, 3.0, 52, 0.9, 0.25, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage21-qte"],
-                    [-51, 3.0, 53, 1.0, 0.15, 0.70, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage21-goal"]]
+                    [-50, 3.0, -50, 1.0, 0.20, 0.55, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage25-start"],
+                    [-15, 3.0, -43, 0.9, 0.55, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage25-battle-a"],
+                    [31, 7.0, -44, 0.9, 0.25, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage25-high"],
+                    [42, 3.0, -17, 0.9, 0.50, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage25-battle-b"],
+                    [32, 3.0, 4, 1.0, 1.0, 0.30, 0.10, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage25-booster"],
+                    [-8, 3.0, 17, 0.9, 0.20, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage25-battle-c"],
+                    [-24, 3.2, 27, 1.0, 0.70, 0.25, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage25-gate"],
+                    [8, 3.0, 52, 0.9, 0.25, 0.65, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 12, "stage25-qte"],
+                    [-51, 3.0, 53, 1.0, 0.15, 0.70, 1.0, 1.0, "Point", 12, 10, 10, 0, 0, 0, 11, "stage25-goal"]]
 
     empty_files = {
         "PressurePlates.csv": [["ID", "PlatePosX", "PlatePosY", "PlatePosZ", "WallID", "WallRotX", "WallRotY", "WallRotZ", "WallScale", "TravelDistance"]],
