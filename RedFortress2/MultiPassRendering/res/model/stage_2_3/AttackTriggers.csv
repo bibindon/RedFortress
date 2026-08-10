@@ -1,7 +1,1 @@
 ﻿ID,Type,TriggerX,TriggerY,TriggerZ,TargetID,Axis,BaseRotX,BaseRotY,BaseRotZ,Scale
-1,Lever,8,0,8,9201,Y,0,0,0,2
-2,Lever,-8,0,-10,9202,Y,0,0,0,2
-3,Lever,8,0,-20,9203,Y,0,0,0,2
-4,Rope,-38,0.6,-19,9301,X,0,0,0,2
-5,Rope,-38,0.6,-14,9302,X,0,0,0,2
-6,Rope,-38,0.6,-9,9303,X,0,0,0,2

@@ -53,16 +53,22 @@ namespace
     }
 
     D3DXMATRIX BuildFloodWorldMatrix(const D3DXVECTOR3& position,
+                                     const D3DXVECTOR3& rotation,
                                      const D3DXVECTOR3& scale)
     {
         D3DXMATRIX scaleMatrix;
+        D3DXMATRIX rotationMatrix;
         D3DXMATRIX translationMatrix;
         D3DXMatrixScaling(&scaleMatrix, scale.x, scale.y, scale.z);
+        D3DXMatrixRotationYawPitchRoll(&rotationMatrix,
+                                       rotation.y,
+                                       rotation.x,
+                                       rotation.z);
         D3DXMatrixTranslation(&translationMatrix,
                               position.x,
                               position.y,
                               position.z);
-        return scaleMatrix * translationMatrix;
+        return scaleMatrix * rotationMatrix * translationMatrix;
     }
 }
 
@@ -106,7 +112,7 @@ void LavaFloodManager::LoadForStage(NSRender::Render& render,
         }
 
         const std::vector<std::wstring> cells = SplitCsvLine(line);
-        if (cells.size() < 11)
+        if (cells.size() != 11 && cells.size() != 13)
         {
             std::abort();
         }
@@ -117,34 +123,49 @@ void LavaFloodManager::LoadForStage(NSRender::Render& render,
         flood.anchor.x = std::stof(cells[2]);
         flood.anchor.y = std::stof(cells[3]);
         flood.anchor.z = std::stof(cells[4]);
-        flood.directionZ = std::stof(cells[5]);
-        flood.startWidth = std::stof(cells[6]);
-        flood.startLength = std::stof(cells[7]);
-        flood.endWidth = std::stof(cells[8]);
-        flood.endLength = std::stof(cells[9]);
-        flood.duration = std::stof(cells[10]);
+        if (cells.size() == 13)
+        {
+            flood.direction.x = std::stof(cells[5]);
+            flood.direction.z = std::stof(cells[6]);
+            flood.startWidth = std::stof(cells[7]);
+            flood.startLength = std::stof(cells[8]);
+            flood.endWidth = std::stof(cells[9]);
+            flood.endLength = std::stof(cells[10]);
+            flood.delay = std::stof(cells[11]);
+            flood.duration = std::stof(cells[12]);
+        }
+        else
+        {
+            flood.direction.x = 0.0f;
+            flood.direction.z = std::stof(cells[5]);
+            flood.startWidth = std::stof(cells[6]);
+            flood.startLength = std::stof(cells[7]);
+            flood.endWidth = std::stof(cells[8]);
+            flood.endLength = std::stof(cells[9]);
+            flood.delay = 0.0f;
+            flood.duration = std::stof(cells[10]);
+        }
+
+        const float directionLength = std::sqrt(
+            flood.direction.x * flood.direction.x +
+            flood.direction.z * flood.direction.z);
 
         if (flood.id.empty() ||
             !loadedIds.insert(flood.id).second ||
             flood.damage <= 0 ||
-            std::fabs(flood.directionZ) <= 0.0001f ||
+            directionLength <= 0.0001f ||
             flood.startWidth < kMinimumExtent ||
             flood.startLength < kMinimumExtent ||
             flood.endWidth < kMinimumExtent ||
             flood.endLength < kMinimumExtent ||
+            flood.delay < 0.0f ||
             flood.duration < 0.0f)
         {
             std::abort();
         }
 
-        if (flood.directionZ > 0.0f)
-        {
-            flood.directionZ = 1.0f;
-        }
-        else
-        {
-            flood.directionZ = -1.0f;
-        }
+        flood.direction.x /= directionLength;
+        flood.direction.z /= directionLength;
 
         flood.meshId = render.AddMeshMix(kLavaModelPath,
                                          flood.anchor,
@@ -173,10 +194,6 @@ void LavaFloodManager::Clear()
 {
     for (Flood& flood : m_floods)
     {
-        if (m_render != nullptr && flood.meshId >= 0)
-        {
-            m_render->RemoveMeshMix(flood.meshId);
-        }
         if (flood.physicsId >= 0)
         {
             PhysicsLib::PhysicsLib::SetVelocity(
@@ -187,6 +204,15 @@ void LavaFloodManager::Clear()
                 kDisabledPosition,
                 kDefaultRotation,
                 D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+        }
+    }
+    for (std::vector<Flood>::reverse_iterator iterator = m_floods.rbegin();
+         iterator != m_floods.rend();
+         ++iterator)
+    {
+        if (m_render != nullptr && iterator->meshId >= 0)
+        {
+            m_render->RemoveMeshMix(iterator->meshId);
         }
     }
     m_floods.clear();
@@ -203,9 +229,10 @@ void LavaFloodManager::Update(NSRender::Render& render,
     for (Flood& flood : m_floods)
     {
         flood.elapsed += deltaSeconds;
-        if (flood.elapsed > flood.duration)
+        const float endTime = flood.delay + flood.duration;
+        if (flood.elapsed > endTime)
         {
-            flood.elapsed = flood.duration;
+            flood.elapsed = endTime;
         }
         ApplyFloodTransform(render, flood);
     }
@@ -222,7 +249,7 @@ int LavaFloodManager::GetContactDamage(
 
     for (const Flood& flood : m_floods)
     {
-        if (flood.physicsId < 0)
+        if (!flood.active || flood.physicsId < 0)
         {
             continue;
         }
@@ -252,7 +279,7 @@ int LavaFloodManager::GetContactDamageForCylinder(
 
     for (const Flood& flood : m_floods)
     {
-        if (flood.physicsId < 0)
+        if (!flood.active || flood.physicsId < 0)
         {
             continue;
         }
@@ -282,10 +309,24 @@ std::size_t LavaFloodManager::GetFloodCount() const
 void LavaFloodManager::ApplyFloodTransform(NSRender::Render& render,
                                            Flood& flood)
 {
+    if (flood.elapsed < flood.delay)
+    {
+        flood.active = false;
+        render.SetMeshMixEnabled(flood.meshId, false);
+        PhysicsLib::PhysicsLib::SetTransform(flood.physicsId,
+                                             kDisabledPosition,
+                                             kDefaultRotation,
+                                             D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+        return;
+    }
+
+    flood.active = true;
+    render.SetMeshMixEnabled(flood.meshId, true);
+    const float activeElapsed = flood.elapsed - flood.delay;
     float progress = 1.0f;
     if (flood.duration > 0.0f)
     {
-        progress = flood.elapsed / flood.duration;
+        progress = activeElapsed / flood.duration;
         progress = (std::max)(0.0f, (std::min)(progress, 1.0f));
     }
 
@@ -294,17 +335,23 @@ void LavaFloodManager::ApplyFloodTransform(NSRender::Render& render,
     const float length = flood.startLength +
                          (flood.endLength - flood.startLength) * progress;
     const D3DXVECTOR3 position(
-        flood.anchor.x,
+        flood.anchor.x + flood.direction.x * length * 0.5f,
         flood.anchor.y,
-        flood.anchor.z + flood.directionZ * length * 0.5f);
+        flood.anchor.z + flood.direction.z * length * 0.5f);
+    const D3DXVECTOR3 rotation(
+        0.0f,
+        std::atan2(flood.direction.x, flood.direction.z),
+        0.0f);
     const D3DXVECTOR3 scale(width / kBasePlaneSize,
                             1.0f,
                             length / kBasePlaneSize);
-    const D3DXMATRIX worldMatrix = BuildFloodWorldMatrix(position, scale);
+    const D3DXMATRIX worldMatrix = BuildFloodWorldMatrix(position,
+                                                         rotation,
+                                                         scale);
 
     render.SetMeshMixWorldMatrix(flood.meshId, worldMatrix);
     PhysicsLib::PhysicsLib::SetTransform(flood.physicsId,
                                          position,
-                                         kDefaultRotation,
+                                         rotation,
                                          scale);
 }

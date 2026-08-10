@@ -1,0 +1,7 @@
+﻿PosX,PosY,PosZ,Brightness,ColorR,ColorG,ColorB,ColorA,Shape,LineLength,SquareWidth,SquareHeight,RotX,RotY,RotZ,Range,OwnerTag
+-20,3.0,-54,1.0,0.2,0.55,1.0,1.0,Point,12,10,10,0,0,0,10,stage23-start
+-20,3.0,-25,0.9,1.0,0.25,0.08,1.0,Point,12,10,10,0,0,0,12,stage23-turn1
+20,3.0,-25,0.9,1.0,0.25,0.08,1.0,Point,12,10,10,0,0,0,12,stage23-turn2
+20,3.0,10,0.9,1.0,0.25,0.08,1.0,Point,12,10,10,0,0,0,12,stage23-turn3
+-20,3.0,10,0.9,1.0,0.25,0.08,1.0,Point,12,10,10,0,0,0,12,stage23-turn4
+-20,3.0,54,1.0,0.15,0.7,1.0,1.0,Point,12,10,10,0,0,0,10,stage23-goal

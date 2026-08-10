@@ -31,13 +31,15 @@ private:
         int physicsId = -1;
         int damage = 0;
         D3DXVECTOR3 anchor = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        float directionZ = -1.0f;
+        D3DXVECTOR3 direction = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
         float startWidth = 0.0f;
         float startLength = 0.0f;
         float endWidth = 0.0f;
         float endLength = 0.0f;
+        float delay = 0.0f;
         float duration = 0.0f;
         float elapsed = 0.0f;
+        bool active = false;
     };
 
     void ApplyFloodTransform(NSRender::Render& render, Flood& flood);

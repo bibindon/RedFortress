@@ -1,2 +1,6 @@
-﻿ID,Damage,AnchorX,AnchorY,AnchorZ,DirectionZ,StartWidth,StartLength,EndWidth,EndLength,Duration
-stage23-flood-01,20,0,0.02,64,-1,24,8,120,128,200
+﻿ID,Damage,AnchorX,AnchorY,AnchorZ,DirectionX,DirectionZ,StartWidth,StartLength,EndWidth,EndLength,Delay,Duration
+stage23-flood-01,20,-20,0.42,-59,0,1,14,2,14,36,8,32
+stage23-flood-02,20,-22,0.42,-25,1,0,14,2,14,44,40,37
+stage23-flood-03,20,20,0.42,-27,0,1,14,2,14,39,77,32
+stage23-flood-04,20,22,0.42,10,-1,0,14,2,14,44,109,37
+stage23-flood-05,20,-20,0.42,8,0,1,14,2,14,51,146,46

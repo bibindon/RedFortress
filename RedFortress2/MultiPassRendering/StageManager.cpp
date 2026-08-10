@@ -34,7 +34,7 @@ void StageManager::Initialize()
     AddStage(L"2-2", 10, L"2-2 上に逃げろ！", L"stage_2_2", D3DXVECTOR3(-20.0f, 0.9f, -54.0f), D3DXVECTOR3(20.0f, 13.5f, 54.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
-    AddStage(L"2-3", 11, L"2-3 追ってくるマグマの道", L"stage_2_3", D3DXVECTOR3(0.0f, 0.2f, 28.0f), D3DXVECTOR3(0.0f, 1.0f, -28.0f),
+    AddStage(L"2-3", 11, L"2-3 追ってくるマグマの道", L"stage_2_3", D3DXVECTOR3(-20.0f, 0.9f, -54.0f), D3DXVECTOR3(-20.0f, 0.9f, 54.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
     AddStage(L"2-4", 12, L"2-4 空飛ぶ足場を乗りつごう", L"stage_2_4", D3DXVECTOR3(-50.0f, 0.9f, -50.0f), D3DXVECTOR3(-50.0f, 30.85f, -50.0f),
