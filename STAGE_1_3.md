@@ -68,12 +68,12 @@
    `stage13-tree-01` @ `(-6, 0, 24)`、PromptDistance 2.5。描画 `../tree2/lemonTree.x`（3801）、衝突 `../tree2Physics/tree_cylinder_collision.x`（3801）、`Interactables.csv`。入口は破壊可能ガレキ2個で塞ぎ、壊すと見つかる構成。成功でランダム素材1個。
 
 5. **レバー3（両開き門）— 1セット（島Dの寄り道）**
-   - 箱 `lever_box3.x` @ `(0, 0.1, 6)`（ID 9103）、扉 `lever_box3_door.x` @ `(0, 0.1, 6)`（ID 9104, Move=y, Scale 0.98）、床 `lever_box3_floor.x`（5x10）@ `(0, 0, 6)`（ID 9102）
+   - 箱 `lever_box3.x` @ `(0, 0.1, 6)`（ID 9103）、扉 `lever_box3_door.x` @ `(0, 0.1, 6)`（ID 9104, Move=y, Scale 0.98）、床 `lever_box3_floor.x`（5x10x1.0）@ `(0, -0.9, 6)`（ID 9102）
    - レバー2つ（AttackTriggers ID=3, 4）: 各連動壁の前 `(0, 0.7, 9)` / `(0, 0.7, 3)`。どちらを操作しても両扉が同時に開閉（共有トグル）。
    - 箱の中にアイテム I05。箱の西側（X −6〜−3）が通路。
 
 6. **感圧板3（両開き門）— 1セット（島Gの寄り道）**
-   - 箱 `lever_box3.x` @ `(0, 0.1, -14)`（ID 9113）、扉 `lever_box3_door.x` @ `(0, 0.1, -14)`（ID 9114, Move=y, Scale 0.98）、床 `lever_box3_floor14.x`（5x14）@ `(0, 0, -14)`（ID 9112）
+   - 箱 `lever_box3.x` @ `(0, 0.1, -14)`（ID 9113）、扉 `lever_box3_door.x` @ `(0, 0.1, -14)`（ID 9114, Move=y, Scale 0.98）、床 `lever_box3_floor14.x`（5x14x1.0）@ `(0, -0.9, -14)`（ID 9112）
    - 感圧板2つ（PressurePlates ID=2, 3）: 各連動壁の前 `(0, 0.11, -11)` / `(0, 0.11, -17)`。どちらに乗っても両扉が同時に開く（共有WallID・OR）。
    - 箱の中にアイテム I06。箱の西側が通路。
 

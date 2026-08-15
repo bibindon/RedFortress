@@ -149,7 +149,7 @@ def build_render_physics_and_move():
 
     # 枝Cのレバー2報酬箱。大きな足場の東半分に置く。
     add_pair(simple, physics, 7101, "../attack_trigger/lever_box_floor.x",
-             "res/model/attack_trigger/lever_box_floor.x", 53, 16.05, -18)
+             "res/model/attack_trigger/lever_box_floor.x", 53, 15.15, -18)
     add_pair(simple, physics, 7102, "../attack_trigger/lever_box.x",
              "res/model/attack_trigger/lever_box.x", 53, 16.15, -18)
     add_pair(simple, physics, 7103, "../attack_trigger/lever_box_door.x",

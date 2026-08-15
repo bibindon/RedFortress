@@ -19,7 +19,7 @@
 2117,res/model/plateLava.x,0,0.02,50,0,0,0,2.5,NonCollision,n,
 2118,res/model/plateLava.x,20,0.02,50,0,0,0,2.5,NonCollision,n,
 2201,res/model/collision_moving_platform.x,-18.5,0.65,-29.5,0,0,0,1.5,Collision,y,
-2301,res/model/attack_trigger/lever_box3_floor.x,0,0.85,0,0,0,0,1,Collision,n,
+2301,res/model/attack_trigger/lever_box3_floor.x,0,-0.05,0,0,0,0,1,Collision,n,
 2302,res/model/attack_trigger/lever_box3.x,0,0.95,0,0,0,0,1,Collision,n,
 2303,res/model/attack_trigger/lever_box3_door.x,0,0.95,0,0,0,0,0.98,Collision,y,
 2401,res/model/tree2Physics/tree_cylinder_collision.x,26,0.9,-18,0,0,0,1,Collision,n,

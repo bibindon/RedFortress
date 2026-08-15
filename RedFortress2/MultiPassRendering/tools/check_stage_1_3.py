@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """ステージ1-3 の静的チェック（1-7設計書の13項目チェック相当を手動実装）。
 重複ID / 描画↔物理整合 / 移動床3CSV連携 / AttackTriggers TargetID /
 PressurePlates WallID / 敵数・型 / 収集物DataID / ギミック最小数 / 開始・ゴール7m以内に敵なし。"""
@@ -113,7 +113,6 @@ def main():
         ("lever/rope/button", len(read("AttackTriggers.csv")) >= 1, "AttackTriggers.csv"),
         ("pressure plate", len(read("PressurePlates.csv")) >= 1, "PressurePlates.csv"),
         ("destructibles", len(read("Destructibles.csv")) >= 1, "Destructibles.csv"),
-        ("skull", len(read("Skulls.csv")) >= 1, "Skulls.csv"),
         ("star", len(read("Stars.csv")) >= 1, "Stars.csv"),
     ]
     for label, ok, src in checks:

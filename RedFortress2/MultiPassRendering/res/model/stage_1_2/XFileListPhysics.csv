@@ -30,6 +30,6 @@
 3620,res/model/static_platform/static_platform_1x1_collision.x,11,3.2,-24,0,0,0,1,Collision,n,
 3621,res/model/static_platform/static_platform_2x2_collision.x,-12,2,-1,0,0,0,1,Collision,n,
 3801,res/model/tree2Physics/tree_cylinder_collision.x,-14,0,14,0,0,0,1,Collision,n,
-9001,res/model/attack_trigger/lever_box3_floor.x,10,0.6,-14,0,0,0,1,Collision,n,
+9001,res/model/attack_trigger/lever_box3_floor.x,10,-0.3,-14,0,0,0,1,Collision,n,
 9002,res/model/attack_trigger/lever_box3.x,10,0.7,-14,0,0,0,1,Collision,n,
 9003,res/model/attack_trigger/lever_box3_door.x,10,0.7,-14,0,0,0,0.98,Collision,y,

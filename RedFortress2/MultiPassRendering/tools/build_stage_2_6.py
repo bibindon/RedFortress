@@ -141,7 +141,7 @@ def build_render_and_physics():
 
     # 南端高台のレバー2報酬箱。
     add_pair(simple, physics, 9001, "../attack_trigger/lever_box_floor.x",
-             "res/model/attack_trigger/lever_box_floor.x", -22, 3.7, -54)
+             "res/model/attack_trigger/lever_box_floor.x", -22, 2.8, -54)
     add_pair(simple, physics, 9002, "../attack_trigger/lever_box.x",
              "res/model/attack_trigger/lever_box.x", -22, 3.8, -54)
     add_pair(simple, physics, 9003, "../attack_trigger/lever_box_door.x",
@@ -150,7 +150,7 @@ def build_render_and_physics():
 
     # 陸地Cから東側へ出る唯一のレバー3門。開口部をX方向へ向ける。
     add_pair(simple, physics, 9101, "../attack_trigger/lever_box3_floor.x",
-             "res/model/attack_trigger/lever_box3_floor.x", 27, 0.85, -27,
+             "res/model/attack_trigger/lever_box3_floor.x", 27, -0.05, -27,
              rotation_y=90)
     add_pair(simple, physics, 9102, "../attack_trigger/lever_box3.x",
              "res/model/attack_trigger/lever_box3.x", 27, 0.95, -27,

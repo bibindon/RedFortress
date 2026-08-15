@@ -2,7 +2,7 @@
 2,res/model/stage_2_2/stage_ground.x,0,0,0,0,0,0,1,Collision,n,
 2201,res/model/collision_moving_platform.x,-20,1.6,-32,0,0,0,1.5,Collision,y,
 2301,res/model/collision_wall/collision_wall_tall_collision.x,8.5,4.3,-12,0,90,0,1,Collision,y,
-2401,res/model/attack_trigger/lever_box3_floor.x,-9,5.25,-3,0,0,0,1,Collision,n,
+2401,res/model/attack_trigger/lever_box3_floor.x,-9,4.35,-3,0,0,0,1,Collision,n,
 2402,res/model/attack_trigger/lever_box3.x,-9,5.35,-3,0,0,0,1,Collision,n,
 2403,res/model/attack_trigger/lever_box3_door.x,-9,5.35,-3,0,0,0,0.98,Collision,y,
 2501,res/model/tree2Physics/tree_cylinder_collision.x,-27,7.0,10,0,0,0,1,Collision,n,

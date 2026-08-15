@@ -100,7 +100,7 @@
 5520,../collision_wall/collision_wall_tall.x,54.8,7.0,48,0,0,0,1.0,meshmix2
 6001,../collision_moving_platform/collision_moving_platform.x,44,0.65,0,0,0,0,1.3,meshmix2
 7001,../tree2/lemonTree.x,-28,0.85,56,0,0,0,1,normal
-7101,../attack_trigger/lever_box_floor.x,5,0.65,-54,0,0,0,1,normal
+7101,../attack_trigger/lever_box_floor.x,5,-0.25,-54,0,0,0,1,normal
 7102,../attack_trigger/lever_box.x,5,0.75,-54,0,0,0,1,normal
 7103,../attack_trigger/lever_box_door.x,5,0.75,-57,0,0,0,0.98,normal
 9201,../base/base_rock1.x,-64,0,-28,0,30,0,0.9,normal

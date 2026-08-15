@@ -133,7 +133,7 @@ def build_render_and_physics():
 
     # 高所のレバー2。箱の中のアイテムは扉を上げないと取得できない。
     add_pair(simple, physics, 9001, "../attack_trigger/lever_box_floor.x",
-             "res/model/attack_trigger/lever_box_floor.x", 31, 3.7, -44)
+             "res/model/attack_trigger/lever_box_floor.x", 31, 2.8, -44)
     add_pair(simple, physics, 9002, "../attack_trigger/lever_box.x",
              "res/model/attack_trigger/lever_box.x", 31, 3.8, -44)
     add_pair(simple, physics, 9003, "../attack_trigger/lever_box_door.x",
@@ -143,7 +143,7 @@ def build_render_and_physics():
     # 区画9と11の間をつなぐレバー3門。床そのものが区画10の橋になる。
     gate_rotation = -53.13
     add_pair(simple, physics, 9101, "../attack_trigger/lever_box3_floor.x",
-             "res/model/attack_trigger/lever_box3_floor.x", -24, 0.85, 27,
+             "res/model/attack_trigger/lever_box3_floor.x", -24, -0.05, 27,
              rotation_y=gate_rotation)
     add_pair(simple, physics, 9102, "../attack_trigger/lever_box3.x",
              "res/model/attack_trigger/lever_box3.x", -24, 0.95, 27,

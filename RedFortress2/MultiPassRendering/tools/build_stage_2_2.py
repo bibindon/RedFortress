@@ -52,7 +52,7 @@ def build_render_and_physics():
 
     # Zone 6のレバー3で開く中央門。
     add_pair(simple, physics, 2401, "../attack_trigger/lever_box3_floor.x",
-             "res/model/attack_trigger/lever_box3_floor.x", -9, 5.25, -3)
+             "res/model/attack_trigger/lever_box3_floor.x", -9, 4.35, -3)
     add_pair(simple, physics, 2402, "../attack_trigger/lever_box3.x",
              "res/model/attack_trigger/lever_box3.x", -9, 5.35, -3)
     add_pair(simple, physics, 2403, "../attack_trigger/lever_box3_door.x",

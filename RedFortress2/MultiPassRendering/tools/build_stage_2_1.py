@@ -58,7 +58,7 @@ def build_render_and_physics():
 
     # 中央のレバー3門。高台のレバーを操作しないと南北を移動できない。
     add_pair(simple, physics, 2301, "../attack_trigger/lever_box3_floor.x",
-             "res/model/attack_trigger/lever_box3_floor.x", 0, 0.85, 0)
+             "res/model/attack_trigger/lever_box3_floor.x", 0, -0.05, 0)
     add_pair(simple, physics, 2302, "../attack_trigger/lever_box3.x",
              "res/model/attack_trigger/lever_box3.x", 0, 0.95, 0)
     add_pair(simple, physics, 2303, "../attack_trigger/lever_box3_door.x",

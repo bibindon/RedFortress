@@ -3,7 +3,7 @@
 2,stage_ground.x,0,0,0,0,0,0,1,meshmix2
 2201,../collision_moving_platform/collision_moving_platform.x,-20,1.6,-32,0,0,0,1.5,meshmix2
 2301,../collision_wall/collision_wall_tall.x,8.5,4.3,-12,0,90,0,1,normal
-2401,../attack_trigger/lever_box3_floor.x,-9,5.25,-3,0,0,0,1,normal
+2401,../attack_trigger/lever_box3_floor.x,-9,4.35,-3,0,0,0,1,normal
 2402,../attack_trigger/lever_box3.x,-9,5.35,-3,0,0,0,1,normal
 2403,../attack_trigger/lever_box3_door.x,-9,5.35,-3,0,0,0,0.98,normal
 2501,../tree2/lemonTree.x,-27,7.0,10,0,0,0,1,normal

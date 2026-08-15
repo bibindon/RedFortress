@@ -73,6 +73,6 @@
 6016,res/model/collision_moving_platform.x,0,24.3,-34,0,0,0,1.5,Collision,y,
 6017,res/model/collision_moving_platform.x,-36,24.3,-3,0,0,0,1.5,Collision,y,
 7001,res/model/tree2Physics/tree_cylinder_collision.x,-54,0.85,12,0,0,0,1,Collision,n,
-7101,res/model/attack_trigger/lever_box_floor.x,53,16.05,-18,0,0,0,1,Collision,n,
+7101,res/model/attack_trigger/lever_box_floor.x,53,15.15,-18,0,0,0,1,Collision,n,
 7102,res/model/attack_trigger/lever_box.x,53,16.15,-18,0,0,0,1,Collision,n,
 7103,res/model/attack_trigger/lever_box_door.x,53,16.15,-21,0,0,0,0.98,Collision,y,

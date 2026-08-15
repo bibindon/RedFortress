@@ -73,6 +73,6 @@
 6016,../collision_moving_platform/collision_moving_platform.x,0,24.3,-34,0,0,0,1.5,meshmix2
 6017,../collision_moving_platform/collision_moving_platform.x,-36,24.3,-3,0,0,0,1.5,meshmix2
 7001,../tree2/lemonTree.x,-54,0.85,12,0,0,0,1,normal
-7101,../attack_trigger/lever_box_floor.x,53,16.05,-18,0,0,0,1,normal
+7101,../attack_trigger/lever_box_floor.x,53,15.15,-18,0,0,0,1,normal
 7102,../attack_trigger/lever_box.x,53,16.15,-18,0,0,0,1,normal
 7103,../attack_trigger/lever_box_door.x,53,16.15,-21,0,0,0,0.98,normal

@@ -14,7 +14,7 @@
 3612,res/model/static_platform/static_platform_2x2_collision.x,16,11,8,0,0,0,1,Collision,n,
 3613,res/model/static_platform/static_platform_2x2_collision.x,-6,15,21,0,0,0,1,Collision,n,
 3512,res/model/collision_moving_platform.x,-12,0.4,-9,0,0,0,1.5,Collision,y,
-9001,res/model/attack_trigger/lever_box3_floor.x,0,0.05,-24,0,0,0,1,Collision,n,
+9001,res/model/attack_trigger/lever_box3_floor.x,0,-0.85,-24,0,0,0,1,Collision,n,
 9002,res/model/attack_trigger/lever_box3.x,0,0.15,-24,0,0,0,1,Collision,n,
 9003,res/model/attack_trigger/lever_box3_door.x,0,0.15,-24,0,0,0,0.98,Collision,y,
 3101,res/model/collision_wall/collision_wall_collision.x,-14.7,1.5,-24,0,90,0,1,Collision,n,

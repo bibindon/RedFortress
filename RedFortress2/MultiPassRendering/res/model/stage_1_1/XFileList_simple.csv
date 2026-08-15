@@ -8,7 +8,7 @@
 3511,../collision_moving_platform/collision_moving_platform.x,0,0.4,3,0,0,0,2,meshmix2,
 3601,../static_platform/static_platform_1x1.x,13,3.2,-4,0,0,0,1,normal,
 3801,../tree2/lemonTree.x,10,0,-18,0,0,0,1,normal,
-9102,../attack_trigger/lever_box3_floor.x,-9,0.6,12,0,0,0,1,normal,
+9102,../attack_trigger/lever_box3_floor.x,-9,-0.3,12,0,0,0,1,normal,
 9103,../attack_trigger/lever_box3.x,-9,0.7,12,0,0,0,1,normal,
 9104,../attack_trigger/lever_box3_door.x,-9,0.7,12,0,0,0,0.98,normal,
 8001,../fence.x,-11,0.5,-30,0,0,0,1,normal,
@@ -35,7 +35,7 @@
 8022,../fence.x,15,0.5,22,0,90,0,1,normal,
 8023,../fence.x,-15,0.5,30,0,90,0,1,normal,
 8024,../fence.x,15,0.5,30,0,90,0,1,normal,
-9001,../attack_trigger/lever_box_floor.x,-9,0.6,-14,0,0,0,1,normal,
+9001,../attack_trigger/lever_box_floor.x,-9,-0.3,-14,0,0,0,1,normal,
 9002,../attack_trigger/lever_box.x,-9,0.7,-14,0,0,0,1,normal,
 9003,../attack_trigger/lever_box_door.x,-9,0.7,-17,0,0,0,0.98,normal,
 9200,../grass/grass.x,0,0,0,0,0,0,1,instancing,../grass/grass1-1.csv

@@ -14,7 +14,7 @@
 3612,../static_platform/static_platform_2x2.x,16,11,8,0,0,0,1,normal,
 3613,../static_platform/static_platform_2x2.x,-6,15,21,0,0,0,1,normal,
 3512,../collision_moving_platform/collision_moving_platform.x,-12,0.4,-9,0,0,0,1.5,normal,
-9001,../attack_trigger/lever_box3_floor.x,0,0.05,-24,0,0,0,1,normal,
+9001,../attack_trigger/lever_box3_floor.x,0,-0.85,-24,0,0,0,1,normal,
 9002,../attack_trigger/lever_box3.x,0,0.15,-24,0,0,0,1,normal,
 9003,../attack_trigger/lever_box3_door.x,0,0.15,-24,0,0,0,0.98,normal,
 3101,../collision_wall/collision_wall.x,-14.7,1.5,-24,0,90,0,1,meshmix2,
