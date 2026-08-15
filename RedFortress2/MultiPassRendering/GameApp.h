@@ -213,6 +213,7 @@ private:
     bool IsCurrentStageSelect() const;
     bool IsStagePortalSelectable(const std::wstring& portalId) const;
     bool AreAllStageEnemiesDefeated() const;
+    bool ShouldUseGoalPortal() const;
     bool IsBossStageClearReached() const;
     bool ShouldShowGoalArrow() const;
     void EnsureGoalArrow();

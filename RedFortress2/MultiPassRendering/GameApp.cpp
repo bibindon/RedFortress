@@ -799,7 +799,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     });
     m_destructibleManager.LoadForStage(m_render, initialStage.destructibleCsvPath);
 
-    if (!IsStageSelectId(initialStage.id) && !IsBaseId(initialStage.id))
+    if (!IsStageSelectId(initialStage.id) &&
+        !IsBaseId(initialStage.id) &&
+        ShouldUseGoalPortal())
     {
         InitializePortal(initialStage.clearPosition);
     }
@@ -2028,19 +2030,20 @@ void GameApp::Run()
             }
 
             const bool isBossStage = IsBossStageNumber(m_stageManager.GetCurrentStageNumber());
-            if (!isBossStage)
+            const bool usesGoalPortal = ShouldUseGoalPortal();
+            if (usesGoalPortal)
             {
                 UpdatePortal();
             }
 
             bool isStageClearReached = false;
-            if (isBossStage)
+            if (usesGoalPortal)
             {
-                isStageClearReached = IsBossStageClearReached();
+                isStageClearReached = IsStageClearReached();
             }
             else
             {
-                isStageClearReached = IsStageClearReached();
+                isStageClearReached = IsBossStageClearReached();
             }
 
             if (!IsCurrentStageSelect() &&
@@ -4356,6 +4359,17 @@ bool GameApp::AreAllStageEnemiesDefeated() const
     return true;
 }
 
+bool GameApp::ShouldUseGoalPortal() const
+{
+    const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+    if (!IsBossStageNumber(stage.number))
+    {
+        return true;
+    }
+
+    return m_saveDataManager.IsStageCleared(stage.id);
+}
+
 bool GameApp::IsBossStageClearReached() const
 {
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
@@ -4366,7 +4380,7 @@ bool GameApp::IsBossStageClearReached() const
 
     if (m_saveDataManager.IsStageCleared(stage.id))
     {
-        return AreAllStageEnemiesDefeated();
+        return false;
     }
 
     bool hasBoss = false;
@@ -4405,7 +4419,7 @@ bool GameApp::ShouldShowGoalArrow() const
         return false;
     }
 
-    if (IsBossStageNumber(stageNumber))
+    if (!ShouldUseGoalPortal())
     {
         return false;
     }
@@ -7900,7 +7914,7 @@ void GameApp::LoadCurrentStageObjects()
 
     if (!IsStageSelectId(stage.id) &&
         !IsBaseId(stage.id) &&
-        !IsBossStageNumber(stage.number))
+        ShouldUseGoalPortal())
     {
         InitializePortal(stage.clearPosition);
     }
