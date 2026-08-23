@@ -138,6 +138,7 @@ namespace
     const std::wstring g_playerWalkAnimName = L"walk";
     const std::wstring g_playerRunAnimName = L"run";
     const std::wstring g_playerJumpAnimName = L"jump";
+    const std::wstring g_playerDeathAnimName = L"death";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
     const std::wstring g_gameOverImagePath = L"res\\2D_Image\\gameover.png";
     const float kPlayerWalkAnimationSpeed = 1.3f;
@@ -252,6 +253,7 @@ namespace
     const int kKnockbackDurationFrames = 60;
     const float kKnockbackSpeed = 1.0f;
     const int kRespawnFadeOutFrames = 30;
+    const int kPlayerDeathMotionFrames = 72;
     const int kRespawnBlackHoldFrames = 12;
     const int kRespawnFadeInFrames = 24;
     const int kWarpFadeOutFrames = 15;
@@ -1299,9 +1301,20 @@ void GameApp::Run()
 
             if (m_playerDeathPending)
             {
-                // フェードアウト中はプレイヤー/敵の更新をスキップし、暗転を進める。
+                // 地上での死亡は崩れ落ちるモーションを見せてから暗転する。
                 // 完全暗転（フェードα=1）になったら瞬間移動でリスポーンし、黒保持を経てフェードインする。
-                if (m_respawnPhase == RespawnPhase::FadeOut)
+                if (m_respawnPhase == RespawnPhase::DeathMotion)
+                {
+                    --m_respawnFadeFrames;
+                    if (m_respawnFadeFrames <= kRespawnFadeOutFrames)
+                    {
+                        m_respawnPhase = RespawnPhase::FadeOut;
+                        m_respawnFadeFrames = kRespawnFadeOutFrames;
+                        m_render.StartFadeOut(
+                            static_cast<float>(kRespawnFadeOutFrames) / 60.0f);
+                    }
+                }
+                else if (m_respawnPhase == RespawnPhase::FadeOut)
                 {
                     if (m_render.GetFadeAlpha() >= 1.0f)
                     {
@@ -2993,6 +3006,12 @@ void GameApp::SetPlayerAnimationState(const PlayerAnimState nextState, const flo
     if (nextState == PlayerAnimState::BusterLower)
     {
         m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"shoot_end");
+        return;
+    }
+
+    if (nextState == PlayerAnimState::Death)
+    {
+        m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerDeathAnimName);
         return;
     }
 
@@ -7373,12 +7392,20 @@ void GameApp::HandlePlayerDeath()
     ClearBusters();
     m_skullManager.ReleaseHeld(m_render, m_playerMover.GetPosition());
 
-    // フェードアウト開始。シーン更新は止めず（SetSceneUpdatePaused は使わない）、
-    // メインループの m_playerDeathPending による continue でプレイヤー/敵の処理をスキップしつつ
-    // Render::UpdateFade を進める。暗転完了後に瞬間移動でリスポーンする。
-    m_respawnPhase = RespawnPhase::FadeOut;
-    m_respawnFadeFrames = kRespawnFadeOutFrames;
-    m_render.StartFadeOut(static_cast<float>(kRespawnFadeOutFrames) / 60.0f);
+    // シーン更新は止めず（SetSceneUpdatePaused は使わない）、死亡モーションと暗転を進める。
+    // 落下死ではプレイヤーが画面外にいるため、従来どおりすぐ暗転する。
+    if (m_playerFallingDead)
+    {
+        m_respawnPhase = RespawnPhase::FadeOut;
+        m_respawnFadeFrames = kRespawnFadeOutFrames;
+        m_render.StartFadeOut(static_cast<float>(kRespawnFadeOutFrames) / 60.0f);
+    }
+    else
+    {
+        SetPlayerAnimationState(PlayerAnimState::Death, 1.0f);
+        m_respawnPhase = RespawnPhase::DeathMotion;
+        m_respawnFadeFrames = kPlayerDeathMotionFrames;
+    }
 }
 
 void GameApp::CompletePlayerDeath()
@@ -7408,6 +7435,7 @@ void GameApp::CompletePlayerDeath()
     m_playerMover.Reset(respawnPos);
     m_player.ResetHp();
     m_hpBar.Reset();
+    SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
 
     // 無敵＋点滅
     m_playerInvincibleFrames = kRespawnInvincibleFrames;

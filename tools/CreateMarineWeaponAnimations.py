@@ -2,7 +2,7 @@
 import os
 
 import bpy
-from mathutils import Euler, Matrix
+from mathutils import Euler, Matrix, Vector
 
 
 ARMATURE_NAME = "宝鐘マリンV2_arm"
@@ -14,12 +14,14 @@ SHOOT_RECOIL_ACTION_NAME = "shoot_recoil"
 SHOOT_AIM_ACTION_NAME = "shoot_aim"
 SHOOT_END_ACTION_NAME = "shoot_end"
 PLACE_BOMB_ACTION_NAME = "place_bomb"
+DEATH_ACTION_NAME = "death"
 
 SHOOT_START_END_FRAME = 6
 SHOOT_RECOIL_END_FRAME = 6
 SHOOT_AIM_END_FRAME = 1
 SHOOT_END_END_FRAME = 8
 PLACE_BOMB_END_FRAME = 24
+DEATH_END_FRAME = 36
 
 
 def capture_pose(armature):
@@ -66,6 +68,20 @@ def point_bone_at(armature, bone_name, target):
     desired_rotation = rotation_delta @ current_matrix.to_quaternion()
     desired_matrix = Matrix.Translation(pose_bone.head) @ desired_rotation.to_matrix().to_4x4()
     pose_bone.matrix = desired_matrix
+    bpy.context.view_layer.update()
+
+
+def point_bone_toward(armature, bone_name, target, amount):
+    pose_bone = armature.pose.bones[bone_name]
+    blended_target = pose_bone.tail.lerp(target, amount)
+    point_bone_at(armature, bone_name, blended_target)
+
+
+def translate_bone_armature_space(armature, bone_name, x, y, z):
+    pose_bone = armature.pose.bones[bone_name]
+    translated_matrix = pose_bone.matrix.copy()
+    translated_matrix.translation += Vector((x, y, z))
+    pose_bone.matrix = translated_matrix
     bpy.context.view_layer.update()
 
 
@@ -229,6 +245,105 @@ def create_place_bomb_action(armature, base_pose):
     return action
 
 
+def apply_death_pose(armature, amount):
+    eased_amount = amount * amount * (3.0 - 2.0 * amount)
+    translate_bone_armature_space(
+        armature,
+        "Bone_001",
+        0.0,
+        -0.06 * eased_amount,
+        -0.30 * eased_amount,
+    )
+
+    rotate_bone_local(armature, "Bone_003", 26.0 * eased_amount, 0.0, 0.0)
+    rotate_bone_local(armature, "Bone_004", 22.0 * eased_amount, 0.0, 0.0)
+    rotate_bone_local(armature, "Bone_005", 12.0 * eased_amount, 0.0, 0.0)
+
+    left_hip = armature.pose.bones["Bone_445"].head.copy()
+    left_knee_target = Vector((left_hip.x, left_hip.y - 0.15, 0.08))
+    point_bone_toward(
+        armature,
+        "Bone_445",
+        left_knee_target,
+        eased_amount,
+    )
+    left_knee = armature.pose.bones["Bone_446"].head.copy()
+    left_ankle_target = Vector((left_knee.x, left_knee.y + 0.34, 0.07))
+    point_bone_toward(
+        armature,
+        "Bone_446",
+        left_ankle_target,
+        eased_amount,
+    )
+    left_ankle = armature.pose.bones["Bone_447"].head.copy()
+    left_toe_target = Vector((left_ankle.x, left_ankle.y - 0.18, 0.03))
+    point_bone_toward(
+        armature,
+        "Bone_447",
+        left_toe_target,
+        eased_amount,
+    )
+
+    right_hip = armature.pose.bones["Bone_457"].head.copy()
+    right_knee_target = Vector((right_hip.x, right_hip.y - 0.15, 0.08))
+    point_bone_toward(
+        armature,
+        "Bone_457",
+        right_knee_target,
+        eased_amount,
+    )
+    right_knee = armature.pose.bones["Bone_458"].head.copy()
+    right_ankle_target = Vector((right_knee.x, right_knee.y + 0.34, 0.07))
+    point_bone_toward(
+        armature,
+        "Bone_458",
+        right_ankle_target,
+        eased_amount,
+    )
+    right_ankle = armature.pose.bones["Bone_459"].head.copy()
+    right_toe_target = Vector((right_ankle.x, right_ankle.y - 0.18, 0.03))
+    point_bone_toward(
+        armature,
+        "Bone_459",
+        right_toe_target,
+        eased_amount,
+    )
+
+    left_elbow = armature.pose.bones["Bone_153"].head.copy()
+    left_elbow.x += 0.14
+    left_elbow.y -= 0.16 * eased_amount
+    left_elbow.z -= 0.28 * eased_amount
+    point_bone_at(armature, "Bone_153", left_elbow)
+
+    left_hand = armature.pose.bones["Bone_155"].head.copy()
+    left_hand.x += 0.04
+    left_hand.y -= 0.24 * eased_amount
+    left_hand.z -= 0.25 * eased_amount
+    point_bone_at(armature, "Bone_155", left_hand)
+
+    right_elbow = armature.pose.bones["Bone_238"].head.copy()
+    right_elbow.x -= 0.14
+    right_elbow.y -= 0.16 * eased_amount
+    right_elbow.z -= 0.28 * eased_amount
+    point_bone_at(armature, "Bone_238", right_elbow)
+
+    right_hand = armature.pose.bones["Bone_240"].head.copy()
+    right_hand.x -= 0.04
+    right_hand.y -= 0.24 * eased_amount
+    right_hand.z -= 0.25 * eased_amount
+    point_bone_at(armature, "Bone_240", right_hand)
+
+
+def create_death_action(armature, base_pose):
+    action = create_action(armature, DEATH_ACTION_NAME)
+
+    for frame, amount in ((0, 0.0), (5, 0.12), (12, 0.45), (22, 0.82), (36, 1.0)):
+        restore_pose(armature, base_pose)
+        apply_death_pose(armature, amount)
+        key_pose(armature, frame)
+    return action
+
+
 def export_action(armature, action, output_path, end_frame):
     bpy.ops.object.select_all(action="DESELECT")
     armature.select_set(True)
@@ -300,6 +415,7 @@ def main():
     shoot_aim_action = create_shoot_aim_action(armature, base_pose)
     shoot_end_action = create_shoot_end_action(armature, base_pose)
     place_bomb_action = create_place_bomb_action(armature, base_pose)
+    death_action = create_death_action(armature, base_pose)
 
     asset_directory = os.path.dirname(blend_path)
     export_action(
@@ -332,6 +448,12 @@ def main():
         os.path.join(asset_directory, "marine.place_bomb.x"),
         PLACE_BOMB_END_FRAME,
     )
+    export_action(
+        armature,
+        death_action,
+        os.path.join(asset_directory, "marine.death.x"),
+        DEATH_END_FRAME,
+    )
 
     armature.animation_data.action = shoot_start_action
     bpy.context.scene.frame_start = 0
@@ -346,11 +468,13 @@ def main():
     print("MARINE_ACTION shoot_aim 0 1")
     print("MARINE_ACTION shoot_end 0 8")
     print("MARINE_ACTION place_bomb 0 24")
+    print("MARINE_ACTION death 0 36")
     print("MARINE_EXPORTED marine.shoot_start.x")
     print("MARINE_EXPORTED marine.shoot_recoil.x")
     print("MARINE_EXPORTED marine.shoot_aim.x")
     print("MARINE_EXPORTED marine.shoot_end.x")
     print("MARINE_EXPORTED marine.place_bomb.x")
+    print("MARINE_EXPORTED marine.death.x")
 
 
 if __name__ == "__main__":

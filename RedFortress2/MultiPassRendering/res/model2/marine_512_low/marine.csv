@@ -9,3 +9,4 @@ Anim, "shoot_recoil", "marine.shoot_recoil.x", normal
 Anim, "shoot_aim", "marine.shoot_aim.x", stopend
 Anim, "shoot_end", "marine.shoot_end.x", normal
 Anim, "place_bomb", "marine.place_bomb.x", normal
+Anim, "death", "marine.death.x", stopWhenEnd
