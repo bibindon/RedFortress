@@ -4999,6 +4999,7 @@ void GameApp::UpdateStageSelectCursorByInput()
 
     const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
     const POINT baseMousePosition = ConvertMouseToBaseResolution(mousePosition.x, mousePosition.y);
+    const bool wasMouseOverStartButton = m_isMouseOverStartButton;
     if (baseMousePosition.x >= kStageSelectStartButtonX &&
         baseMousePosition.x < kStageSelectStartButtonX + kStageSelectStartButtonWidth &&
         baseMousePosition.y >= kStageSelectStartButtonY &&
@@ -5009,6 +5010,10 @@ void GameApp::UpdateStageSelectCursorByInput()
     else
     {
         m_isMouseOverStartButton = false;
+    }
+    if (m_isMouseOverStartButton && !wasMouseOverStartButton)
+    {
+        GameAudio::PlayMenuMove();
     }
 
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
