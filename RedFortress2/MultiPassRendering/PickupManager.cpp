@@ -14,6 +14,7 @@ namespace
 {
 const int kStarDurationFrames = 1200;
 const float kStarPickupDistance = 1.0f;
+const float kStarRotationRadiansPerFrame = D3DX_PI / 120.0f;
 const std::wstring kStarModelPath = L"res\\model\\itemIconStar\\itemIconStar.x";
 const std::wstring kSpeedUpModelPath = L"res\\model\\itemIconPowerUp\\itemIconPowerUp.x";
 const std::wstring kStarItemId = L"star_power_up";
@@ -175,6 +176,13 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
         {
             continue;
         }
+
+        pickup.rotationY += kStarRotationRadiansPerFrame;
+        if (pickup.rotationY >= D3DX_PI * 2.0f)
+        {
+            pickup.rotationY -= D3DX_PI * 2.0f;
+        }
+        m_render->SetMeshMixRotY(pickup.meshId, pickup.rotationY);
 
         const D3DXVECTOR3 diff = playerPosition - pickup.position;
         if (D3DXVec3Length(&diff) <= kStarPickupDistance)

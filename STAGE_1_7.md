@@ -75,7 +75,7 @@ World 1方針: `wolf`・`small_mushroom`・`crab`・`frog` のみ（birdは1-4�
 
 | 区画 | 配置 | 数 |
 |---|---|---|
-| 北の砦 | wolf(-6,24), frog(7,20), crab(-9,15), small_mushroom(8,12), wolf(3,8) | 5 |
+| 北の砦 | wolf(-10,20), frog(9,19), crab(-9,15), small_mushroom(8,12), wolf(3,8) | 5 |
 | 南の砦 | small_mushroom(-7,-10), crab(9,-14), frog(4,-18), wolf(-5,-22), small_mushroom(8,-26) | 5 |
 | 堀上空 | bird(0,2,-15) | 1 |
 

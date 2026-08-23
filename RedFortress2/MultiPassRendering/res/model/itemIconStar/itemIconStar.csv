@@ -1,0 +1,5 @@
+﻿meshtype,Emit
+EmitIntensity,2.0
+EmitColor,255,210,0
+EmitPointLightIntensity,0.2
+EmitPointLightRange,4.0

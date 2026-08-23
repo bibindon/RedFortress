@@ -39,6 +39,7 @@ RedFortress2/MultiPassRendering/res/model2/marine/untitled.blend1
 !/tools/BuildStage42.py
 !/tools/CreateStaticPlatformModels.py
 !/tools/PrepareSkullModel.py
+!/tools/CreateStarPickupModel.py
 /tools/BuildPortalModels.py
 /tools/ImportAndSaveBlend.py
 /tools/RemoveSpiderIK.py

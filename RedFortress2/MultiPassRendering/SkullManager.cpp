@@ -204,6 +204,7 @@ void SkullManager::Update(NSRender::Render& render,
         const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
         heldSkull->position = playerPosition + forward * kHeldForwardOffset;
         heldSkull->position.y += kHeldHeightOffset;
+        heldSkull->rotation.y = playerYaw;
         UpdateWorldMatrix(render, *heldSkull);
     }
 }
@@ -261,6 +262,7 @@ bool SkullManager::HandleLeftClick(NSRender::Render& render,
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
     nearestSkull->position = playerPosition + forward * kHeldForwardOffset;
     nearestSkull->position.y += kHeldHeightOffset;
+    nearestSkull->rotation.y = playerYaw;
     UpdateWorldMatrix(render, *nearestSkull);
     return true;
 }

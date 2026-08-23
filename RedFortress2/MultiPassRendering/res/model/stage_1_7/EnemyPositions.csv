@@ -1,6 +1,6 @@
 ﻿Type,PosX,PosY,PosZ,RotY
-wolf,-6,0.2,24,180
-frog,7,0.2,20,180
+wolf,-10,0.2,20,180
+frog,9,0.2,19,180
 crab,-9,0.2,15,180
 small_mushroom,8,0.2,12,180
 wolf,3,0.2,8,0

@@ -51,7 +51,7 @@
 
 ## 敵（10体・World 1）
 
-- S1: wolf(8,-26) / S2: small_mushroom(10,-20), crab(10,-14), frog(10,-6)
+- S1: wolf(12,-23) / S2: small_mushroom(10,-20), crab(10,-14), frog(10,-6)
 - 東の寄り道: small_mushroom(13,-8)
 - S3: wolf(-10,12), crab(-10,16), small_mushroom(-10,22), wolf(-10,26)
 - 西の寄り道: frog(-13,18)

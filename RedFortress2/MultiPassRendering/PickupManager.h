@@ -51,6 +51,7 @@ private:
     {
         D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         int meshId = -1;
+        float rotationY = 0.0f;
     };
 
     bool LoadPickupPosition(const std::wstring& csvPath, D3DXVECTOR3* outPosition) const;
