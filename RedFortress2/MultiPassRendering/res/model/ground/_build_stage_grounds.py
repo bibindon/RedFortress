@@ -51,6 +51,7 @@ def world_for_folder(folder):
 STAGES = (
     {"display": "1-1", "folder": "stage_1_1", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0),
      "pits": ((4.0, 7.0, -32.0, -24.0), (-16.0, 16.0, 0.0, 6.0), (-16.0, -12.0, 7.5, 31.0), (-6.0, 16.0, 7.5, 18.0)),
+     "pit_bottom": -100.0,
      "jump_links": (((3.0, -27.0), (8.0, -27.0)),),
      "static_platforms": ((13.0, -4.0, 1.5),)},
     {"display": "1-2", "folder": "stage_1_2", "size": (16.0, 32.0), "start": (0.0, -28.0), "goal": (0.0, 28.0),
@@ -1063,6 +1064,11 @@ def create_stage_ground(stage, top_material, side_material):
 
     half_width, half_depth = stage["size"]
     pits = stage["pits"]
+    pit_bottom = stage.get("pit_bottom", PIT_BOTTOM)
+    if pit_bottom >= 0.0:
+        raise RuntimeError(stage["display"] + " has an invalid pit bottom")
+    pit_texture_v = -pit_bottom / 8.0
+    slab_bottom = min(SLAB_BOTTOM, pit_bottom - 2.0)
     vertices = []
     faces = []
     uvs = []
@@ -1103,7 +1109,7 @@ def create_stage_ground(stage, top_material, side_material):
         faces,
         uvs,
         material_indices,
-        ((-half_width, -half_depth, SLAB_BOTTOM), (-half_width, half_depth, SLAB_BOTTOM), (half_width, half_depth, SLAB_BOTTOM), (half_width, -half_depth, SLAB_BOTTOM)),
+        ((-half_width, -half_depth, slab_bottom), (-half_width, half_depth, slab_bottom), (half_width, half_depth, slab_bottom), (half_width, -half_depth, slab_bottom)),
         ((0.0, 0.0), (0.0, half_depth / 8.0), (half_width / 8.0, half_depth / 8.0), (half_width / 8.0, 0.0)),
         1,
     )
@@ -1113,19 +1119,19 @@ def create_stage_ground(stage, top_material, side_material):
     for pit in pits:
         x_min, x_max, y_min, y_max = pit
         add_quad(vertices, faces, uvs, material_indices,
-                 ((x_min, y_min, 0.0), (x_min, y_min, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM), (x_min, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
+                 ((x_min, y_min, 0.0), (x_min, y_min, pit_bottom), (x_min, y_max, pit_bottom), (x_min, y_max, 0.0)),
+                 ((0.0, 0.0), (0.0, pit_texture_v), ((y_max - y_min) / 4.0, pit_texture_v), ((y_max - y_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
-                 ((x_max, y_max, 0.0), (x_max, y_max, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
+                 ((x_max, y_max, 0.0), (x_max, y_max, pit_bottom), (x_max, y_min, pit_bottom), (x_max, y_min, 0.0)),
+                 ((0.0, 0.0), (0.0, pit_texture_v), ((y_max - y_min) / 4.0, pit_texture_v), ((y_max - y_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
-                 ((x_max, y_min, 0.0), (x_max, y_min, PIT_BOTTOM), (x_min, y_min, PIT_BOTTOM), (x_min, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
+                 ((x_max, y_min, 0.0), (x_max, y_min, pit_bottom), (x_min, y_min, pit_bottom), (x_min, y_min, 0.0)),
+                 ((0.0, 0.0), (0.0, pit_texture_v), ((x_max - x_min) / 4.0, pit_texture_v), ((x_max - x_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
-                 ((x_min, y_max, 0.0), (x_min, y_max, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_max, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
+                 ((x_min, y_max, 0.0), (x_min, y_max, pit_bottom), (x_max, y_max, pit_bottom), (x_max, y_max, 0.0)),
+                 ((0.0, 0.0), (0.0, pit_texture_v), ((x_max - x_min) / 4.0, pit_texture_v), ((x_max - x_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
-                 ((x_min, y_min, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM)),
+                 ((x_min, y_min, pit_bottom), (x_max, y_min, pit_bottom), (x_max, y_max, pit_bottom), (x_min, y_max, pit_bottom)),
                  ((0.0, 0.0), ((x_max - x_min) / 4.0, 0.0), ((x_max - x_min) / 4.0, (y_max - y_min) / 4.0), (0.0, (y_max - y_min) / 4.0)), 0)
 
     object_name = "Stage" + stage["display"].replace("-", "_") + "Ground"
