@@ -59,6 +59,9 @@ const std::wstring kExplosion = L"res\\sound\\explosion.wav";
 const std::wstring kBombPlace = L"res\\sound\\bombDrop.wav";
 const std::wstring kStomp = L"res\\sound\\stomp_impact.wav";
 const std::wstring kBuster = L"res\\sound\\buster.wav";
+const std::wstring kSkullThrow = L"res\\sound\\arrow.wav";
+const std::wstring kSkullHit = L"res\\sound\\club_hit.wav";
+const std::wstring kSkullLand = L"res\\sound\\bombDrop.wav";
 const std::wstring kWeaponChange = L"res\\sound\\weaponChange.wav";
 const std::wstring kQte = L"res\\sound\\qte.wav";
 const std::wstring kQteBest = L"res\\sound\\qte_best.wav";
@@ -637,6 +640,9 @@ void PlayExplosion() { PlayEffect(kExplosion, 75); }
 void PlayBombPlace() { PlayEffect(kBombPlace, 78); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }
+void PlaySkullThrow() { PlayEffect(kSkullThrow, 68); }
+void PlaySkullHit() { PlayEffect(kSkullHit, 78); }
+void PlaySkullLand() { PlayEffect(kSkullLand, 62); }
 void PlayWeaponChange() { PlayEffect(kWeaponChange, 72); }
 void PlayArrow() { PlayEffect(kArrow, 100); }
 void PlayWarp() { PlayEffect(kWarp, 80); }

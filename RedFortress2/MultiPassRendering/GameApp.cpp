@@ -2018,7 +2018,6 @@ void GameApp::Run()
                     enemy.StartKnockbackFrom(sourcePosition, 0.7f, 24);
                     m_damagePopupManager.Add(kSkullDamage, enemy.GetPosition(), false);
                     TryDropEnemyItem(enemy);
-                    GameAudio::PlayAttackHit();
                 });
 
             if (m_busterCooldownFrames > 0)
@@ -4488,6 +4487,10 @@ void GameApp::EnsureGoalArrow()
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                             D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                             1.0f);
+    if (m_goalArrowMeshId >= 0)
+    {
+        GameAudio::PlayArrow();
+    }
 }
 
 void GameApp::RemoveGoalArrow()

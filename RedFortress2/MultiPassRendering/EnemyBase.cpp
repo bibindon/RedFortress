@@ -1093,7 +1093,7 @@ void EnemyBase::SetBossName(const std::wstring& bossName)
     m_bossName = bossName;
 }
 
-bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos) const
+bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos, const float playerRadius) const
 {
     if (m_state == State::Dead)
     {
@@ -1103,6 +1103,7 @@ bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos) const
     const D3DXVECTOR3 diff = playerPos - m_position;
     const float horizontalDist = sqrtf(diff.x * diff.x + diff.z * diff.z);
     const float verticalDist = fabsf(diff.y);
+    const float combinedContactRadius = m_contactRadius + playerRadius;
 
     float verticalTolerance = m_height * 0.75f;
     if (m_movementMode == MovementMode::Hover ||
@@ -1114,13 +1115,14 @@ bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos) const
         verticalTolerance = 1.5f;
     }
 
-    return horizontalDist <= m_contactRadius && verticalDist <= verticalTolerance;
+    return horizontalDist <= combinedContactRadius && verticalDist <= verticalTolerance;
 }
 
 bool EnemyBase::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
                                   const D3DXVECTOR3& playerPos,
                                   const bool playerIsJumping,
-                                  const float playerYVelocity) const
+                                  const float playerYVelocity,
+                                  const float playerRadius) const
 {
     if (m_state == State::Dead)
     {
@@ -1134,7 +1136,8 @@ bool EnemyBase::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
 
     const D3DXVECTOR3 diff = playerPos - m_position;
     const float horizontalDist = sqrtf(diff.x * diff.x + diff.z * diff.z);
-    if (horizontalDist > m_contactRadius || playerYVelocity > 0.0f)
+    const float combinedContactRadius = m_contactRadius + playerRadius;
+    if (horizontalDist > combinedContactRadius || playerYVelocity > 0.0f)
     {
         return false;
     }

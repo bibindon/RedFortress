@@ -80,11 +80,12 @@ public:
     void SetType(const std::wstring& type);
     void SetBossName(const std::wstring& bossName);
 
-    bool IsTouchingPlayer(const D3DXVECTOR3& playerPos) const;
+    bool IsTouchingPlayer(const D3DXVECTOR3& playerPos, float playerRadius) const;
     bool IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
                            const D3DXVECTOR3& playerPos,
                            bool playerIsJumping,
-                           float playerYVelocity) const;
+                           float playerYVelocity,
+                           float playerRadius) const;
     // 物理円柱の半径（自己移動の衝突解決に使う）。接触攻撃判定とは別に設定できる。
     float GetPhysicsRadius() const { return m_physicsRadius; }
     // 物理円柱の高さ。プレイヤー攻撃の食らい判定（体全体との重なり）に使う。

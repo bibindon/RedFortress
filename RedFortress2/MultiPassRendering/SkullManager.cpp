@@ -1,6 +1,7 @@
 ﻿#include "SkullManager.h"
 
 #include "EnemyBase.h"
+#include "GameAudio.h"
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
@@ -226,6 +227,7 @@ bool SkullManager::HandleLeftClick(NSRender::Render& render,
         m_heldSkullSerial = 0;
         UpdateCollisionTransform(*heldSkull);
         UpdateWorldMatrix(render, *heldSkull);
+        GameAudio::PlaySkullThrow();
         return true;
     }
 
@@ -466,6 +468,7 @@ void SkullManager::UpdateFlyingSkull(
             skull.state = SkullState::Resting;
             skull.velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
             skull.angularVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            GameAudio::PlaySkullLand();
         }
         else
         {
@@ -490,6 +493,7 @@ void SkullManager::UpdateFlyingSkull(
             if (IsSkullTouchingEnemy(skull, *enemy))
             {
                 skull.hitEnemyDuringFlight = true;
+                GameAudio::PlaySkullHit();
                 enemyHitCallback(*enemy, skull.position);
                 skull.velocity.x *= -0.25f;
                 skull.velocity.z *= -0.25f;
