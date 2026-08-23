@@ -448,6 +448,7 @@ private:
     bool m_playerDeathPending = false;
     bool m_playerFallingDead = false;
     int m_fallDeathFrames = 0;
+    int m_fallDeathGroundedFrames = 0;
     int m_stageExitFrame = 0;
     float m_stageExitVisualOffsetY = 0.0f;
     int m_bossDefeatFrame = 0;

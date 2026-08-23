@@ -202,6 +202,7 @@
     * 衝突判定用 : res/model/collision_moving_platform.x
 * 落とし穴
   * 落とし穴は別オブジェクトとして設置できない。各ステージ専用の`stage_ground.x`へ穴や窪みを設けて作成する。
+  * 落とし穴は深さを100メートル以上にすること。
   * 地面の外周壁は描画しない。
   * `stage_ground.x`を手書きで編集したり、独自のXファイル変換・シリアライズ処理を作成したりしない。
   * 地面モデルはBlenderで編集し、公式DirectX Xエクスポーターの`bpy.ops.export_scene.directx_x`を使用して、`axis_forward="Z"`、`axis_up="Y"`で直接エクスポートする。

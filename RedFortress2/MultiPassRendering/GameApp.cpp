@@ -263,7 +263,8 @@ namespace
     const int kStageTitleFrameMax = 180;
     const int kGameOverFadeFrames = 18;
     const float kFallDeathY = -10.0f;
-    const int kFallDeathFrames = 90;
+    const int kFallDeathGroundedHoldFrames = 60;
+    const int kFallDeathMaxFrames = 600;
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
@@ -1782,19 +1783,29 @@ void GameApp::Run()
                 }
 
                 // 落下死判定: Y座標が閾値以下で落下死。
-                // カメラ追従を止め、プレイヤーはそのまま落下させ、指定フレーム後にリスポーンへ接続する。
+                // カメラ追従を止めた後も穴底へ着地するまで自由落下させる。
                 if (!m_playerFallingDead)
                 {
                     if (m_playerMover.GetPosition().y <= kFallDeathY)
                     {
                         m_playerFallingDead = true;
                         m_fallDeathFrames = 0;
+                        m_fallDeathGroundedFrames = 0;
                     }
                 }
                 else
                 {
                     ++m_fallDeathFrames;
-                    if (m_fallDeathFrames >= kFallDeathFrames)
+                    if (m_playerMover.IsGrounded())
+                    {
+                        ++m_fallDeathGroundedFrames;
+                    }
+                    else
+                    {
+                        m_fallDeathGroundedFrames = 0;
+                    }
+                    if (m_fallDeathGroundedFrames >= kFallDeathGroundedHoldFrames ||
+                        m_fallDeathFrames >= kFallDeathMaxFrames)
                     {
                         HandlePlayerDeath();
                     }
@@ -7413,6 +7424,7 @@ void GameApp::CompletePlayerDeath()
     m_player.Die();
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
+    m_fallDeathGroundedFrames = 0;
 
     if (m_player.IsGameOver())
     {
@@ -7658,6 +7670,7 @@ void GameApp::BeginReturnToTitle()
     m_warpFadeFrames = 0;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
+    m_fallDeathGroundedFrames = 0;
     m_gameOverPhase = GameOverPhase::None;
     m_gameOverFadeFrames = 0;
     m_startStageAfterSlideShow = false;
@@ -7981,6 +7994,7 @@ void GameApp::LoadCurrentStageObjects()
     m_warpFadeFrames = 0;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
+    m_fallDeathGroundedFrames = 0;
     m_render.SetSceneUpdatePaused(false);
     if (m_playerMeshId >= 0)
     {
