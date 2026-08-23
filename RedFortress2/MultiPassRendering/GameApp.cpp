@@ -1670,9 +1670,6 @@ void GameApp::Run()
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
                 const ULONGLONG platformSyncStartTick = GetTickCount64();
 #endif
-                const D3DXVECTOR3 kPlatformRot(0.0f, 0.0f, 0.0f);
-                const D3DXVECTOR3 kPlatformScale(1.0f, 1.0f, 1.0f);
-
                 const auto& platforms = m_render.GetMovingPlatforms();
                 for (const auto& platform : platforms)
                 {
@@ -1689,7 +1686,10 @@ void GameApp::Run()
                     const D3DXVECTOR3 platformVelocity = (platformPos - prevPos) / kTargetFrameSeconds;
                     prevPos = platformPos;
 
-                    PhysicsWorld::UpdateCsvTransform(platform.csvId, platformPos, kPlatformRot, kPlatformScale);
+                    PhysicsWorld::UpdateCsvTransform(platform.csvId,
+                                                     platformPos,
+                                                     platform.rotation,
+                                                     platform.scale);
                     const int physicsId = PhysicsWorld::GetCsvObjectId(platform.csvId);
                     if (physicsId >= 0)
                     {
