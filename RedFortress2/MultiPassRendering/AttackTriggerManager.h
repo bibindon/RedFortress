@@ -33,6 +33,8 @@ public:
     void LoadForStage(NSRender::Render& render, const std::wstring& csvPath);
     void Clear(NSRender::Render& render);
     void Update(NSRender::Render& render, float deltaSeconds);
+    void ResetLevers(NSRender::Render& render,
+                     const std::vector<int>& triggerIds);
 
     AttackTriggerActivation TryActivateInAttackRange(
         NSRender::Render& render,

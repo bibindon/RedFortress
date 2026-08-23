@@ -333,6 +333,43 @@ void AttackTriggerManager::Update(NSRender::Render& render,
     }
 }
 
+void AttackTriggerManager::ResetLevers(NSRender::Render& render,
+                                       const std::vector<int>& triggerIds)
+{
+    std::unordered_set<int> targetCsvIds;
+    for (const Trigger& trigger : m_triggers)
+    {
+        if ((trigger.type == AttackTriggerType::Lever ||
+             trigger.type == AttackTriggerType::LeverLift) &&
+            trigger.hasTarget &&
+            std::find(triggerIds.begin(), triggerIds.end(), trigger.id) != triggerIds.end())
+        {
+            targetCsvIds.insert(trigger.targetCsvId);
+        }
+    }
+
+    for (Trigger& trigger : m_triggers)
+    {
+        if (trigger.type != AttackTriggerType::Lever &&
+            trigger.type != AttackTriggerType::LeverLift)
+        {
+            continue;
+        }
+        if (!trigger.hasTarget ||
+            targetCsvIds.find(trigger.targetCsvId) == targetCsvIds.end())
+        {
+            continue;
+        }
+
+        // 同じ門を共有するレバーをすべて戻し、次の更新で再び開かないようにする。
+        trigger.leverActive = false;
+        trigger.currentAngle = 0.0f;
+        trigger.currentLift = 0.0f;
+        trigger.stopSoundPlayed = false;
+        ApplyTargetTransform(render, trigger);
+    }
+}
+
 AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
     NSRender::Render& render,
     const D3DXVECTOR3& playerPosition,

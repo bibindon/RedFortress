@@ -7490,6 +7490,9 @@ void GameApp::CompletePlayerDeath()
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
     m_pickupManager.RespawnStars();
 
+    // レバー2・3で操作した門を閉じた初期状態へ戻す。
+    m_attackTriggerManager.ResetLevers(m_render, std::vector<int>{2, 3});
+
     // 各種状態リセット
     m_playerKnockbackFrames = 0;
     m_playerSlowFrames = 0;
