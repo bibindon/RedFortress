@@ -221,7 +221,11 @@ void PressurePlateManager::Update(NSRender::Render& render,
         bool controlsWall = true;
         for (const PressurePlatePair& other : m_pairs)
         {
-            if (&other != &pair && other.wallCsvId == pair.wallCsvId)
+            if (&other == &pair)
+            {
+                break;
+            }
+            if (other.wallCsvId == pair.wallCsvId)
             {
                 controlsWall = false;
                 break;
