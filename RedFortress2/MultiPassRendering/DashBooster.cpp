@@ -36,7 +36,7 @@ D3DXVECTOR3 CalculateDashBoosterVisualRotation(const D3DXVECTOR3& direction)
         yaw = std::atan2(normalizedDirection.x, normalizedDirection.z);
     }
 
-    const float pitch = std::atan2(normalizedDirection.y, horizontalLength);
+    const float pitch = -std::atan2(normalizedDirection.y, horizontalLength);
     // dashBooster_alt.x の銃口軸は、座標補正後のローカル +Z 軸に一致する。
     return D3DXVECTOR3(pitch, yaw, 0.0f);
 }

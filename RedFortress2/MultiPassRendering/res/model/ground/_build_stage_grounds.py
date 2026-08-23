@@ -283,7 +283,7 @@ STAGES = (
     {"display": "3-2", "folder": "stage_3_2", "size": (60.0, 120.0), "start": (-14.0, 0.0), "goal": (14.0, 0.0), "pits": ((-32.0, -6.0, -52.0, -44.0), (6.0, 32.0, -52.0, -44.0), (-32.0, -6.0, 44.0, 52.0), (6.0, 32.0, 44.0, 52.0))},
     {"display": "3-3", "folder": "stage_3_3", "size": (60.0, 120.0), "start": (0.0, 28.0), "goal": (0.0, -28.0), "pits": ((-35.0, -25.0, -50.0, 50.0),)},
     {"display": "3-4", "folder": "stage_3_4", "size": (60.0, 120.0), "start": (0.0, -116.0), "goal": (0.0, 114.0),
-     "pits": ((-59.9, 59.9, -112.0, 112.0),),
+     "pits": ((-60.0, 60.0, -112.0, 112.0),),
      "static_platforms": ((0.0, -100.0, 6.0), (-16.0, -88.0, 6.0), (-32.0, -76.0, 6.0), (-44.0, -64.0, 6.0),
                           (-28.0, -52.0, 6.0), (-12.0, -40.0, 6.0), (4.0, -28.0, 6.0), (20.0, -16.0, 6.0),
                           (36.0, -4.0, 6.0), (44.0, 10.0, 6.0), (28.0, 22.0, 6.0), (12.0, 34.0, 6.0),
@@ -1124,18 +1124,23 @@ def create_stage_ground(stage, top_material, side_material):
     # Pit walls and bottoms use the same world texture as the ground surface.
     for pit in pits:
         x_min, x_max, y_min, y_max = pit
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_min, y_min, 0.0), (x_min, y_min, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM), (x_min, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_max, y_max, 0.0), (x_max, y_max, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_max, y_min, 0.0), (x_max, y_min, PIT_BOTTOM), (x_min, y_min, PIT_BOTTOM), (x_min, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_min, y_max, 0.0), (x_min, y_max, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_max, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
+        # 外周に接する辺は既存の外周壁に任せ、同一面の穴壁を重ねない。
+        if x_min > -half_width:
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((x_min, y_min, 0.0), (x_min, y_min, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM), (x_min, y_max, 0.0)),
+                     ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
+        if x_max < half_width:
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((x_max, y_max, 0.0), (x_max, y_max, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_min, 0.0)),
+                     ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
+        if y_min > -half_depth:
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((x_max, y_min, 0.0), (x_max, y_min, PIT_BOTTOM), (x_min, y_min, PIT_BOTTOM), (x_min, y_min, 0.0)),
+                     ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
+        if y_max < half_depth:
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((x_min, y_max, 0.0), (x_min, y_max, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_max, y_max, 0.0)),
+                     ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_min, y_min, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM)),
                  ((0.0, 0.0), ((x_max - x_min) / 4.0, 0.0), ((x_max - x_min) / 4.0, (y_max - y_min) / 4.0), (0.0, (y_max - y_min) / 4.0)), 0)
