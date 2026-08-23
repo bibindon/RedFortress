@@ -179,6 +179,10 @@ namespace
     const int kStageSelectStartButtonY = 790;
     const int kStageSelectStartButtonWidth = 300;
     const int kStageSelectStartButtonHeight = 54;
+    const int kStageSelectStartHitX = 620;
+    const int kStageSelectStartHitY = 765;
+    const int kStageSelectStartHitWidth = 360;
+    const int kStageSelectStartHitHeight = 95;
     const std::wstring kStageSelectStartMaskPath = L"res\\2D_Image\\stage_select_start_mask.png";
     const int kStageSelectMaskedGaussianSampleSize = 25;
     const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
@@ -5000,10 +5004,10 @@ void GameApp::UpdateStageSelectCursorByInput()
     const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
     const POINT baseMousePosition = ConvertMouseToBaseResolution(mousePosition.x, mousePosition.y);
     const bool wasMouseOverStartButton = m_isMouseOverStartButton;
-    if (baseMousePosition.x >= kStageSelectStartButtonX &&
-        baseMousePosition.x < kStageSelectStartButtonX + kStageSelectStartButtonWidth &&
-        baseMousePosition.y >= kStageSelectStartButtonY &&
-        baseMousePosition.y < kStageSelectStartButtonY + kStageSelectStartButtonHeight)
+    if (baseMousePosition.x >= kStageSelectStartHitX &&
+        baseMousePosition.x < kStageSelectStartHitX + kStageSelectStartHitWidth &&
+        baseMousePosition.y >= kStageSelectStartHitY &&
+        baseMousePosition.y < kStageSelectStartHitY + kStageSelectStartHitHeight)
     {
         m_isMouseOverStartButton = true;
     }
