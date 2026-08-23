@@ -1108,39 +1108,22 @@ def create_stage_ground(stage, top_material, side_material):
         1,
     )
 
-    add_quad(vertices, faces, uvs, material_indices,
-             ((-half_width, -half_depth, 0.0), (-half_width, -half_depth, SLAB_BOTTOM), (half_width, -half_depth, SLAB_BOTTOM), (half_width, -half_depth, 0.0)),
-             ((0.0, 0.0), (0.0, 2.5), (half_width / 4.0, 2.5), (half_width / 4.0, 0.0)), 1)
-    add_quad(vertices, faces, uvs, material_indices,
-             ((half_width, half_depth, 0.0), (half_width, half_depth, SLAB_BOTTOM), (-half_width, half_depth, SLAB_BOTTOM), (-half_width, half_depth, 0.0)),
-             ((0.0, 0.0), (0.0, 2.5), (half_width / 4.0, 2.5), (half_width / 4.0, 0.0)), 1)
-    add_quad(vertices, faces, uvs, material_indices,
-             ((-half_width, half_depth, 0.0), (-half_width, half_depth, SLAB_BOTTOM), (-half_width, -half_depth, SLAB_BOTTOM), (-half_width, -half_depth, 0.0)),
-             ((0.0, 0.0), (0.0, 2.5), (half_depth / 4.0, 2.5), (half_depth / 4.0, 0.0)), 1)
-    add_quad(vertices, faces, uvs, material_indices,
-             ((half_width, -half_depth, 0.0), (half_width, -half_depth, SLAB_BOTTOM), (half_width, half_depth, SLAB_BOTTOM), (half_width, half_depth, 0.0)),
-             ((0.0, 0.0), (0.0, 2.5), (half_depth / 4.0, 2.5), (half_depth / 4.0, 0.0)), 1)
-
+    # 外周の側面は描画しない。ステージ外側は景観用地面と天球で描画する。
     # Pit walls and bottoms use the same world texture as the ground surface.
     for pit in pits:
         x_min, x_max, y_min, y_max = pit
-        # 外周に接する辺は既存の外周壁に任せ、同一面の穴壁を重ねない。
-        if x_min > -half_width:
-            add_quad(vertices, faces, uvs, material_indices,
-                     ((x_min, y_min, 0.0), (x_min, y_min, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM), (x_min, y_max, 0.0)),
-                     ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
-        if x_max < half_width:
-            add_quad(vertices, faces, uvs, material_indices,
-                     ((x_max, y_max, 0.0), (x_max, y_max, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_min, 0.0)),
-                     ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
-        if y_min > -half_depth:
-            add_quad(vertices, faces, uvs, material_indices,
-                     ((x_max, y_min, 0.0), (x_max, y_min, PIT_BOTTOM), (x_min, y_min, PIT_BOTTOM), (x_min, y_min, 0.0)),
-                     ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
-        if y_max < half_depth:
-            add_quad(vertices, faces, uvs, material_indices,
-                     ((x_min, y_max, 0.0), (x_min, y_max, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_max, y_max, 0.0)),
-                     ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_min, y_min, 0.0), (x_min, y_min, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM), (x_min, y_max, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_max, y_max, 0.0), (x_max, y_max, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_min, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((y_max - y_min) / 4.0, 2.25), ((y_max - y_min) / 4.0, 0.0)), 0)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_max, y_min, 0.0), (x_max, y_min, PIT_BOTTOM), (x_min, y_min, PIT_BOTTOM), (x_min, y_min, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
+        add_quad(vertices, faces, uvs, material_indices,
+                 ((x_min, y_max, 0.0), (x_min, y_max, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_max, y_max, 0.0)),
+                 ((0.0, 0.0), (0.0, 2.25), ((x_max - x_min) / 4.0, 2.25), ((x_max - x_min) / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_min, y_min, PIT_BOTTOM), (x_max, y_min, PIT_BOTTOM), (x_max, y_max, PIT_BOTTOM), (x_min, y_max, PIT_BOTTOM)),
                  ((0.0, 0.0), ((x_max - x_min) / 4.0, 0.0), ((x_max - x_min) / 4.0, (y_max - y_min) / 4.0), (0.0, (y_max - y_min) / 4.0)), 0)
