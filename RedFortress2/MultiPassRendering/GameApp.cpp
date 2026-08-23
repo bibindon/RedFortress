@@ -263,8 +263,7 @@ namespace
     const int kStageTitleFrameMax = 180;
     const int kGameOverFadeFrames = 18;
     const float kFallDeathY = -10.0f;
-    const int kFallDeathGroundedHoldFrames = 60;
-    const int kFallDeathMaxFrames = 600;
+    const int kFallDeathFadeDelayFrames = 60;
     const float kEnemyAttackKnockbackDistance = 0.2f;
     const int kEnemyAttackKnockbackFrames = 60;
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
@@ -1782,30 +1781,20 @@ void GameApp::Run()
                     DamagePlayerHp(m_player.GetHp());
                 }
 
-                // 落下死判定: Y座標が閾値以下で落下死。
-                // カメラ追従を止めた後も穴底へ着地するまで自由落下させる。
+                // 落下死判定: Y座標が閾値以下でカメラ追従を止める。
+                // その後も1秒間自由落下させてから暗転を開始する。
                 if (!m_playerFallingDead)
                 {
                     if (m_playerMover.GetPosition().y <= kFallDeathY)
                     {
                         m_playerFallingDead = true;
                         m_fallDeathFrames = 0;
-                        m_fallDeathGroundedFrames = 0;
                     }
                 }
                 else
                 {
                     ++m_fallDeathFrames;
-                    if (m_playerMover.IsGrounded())
-                    {
-                        ++m_fallDeathGroundedFrames;
-                    }
-                    else
-                    {
-                        m_fallDeathGroundedFrames = 0;
-                    }
-                    if (m_fallDeathGroundedFrames >= kFallDeathGroundedHoldFrames ||
-                        m_fallDeathFrames >= kFallDeathMaxFrames)
+                    if (m_fallDeathFrames >= kFallDeathFadeDelayFrames)
                     {
                         HandlePlayerDeath();
                     }
@@ -7404,7 +7393,7 @@ void GameApp::HandlePlayerDeath()
     m_skullManager.ReleaseHeld(m_render, m_playerMover.GetPosition());
 
     // シーン更新は止めず（SetSceneUpdatePaused は使わない）、死亡モーションと暗転を進める。
-    // 落下死ではプレイヤーが画面外にいるため、従来どおりすぐ暗転する。
+    // 落下死ではカメラ停止後の1秒待機が完了しているため、ここで暗転を開始する。
     if (m_playerFallingDead)
     {
         m_respawnPhase = RespawnPhase::FadeOut;
@@ -7424,7 +7413,6 @@ void GameApp::CompletePlayerDeath()
     m_player.Die();
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
-    m_fallDeathGroundedFrames = 0;
 
     if (m_player.IsGameOver())
     {
@@ -7670,7 +7658,6 @@ void GameApp::BeginReturnToTitle()
     m_warpFadeFrames = 0;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
-    m_fallDeathGroundedFrames = 0;
     m_gameOverPhase = GameOverPhase::None;
     m_gameOverFadeFrames = 0;
     m_startStageAfterSlideShow = false;
@@ -7994,7 +7981,6 @@ void GameApp::LoadCurrentStageObjects()
     m_warpFadeFrames = 0;
     m_playerFallingDead = false;
     m_fallDeathFrames = 0;
-    m_fallDeathGroundedFrames = 0;
     m_render.SetSceneUpdatePaused(false);
     if (m_playerMeshId >= 0)
     {

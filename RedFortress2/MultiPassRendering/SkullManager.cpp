@@ -6,6 +6,7 @@
 #include "../../RedFortressRender/Render/Util.h"
 
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <limits>
 #include <sstream>
@@ -13,6 +14,11 @@
 namespace
 {
     const std::wstring kSkullModelPath = L"res\\model\\skull\\skull.x";
+    const std::wstring kSkullCollisionModelPath =
+        L"res\\model\\skull\\skull_collision.x";
+    const D3DXVECTOR3 kCollisionRotation(0.0f, 0.0f, 0.0f);
+    const D3DXVECTOR3 kCollisionScale(1.0f, 1.0f, 1.0f);
+    const D3DXVECTOR3 kDisabledCollisionPosition(0.0f, -10000.0f, 0.0f);
     const float kTargetFrameSeconds = 1.0f / 60.0f;
     const float kGrabDistance = 1.5f;
     const float kSkullRadius = 0.38f;
@@ -141,6 +147,10 @@ void SkullManager::Clear(NSRender::Render& render)
         {
             render.RemoveMeshMix(skull.meshId);
         }
+        if (skull.physicsId >= 0)
+        {
+            PhysicsLib::PhysicsLib::RemoveObject(skull.physicsId);
+        }
     }
 
     m_skulls.clear();
@@ -178,6 +188,7 @@ void SkullManager::Update(NSRender::Render& render,
         {
             UpdateFlyingSkull(render, skull, enemies, enemyHitCallback);
         }
+        UpdateCollisionTransform(skull);
 
         if (skull.position.y < kFallRemovalY && skull.state != SkullState::Held)
         {
@@ -212,6 +223,7 @@ bool SkullManager::HandleLeftClick(NSRender::Render& render,
         heldSkull->state = SkullState::Flying;
         heldSkull->hitEnemyDuringFlight = false;
         m_heldSkullSerial = 0;
+        UpdateCollisionTransform(*heldSkull);
         UpdateWorldMatrix(render, *heldSkull);
         return true;
     }
@@ -244,6 +256,7 @@ bool SkullManager::HandleLeftClick(NSRender::Render& render,
     nearestSkull->angularVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     nearestSkull->state = SkullState::Held;
     m_heldSkullSerial = nearestSkull->serial;
+    UpdateCollisionTransform(*nearestSkull);
 
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
     nearestSkull->position = playerPosition + forward * kHeldForwardOffset;
@@ -267,6 +280,7 @@ void SkullManager::ReleaseHeld(NSRender::Render& render, const D3DXVECTOR3& posi
     heldSkull->state = SkullState::Resting;
     heldSkull->hitEnemyDuringFlight = false;
     m_heldSkullSerial = 0;
+    UpdateCollisionTransform(*heldSkull);
     UpdateWorldMatrix(render, *heldSkull);
 }
 
@@ -310,6 +324,16 @@ bool SkullManager::SpawnAtPoint(NSRender::Render& render, SkullSpawnPoint& spawn
     {
         return false;
     }
+
+    skull.physicsId = PhysicsLib::PhysicsLib::Load(
+        kSkullCollisionModelPath.c_str(),
+        PhysicsLib::PhysicsLib::ObjectType::Slide,
+        0.0f);
+    if (skull.physicsId < 0)
+    {
+        std::abort();
+    }
+    UpdateCollisionTransform(skull);
 
     spawnPoint.readySkullSerial = skull.serial;
     spawnPoint.respawnFrames = 0;
@@ -357,6 +381,10 @@ void SkullManager::RemoveSkull(NSRender::Render& render, const std::size_t index
     if (skull.meshId >= 0)
     {
         render.RemoveMeshMix(skull.meshId);
+    }
+    if (skull.physicsId >= 0)
+    {
+        PhysicsLib::PhysicsLib::RemoveObject(skull.physicsId);
     }
 
     if (skull.serial == m_heldSkullSerial)
@@ -473,6 +501,26 @@ void SkullManager::UpdateFlyingSkull(
     }
 
     UpdateWorldMatrix(render, skull);
+}
+
+void SkullManager::UpdateCollisionTransform(const SkullObject& skull)
+{
+    if (skull.physicsId < 0)
+    {
+        return;
+    }
+
+    D3DXVECTOR3 collisionPosition = kDisabledCollisionPosition;
+    if (skull.state == SkullState::Resting)
+    {
+        collisionPosition = skull.position;
+    }
+    PhysicsLib::PhysicsLib::SetTransform(skull.physicsId,
+                                         collisionPosition,
+                                         kCollisionRotation,
+                                         kCollisionScale);
+    PhysicsLib::PhysicsLib::SetVelocity(skull.physicsId,
+                                        D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
 void SkullManager::UpdateWorldMatrix(NSRender::Render& render, const SkullObject& skull)

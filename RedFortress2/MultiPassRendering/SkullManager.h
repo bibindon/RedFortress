@@ -26,6 +26,7 @@ struct SkullObject
     std::uint64_t serial = 0;
     std::uint64_t creationOrder = 0;
     int meshId = -1;
+    int physicsId = -1;
     int spawnId = -1;
     SkullState state = SkullState::Resting;
     D3DXVECTOR3 position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -75,6 +76,7 @@ private:
                            SkullObject& skull,
                            const std::vector<std::unique_ptr<EnemyBase>>& enemies,
                            const EnemyHitCallback& enemyHitCallback);
+    void UpdateCollisionTransform(const SkullObject& skull);
     void UpdateWorldMatrix(NSRender::Render& render, const SkullObject& skull);
     SkullObject* FindHeldSkull();
     const SkullObject* FindHeldSkull() const;

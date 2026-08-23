@@ -11,6 +11,8 @@ SOURCE_MESH_NAME = "Cylinder.001"
 HEAD_GROUP_NAME = "Head"
 MODEL_SCALE = 0.5
 JAW_EPSILON = 0.025
+COLLISION_RADIUS = 0.55
+COLLISION_HEIGHT = 0.76
 
 
 def normalize_x_file(path):
@@ -22,6 +24,41 @@ def normalize_x_file(path):
     data = data.replace(b"\n", b"\r\n")
     with open(path, "wb") as destination_file:
         destination_file.write(data)
+
+
+def export_selected(path):
+    result = bpy.ops.export_scene.directx_x(
+        filepath=path,
+        check_existing=False,
+        use_selection=True,
+        axis_forward="Z",
+        axis_up="Y",
+        export_animation=False,
+    )
+    if "FINISHED" not in result:
+        raise RuntimeError(f"DirectX X export failed: {path}")
+    normalize_x_file(path)
+
+
+def create_collision_model(output_directory):
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=16,
+        radius=COLLISION_RADIUS,
+        depth=COLLISION_HEIGHT,
+        end_fill_type="NGON",
+        location=(0.0, 0.0, COLLISION_HEIGHT * 0.5),
+    )
+    collision_object = bpy.context.active_object
+    collision_object.name = "SkullCollision"
+    collision_object.data.name = "SkullCollision"
+    bpy.ops.object.select_all(action="DESELECT")
+    collision_object.select_set(True)
+    bpy.context.view_layer.objects.active = collision_object
+    collision_path = os.path.join(output_directory, "skull_collision.x")
+    export_selected(collision_path)
+    return collision_path
 
 
 def keep_head_vertices(mesh_object):
@@ -124,18 +161,7 @@ def main():
     bpy.context.view_layer.objects.active = mesh_object
     bpy.ops.wm.save_as_mainfile(filepath=blend_path)
 
-    result = bpy.ops.export_scene.directx_x(
-        filepath=x_path,
-        check_existing=False,
-        use_selection=True,
-        axis_forward="Z",
-        axis_up="Y",
-        export_animation=False,
-    )
-    if "FINISHED" not in result:
-        raise RuntimeError("DirectX X export failed.")
-
-    normalize_x_file(x_path)
+    export_selected(x_path)
     with open(x_path, "rb") as exported_file:
         exported_data = exported_file.read()
     if not exported_data.startswith(b"xof "):
@@ -143,13 +169,16 @@ def main():
     if exported_data.startswith(b"\xef\xbb\xbf"):
         raise RuntimeError("The exported DirectX X file contains a BOM.")
 
-    dimensions = mesh_object.dimensions
+    dimensions = mesh_object.dimensions.copy()
     minimum_export_y = min(vertex.co.z for vertex in mesh_object.data.vertices)
     if abs(minimum_export_y) > 0.0001:
         raise RuntimeError("The skull origin is not on the lower jaw.")
 
+    collision_path = create_collision_model(output_directory)
+
     print(f"Saved: {blend_path}")
     print(f"Exported: {x_path}")
+    print(f"Exported: {collision_path}")
     print(
         "Skull dimensions (Blender XYZ): "
         f"{dimensions.x:.4f}, {dimensions.y:.4f}, {dimensions.z:.4f}"
