@@ -53,7 +53,7 @@
 
 - S1: wolf(12,-23) / S2: small_mushroom(10,-20), crab(10,-14), frog(10,-6)
 - 東の寄り道: small_mushroom(13,-8)
-- S3: wolf(-10,0.9,12), crab(-10,16), small_mushroom(-10,22), wolf(-10,26)
+- S3: wolf(-10,1.4,12), crab(-10,0.9,16), small_mushroom(-10,22), wolf(-10,26)
 - 西の寄り道: frog(-13,18)
 - 全員 start(0,-28)/goal(0,28) から 7m 以上離す
 

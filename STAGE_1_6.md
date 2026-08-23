@@ -94,7 +94,7 @@ World 1方針: `wolf`・`small_mushroom`・`crab`・`frog`（birdは少数）。
 
 | 区画 | 配置 | 数 |
 |---|---|---|
-| 西の砦W | wolf(-10.5,-12), frog(-13.2,-18.5), small_mushroom(-13,-13) | 3 |
+| 西の砦W | wolf(-9,-12), frog(-13.2,-18.5), small_mushroom(-13,-13) | 3 |
 | C1島 | wolf(-2.5,-7), crab(-2.5,-4.5), frog(-2.5,6.5) | 3 |
 | C2島 | bird(0.5, 2.0, 5) | 1 |
 | C3島 | wolf(4,6.5), crab(4.6,-3.5), small_mushroom(4.5,-6.5) | 3 |
