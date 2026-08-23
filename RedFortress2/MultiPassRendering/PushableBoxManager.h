@@ -30,7 +30,12 @@ public:
     // Move one box using the horizontal player velocity.
     void Update(const D3DXVECTOR3& playerPosition,
                 const D3DXVECTOR3& playerVelocity,
+                bool playerGrounded,
                 float deltaSeconds);
+
+    bool IsPlayerPushingAnyBox(const D3DXVECTOR3& playerPosition,
+                               const D3DXVECTOR3& playerMoveDirection,
+                               bool playerGrounded) const;
 
     bool IsAnyBoxOnPlate(const D3DXVECTOR3& platePosition,
                          float plateHalfWidth,

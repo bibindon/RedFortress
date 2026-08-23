@@ -407,18 +407,17 @@ void SkullManager::UpdateFlyingSkull(
     const EnemyHitCallback& enemyHitCallback)
 {
     skull.velocity.y -= kGravity * kTargetFrameSeconds;
-    const D3DXVECTOR3 movement = skull.velocity * kTargetFrameSeconds;
     const D3DXVECTOR3 collisionPosition =
         skull.position + D3DXVECTOR3(0.0f, kSkullCollisionCenterY, 0.0f);
     D3DXVECTOR3 nextCollisionPosition = collisionPosition;
-    D3DXVECTOR3 nextMovement = movement;
+    D3DXVECTOR3 nextVelocity = skull.velocity;
     D3DXVECTOR3 hitNormal(0.0f, 0.0f, 0.0f);
 
     const bool collided = PhysicsLib::PhysicsLib::CheckCollide(collisionPosition,
-                                                                movement,
+                                                                skull.velocity,
                                                                 PhysicsLib::PhysicsLib::ShapeType::Sphere,
                                                                 &nextCollisionPosition,
-                                                                &nextMovement,
+                                                                &nextVelocity,
                                                                 nullptr,
                                                                 nullptr,
                                                                 kSkullRadius,
@@ -426,6 +425,7 @@ void SkullManager::UpdateFlyingSkull(
                                                                 nullptr,
                                                                 &hitNormal);
     skull.position = nextCollisionPosition - D3DXVECTOR3(0.0f, kSkullCollisionCenterY, 0.0f);
+    skull.velocity = nextVelocity;
 
     if (collided)
     {

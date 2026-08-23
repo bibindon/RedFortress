@@ -21,7 +21,7 @@ namespace
     const D3DXVECTOR3 kDefaultScale(1.0f, 1.0f, 1.0f);
     const D3DXVECTOR3 kDisabledPosition(0.0f, -10000.0f, 0.0f);
     const float kBoxWidth = 1.2f;
-    const float kBoxHeight = 1.2f;
+    const float kBoxHeight = 1.0f;
     const float kBoxDepth = 1.2f;
     const float kPlayerRadius = 0.3f;
     const float kPlayerHeight = 1.7f;
@@ -174,6 +174,7 @@ void PushableBoxManager::Clear()
 
 void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
                                 const D3DXVECTOR3& playerVelocity,
+                                const bool playerGrounded,
                                 const float deltaSeconds)
 {
     if (deltaSeconds <= 0.0f)
@@ -181,7 +182,7 @@ void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
         std::abort();
     }
 
-    if (m_render == nullptr || m_boxes.empty())
+    if (m_render == nullptr || m_boxes.empty() || !playerGrounded)
     {
         return;
     }
@@ -230,6 +231,34 @@ void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
     m_render->SetMeshMixPos(box.meshId, box.position);
 }
 
+bool PushableBoxManager::IsPlayerPushingAnyBox(
+    const D3DXVECTOR3& playerPosition,
+    const D3DXVECTOR3& playerMoveDirection,
+    const bool playerGrounded) const
+{
+    if (!playerGrounded)
+    {
+        return false;
+    }
+
+    const D3DXVECTOR3 horizontalDirection(playerMoveDirection.x,
+                                           0.0f,
+                                           playerMoveDirection.z);
+    if (D3DXVec3LengthSq(&horizontalDirection) <= 0.0001f)
+    {
+        return false;
+    }
+
+    for (const PushableBox& box : m_boxes)
+    {
+        if (IsPlayerPushingBox(box, playerPosition, horizontalDirection))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool PushableBoxManager::IsAnyBoxOnPlate(const D3DXVECTOR3& platePosition,
                                          const float plateHalfWidth,
                                          const float plateHalfDepth) const
@@ -272,6 +301,11 @@ bool PushableBoxManager::IsPlayerPushingBox(const PushableBox& box,
     const float halfDepth = kBoxDepth * PositiveScale(box.scale.z) * 0.5f;
     const float boxBottom = box.position.y;
     const float boxTop = box.position.y + kBoxHeight * PositiveScale(box.scale.y);
+    if (playerPosition.y >= boxTop - kContactTolerance)
+    {
+        return false;
+    }
+
     const bool overlapsY = playerPosition.y <= boxTop + kContactTolerance &&
                            playerPosition.y + kPlayerHeight >= boxBottom - kContactTolerance;
     if (!overlapsY)

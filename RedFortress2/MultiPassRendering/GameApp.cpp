@@ -1690,6 +1690,7 @@ void GameApp::Run()
             m_lavaRiseManager.Update(m_render, kTargetFrameSeconds);
             m_pushableBoxManager.Update(m_playerMover.GetPosition(),
                                          m_playerMover.GetVelocity(),
+                                         m_playerMover.IsGrounded(),
                                          kTargetFrameSeconds);
             m_pressurePlateManager.Update(m_render,
                                           m_playerMover.GetPosition(),
@@ -3386,6 +3387,18 @@ void GameApp::UpdatePlayerByInput()
         }
         move = desiredMove;
         D3DXVec3Normalize(&move, &move);
+    }
+
+    const bool isPushingBox = m_playerKnockbackFrames <= 0 &&
+        !m_playerAttackController.IsMovementActive() &&
+        isMoving &&
+        m_pushableBoxManager.IsPlayerPushingAnyBox(m_playerMover.GetPosition(),
+                                                    move,
+                                                    m_playerMover.IsGrounded());
+    if (isPushingBox)
+    {
+        settings.moveSpeed *= 0.5f;
+        m_playerMover.SetSettings(settings);
     }
 
     if (m_playerMeshId >= 0)
