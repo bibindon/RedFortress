@@ -131,8 +131,9 @@ def main():
                      ["stage21-tree-01", "Tree", 26, 0.9, -18, 2.5]]
 
     triggers = [["ID", "Type", "TriggerX", "TriggerY", "TriggerZ", "TargetID", "Axis",
-                 "BaseRotX", "BaseRotY", "BaseRotZ", "Scale", "LiftHeight"],
-                [1, "LeverLift", -22, 4.2, -5, 2303, "Y", 0, 0, 0, 0.98, 6]]
+                  "BaseRotX", "BaseRotY", "BaseRotZ", "Scale", "LiftHeight"],
+                 [1, "LeverLift", -22, 4.2, -5, 2303, "Y", 0, 0, 0, 0.98, 6],
+                 [2, "LeverLift", 0, 1.55, 0, 2303, "Y", 0, 0, 0, 0.98, 6]]
 
     point_lights = [["PosX", "PosY", "PosZ", "Brightness", "ColorR", "ColorG", "ColorB", "ColorA",
                      "Shape", "LineLength", "SquareWidth", "SquareHeight", "RotX", "RotY", "RotZ", "Range", "OwnerTag"],

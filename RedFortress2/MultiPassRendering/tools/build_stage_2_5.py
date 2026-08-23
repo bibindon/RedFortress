@@ -222,10 +222,11 @@ def main():
     triggers = [["ID", "Type", "TriggerX", "TriggerY", "TriggerZ", "TargetID", "Axis",
                  "BaseRotX", "BaseRotY", "BaseRotZ", "Scale", "LiftHeight"],
                 [1, "LeverLift", 31, 4.4, -48.2, 9003, "Y", 0, 0, 0, 0.98, 6],
-                [2, "LeverLift", -24 - gate_direction_x * 4.2, 1.55,
-                 27 - gate_direction_z * 4.2, 9103, "Y", 0, -53.13, 0, 0.98, 6],
-                [3, "LeverLift", -24 + gate_direction_x * 4.2, 1.55,
-                 27 + gate_direction_z * 4.2, 9103, "Y", 0, -53.13, 0, 0.98, 6]]
+                 [2, "LeverLift", -24 - gate_direction_x * 4.2, 1.55,
+                  27 - gate_direction_z * 4.2, 9103, "Y", 0, -53.13, 0, 0.98, 6],
+                 [3, "LeverLift", -24 + gate_direction_x * 4.2, 1.55,
+                  27 + gate_direction_z * 4.2, 9103, "Y", 0, -53.13, 0, 0.98, 6],
+                 [4, "LeverLift", -24, 1.55, 27, 9103, "Y", 0, -53.13, 0, 0.98, 6]]
 
     point_lights = [["PosX", "PosY", "PosZ", "Brightness", "ColorR", "ColorG", "ColorB", "ColorA",
                      "Shape", "LineLength", "SquareWidth", "SquareHeight", "RotX", "RotY", "RotZ", "Range", "OwnerTag"],

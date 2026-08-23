@@ -119,8 +119,9 @@ def main():
                      ["stage22-tree-01", "Tree", -27, 7.0, 10, 2.5]]
 
     triggers = [["ID", "Type", "TriggerX", "TriggerY", "TriggerZ", "TargetID", "Axis",
-                 "BaseRotX", "BaseRotY", "BaseRotZ", "Scale", "LiftHeight"],
-                [1, "LeverLift", 2, 5.4, -8, 2403, "Y", 0, 0, 0, 0.98, 6]]
+                  "BaseRotX", "BaseRotY", "BaseRotZ", "Scale", "LiftHeight"],
+                 [1, "LeverLift", 2, 5.4, -8, 2403, "Y", 0, 0, 0, 0.98, 6],
+                 [2, "LeverLift", -9, 5.95, -3, 2403, "Y", 0, 0, 0, 0.98, 6]]
 
     pressure_plates = [["ID", "PlatePosX", "PlatePosY", "PlatePosZ", "WallID",
                         "WallRotX", "WallRotY", "WallRotZ", "WallScale", "TravelDistance"],
