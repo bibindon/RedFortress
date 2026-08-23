@@ -232,6 +232,54 @@ void DestructibleManager::Clear()
     m_droppedRedCubes.clear();
 }
 
+void DestructibleManager::ResetForRespawn(NSRender::Render& render)
+{
+    m_render = &render;
+
+    for (auto& drop : m_droppedRedCubes)
+    {
+        if (drop.meshId >= 0)
+        {
+            render.RemoveMeshMix(drop.meshId);
+        }
+    }
+    m_droppedRedCubes.clear();
+
+    for (auto& obj : m_objects)
+    {
+        if (obj.isDead || obj.meshId < 0)
+        {
+            obj.meshId = render.AddMeshMix(kModelPath,
+                                           obj.position,
+                                           kDefaultRotation,
+                                           1.0f);
+        }
+
+        obj.hp = obj.maxHp;
+        obj.blinkFrames = 0;
+
+        if (obj.meshId < 0)
+        {
+            obj.isDead = true;
+            DisablePhysicsObject(obj.physicsId);
+            continue;
+        }
+
+        obj.isDead = false;
+        render.SetMeshMixPos(obj.meshId, obj.position);
+        render.SetMeshMixDamageFlash(obj.meshId, false);
+        render.SetMeshMixEnabled(obj.meshId, true);
+
+        if (obj.physicsId >= 0)
+        {
+            PhysicsLib::PhysicsLib::SetTransform(obj.physicsId,
+                                                 obj.position,
+                                                 kDefaultRotation,
+                                                 kDefaultScale);
+        }
+    }
+}
+
 void DestructibleManager::Update(NSRender::Render& render)
 {
     for (auto& obj : m_objects)

@@ -54,6 +54,7 @@ public:
     void Initialize(NSRender::Render& render);
     void LoadForStage(NSRender::Render& render, const std::wstring& csvPath);
     void Clear();
+    void ResetForRespawn(NSRender::Render& render);
     void Update(NSRender::Render& render);
 
     const DestructibleObject* FindInAttackRange(const D3DXVECTOR3& playerPos,

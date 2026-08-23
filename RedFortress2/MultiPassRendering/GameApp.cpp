@@ -1236,6 +1236,7 @@ void GameApp::Run()
         }
         else if (m_warpPhase != WarpPhase::None)
         {
+            GameAudio::StopPushableBoxMovement();
             UpdateWarp();
             m_render.Draw();
             continue;
@@ -1244,6 +1245,7 @@ void GameApp::Run()
         {
             if (m_craftMenu.BlocksGameInput())
             {
+                GameAudio::StopPushableBoxMovement();
                 m_craftMenu.Update();
                 ApplyUnlockedAbilities();
                 if (!IsCurrentStageSelect())
@@ -1262,6 +1264,7 @@ void GameApp::Run()
 
             if (m_pauseMenu.BlocksGameInput())
             {
+                GameAudio::StopPushableBoxMovement();
                 m_pauseMenu.Update();
                 if (m_pauseMenu.ConsumeExitRequested())
                 {
@@ -1310,6 +1313,7 @@ void GameApp::Run()
 
             if (m_playerDeathPending)
             {
+                GameAudio::StopPushableBoxMovement();
                 // 地上での死亡は崩れ落ちるモーションを見せてから暗転する。
                 // 完全暗転（フェードα=1）になったら瞬間移動でリスポーンし、黒保持を経てフェードインする。
                 if (m_respawnPhase == RespawnPhase::DeathMotion)
@@ -1378,6 +1382,7 @@ void GameApp::Run()
 
             if (IsHitStopActive())
             {
+                GameAudio::StopPushableBoxMovement();
                 m_destructibleManager.Update(m_render);
                 m_enemyManager.SyncMeshes(m_render);
                 UpdateGoalArrow();
@@ -4600,6 +4605,7 @@ void GameApp::UpdateGoalArrow()
 void GameApp::InitializeStageSelectCursor()
 {
     m_selectedStagePortalId.clear();
+    m_mouseOverStagePortalId.clear();
     m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_hasSelectedStagePortal = false;
     m_stageSelectPlayerMoveStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -5026,55 +5032,66 @@ void GameApp::UpdateStageSelectCursorByInput()
         GameAudio::PlayMenuMove();
     }
 
+    const std::vector<InteractionManager::Interactable>& interactables =
+        m_interactionManager.GetInteractables();
+    float nearestDistanceSquared = kStagePortalClickRadius * kStagePortalClickRadius;
+    const InteractionManager::Interactable* mouseOverInteractable = nullptr;
+    if (!m_isMouseOverStartButton)
+    {
+        for (const InteractionManager::Interactable& interactable : interactables)
+        {
+            if (interactable.type != L"StagePortal" ||
+                !IsStagePortalSelectable(interactable.id))
+            {
+                continue;
+            }
+
+            const POINT screenPosition = NSRender::Camera::GetScreenPos(interactable.position);
+            if (screenPosition.x < 0 || screenPosition.y < 0)
+            {
+                continue;
+            }
+
+            const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                static_cast<float>(NSRender::Common::ScreenW());
+            const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                static_cast<float>(NSRender::Common::ScreenH());
+            const float portalX = static_cast<float>(screenPosition.x) * scaleX;
+            const float portalY = static_cast<float>(screenPosition.y) * scaleY;
+            const float differenceX = portalX - static_cast<float>(baseMousePosition.x);
+            const float differenceY = portalY - static_cast<float>(baseMousePosition.y);
+            const float distanceSquared = differenceX * differenceX + differenceY * differenceY;
+            if (distanceSquared <= nearestDistanceSquared)
+            {
+                nearestDistanceSquared = distanceSquared;
+                mouseOverInteractable = &interactable;
+            }
+        }
+    }
+
+    std::wstring mouseOverPortalId;
+    if (mouseOverInteractable != nullptr)
+    {
+        mouseOverPortalId = mouseOverInteractable->id;
+    }
+    if (!mouseOverPortalId.empty() && mouseOverPortalId != m_mouseOverStagePortalId)
+    {
+        GameAudio::PlayStageSelectMove();
+    }
+    m_mouseOverStagePortalId = mouseOverPortalId;
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
         if (m_isMouseOverStartButton)
         {
             MoveToSelectedStagePortal();
         }
-        else
+        else if (mouseOverInteractable != nullptr)
         {
-            const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
-            float nearestDistanceSquared = kStagePortalClickRadius * kStagePortalClickRadius;
-            const InteractionManager::Interactable* selectedInteractable = nullptr;
-
-            for (const InteractionManager::Interactable& interactable : interactables)
-            {
-                if (interactable.type != L"StagePortal" ||
-                    !IsStagePortalSelectable(interactable.id))
-                {
-                    continue;
-                }
-
-                const POINT screenPosition = NSRender::Camera::GetScreenPos(interactable.position);
-                if (screenPosition.x < 0 || screenPosition.y < 0)
-                {
-                    continue;
-                }
-
-                const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                    static_cast<float>(NSRender::Common::ScreenW());
-                const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                    static_cast<float>(NSRender::Common::ScreenH());
-                const float portalX = static_cast<float>(screenPosition.x) * scaleX;
-                const float portalY = static_cast<float>(screenPosition.y) * scaleY;
-                const float differenceX = portalX - static_cast<float>(baseMousePosition.x);
-                const float differenceY = portalY - static_cast<float>(baseMousePosition.y);
-                const float distanceSquared = differenceX * differenceX + differenceY * differenceY;
-                if (distanceSquared <= nearestDistanceSquared)
-                {
-                    nearestDistanceSquared = distanceSquared;
-                    selectedInteractable = &interactable;
-                }
-            }
-
-            if (selectedInteractable != nullptr)
-            {
-                m_selectedStagePortalId = selectedInteractable->id;
-                m_selectedStagePortalPosition = selectedInteractable->position;
-                m_hasSelectedStagePortal = true;
-                SyncStageSelectPlayerToPortal(false);
-            }
+            m_selectedStagePortalId = mouseOverInteractable->id;
+            m_selectedStagePortalPosition = mouseOverInteractable->position;
+            m_hasSelectedStagePortal = true;
+            SyncStageSelectPlayerToPortal(false);
         }
     }
 
@@ -7486,8 +7503,10 @@ void GameApp::CompletePlayerDeath()
         m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kRespawnInvincibleFrames, 4);
     }
 
-    // 敵と取得済みスターを再配置
+    // 敵、破壊可能オブジェクト、取得済みスターを再配置
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
+    m_destructibleManager.ResetForRespawn(m_render);
+    m_collectibleManager.RefreshVisibility(m_destructibleManager);
     m_pickupManager.RespawnStars();
 
     // レバー2・3で操作した門を閉じた初期状態へ戻す。

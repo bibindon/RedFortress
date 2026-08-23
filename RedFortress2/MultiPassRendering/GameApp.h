@@ -500,6 +500,7 @@ private:
     int m_stagePortalCooldownFrames = 0;
     std::wstring m_lastSelectId;
     std::wstring m_selectedStagePortalId;
+    std::wstring m_mouseOverStagePortalId;
     std::wstring m_preferredStageSelectPortalId;
 D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_hasSelectedStagePortal = false;

@@ -41,6 +41,7 @@ const std::wstring kSlashHit = L"res\\sound\\slashHit.wav";
 const std::wstring kLeverToggle = L"res\\sound\\pullOar.wav";
 const std::wstring kRopeCut = L"res\\sound\\slashHit.wav";
 const std::wstring kMechanismStop = L"res\\sound\\stomp_impact.wav";
+const std::wstring kPushableBoxMovement = L"res\\sound\\pushable_box_scrape.wav";
 const std::wstring kAttackHit = L"res\\sound\\club_hit.wav";
 const std::wstring kBusterHit = L"res\\sound\\buster_hit.wav";
 const std::wstring kEnemyAttack = L"res\\sound\\enemyAttack.wav";
@@ -76,6 +77,7 @@ std::wstring g_currentBgm;
 std::wstring g_currentEnvironment;
 int g_environmentId = -1;
 int g_hyperModeId = -1;
+int g_pushableBoxMovementId = -1;
 int g_currentBgmVolume = 0;
 int g_effectiveBgmVolume = -1;
 bool g_initialized = false;
@@ -93,6 +95,7 @@ void ResetTrackingState()
     g_currentEnvironment.clear();
     g_environmentId = -1;
     g_hyperModeId = -1;
+    g_pushableBoxMovementId = -1;
     g_currentBgmVolume = 0;
     g_effectiveBgmVolume = -1;
     g_bgmFadeOutActive = false;
@@ -366,6 +369,7 @@ void Finalize()
     if (g_initialized)
     {
         StopHyperMode();
+        StopPushableBoxMovement();
         StopEnvironment();
         StopBgmIfPlaying();
     }
@@ -572,6 +576,47 @@ void PlayAttackHit() { PlayEffect(kAttackHit, 82); }
 void PlayLeverToggle() { PlayEffect(kLeverToggle, 80); }
 void PlayRopeCut() { PlayEffect(kRopeCut, 82); }
 void PlayMechanismStop() { PlayEffect(kMechanismStop, 80); }
+void StartPushableBoxMovement()
+{
+    if (!g_initialized || g_pushableBoxMovementId >= 0)
+    {
+        return;
+    }
+
+    try
+    {
+        g_pushableBoxMovementId =
+            SoundLib::SoundLib::PlayEnvironmentSound(kPushableBoxMovement, 46);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+    }
+}
+
+void StopPushableBoxMovement()
+{
+    if (!g_initialized)
+    {
+        g_pushableBoxMovementId = -1;
+        return;
+    }
+    if (g_pushableBoxMovementId < 0)
+    {
+        return;
+    }
+
+    try
+    {
+        SoundLib::SoundLib::StopEnvironmentSound(g_pushableBoxMovementId);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
+    g_pushableBoxMovementId = -1;
+}
 void PlayBusterHit() { PlayEffect(kBusterHit, 76); }
 void PlayEnemyAttack() { PlayEffect(kEnemyAttack, 72); }
 void PlayPlayerDamage() { PlayEffect(kPlayerDamage, 88); }

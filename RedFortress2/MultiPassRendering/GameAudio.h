@@ -34,6 +34,8 @@ void PlayAttackHit();
 void PlayLeverToggle();
 void PlayRopeCut();
 void PlayMechanismStop();
+void StartPushableBoxMovement();
+void StopPushableBoxMovement();
 void PlayBusterHit();
 void PlayEnemyAttack();
 void PlayPlayerDamage();

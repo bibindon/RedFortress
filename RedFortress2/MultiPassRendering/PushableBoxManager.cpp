@@ -3,6 +3,7 @@
 #include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Util.h"
+#include "GameAudio.h"
 
 #include <algorithm>
 #include <cmath>
@@ -152,6 +153,7 @@ void PushableBoxManager::LoadForStage(NSRender::Render& render, const std::wstri
 
 void PushableBoxManager::Clear()
 {
+    GameAudio::StopPushableBoxMovement();
     for (PushableBox& box : m_boxes)
     {
         if (m_render != nullptr && box.meshId >= 0)
@@ -184,12 +186,14 @@ void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
 
     if (m_render == nullptr || m_boxes.empty() || !playerGrounded)
     {
+        GameAudio::StopPushableBoxMovement();
         return;
     }
 
     const D3DXVECTOR3 horizontalVelocity(playerVelocity.x, 0.0f, playerVelocity.z);
     if (D3DXVec3LengthSq(&horizontalVelocity) <= 0.0001f)
     {
+        GameAudio::StopPushableBoxMovement();
         return;
     }
 
@@ -213,6 +217,7 @@ void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
 
     if (selectedIndex >= m_boxes.size())
     {
+        GameAudio::StopPushableBoxMovement();
         return;
     }
 
@@ -224,11 +229,13 @@ void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
                                             &movedMovement);
     if (D3DXVec3LengthSq(&movedMovement) <= 0.0000001f)
     {
+        GameAudio::StopPushableBoxMovement();
         return;
     }
 
     box.position += movedMovement;
     m_render->SetMeshMixPos(box.meshId, box.position);
+    GameAudio::StartPushableBoxMovement();
 }
 
 bool PushableBoxManager::IsPlayerPushingAnyBox(
