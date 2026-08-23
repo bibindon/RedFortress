@@ -1254,7 +1254,7 @@ void GameApp::Run()
                     DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
-                m_enemyManager.DrawHpBars(m_render);
+                m_enemyManager.DrawHpBars(m_render, m_playerMover.GetPosition());
                 m_craftMenu.Render();
                 m_render.Draw();
                 continue;
@@ -1371,7 +1371,7 @@ void GameApp::Run()
                     DrawAmmoGauge();
                 }
                 m_damagePopupManager.Draw();
-                m_enemyManager.DrawHpBars(m_render);
+                m_enemyManager.DrawHpBars(m_render, m_playerMover.GetPosition());
                 m_render.Draw();
                 continue;
             }
@@ -1396,7 +1396,7 @@ void GameApp::Run()
                 }
                 m_damagePopupManager.Update();
                 m_damagePopupManager.Draw();
-                m_enemyManager.DrawHpBars(m_render);
+                m_enemyManager.DrawHpBars(m_render, m_playerMover.GetPosition());
                 DrawItemPickupMessage();
                 m_render.Draw();
                 UpdateHitStop();
@@ -1638,7 +1638,7 @@ void GameApp::Run()
                 m_damagePopupManager.Update();
             }
             m_damagePopupManager.Draw();
-            m_enemyManager.DrawHpBars(m_render);
+            m_enemyManager.DrawHpBars(m_render, m_playerMover.GetPosition());
             if (m_qte == nullptr && !IsCurrentStageSelect())
             {
                 m_interactionManager.DrawPrompt();
@@ -1934,6 +1934,7 @@ void GameApp::Run()
 #endif
             if (m_qte == nullptr)
             {
+                const float playerContactRadius = m_playerMover.GetSettings().radius;
                 for (auto& enemy : m_enemyManager.GetEnemies())
                 {
                     if (enemy->IsDead())
@@ -1944,7 +1945,8 @@ void GameApp::Run()
                     if (enemy->IsStompedByPlayer(playerPositionBeforePhysicsUpdate,
                                                 m_playerMover.GetPosition(),
                                                 m_playerMover.IsJumping(),
-                                                m_playerMover.GetVelocity().y))
+                                                m_playerMover.GetVelocity().y,
+                                                playerContactRadius))
                     {
                         enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy->GetPosition(), false);
@@ -1954,7 +1956,8 @@ void GameApp::Run()
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
                         break;
                     }
-                    else if (m_pickupManager.IsStarActive() && enemy->IsTouchingPlayer(m_playerMover.GetPosition()))
+                    else if (m_pickupManager.IsStarActive() &&
+                             enemy->IsTouchingPlayer(m_playerMover.GetPosition(), playerContactRadius))
                     {
                         enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy->GetPosition(), false);
@@ -1964,7 +1967,7 @@ void GameApp::Run()
                     }
                     else if (m_playerInvincibleFrames <= 0 &&
                              !enemy->UsesSpecialAttacks() &&
-                             enemy->IsTouchingPlayer(m_playerMover.GetPosition()))
+                             enemy->IsTouchingPlayer(m_playerMover.GetPosition(), playerContactRadius))
                     {
                         GameAudio::PlayEnemyAttack();
                         DamagePlayerHp(10);

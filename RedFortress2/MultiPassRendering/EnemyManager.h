@@ -30,7 +30,7 @@ public:
     void LoadForStage(NSRender::Render& render, const std::wstring& csvPath);
     void Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, bool playerInvincible);
     void SyncMeshes(NSRender::Render& render);
-    void DrawHpBars(NSRender::Render& render);
+    void DrawHpBars(NSRender::Render& render, const D3DXVECTOR3& playerPos);
 
     std::vector<std::unique_ptr<EnemyBase>>& GetEnemies();
     const std::vector<std::unique_ptr<EnemyBase>>& GetEnemies() const;

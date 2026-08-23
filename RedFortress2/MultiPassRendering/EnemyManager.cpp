@@ -29,6 +29,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 namespace
 {
@@ -41,6 +42,8 @@ namespace
     // 20m = 400.0f。遠方でも死亡敵は死亡アニメと削除タイマーを進める必要があるため対象外。
     const float kEnemySleepDistanceMeters = 20.0f;
     const float kEnemySleepDistanceSq = kEnemySleepDistanceMeters * kEnemySleepDistanceMeters;
+    const float kHpBarFadeStartDistanceMeters = 10.0f;
+    const int kHpBarMaxAlpha = 255;
 
     std::wstring Trim(const std::wstring& str)
     {
@@ -198,7 +201,7 @@ void EnemyManager::SyncMeshes(NSRender::Render& render)
     }
 }
 
-void EnemyManager::DrawHpBars(NSRender::Render& render)
+void EnemyManager::DrawHpBars(NSRender::Render& render, const D3DXVECTOR3& playerPos)
 {
     const float scale = static_cast<float>(NSRender::Common::ScreenW()) / static_cast<float>(NSRender::Common::BASE_W);
 
@@ -222,6 +225,21 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
             continue;
         }
 
+        const D3DXVECTOR3 diff = enemy->GetPosition() - playerPos;
+        const float distanceXZ = std::sqrt(diff.x * diff.x + diff.z * diff.z);
+        if (distanceXZ >= kEnemySleepDistanceMeters)
+        {
+            continue;
+        }
+
+        int hpBarAlpha = kHpBarMaxAlpha;
+        if (distanceXZ > kHpBarFadeStartDistanceMeters)
+        {
+            const float fadeDistance = kEnemySleepDistanceMeters - kHpBarFadeStartDistanceMeters;
+            const float remainingDistance = kEnemySleepDistanceMeters - distanceXZ;
+            hpBarAlpha = static_cast<int>(kHpBarMaxAlpha * remainingDistance / fadeDistance);
+        }
+
         const D3DXVECTOR3 barPos = enemy->GetPosition() + D3DXVECTOR3(0.0f, 1.5f, 0.0f);
         const POINT screenPos = NSRender::Camera::GetScreenPos(barPos);
         if (screenPos.x < 0 || screenPos.y < 0)
@@ -243,7 +261,7 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
                                             kHpBarWidth,
                                             kHpBarHeight,
                                             scale,
-                                            255);
+                                            hpBarAlpha);
 
         if (greenWidth > 0)
         {
@@ -255,7 +273,7 @@ void EnemyManager::DrawHpBars(NSRender::Render& render)
                                                 greenWidth,
                                                 kHpBarHeight,
                                                 scale,
-                                                255);
+                                                hpBarAlpha);
         }
     }
 }
