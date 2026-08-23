@@ -231,6 +231,7 @@ private:
     void UpdateStageSelectCursorByInput();
     bool MoveToSelectedStagePortal();
     std::wstring GetSelectedStagePortalDisplayName() const;
+    void UpdateStageSelectMaskedGaussian();
     void DrawStageSelectCursor();
     void CreateStageSelectCubes();
     void RemoveStageSelectCubes();

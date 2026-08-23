@@ -170,14 +170,17 @@ namespace
     const wchar_t* kPlayerPointLightOwnerTag = L"stage-player";
     const int kStageSelectStageNameX = 48;
     const int kStageSelectStageNameY = 42;
-    const int kStageSelectLivesX = 1190;
-    const int kStageSelectLivesY = 42;
-    const int kStageSelectLivesWidth = 360;
-    const int kStageSelectHintY = 852;
+    const int kStageSelectHintX = 900;
+    const int kStageSelectHintWidth = 650;
+    const int kStageSelectHintFirstLineY = 812;
+    const int kStageSelectHintSecondLineY = 844;
+    const int kStageSelectHintLineHeight = 22;
     const int kStageSelectStartButtonX = 650;
     const int kStageSelectStartButtonY = 790;
     const int kStageSelectStartButtonWidth = 300;
     const int kStageSelectStartButtonHeight = 54;
+    const std::wstring kStageSelectStartMaskPath = L"res\\2D_Image\\stage_select_start_mask.png";
+    const int kStageSelectMaskedGaussianSampleSize = 25;
     const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
     const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
@@ -976,6 +979,8 @@ void GameApp::Run()
         {
             GameAudio::PlayStoryMusic();
         }
+
+        UpdateStageSelectMaskedGaussian();
 
         if (m_stageTransitionAction != StageTransitionAction::None)
         {
@@ -5125,6 +5130,33 @@ std::wstring GameApp::GetSelectedStagePortalDisplayName() const
     return BuildStageComboText(m_stageManager.GetStage(targetIndex));
 }
 
+void GameApp::UpdateStageSelectMaskedGaussian()
+{
+    if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen())
+    {
+        return;
+    }
+
+    const bool isEnabled = m_render.IsPostEffectMaskedGaussianFilterEnabled();
+    const std::wstring currentMaskPath = m_render.GetPostEffectMaskedGaussianMaskPath();
+    const bool shouldEnable = m_gameState == GameState::Playing && IsCurrentStageSelect();
+    if (shouldEnable)
+    {
+        if (!isEnabled || currentMaskPath != kStageSelectStartMaskPath)
+        {
+            m_render.SetPostEffectMaskedGaussianMaskPath(kStageSelectStartMaskPath);
+            m_render.SetPostEffectMaskedGaussianSampleSize(kStageSelectMaskedGaussianSampleSize);
+            m_render.SetPostEffectMaskedGaussianFilter(true);
+        }
+        return;
+    }
+
+    if (isEnabled && currentMaskPath == kStageSelectStartMaskPath)
+    {
+        m_render.SetPostEffectMaskedGaussianFilter(false);
+    }
+}
+
 void GameApp::DrawStageSelectCursor()
 {
     if (!IsCurrentStageSelect())
@@ -5138,11 +5170,11 @@ void GameApp::DrawStageSelectCursor()
     }
     if (m_stageSelectHintFontId < 0)
     {
-        m_stageSelectHintFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 24, D3DCOLOR_RGBA(255, 255, 255, 220));
+        m_stageSelectHintFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 18, D3DCOLOR_RGBA(255, 255, 255, 150));
     }
     if (m_stageSelectStartButtonFontId < 0)
     {
-        m_stageSelectStartButtonFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 40, D3DCOLOR_RGBA(255, 255, 255, 255));
+        m_stageSelectStartButtonFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 60, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
     const std::wstring stageName = GetSelectedStagePortalDisplayName();
@@ -5153,28 +5185,23 @@ void GameApp::DrawStageSelectCursor()
                             kStageSelectStageNameX,
                             kStageSelectStageNameY,
                             D3DCOLOR_RGBA(255, 255, 255, 255));
-
-        const std::wstring livesText = L"残機: " + std::to_wstring(m_player.GetLives());
-        m_render.DrawTextExCenter(m_stageSelectFontId,
-                                  livesText,
-                                  kStageSelectLivesX,
-                                  kStageSelectLivesY,
-                                  kStageSelectLivesWidth,
-                                  32,
-                                  D3DCOLOR_RGBA(255, 255, 255, 230));
     }
 
-    m_render.DrawTextEx(m_stageSelectHintFontId,
-                        L"方向キー・WASD・パッド・マウス: ステージ選択",
-                        kStageSelectStageNameX,
-                        kStageSelectHintY,
-                        D3DCOLOR_RGBA(255, 255, 255, 220));
+    m_render.DrawTextExRight(m_stageSelectHintFontId,
+                             L"方向キー・WASD・パッド・マウス: ステージ選択",
+                             kStageSelectHintX,
+                             kStageSelectHintFirstLineY,
+                             kStageSelectHintWidth,
+                             kStageSelectHintLineHeight,
+                             D3DCOLOR_RGBA(255, 255, 255, 150));
 
-    m_render.DrawTextEx(m_stageSelectHintFontId,
-                        L"エンター・クリック: 開始",
-                        1180,
-                        kStageSelectHintY,
-                        D3DCOLOR_RGBA(255, 255, 255, 220));
+    m_render.DrawTextExRight(m_stageSelectHintFontId,
+                             L"エンター・クリック: 開始",
+                             kStageSelectHintX,
+                             kStageSelectHintSecondLineY,
+                             kStageSelectHintWidth,
+                             kStageSelectHintLineHeight,
+                             D3DCOLOR_RGBA(255, 255, 255, 150));
 
     UINT startButtonColor = D3DCOLOR_RGBA(255, 255, 255, 255);
     if (m_stageSelectPlayerMoveActive)
