@@ -19,6 +19,7 @@ def main():
     simple = read("XFileList_simple.csv")
     physics = read("XFileListPhysics.csv")
     move = read("XFileListMove.csv")
+    plates = read("PressurePlates.csv")
 
     # 1) 重複ID
     def dup(rows, label):
@@ -77,7 +78,7 @@ def main():
             errors.append("trigger target %s physics Move != y" % r["TargetID"])
 
     # 5) PressurePlates WallID が描画・物理両方に存在
-    for r in read("PressurePlates.csv"):
+    for r in plates:
         wid = r["WallID"]
         if wid not in simple_ids:
             errors.append("plate WallID %s missing in simple" % wid)
@@ -86,6 +87,24 @@ def main():
         phys = [s for s in physics if s["ID"] == wid]
         if phys and phys[0].get("Move", "").lower() != "y":
             errors.append("plate wall %s physics Move != y" % wid)
+
+    # 感圧板3は各扉の外側2枚と箱内中央1枚を同じ扉へ接続する。
+    expected_plate_positions = {
+        (-10.0, 0.71, -14.0),
+        (-10.0, 0.71, -18.0),
+        (-10.0, 0.71, -22.0),
+    }
+    actual_plate_positions = {
+        (float(r["PlatePosX"]), float(r["PlatePosY"]), float(r["PlatePosZ"]))
+        for r in plates
+        if r["WallID"] == "9114"
+    }
+    if len(plates) != 3:
+        errors.append("PressurePlate3 must have exactly three plates")
+    if any(r["WallID"] != "9114" for r in plates):
+        errors.append("all PressurePlate3 plates must target wall 9114")
+    if actual_plate_positions != expected_plate_positions:
+        errors.append("PressurePlate3 must have two outside plates and one plate at the box center")
 
     # 6) 敵数・型・開始/ゴール7m以内に敵なし
     enemies = read("EnemyPositions.csv")
@@ -111,7 +130,7 @@ def main():
         ("QTE tree", len(read("Interactables.csv")) >= 1, "Interactables.csv"),
         ("dash booster", len(read("DashBoosters.csv")) >= 1, "DashBoosters.csv"),
         ("lever/rope/button", len(read("AttackTriggers.csv")) >= 1, "AttackTriggers.csv"),
-        ("pressure plate", len(read("PressurePlates.csv")) >= 1, "PressurePlates.csv"),
+        ("pressure plate", len(plates) >= 1, "PressurePlates.csv"),
         ("destructibles", len(read("Destructibles.csv")) >= 1, "Destructibles.csv"),
         ("star", len(read("Stars.csv")) >= 1, "Stars.csv"),
     ]
