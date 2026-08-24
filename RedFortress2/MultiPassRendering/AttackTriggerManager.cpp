@@ -277,6 +277,7 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
 
 void AttackTriggerManager::Clear(NSRender::Render& render)
 {
+    GameAudio::StopDoorMovement();
     for (Trigger& trigger : m_triggers)
     {
         if (trigger.type == AttackTriggerType::Button)
