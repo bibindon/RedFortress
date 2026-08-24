@@ -266,6 +266,7 @@ bool SkullManager::HandleLeftClick(NSRender::Render& render,
     nearestSkull->position.y += kHeldHeightOffset;
     nearestSkull->rotation.y = playerYaw;
     UpdateWorldMatrix(render, *nearestSkull);
+    GameAudio::PlaySkullGrab();
     return true;
 }
 

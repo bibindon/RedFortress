@@ -685,6 +685,7 @@ void PlayExplosion() { PlayEffect(kExplosion, 75); }
 void PlayBombPlace() { PlayEffect(kBombPlace, 78); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }
+void PlaySkullGrab() { PlayEffect(kWeaponChange, 72); }
 void PlaySkullThrow() { PlayEffect(kSkullThrow, 68); }
 void PlaySkullHit() { PlayEffect(kSkullHit, 78); }
 void PlaySkullLand() { PlayEffect(kSkullLand, 62); }

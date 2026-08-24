@@ -54,6 +54,7 @@ void PlayExplosion();
 void PlayBombPlace();
 void PlayStomp();
 void PlayBuster();
+void PlaySkullGrab();
 void PlaySkullThrow();
 void PlaySkullHit();
 void PlaySkullLand();

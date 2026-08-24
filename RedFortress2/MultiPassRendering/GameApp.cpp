@@ -164,6 +164,10 @@ namespace
     const float kStageSelectPlayerVisualScale = 1.0f;
     const float kStageSelectPlayerLightHeight = 3.2f;
     const wchar_t* kStageSelectPlayerLightOwnerTag = L"stage-select-player";
+    const float kStageSelectCursorLightHeight = 0.4f;
+    const float kStageSelectCursorLightBrightness = 3.0f;
+    const float kStageSelectCursorLightRange = 4.5f;
+    const wchar_t* kStageSelectCursorLightOwnerTag = L"stage-select-cursor";
     const float kPlayerPointLightHeight = 2.2f;
     const float kPlayerPointLightBrightness = 2.5f;
     const float kPlayerPointLightRange = 12.0f;
@@ -4604,6 +4608,7 @@ void GameApp::UpdateGoalArrow()
 
 void GameApp::InitializeStageSelectCursor()
 {
+    m_render.RemovePointLightsByOwnerTag(kStageSelectCursorLightOwnerTag);
     m_selectedStagePortalId.clear();
     m_mouseOverStagePortalId.clear();
     m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -5074,9 +5079,33 @@ void GameApp::UpdateStageSelectCursorByInput()
     {
         mouseOverPortalId = mouseOverInteractable->id;
     }
-    if (!mouseOverPortalId.empty() && mouseOverPortalId != m_mouseOverStagePortalId)
+    if (mouseOverPortalId != m_mouseOverStagePortalId)
     {
-        GameAudio::PlayStageSelectMove();
+        m_render.RemovePointLightsByOwnerTag(kStageSelectCursorLightOwnerTag);
+        if (!mouseOverPortalId.empty())
+        {
+            GameAudio::PlayStageSelectMove();
+
+            float cubeVisualOffsetY = kStageSelectCubeVisualOffsetY;
+            if (m_stageManager.GetCurrentStage().id == L"select2")
+            {
+                cubeVisualOffsetY += kStageSelect2CubeVisualOffsetY;
+            }
+
+            D3DXVECTOR3 lightPosition = mouseOverInteractable->position;
+            lightPosition.y += cubeVisualOffsetY + kStageSelectCursorLightHeight;
+            const D3DXCOLOR lightColor(1.0f, 0.86f, 0.38f, 1.0f);
+            m_render.AddPointLight(lightPosition,
+                                   kStageSelectCursorLightBrightness,
+                                   lightColor,
+                                   NSRender::PointLightShape::Point,
+                                   12.0f,
+                                   10.0f,
+                                   10.0f,
+                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                   kStageSelectCursorLightRange,
+                                   kStageSelectCursorLightOwnerTag);
+        }
     }
     m_mouseOverStagePortalId = mouseOverPortalId;
 
