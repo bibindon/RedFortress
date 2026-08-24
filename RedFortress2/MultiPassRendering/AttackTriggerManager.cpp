@@ -104,6 +104,7 @@ void AttackTriggerManager::Initialize()
     m_triggers.clear();
     m_buttonLightsActive = false;
     m_buttonLightsElapsed = 0.0f;
+    m_targetMoving = false;
 }
 
 void AttackTriggerManager::LoadForStage(NSRender::Render& render,
@@ -296,6 +297,7 @@ void AttackTriggerManager::Clear(NSRender::Render& render)
     }
     m_buttonLightsActive = false;
     m_buttonLightsElapsed = 0.0f;
+    m_targetMoving = false;
     m_triggers.clear();
 }
 
@@ -306,6 +308,8 @@ void AttackTriggerManager::Update(NSRender::Render& render,
     {
         std::abort();
     }
+
+    m_targetMoving = false;
 
     if (m_buttonLightsActive)
     {
@@ -474,6 +478,11 @@ std::size_t AttackTriggerManager::GetTriggerCount() const
     return m_triggers.size();
 }
 
+bool AttackTriggerManager::IsTargetMoving() const
+{
+    return m_targetMoving;
+}
+
 bool AttackTriggerManager::IsTargetInAttackRange(
     const Trigger& trigger,
     const D3DXVECTOR3& playerPosition,
@@ -585,6 +594,7 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
     const bool liftChanged = trigger.currentLift != previousLift;
     if ((angleChanged || liftChanged) && trigger.hasTarget)
     {
+        m_targetMoving = true;
         ApplyTargetTransform(render, trigger);
     }
 

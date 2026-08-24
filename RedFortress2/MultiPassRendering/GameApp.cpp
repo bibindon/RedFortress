@@ -1240,6 +1240,7 @@ void GameApp::Run()
         }
         else if (m_warpPhase != WarpPhase::None)
         {
+            GameAudio::StopDoorMovement();
             GameAudio::StopPushableBoxMovement();
             UpdateWarp();
             m_render.Draw();
@@ -1249,6 +1250,7 @@ void GameApp::Run()
         {
             if (m_craftMenu.BlocksGameInput())
             {
+                GameAudio::StopDoorMovement();
                 GameAudio::StopPushableBoxMovement();
                 m_craftMenu.Update();
                 ApplyUnlockedAbilities();
@@ -1268,6 +1270,7 @@ void GameApp::Run()
 
             if (m_pauseMenu.BlocksGameInput())
             {
+                GameAudio::StopDoorMovement();
                 GameAudio::StopPushableBoxMovement();
                 m_pauseMenu.Update();
                 if (m_pauseMenu.ConsumeExitRequested())
@@ -1317,6 +1320,7 @@ void GameApp::Run()
 
             if (m_playerDeathPending)
             {
+                GameAudio::StopDoorMovement();
                 GameAudio::StopPushableBoxMovement();
                 // 地上での死亡は崩れ落ちるモーションを見せてから暗転する。
                 // 完全暗転（フェードα=1）になったら瞬間移動でリスポーンし、黒保持を経てフェードインする。
@@ -1386,6 +1390,7 @@ void GameApp::Run()
 
             if (IsHitStopActive())
             {
+                GameAudio::StopDoorMovement();
                 GameAudio::StopPushableBoxMovement();
                 m_destructibleManager.Update(m_render);
                 m_enemyManager.SyncMeshes(m_render);
@@ -1729,6 +1734,9 @@ void GameApp::Run()
                                           m_pushableBoxManager,
                                           kTargetFrameSeconds);
             m_attackTriggerManager.Update(m_render, kTargetFrameSeconds);
+            GameAudio::SetDoorMovementActive(
+                m_pressurePlateManager.IsWallMoving() ||
+                m_attackTriggerManager.IsTargetMoving());
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
             if (m_debugProfileStartTick != 0)
             {

@@ -25,6 +25,7 @@ public:
                 const PushableBoxManager& pushableBoxManager,
                 float deltaSeconds);
     std::size_t GetPairCount() const;
+    bool IsWallMoving() const;
 
 private:
     struct PressurePlatePair
@@ -55,4 +56,5 @@ private:
 
     NSRender::Render* m_render = nullptr;
     std::vector<PressurePlatePair> m_pairs;
+    bool m_wallMoving = false;
 };

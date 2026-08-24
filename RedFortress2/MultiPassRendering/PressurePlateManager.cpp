@@ -62,6 +62,7 @@ void PressurePlateManager::Initialize(NSRender::Render& render)
 {
     m_render = &render;
     m_pairs.clear();
+    m_wallMoving = false;
 }
 
 void PressurePlateManager::LoadForStage(NSRender::Render& render, const std::wstring& csvPath)
@@ -181,6 +182,7 @@ void PressurePlateManager::Clear(NSRender::Render& render)
         }
     }
     m_pairs.clear();
+    m_wallMoving = false;
 }
 
 void PressurePlateManager::Update(NSRender::Render& render,
@@ -193,6 +195,8 @@ void PressurePlateManager::Update(NSRender::Render& render,
     {
         std::abort();
     }
+
+    m_wallMoving = false;
 
     for (PressurePlatePair& pair : m_pairs)
     {
@@ -253,6 +257,11 @@ void PressurePlateManager::Update(NSRender::Render& render,
             pair.wallPosition.y = (std::max)(pair.wallPosition.y - movementDistance, targetY);
         }
 
+        if (pair.wallPosition.y != previousY)
+        {
+            m_wallMoving = true;
+        }
+
         if (!render.SetCsvMeshPosition(pair.wallCsvId, pair.wallPosition))
         {
             std::abort();
@@ -271,6 +280,11 @@ void PressurePlateManager::Update(NSRender::Render& render,
 std::size_t PressurePlateManager::GetPairCount() const
 {
     return m_pairs.size();
+}
+
+bool PressurePlateManager::IsWallMoving() const
+{
+    return m_wallMoving;
 }
 
 bool PressurePlateManager::IsPlayerOnPlate(

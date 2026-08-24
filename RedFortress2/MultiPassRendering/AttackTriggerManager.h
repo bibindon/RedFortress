@@ -45,6 +45,7 @@ public:
         float halfAngleRadians);
 
     std::size_t GetTriggerCount() const;
+    bool IsTargetMoving() const;
 
 private:
     struct Trigger
@@ -101,4 +102,5 @@ private:
     std::vector<Trigger> m_triggers;
     bool m_buttonLightsActive = false;
     float m_buttonLightsElapsed = 0.0f;
+    bool m_targetMoving = false;
 };
