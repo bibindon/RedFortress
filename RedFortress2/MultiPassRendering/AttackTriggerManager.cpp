@@ -414,7 +414,8 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
     const D3DXVECTOR3& playerPosition,
     const float playerYaw,
     const float range,
-    const float verticalRange,
+    const float verticalMinOffset,
+    const float verticalMaxOffset,
     const float halfAngleRadians)
 {
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
@@ -429,7 +430,8 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
                                    playerPosition,
                                    playerYaw,
                                    range,
-                                   verticalRange,
+                                   verticalMinOffset,
+                                   verticalMaxOffset,
                                    halfAngleRadians))
         {
             continue;
@@ -515,13 +517,15 @@ bool AttackTriggerManager::IsTargetInAttackRange(
     const D3DXVECTOR3& playerPosition,
     const float playerYaw,
     const float range,
-    const float verticalRange,
+    const float verticalMinOffset,
+    const float verticalMaxOffset,
     const float halfAngleRadians) const
 {
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
-    const float attackCenterY = playerPosition.y + kPlayerAttackCenterHeight;
+    const float attackMinY = playerPosition.y + verticalMinOffset;
+    const float attackMaxY = playerPosition.y + verticalMaxOffset;
     const float targetCenterY = trigger.triggerPosition.y + kPlayerAttackCenterHeight;
-    if (std::fabs(targetCenterY - attackCenterY) > verticalRange)
+    if (targetCenterY < attackMinY || targetCenterY > attackMaxY)
     {
         return false;
     }

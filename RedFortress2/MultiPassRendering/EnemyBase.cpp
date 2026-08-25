@@ -1093,7 +1093,9 @@ void EnemyBase::SetBossName(const std::wstring& bossName)
     m_bossName = bossName;
 }
 
-bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos, const float playerRadius) const
+bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos,
+                                 const float playerRadius,
+                                 const float playerHeight) const
 {
     if (m_state == State::Dead)
     {
@@ -1102,20 +1104,15 @@ bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos, const float playe
 
     const D3DXVECTOR3 diff = playerPos - m_position;
     const float horizontalDist = sqrtf(diff.x * diff.x + diff.z * diff.z);
-    const float verticalDist = fabsf(diff.y);
     const float combinedContactRadius = m_contactRadius + playerRadius;
+    const float playerBottomY = playerPos.y;
+    const float playerTopY = playerBottomY + playerHeight;
+    const float enemyBottomY = m_position.y - m_height * 0.5f;
+    const float enemyTopY = m_position.y + m_height * 0.5f;
+    const bool verticalOverlap =
+        playerBottomY <= enemyTopY && playerTopY >= enemyBottomY;
 
-    float verticalTolerance = m_height * 0.75f;
-    if (m_movementMode == MovementMode::Hover ||
-        m_movementMode == MovementMode::Swoop)
-    {
-        // 飛行敵は空中から急降下してくるため、上下方向の接触許容を広く取る。
-        // さもないと Swoop の高度差（約 0.8〜0.95m）が小さな m_height の許容
-        // を常に上回り、接触攻撃が一切発動しなくなる。
-        verticalTolerance = 1.5f;
-    }
-
-    return horizontalDist <= combinedContactRadius && verticalDist <= verticalTolerance;
+    return horizontalDist <= combinedContactRadius && verticalOverlap;
 }
 
 void EnemyBase::SuppressContactDamageUntilPlayerSeparates()

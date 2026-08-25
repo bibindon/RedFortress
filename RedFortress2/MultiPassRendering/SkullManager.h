@@ -53,6 +53,7 @@ public:
     void Initialize(NSRender::Render& render);
     void LoadForStage(NSRender::Render& render, const std::wstring& csvPath);
     void Clear(NSRender::Render& render);
+    void ResetForRespawn(NSRender::Render& render);
     void Update(NSRender::Render& render,
                 const D3DXVECTOR3& playerPosition,
                 float playerYaw,

@@ -80,7 +80,9 @@ public:
     void SetType(const std::wstring& type);
     void SetBossName(const std::wstring& bossName);
 
-    bool IsTouchingPlayer(const D3DXVECTOR3& playerPos, float playerRadius) const;
+    bool IsTouchingPlayer(const D3DXVECTOR3& playerPos,
+                          float playerRadius,
+                          float playerHeight) const;
     void SuppressContactDamageUntilPlayerSeparates();
     bool CanDamagePlayerOnContact(bool playerTouching);
     bool IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,

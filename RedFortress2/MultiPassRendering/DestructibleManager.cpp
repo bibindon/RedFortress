@@ -334,11 +334,13 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
     const D3DXVECTOR3& playerPos,
     const float playerYaw,
     const float range,
-    const float verticalRange,
+    const float verticalMinOffset,
+    const float verticalMaxOffset,
     const float halfAngleRadians) const
 {
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
-    const float attackCenterY = playerPos.y + kPlayerAttackCenterHeight;
+    const float attackMinY = playerPos.y + verticalMinOffset;
+    const float attackMaxY = playerPos.y + verticalMaxOffset;
     const DestructibleObject* bestObj = nullptr;
     float bestDistanceSq = -1.0f;
 
@@ -350,7 +352,7 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
         }
 
         const float targetCenterY = obj.position.y + kDestructibleAttackTargetHeight;
-        if (fabsf(targetCenterY - attackCenterY) > verticalRange)
+        if (targetCenterY < attackMinY || targetCenterY > attackMaxY)
         {
             continue;
         }

@@ -354,7 +354,6 @@ namespace
     const int kBusterCooldownByLevel[kBusterRapidLevelMax] = { 24, 20, 16, 12, 9, 6, 4, 3 };
     const int kBusterAimHoldFrames = 30;
     const int kBusterLowerFrames = 8;
-    const float kEnemyAttackTargetHeight = 1.0f;
     const int kAmmoGaugeX = 130;
     const int kAmmoGaugeY = 78;
     const int kAmmoRailHeight = 5;
@@ -1862,7 +1861,9 @@ void GameApp::Run()
                                 m_attackTriggerManager.TryActivateInAttackRange(
                                     m_render,
                                     m_playerMover.GetPosition(), m_playerYaw,
-                                    attackDefinition.range, attackDefinition.verticalRange,
+                                    attackDefinition.range,
+                                    attackDefinition.verticalMinOffset,
+                                    attackDefinition.verticalMaxOffset,
                                     attackDefinition.halfAngleRadians);
                             if (triggerActivation != AttackTriggerActivation::None)
                             {
@@ -1872,7 +1873,9 @@ void GameApp::Run()
                             {
                                 const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
                                     m_playerMover.GetPosition(), m_playerYaw,
-                                    attackDefinition.range, attackDefinition.verticalRange,
+                                    attackDefinition.range,
+                                    attackDefinition.verticalMinOffset,
+                                    attackDefinition.verticalMaxOffset,
                                     attackDefinition.halfAngleRadians);
                                 if (destructible != nullptr)
                                 {
@@ -1954,6 +1957,7 @@ void GameApp::Run()
             if (m_qte == nullptr)
             {
                 const float playerContactRadius = m_playerMover.GetSettings().radius;
+                const float playerContactHeight = m_playerMover.GetSettings().height;
                 for (auto& enemy : m_enemyManager.GetEnemies())
                 {
                     if (enemy->IsDead())
@@ -1962,7 +1966,9 @@ void GameApp::Run()
                     }
 
                     const bool playerTouchingEnemy =
-                        enemy->IsTouchingPlayer(m_playerMover.GetPosition(), playerContactRadius);
+                        enemy->IsTouchingPlayer(m_playerMover.GetPosition(),
+                                                playerContactRadius,
+                                                playerContactHeight);
                     const bool enemyCanDamagePlayerOnContact =
                         enemy->CanDamagePlayerOnContact(playerTouchingEnemy);
 
@@ -3576,9 +3582,8 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
 {
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const D3DXVECTOR3 forward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
-    const float attackCenterY = playerPos.y + kEnemyAttackTargetHeight;
-    const float attackMinY = attackCenterY - attackDefinition.verticalRange;
-    const float attackMaxY = attackCenterY + attackDefinition.verticalRange;
+    const float attackMinY = playerPos.y + attackDefinition.verticalMinOffset;
+    const float attackMaxY = playerPos.y + attackDefinition.verticalMaxOffset;
     int damagedCount = 0;
 
     for (auto& enemy : m_enemyManager.GetEnemies())
@@ -7555,11 +7560,12 @@ void GameApp::CompletePlayerDeath()
         m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kRespawnInvincibleFrames, 4);
     }
 
-    // 敵、破壊可能オブジェクト、取得済みスターを再配置
+    // 敵、破壊可能オブジェクト、取得済みスター、ドクロを再配置
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
     m_destructibleManager.ResetForRespawn(m_render);
     m_collectibleManager.RefreshVisibility(m_destructibleManager);
     m_pickupManager.RespawnStars();
+    m_skullManager.ResetForRespawn(m_render);
 
     // レバー2・3で操作した門を閉じた初期状態へ戻す。
     m_attackTriggerManager.ResetLevers(m_render, std::vector<int>{2, 3});

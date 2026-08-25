@@ -30,7 +30,8 @@ VARIANTS = (
 GUARD_RAIL_HEIGHT = 0.1
 GUARD_RAIL_THICKNESS = 0.3
 GUARD_RAIL_BEVEL = 0.015
-COLLISION_HALF_HEIGHT = 0.203
+FLOOR_HEIGHT = 0.8
+COLLISION_TOP_HEIGHT = 0.203
 
 
 def normalize_x_file(path):
@@ -80,6 +81,36 @@ def get_world_bounds(obj):
         max(corner.z for corner in corners),
     ))
     return minimum, maximum
+
+
+def extend_platform_downward(obj):
+    minimum, maximum = get_world_bounds(obj)
+    current_height = maximum.z - minimum.z
+    if current_height <= 0.0:
+        raise RuntimeError(f"Invalid platform height: {current_height}")
+    if abs(current_height - FLOOR_HEIGHT) <= 0.000001:
+        return
+
+    top_height = maximum.z
+    height_scale = FLOOR_HEIGHT / current_height
+    bpy.ops.object.select_all(action="DESELECT")
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    obj.scale.z *= height_scale
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
+    _, scaled_maximum = get_world_bounds(obj)
+    obj.location.z += top_height - scaled_maximum.z
+    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+
+    updated_minimum, updated_maximum = get_world_bounds(obj)
+    updated_height = updated_maximum.z - updated_minimum.z
+    if abs(updated_maximum.z - top_height) > 0.000001:
+        raise RuntimeError("Platform top moved while extending the floor downward.")
+    if abs(updated_height - FLOOR_HEIGHT) > 0.000001:
+        raise RuntimeError(
+            f"Unexpected platform height: {updated_height}; expected {FLOOR_HEIGHT}"
+        )
 
 
 def create_box(name, dimensions, location, material, bevel_width=0.0):
@@ -211,12 +242,12 @@ def create_collision_mesh(name, minimum, maximum):
     collision_minimum = Vector((
         minimum.x,
         minimum.y,
-        -COLLISION_HALF_HEIGHT,
+        COLLISION_TOP_HEIGHT - FLOOR_HEIGHT,
     ))
     collision_maximum = Vector((
         maximum.x,
         maximum.y,
-        COLLISION_HALF_HEIGHT,
+        COLLISION_TOP_HEIGHT,
     ))
     dimensions = collision_maximum - collision_minimum
     center = (collision_minimum + collision_maximum) * 0.5
@@ -258,6 +289,7 @@ def build_variant(name, source_blend_name, scale_multiplier):
         platform.select_set(True)
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
+    extend_platform_downward(platform)
     minimum, maximum = get_world_bounds(platform)
     guard_rails = create_guard_rails(
         name,
@@ -279,7 +311,8 @@ def build_variant(name, source_blend_name, scale_multiplier):
     export_objects([collision], collision_path)
     print(
         f"Updated {name}: {maximum.x - minimum.x:.3f} x "
-        f"{maximum.y - minimum.y:.3f} m, guard rail {GUARD_RAIL_HEIGHT:.3f} m"
+        f"{maximum.y - minimum.y:.3f} x {maximum.z - minimum.z:.3f} m, "
+        f"guard rail {GUARD_RAIL_HEIGHT:.3f} m"
     )
 
 

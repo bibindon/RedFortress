@@ -41,7 +41,8 @@ public:
         const D3DXVECTOR3& playerPosition,
         float playerYaw,
         float range,
-        float verticalRange,
+        float verticalMinOffset,
+        float verticalMaxOffset,
         float halfAngleRadians);
 
     std::size_t GetTriggerCount() const;
@@ -82,7 +83,8 @@ private:
                                const D3DXVECTOR3& playerPosition,
                                float playerYaw,
                                float range,
-                               float verticalRange,
+                               float verticalMinOffset,
+                               float verticalMaxOffset,
                                float halfAngleRadians) const;
     bool IsReadyForAttack(const Trigger& trigger) const;
     void UpdateTrigger(NSRender::Render& render,

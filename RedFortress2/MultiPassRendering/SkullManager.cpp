@@ -159,6 +159,35 @@ void SkullManager::Clear(NSRender::Render& render)
     m_heldSkullSerial = 0;
 }
 
+void SkullManager::ResetForRespawn(NSRender::Render& render)
+{
+    for (SkullObject& skull : m_skulls)
+    {
+        if (skull.meshId >= 0)
+        {
+            render.RemoveMeshMix(skull.meshId);
+        }
+        if (skull.physicsId >= 0)
+        {
+            PhysicsLib::PhysicsLib::RemoveObject(skull.physicsId);
+        }
+    }
+
+    m_skulls.clear();
+    m_heldSkullSerial = 0;
+
+    for (SkullSpawnPoint& spawnPoint : m_spawnPoints)
+    {
+        spawnPoint.readySkullSerial = 0;
+        spawnPoint.respawnFrames = 0;
+    }
+
+    for (SkullSpawnPoint& spawnPoint : m_spawnPoints)
+    {
+        SpawnAtPoint(render, spawnPoint);
+    }
+}
+
 void SkullManager::Update(NSRender::Render& render,
                           const D3DXVECTOR3& playerPosition,
                           const float playerYaw,

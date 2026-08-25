@@ -20,7 +20,8 @@ struct PlayerAttackDefinition
     int hitDelayFrames = 0;
     int damage = 0;
     float range = 0.0f;
-    float verticalRange = 0.0f;
+    float verticalMinOffset = 0.0f;
+    float verticalMaxOffset = 0.0f;
     float halfAngleRadians = 0.0f;
     float moveSpeed = 0.0f;
     int moveStartRemainingFrames = 0;

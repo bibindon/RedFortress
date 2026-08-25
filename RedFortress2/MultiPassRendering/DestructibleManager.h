@@ -58,10 +58,11 @@ public:
     void Update(NSRender::Render& render);
 
     const DestructibleObject* FindInAttackRange(const D3DXVECTOR3& playerPos,
-                                                 float playerYaw,
-                                                 float range,
-                                                 float verticalRange,
-                                                 float halfAngleRadians) const;
+                                                  float playerYaw,
+                                                  float range,
+                                                  float verticalMinOffset,
+                                                  float verticalMaxOffset,
+                                                  float halfAngleRadians) const;
 
     bool TryDamage(NSRender::Render& render, const DestructibleObject& obj, int damage);
 
