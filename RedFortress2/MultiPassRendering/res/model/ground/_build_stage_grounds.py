@@ -346,11 +346,21 @@ STAGES = (
 
 POSITION_CSV_FILES = (
     "EnemyPositions.csv",
-    "Destructibles.csv",
     "Collectibles.csv",
     "SpeedUps.csv",
     "DashBoosters.csv",
 )
+
+DESTRUCTIBLE_HEIGHT = 1.0
+DESTRUCTIBLE_SUPPORT_TOLERANCE = 0.02
+STATIC_PLATFORM_DECK_OFFSET_Y = 0.203
+STATIC_PLATFORM_SIZES = {
+    "static_platform_1x1_collision.x": (1.5, 1.5),
+    "static_platform_1x2_collision.x": (1.5, 3.0),
+    "static_platform_2x1_collision.x": (3.0, 1.5),
+    "static_platform_2x2_collision.x": (3.0, 3.0),
+    "static_platform_4x4_collision.x": (6.0, 6.0),
+}
 
 
 def clear_scene():
@@ -449,6 +459,98 @@ def point_on_static_platform(x, y, stage, margin=0.0):
     return False
 
 
+def load_static_platform_supports(stage):
+    supports = []
+    physics_path = MODEL_DIR / stage["folder"] / "XFileListPhysics.csv"
+    if not physics_path.exists():
+        return supports
+
+    with physics_path.open("r", encoding="utf-8-sig", newline="") as file:
+        for row in csv.DictReader(file):
+            filename = row.get("FileName", "").replace("\\", "/").lower()
+            platform_size = None
+            for platform_filename, size in STATIC_PLATFORM_SIZES.items():
+                if filename.endswith(platform_filename):
+                    platform_size = size
+                    break
+            if platform_size is None:
+                continue
+
+            scale = float(row.get("Scale", "1"))
+            half_x = platform_size[0] * scale
+            half_z = platform_size[1] * scale
+            rotation_y = float(row.get("RotY", "0")) % 180.0
+            if rotation_y > 45.0 and rotation_y < 135.0:
+                old_half_x = half_x
+                half_x = half_z
+                half_z = old_half_x
+
+            supports.append((
+                float(row["PosX"]),
+                float(row["PosZ"]),
+                half_x,
+                half_z,
+                float(row["PosY"]) + STATIC_PLATFORM_DECK_OFFSET_Y * scale,
+            ))
+    return supports
+
+
+def validate_world1_destructibles(stage, conflicts):
+    if not stage["folder"].startswith("stage_1_"):
+        return
+
+    stage_dir = MODEL_DIR / stage["folder"]
+    platform_supports = load_static_platform_supports(stage)
+    destructible_filenames = ("Destructibles.csv", "DestructiblesCleared.csv")
+    for csv_name in destructible_filenames:
+        csv_path = stage_dir / csv_name
+        if not csv_path.exists():
+            continue
+
+        destructibles = []
+        with csv_path.open("r", encoding="utf-8-sig", newline="") as file:
+            for row_index, row in enumerate(csv.DictReader(file), start=2):
+                if row.get("PosX") is None or row.get("PosY") is None or row.get("PosZ") is None:
+                    continue
+                destructibles.append((
+                    row_index,
+                    float(row["PosX"]),
+                    float(row["PosY"]),
+                    float(row["PosZ"]),
+                ))
+
+        destructibles.sort(key=lambda item: item[2])
+        supported_destructibles = []
+        for row_index, x, position_y, z in destructibles:
+            supported = False
+            if point_on_stage_ground(x, z, stage):
+                if abs(position_y) <= DESTRUCTIBLE_SUPPORT_TOLERANCE:
+                    supported = True
+
+            if not supported:
+                for center_x, center_z, half_x, half_z, surface_y in platform_supports:
+                    inside_x = x >= center_x - half_x and x <= center_x + half_x
+                    inside_z = z >= center_z - half_z and z <= center_z + half_z
+                    correct_y = abs(position_y - surface_y) <= DESTRUCTIBLE_SUPPORT_TOLERANCE
+                    if inside_x and inside_z and correct_y:
+                        supported = True
+                        break
+
+            if not supported:
+                for lower_x, lower_y, lower_z in supported_destructibles:
+                    same_x = abs(x - lower_x) <= DESTRUCTIBLE_SUPPORT_TOLERANCE
+                    same_z = abs(z - lower_z) <= DESTRUCTIBLE_SUPPORT_TOLERANCE
+                    stacked_y = abs(position_y - lower_y - DESTRUCTIBLE_HEIGHT) <= DESTRUCTIBLE_SUPPORT_TOLERANCE
+                    if same_x and same_z and stacked_y:
+                        supported = True
+                        break
+
+            if not supported:
+                conflicts.append(csv_name + ":" + str(row_index) + " unsupported destructible")
+                continue
+            supported_destructibles.append((x, position_y, z))
+
+
 def validate_stage(stage):
     half_width, half_depth = stage["size"]
     pits = stage["pits"]
@@ -476,6 +578,7 @@ def validate_stage(stage):
 
     stage_dir = MODEL_DIR / stage["folder"]
     conflicts = []
+    validate_world1_destructibles(stage, conflicts)
     for csv_name in POSITION_CSV_FILES:
         csv_path = stage_dir / csv_name
         if not csv_path.exists():
@@ -490,11 +593,6 @@ def validate_stage(stage):
                     continue
                 x = float(row["PosX"])
                 y = float(row["PosZ"])
-                position_y = float(row.get("PosY", "0"))
-                # ガレキ（Destructibles）はピット上に浮かせて「道からはみ出す壁」を作れる。
-                # 破壊可能で壊すと消えるためピット上でも問題ない（敵・アイテム等は従来どおり NG）。
-                if csv_name == "Destructibles.csv":
-                    continue
                 # 地面なしステージ（全面ピット）ではオブジェクトが静的プラットフォームの上に置かれるため、
                 # 「ピット外の地面」または「静的プラットフォームの上」のどちらかで許容する（PosY不問）。
                 elevated_and_supported = point_on_static_platform(x, y, stage, margin=0.8)
