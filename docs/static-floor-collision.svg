@@ -1,0 +1,105 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#10273a"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#47d7c0" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#157f86" stop-opacity="0.72"/>
+    </linearGradient>
+    <linearGradient id="player" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffcf66" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#ff8a3d" stop-opacity="0.12"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f3f8fb"/>
+    </marker>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4de1d0"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.28"/>
+    </filter>
+    <style>
+      .title { font: 700 42px 'Yu Gothic UI', 'Meiryo', sans-serif; fill: #f5fbff; }
+      .subtitle { font: 400 20px 'Yu Gothic UI', 'Meiryo', sans-serif; fill: #a9c6d8; }
+      .panelTitle { font: 700 25px 'Yu Gothic UI', 'Meiryo', sans-serif; fill: #f5fbff; }
+      .label { font: 600 19px 'Yu Gothic UI', 'Meiryo', sans-serif; fill: #eaf6fb; }
+      .small { font: 400 16px 'Yu Gothic UI', 'Meiryo', sans-serif; fill: #bcd3df; }
+      .note { font: 600 17px 'Yu Gothic UI', 'Meiryo', sans-serif; fill: #ffd27d; }
+      .card { fill: #0d2132; stroke: #27465a; stroke-width: 2; }
+      .meshLine { fill: none; stroke: #a9fff3; stroke-width: 2.2; }
+      .ray { stroke: #ffca66; stroke-width: 3; marker-end: url(#arrow); }
+      .guide { stroke: #8fb2c5; stroke-width: 2; stroke-dasharray: 8 8; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <text x="70" y="72" class="title">動かない床の衝突判定 — 実装上の形</text>
+  <text x="72" y="108" class="subtitle">床は箱ではなく .x ファイルの三角形メッシュ。プレイヤー円柱は複数の線分判定で近似されます。</text>
+
+  <g filter="url(#shadow)">
+    <rect x="55" y="145" width="720" height="500" rx="22" class="card"/>
+    <rect x="805" y="145" width="740" height="500" rx="22" class="card"/>
+    <rect x="55" y="680" width="1490" height="255" rx="22" class="card"/>
+  </g>
+
+  <!-- Panel 1: triangle mesh -->
+  <text x="90" y="192" class="panelTitle">1. 床側：三角形の面が当たり判定</text>
+  <path d="M150 390 L350 245 L690 345 L490 520 Z" fill="url(#floor)" stroke="#65f0da" stroke-width="3"/>
+  <path d="M150 390 L350 245 L505 365 L690 345 M150 390 L330 405 L490 520 M330 405 L505 365 L490 520 M505 365 L690 345" class="meshLine"/>
+  <circle cx="330" cy="405" r="7" fill="#d7fff8"/>
+  <circle cx="505" cy="365" r="7" fill="#d7fff8"/>
+  <circle cx="490" cy="520" r="7" fill="#d7fff8"/>
+  <path d="M 505 365 L 555 285" stroke="#4de1d0" stroke-width="4" marker-end="url(#arrowCyan)"/>
+  <text x="565" y="282" class="label">面の法線</text>
+  <text x="104" y="570" class="small">穴・段差・坂がモデルにあれば、その形のまま判定される</text>
+  <rect x="98" y="590" width="620" height="35" rx="10" fill="#152f43"/>
+  <text x="116" y="614" class="note">AABB / 四分木は候補を絞るだけで、最終形状ではありません</text>
+
+  <!-- Panel 2: swept representative rays -->
+  <text x="840" y="192" class="panelTitle">2. プレイヤー側：円柱を代表点の線分で近似</text>
+  <ellipse cx="1115" cy="290" rx="118" ry="38" fill="url(#player)" stroke="#ffbf5c" stroke-width="3" stroke-dasharray="9 7"/>
+  <path d="M997 290 L997 490 M1233 290 L1233 490" stroke="#ffbf5c" stroke-width="3" stroke-dasharray="9 7"/>
+  <ellipse cx="1115" cy="490" rx="118" ry="38" fill="url(#player)" stroke="#ffbf5c" stroke-width="3" stroke-dasharray="9 7"/>
+  <ellipse cx="1115" cy="390" rx="118" ry="38" fill="none" stroke="#ffbf5c" stroke-width="2" stroke-dasharray="6 7" opacity="0.7"/>
+  <g fill="#ffe1a6" stroke="#6b4718" stroke-width="1.5">
+    <circle cx="1115" cy="290" r="6"/><circle cx="997" cy="290" r="6"/><circle cx="1233" cy="290" r="6"/><circle cx="1032" cy="265" r="6"/><circle cx="1198" cy="315" r="6"/>
+    <circle cx="1115" cy="390" r="6"/><circle cx="997" cy="390" r="6"/><circle cx="1233" cy="390" r="6"/><circle cx="1032" cy="365" r="6"/><circle cx="1198" cy="415" r="6"/>
+    <circle cx="1115" cy="490" r="6"/><circle cx="997" cy="490" r="6"/><circle cx="1233" cy="490" r="6"/><circle cx="1032" cy="465" r="6"/><circle cx="1198" cy="515" r="6"/>
+  </g>
+  <path d="M997 490 L997 560 M1032 465 L1032 560 M1115 490 L1115 560 M1198 515 L1198 560 M1233 490 L1233 560" class="ray"/>
+  <path d="M900 560 Q1115 525 1390 560" fill="none" stroke="#58dfcc" stroke-width="7"/>
+  <circle cx="1032" cy="543" r="10" fill="#ff5f57" stroke="#fff" stroke-width="3"/>
+  <path d="M1032 543 L1070 480" stroke="#4de1d0" stroke-width="4" marker-end="url(#arrowCyan)"/>
+  <text x="1080" y="475" class="label">最も近いヒット</text>
+  <text x="1270" y="305" class="small">高さ 1.7 m</text>
+  <path d="M1260 292 L1260 490" class="guide" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="940" y="615" class="small">下向き移動時の概念図。各代表点を「現在位置 → 次位置」へ掃引</text>
+
+  <!-- Panel 3: result -->
+  <text x="90" y="727" class="panelTitle">3. ヒット後</text>
+  <g transform="translate(105,755)">
+    <rect x="0" y="0" width="300" height="120" rx="17" fill="#142f42" stroke="#3f687e" stroke-width="2"/>
+    <text x="25" y="42" class="label">CSV: Collision, n</text>
+    <text x="25" y="76" class="small">静止物体（Slide）として読込</text>
+    <text x="25" y="102" class="small">位置・回転・縮尺も適用</text>
+  </g>
+  <path d="M425 815 L520 815" stroke="#f3f8fb" stroke-width="3" marker-end="url(#arrow)"/>
+  <g transform="translate(540,755)">
+    <rect x="0" y="0" width="385" height="120" rx="17" fill="#142f42" stroke="#3f687e" stroke-width="2"/>
+    <text x="25" y="42" class="label">線分 × 三角形を検査</text>
+    <text x="25" y="76" class="small">移動方向に対する最近接面を選ぶ</text>
+    <text x="25" y="102" class="small">裏表に関係なく交差自体は検出</text>
+  </g>
+  <path d="M945 815 L1040 815" stroke="#f3f8fb" stroke-width="3" marker-end="url(#arrow)"/>
+  <g transform="translate(1060,755)">
+    <rect x="0" y="0" width="420" height="120" rx="17" fill="#142f42" stroke="#3f687e" stroke-width="2"/>
+    <text x="25" y="42" class="label">面の手前で停止 ＋ 接面方向へ滑る</text>
+    <text x="25" y="76" class="small">面へ食い込む速度成分を除去</text>
+    <text x="25" y="102" class="small">上向き法線なら「地面接触」と判定</text>
+  </g>
+
+  <text x="1480" y="975" text-anchor="end" class="small">RedFortress / PhysicsLib 実装に基づく概念図</text>
+</svg>

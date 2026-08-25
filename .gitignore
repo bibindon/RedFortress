@@ -38,6 +38,7 @@ RedFortress2/MultiPassRendering/res/model2/marine/untitled.blend1
 /tools/*
 !/tools/BuildStage42.py
 !/tools/CreateStaticPlatformModels.py
+!/tools/AddStaticPlatformGuardRails.py
 !/tools/PrepareSkullModel.py
 !/tools/CreateStarPickupModel.py
 /tools/BuildPortalModels.py
