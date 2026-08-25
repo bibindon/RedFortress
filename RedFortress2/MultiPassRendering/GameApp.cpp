@@ -1602,8 +1602,10 @@ void GameApp::Run()
                     if (result == NS_QTE_Module::QTE_Module::BarResult::Success ||
                         result == NS_QTE_Module::QTE_Module::BarResult::Normal)
                     {
+                        int qteRewardItemCount = 1;
                         if (result == NS_QTE_Module::QTE_Module::BarResult::Success)
                         {
+                            qteRewardItemCount = 3;
                             GameAudio::PlayQteSuccess();
                         }
                         else
@@ -1611,9 +1613,9 @@ void GameApp::Run()
                             GameAudio::PlayQteNormal();
                         }
                         const std::wstring qteRewardItemId = GetRandomCraftMaterialItemId();
-                        m_inventoryManager.AddItem(qteRewardItemId, 1);
+                        m_inventoryManager.AddItem(qteRewardItemId, qteRewardItemCount);
                         m_inventoryManager.Save();
-                        ShowItemPickupMessage(qteRewardItemId, 1);
+                        ShowItemPickupMessage(qteRewardItemId, qteRewardItemCount);
                     }
                     else
                     {
@@ -5689,9 +5691,16 @@ void GameApp::ShowItemPickupMessage(const std::wstring& itemId, const int count)
     }
     else
     {
-        message = GetItemDisplayName(itemId) + L"を手に入れた";
+        if (count == 3)
+        {
+            message = GetItemDisplayName(itemId) + L"を３つ手に入れた";
+        }
+        else
+        {
+            message = GetItemDisplayName(itemId) + L"を手に入れた";
+        }
     }
-    if (count > 1)
+    if (count > 1 && count != 3)
     {
         message += L" x" + std::to_wstring(count);
     }

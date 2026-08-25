@@ -14,8 +14,10 @@
 
 namespace
 {
-    const std::wstring kLeverModelPath =
-        L"res\\model\\attack_trigger\\lever.x";
+    const std::wstring kLeverBaseModelPath =
+        L"res\\model\\attack_trigger\\lever_base.x";
+    const std::wstring kLeverHandleModelPath =
+        L"res\\model\\attack_trigger\\lever_handle.x";
     const std::wstring kRopeModelPath =
         L"res\\model\\attack_trigger\\rope.x";
     const std::wstring kButtonInactiveModelPath =
@@ -28,6 +30,9 @@ namespace
     const float kButtonLocatorRange = 2.0f;
     const float kTargetAngle = D3DX_PI * 0.5f;
     const float kRotationSpeed = D3DX_PI * 0.5f;
+    const float kLeverVisualTargetAngle = D3DXToRadian(45.0f);
+    const float kLeverVisualRotationSpeed = D3DXToRadian(180.0f);
+    const float kLeverHandleHingeHeight = 0.575f;
     const float kLiftSpeed = 3.0f;
     const float kPlayerAttackCenterHeight = 1.0f;
 
@@ -247,24 +252,46 @@ void AttackTriggerManager::LoadForStage(NSRender::Render& render,
         }
         else
         {
-            std::wstring visualModelPath;
             if (trigger.type == AttackTriggerType::Lever ||
                 trigger.type == AttackTriggerType::LeverLift)
             {
-                visualModelPath = kLeverModelPath;
+                trigger.visualMeshId = render.AddMeshMix(
+                    kLeverBaseModelPath,
+                    trigger.triggerPosition,
+                    D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                    1.0f,
+                    -1.0f,
+                    false,
+                    false,
+                    false);
+                trigger.leverHandleVisualMeshId = render.AddMeshMix(
+                    kLeverHandleModelPath,
+                    trigger.triggerPosition,
+                    D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                    1.0f,
+                    -1.0f,
+                    false,
+                    false,
+                    false);
+                if (trigger.visualMeshId < 0 ||
+                    trigger.leverHandleVisualMeshId < 0)
+                {
+                    std::abort();
+                }
+                ApplyLeverVisualTransform(render, trigger);
             }
             else
             {
-                visualModelPath = kRopeModelPath;
+                trigger.visualMeshId = render.AddMeshMix(
+                    kRopeModelPath,
+                    trigger.triggerPosition,
+                    D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                    1.0f,
+                    -1.0f,
+                    false,
+                    false,
+                    false);
             }
-            trigger.visualMeshId = render.AddMeshMix(visualModelPath,
-                                                     trigger.triggerPosition,
-                                                     D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                     1.0f,
-                                                     -1.0f,
-                                                     false,
-                                                     false,
-                                                     false);
             if (trigger.visualMeshId < 0)
             {
                 std::abort();
@@ -289,6 +316,11 @@ void AttackTriggerManager::Clear(NSRender::Render& render)
         {
             render.RemoveMeshMix(trigger.visualMeshId);
             trigger.visualMeshId = -1;
+        }
+        if (trigger.leverHandleVisualMeshId >= 0)
+        {
+            render.RemoveMeshMix(trigger.leverHandleVisualMeshId);
+            trigger.leverHandleVisualMeshId = -1;
         }
         if (trigger.activeVisualMeshId >= 0)
         {
@@ -369,9 +401,11 @@ void AttackTriggerManager::ResetLevers(NSRender::Render& render,
         // 同じ門を共有するレバーをすべて戻し、次の更新で再び開かないようにする。
         trigger.leverActive = false;
         trigger.currentAngle = 0.0f;
+        trigger.currentLeverVisualAngle = 0.0f;
         trigger.currentLift = 0.0f;
         trigger.stopSoundPlayed = false;
         ApplyTargetTransform(render, trigger);
+        ApplyLeverVisualTransform(render, trigger);
     }
 }
 
@@ -385,7 +419,7 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
 {
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
     int nearestIndex = -1;
-    float nearestDot = -1.0f;
+    float nearestDistanceSq = -1.0f;
 
     for (std::size_t index = 0; index < m_triggers.size(); ++index)
     {
@@ -402,19 +436,11 @@ AttackTriggerActivation AttackTriggerManager::TryActivateInAttackRange(
         }
 
         D3DXVECTOR3 direction = trigger.triggerPosition - playerPosition;
-        if (D3DXVec3LengthSq(&direction) > 0.0001f)
+        direction.y = 0.0f;
+        const float distanceSq = D3DXVec3LengthSq(&direction);
+        if (nearestIndex < 0 || distanceSq < nearestDistanceSq)
         {
-            D3DXVec3Normalize(&direction, &direction);
-        }
-        else
-        {
-            direction = forward;
-        }
-
-        const float dot = D3DXVec3Dot(&forward, &direction);
-        if (dot > nearestDot)
-        {
-            nearestDot = dot;
+            nearestDistanceSq = distanceSq;
             nearestIndex = static_cast<int>(index);
         }
     }
@@ -501,13 +527,14 @@ bool AttackTriggerManager::IsTargetInAttackRange(
     }
 
     D3DXVECTOR3 direction = trigger.triggerPosition - playerPosition;
-    const float distance = D3DXVec3Length(&direction);
-    if (distance > range)
+    direction.y = 0.0f;
+    const float distanceSq = D3DXVec3LengthSq(&direction);
+    if (distanceSq > range * range)
     {
         return false;
     }
 
-    if (D3DXVec3LengthSq(&direction) > 0.0001f)
+    if (distanceSq > 0.0001f)
     {
         D3DXVec3Normalize(&direction, &direction);
     }
@@ -537,6 +564,34 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
     {
         render.SetMeshMixEnabled(trigger.visualMeshId, !trigger.buttonActive);
         render.SetMeshMixEnabled(trigger.activeVisualMeshId, trigger.buttonActive);
+    }
+
+    if (trigger.type == AttackTriggerType::Lever ||
+        trigger.type == AttackTriggerType::LeverLift)
+    {
+        const float previousLeverVisualAngle = trigger.currentLeverVisualAngle;
+        float targetLeverVisualAngle = 0.0f;
+        if (trigger.leverActive)
+        {
+            targetLeverVisualAngle = kLeverVisualTargetAngle;
+        }
+        const float leverVisualStep = kLeverVisualRotationSpeed * deltaSeconds;
+        if (trigger.currentLeverVisualAngle < targetLeverVisualAngle)
+        {
+            trigger.currentLeverVisualAngle =
+                (std::min)(trigger.currentLeverVisualAngle + leverVisualStep,
+                           targetLeverVisualAngle);
+        }
+        else if (trigger.currentLeverVisualAngle > targetLeverVisualAngle)
+        {
+            trigger.currentLeverVisualAngle =
+                (std::max)(trigger.currentLeverVisualAngle - leverVisualStep,
+                           targetLeverVisualAngle);
+        }
+        if (trigger.currentLeverVisualAngle != previousLeverVisualAngle)
+        {
+            ApplyLeverVisualTransform(render, trigger);
+        }
     }
 
     const float previousAngle = trigger.currentAngle;
@@ -621,6 +676,33 @@ void AttackTriggerManager::UpdateTrigger(NSRender::Render& render,
         PlayMovementStopSound();
         trigger.stopSoundPlayed = true;
     }
+}
+
+void AttackTriggerManager::ApplyLeverVisualTransform(NSRender::Render& render,
+                                                       const Trigger& trigger)
+{
+    D3DXMATRIX yawMatrix;
+    D3DXMatrixRotationY(&yawMatrix, trigger.targetRotation.y);
+    D3DXMATRIX baseTranslationMatrix;
+    D3DXMatrixTranslation(&baseTranslationMatrix,
+                          trigger.triggerPosition.x,
+                          trigger.triggerPosition.y,
+                          trigger.triggerPosition.z);
+    render.SetMeshMixWorldMatrix(trigger.visualMeshId,
+                                 yawMatrix * baseTranslationMatrix);
+
+    D3DXMATRIX handleRotationMatrix;
+    D3DXMatrixRotationYawPitchRoll(&handleRotationMatrix,
+                                   trigger.targetRotation.y,
+                                   trigger.currentLeverVisualAngle,
+                                   0.0f);
+    D3DXMATRIX handleTranslationMatrix;
+    D3DXMatrixTranslation(&handleTranslationMatrix,
+                          trigger.triggerPosition.x,
+                          trigger.triggerPosition.y + kLeverHandleHingeHeight,
+                          trigger.triggerPosition.z);
+    render.SetMeshMixWorldMatrix(trigger.leverHandleVisualMeshId,
+                                 handleRotationMatrix * handleTranslationMatrix);
 }
 
 void AttackTriggerManager::ApplyTargetTransform(NSRender::Render& render,

@@ -340,7 +340,7 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
     const D3DXVECTOR3 forward(-sinf(playerYaw), 0.0f, -cosf(playerYaw));
     const float attackCenterY = playerPos.y + kPlayerAttackCenterHeight;
     const DestructibleObject* bestObj = nullptr;
-    float bestDot = -1.0f;
+    float bestDistanceSq = -1.0f;
 
     for (const auto& obj : m_objects)
     {
@@ -356,13 +356,14 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
         }
 
         D3DXVECTOR3 dir = obj.position - playerPos;
-        const float dist = D3DXVec3Length(&dir);
-        if (dist > range)
+        dir.y = 0.0f;
+        const float distanceSq = D3DXVec3LengthSq(&dir);
+        if (distanceSq > range * range)
         {
             continue;
         }
 
-        if (D3DXVec3LengthSq(&dir) > 0.0001f)
+        if (distanceSq > 0.0001f)
         {
             D3DXVec3Normalize(&dir, &dir);
         }
@@ -372,9 +373,14 @@ const DestructibleObject* DestructibleManager::FindInAttackRange(
         }
 
         const float dot = D3DXVec3Dot(&forward, &dir);
-        if (dot > cosf(halfAngleRadians) && dot > bestDot)
+        if (dot <= cosf(halfAngleRadians))
         {
-            bestDot = dot;
+            continue;
+        }
+
+        if (bestObj == nullptr || distanceSq < bestDistanceSq)
+        {
+            bestDistanceSq = distanceSq;
             bestObj = &obj;
         }
     }

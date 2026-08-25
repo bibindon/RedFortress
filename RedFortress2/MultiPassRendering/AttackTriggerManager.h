@@ -56,6 +56,7 @@ private:
         int targetPhysicsId = -1;
         bool hasTarget = false;
         int visualMeshId = -1;
+        int leverHandleVisualMeshId = -1;
         int activeVisualMeshId = -1;
         bool leverActive = false;
         bool buttonActive = false;
@@ -72,6 +73,7 @@ private:
         D3DXVECTOR3 targetScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
         D3DXVECTOR3 targetAxis = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
         float currentAngle = 0.0f;
+        float currentLeverVisualAngle = 0.0f;
         float liftHeight = 0.0f;
         float currentLift = 0.0f;
     };
@@ -88,6 +90,8 @@ private:
                        float deltaSeconds);
     void ApplyTargetTransform(NSRender::Render& render,
                               const Trigger& trigger);
+    void ApplyLeverVisualTransform(NSRender::Render& render,
+                                   const Trigger& trigger);
     void AddButtonLocatorLight(NSRender::Render& render,
                                const Trigger& trigger);
     void ActivateButtonLight(NSRender::Render& render,
