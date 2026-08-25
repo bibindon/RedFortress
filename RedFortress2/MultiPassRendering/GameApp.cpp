@@ -165,8 +165,8 @@ namespace
     const float kStageSelectPlayerLightHeight = 3.2f;
     const wchar_t* kStageSelectPlayerLightOwnerTag = L"stage-select-player";
     const float kStageSelectCursorLightHeight = 0.4f;
-    const float kStageSelectCursorLightBrightness = 3.0f;
-    const float kStageSelectCursorLightRange = 4.5f;
+    const float kStageSelectCursorLightBrightness = 0.6f;
+    const float kStageSelectCursorLightRange = 2.0f;
     const wchar_t* kStageSelectCursorLightOwnerTag = L"stage-select-cursor";
     const float kPlayerPointLightHeight = 2.2f;
     const float kPlayerPointLightBrightness = 2.5f;
@@ -1959,6 +1959,11 @@ void GameApp::Run()
                         continue;
                     }
 
+                    const bool playerTouchingEnemy =
+                        enemy->IsTouchingPlayer(m_playerMover.GetPosition(), playerContactRadius);
+                    const bool enemyCanDamagePlayerOnContact =
+                        enemy->CanDamagePlayerOnContact(playerTouchingEnemy);
+
                     if (enemy->IsStompedByPlayer(playerPositionBeforePhysicsUpdate,
                                                 m_playerMover.GetPosition(),
                                                 m_playerMover.IsJumping(),
@@ -1969,12 +1974,13 @@ void GameApp::Run()
                         m_damagePopupManager.Add(10, enemy->GetPosition(), false);
                         TryDropEnemyItem(*enemy);
                         GameAudio::PlayStomp();
+                        enemy->SuppressContactDamageUntilPlayerSeparates();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
                         break;
                     }
                     else if (m_pickupManager.IsStarActive() &&
-                             enemy->IsTouchingPlayer(m_playerMover.GetPosition(), playerContactRadius))
+                             playerTouchingEnemy)
                     {
                         enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy->GetPosition(), false);
@@ -1984,7 +1990,7 @@ void GameApp::Run()
                     }
                     else if (m_playerInvincibleFrames <= 0 &&
                              !enemy->UsesSpecialAttacks() &&
-                             enemy->IsTouchingPlayer(m_playerMover.GetPosition(), playerContactRadius))
+                             enemyCanDamagePlayerOnContact)
                     {
                         GameAudio::PlayEnemyAttack();
                         DamagePlayerHp(10);

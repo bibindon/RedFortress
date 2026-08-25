@@ -438,7 +438,7 @@ def build_stage(stage):
     for index, values in enumerate(stage.get("crates", ())):
         if index % 2 == 0:
             x, unused_y, z = values
-            destructible_rows.append((x + 3, 0, z, 3))
+            destructible_rows.append((x + 3, 0, z, 1))
     collectible_rows = []
     for index, values in enumerate(stage.get("items", ()), start=1):
         data_id, x, y, z = values

@@ -1118,6 +1118,25 @@ bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos, const float playe
     return horizontalDist <= combinedContactRadius && verticalDist <= verticalTolerance;
 }
 
+void EnemyBase::SuppressContactDamageUntilPlayerSeparates()
+{
+    m_contactDamageSuppressedUntilPlayerSeparates = true;
+}
+
+bool EnemyBase::CanDamagePlayerOnContact(const bool playerTouching)
+{
+    if (m_contactDamageSuppressedUntilPlayerSeparates)
+    {
+        if (!playerTouching)
+        {
+            m_contactDamageSuppressedUntilPlayerSeparates = false;
+        }
+        return false;
+    }
+
+    return playerTouching;
+}
+
 bool EnemyBase::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
                                   const D3DXVECTOR3& playerPos,
                                   const bool playerIsJumping,

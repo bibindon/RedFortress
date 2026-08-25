@@ -81,6 +81,8 @@ public:
     void SetBossName(const std::wstring& bossName);
 
     bool IsTouchingPlayer(const D3DXVECTOR3& playerPos, float playerRadius) const;
+    void SuppressContactDamageUntilPlayerSeparates();
+    bool CanDamagePlayerOnContact(bool playerTouching);
     bool IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
                            const D3DXVECTOR3& playerPos,
                            bool playerIsJumping,
@@ -213,4 +215,5 @@ private:
     unsigned int m_behaviorSeed = 1;
     AttackHit m_pendingAttackHit;
     bool m_hasPendingAttackHit = false;
+    bool m_contactDamageSuppressedUntilPlayerSeparates = false;
 };

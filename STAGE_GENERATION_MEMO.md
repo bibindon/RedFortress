@@ -244,7 +244,8 @@
   * レバー2・レバー3・感圧板2・感圧板3 まとめ（箱＋上下する壁のセット）
     * いずれも「6x6x6mの箱＋上下する壁（扉）」のセット。箱でアイテムを囲み、操作しないと取得できない（感圧板3/レバー3は「門」として通路を塞ぐ）。
     * 共通ルール
-      * 箱・扉・操作装置（レバー/感圧板）は**床の上面に配置**する。1.0m厚の`lever_box_floor.x`・`lever_box3_floor.x`・`lever_box3_floor14.x`では、床の`PosY`を箱・扉の`PosY - 1.0`にする。
+      * 箱・扉・箱外の操作装置（レバー/感圧板）は**床の上面に配置**する。1.0m厚の`lever_box_floor.x`・`lever_box3_floor.x`・`lever_box3_floor14.x`では、床の`PosY`を箱・扉の`PosY - 1.0`にする。
+      * `lever_box.x`・`lever_box3.x`には、箱の`PosY`から0.5m高い位置まで内蔵床がある。**箱内の感圧板を箱・扉と同じYに置くと内蔵床へ埋没し、判定だけ反応して表示されない。** 箱内感圧板の`PlatePosY`は`箱のPosY + 0.5 + 0.01`（床上面から1cm上。例: 箱Y=0.7なら板Y=1.21）にする。箱外の感圧板は外床上面から1cm上に置く。
       * レバーの`TriggerY`は**箱のPosY + 0.6**（例: 箱0.7→TriggerY=1.3、箱0.1→TriggerY=0.7）。
       * 扉の`Scale`は**0.98（2%縮小）**。`XFileList_simple.csv`・`XFileListPhysics.csv`・`AttackTriggers.csv`（または`PressurePlates.csv`）のすべてで同じ値にする。
       * 扉は`XFileListPhysics.csv`で`Move=y`にする。
@@ -420,7 +421,7 @@
   * 衝突判定用 : `res/model/cubeWoodBreakable/cube_wood_breakable_collision.x`
   * 配置情報 : `Destructibles.csv`
     * `PosX`、`PosY`、`PosZ` : 配置座標
-    * `HP` : 耐久力
+    * `HP` : 耐久力。破壊可能木箱はすべて`1`とする
     * `DropItemId` : 破壊時に必ず落とすアイテム。`None`を指定すると何も落とさない
 * 感圧板と連動扉
   * プレイヤーが踏むか、「押せる箱」を乗せるか、ドクロを乗せると反応する。
@@ -433,7 +434,7 @@
     * レバー2・レバー3と同じ箱ギミックを感圧板で起動するもの。`TravelDistance=6`を指定する（扉6mを開ける）。
     * 感圧板2 : 箱`res/model/attack_trigger/lever_box.x`＋扉1枚`lever_box_door.x`。感圧板は**扉の外側に1つ、箱の内側に1つの合計2つ以上**を配置し、同じ`WallID`を共有する。外側の感圧板は扉の目の前の面に配置する（感圧板と反対側に置かない）。箱は開口部が外側の感圧板を向くよう`RotY=180`等で回転させる（例: 外側の感圧板が+Z側なら箱をRotY=180にして扉は箱の+Z側に+3した位置）。箱内の感圧板は扉が閉じても踏める位置に置く。
     * 感圧板3 : 箱`res/model/attack_trigger/lever_box3.x`＋扉2枚`lever_box3_door.x`（両開き）。扉は箱と同じ座標。感圧板は**各扉の外側に1つずつ、箱の内側中央に1つの合計3つ以上**を配置し、すべて同じ`WallID`を共有する。どの感圧板に乗っても**両方の扉が同時に開く**（いずれか1つがアクティブな間は開いたまま）。レバー3と同じ**「門」**になり、箱内からも必ず再開放できる。
-    * 床モデル : 感圧板2は`res/model/attack_trigger/lever_box_floor.x`（10x10x1.0m）、感圧板3は`res/model/attack_trigger/lever_box3_floor14.x`（5x14x1.0m・X=5m/Z=14m）。いずれも原点=下面中心。箱の下に敷き、**箱・扉・感圧板は床の上面に配置**する。床のPosYは箱・扉のPosY-1.0とする。感圧板は床の範囲内に置く。
+    * 床モデル : 感圧板2は`res/model/attack_trigger/lever_box_floor.x`（10x10x1.0m）、感圧板3は`res/model/attack_trigger/lever_box3_floor14.x`（5x14x1.0m・X=5m/Z=14m）。いずれも原点=下面中心。箱の下に敷き、箱・扉・箱外感圧板を床の上面に配置する。床のPosYは箱・扉のPosY-1.0とし、箱外感圧板は床上面から1cm上に置く。箱内感圧板は箱モデルの0.5m厚の内蔵床上面から1cm上、すなわち`箱のPosY + 0.51`に置く。感圧板は床の範囲内に置く。
     * 扉は`XFileListPhysics.csv`で`Move=y`にする。扉の`Scale`は0.98（2%縮小）で、`XFileList_simple.csv`・`XFileListPhysics.csv`・`PressurePlates.csv`の3ファイルすべて同じ値にする。
 * 押せる箱
   * 押して移動する。`PushableBoxes.csv`に`ID`、座標、`RotY`、`Scale`を記述する（物理・描画CSVには登録しない）。

@@ -12,7 +12,7 @@ class Render;
 
 const int kDestructibleBlinkFrames = 15;
 const int kDestructibleBlinkInterval = 2;
-const int kDestructibleDefaultHp = 3;
+const int kDestructibleDefaultHp = 1;
 const int kDroppedRedCubePickupDelayFrames = 60;
 
 struct DestructibleObject
