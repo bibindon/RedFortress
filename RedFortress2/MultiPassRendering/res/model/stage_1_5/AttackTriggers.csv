@@ -1,4 +1,4 @@
 ﻿ID,Type,TriggerX,TriggerY,TriggerZ,TargetID,Axis,BaseRotX,BaseRotY,BaseRotZ,Scale,LiftHeight
 1,LeverLift,1.5,0.15,-27.5,9003,Y,0,0,0,0.98,6
 2,LeverLift,1.5,0.15,-20.5,9003,Y,0,0,0,0.98,6
-3,LeverLift,0,0.65,-24,9003,Y,0,0,0,0.98,6
+3,LeverLift,1.5,0.65,-24,9003,Y,0,0,0,0.98,6

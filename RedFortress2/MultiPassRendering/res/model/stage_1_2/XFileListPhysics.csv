@@ -2,7 +2,7 @@
 1,res/model/cubeNormalInverse30x60.x,0,0,0,0,0,0,1,Collision,n,
 2,res/model/stage_1_2/stage_ground.x,0,0.01,0,0,0,0,1,Collision,n,
 12,res/model/attack_trigger/lever_box_door.x,-12,0.7,17,0,0,0,0.98,Collision,y,
-13,res/model/attack_trigger/lever_box_floor.x,-12,-0.3,20,0,0,0,1,Collision,n,
+13,res/model/attack_trigger/lever_box_floor14.x,-12,-0.3,20,0,0,0,1,Collision,n,
 14,res/model/attack_trigger/lever_box.x,-12,0.7,20,0,0,0,1,Collision,n,
 3101,res/model/collision_wall/collision_wall_collision.x,9,1.5,-26,0,90,0,1,Collision,n,
 3103,res/model/collision_wall/collision_wall_collision.x,11,1.5,-20,0,90,0,1,Collision,n,

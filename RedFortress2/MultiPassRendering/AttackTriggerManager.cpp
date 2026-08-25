@@ -696,10 +696,20 @@ void AttackTriggerManager::ApplyLeverVisualTransform(NSRender::Render& render,
                                  yawMatrix * baseTranslationMatrix);
 
     D3DXMATRIX handleRotationMatrix;
-    D3DXMatrixRotationYawPitchRoll(&handleRotationMatrix,
-                                   trigger.targetRotation.y,
-                                   trigger.currentLeverVisualAngle,
-                                   0.0f);
+    if (trigger.type == AttackTriggerType::LeverLift)
+    {
+        D3DXMatrixRotationYawPitchRoll(&handleRotationMatrix,
+                                       trigger.targetRotation.y,
+                                       0.0f,
+                                       trigger.currentLeverVisualAngle);
+    }
+    else
+    {
+        D3DXMatrixRotationYawPitchRoll(&handleRotationMatrix,
+                                       trigger.targetRotation.y,
+                                       trigger.currentLeverVisualAngle,
+                                       0.0f);
+    }
     D3DXMATRIX handleTranslationMatrix;
     D3DXMatrixTranslation(&handleTranslationMatrix,
                           trigger.triggerPosition.x,
