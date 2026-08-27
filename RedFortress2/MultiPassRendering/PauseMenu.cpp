@@ -65,10 +65,14 @@ const int kExitPanelButtonHeight = 56;
 const int kExitPanelStageSelectY = 450;
 const int kExitPanelTitleY = 525;
 const int kExitPanelGameY = 600;
-const std::size_t kVisibleItemCount = 11;
+const std::size_t kVisibleItemCount = 10;
+const std::size_t kVisibleWeaponCount = 11;
 const int kItemListX = 205;
-const int kItemListY = 350;
+const int kItemListHeaderY = 350;
+const int kItemListY = 385;
 const int kItemListLineHeight = 34;
+const int kItemCountColumnX = 610;
+const int kItemCountColumnWidth = 100;
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
 const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
@@ -828,7 +832,7 @@ void PauseMenu::UpdateWeaponList()
                           kItemListX,
                           kItemListY,
                           520,
-                          static_cast<int>(kVisibleItemCount) * kItemListLineHeight))
+                          static_cast<int>(kVisibleWeaponCount) * kItemListLineHeight))
         {
             const std::size_t clickedIndex = m_weaponScrollOffset +
                 static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
@@ -1039,9 +1043,9 @@ void PauseMenu::EnsureSelectedWeaponVisible()
         m_weaponScrollOffset = m_selectedWeaponIndex;
     }
 
-    if (m_selectedWeaponIndex >= m_weaponScrollOffset + kVisibleItemCount)
+    if (m_selectedWeaponIndex >= m_weaponScrollOffset + kVisibleWeaponCount)
     {
-        m_weaponScrollOffset = m_selectedWeaponIndex - kVisibleItemCount + 1;
+        m_weaponScrollOffset = m_selectedWeaponIndex - kVisibleWeaponCount + 1;
     }
 }
 
@@ -1253,6 +1257,19 @@ void PauseMenu::RenderItemPanel()
                                44,
                                kTextColor);
 
+    m_render->DrawTextEx(m_qualityFontId,
+                         L"アイテム名",
+                         kItemListX,
+                         kItemListHeaderY,
+                         kSubTextColor);
+    m_render->DrawTextExCenter(m_qualityFontId,
+                               L"所持数",
+                               kItemCountColumnX,
+                               kItemListHeaderY,
+                               kItemCountColumnWidth,
+                               kItemListLineHeight,
+                               kSubTextColor);
+
     const std::vector<std::size_t> ownedItems = GetOwnedItemIndices();
     if (ownedItems.empty())
     {
@@ -1288,6 +1305,13 @@ void PauseMenu::RenderItemPanel()
                              kItemListX,
                              kItemListY + lineIndex * kItemListLineHeight,
                              color);
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   std::to_wstring(m_inventory->GetItemCount(item.id)),
+                                   kItemCountColumnX,
+                                   kItemListY + lineIndex * kItemListLineHeight,
+                                   kItemCountColumnWidth,
+                                   kItemListLineHeight,
+                                   color);
     }
 
     const std::wstring positionText = std::to_wstring(m_selectedItemIndex + 1) +
@@ -1335,19 +1359,14 @@ void PauseMenu::RenderItemPanel()
                          520,
                          kSubTextColor);
     m_render->DrawTextEx(m_qualityFontId,
-                         L"所持数：" + std::to_wstring(m_inventory->GetItemCount(selectedItem.id)),
-                         detailX,
-                         565,
-                         kSubTextColor);
-    m_render->DrawTextEx(m_qualityFontId,
                          L"説明",
                          800,
-                         665,
+                         590,
                          kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          selectedItem.description,
                          800,
-                         700,
+                         625,
                          kSubTextColor);
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"Enter / Space  使用   Esc  戻る",
@@ -1397,7 +1416,7 @@ void PauseMenu::RenderWeaponPanel()
         return;
     }
 
-    const std::size_t visibleEnd = m_weaponScrollOffset + kVisibleItemCount;
+    const std::size_t visibleEnd = m_weaponScrollOffset + kVisibleWeaponCount;
     std::size_t weaponEnd = visibleEnd;
     if (weaponEnd > ownedWeapons.size())
     {

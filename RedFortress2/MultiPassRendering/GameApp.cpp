@@ -879,6 +879,8 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_damagePopupManager.SetEnabled(false);
 
     m_saveDataManager.Initialize(m_stageManager);
+    m_explanationManager.Initialize(m_render, m_saveDataManager);
+    m_explanationManager.LoadForStage(initialStage.id, initialStage.explanationCsvPath);
     m_saveDataManager.ResetToDefaults();
     InitializeStageSelectCursor();
     CreateStageSelectCubes();
@@ -998,6 +1000,7 @@ void GameApp::Run()
         if (m_gameState == GameState::Playing &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
+            !m_explanationManager.IsActive() &&
             !m_playerDeathPending &&
             !m_stageClearInputLocked &&
             !IsHitStopActive() &&
@@ -1014,6 +1017,7 @@ void GameApp::Run()
             !IsCurrentStageSelect() &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
+            !m_explanationManager.IsActive() &&
             !m_playerDeathPending &&
             !m_stageClearInputLocked &&
             !IsHitStopActive() &&
@@ -1028,6 +1032,7 @@ void GameApp::Run()
             !IsCurrentStageSelect() &&
             !m_pauseMenu.IsOpen() &&
             !m_craftMenu.IsOpen() &&
+            !m_explanationManager.IsActive() &&
             !m_playerDeathPending &&
             !m_stageClearInputLocked &&
             !IsHitStopActive() &&
@@ -1413,6 +1418,28 @@ void GameApp::Run()
                 DrawItemPickupMessage();
                 m_render.Draw();
                 UpdateHitStop();
+                continue;
+            }
+
+            m_explanationManager.TryActivate(m_playerMover.GetPosition());
+            if (m_explanationManager.IsActive())
+            {
+                GameAudio::StopDoorMovement();
+                GameAudio::StopPushableBoxMovement();
+                m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                m_pendingJump = false;
+                m_explanationManager.Update();
+                if (!IsCurrentStageSelect())
+                {
+                    m_hpBar.Draw();
+                    UpdateBossHpBar();
+                    DrawBossHpBar();
+                    DrawAmmoGauge();
+                }
+                m_damagePopupManager.Draw();
+                m_enemyManager.DrawHpBars(m_render, m_playerMover.GetPosition());
+                m_explanationManager.Render();
+                m_render.Draw();
                 continue;
             }
 
@@ -2797,6 +2824,8 @@ void GameApp::Finalize()
     {
         m_craftMenu.Close();
     }
+
+    m_explanationManager.Close();
 
     m_interactionManager.Clear();
     m_pressurePlateManager.Clear(m_render);
@@ -5214,7 +5243,7 @@ std::wstring GameApp::GetSelectedStagePortalDisplayName() const
 
 void GameApp::UpdateStageSelectMaskedGaussian()
 {
-    if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen())
+    if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen() || m_explanationManager.IsActive())
     {
         return;
     }
@@ -7403,7 +7432,8 @@ void GameApp::BeginHitStop(int frames)
         return;
     }
 
-    if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen() || m_playerDeathPending || m_qte != nullptr)
+    if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen() || m_explanationManager.IsActive() ||
+        m_playerDeathPending || m_qte != nullptr)
     {
         return;
     }
@@ -7965,6 +7995,7 @@ StageManager::StageData GameApp::GetStageDataForLoad(
     result.pressurePlateCsvPath = GetBossClearedCsvPath(stage, stage.pressurePlateCsvPath);
     result.pushableBoxCsvPath = GetBossClearedCsvPath(stage, stage.pushableBoxCsvPath);
     result.attackTriggerCsvPath = GetBossClearedCsvPath(stage, stage.attackTriggerCsvPath);
+    result.explanationCsvPath = GetBossClearedCsvPath(stage, stage.explanationCsvPath);
     result.warpBearCsvPath = GetBossClearedCsvPath(stage, stage.warpBearCsvPath);
     result.pointLightCsvPath = GetBossClearedCsvPath(stage, stage.pointLightCsvPath);
     return result;
@@ -8073,6 +8104,7 @@ void GameApp::LoadCurrentStageObjects()
     m_pressurePlateManager.LoadForStage(m_render, loadStage.pressurePlateCsvPath);
     m_pushableBoxManager.LoadForStage(m_render, loadStage.pushableBoxCsvPath);
     m_attackTriggerManager.LoadForStage(m_render, loadStage.attackTriggerCsvPath);
+    m_explanationManager.LoadForStage(stage.id, loadStage.explanationCsvPath);
     m_warpBearManager.LoadForStage(loadStage.warpBearCsvPath);
 
     if (!IsStageSelectId(stage.id) &&

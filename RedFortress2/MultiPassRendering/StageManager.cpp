@@ -165,6 +165,7 @@ void StageManager::AddStage(const std::wstring& id,
     stage.pressurePlateCsvPath = basePath + L"PressurePlates.csv";
     stage.pushableBoxCsvPath = basePath + L"PushableBoxes.csv";
     stage.attackTriggerCsvPath = basePath + L"AttackTriggers.csv";
+    stage.explanationCsvPath = basePath + L"Explanations.csv";
     stage.warpBearCsvPath = basePath + L"WarpBears.csv";
     stage.pointLightCsvPath = basePath + L"PointLights.csv";
     stage.renderSettingsCsvPath = renderSettingsCsvPath;

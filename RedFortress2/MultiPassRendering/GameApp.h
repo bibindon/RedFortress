@@ -39,6 +39,7 @@
 #include "PressurePlateManager.h"
 #include "PushableBoxManager.h"
 #include "AttackTriggerManager.h"
+#include "ExplanationManager.h"
 #include "WarpBearManager.h"
 #include "DebugRpc.h"
 
@@ -432,6 +433,7 @@ private:
     PressurePlateManager m_pressurePlateManager;
     PushableBoxManager m_pushableBoxManager;
     AttackTriggerManager m_attackTriggerManager;
+    ExplanationManager m_explanationManager;
     WarpBearManager m_warpBearManager;
     int m_playerInvincibleFrames = 0;
     int m_stickMeshId = -1;

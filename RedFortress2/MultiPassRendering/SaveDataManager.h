@@ -28,6 +28,9 @@ public:
     bool IsStageUnlocked(const std::wstring& stageId) const;
     void MarkAllStagesClearedAndUnlocked();
 
+    void MarkExplanationShown(const std::wstring& stageId, const std::wstring& explanationId);
+    bool IsExplanationShown(const std::wstring& stageId, const std::wstring& explanationId) const;
+
     bool IsStageClearedByIndex(std::size_t stageIndex) const;
     void MarkStageClearedByIndex(std::size_t stageIndex);
 
@@ -47,6 +50,7 @@ private:
     const StageManager* m_stageManager;
     std::unordered_set<std::wstring> m_clearedStageIds;
     std::unordered_set<std::wstring> m_unlockedStageIds;
+    std::unordered_set<std::wstring> m_shownExplanationIds;
     std::wstring m_filePath;
     std::wstring m_stageSelectId;
     std::wstring m_stageSelectPortalId;

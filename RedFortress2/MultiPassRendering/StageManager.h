@@ -37,6 +37,7 @@ public:
         std::wstring pressurePlateCsvPath;
         std::wstring pushableBoxCsvPath;
         std::wstring attackTriggerCsvPath;
+        std::wstring explanationCsvPath;
         std::wstring warpBearCsvPath;
         std::wstring pointLightCsvPath;
         std::wstring renderSettingsCsvPath;

@@ -1,12 +1,25 @@
 ﻿#include "SaveDataManager.h"
 
 #include <Windows.h>
+#include <algorithm>
 #include <cstddef>
 #include <vector>
 
 #include "StageManager.h"
 #include "../../RedFortressRender/Render/Util.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
+
+namespace
+{
+const wchar_t kExplanationIdSeparator = L'|';
+const wchar_t kStageExplanationSeparator = L':';
+
+std::wstring MakeExplanationSaveId(const std::wstring& stageId,
+                                   const std::wstring& explanationId)
+{
+    return stageId + kStageExplanationSeparator + explanationId;
+}
+}
 
 SaveDataManager::SaveDataManager()
     : m_stageManager(nullptr)
@@ -57,6 +70,7 @@ bool SaveDataManager::Load()
 {
     m_clearedStageIds.clear();
     m_unlockedStageIds.clear();
+    m_shownExplanationIds.clear();
     m_stageSelectId.clear();
     m_stageSelectPortalId.clear();
     m_hasSaveFile = false;
@@ -123,6 +137,35 @@ bool SaveDataManager::Load()
         {
             m_unlockedStageIds.insert(stageId);
         }
+
+        if (row.size() >= 5 && !row.at(4).empty())
+        {
+            const std::wstring& shownIds = row.at(4);
+            std::size_t begin = 0;
+            while (begin <= shownIds.length())
+            {
+                const std::size_t end = shownIds.find(kExplanationIdSeparator, begin);
+                std::wstring explanationId;
+                if (end == std::wstring::npos)
+                {
+                    explanationId = shownIds.substr(begin);
+                }
+                else
+                {
+                    explanationId = shownIds.substr(begin, end - begin);
+                }
+
+                if (!explanationId.empty())
+                {
+                    m_shownExplanationIds.insert(MakeExplanationSaveId(stageId, explanationId));
+                }
+                if (end == std::wstring::npos)
+                {
+                    break;
+                }
+                begin = end + 1;
+            }
+        }
     }
 
     InitializeDefaultUnlocks();
@@ -167,6 +210,7 @@ void SaveDataManager::Save()
     header.push_back(L"Cleared");
     header.push_back(L"Unlocked");
     header.push_back(L"SelectedPortalId");
+    header.push_back(L"ShownExplanationIds");
     csvData.push_back(header);
 
     const std::size_t stageCount = m_stageManager->GetStageCount();
@@ -204,6 +248,31 @@ void SaveDataManager::Save()
         {
             row.push_back(L"");
         }
+
+        const std::wstring explanationPrefix = stage.id + kStageExplanationSeparator;
+        std::vector<std::wstring> stageExplanationIds;
+        for (const std::wstring& saveId : m_shownExplanationIds)
+        {
+            if (saveId.length() > explanationPrefix.length() &&
+                saveId.substr(0, explanationPrefix.length()) == explanationPrefix)
+            {
+                stageExplanationIds.push_back(saveId.substr(explanationPrefix.length()));
+            }
+        }
+        std::sort(stageExplanationIds.begin(), stageExplanationIds.end());
+
+        std::wstring shownExplanationIds;
+        for (std::size_t explanationIndex = 0;
+             explanationIndex < stageExplanationIds.size();
+             ++explanationIndex)
+        {
+            if (!shownExplanationIds.empty())
+            {
+                shownExplanationIds += kExplanationIdSeparator;
+            }
+            shownExplanationIds += stageExplanationIds.at(explanationIndex);
+        }
+        row.push_back(shownExplanationIds);
 
         csvData.push_back(row);
     }
@@ -323,6 +392,27 @@ bool SaveDataManager::IsStageUnlocked(const std::wstring& stageId) const
     return m_unlockedStageIds.find(stageId) != m_unlockedStageIds.end();
 }
 
+void SaveDataManager::MarkExplanationShown(const std::wstring& stageId,
+                                           const std::wstring& explanationId)
+{
+    if (stageId.empty() || explanationId.empty())
+    {
+        return;
+    }
+    m_shownExplanationIds.insert(MakeExplanationSaveId(stageId, explanationId));
+}
+
+bool SaveDataManager::IsExplanationShown(const std::wstring& stageId,
+                                         const std::wstring& explanationId) const
+{
+    if (stageId.empty() || explanationId.empty())
+    {
+        return false;
+    }
+    const std::wstring saveId = MakeExplanationSaveId(stageId, explanationId);
+    return m_shownExplanationIds.find(saveId) != m_shownExplanationIds.end();
+}
+
 void SaveDataManager::MarkAllStagesClearedAndUnlocked()
 {
     if (m_stageManager == nullptr)
@@ -349,6 +439,7 @@ void SaveDataManager::ResetToDefaults()
 {
     m_clearedStageIds.clear();
     m_unlockedStageIds.clear();
+    m_shownExplanationIds.clear();
     m_stageSelectId.clear();
     m_stageSelectPortalId.clear();
     m_hasSaveFile = false;
