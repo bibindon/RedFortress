@@ -83,6 +83,17 @@ const int kSettingsRowWidth = 260;
 const int kSettingsOptionListX = 370;
 const int kSettingsOptionListY = 342;
 const int kSettingsOptionListWidth = 430;
+const int kSettingsValueHeight = 56;
+const int kSettingsArrowY = 424;
+const int kSettingsArrowWidth = 170;
+const int kSettingsArrowHeight = 56;
+const int kSettingsLeftArrowX = 390;
+const int kSettingsRightArrowX = 610;
+const int kSettingsApplyX = 500;
+const int kSettingsApplyY = 510;
+const int kSettingsApplyWidth = 190;
+const int kSettingsApplyHeight = 52;
+const UINT kDisabledSettingsTextColor = D3DCOLOR_RGBA(120, 125, 135, 190);
 const std::size_t kVisibleItemCount = 10;
 const std::size_t kVisibleWeaponCount = 11;
 const int kItemListX = 205;
@@ -244,7 +255,6 @@ void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabl
     m_selectedResolutionIndex = 0;
     m_selectedWindowModeIndex = 0;
     m_selectedQualityIndex = 0;
-    m_settingsOptionScrollOffset = 0;
     m_selectedItemIndex = 0;
     m_itemScrollOffset = 0;
     m_itemStatusMessage.clear();
@@ -978,7 +988,6 @@ void PauseMenu::UpdateSettingsPanel()
         {
             m_selectedSettingsRow = SettingsRow::WindowMode;
         }
-        EnsureSelectedSettingsOptionVisible();
         GameAudio::PlayMenuMove();
     }
 
@@ -996,7 +1005,6 @@ void PauseMenu::UpdateSettingsPanel()
         {
             m_selectedSettingsRow = SettingsRow::Resolution;
         }
-        EnsureSelectedSettingsOptionVisible();
         GameAudio::PlayMenuMove();
     }
 
@@ -1004,9 +1012,20 @@ void PauseMenu::UpdateSettingsPanel()
     {
         MoveSelectedSettingsOption(-1);
     }
-    if (IsMenuRightPressed() || IsMenuConfirmPressed())
+    if (IsMenuRightPressed())
     {
         MoveSelectedSettingsOption(1);
+    }
+    if (IsMenuConfirmPressed())
+    {
+        if (m_selectedSettingsRow == SettingsRow::WindowMode)
+        {
+            MoveSelectedSettingsOption(1);
+        }
+        else
+        {
+            ApplySelectedSettings();
+        }
     }
 
     const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
@@ -1016,8 +1035,6 @@ void PauseMenu::UpdateSettingsPanel()
                          static_cast<float>(NSRender::Common::ScreenH());
     const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
     const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
-    const int optionLineHeight = 44;
-    const int visibleOptionCount = 8;
     const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
     const bool mouseMoved = mouseDelta.x != 0 || mouseDelta.y != 0;
     if (mouseMoved)
@@ -1028,26 +1045,6 @@ void PauseMenu::UpdateSettingsPanel()
             if (hoveredRow != m_selectedSettingsRow)
             {
                 m_selectedSettingsRow = hoveredRow;
-                EnsureSelectedSettingsOptionVisible();
-                GameAudio::PlayMenuMove();
-            }
-        }
-        else if (IsPointInRect(baseMouseX,
-                               baseMouseY,
-                               kSettingsOptionListX,
-                               kSettingsOptionListY,
-                               kSettingsOptionListWidth,
-                               optionLineHeight * visibleOptionCount))
-        {
-            const int hoveredRowIndex =
-                static_cast<int>((baseMouseY - kSettingsOptionListY) / optionLineHeight);
-            const int hoveredOptionIndex = m_settingsOptionScrollOffset + hoveredRowIndex;
-            if (hoveredOptionIndex >= 0 &&
-                hoveredOptionIndex < GetSettingsOptionCount(m_selectedSettingsRow) &&
-                hoveredOptionIndex != GetSelectedSettingsOptionIndex(m_selectedSettingsRow))
-            {
-                SetSelectedSettingsOptionIndex(m_selectedSettingsRow, hoveredOptionIndex);
-                EnsureSelectedSettingsOptionVisible();
                 GameAudio::PlayMenuMove();
             }
         }
@@ -1061,31 +1058,42 @@ void PauseMenu::UpdateSettingsPanel()
             if (clickedRow != m_selectedSettingsRow)
             {
                 m_selectedSettingsRow = clickedRow;
-                EnsureSelectedSettingsOptionVisible();
                 GameAudio::PlayMenuMove();
             }
             return;
         }
 
-        const int optionListX = kSettingsOptionListX;
-        const int optionListY = kSettingsOptionListY;
-        const int optionListWidth = kSettingsOptionListWidth;
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
-                          optionListX,
-                          optionListY,
-                          optionListWidth,
-                          optionLineHeight * visibleOptionCount))
+                          kSettingsLeftArrowX,
+                          kSettingsArrowY,
+                          kSettingsArrowWidth,
+                          kSettingsArrowHeight))
         {
-            const int clickedRowIndex = static_cast<int>((baseMouseY - optionListY) / optionLineHeight);
-            const int clickedOptionIndex = m_settingsOptionScrollOffset + clickedRowIndex;
-            if (clickedOptionIndex >= 0 &&
-                clickedOptionIndex < GetSettingsOptionCount(m_selectedSettingsRow))
-            {
-                SetSelectedSettingsOptionIndex(m_selectedSettingsRow, clickedOptionIndex);
-                EnsureSelectedSettingsOptionVisible();
-                GameAudio::PlayMenuConfirm();
-            }
+            MoveSelectedSettingsOption(-1);
+            return;
+        }
+
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kSettingsRightArrowX,
+                          kSettingsArrowY,
+                          kSettingsArrowWidth,
+                          kSettingsArrowHeight))
+        {
+            MoveSelectedSettingsOption(1);
+            return;
+        }
+
+        if (m_selectedSettingsRow != SettingsRow::WindowMode &&
+            IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kSettingsApplyX,
+                          kSettingsApplyY,
+                          kSettingsApplyWidth,
+                          kSettingsApplyHeight))
+        {
+            ApplySelectedSettings();
             return;
         }
     }
@@ -1481,7 +1489,6 @@ void PauseMenu::ActivateTopMenu(const int menuIndex)
         RefreshSettingsOptions();
         m_focusArea = FocusArea::SettingsPanel;
         m_selectedSettingsRow = SettingsRow::Resolution;
-        EnsureSelectedSettingsOptionVisible();
     }
     else if (m_activeTopMenuIndex == kSaveMenuIndex)
     {
@@ -1907,7 +1914,7 @@ void PauseMenu::RenderSettingsPanel()
     RenderSettingsOptionList(m_selectedSettingsRow);
 
     m_render->DrawTextExCenter(m_qualityFontId,
-                               L"↑↓ 項目選択   ←→/Enter 選択肢変更   クリック 選択   Esc 戻る",
+                               L"↑↓ 項目選択   ←→ 値変更   Enter 適用   クリック 操作   Esc 戻る",
                                170,
                                730,
                                900,
@@ -1917,58 +1924,122 @@ void PauseMenu::RenderSettingsPanel()
 
 void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
 {
-    const int optionListX = kSettingsOptionListX;
-    const int optionListY = kSettingsOptionListY;
-    const int optionListWidth = kSettingsOptionListWidth;
-    const int optionLineHeight = 44;
-    const int visibleOptionCount = 8;
     const int optionCount = GetSettingsOptionCount(row);
     const int selectedIndex = GetSelectedSettingsOptionIndex(row);
-
-    if (m_settingsOptionScrollOffset > 0)
+    std::wstring valueText;
+    if (row == SettingsRow::Resolution)
     {
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"↑",
-                                   optionListX,
-                                   optionListY - 32,
-                                   optionListWidth,
-                                   28,
-                                   kSubTextColor);
+        valueText = BuildResolutionComboText();
+    }
+    else if (row == SettingsRow::WindowMode)
+    {
+        valueText = BuildWindowModeComboText();
+    }
+    else
+    {
+        valueText = BuildQualityComboText();
     }
 
-    int optionEnd = m_settingsOptionScrollOffset + visibleOptionCount;
-    if (optionEnd > optionCount)
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               valueText,
+                               kSettingsOptionListX,
+                               kSettingsOptionListY,
+                               kSettingsOptionListWidth,
+                               kSettingsValueHeight,
+                               kTextColor);
+
+    UINT leftArrowColor = kTextColor;
+    UINT rightArrowColor = kTextColor;
+    if (selectedIndex <= 0)
     {
-        optionEnd = optionCount;
+        leftArrowColor = kDisabledSettingsTextColor;
+    }
+    if (selectedIndex >= optionCount - 1)
+    {
+        rightArrowColor = kDisabledSettingsTextColor;
     }
 
-    for (int i = m_settingsOptionScrollOffset; i < optionEnd; ++i)
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"［ ◀ ］",
+                               kSettingsLeftArrowX,
+                               kSettingsArrowY,
+                               kSettingsArrowWidth,
+                               kSettingsArrowHeight,
+                               leftArrowColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"［ ▶ ］",
+                               kSettingsRightArrowX,
+                               kSettingsArrowY,
+                               kSettingsArrowWidth,
+                               kSettingsArrowHeight,
+                               rightArrowColor);
+
+    if (row != SettingsRow::WindowMode)
     {
-        const int lineIndex = i - m_settingsOptionScrollOffset;
-        const int lineY = optionListY + lineIndex * optionLineHeight;
-        m_render->DrawTextEx(m_qualityFontId,
-                             GetSettingsOptionLabel(row, i),
-                             optionListX + 30,
-                             lineY + 9,
-                             kTextColor);
-        if (i == selectedIndex)
+        UINT applyColor = kDisabledSettingsTextColor;
+        if (IsSelectedSettingsDirty())
         {
-            m_render->DrawImage(kCommandCursorPath,
-                                optionListX + 15 - kCommandCursorDotCenterX,
-                                lineY + 19 - kCommandCursorDotCenterY,
-                                255);
+            applyColor = kTextColor;
         }
+        m_render->DrawTextExCenter(m_menuItemFontId,
+                                   L"［ 適用 ］",
+                                   kSettingsApplyX,
+                                   kSettingsApplyY,
+                                   kSettingsApplyWidth,
+                                   kSettingsApplyHeight,
+                                   applyColor);
     }
 
-    if (optionEnd < optionCount)
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    int cursorX = -1;
+    int cursorY = -1;
+    if (selectedIndex > 0 &&
+        IsPointInRect(baseMouseX,
+                      baseMouseY,
+                      kSettingsLeftArrowX,
+                      kSettingsArrowY,
+                      kSettingsArrowWidth,
+                      kSettingsArrowHeight))
     {
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"↓",
-                                   optionListX,
-                                   optionListY + visibleOptionCount * optionLineHeight + 4,
-                                   optionListWidth,
-                                   28,
-                                   kSubTextColor);
+        cursorX = kSettingsLeftArrowX + 12;
+        cursorY = kSettingsArrowY + kSettingsArrowHeight / 2;
+    }
+    else if (selectedIndex < optionCount - 1 &&
+             IsPointInRect(baseMouseX,
+                           baseMouseY,
+                           kSettingsRightArrowX,
+                           kSettingsArrowY,
+                           kSettingsArrowWidth,
+                           kSettingsArrowHeight))
+    {
+        cursorX = kSettingsRightArrowX + 12;
+        cursorY = kSettingsArrowY + kSettingsArrowHeight / 2;
+    }
+    else if (row != SettingsRow::WindowMode &&
+             IsSelectedSettingsDirty() &&
+             IsPointInRect(baseMouseX,
+                           baseMouseY,
+                           kSettingsApplyX,
+                           kSettingsApplyY,
+                           kSettingsApplyWidth,
+                           kSettingsApplyHeight))
+    {
+        cursorX = kSettingsApplyX + 12;
+        cursorY = kSettingsApplyY + kSettingsApplyHeight / 2;
+    }
+
+    if (cursorX >= 0 && cursorY >= 0)
+    {
+        m_render->DrawImage(kCommandCursorPath,
+                            cursorX - kCommandCursorDotCenterX,
+                            cursorY - kCommandCursorDotCenterY,
+                            255);
     }
 }
 
@@ -2020,6 +2091,28 @@ void PauseMenu::RefreshSettingsOptions()
         }
     }
 
+    m_resolutionOptions.push_back(std::make_pair(NSRender::Common::ScreenW(),
+                                                 NSRender::Common::ScreenH()));
+    std::sort(m_resolutionOptions.begin(),
+              m_resolutionOptions.end(),
+              [](const std::pair<int, int>& left, const std::pair<int, int>& right)
+              {
+                  const long long leftPixels = static_cast<long long>(left.first) * left.second;
+                  const long long rightPixels = static_cast<long long>(right.first) * right.second;
+                  if (leftPixels != rightPixels)
+                  {
+                      return leftPixels < rightPixels;
+                  }
+                  if (left.first != right.first)
+                  {
+                      return left.first < right.first;
+                  }
+                  return left.second < right.second;
+              });
+    m_resolutionOptions.erase(std::unique(m_resolutionOptions.begin(),
+                                          m_resolutionOptions.end()),
+                              m_resolutionOptions.end());
+
     if (m_resolutionOptions.empty())
     {
         m_resolutionOptions.push_back(std::make_pair(NSRender::Common::ScreenW(),
@@ -2043,7 +2136,11 @@ void PauseMenu::RefreshSettingsOptions()
         m_selectedWindowModeIndex = 1;
     }
 
-    const std::wstring quality = m_render != nullptr ? m_render->GetRenderQuality() : L"LOW";
+    std::wstring quality = L"LOW";
+    if (m_render != nullptr)
+    {
+        quality = m_render->GetRenderQuality();
+    }
     m_selectedQualityIndex = 0;
     if (quality == L"MIDDLE" || quality == L"HIGH")
     {
@@ -2092,6 +2189,62 @@ void PauseMenu::ApplySelectedQuality()
         quality = L"HIGH";
     }
     m_render->SetRenderQuality(quality);
+}
+
+void PauseMenu::ApplySelectedSettings()
+{
+    if (!IsSelectedSettingsDirty())
+    {
+        return;
+    }
+
+    if (m_selectedSettingsRow == SettingsRow::Resolution)
+    {
+        ApplySelectedResolution();
+    }
+    else if (m_selectedSettingsRow == SettingsRow::Quality)
+    {
+        ApplySelectedQuality();
+    }
+    else
+    {
+        return;
+    }
+
+    GameAudio::PlayMenuConfirm();
+}
+
+bool PauseMenu::IsSelectedSettingsDirty() const
+{
+    if (m_selectedSettingsRow == SettingsRow::Resolution)
+    {
+        if (m_selectedResolutionIndex < 0 ||
+            m_selectedResolutionIndex >= static_cast<int>(m_resolutionOptions.size()))
+        {
+            return false;
+        }
+
+        const std::pair<int, int>& resolution = m_resolutionOptions.at(m_selectedResolutionIndex);
+        return resolution.first != NSRender::Common::ScreenW() ||
+               resolution.second != NSRender::Common::ScreenH();
+    }
+
+    if (m_selectedSettingsRow == SettingsRow::Quality)
+    {
+        if (m_render == nullptr)
+        {
+            return false;
+        }
+
+        const std::wstring quality = m_render->GetRenderQuality();
+        if (m_selectedQualityIndex == 1)
+        {
+            return quality != L"MIDDLE" && quality != L"HIGH";
+        }
+        return quality == L"MIDDLE" || quality == L"HIGH";
+    }
+
+    return false;
 }
 
 int PauseMenu::GetSettingsOptionCount(const SettingsRow row) const
@@ -2166,7 +2319,6 @@ void PauseMenu::SetSelectedSettingsOptionIndex(const SettingsRow row, const int 
     if (row == SettingsRow::Resolution)
     {
         m_selectedResolutionIndex = index;
-        ApplySelectedResolution();
     }
     else if (row == SettingsRow::WindowMode)
     {
@@ -2176,10 +2328,7 @@ void PauseMenu::SetSelectedSettingsOptionIndex(const SettingsRow row, const int 
     else
     {
         m_selectedQualityIndex = index;
-        ApplySelectedQuality();
     }
-
-    RefreshSettingsOptions();
 }
 
 void PauseMenu::MoveSelectedSettingsOption(const int direction)
@@ -2193,48 +2342,20 @@ void PauseMenu::MoveSelectedSettingsOption(const int direction)
     int nextIndex = GetSelectedSettingsOptionIndex(m_selectedSettingsRow) + direction;
     if (nextIndex < 0)
     {
-        nextIndex = optionCount - 1;
+        nextIndex = 0;
     }
     else if (nextIndex >= optionCount)
     {
-        nextIndex = 0;
+        nextIndex = optionCount - 1;
+    }
+
+    if (nextIndex == GetSelectedSettingsOptionIndex(m_selectedSettingsRow))
+    {
+        return;
     }
 
     SetSelectedSettingsOptionIndex(m_selectedSettingsRow, nextIndex);
-    EnsureSelectedSettingsOptionVisible();
-    GameAudio::PlayMenuConfirm();
-}
-
-void PauseMenu::EnsureSelectedSettingsOptionVisible()
-{
-    const int visibleOptionCount = 8;
-    const int selectedIndex = GetSelectedSettingsOptionIndex(m_selectedSettingsRow);
-    if (selectedIndex < m_settingsOptionScrollOffset)
-    {
-        m_settingsOptionScrollOffset = selectedIndex;
-    }
-
-    if (selectedIndex >= m_settingsOptionScrollOffset + visibleOptionCount)
-    {
-        m_settingsOptionScrollOffset = selectedIndex - visibleOptionCount + 1;
-    }
-
-    const int optionCount = GetSettingsOptionCount(m_selectedSettingsRow);
-    int maxOffset = optionCount - visibleOptionCount;
-    if (maxOffset < 0)
-    {
-        maxOffset = 0;
-    }
-
-    if (m_settingsOptionScrollOffset > maxOffset)
-    {
-        m_settingsOptionScrollOffset = maxOffset;
-    }
-
-    if (m_settingsOptionScrollOffset < 0)
-    {
-        m_settingsOptionScrollOffset = 0;
-    }
+    GameAudio::PlayMenuMove();
 }
 
 std::wstring PauseMenu::WindowModeToLabel(const NSRender::eWindowMode mode)

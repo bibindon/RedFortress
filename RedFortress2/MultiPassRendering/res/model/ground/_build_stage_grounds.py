@@ -896,6 +896,34 @@ def add_quad(vertices, faces, uvs, material_indices, coordinates, quad_uvs, mate
     material_indices.append(material_index)
 
 
+def uncovered_intervals(start, end, covered_intervals):
+    split_points = {start, end}
+    clipped_intervals = []
+    for covered_start, covered_end in covered_intervals:
+        clipped_start = max(start, covered_start)
+        clipped_end = min(end, covered_end)
+        if clipped_start >= clipped_end:
+            continue
+        clipped_intervals.append((clipped_start, clipped_end))
+        split_points.add(clipped_start)
+        split_points.add(clipped_end)
+
+    sorted_points = sorted(split_points)
+    intervals = []
+    for point_index in range(len(sorted_points) - 1):
+        interval_start = sorted_points[point_index]
+        interval_end = sorted_points[point_index + 1]
+        midpoint = (interval_start + interval_end) * 0.5
+        covered = False
+        for covered_start, covered_end in clipped_intervals:
+            if midpoint >= covered_start and midpoint <= covered_end:
+                covered = True
+                break
+        if not covered:
+            intervals.append((interval_start, interval_end))
+    return intervals
+
+
 def create_visual_ground_extension(world, top_material, play_half_size):
     play_half_width, play_half_depth = play_half_size
     outer_half_size = VISUAL_GROUND_HALF_SIZE
@@ -1217,20 +1245,53 @@ def create_stage_ground(stage, top_material, side_material):
 
     # 外周の側面は描画しない。ステージ外側は景観用地面と天球で描画する。
     # Pit walls and bottoms use the same world texture as the ground surface.
-    for pit in pits:
+    edge_epsilon = 0.000001
+    for pit_index, pit in enumerate(pits):
         x_min, x_max, y_min, y_max = pit
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_min, y_min, 0.0), (x_min, y_min, pit_bottom), (x_min, y_max, pit_bottom), (x_min, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, pit_texture_v), ((y_max - y_min) / 4.0, pit_texture_v), ((y_max - y_min) / 4.0, 0.0)), 0)
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_max, y_max, 0.0), (x_max, y_max, pit_bottom), (x_max, y_min, pit_bottom), (x_max, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, pit_texture_v), ((y_max - y_min) / 4.0, pit_texture_v), ((y_max - y_min) / 4.0, 0.0)), 0)
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_max, y_min, 0.0), (x_max, y_min, pit_bottom), (x_min, y_min, pit_bottom), (x_min, y_min, 0.0)),
-                 ((0.0, 0.0), (0.0, pit_texture_v), ((x_max - x_min) / 4.0, pit_texture_v), ((x_max - x_min) / 4.0, 0.0)), 0)
-        add_quad(vertices, faces, uvs, material_indices,
-                 ((x_min, y_max, 0.0), (x_min, y_max, pit_bottom), (x_max, y_max, pit_bottom), (x_max, y_max, 0.0)),
-                 ((0.0, 0.0), (0.0, pit_texture_v), ((x_max - x_min) / 4.0, pit_texture_v), ((x_max - x_min) / 4.0, 0.0)), 0)
+        left_covered = []
+        right_covered = []
+        bottom_covered = []
+        top_covered = []
+        for other_index, other in enumerate(pits):
+            if other_index == pit_index:
+                continue
+            if abs(other[1] - x_min) <= edge_epsilon:
+                left_covered.append((other[2], other[3]))
+            if abs(other[0] - x_max) <= edge_epsilon:
+                right_covered.append((other[2], other[3]))
+            if abs(other[3] - y_min) <= edge_epsilon:
+                bottom_covered.append((other[0], other[1]))
+            if abs(other[2] - y_max) <= edge_epsilon:
+                top_covered.append((other[0], other[1]))
+
+        for segment_min, segment_max in uncovered_intervals(y_min, y_max, left_covered):
+            segment_length = segment_max - segment_min
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((x_min, segment_min, 0.0), (x_min, segment_min, pit_bottom),
+                      (x_min, segment_max, pit_bottom), (x_min, segment_max, 0.0)),
+                     ((0.0, 0.0), (0.0, pit_texture_v),
+                      (segment_length / 4.0, pit_texture_v), (segment_length / 4.0, 0.0)), 0)
+        for segment_min, segment_max in uncovered_intervals(y_min, y_max, right_covered):
+            segment_length = segment_max - segment_min
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((x_max, segment_max, 0.0), (x_max, segment_max, pit_bottom),
+                      (x_max, segment_min, pit_bottom), (x_max, segment_min, 0.0)),
+                     ((0.0, 0.0), (0.0, pit_texture_v),
+                      (segment_length / 4.0, pit_texture_v), (segment_length / 4.0, 0.0)), 0)
+        for segment_min, segment_max in uncovered_intervals(x_min, x_max, bottom_covered):
+            segment_length = segment_max - segment_min
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((segment_max, y_min, 0.0), (segment_max, y_min, pit_bottom),
+                      (segment_min, y_min, pit_bottom), (segment_min, y_min, 0.0)),
+                     ((0.0, 0.0), (0.0, pit_texture_v),
+                      (segment_length / 4.0, pit_texture_v), (segment_length / 4.0, 0.0)), 0)
+        for segment_min, segment_max in uncovered_intervals(x_min, x_max, top_covered):
+            segment_length = segment_max - segment_min
+            add_quad(vertices, faces, uvs, material_indices,
+                     ((segment_min, y_max, 0.0), (segment_min, y_max, pit_bottom),
+                      (segment_max, y_max, pit_bottom), (segment_max, y_max, 0.0)),
+                     ((0.0, 0.0), (0.0, pit_texture_v),
+                      (segment_length / 4.0, pit_texture_v), (segment_length / 4.0, 0.0)), 0)
         add_quad(vertices, faces, uvs, material_indices,
                  ((x_min, y_min, pit_bottom), (x_max, y_min, pit_bottom), (x_max, y_max, pit_bottom), (x_min, y_max, pit_bottom)),
                  ((0.0, 0.0), ((x_max - x_min) / 4.0, 0.0), ((x_max - x_min) / 4.0, (y_max - y_min) / 4.0), (0.0, (y_max - y_min) / 4.0)), 0)

@@ -114,12 +114,13 @@ private:
     void ApplySelectedResolution();
     void ApplySelectedWindowMode();
     void ApplySelectedQuality();
+    void ApplySelectedSettings();
+    bool IsSelectedSettingsDirty() const;
     int GetSettingsOptionCount(SettingsRow row) const;
     int GetSelectedSettingsOptionIndex(SettingsRow row) const;
     std::wstring GetSettingsOptionLabel(SettingsRow row, int index) const;
     void SetSelectedSettingsOptionIndex(SettingsRow row, int index);
     void MoveSelectedSettingsOption(int direction);
-    void EnsureSelectedSettingsOptionVisible();
     static std::wstring WindowModeToLabel(NSRender::eWindowMode mode);
     static std::wstring QualityToLabel(const std::wstring& quality);
     static bool TryGetSettingsRowFromPoint(long x, long y, SettingsRow* outRow);
@@ -166,7 +167,6 @@ private:
     int m_selectedResolutionIndex = 0;
     int m_selectedWindowModeIndex = 0;
     int m_selectedQualityIndex = 0;
-    int m_settingsOptionScrollOffset = 0;
     std::size_t m_selectedItemIndex = 0;
     std::size_t m_itemScrollOffset = 0;
     std::vector<ItemData> m_items;
