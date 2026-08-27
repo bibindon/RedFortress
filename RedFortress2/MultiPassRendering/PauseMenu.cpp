@@ -34,8 +34,6 @@ const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(225, 235, 255, 230);
-const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
-const UINT kInactiveTextColor = D3DCOLOR_RGBA(190, 200, 220, 210);
 const UINT kSuccessTextColor = D3DCOLOR_RGBA(160, 245, 175, 245);
 const UINT kErrorTextColor = D3DCOLOR_RGBA(245, 145, 145, 245);
 const std::array<const wchar_t*, 5> kTopMenuItems =
@@ -1209,50 +1207,55 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
 
 void PauseMenu::RenderExitPanel()
 {
+    const int textX = kExitPanelButtonX + 30;
+    const int cursorCenterX = kExitPanelButtonX + 15;
     if (m_returnToStageSelectEnabled)
     {
-        UINT returnColor = kInactiveTextColor;
+        m_render->DrawTextEx(m_menuItemFontId,
+                             L"ステージセレクトに戻る",
+                             textX,
+                             kExitPanelStageSelectY + 15,
+                             kTextColor);
         if (m_selectedExitPanelIndex == kExitPanelStageSelectIndex)
         {
-            returnColor = kSelectedTextColor;
+            m_render->DrawImage(kCommandCursorPath,
+                                cursorCenterX - kCommandCursorDotCenterX,
+                                kExitPanelStageSelectY + (kExitPanelButtonHeight / 2) -
+                                    kCommandCursorDotCenterY,
+                                255);
         }
-        m_render->DrawTextExCenter(m_menuItemFontId,
-                                   L"ステージセレクトに戻る",
-                                   kExitPanelButtonX,
-                                   kExitPanelStageSelectY,
-                                   kExitPanelButtonWidth,
-                                   kExitPanelButtonHeight,
-                                   returnColor);
     }
 
     if (m_returnToTitleEnabled)
     {
-        UINT titleColor = kInactiveTextColor;
+        m_render->DrawTextEx(m_menuItemFontId,
+                             L"タイトルに戻る",
+                             textX,
+                             kExitPanelTitleY + 15,
+                             kTextColor);
         if (m_selectedExitPanelIndex == kExitPanelTitleIndex)
         {
-            titleColor = kSelectedTextColor;
+            m_render->DrawImage(kCommandCursorPath,
+                                cursorCenterX - kCommandCursorDotCenterX,
+                                kExitPanelTitleY + (kExitPanelButtonHeight / 2) -
+                                    kCommandCursorDotCenterY,
+                                255);
         }
-        m_render->DrawTextExCenter(m_menuItemFontId,
-                                   L"タイトルに戻る",
-                                   kExitPanelButtonX,
-                                   kExitPanelTitleY,
-                                   kExitPanelButtonWidth,
-                                   kExitPanelButtonHeight,
-                                   titleColor);
     }
 
-    UINT gameExitColor = kInactiveTextColor;
+    m_render->DrawTextEx(m_menuItemFontId,
+                         L"ゲームを終了",
+                         textX,
+                         kExitPanelGameY + 15,
+                         kTextColor);
     if (m_selectedExitPanelIndex == kExitPanelGameIndex)
     {
-        gameExitColor = kSelectedTextColor;
+        m_render->DrawImage(kCommandCursorPath,
+                            cursorCenterX - kCommandCursorDotCenterX,
+                            kExitPanelGameY + (kExitPanelButtonHeight / 2) -
+                                kCommandCursorDotCenterY,
+                            255);
     }
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"ゲームを終了",
-                               kExitPanelButtonX,
-                               kExitPanelGameY,
-                               kExitPanelButtonWidth,
-                               kExitPanelButtonHeight,
-                               gameExitColor);
 }
 void PauseMenu::RenderTopMenu()
 {
@@ -1693,18 +1696,6 @@ void PauseMenu::RenderWeaponPanel()
 
 void PauseMenu::RenderExitConfirm()
 {
-    UINT yesColor = kInactiveTextColor;
-    if (m_selectedExitConfirmIndex == kExitConfirmYesIndex)
-    {
-        yesColor = kSelectedTextColor;
-    }
-
-    UINT noColor = kInactiveTextColor;
-    if (m_selectedExitConfirmIndex == kExitConfirmNoIndex)
-    {
-        noColor = kSelectedTextColor;
-    }
-
     const wchar_t* confirmMessage = L"ゲームを終了しますか？";
     if (m_exitConfirmAction == ExitConfirmAction::Title)
     {
@@ -1724,34 +1715,33 @@ void PauseMenu::RenderExitConfirm()
                                kExitConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight,
-                               yesColor);
+                               kTextColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"いいえ",
                                kExitConfirmNoX,
                                kExitConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight,
-                               noColor);
+                               kTextColor);
+    const int cursorCenterY = kExitConfirmY + (kExitConfirmButtonHeight / 2);
+    if (m_selectedExitConfirmIndex == kExitConfirmYesIndex)
+    {
+        m_render->DrawImage(kCommandCursorPath,
+                            kExitConfirmYesX + 20 - kCommandCursorDotCenterX,
+                            cursorCenterY - kCommandCursorDotCenterY,
+                            255);
+    }
+    else if (m_selectedExitConfirmIndex == kExitConfirmNoIndex)
+    {
+        m_render->DrawImage(kCommandCursorPath,
+                            kExitConfirmNoX + 20 - kCommandCursorDotCenterX,
+                            cursorCenterY - kCommandCursorDotCenterY,
+                            255);
+    }
 }
 
 void PauseMenu::RenderSettingsPanel()
 {
-    UINT resolutionColor = kSubTextColor;
-    if (m_selectedSettingsRow == SettingsRow::Resolution)
-    {
-        resolutionColor = kSelectedTextColor;
-    }
-    UINT windowModeColor = kSubTextColor;
-    if (m_selectedSettingsRow == SettingsRow::WindowMode)
-    {
-        windowModeColor = kSelectedTextColor;
-    }
-    UINT qualityColor = kSubTextColor;
-    if (m_selectedSettingsRow == SettingsRow::Quality)
-    {
-        qualityColor = kSelectedTextColor;
-    }
-
     const int leftX = kSettingsRowTextX;
     const int leftY = 345;
     const int leftLineHeight = 74;
@@ -1770,43 +1760,42 @@ void PauseMenu::RenderSettingsPanel()
                                42,
                                kTextColor);
 
-    std::wstring resolutionPrefix = L"  ";
-    if (m_selectedSettingsRow == SettingsRow::Resolution)
-    {
-        resolutionPrefix = L"> ";
-    }
     m_render->DrawTextEx(m_menuItemFontId,
-                         resolutionPrefix + L"解像度",
+                         L"解像度",
                          leftX,
                          leftY,
-                         resolutionColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"16:9限定",
                          leftX + 30,
                          leftY + 34,
                          kSubTextColor);
 
-    std::wstring windowModePrefix = L"  ";
-    if (m_selectedSettingsRow == SettingsRow::WindowMode)
-    {
-        windowModePrefix = L"> ";
-    }
     m_render->DrawTextEx(m_menuItemFontId,
-                         windowModePrefix + L"表示モード",
+                         L"表示モード",
                          leftX,
                          leftY + leftLineHeight,
-                         windowModeColor);
+                         kTextColor);
 
-    std::wstring qualityPrefix = L"  ";
-    if (m_selectedSettingsRow == SettingsRow::Quality)
-    {
-        qualityPrefix = L"> ";
-    }
     m_render->DrawTextEx(m_menuItemFontId,
-                         qualityPrefix + L"描画品質",
+                         L"描画品質",
                          leftX,
                          leftY + leftLineHeight * 2,
-                         qualityColor);
+                         kTextColor);
+
+    int selectedRowY = leftY;
+    if (m_selectedSettingsRow == SettingsRow::WindowMode)
+    {
+        selectedRowY = leftY + leftLineHeight;
+    }
+    else if (m_selectedSettingsRow == SettingsRow::Quality)
+    {
+        selectedRowY = leftY + leftLineHeight * 2;
+    }
+    m_render->DrawImage(kCommandCursorPath,
+                        leftX - 10 - kCommandCursorDotCenterX,
+                        selectedRowY + 13 - kCommandCursorDotCenterY,
+                        255);
 
     RenderSettingsOptionList(m_selectedSettingsRow);
 
@@ -1848,22 +1837,20 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
 
     for (int i = m_settingsOptionScrollOffset; i < optionEnd; ++i)
     {
-        std::wstring prefix = L"  ";
-        UINT color = kSubTextColor;
+        const int lineIndex = i - m_settingsOptionScrollOffset;
+        const int lineY = optionListY + lineIndex * optionLineHeight;
+        m_render->DrawTextEx(m_qualityFontId,
+                             GetSettingsOptionLabel(row, i),
+                             optionListX + 30,
+                             lineY + 9,
+                             kTextColor);
         if (i == selectedIndex)
         {
-            prefix = L"> ";
-            color = kSelectedTextColor;
+            m_render->DrawImage(kCommandCursorPath,
+                                optionListX + 15 - kCommandCursorDotCenterX,
+                                lineY + 19 - kCommandCursorDotCenterY,
+                                255);
         }
-
-        const int lineIndex = i - m_settingsOptionScrollOffset;
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   prefix + GetSettingsOptionLabel(row, i),
-                                   optionListX,
-                                   optionListY + lineIndex * optionLineHeight,
-                                   optionListWidth,
-                                   38,
-                                   color);
     }
 
     if (optionEnd < optionCount)
@@ -2354,18 +2341,6 @@ void PauseMenu::UpdateSaveConfirm()
 
 void PauseMenu::RenderSaveConfirm()
 {
-    UINT yesColor = kInactiveTextColor;
-    if (m_selectedSaveConfirmIndex == kSaveConfirmYesIndex)
-    {
-        yesColor = kSelectedTextColor;
-    }
-
-    UINT noColor = kInactiveTextColor;
-    if (m_selectedSaveConfirmIndex == kSaveConfirmNoIndex)
-    {
-        noColor = kSelectedTextColor;
-    }
-
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"セーブしますか？",
                                kConfirmPromptX,
@@ -2379,14 +2354,29 @@ void PauseMenu::RenderSaveConfirm()
                                kExitConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight,
-                               yesColor);
+                               kTextColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"いいえ",
                                kExitConfirmNoX,
                                kExitConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight,
-                               noColor);
+                               kTextColor);
+    const int cursorCenterY = kExitConfirmY + (kExitConfirmButtonHeight / 2);
+    if (m_selectedSaveConfirmIndex == kSaveConfirmYesIndex)
+    {
+        m_render->DrawImage(kCommandCursorPath,
+                            kExitConfirmYesX + 20 - kCommandCursorDotCenterX,
+                            cursorCenterY - kCommandCursorDotCenterY,
+                            255);
+    }
+    else if (m_selectedSaveConfirmIndex == kSaveConfirmNoIndex)
+    {
+        m_render->DrawImage(kCommandCursorPath,
+                            kExitConfirmNoX + 20 - kCommandCursorDotCenterX,
+                            cursorCenterY - kCommandCursorDotCenterY,
+                            255);
+    }
 }
 
 bool PauseMenu::IsOpen() const
