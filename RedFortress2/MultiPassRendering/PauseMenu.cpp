@@ -63,22 +63,28 @@ const int kSaveConfirmYesIndex = 0;
 const int kSaveConfirmNoIndex = 1;
 const int kExitConfirmButtonWidth = 150;
 const int kExitConfirmButtonHeight = 44;
-const int kExitConfirmYesX = 1010;
-const int kExitConfirmNoX = 1190;
+const int kExitConfirmYesX = 250;
+const int kExitConfirmNoX = 430;
 const int kExitConfirmY = 700;
-const int kConfirmPromptX = 970;
+const int kConfirmPromptX = 210;
 const int kConfirmPromptY = 650;
 const int kConfirmPromptWidth = 400;
 const int kConfirmPromptHeight = 36;
 const int kExitPanelStageSelectIndex = 0;
 const int kExitPanelTitleIndex = 1;
 const int kExitPanelGameIndex = 2;
-const int kExitPanelButtonX = 980;
+const int kExitPanelButtonX = 220;
 const int kExitPanelButtonWidth = 460;
 const int kExitPanelButtonHeight = 56;
 const int kExitPanelStageSelectY = 450;
 const int kExitPanelTitleY = 525;
 const int kExitPanelGameY = 600;
+const int kSettingsRowX = 200;
+const int kSettingsRowTextX = 220;
+const int kSettingsRowWidth = 260;
+const int kSettingsOptionListX = 370;
+const int kSettingsOptionListY = 342;
+const int kSettingsOptionListWidth = 430;
 const std::size_t kVisibleItemCount = 10;
 const std::size_t kVisibleWeaponCount = 11;
 const int kItemListX = 205;
@@ -985,10 +991,10 @@ void PauseMenu::UpdateSettingsPanel()
             return;
         }
 
-        const int optionListX = 970;
-        const int optionListY = 342;
+        const int optionListX = kSettingsOptionListX;
+        const int optionListY = kSettingsOptionListY;
         const int optionLineHeight = 44;
-        const int optionListWidth = 430;
+        const int optionListWidth = kSettingsOptionListWidth;
         const int visibleOptionCount = 8;
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
@@ -1258,7 +1264,12 @@ void PauseMenu::RenderTopMenu()
                          static_cast<float>(NSRender::Common::ScreenH());
     const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
     const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
-    TryGetTopMenuIndexFromPoint(baseMouseX, baseMouseY, &hoveredMenuIndex);
+    int pointedMenuIndex = -1;
+    if (TryGetTopMenuIndexFromPoint(baseMouseX, baseMouseY, &pointedMenuIndex) &&
+        IsTopMenuItemEnabled(pointedMenuIndex))
+    {
+        hoveredMenuIndex = pointedMenuIndex;
+    }
 
     for (std::size_t i = 0; i < kTopMenuItems.size(); ++i)
     {
@@ -1278,9 +1289,15 @@ void PauseMenu::RenderTopMenu()
                                    kTopMenuItemHeight,
                                    color);
 
-        const bool isCursorTarget = (menuIndex == hoveredMenuIndex) ||
-                                    (m_activeTopMenuIndex < 0 &&
-                                     menuIndex == m_selectedTopMenuIndex);
+        bool isCursorTarget = false;
+        if (hoveredMenuIndex >= 0)
+        {
+            isCursorTarget = menuIndex == hoveredMenuIndex;
+        }
+        else if (m_activeTopMenuIndex < 0)
+        {
+            isCursorTarget = menuIndex == m_selectedTopMenuIndex;
+        }
         if (isCursorTarget)
         {
             // 文字列は DrawTextExCenter で 200x44 の箱の中央に描かれる。
@@ -1735,21 +1752,21 @@ void PauseMenu::RenderSettingsPanel()
         qualityColor = kSelectedTextColor;
     }
 
-    const int leftX = 820;
+    const int leftX = kSettingsRowTextX;
     const int leftY = 345;
     const int leftLineHeight = 74;
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"設定項目",
-                               800,
+                               kSettingsRowX,
                                285,
-                               260,
+                               kSettingsRowWidth,
                                42,
                                kTextColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"選択肢",
-                               970,
+                               kSettingsOptionListX,
                                285,
-                               430,
+                               kSettingsOptionListWidth,
                                42,
                                kTextColor);
 
@@ -1795,7 +1812,7 @@ void PauseMenu::RenderSettingsPanel()
 
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"↑↓ 項目選択   ←→/Enter 選択肢変更   クリック 選択   Esc 戻る",
-                               520,
+                               170,
                                730,
                                900,
                                36,
@@ -1804,9 +1821,9 @@ void PauseMenu::RenderSettingsPanel()
 
 void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
 {
-    const int optionListX = 970;
-    const int optionListY = 342;
-    const int optionListWidth = 430;
+    const int optionListX = kSettingsOptionListX;
+    const int optionListY = kSettingsOptionListY;
+    const int optionListWidth = kSettingsOptionListWidth;
     const int optionLineHeight = 44;
     const int visibleOptionCount = 8;
     const int optionCount = GetSettingsOptionCount(row);
@@ -2153,19 +2170,19 @@ bool PauseMenu::TryGetSettingsRowFromPoint(const long x, const long y, SettingsR
         return false;
     }
 
-    if (IsPointInRect(x, y, 800, 342, 260, 62))
+    if (IsPointInRect(x, y, kSettingsRowX, 342, kSettingsRowWidth, 62))
     {
         *outRow = SettingsRow::Resolution;
         return true;
     }
 
-    if (IsPointInRect(x, y, 800, 416, 260, 62))
+    if (IsPointInRect(x, y, kSettingsRowX, 416, kSettingsRowWidth, 62))
     {
         *outRow = SettingsRow::WindowMode;
         return true;
     }
 
-    if (IsPointInRect(x, y, 800, 490, 260, 62))
+    if (IsPointInRect(x, y, kSettingsRowX, 490, kSettingsRowWidth, 62))
     {
         *outRow = SettingsRow::Quality;
         return true;
