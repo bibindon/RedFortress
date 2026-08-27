@@ -20,7 +20,11 @@ namespace
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
 const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
 const std::wstring kHeartImagePath = L"res\\2D_Image\\heart.png";
-const int kHeartImageSize = 28;
+const int kHeartImageSize = 36;
+const int kLivesDisplayX = 1320;
+const int kLivesDisplayY = 130;
+const int kLivesTextX = kLivesDisplayX + kHeartImageSize + 10;
+const int kLivesTextY = 133;
 // command_cursor.png の白い点は画像左上(0,0)〜(12,12)にあるため、点の中心は画像内 (6,6)。
 const int kCommandCursorDotCenterX = 6;
 const int kCommandCursorDotCenterY = 6;
@@ -643,16 +647,35 @@ void PauseMenu::UpdateItemList()
     }
 
     const std::size_t previousIndex = m_selectedItemIndex;
-    if (IsMenuUpPressed())
+    bool navigationInputDetected = false;
+    const long wheelDelta = InputDevice::Mouse::GetWheelDelta();
+    if (wheelDelta > 0)
     {
+        navigationInputDetected = true;
         if (m_selectedItemIndex > 0)
         {
             --m_selectedItemIndex;
         }
     }
-
-    if (IsMenuDownPressed())
+    else if (wheelDelta < 0)
     {
+        navigationInputDetected = true;
+        if (m_selectedItemIndex + 1 < ownedItems.size())
+        {
+            ++m_selectedItemIndex;
+        }
+    }
+    else if (IsMenuUpPressed())
+    {
+        navigationInputDetected = true;
+        if (m_selectedItemIndex > 0)
+        {
+            --m_selectedItemIndex;
+        }
+    }
+    else if (IsMenuDownPressed())
+    {
+        navigationInputDetected = true;
         if (m_selectedItemIndex + 1 < ownedItems.size())
         {
             ++m_selectedItemIndex;
@@ -674,7 +697,11 @@ void PauseMenu::UpdateItemList()
                          static_cast<float>(NSRender::Common::ScreenH());
     const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
     const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
-    if (IsPointInRect(baseMouseX,
+    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
+    const bool mouseMoved = mouseDelta.x != 0 || mouseDelta.y != 0;
+    if (!navigationInputDetected &&
+        mouseMoved &&
+        IsPointInRect(baseMouseX,
                       baseMouseY,
                       kItemListX,
                       kItemListY,
@@ -1117,11 +1144,16 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
         m_qualityFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 20, kSubTextColor);
     }
 
-    m_render->DrawImage(kHeartImagePath, 1130, 171, 255);
-    m_render->DrawTextEx(m_qualityFontId,
-                         std::to_wstring(lives),
-                         1168,
-                         175,
+    m_render->DrawImageSized(kHeartImagePath,
+                             kLivesDisplayX,
+                             kLivesDisplayY,
+                             kHeartImageSize,
+                             kHeartImageSize,
+                             255);
+    m_render->DrawTextEx(m_menuItemFontId,
+                         L"× " + std::to_wstring(lives),
+                         kLivesTextX,
+                         kLivesTextY,
                          kTextColor);
 
     RenderTopMenu();
