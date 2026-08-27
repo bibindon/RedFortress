@@ -232,6 +232,7 @@ private:
     void UpdateStageSelectCursorByInput();
     bool MoveToSelectedStagePortal();
     std::wstring GetSelectedStagePortalDisplayName() const;
+    void UpdateStageSelectStageNameAnimation();
     void UpdateStageSelectMaskedGaussian();
     void DrawStageSelectCursor();
     void CreateStageSelectCubes();
@@ -504,6 +505,10 @@ private:
     std::wstring m_selectedStagePortalId;
     std::wstring m_mouseOverStagePortalId;
     std::wstring m_preferredStageSelectPortalId;
+    std::wstring m_stageSelectDisplayedStageName;
+    std::wstring m_stageSelectPendingStageName;
+    float m_stageSelectStageNameAlpha = 0.0f;
+    bool m_stageSelectStageNameFadingOut = false;
 D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_hasSelectedStagePortal = false;
 

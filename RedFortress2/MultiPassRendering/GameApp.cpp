@@ -174,6 +174,8 @@ namespace
     const wchar_t* kPlayerPointLightOwnerTag = L"stage-player";
     const int kStageSelectStageNameX = 48;
     const int kStageSelectStageNameY = 42;
+    const float kStageSelectStageNameFadeOutDuration = 0.15f;
+    const float kStageSelectStageNameFadeInDuration = 0.20f;
     const int kStageSelectHintX = 900;
     const int kStageSelectHintWidth = 650;
     const int kStageSelectHintFirstLineY = 812;
@@ -4662,6 +4664,10 @@ void GameApp::InitializeStageSelectCursor()
     m_render.RemovePointLightsByOwnerTag(kStageSelectCursorLightOwnerTag);
     m_selectedStagePortalId.clear();
     m_mouseOverStagePortalId.clear();
+    m_stageSelectDisplayedStageName.clear();
+    m_stageSelectPendingStageName.clear();
+    m_stageSelectStageNameAlpha = 0.0f;
+    m_stageSelectStageNameFadingOut = false;
     m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_hasSelectedStagePortal = false;
     m_stageSelectPlayerMoveStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -4995,6 +5001,8 @@ void GameApp::UpdateStageSelectCursorByInput()
         InputDevice::Mouse::SetVisible(true);
     }
 
+    UpdateStageSelectStageNameAnimation();
+
     float directionX = 0.0f;
     float directionY = 0.0f;
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_LEFT) ||
@@ -5242,6 +5250,53 @@ std::wstring GameApp::GetSelectedStagePortalDisplayName() const
     return BuildStageComboText(m_stageManager.GetStage(targetIndex));
 }
 
+void GameApp::UpdateStageSelectStageNameAnimation()
+{
+    const std::wstring selectedStageName = GetSelectedStagePortalDisplayName();
+    if (selectedStageName != m_stageSelectPendingStageName)
+    {
+        m_stageSelectPendingStageName = selectedStageName;
+        if (m_stageSelectDisplayedStageName.empty())
+        {
+            m_stageSelectDisplayedStageName = m_stageSelectPendingStageName;
+            m_stageSelectStageNameAlpha = 0.0f;
+            m_stageSelectStageNameFadingOut = false;
+        }
+        else if (m_stageSelectDisplayedStageName != m_stageSelectPendingStageName)
+        {
+            m_stageSelectStageNameFadingOut = true;
+        }
+        else
+        {
+            m_stageSelectStageNameFadingOut = false;
+        }
+    }
+
+    if (m_stageSelectStageNameFadingOut)
+    {
+        m_stageSelectStageNameAlpha -= kTargetFrameSeconds / kStageSelectStageNameFadeOutDuration;
+        if (m_stageSelectStageNameAlpha <= 0.0f)
+        {
+            m_stageSelectStageNameAlpha = 0.0f;
+            m_stageSelectDisplayedStageName = m_stageSelectPendingStageName;
+            m_stageSelectStageNameFadingOut = false;
+        }
+        return;
+    }
+
+    if (m_stageSelectDisplayedStageName != m_stageSelectPendingStageName)
+    {
+        m_stageSelectDisplayedStageName = m_stageSelectPendingStageName;
+        m_stageSelectStageNameAlpha = 0.0f;
+    }
+
+    m_stageSelectStageNameAlpha += kTargetFrameSeconds / kStageSelectStageNameFadeInDuration;
+    if (m_stageSelectStageNameAlpha >= 1.0f)
+    {
+        m_stageSelectStageNameAlpha = 1.0f;
+    }
+}
+
 void GameApp::UpdateStageSelectMaskedGaussian()
 {
     if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen() || m_explanationManager.IsActive())
@@ -5289,14 +5344,14 @@ void GameApp::DrawStageSelectCursor()
         m_stageSelectStartButtonFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 60, D3DCOLOR_RGBA(255, 255, 255, 255));
     }
 
-    const std::wstring stageName = GetSelectedStagePortalDisplayName();
-    if (!stageName.empty())
+    if (!m_stageSelectDisplayedStageName.empty())
     {
+        const int stageNameAlpha = static_cast<int>(m_stageSelectStageNameAlpha * 255.0f + 0.5f);
         m_render.DrawTextEx(m_stageSelectFontId,
-                            stageName,
+                            m_stageSelectDisplayedStageName,
                             kStageSelectStageNameX,
                             kStageSelectStageNameY,
-                            D3DCOLOR_RGBA(255, 255, 255, 255));
+                            D3DCOLOR_RGBA(255, 255, 255, stageNameAlpha));
     }
 
     m_render.DrawTextExRight(m_stageSelectHintFontId,
