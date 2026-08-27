@@ -19,7 +19,11 @@ namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
 const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
-const int kCommandCursorSize = 32;
+// command_cursor.png の白い点は画像左上(0,0)〜(12,12)にあるため、点の中心は画像内 (6,6)。
+const int kCommandCursorDotCenterX = 6;
+const int kCommandCursorDotCenterY = 6;
+// 点の中心をずらす場合の縦位置。文字列(DT_VCENTERで箱の中央)の少し上に浮かせる。
+const int kCommandCursorVerticalOffset = 1;
 const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
@@ -1197,14 +1201,10 @@ void PauseMenu::RenderTopMenu()
     {
         const int menuIndex = static_cast<int>(i);
         const int x = kTopMenuX + menuIndex * kTopMenuItemInterval;
-        UINT color = kInactiveTextColor;
+        UINT color = kTextColor;
         if (!IsTopMenuItemEnabled(menuIndex))
         {
             color = D3DCOLOR_RGBA(110, 115, 125, 180);
-        }
-        else if (menuIndex == m_activeTopMenuIndex)
-        {
-            color = kTextColor;
         }
 
         m_render->DrawTextExCenter(m_qualityFontId,
@@ -1220,9 +1220,14 @@ void PauseMenu::RenderTopMenu()
                                      menuIndex == m_selectedTopMenuIndex);
         if (isCursorTarget)
         {
+            // 文字列は DrawTextExCenter で 200x44 の箱の中央に描かれる。
+            // 文字数が違っても文字列の中心は箱の中心( x + 幅/2 )で一定になる。
+            // 白い点の中心(画像内 +6,+6)が文字列の中心に一致するように画像位置を決める。
+            const int cursorCenterX = x + (kTopMenuItemWidth / 2);
+            const int cursorCenterY = kTopMenuY + kCommandCursorVerticalOffset;
             m_render->DrawImage(kCommandCursorPath,
-                                x + (kTopMenuItemWidth / 2) - (kCommandCursorSize / 2),
-                                kTopMenuY + (kTopMenuItemHeight - kCommandCursorSize) / 2,
+                                cursorCenterX - kCommandCursorDotCenterX,
+                                cursorCenterY - kCommandCursorDotCenterY,
                                 255);
         }
     }
