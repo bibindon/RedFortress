@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <chrono>
 #include <d3dx9.h>
 #include <string>
 #include <vector>
@@ -20,9 +21,18 @@ public:
     void Update();
     void Render();
     void Close();
+    void CloseImmediately();
     bool IsActive() const;
 
 private:
+    enum class TransitionState
+    {
+        Closed,
+        Opening,
+        Open,
+        Closing
+    };
+
     struct Explanation
     {
         std::wstring id;
@@ -33,6 +43,8 @@ private:
 
     bool IsDismissInputPressed() const;
     void Open(std::size_t explanationIndex);
+    void UpdateMaskedGaussianAnimation();
+    void CompleteClose();
 
     NSRender::Render* m_render = nullptr;
     SaveDataManager* m_saveDataManager = nullptr;
@@ -40,6 +52,10 @@ private:
     std::vector<Explanation> m_explanations;
     std::size_t m_activeIndex = 0;
     bool m_isActive = false;
+    TransitionState m_transitionState = TransitionState::Closed;
+    std::chrono::steady_clock::time_point m_transitionStartTime;
+    float m_transitionStartAmount = 0.0f;
+    float m_maskedGaussianAmount = 0.0f;
     bool m_skipInputFrame = false;
     int m_textFontId = -1;
     int m_hintFontId = -1;

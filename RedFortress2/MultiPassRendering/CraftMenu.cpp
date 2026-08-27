@@ -17,6 +17,7 @@ const std::wstring kRecipeCsvPath = L"res\\script\\CraftRecipes.csv";
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
 const int kMaskedGaussianSampleSize = 25;
+const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const std::size_t kVisibleRecipeCount = 11;
 const int kRecipeStartY = 260;
 const int kRecipeLineHeight = 42;
@@ -58,14 +59,41 @@ void CraftMenu::Open()
     {
         m_previousMouseCursorVisible = *m_mouseCursorVisible;
     }
+    m_maskedGaussianAmount = 0.0f;
+    m_transitionStartAmount = 0.0f;
+    m_transitionStartTime = std::chrono::steady_clock::now();
+    m_transitionState = TransitionState::Opening;
     m_render->SetSceneUpdatePaused(true);
-    m_render->SetPostEffectMaskedGaussianFilter(true);
     m_render->SetPostEffectMaskedGaussianMaskPath(kMenuMaskPath);
     m_render->SetPostEffectMaskedGaussianSampleSize(kMaskedGaussianSampleSize);
+    m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+    m_render->SetPostEffectMaskedGaussianFilter(true);
     SetMouseCursorVisible(true);
 }
 
 void CraftMenu::Close()
+{
+    if (!m_isOpen || m_transitionState == TransitionState::Closing)
+    {
+        return;
+    }
+
+    m_transitionStartAmount = m_maskedGaussianAmount;
+    m_transitionStartTime = std::chrono::steady_clock::now();
+    m_transitionState = TransitionState::Closing;
+}
+
+void CraftMenu::CloseImmediately()
+{
+    m_maskedGaussianAmount = 0.0f;
+    if (m_render != nullptr)
+    {
+        m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+    }
+    CompleteClose();
+}
+
+void CraftMenu::CompleteClose()
 {
     if (m_render != nullptr)
     {
@@ -73,12 +101,67 @@ void CraftMenu::Close()
         m_render->SetSceneUpdatePaused(false);
     }
     m_isOpen = false;
+    m_transitionState = TransitionState::Closed;
     SetMouseCursorVisible(m_previousMouseCursorVisible);
+}
+
+void CraftMenu::UpdateMaskedGaussianAnimation()
+{
+    if (m_render == nullptr ||
+        (m_transitionState != TransitionState::Opening &&
+         m_transitionState != TransitionState::Closing))
+    {
+        return;
+    }
+
+    float targetAmount = 1.0f;
+    if (m_transitionState == TransitionState::Closing)
+    {
+        targetAmount = 0.0f;
+    }
+
+    float transitionDistance = targetAmount - m_transitionStartAmount;
+    if (transitionDistance < 0.0f)
+    {
+        transitionDistance = -transitionDistance;
+    }
+    const float transitionDuration = kMaskedGaussianAnimationDurationSeconds * transitionDistance;
+    float progress = 1.0f;
+    if (transitionDuration > 0.0f)
+    {
+        const float elapsedSeconds = std::chrono::duration<float>(
+            std::chrono::steady_clock::now() - m_transitionStartTime).count();
+        progress = elapsedSeconds / transitionDuration;
+        progress = (std::max)(0.0f, (std::min)(progress, 1.0f));
+    }
+
+    m_maskedGaussianAmount = m_transitionStartAmount +
+                             (targetAmount - m_transitionStartAmount) * progress;
+    m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+
+    if (progress < 1.0f)
+    {
+        return;
+    }
+
+    if (m_transitionState == TransitionState::Opening)
+    {
+        m_transitionState = TransitionState::Open;
+        return;
+    }
+
+    CompleteClose();
 }
 
 void CraftMenu::Update()
 {
     if (!m_isOpen || m_recipes.empty())
+    {
+        return;
+    }
+
+    UpdateMaskedGaussianAnimation();
+    if (!m_isOpen || m_transitionState != TransitionState::Open)
     {
         return;
     }

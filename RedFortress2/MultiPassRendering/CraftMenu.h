@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <chrono>
 #include <cstddef>
 #include <string>
 #include <unordered_map>
@@ -21,6 +22,7 @@ public:
                     InventoryManager& inventory);
     void Open();
     void Close();
+    void CloseImmediately();
     void Update();
     void Render();
     bool IsOpen() const;
@@ -28,6 +30,14 @@ public:
     void SetCurrentWorld(int world);
 
 private:
+    enum class TransitionState
+    {
+        Closed,
+        Opening,
+        Open,
+        Closing
+    };
+
     struct Recipe
     {
         std::wstring id;
@@ -50,12 +60,18 @@ private:
     bool TryGetRecipeIndexFromPoint(long x, long y, std::size_t* outIndex) const;
     static bool IsPointInRect(long x, long y, int left, int top, int width, int height);
     void SetMouseCursorVisible(bool visible);
+    void UpdateMaskedGaussianAnimation();
+    void CompleteClose();
 
     NSRender::Render* m_render = nullptr;
     InventoryManager* m_inventory = nullptr;
     bool* m_mouseCursorVisible = nullptr;
     bool m_previousMouseCursorVisible = false;
     bool m_isOpen = false;
+    TransitionState m_transitionState = TransitionState::Closed;
+    std::chrono::steady_clock::time_point m_transitionStartTime;
+    float m_transitionStartAmount = 0.0f;
+    float m_maskedGaussianAmount = 0.0f;
     bool m_skipInputFrame = false;
     std::size_t m_selectedIndex = 0;
     std::size_t m_scrollOffset = 0;

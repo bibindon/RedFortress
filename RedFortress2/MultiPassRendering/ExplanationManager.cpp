@@ -1,5 +1,6 @@
 ﻿#include "ExplanationManager.h"
 
+#include <algorithm>
 #include <cerrno>
 #include <cmath>
 #include <cstdlib>
@@ -17,6 +18,7 @@ namespace
 {
 const std::wstring kMaskPath = L"res\\2D_Image\\menu_mask.png";
 const int kMaskedGaussianSampleSize = 25;
+const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kHintColor = D3DCOLOR_RGBA(220, 232, 245, 235);
 const int kLineHeight = 58;
@@ -67,7 +69,7 @@ void ExplanationManager::Initialize(NSRender::Render& render,
 void ExplanationManager::LoadForStage(const std::wstring& stageId,
                                       const std::wstring& csvPath)
 {
-    Close();
+    CloseImmediately();
     m_stageId = stageId;
     m_explanations.clear();
 
@@ -151,6 +153,11 @@ void ExplanationManager::Update()
     {
         return;
     }
+    UpdateMaskedGaussianAnimation();
+    if (!m_isActive || m_transitionState != TransitionState::Open)
+    {
+        return;
+    }
     if (m_skipInputFrame)
     {
         m_skipInputFrame = false;
@@ -200,17 +207,89 @@ void ExplanationManager::Render()
 
 void ExplanationManager::Close()
 {
+    if (!m_isActive || m_transitionState == TransitionState::Closing)
+    {
+        return;
+    }
+
+    m_transitionStartAmount = m_maskedGaussianAmount;
+    m_transitionStartTime = std::chrono::steady_clock::now();
+    m_transitionState = TransitionState::Closing;
+}
+
+void ExplanationManager::CloseImmediately()
+{
     if (!m_isActive)
     {
         return;
     }
+
+    m_maskedGaussianAmount = 0.0f;
+    if (m_render != nullptr)
+    {
+        m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+    }
+    CompleteClose();
+}
+
+void ExplanationManager::CompleteClose()
+{
     if (m_render != nullptr)
     {
         m_render->SetPostEffectMaskedGaussianFilter(false);
         m_render->SetSceneUpdatePaused(false);
     }
     m_isActive = false;
+    m_transitionState = TransitionState::Closed;
     m_skipInputFrame = false;
+}
+
+void ExplanationManager::UpdateMaskedGaussianAnimation()
+{
+    if (m_render == nullptr ||
+        (m_transitionState != TransitionState::Opening &&
+         m_transitionState != TransitionState::Closing))
+    {
+        return;
+    }
+
+    float targetAmount = 1.0f;
+    if (m_transitionState == TransitionState::Closing)
+    {
+        targetAmount = 0.0f;
+    }
+
+    float transitionDistance = targetAmount - m_transitionStartAmount;
+    if (transitionDistance < 0.0f)
+    {
+        transitionDistance = -transitionDistance;
+    }
+    const float transitionDuration = kMaskedGaussianAnimationDurationSeconds * transitionDistance;
+    float progress = 1.0f;
+    if (transitionDuration > 0.0f)
+    {
+        const float elapsedSeconds = std::chrono::duration<float>(
+            std::chrono::steady_clock::now() - m_transitionStartTime).count();
+        progress = elapsedSeconds / transitionDuration;
+        progress = (std::max)(0.0f, (std::min)(progress, 1.0f));
+    }
+
+    m_maskedGaussianAmount = m_transitionStartAmount +
+                             (targetAmount - m_transitionStartAmount) * progress;
+    m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+
+    if (progress < 1.0f)
+    {
+        return;
+    }
+
+    if (m_transitionState == TransitionState::Opening)
+    {
+        m_transitionState = TransitionState::Open;
+        return;
+    }
+
+    CompleteClose();
 }
 
 bool ExplanationManager::IsActive() const
@@ -283,8 +362,13 @@ void ExplanationManager::Open(const std::size_t explanationIndex)
     const Explanation& explanation = m_explanations.at(explanationIndex);
     m_saveDataManager->MarkExplanationShown(m_stageId, explanation.id);
     m_saveDataManager->Save();
+    m_maskedGaussianAmount = 0.0f;
+    m_transitionStartAmount = 0.0f;
+    m_transitionStartTime = std::chrono::steady_clock::now();
+    m_transitionState = TransitionState::Opening;
     m_render->SetSceneUpdatePaused(true);
     m_render->SetPostEffectMaskedGaussianMaskPath(kMaskPath);
     m_render->SetPostEffectMaskedGaussianSampleSize(kMaskedGaussianSampleSize);
+    m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
     m_render->SetPostEffectMaskedGaussianFilter(true);
 }

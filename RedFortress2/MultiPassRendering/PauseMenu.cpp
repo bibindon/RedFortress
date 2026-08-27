@@ -1,5 +1,6 @@
 ﻿#include "PauseMenu.h"
 
+#include <algorithm>
 #include <array>
 #include <string>
 #include <unordered_map>
@@ -18,6 +19,7 @@ namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
 const int kMaskedGaussianSampleSize = 25;
+const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(225, 235, 255, 230);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
@@ -231,15 +233,42 @@ void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabl
     m_itemStatusMessage.clear();
     m_selectedWeaponIndex = 0;
     m_weaponScrollOffset = 0;
+    m_maskedGaussianAmount = 0.0f;
+    m_transitionStartAmount = 0.0f;
+    m_transitionStartTime = std::chrono::steady_clock::now();
+    m_transitionState = TransitionState::Opening;
     m_render->SetSceneUpdatePaused(true);
-    m_render->SetPostEffectMaskedGaussianFilter(true);
     m_render->SetPostEffectMaskedGaussianMaskPath(kMenuMaskPath);
     m_render->SetPostEffectMaskedGaussianSampleSize(kMaskedGaussianSampleSize);
+    m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+    m_render->SetPostEffectMaskedGaussianFilter(true);
     RefreshSettingsOptions();
     SetMouseCursorVisible(true);
 }
 
 void PauseMenu::Close()
+{
+    if (!m_isOpen || m_transitionState == TransitionState::Closing)
+    {
+        return;
+    }
+
+    m_transitionStartAmount = m_maskedGaussianAmount;
+    m_transitionStartTime = std::chrono::steady_clock::now();
+    m_transitionState = TransitionState::Closing;
+}
+
+void PauseMenu::CloseImmediately()
+{
+    m_maskedGaussianAmount = 0.0f;
+    if (m_render != nullptr)
+    {
+        m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+    }
+    CompleteClose();
+}
+
+void PauseMenu::CompleteClose()
 {
     if (m_render != nullptr)
     {
@@ -248,13 +277,68 @@ void PauseMenu::Close()
     }
 
     m_isOpen = false;
+    m_transitionState = TransitionState::Closed;
     m_showExitConfirm = false;
     m_showSaveConfirm = false;
+}
+
+void PauseMenu::UpdateMaskedGaussianAnimation()
+{
+    if (m_render == nullptr ||
+        (m_transitionState != TransitionState::Opening &&
+         m_transitionState != TransitionState::Closing))
+    {
+        return;
+    }
+
+    float targetAmount = 1.0f;
+    if (m_transitionState == TransitionState::Closing)
+    {
+        targetAmount = 0.0f;
+    }
+
+    float transitionDistance = targetAmount - m_transitionStartAmount;
+    if (transitionDistance < 0.0f)
+    {
+        transitionDistance = -transitionDistance;
+    }
+    const float transitionDuration = kMaskedGaussianAnimationDurationSeconds * transitionDistance;
+    float progress = 1.0f;
+    if (transitionDuration > 0.0f)
+    {
+        const float elapsedSeconds = std::chrono::duration<float>(
+            std::chrono::steady_clock::now() - m_transitionStartTime).count();
+        progress = elapsedSeconds / transitionDuration;
+        progress = (std::max)(0.0f, (std::min)(progress, 1.0f));
+    }
+
+    m_maskedGaussianAmount = m_transitionStartAmount +
+                             (targetAmount - m_transitionStartAmount) * progress;
+    m_render->SetPostEffectMaskedGaussianAmount(m_maskedGaussianAmount);
+
+    if (progress < 1.0f)
+    {
+        return;
+    }
+
+    if (m_transitionState == TransitionState::Opening)
+    {
+        m_transitionState = TransitionState::Open;
+        return;
+    }
+
+    CompleteClose();
 }
 
 void PauseMenu::Update()
 {
     if (!m_isOpen)
+    {
+        return;
+    }
+
+    UpdateMaskedGaussianAnimation();
+    if (!m_isOpen || m_transitionState != TransitionState::Open)
     {
         return;
     }
@@ -2055,6 +2139,10 @@ std::vector<std::size_t> PauseMenu::GetOwnedWeaponIndices() const
 
 bool PauseMenu::ConsumeExitRequested()
 {
+    if (m_isOpen)
+    {
+        return false;
+    }
     const bool requested = m_exitRequested;
     m_exitRequested = false;
     return requested;
@@ -2069,6 +2157,10 @@ bool PauseMenu::ConsumeSaveRequested()
 
 bool PauseMenu::ConsumeReturnToStageSelectRequested()
 {
+    if (m_isOpen)
+    {
+        return false;
+    }
     const bool requested = m_returnToStageSelectRequested;
     m_returnToStageSelectRequested = false;
     return requested;
@@ -2076,6 +2168,10 @@ bool PauseMenu::ConsumeReturnToStageSelectRequested()
 
 bool PauseMenu::ConsumeReturnToTitleRequested()
 {
+    if (m_isOpen)
+    {
+        return false;
+    }
     const bool requested = m_returnToTitleRequested;
     m_returnToTitleRequested = false;
     return requested;

@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <chrono>
 #include <cstddef>
 #include <functional>
 #include <string>
@@ -23,6 +24,7 @@ public:
     void Toggle();
     void Open(bool saveEnabled, bool returnToStageSelectEnabled, bool returnToTitleEnabled);
     void Close();
+    void CloseImmediately();
     void Update();
     void Render(const std::wstring& stageName, int lives);
     bool ConsumeExitRequested();
@@ -76,6 +78,14 @@ private:
         Title,
     };
 
+    enum class TransitionState
+    {
+        Closed,
+        Opening,
+        Open,
+        Closing
+    };
+
     void LoadItems();
     void LoadWeapons();
     void UpdateTopMenu();
@@ -118,6 +128,8 @@ private:
     std::vector<std::size_t> GetOwnedItemIndices() const;
     std::vector<std::size_t> GetOwnedWeaponIndices() const;
     void SetMouseCursorVisible(bool visible);
+    void UpdateMaskedGaussianAnimation();
+    void CompleteClose();
     bool IsTopMenuItemEnabled(int menuIndex) const;
     void MoveTopMenuSelection(int direction);
     bool TryGetTopMenuIndexFromPoint(long x, long y, int* outMenuIndex) const;
@@ -127,6 +139,10 @@ private:
     InventoryManager* m_inventory = nullptr;
     bool* m_mouseCursorVisible = nullptr;
     bool m_isOpen = false;
+    TransitionState m_transitionState = TransitionState::Closed;
+    std::chrono::steady_clock::time_point m_transitionStartTime;
+    float m_transitionStartAmount = 0.0f;
+    float m_maskedGaussianAmount = 0.0f;
     bool m_exitRequested = false;
     bool m_showExitConfirm = false;
     bool m_skipInputFrame = false;

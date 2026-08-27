@@ -1219,7 +1219,7 @@ void GameApp::Run()
                 m_slideShowManager.ProcessInput();
                 if (m_slideShowManager.Update())
                 {
-                    m_pauseMenu.Close();
+                    m_pauseMenu.CloseImmediately();
                     m_gameState = GameState::EndingFin;
                     DrawEndingFin();
                 }
@@ -1231,7 +1231,7 @@ void GameApp::Run()
             }
             else
             {
-                m_pauseMenu.Close();
+                m_pauseMenu.CloseImmediately();
                 m_gameState = GameState::EndingFin;
                 DrawEndingFin();
             }
@@ -2825,10 +2825,10 @@ void GameApp::Finalize()
 
     if (m_craftMenu.IsOpen())
     {
-        m_craftMenu.Close();
+        m_craftMenu.CloseImmediately();
     }
 
-    m_explanationManager.Close();
+    m_explanationManager.CloseImmediately();
 
     m_interactionManager.Clear();
     m_pressurePlateManager.Clear(m_render);
@@ -5306,13 +5306,15 @@ void GameApp::UpdateStageSelectMaskedGaussian()
 
     const bool isEnabled = m_render.IsPostEffectMaskedGaussianFilterEnabled();
     const std::wstring currentMaskPath = m_render.GetPostEffectMaskedGaussianMaskPath();
+    const float currentAmount = m_render.GetPostEffectMaskedGaussianAmount();
     const bool shouldEnable = m_gameState == GameState::Playing && IsCurrentStageSelect();
     if (shouldEnable)
     {
-        if (!isEnabled || currentMaskPath != kStageSelectStartMaskPath)
+        if (!isEnabled || currentMaskPath != kStageSelectStartMaskPath || currentAmount != 1.0f)
         {
             m_render.SetPostEffectMaskedGaussianMaskPath(kStageSelectStartMaskPath);
             m_render.SetPostEffectMaskedGaussianSampleSize(kStageSelectMaskedGaussianSampleSize);
+            m_render.SetPostEffectMaskedGaussianAmount(1.0f);
             m_render.SetPostEffectMaskedGaussianFilter(true);
         }
         return;
@@ -6816,7 +6818,7 @@ void GameApp::UpdateTitleByInput()
 
 void GameApp::BeginStageExit()
 {
-    m_pauseMenu.Close();
+    m_pauseMenu.CloseImmediately();
     m_mouseCursorVisible = false;
     InputDevice::Mouse::SetVisible(false);
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -6884,7 +6886,7 @@ void GameApp::UpdateStageExit()
 
 void GameApp::BeginBossDefeat(const D3DXVECTOR3& bossPosition)
 {
-    m_pauseMenu.Close();
+    m_pauseMenu.CloseImmediately();
     m_mouseCursorVisible = false;
     InputDevice::Mouse::SetVisible(false);
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -7690,8 +7692,8 @@ void GameApp::StartGameOverSequence()
     }
     RestoreQteVisualEffectImmediate();
 
-    m_pauseMenu.Close();
-    m_craftMenu.Close();
+    m_pauseMenu.CloseImmediately();
+    m_craftMenu.CloseImmediately();
     m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_pendingJump = false;
     m_playerKnockbackFrames = 0;
@@ -7839,10 +7841,10 @@ void GameApp::BeginReturnToTitle()
         return;
     }
 
-    m_pauseMenu.Close();
+    m_pauseMenu.CloseImmediately();
     if (m_craftMenu.IsOpen())
     {
-        m_craftMenu.Close();
+        m_craftMenu.CloseImmediately();
     }
 
     RestoreQteVisualEffectImmediate();
