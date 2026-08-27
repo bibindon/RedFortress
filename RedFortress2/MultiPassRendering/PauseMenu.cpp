@@ -19,6 +19,8 @@ namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
 const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
+const std::wstring kHeartImagePath = L"res\\2D_Image\\heart.png";
+const int kHeartImageSize = 28;
 // command_cursor.png の白い点は画像左上(0,0)〜(12,12)にあるため、点の中心は画像内 (6,6)。
 const int kCommandCursorDotCenterX = 6;
 const int kCommandCursorDotCenterY = 6;
@@ -665,15 +667,32 @@ void PauseMenu::UpdateItemList()
 
     EnsureSelectedItemVisible();
 
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    if (IsPointInRect(baseMouseX,
+                      baseMouseY,
+                      kItemListX,
+                      kItemListY,
+                      520,
+                      static_cast<int>(kVisibleItemCount) * kItemListLineHeight))
+    {
+        const std::size_t hoveredIndex = m_itemScrollOffset +
+            static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+        if (hoveredIndex < ownedItems.size() && hoveredIndex != m_selectedItemIndex)
+        {
+            m_selectedItemIndex = hoveredIndex;
+            m_itemStatusMessage.clear();
+            GameAudio::PlayMenuMove();
+        }
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                             static_cast<float>(NSRender::Common::ScreenW());
-        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                             static_cast<float>(NSRender::Common::ScreenH());
-        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
-        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           kItemListX,
@@ -823,15 +842,31 @@ void PauseMenu::UpdateWeaponList()
 
     EnsureSelectedWeaponVisible();
 
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    if (IsPointInRect(baseMouseX,
+                      baseMouseY,
+                      kItemListX,
+                      kItemListY,
+                      520,
+                      static_cast<int>(kVisibleWeaponCount) * kItemListLineHeight))
+    {
+        const std::size_t hoveredIndex = m_weaponScrollOffset +
+            static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+        if (hoveredIndex < ownedWeapons.size() && hoveredIndex != m_selectedWeaponIndex)
+        {
+            m_selectedWeaponIndex = hoveredIndex;
+            GameAudio::PlayMenuMove();
+        }
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                             static_cast<float>(NSRender::Common::ScreenW());
-        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                             static_cast<float>(NSRender::Common::ScreenH());
-        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
-        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           kItemListX,
@@ -1076,22 +1111,12 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
         m_qualityFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 20, kSubTextColor);
     }
 
-    m_render->DrawTextExCenter(m_stageNameFontId,
-                               stageName,
-                               880,
-                               130,
-                               560,
-                               60,
-                               kTextColor);
-
-    const std::wstring livesText = L"残機: " + std::to_wstring(lives);
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               livesText,
-                               1000,
-                               165,
-                               320,
-                               40,
-                               kSubTextColor);
+    m_render->DrawImage(kHeartImagePath, 1130, 171, 255);
+    m_render->DrawTextEx(m_qualityFontId,
+                         std::to_wstring(lives),
+                         1168,
+                         175,
+                         kTextColor);
 
     RenderTopMenu();
 
@@ -1364,14 +1389,14 @@ void PauseMenu::RenderItemPanel()
                          L"アイテム名",
                          kItemListX,
                          kItemListHeaderY,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"所持数",
                                kItemCountColumnX,
                                kItemListHeaderY,
                                kItemCountColumnWidth,
                                kItemListLineHeight,
-                               kSubTextColor);
+                               kTextColor);
 
     const std::vector<std::size_t> ownedItems = GetOwnedItemIndices();
     if (ownedItems.empty())
@@ -1380,7 +1405,7 @@ void PauseMenu::RenderItemPanel()
                              L"所持しているアイテムはありません。",
                              kItemListX,
                              kItemListY,
-                             kSubTextColor);
+                             kTextColor);
         return;
     }
 
@@ -1393,28 +1418,28 @@ void PauseMenu::RenderItemPanel()
 
     for (std::size_t i = m_itemScrollOffset; i < itemEnd; ++i)
     {
-        std::wstring prefix = L"  ";
-        UINT color = kSubTextColor;
-        if (i == m_selectedItemIndex)
-        {
-            prefix = L"> ";
-            color = kSelectedTextColor;
-        }
-
         const int lineIndex = static_cast<int>(i - m_itemScrollOffset);
         const ItemData& item = m_items.at(ownedItems.at(i));
+        const int rowY = kItemListY + lineIndex * kItemListLineHeight;
         m_render->DrawTextEx(m_qualityFontId,
-                             prefix + item.name,
+                             item.name,
                              kItemListX,
-                             kItemListY + lineIndex * kItemListLineHeight,
-                             color);
+                             rowY,
+                             kTextColor);
         m_render->DrawTextExCenter(m_qualityFontId,
                                    std::to_wstring(m_inventory->GetItemCount(item.id)),
                                    kItemCountColumnX,
-                                   kItemListY + lineIndex * kItemListLineHeight,
+                                   rowY,
                                    kItemCountColumnWidth,
                                    kItemListLineHeight,
-                                   color);
+                                   kTextColor);
+        if (i == m_selectedItemIndex)
+        {
+            m_render->DrawImage(kCommandCursorPath,
+                                kItemListX - 10 - kCommandCursorDotCenterX,
+                                rowY + (kItemListLineHeight / 2) - kCommandCursorDotCenterY,
+                                255);
+        }
     }
 
     const std::wstring positionText = std::to_wstring(m_selectedItemIndex + 1) +
@@ -1426,7 +1451,7 @@ void PauseMenu::RenderItemPanel()
                                730,
                                560,
                                36,
-                               kSubTextColor);
+                               kTextColor);
 
     const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
     const std::wstring illustrationPath = GetItemIllustrationPath(selectedItem.id);
@@ -1445,39 +1470,39 @@ void PauseMenu::RenderItemPanel()
                          selectedItem.name,
                          detailX,
                          365,
-                         kSelectedTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"分類：" + selectedItem.category,
                          detailX,
                          430,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"入手方法：" + selectedItem.acquisition,
                          detailX,
                          475,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"主な用途：" + selectedItem.primaryUse,
                          detailX,
                          520,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"説明",
-                         800,
-                         590,
+                         detailX,
+                         565,
                          kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          selectedItem.description,
-                         800,
-                         625,
-                         kSubTextColor);
+                         detailX,
+                         600,
+                         kTextColor);
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"Enter / Space  使用   Esc  戻る",
                                820,
                                720,
                                640,
                                28,
-                               kSubTextColor);
+                               kTextColor);
     if (!m_itemStatusMessage.empty())
     {
         m_render->DrawTextExCenter(m_qualityFontId,
@@ -1515,7 +1540,7 @@ void PauseMenu::RenderWeaponPanel()
                              L"所持している武器はありません。",
                              kItemListX,
                              kItemListY,
-                             kSubTextColor);
+                             kTextColor);
         return;
     }
 
@@ -1528,21 +1553,21 @@ void PauseMenu::RenderWeaponPanel()
 
     for (std::size_t i = m_weaponScrollOffset; i < weaponEnd; ++i)
     {
-        std::wstring prefix = L"  ";
-        UINT color = kSubTextColor;
-        if (i == m_selectedWeaponIndex)
-        {
-            prefix = L"> ";
-            color = kSelectedTextColor;
-        }
-
         const int lineIndex = static_cast<int>(i - m_weaponScrollOffset);
         const WeaponData& weapon = m_weapons.at(ownedWeapons.at(i));
+        const int rowY = kItemListY + lineIndex * kItemListLineHeight;
         m_render->DrawTextEx(m_qualityFontId,
-                             prefix + weapon.name,
+                             weapon.name,
                              kItemListX,
-                             kItemListY + lineIndex * kItemListLineHeight,
-                             color);
+                             rowY,
+                             kTextColor);
+        if (i == m_selectedWeaponIndex)
+        {
+            m_render->DrawImage(kCommandCursorPath,
+                                kItemListX - 10 - kCommandCursorDotCenterX,
+                                rowY + (kItemListLineHeight / 2) - kCommandCursorDotCenterY,
+                                255);
+        }
     }
 
     const std::wstring positionText = std::to_wstring(m_selectedWeaponIndex + 1) +
@@ -1554,7 +1579,7 @@ void PauseMenu::RenderWeaponPanel()
                                730,
                                560,
                                36,
-                               kSubTextColor);
+                               kTextColor);
 
     const WeaponData& selectedWeapon = m_weapons.at(ownedWeapons.at(m_selectedWeaponIndex));
     const int detailX = 800;
@@ -1562,27 +1587,27 @@ void PauseMenu::RenderWeaponPanel()
                          selectedWeapon.name,
                          detailX,
                          365,
-                         kSelectedTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"分類：" + selectedWeapon.category,
                          detailX,
                          430,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"入手方法：" + selectedWeapon.acquisition,
                          detailX,
                          475,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"特徴：" + selectedWeapon.feature,
                          detailX,
                          520,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"状態：使用可能",
                          detailX,
                          565,
-                         kSubTextColor);
+                         kTextColor);
     m_render->DrawTextEx(m_qualityFontId,
                          L"説明",
                          detailX,
@@ -1600,14 +1625,14 @@ void PauseMenu::RenderWeaponPanel()
                          descriptionLine1,
                          detailX,
                          665,
-                         kSubTextColor);
+                         kTextColor);
     if (!descriptionLine2.empty())
     {
         m_render->DrawTextEx(m_qualityFontId,
                              descriptionLine2,
                              detailX,
                              695,
-                             kSubTextColor);
+                             kTextColor);
     }
 }
 
