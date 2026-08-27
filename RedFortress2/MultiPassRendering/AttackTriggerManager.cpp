@@ -32,7 +32,7 @@ namespace
     const float kRotationSpeed = D3DX_PI * 0.5f;
     const float kLeverVisualTargetAngle = D3DXToRadian(45.0f);
     const float kLeverVisualRotationSpeed = D3DXToRadian(180.0f);
-    const float kLeverHandleHingeHeight = 0.575f;
+    const float kLeverHandleHingeHeight = 0.2f;
     const float kLiftSpeed = 3.0f;
     const float kPlayerAttackCenterHeight = 1.0f;
 
