@@ -263,6 +263,12 @@ void CraftMenu::Render()
         return;
     }
 
+    // 開くときはアニメーション完了後に、閉じるときはアニメーション開始と同時にテキストを出し入れする。
+    if (m_transitionState != TransitionState::Open)
+    {
+        return;
+    }
+
     if (m_titleFontId < 0)
     {
         m_titleFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 32, kTextColor);
