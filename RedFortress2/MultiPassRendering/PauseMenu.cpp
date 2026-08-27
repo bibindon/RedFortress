@@ -18,6 +18,8 @@
 namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
+const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
+const int kCommandCursorSize = 32;
 const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
@@ -350,6 +352,11 @@ void PauseMenu::Update()
         return;
     }
 
+    if (TryActivateTopMenuFromMouseClick())
+    {
+        return;
+    }
+
     if (m_focusArea == FocusArea::ItemList)
     {
         UpdateItemList();
@@ -475,66 +482,9 @@ void PauseMenu::UpdateTopMenu()
         GameAudio::PlayMenuMove();
     }
 
-    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    if (TryActivateTopMenuFromMouseClick())
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                             static_cast<float>(NSRender::Common::ScreenW());
-        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                             static_cast<float>(NSRender::Common::ScreenH());
-        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
-        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
-        int clickedMenuIndex = -1;
-        if (TryGetTopMenuIndexFromPoint(baseMouseX, baseMouseY, &clickedMenuIndex))
-        {
-            if (!IsTopMenuItemEnabled(clickedMenuIndex))
-            {
-                return;
-            }
-
-            if (clickedMenuIndex != m_selectedTopMenuIndex)
-            {
-                m_selectedTopMenuIndex = clickedMenuIndex;
-                GameAudio::PlayMenuMove();
-            }
-
-            GameAudio::PlayMenuConfirm();
-            m_activeTopMenuIndex = clickedMenuIndex;
-            if (m_activeTopMenuIndex == kItemMenuIndex)
-            {
-                m_focusArea = FocusArea::ItemList;
-            }
-            else if (m_activeTopMenuIndex == kWeaponMenuIndex)
-            {
-                m_focusArea = FocusArea::WeaponList;
-            }
-            else if (m_activeTopMenuIndex == kSettingsMenuIndex)
-            {
-                RefreshSettingsOptions();
-                m_focusArea = FocusArea::SettingsPanel;
-                m_selectedSettingsRow = SettingsRow::Resolution;
-                EnsureSelectedSettingsOptionVisible();
-            }
-            else if (m_activeTopMenuIndex == kSaveMenuIndex)
-            {
-                m_showSaveConfirm = true;
-                m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
-            }
-            else if (m_activeTopMenuIndex == kExitMenuIndex)
-            {
-                m_focusArea = FocusArea::ExitPanel;
-                m_selectedExitPanelIndex = kExitPanelGameIndex;
-                if (m_returnToTitleEnabled)
-                {
-                    m_selectedExitPanelIndex = kExitPanelTitleIndex;
-                }
-                if (m_returnToStageSelectEnabled)
-                {
-                    m_selectedExitPanelIndex = kExitPanelStageSelectIndex;
-                }
-            }
-            return;
-        }
+        return;
     }
 
     if (IsMenuConfirmPressed())
@@ -544,41 +494,7 @@ void PauseMenu::UpdateTopMenu()
             return;
         }
 
-        GameAudio::PlayMenuConfirm();
-        m_activeTopMenuIndex = m_selectedTopMenuIndex;
-        if (m_activeTopMenuIndex == kItemMenuIndex)
-        {
-            m_focusArea = FocusArea::ItemList;
-        }
-        else if (m_activeTopMenuIndex == kWeaponMenuIndex)
-        {
-            m_focusArea = FocusArea::WeaponList;
-        }
-        else if (m_activeTopMenuIndex == kSettingsMenuIndex)
-        {
-            RefreshSettingsOptions();
-            m_focusArea = FocusArea::SettingsPanel;
-            m_selectedSettingsRow = SettingsRow::Resolution;
-            EnsureSelectedSettingsOptionVisible();
-        }
-        else if (m_activeTopMenuIndex == kSaveMenuIndex)
-        {
-            m_showSaveConfirm = true;
-            m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
-        }
-        else if (m_activeTopMenuIndex == kExitMenuIndex)
-        {
-            m_focusArea = FocusArea::ExitPanel;
-            m_selectedExitPanelIndex = kExitPanelGameIndex;
-            if (m_returnToTitleEnabled)
-            {
-                m_selectedExitPanelIndex = kExitPanelTitleIndex;
-            }
-            if (m_returnToStageSelectEnabled)
-            {
-                m_selectedExitPanelIndex = kExitPanelStageSelectIndex;
-            }
-        }
+        ActivateTopMenu(m_selectedTopMenuIndex);
     }
 
     if (IsMenuCancelPressed())
@@ -1267,6 +1183,16 @@ void PauseMenu::RenderExitPanel()
 }
 void PauseMenu::RenderTopMenu()
 {
+    int hoveredMenuIndex = -1;
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    TryGetTopMenuIndexFromPoint(baseMouseX, baseMouseY, &hoveredMenuIndex);
+
     for (std::size_t i = 0; i < kTopMenuItems.size(); ++i)
     {
         const int menuIndex = static_cast<int>(i);
@@ -1276,9 +1202,9 @@ void PauseMenu::RenderTopMenu()
         {
             color = D3DCOLOR_RGBA(110, 115, 125, 180);
         }
-        else if (menuIndex == m_selectedTopMenuIndex)
+        else if (menuIndex == m_activeTopMenuIndex)
         {
-            color = kSelectedTextColor;
+            color = kTextColor;
         }
 
         m_render->DrawTextExCenter(m_qualityFontId,
@@ -1288,6 +1214,17 @@ void PauseMenu::RenderTopMenu()
                                    kTopMenuItemWidth,
                                    kTopMenuItemHeight,
                                    color);
+
+        const bool isCursorTarget = (menuIndex == hoveredMenuIndex) ||
+                                    (m_activeTopMenuIndex < 0 &&
+                                     menuIndex == m_selectedTopMenuIndex);
+        if (isCursorTarget)
+        {
+            m_render->DrawImage(kCommandCursorPath,
+                                x + (kTopMenuItemWidth / 2) - (kCommandCursorSize / 2),
+                                kTopMenuY + (kTopMenuItemHeight - kCommandCursorSize) / 2,
+                                255);
+        }
     }
 }
 
@@ -1322,6 +1259,82 @@ void PauseMenu::MoveTopMenuSelection(const int direction)
             return;
         }
     }
+}
+
+void PauseMenu::ActivateTopMenu(const int menuIndex)
+{
+    if (menuIndex != m_selectedTopMenuIndex)
+    {
+        m_selectedTopMenuIndex = menuIndex;
+        GameAudio::PlayMenuMove();
+    }
+
+    GameAudio::PlayMenuConfirm();
+    m_showSaveConfirm = false;
+    m_showExitConfirm = false;
+    m_activeTopMenuIndex = menuIndex;
+    if (m_activeTopMenuIndex == kItemMenuIndex)
+    {
+        m_focusArea = FocusArea::ItemList;
+    }
+    else if (m_activeTopMenuIndex == kWeaponMenuIndex)
+    {
+        m_focusArea = FocusArea::WeaponList;
+    }
+    else if (m_activeTopMenuIndex == kSettingsMenuIndex)
+    {
+        RefreshSettingsOptions();
+        m_focusArea = FocusArea::SettingsPanel;
+        m_selectedSettingsRow = SettingsRow::Resolution;
+        EnsureSelectedSettingsOptionVisible();
+    }
+    else if (m_activeTopMenuIndex == kSaveMenuIndex)
+    {
+        m_showSaveConfirm = true;
+        m_selectedSaveConfirmIndex = kSaveConfirmNoIndex;
+    }
+    else if (m_activeTopMenuIndex == kExitMenuIndex)
+    {
+        m_focusArea = FocusArea::ExitPanel;
+        m_selectedExitPanelIndex = kExitPanelGameIndex;
+        if (m_returnToTitleEnabled)
+        {
+            m_selectedExitPanelIndex = kExitPanelTitleIndex;
+        }
+        if (m_returnToStageSelectEnabled)
+        {
+            m_selectedExitPanelIndex = kExitPanelStageSelectIndex;
+        }
+    }
+}
+
+bool PauseMenu::TryActivateTopMenuFromMouseClick()
+{
+    if (!InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        return false;
+    }
+
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    int clickedMenuIndex = -1;
+    if (!TryGetTopMenuIndexFromPoint(baseMouseX, baseMouseY, &clickedMenuIndex))
+    {
+        return false;
+    }
+
+    if (!IsTopMenuItemEnabled(clickedMenuIndex))
+    {
+        return false;
+    }
+
+    ActivateTopMenu(clickedMenuIndex);
+    return true;
 }
 
 void PauseMenu::RenderItemPanel()

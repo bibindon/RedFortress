@@ -132,6 +132,8 @@ private:
     void CompleteClose();
     bool IsTopMenuItemEnabled(int menuIndex) const;
     void MoveTopMenuSelection(int direction);
+    void ActivateTopMenu(int menuIndex);
+    bool TryActivateTopMenuFromMouseClick();
     bool TryGetTopMenuIndexFromPoint(long x, long y, int* outMenuIndex) const;
     static bool IsPointInRect(long x, long y, int left, int top, int width, int height);
 
