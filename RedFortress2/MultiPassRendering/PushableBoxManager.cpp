@@ -27,6 +27,8 @@ namespace
     const float kPlayerRadius = 0.3f;
     const float kPlayerHeight = 1.7f;
     const float kContactTolerance = 0.08f;
+    const float kMinimumPushDirectionAmount = 0.8660254f;
+    const float kPushDelaySeconds = 1.0f;
 
     std::wstring Trim(const std::wstring& value)
     {
@@ -72,6 +74,7 @@ void PushableBoxManager::Initialize(NSRender::Render& render)
 {
     m_render = &render;
     m_boxes.clear();
+    ResetPushState();
 }
 
 void PushableBoxManager::LoadForStage(NSRender::Render& render, const std::wstring& csvPath)
@@ -154,6 +157,7 @@ void PushableBoxManager::LoadForStage(NSRender::Render& render, const std::wstri
 void PushableBoxManager::Clear()
 {
     GameAudio::StopPushableBoxMovement();
+    ResetPushState();
     for (PushableBox& box : m_boxes)
     {
         if (m_render != nullptr && box.meshId >= 0)
@@ -175,7 +179,8 @@ void PushableBoxManager::Clear()
 }
 
 void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
-                                const D3DXVECTOR3& playerVelocity,
+                                const D3DXVECTOR3& playerMoveDirection,
+                                const float playerMoveSpeed,
                                 const bool playerGrounded,
                                 const float deltaSeconds)
 {
@@ -184,24 +189,40 @@ void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
         std::abort();
     }
 
-    if (m_render == nullptr || m_boxes.empty() || !playerGrounded)
+    if (m_render == nullptr || m_boxes.empty() || !playerGrounded ||
+        playerMoveSpeed <= 0.0001f)
     {
         GameAudio::StopPushableBoxMovement();
+        ResetPushState();
         return;
     }
 
-    const D3DXVECTOR3 horizontalVelocity(playerVelocity.x, 0.0f, playerVelocity.z);
-    if (D3DXVec3LengthSq(&horizontalVelocity) <= 0.0001f)
+    const D3DXVECTOR3 horizontalDirection(playerMoveDirection.x,
+                                           0.0f,
+                                           playerMoveDirection.z);
+    if (D3DXVec3LengthSq(&horizontalDirection) <= 0.0001f)
     {
         GameAudio::StopPushableBoxMovement();
+        ResetPushState();
         return;
     }
 
     std::size_t selectedIndex = m_boxes.size();
     float selectedDistanceSq = 0.0f;
+    PushFace selectedFace = PushFace::None;
+    D3DXVECTOR3 selectedPushDirection(0.0f, 0.0f, 0.0f);
+    float selectedDirectionAmount = 0.0f;
     for (std::size_t i = 0; i < m_boxes.size(); ++i)
     {
-        if (!IsPlayerPushingBox(m_boxes[i], playerPosition, horizontalVelocity))
+        PushFace face = PushFace::None;
+        D3DXVECTOR3 pushDirection(0.0f, 0.0f, 0.0f);
+        float directionAmount = 0.0f;
+        if (!TryGetPlayerPush(m_boxes[i],
+                              playerPosition,
+                              horizontalDirection,
+                              &face,
+                              &pushDirection,
+                              &directionAmount))
         {
             continue;
         }
@@ -212,17 +233,37 @@ void PushableBoxManager::Update(const D3DXVECTOR3& playerPosition,
         {
             selectedIndex = i;
             selectedDistanceSq = distanceSq;
+            selectedFace = face;
+            selectedPushDirection = pushDirection;
+            selectedDirectionAmount = directionAmount;
         }
     }
 
     if (selectedIndex >= m_boxes.size())
     {
         GameAudio::StopPushableBoxMovement();
+        ResetPushState();
         return;
     }
 
     PushableBox& box = m_boxes[selectedIndex];
-    const D3DXVECTOR3 requestedMovement = horizontalVelocity * deltaSeconds;
+    if (m_pushBoxId != box.id || m_pushFace != selectedFace)
+    {
+        ResetPushState();
+        m_pushBoxId = box.id;
+        m_pushFace = selectedFace;
+    }
+
+    m_pushElapsedSeconds += deltaSeconds;
+    if (m_pushElapsedSeconds < kPushDelaySeconds)
+    {
+        GameAudio::StopPushableBoxMovement();
+        return;
+    }
+
+    const float pushSpeed = playerMoveSpeed * selectedDirectionAmount;
+    const D3DXVECTOR3 requestedMovement =
+        selectedPushDirection * pushSpeed * deltaSeconds;
     D3DXVECTOR3 movedMovement(0.0f, 0.0f, 0.0f);
     PhysicsLib::PhysicsLib::TryMovePushable(box.physicsId,
                                             requestedMovement,
@@ -258,7 +299,15 @@ bool PushableBoxManager::IsPlayerPushingAnyBox(
 
     for (const PushableBox& box : m_boxes)
     {
-        if (IsPlayerPushingBox(box, playerPosition, horizontalDirection))
+        PushFace face = PushFace::None;
+        D3DXVECTOR3 pushDirection(0.0f, 0.0f, 0.0f);
+        float directionAmount = 0.0f;
+        if (TryGetPlayerPush(box,
+                             playerPosition,
+                             horizontalDirection,
+                             &face,
+                             &pushDirection,
+                             &directionAmount))
         {
             return true;
         }
@@ -300,10 +349,33 @@ std::size_t PushableBoxManager::GetBoxCount() const
     return m_boxes.size();
 }
 
-bool PushableBoxManager::IsPlayerPushingBox(const PushableBox& box,
-                                            const D3DXVECTOR3& playerPosition,
-                                            const D3DXVECTOR3& playerVelocity) const
+bool PushableBoxManager::TryGetPlayerPush(
+    const PushableBox& box,
+    const D3DXVECTOR3& playerPosition,
+    const D3DXVECTOR3& playerMoveDirection,
+    PushFace* outFace,
+    D3DXVECTOR3* outPushDirection,
+    float* outDirectionAmount) const
 {
+    if (outFace == nullptr || outPushDirection == nullptr ||
+        outDirectionAmount == nullptr)
+    {
+        std::abort();
+    }
+
+    *outFace = PushFace::None;
+    *outPushDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    *outDirectionAmount = 0.0f;
+
+    D3DXVECTOR3 normalizedDirection(playerMoveDirection.x,
+                                     0.0f,
+                                     playerMoveDirection.z);
+    if (D3DXVec3LengthSq(&normalizedDirection) <= 0.0001f)
+    {
+        return false;
+    }
+    D3DXVec3Normalize(&normalizedDirection, &normalizedDirection);
+
     const float halfWidth = kBoxWidth * PositiveScale(box.scale.x) * 0.5f;
     const float halfDepth = kBoxDepth * PositiveScale(box.scale.z) * 0.5f;
     const float boxBottom = box.position.y;
@@ -337,17 +409,88 @@ bool PushableBoxManager::IsPlayerPushingBox(const PushableBox& box,
         return false;
     }
 
-    const bool pushPositiveX = playerVelocity.x > 0.0001f &&
-                               playerMaxX >= boxMinX - kContactTolerance &&
-                               playerPosition.x < box.position.x;
-    const bool pushNegativeX = playerVelocity.x < -0.0001f &&
-                               playerMinX <= boxMaxX + kContactTolerance &&
-                               playerPosition.x > box.position.x;
-    const bool pushPositiveZ = playerVelocity.z > 0.0001f &&
-                               playerMaxZ >= boxMinZ - kContactTolerance &&
-                               playerPosition.z < box.position.z;
-    const bool pushNegativeZ = playerVelocity.z < -0.0001f &&
-                               playerMinZ <= boxMaxZ + kContactTolerance &&
-                               playerPosition.z > box.position.z;
-    return pushPositiveX || pushNegativeX || pushPositiveZ || pushNegativeZ;
+    PushFace bestFace = PushFace::None;
+    D3DXVECTOR3 bestPushDirection(0.0f, 0.0f, 0.0f);
+    float bestDirectionAmount = 0.0f;
+
+    const bool touchesNegativeX =
+        std::fabs(playerMaxX - boxMinX) <= kContactTolerance &&
+        playerPosition.x < box.position.x;
+    if (touchesNegativeX)
+    {
+        const D3DXVECTOR3 pushDirection(1.0f, 0.0f, 0.0f);
+        const float directionAmount =
+            D3DXVec3Dot(&normalizedDirection, &pushDirection);
+        if (directionAmount > bestDirectionAmount)
+        {
+            bestFace = PushFace::NegativeX;
+            bestPushDirection = pushDirection;
+            bestDirectionAmount = directionAmount;
+        }
+    }
+
+    const bool touchesPositiveX =
+        std::fabs(playerMinX - boxMaxX) <= kContactTolerance &&
+        playerPosition.x > box.position.x;
+    if (touchesPositiveX)
+    {
+        const D3DXVECTOR3 pushDirection(-1.0f, 0.0f, 0.0f);
+        const float directionAmount =
+            D3DXVec3Dot(&normalizedDirection, &pushDirection);
+        if (directionAmount > bestDirectionAmount)
+        {
+            bestFace = PushFace::PositiveX;
+            bestPushDirection = pushDirection;
+            bestDirectionAmount = directionAmount;
+        }
+    }
+
+    const bool touchesNegativeZ =
+        std::fabs(playerMaxZ - boxMinZ) <= kContactTolerance &&
+        playerPosition.z < box.position.z;
+    if (touchesNegativeZ)
+    {
+        const D3DXVECTOR3 pushDirection(0.0f, 0.0f, 1.0f);
+        const float directionAmount =
+            D3DXVec3Dot(&normalizedDirection, &pushDirection);
+        if (directionAmount > bestDirectionAmount)
+        {
+            bestFace = PushFace::NegativeZ;
+            bestPushDirection = pushDirection;
+            bestDirectionAmount = directionAmount;
+        }
+    }
+
+    const bool touchesPositiveZ =
+        std::fabs(playerMinZ - boxMaxZ) <= kContactTolerance &&
+        playerPosition.z > box.position.z;
+    if (touchesPositiveZ)
+    {
+        const D3DXVECTOR3 pushDirection(0.0f, 0.0f, -1.0f);
+        const float directionAmount =
+            D3DXVec3Dot(&normalizedDirection, &pushDirection);
+        if (directionAmount > bestDirectionAmount)
+        {
+            bestFace = PushFace::PositiveZ;
+            bestPushDirection = pushDirection;
+            bestDirectionAmount = directionAmount;
+        }
+    }
+
+    if (bestDirectionAmount < kMinimumPushDirectionAmount)
+    {
+        return false;
+    }
+
+    *outFace = bestFace;
+    *outPushDirection = bestPushDirection;
+    *outDirectionAmount = bestDirectionAmount;
+    return true;
+}
+
+void PushableBoxManager::ResetPushState()
+{
+    m_pushBoxId = -1;
+    m_pushFace = PushFace::None;
+    m_pushElapsedSeconds = 0.0f;
 }

@@ -27,9 +27,10 @@ public:
     void LoadForStage(NSRender::Render& render, const std::wstring& csvPath);
     void Clear();
 
-    // Move one box using the horizontal player velocity.
+    // Move one box using the horizontal player input after a continuous push delay.
     void Update(const D3DXVECTOR3& playerPosition,
-                const D3DXVECTOR3& playerVelocity,
+                const D3DXVECTOR3& playerMoveDirection,
+                float playerMoveSpeed,
                 bool playerGrounded,
                 float deltaSeconds);
 
@@ -44,10 +45,26 @@ public:
     std::size_t GetBoxCount() const;
 
 private:
-    bool IsPlayerPushingBox(const PushableBox& box,
-                           const D3DXVECTOR3& playerPosition,
-                           const D3DXVECTOR3& playerVelocity) const;
+    enum class PushFace
+    {
+        None,
+        NegativeX,
+        PositiveX,
+        NegativeZ,
+        PositiveZ
+    };
+
+    bool TryGetPlayerPush(const PushableBox& box,
+                          const D3DXVECTOR3& playerPosition,
+                          const D3DXVECTOR3& playerMoveDirection,
+                          PushFace* outFace,
+                          D3DXVECTOR3* outPushDirection,
+                          float* outDirectionAmount) const;
+    void ResetPushState();
 
     NSRender::Render* m_render = nullptr;
     std::vector<PushableBox> m_boxes;
+    int m_pushBoxId = -1;
+    PushFace m_pushFace = PushFace::None;
+    float m_pushElapsedSeconds = 0.0f;
 };

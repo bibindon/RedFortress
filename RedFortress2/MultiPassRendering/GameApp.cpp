@@ -1753,7 +1753,8 @@ void GameApp::Run()
             m_lavaFloodManager.Update(m_render, kTargetFrameSeconds);
             m_lavaRiseManager.Update(m_render, kTargetFrameSeconds);
             m_pushableBoxManager.Update(m_playerMover.GetPosition(),
-                                         m_playerMover.GetVelocity(),
+                                         m_pendingMove,
+                                         m_playerMover.GetSettings().moveSpeed,
                                          m_playerMover.IsGrounded(),
                                          kTargetFrameSeconds);
             m_pressurePlateManager.Update(m_render,
