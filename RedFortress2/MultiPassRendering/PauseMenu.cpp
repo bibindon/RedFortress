@@ -200,6 +200,7 @@ void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabl
 
     m_isOpen = true;
     m_exitRequested = false;
+    GameAudio::PlayMenuOpen();
     m_showExitConfirm = false;
     m_showSaveConfirm = false;
     m_saveRequested = false;

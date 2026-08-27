@@ -55,6 +55,7 @@ void CraftMenu::Open()
     m_selectedIndex = 0;
     m_scrollOffset = 0;
     m_statusMessage.clear();
+    GameAudio::PlayCraftOpen();
     if (m_mouseCursorVisible != nullptr)
     {
         m_previousMouseCursorVisible = *m_mouseCursorVisible;

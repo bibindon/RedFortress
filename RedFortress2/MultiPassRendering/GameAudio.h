@@ -21,6 +21,9 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
 void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();
+void PlayMenuOpen();
+void PlayCraftOpen();
+void PlayExplanationOpen();
 void PlaySaveComplete();
 void BeginBgmFadeOut(int frames);
 void UpdateBgmFadeOut();

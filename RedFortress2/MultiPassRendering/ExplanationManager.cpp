@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include "SaveDataManager.h"
+#include "GameAudio.h"
 #include "../../InputDevice/InputDevice/InputDevice.h"
 #include "../../RedFortressCommand/Command/HeaderOnlyCsv.hpp"
 #include "../../RedFortressRender/Render/Common.h"
@@ -359,6 +360,7 @@ void ExplanationManager::Open(const std::size_t explanationIndex)
     m_activeIndex = explanationIndex;
     m_isActive = true;
     m_skipInputFrame = true;
+    GameAudio::PlayExplanationOpen();
     const Explanation& explanation = m_explanations.at(explanationIndex);
     m_saveDataManager->MarkExplanationShown(m_stageId, explanation.id);
     m_saveDataManager->Save();
