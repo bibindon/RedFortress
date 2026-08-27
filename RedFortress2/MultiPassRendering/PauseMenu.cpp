@@ -544,16 +544,57 @@ void PauseMenu::UpdateExitPanel()
         }
     }
 
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
+    const bool mouseMoved = mouseDelta.x != 0 || mouseDelta.y != 0;
+    if (mouseMoved)
+    {
+        int hoveredIndex = -1;
+        if (m_returnToStageSelectEnabled &&
+            IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitPanelButtonX,
+                          kExitPanelStageSelectY,
+                          kExitPanelButtonWidth,
+                          kExitPanelButtonHeight))
+        {
+            hoveredIndex = kExitPanelStageSelectIndex;
+        }
+        else if (m_returnToTitleEnabled &&
+                 IsPointInRect(baseMouseX,
+                               baseMouseY,
+                               kExitPanelButtonX,
+                               kExitPanelTitleY,
+                               kExitPanelButtonWidth,
+                               kExitPanelButtonHeight))
+        {
+            hoveredIndex = kExitPanelTitleIndex;
+        }
+        else if (IsPointInRect(baseMouseX,
+                               baseMouseY,
+                               kExitPanelButtonX,
+                               kExitPanelGameY,
+                               kExitPanelButtonWidth,
+                               kExitPanelButtonHeight))
+        {
+            hoveredIndex = kExitPanelGameIndex;
+        }
+
+        if (hoveredIndex >= 0 && hoveredIndex != m_selectedExitPanelIndex)
+        {
+            m_selectedExitPanelIndex = hoveredIndex;
+            GameAudio::PlayMenuMove();
+        }
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                             static_cast<float>(NSRender::Common::ScreenW());
-        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                             static_cast<float>(NSRender::Common::ScreenH());
-        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
-        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
-
         if (m_returnToStageSelectEnabled &&
             IsPointInRect(baseMouseX,
                           baseMouseY,
@@ -968,15 +1009,52 @@ void PauseMenu::UpdateSettingsPanel()
         MoveSelectedSettingsOption(1);
     }
 
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    const int optionLineHeight = 44;
+    const int visibleOptionCount = 8;
+    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
+    const bool mouseMoved = mouseDelta.x != 0 || mouseDelta.y != 0;
+    if (mouseMoved)
+    {
+        SettingsRow hoveredRow;
+        if (TryGetSettingsRowFromPoint(baseMouseX, baseMouseY, &hoveredRow))
+        {
+            if (hoveredRow != m_selectedSettingsRow)
+            {
+                m_selectedSettingsRow = hoveredRow;
+                EnsureSelectedSettingsOptionVisible();
+                GameAudio::PlayMenuMove();
+            }
+        }
+        else if (IsPointInRect(baseMouseX,
+                               baseMouseY,
+                               kSettingsOptionListX,
+                               kSettingsOptionListY,
+                               kSettingsOptionListWidth,
+                               optionLineHeight * visibleOptionCount))
+        {
+            const int hoveredRowIndex =
+                static_cast<int>((baseMouseY - kSettingsOptionListY) / optionLineHeight);
+            const int hoveredOptionIndex = m_settingsOptionScrollOffset + hoveredRowIndex;
+            if (hoveredOptionIndex >= 0 &&
+                hoveredOptionIndex < GetSettingsOptionCount(m_selectedSettingsRow) &&
+                hoveredOptionIndex != GetSelectedSettingsOptionIndex(m_selectedSettingsRow))
+            {
+                SetSelectedSettingsOptionIndex(m_selectedSettingsRow, hoveredOptionIndex);
+                EnsureSelectedSettingsOptionVisible();
+                GameAudio::PlayMenuMove();
+            }
+        }
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                             static_cast<float>(NSRender::Common::ScreenW());
-        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                             static_cast<float>(NSRender::Common::ScreenH());
-        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
-        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
         SettingsRow clickedRow;
         if (TryGetSettingsRowFromPoint(baseMouseX, baseMouseY, &clickedRow))
         {
@@ -991,9 +1069,7 @@ void PauseMenu::UpdateSettingsPanel()
 
         const int optionListX = kSettingsOptionListX;
         const int optionListY = kSettingsOptionListY;
-        const int optionLineHeight = 44;
         const int optionListWidth = kSettingsOptionListWidth;
-        const int visibleOptionCount = 8;
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           optionListX,
@@ -1035,15 +1111,46 @@ void PauseMenu::UpdateExitConfirm()
         GameAudio::PlayMenuMove();
     }
 
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
+    const bool mouseMoved = mouseDelta.x != 0 || mouseDelta.y != 0;
+    if (mouseMoved)
+    {
+        int hoveredIndex = -1;
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitConfirmYesX,
+                          kExitConfirmY,
+                          kExitConfirmButtonWidth,
+                          kExitConfirmButtonHeight))
+        {
+            hoveredIndex = kExitConfirmYesIndex;
+        }
+        else if (IsPointInRect(baseMouseX,
+                               baseMouseY,
+                               kExitConfirmNoX,
+                               kExitConfirmY,
+                               kExitConfirmButtonWidth,
+                               kExitConfirmButtonHeight))
+        {
+            hoveredIndex = kExitConfirmNoIndex;
+        }
+
+        if (hoveredIndex >= 0 && hoveredIndex != m_selectedExitConfirmIndex)
+        {
+            m_selectedExitConfirmIndex = hoveredIndex;
+            GameAudio::PlayMenuMove();
+        }
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                             static_cast<float>(NSRender::Common::ScreenW());
-        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                             static_cast<float>(NSRender::Common::ScreenH());
-        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
-        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           kExitConfirmYesX,
@@ -2277,15 +2384,46 @@ void PauseMenu::UpdateSaveConfirm()
         GameAudio::PlayMenuMove();
     }
 
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
+    const bool mouseMoved = mouseDelta.x != 0 || mouseDelta.y != 0;
+    if (mouseMoved)
+    {
+        int hoveredIndex = -1;
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kExitConfirmYesX,
+                          kExitConfirmY,
+                          kExitConfirmButtonWidth,
+                          kExitConfirmButtonHeight))
+        {
+            hoveredIndex = kSaveConfirmYesIndex;
+        }
+        else if (IsPointInRect(baseMouseX,
+                               baseMouseY,
+                               kExitConfirmNoX,
+                               kExitConfirmY,
+                               kExitConfirmButtonWidth,
+                               kExitConfirmButtonHeight))
+        {
+            hoveredIndex = kSaveConfirmNoIndex;
+        }
+
+        if (hoveredIndex >= 0 && hoveredIndex != m_selectedSaveConfirmIndex)
+        {
+            m_selectedSaveConfirmIndex = hoveredIndex;
+            GameAudio::PlayMenuMove();
+        }
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
-        const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
-        const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
-                             static_cast<float>(NSRender::Common::ScreenW());
-        const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
-                             static_cast<float>(NSRender::Common::ScreenH());
-        const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
-        const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           kExitConfirmYesX,
