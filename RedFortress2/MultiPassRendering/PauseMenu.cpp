@@ -300,10 +300,11 @@ void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabl
     m_returnToStageSelectEnabled = returnToStageSelectEnabled;
     m_returnToTitleEnabled = returnToTitleEnabled;
     m_skipInputFrame = true;
-    m_focusArea = FocusArea::TopMenu;
+    // メニューを開いたら最初からアイテム一覧を表示する。
+    m_focusArea = FocusArea::ItemList;
     m_selectedSettingsRow = SettingsRow::Resolution;
-    m_selectedTopMenuIndex = 0;
-    m_activeTopMenuIndex = -1;
+    m_selectedTopMenuIndex = kItemMenuIndex;
+    m_activeTopMenuIndex = kItemMenuIndex;
     m_selectedExitConfirmIndex = kExitConfirmNoIndex;
     m_exitConfirmAction = ExitConfirmAction::Game;
     m_selectedExitPanelIndex = kExitPanelGameIndex;
