@@ -20,7 +20,13 @@ namespace
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
 const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
 const std::wstring kHeartImagePath = L"res\\2D_Image\\heart.png";
+const std::wstring kWeaponClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
+const std::wstring kWeaponSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
+const std::wstring kWeaponBusterIconPath = L"res\\2D_Image\\attack_buster_icon.png";
+const std::wstring kWeaponBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
 const std::wstring kSettingsArrowButtonImagePath = L"res\\2D_Image\\settings_button_arrow.png";
+const std::wstring kSettingsLeftArrowImagePath = L"res\\2D_Image\\settings_arrow_left.png";
+const std::wstring kSettingsRightArrowImagePath = L"res\\2D_Image\\settings_arrow_right.png";
 const std::wstring kSettingsApplyButtonImagePath = L"res\\2D_Image\\settings_button_apply.png";
 const std::wstring kSettingsCancelButtonImagePath = L"res\\2D_Image\\settings_button_cancel.png";
 const int kHeartImageSize = 36;
@@ -37,6 +43,7 @@ const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(225, 235, 255, 230);
+const UINT kItemListHeaderTextColor = D3DCOLOR_RGBA(180, 180, 180, 230);
 const UINT kSuccessTextColor = D3DCOLOR_RGBA(160, 245, 175, 245);
 const UINT kErrorTextColor = D3DCOLOR_RGBA(245, 145, 145, 245);
 const std::array<const wchar_t*, 5> kTopMenuItems =
@@ -94,6 +101,9 @@ const int kSettingsOptionListWidth = 300;
 const int kSettingsValueHeight = 62;
 const int kSettingsArrowWidth = 80;
 const int kSettingsArrowHeight = 62;
+const int kSettingsArrowIconSize = 24;
+const int kSettingsArrowIconOffsetX = (kSettingsArrowWidth - kSettingsArrowIconSize) / 2;
+const int kSettingsArrowIconOffsetY = (kSettingsArrowHeight - kSettingsArrowIconSize) / 2;
 const int kSettingsLeftArrowX = 390;
 const int kSettingsRightArrowX = 790;
 const int kSettingsApplyX = 460;
@@ -106,15 +116,22 @@ const int kSettingsCancelWidth = 190;
 const int kSettingsCancelHeight = kSettingsApplyHeight;
 const int kSettingsButtonTransparency = 64;
 const int kDisabledSettingsButtonTransparency = 32;
+const int kSettingsArrowIconTransparency = 245;
+const int kDisabledSettingsArrowIconTransparency = 90;
 const UINT kDisabledSettingsTextColor = D3DCOLOR_RGBA(120, 125, 135, 190);
 const std::size_t kVisibleItemCount = 10;
 const std::size_t kVisibleWeaponCount = 11;
 const int kItemListX = 205;
-const int kItemListHeaderY = 350;
+const int kItemListHeaderY = 320;
+const int kItemPanelListY = 355;
 const int kItemListY = 385;
 const int kItemListLineHeight = 34;
 const int kItemCountColumnX = 610;
 const int kItemCountColumnWidth = 100;
+const int kWeaponListIconX = kItemListX;
+const int kWeaponListIconSize = 28;
+const int kWeaponListTextX = kWeaponListIconX + kWeaponListIconSize + 12;
+const int kWeaponListCursorCenterYOffset = 10;
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
 const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
@@ -206,6 +223,27 @@ bool IsMenuCancelPressed()
         return true;
     }
     return false;
+}
+
+std::wstring GetWeaponIconPath(const std::wstring& weaponId)
+{
+    if (weaponId == L"W001")
+    {
+        return kWeaponClubIconPath;
+    }
+    if (weaponId == L"W002")
+    {
+        return kWeaponSlashIconPath;
+    }
+    if (weaponId == L"W003")
+    {
+        return kWeaponBusterIconPath;
+    }
+    if (weaponId == L"W004")
+    {
+        return kWeaponBombIconPath;
+    }
+    return L"";
 }
 }
 
@@ -772,12 +810,12 @@ void PauseMenu::UpdateItemList()
         IsPointInRect(baseMouseX,
                       baseMouseY,
                       kItemListX,
-                      kItemListY,
+                      kItemPanelListY,
                       520,
                       static_cast<int>(kVisibleItemCount) * kItemListLineHeight))
     {
         const std::size_t hoveredIndex = m_itemScrollOffset +
-            static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+            static_cast<std::size_t>((baseMouseY - kItemPanelListY) / kItemListLineHeight);
         if (hoveredIndex < ownedItems.size() && hoveredIndex != m_selectedItemIndex)
         {
             m_selectedItemIndex = hoveredIndex;
@@ -791,12 +829,12 @@ void PauseMenu::UpdateItemList()
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           kItemListX,
-                          kItemListY,
+                          kItemPanelListY,
                           520,
                           static_cast<int>(kVisibleItemCount) * kItemListLineHeight))
         {
             const std::size_t clickedIndex = m_itemScrollOffset +
-                static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+                static_cast<std::size_t>((baseMouseY - kItemPanelListY) / kItemListLineHeight);
             if (clickedIndex < ownedItems.size())
             {
                 if (clickedIndex != m_selectedItemIndex)
@@ -1563,34 +1601,18 @@ bool PauseMenu::TryActivateTopMenuFromMouseClick()
 
 void PauseMenu::RenderItemPanel()
 {
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"アイテム一覧",
-                               170,
-                               300,
-                               560,
-                               44,
-                               kTextColor);
-
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"アイテム詳細",
-                               820,
-                               300,
-                               600,
-                               44,
-                               kTextColor);
-
     m_render->DrawTextEx(m_qualityFontId,
                          L"アイテム名",
                          kItemListX,
                          kItemListHeaderY,
-                         kTextColor);
+                         kItemListHeaderTextColor);
     m_render->DrawTextExCenter(m_qualityFontId,
                                L"所持数",
                                kItemCountColumnX,
                                kItemListHeaderY,
                                kItemCountColumnWidth,
                                kItemListLineHeight,
-                               kTextColor);
+                               kItemListHeaderTextColor);
 
     const std::vector<std::size_t> ownedItems = GetOwnedItemIndices();
     if (ownedItems.empty())
@@ -1598,7 +1620,7 @@ void PauseMenu::RenderItemPanel()
         m_render->DrawTextEx(m_qualityFontId,
                              L"所持しているアイテムはありません。",
                              kItemListX,
-                             kItemListY,
+                             kItemPanelListY,
                              kTextColor);
         return;
     }
@@ -1614,7 +1636,7 @@ void PauseMenu::RenderItemPanel()
     {
         const int lineIndex = static_cast<int>(i - m_itemScrollOffset);
         const ItemData& item = m_items.at(ownedItems.at(i));
-        const int rowY = kItemListY + lineIndex * kItemListLineHeight;
+        const int rowY = kItemPanelListY + lineIndex * kItemListLineHeight;
         m_render->DrawTextEx(m_qualityFontId,
                              item.name,
                              kItemListX,
@@ -1635,17 +1657,6 @@ void PauseMenu::RenderItemPanel()
                                 255);
         }
     }
-
-    const std::wstring positionText = std::to_wstring(m_selectedItemIndex + 1) +
-                                      L" / " +
-                                      std::to_wstring(ownedItems.size());
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               positionText,
-                               170,
-                               730,
-                               560,
-                               36,
-                               kTextColor);
 
     const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
     const std::wstring illustrationPath = GetItemIllustrationPath(selectedItem.id);
@@ -1711,22 +1722,6 @@ void PauseMenu::RenderItemPanel()
 
 void PauseMenu::RenderWeaponPanel()
 {
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"武器一覧",
-                               170,
-                               300,
-                               560,
-                               44,
-                               kTextColor);
-
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"武器詳細",
-                               820,
-                               300,
-                               600,
-                               44,
-                               kTextColor);
-
     const std::vector<std::size_t> ownedWeapons = GetOwnedWeaponIndices();
     if (ownedWeapons.empty())
     {
@@ -1750,16 +1745,26 @@ void PauseMenu::RenderWeaponPanel()
         const int lineIndex = static_cast<int>(i - m_weaponScrollOffset);
         const WeaponData& weapon = m_weapons.at(ownedWeapons.at(i));
         const int rowY = kItemListY + lineIndex * kItemListLineHeight;
+        const std::wstring iconPath = GetWeaponIconPath(weapon.id);
+        if (!iconPath.empty())
+        {
+            m_render->DrawImageSized(iconPath,
+                                     kWeaponListIconX,
+                                     rowY - 4,
+                                     kWeaponListIconSize,
+                                     kWeaponListIconSize,
+                                     255);
+        }
         m_render->DrawTextEx(m_qualityFontId,
                              weapon.name,
-                             kItemListX,
+                             kWeaponListTextX,
                              rowY,
                              kTextColor);
         if (i == m_selectedWeaponIndex)
         {
             m_render->DrawImage(kCommandCursorPath,
                                 kItemListX - 10 - kCommandCursorDotCenterX,
-                                rowY + (kItemListLineHeight / 2) - kCommandCursorDotCenterY,
+                                rowY + kWeaponListCursorCenterYOffset - kCommandCursorDotCenterY,
                                 255);
         }
     }
@@ -1880,21 +1885,6 @@ void PauseMenu::RenderSettingsPanel()
 {
     const int leftX = kSettingsRowTextX;
     const int leftY = kSettingsFirstRowY + 9;
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"設定項目",
-                               kSettingsRowX,
-                               285,
-                               kSettingsRowWidth,
-                               42,
-                               kTextColor);
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"選択肢",
-                               kSettingsOptionListX,
-                               285,
-                               kSettingsOptionListWidth,
-                               42,
-                               kTextColor);
-
     m_render->DrawTextEx(m_menuItemFontId,
                          L"解像度",
                          leftX,
@@ -1974,54 +1964,44 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
         selectedRowY += kSettingsRowInterval * 2;
     }
 
-    UINT leftArrowColor = kTextColor;
-    UINT rightArrowColor = kTextColor;
+    int leftArrowButtonTransparency = kSettingsButtonTransparency;
+    int leftArrowIconTransparency = kSettingsArrowIconTransparency;
     if (selectedIndex <= 0)
     {
-        leftArrowColor = kDisabledSettingsTextColor;
+        leftArrowButtonTransparency = kDisabledSettingsButtonTransparency;
+        leftArrowIconTransparency = kDisabledSettingsArrowIconTransparency;
     }
+    int rightArrowButtonTransparency = kSettingsButtonTransparency;
+    int rightArrowIconTransparency = kSettingsArrowIconTransparency;
     if (selectedIndex >= optionCount - 1)
     {
-        rightArrowColor = kDisabledSettingsTextColor;
-    }
-
-    int leftArrowTransparency = kSettingsButtonTransparency;
-    if (selectedIndex <= 0)
-    {
-        leftArrowTransparency = kDisabledSettingsButtonTransparency;
-    }
-    int rightArrowTransparency = kSettingsButtonTransparency;
-    if (selectedIndex >= optionCount - 1)
-    {
-        rightArrowTransparency = kDisabledSettingsButtonTransparency;
+        rightArrowButtonTransparency = kDisabledSettingsButtonTransparency;
+        rightArrowIconTransparency = kDisabledSettingsArrowIconTransparency;
     }
     m_render->DrawImageSized(kSettingsArrowButtonImagePath,
                              kSettingsLeftArrowX,
                              selectedRowY,
                              kSettingsArrowWidth,
                              kSettingsArrowHeight,
-                             leftArrowTransparency);
+                             leftArrowButtonTransparency);
     m_render->DrawImageSized(kSettingsArrowButtonImagePath,
                              kSettingsRightArrowX,
                              selectedRowY,
                              kSettingsArrowWidth,
                              kSettingsArrowHeight,
-                             rightArrowTransparency);
-
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"◀",
-                               kSettingsLeftArrowX,
-                               selectedRowY,
-                               kSettingsArrowWidth,
-                               kSettingsArrowHeight,
-                               leftArrowColor);
-    m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"▶",
-                               kSettingsRightArrowX,
-                               selectedRowY,
-                               kSettingsArrowWidth,
-                               kSettingsArrowHeight,
-                               rightArrowColor);
+                             rightArrowButtonTransparency);
+    m_render->DrawImageSized(kSettingsLeftArrowImagePath,
+                             kSettingsLeftArrowX + kSettingsArrowIconOffsetX,
+                             selectedRowY + kSettingsArrowIconOffsetY,
+                             kSettingsArrowIconSize,
+                             kSettingsArrowIconSize,
+                             leftArrowIconTransparency);
+    m_render->DrawImageSized(kSettingsRightArrowImagePath,
+                             kSettingsRightArrowX + kSettingsArrowIconOffsetX,
+                             selectedRowY + kSettingsArrowIconOffsetY,
+                             kSettingsArrowIconSize,
+                             kSettingsArrowIconSize,
+                             rightArrowIconTransparency);
 
     UINT applyColor = kDisabledSettingsTextColor;
     if (IsSettingsDirty())
