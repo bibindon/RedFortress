@@ -68,6 +68,11 @@ const int kConfirmPromptX = 210;
 const int kConfirmPromptY = 650;
 const int kConfirmPromptWidth = 400;
 const int kConfirmPromptHeight = 36;
+const int kSaveConfirmYesX = 220;
+const int kSaveConfirmNoX = 400;
+const int kSaveConfirmY = 410;
+const int kSaveConfirmPromptX = 220;
+const int kSaveConfirmPromptY = 350;
 const int kExitPanelStageSelectIndex = 0;
 const int kExitPanelTitleIndex = 1;
 const int kExitPanelGameIndex = 2;
@@ -1297,13 +1302,6 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
 
     if (m_activeTopMenuIndex == kSaveMenuIndex)
     {
-        m_render->DrawTextExCenter(m_menuItemFontId,
-                                   L"セーブしますか？",
-                                   1040,
-                                   510,
-                                   400,
-                                   56,
-                                   kTextColor);
         if (m_showSaveConfirm)
         {
             RenderSaveConfirm();
@@ -2519,8 +2517,8 @@ void PauseMenu::UpdateSaveConfirm()
         int hoveredIndex = -1;
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
-                          kExitConfirmYesX,
-                          kExitConfirmY,
+                          kSaveConfirmYesX,
+                          kSaveConfirmY,
                           kExitConfirmButtonWidth,
                           kExitConfirmButtonHeight))
         {
@@ -2528,8 +2526,8 @@ void PauseMenu::UpdateSaveConfirm()
         }
         else if (IsPointInRect(baseMouseX,
                                baseMouseY,
-                               kExitConfirmNoX,
-                               kExitConfirmY,
+                               kSaveConfirmNoX,
+                               kSaveConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight))
         {
@@ -2547,8 +2545,8 @@ void PauseMenu::UpdateSaveConfirm()
     {
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
-                          kExitConfirmYesX,
-                          kExitConfirmY,
+                          kSaveConfirmYesX,
+                          kSaveConfirmY,
                           kExitConfirmButtonWidth,
                           kExitConfirmButtonHeight))
         {
@@ -2561,8 +2559,8 @@ void PauseMenu::UpdateSaveConfirm()
 
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
-                          kExitConfirmNoX,
-                          kExitConfirmY,
+                          kSaveConfirmNoX,
+                          kSaveConfirmY,
                           kExitConfirmButtonWidth,
                           kExitConfirmButtonHeight))
         {
@@ -2600,39 +2598,37 @@ void PauseMenu::UpdateSaveConfirm()
 
 void PauseMenu::RenderSaveConfirm()
 {
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               L"セーブしますか？",
-                               kConfirmPromptX,
-                               kConfirmPromptY,
-                               kConfirmPromptWidth,
-                               kConfirmPromptHeight,
-                               kSubTextColor);
+    m_render->DrawTextEx(m_menuItemFontId,
+                         L"セーブする",
+                         kSaveConfirmPromptX,
+                         kSaveConfirmPromptY,
+                         kTextColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"はい",
-                               kExitConfirmYesX,
-                               kExitConfirmY,
+                               kSaveConfirmYesX,
+                               kSaveConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight,
                                kTextColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"いいえ",
-                               kExitConfirmNoX,
-                               kExitConfirmY,
+                               kSaveConfirmNoX,
+                               kSaveConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight,
                                kTextColor);
-    const int cursorCenterY = kExitConfirmY + (kExitConfirmButtonHeight / 2);
+    const int cursorCenterY = kSaveConfirmY + (kExitConfirmButtonHeight / 2);
     if (m_selectedSaveConfirmIndex == kSaveConfirmYesIndex)
     {
         m_render->DrawImage(kCommandCursorPath,
-                            kExitConfirmYesX + 20 - kCommandCursorDotCenterX,
+                            kSaveConfirmYesX + 20 - kCommandCursorDotCenterX,
                             cursorCenterY - kCommandCursorDotCenterY,
                             255);
     }
     else if (m_selectedSaveConfirmIndex == kSaveConfirmNoIndex)
     {
         m_render->DrawImage(kCommandCursorPath,
-                            kExitConfirmNoX + 20 - kCommandCursorDotCenterX,
+                            kSaveConfirmNoX + 20 - kCommandCursorDotCenterX,
                             cursorCenterY - kCommandCursorDotCenterY,
                             255);
     }

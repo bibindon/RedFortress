@@ -150,6 +150,8 @@ namespace
     const std::wstring kPortalPillarModelPath = L"res\\model\\portal\\light_pillar.x";
     const std::wstring kPortalFlagModelPath = L"res\\model\\portal\\black_flag.x";
     const std::wstring kPortalFlagAnimCsvPath = L"res\\model\\portal\\black_flag.csv";
+    const float kPortalStepsScale = 2.0f;
+    const float kPortalStepsPositionYOffset = -1.0f;
     const int kPortalClearDelayFrames = 150;
     const float kPortalPillarTouchRadius = 0.9f;
     const float kPortalPillarLightHeight = 1.2f;
@@ -7326,11 +7328,13 @@ void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
 {
     m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
     m_portalBasePosition = D3DXVECTOR3(clearPosition.x, clearPosition.y - 1.0f, clearPosition.z);
+    const D3DXVECTOR3 portalStepsPosition =
+        m_portalBasePosition + D3DXVECTOR3(0.0f, kPortalStepsPositionYOffset, 0.0f);
 
     m_portalStepsMeshId = m_render.AddMeshMix(kPortalStepsModelPath,
-                                               m_portalBasePosition,
+                                               portalStepsPosition,
                                                D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                               1.0f,
+                                               kPortalStepsScale,
                                                -1.0f,
                                                false,
                                                false,
@@ -7341,7 +7345,12 @@ void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
                                               0.5f);
     if (m_portalCollisionId >= 0)
     {
-        PhysicsWorld::SetTransform(m_portalCollisionId, m_portalBasePosition);
+        PhysicsWorld::SetTransform(m_portalCollisionId,
+                                   portalStepsPosition,
+                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                   D3DXVECTOR3(kPortalStepsScale,
+                                               kPortalStepsScale,
+                                               kPortalStepsScale));
     }
 
     m_portalPillarShown = false;
