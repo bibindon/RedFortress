@@ -140,7 +140,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
     case PlayerAttackType::SwordAttack:
         definition.durationFrames = 24;
         definition.hitDelayFrames = 12;
-        definition.damage = 2;
+        definition.damage = 4;
         definition.range = 2.1f;
         definition.verticalMinOffset = 0.2f;
         definition.verticalMaxOffset = 1.7f;
@@ -154,7 +154,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
     case PlayerAttackType::SwordStrongAttack:
         definition.durationFrames = 57;
         definition.hitDelayFrames = 28;
-        definition.damage = 5;
+        definition.damage = 10;
         definition.range = 2.1f;
         definition.verticalMinOffset = 0.2f;
         definition.verticalMaxOffset = 1.7f;

@@ -1935,7 +1935,7 @@ void GameApp::Run()
                             {
                                 BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                             }
-                            else
+                            else if (!IsSwordAttackType(attackType))
                             {
                                 const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
                                     m_playerMover.GetPosition(), m_playerYaw,
@@ -1948,14 +1948,7 @@ void GameApp::Run()
                                     if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
                                     {
                                         m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
-                                        if (IsSwordAttackType(attackType))
-                                        {
-                                            GameAudio::PlaySlashHit();
-                                        }
-                                        else
-                                        {
-                                            GameAudio::PlayAttackHit();
-                                        }
+                                        GameAudio::PlayAttackHit();
                                         BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                                     }
                                 }
@@ -7147,6 +7140,7 @@ void GameApp::BeginStageClearVisual()
             m_render.StopMeshMixSkinAnimBlink(m_playerMeshId);
             m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, false);
             m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
+            SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
         }
         return;
     }
