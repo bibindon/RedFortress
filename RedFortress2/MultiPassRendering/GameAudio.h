@@ -15,6 +15,7 @@ void Update(HWND windowHandle,
             const SoundLib::Vector3& listenerTop);
 void PlayLoadingEnvironment();
 void PlayTitleMusic();
+void PlayGameOverMusic();
 void PlayEndingMusic();
 void PlayStoryMusic();
 void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world, const bool isCleared);

@@ -276,7 +276,7 @@ private:
     enum class PlayerAnimState { Idle, Walk, Run, Jump, Attack, Dash, BusterAim, BusterLower, Death };
     enum class GameState { Loading, Title, SlideShow, StageIntro, Playing, StageExit, BossDefeat, StageClear, GameOver, Ending, EndingFin };
     enum class GameOverPhase { None, FadeOutToScreen, FadeInScreen, WaitingInput, FadeOutToTitle };
-    enum class RespawnPhase { None, DeathMotion, FadeOut, HoldBlack, FadeIn };
+    enum class RespawnPhase { None, DeathMotion, GameOverWait, FadeOut, HoldBlack, FadeIn };
     enum class WarpPhase { None, FadeOut, HoldBlack, FadeIn };
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };

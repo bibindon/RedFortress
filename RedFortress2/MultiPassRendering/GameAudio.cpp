@@ -6,6 +6,7 @@ namespace
 {
 const std::wstring kTitleBgm = L"res\\sound\\title2.wav";
 const std::wstring kLoadingBgm = L"res\\sound\\loading.wav";
+const std::wstring kGameOverBgm = L"res\\sound\\gameover.wav";
 const std::wstring kEndingBgm = L"res\\sound\\ending.wav";
 const std::wstring kBaseBgm = L"res\\sound\\kokeniwa.wav";
 const std::wstring kKaiganDoukutsuBgm = L"res\\sound\\kaiganDoukutsu.wav";
@@ -73,6 +74,7 @@ const std::wstring kQteBest = L"res\\sound\\qte_best.wav";
 const std::wstring kArrow = L"res\\sound\\arrow.wav";
 const std::wstring kWarp = L"res\\sound\\warp.wav";
 const int kTitleBgmVolume = 22;
+const int kGameOverBgmVolume = 40;
 const int kEndingBgmVolume = 50;
 const int kFieldBgmVolume = 40;
 const int kStoryBgmVolume = 40;
@@ -438,6 +440,12 @@ void PlayTitleMusic()
 {
     StopEnvironment();
     PlayBgmIfChanged(kTitleBgm, kTitleBgmVolume);
+}
+
+void PlayGameOverMusic()
+{
+    StopEnvironment();
+    PlayBgmIfChanged(kGameOverBgm, kGameOverBgmVolume);
 }
 
 void PlayEndingMusic()

@@ -274,6 +274,7 @@ namespace
     const int kWarpFadeInFrames = 15;
     const float kWarpFadeDurationSeconds = 0.25f;
     const int kStageTitleFrameMax = 180;
+    const int kGameOverWaitFrames = 180;
     const int kGameOverFadeFrames = 18;
     const float kFallDeathY = -10.0f;
     const int kFallDeathFadeDelayFrames = 60;
@@ -975,6 +976,10 @@ void GameApp::Run()
         {
             GameAudio::PlayTitleMusic();
         }
+        else if (m_gameState == GameState::GameOver)
+        {
+            GameAudio::PlayGameOverMusic();
+        }
         else if (m_gameState == GameState::Playing || m_gameState == GameState::StageIntro)
         {
             const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
@@ -1334,6 +1339,17 @@ void GameApp::Run()
                 {
                     --m_respawnFadeFrames;
                     if (m_respawnFadeFrames <= kRespawnFadeOutFrames)
+                    {
+                        m_respawnPhase = RespawnPhase::FadeOut;
+                        m_respawnFadeFrames = kRespawnFadeOutFrames;
+                        m_render.StartFadeOut(
+                            static_cast<float>(kRespawnFadeOutFrames) / 60.0f);
+                    }
+                }
+                else if (m_respawnPhase == RespawnPhase::GameOverWait)
+                {
+                    --m_respawnFadeFrames;
+                    if (m_respawnFadeFrames <= 0)
                     {
                         m_respawnPhase = RespawnPhase::FadeOut;
                         m_respawnFadeFrames = kRespawnFadeOutFrames;
@@ -7595,6 +7611,18 @@ void GameApp::HandlePlayerDeath()
     ClearBombs();
     ClearBusters();
     m_skullManager.ReleaseHeld(m_render, m_playerMover.GetPosition());
+
+    // 最後の残機では、ゲームオーバー画面へ移る前に死亡したシーンを約3秒間表示する。
+    if (m_player.GetLives() <= 1)
+    {
+        if (!m_playerFallingDead)
+        {
+            SetPlayerAnimationState(PlayerAnimState::Death, 1.0f);
+        }
+        m_respawnPhase = RespawnPhase::GameOverWait;
+        m_respawnFadeFrames = kGameOverWaitFrames;
+        return;
+    }
 
     // シーン更新は止めず（SetSceneUpdatePaused は使わない）、死亡モーションと暗転を進める。
     // 落下死ではカメラ停止後の1秒待機が完了しているため、ここで暗転を開始する。
