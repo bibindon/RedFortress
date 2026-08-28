@@ -127,6 +127,7 @@ private:
     void BeginStageClearVisual();
     void UpdateStageClearVisual();
     void RestoreStageClearVisual();
+    void HideStageClearReplayEquipment();
     bool StartNextStage();
     std::wstring GetStageStoryScriptPath(const std::wstring& stageId,
                                          const std::wstring& timing) const;
@@ -281,6 +282,7 @@ private:
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
     enum class QteVisualPhase { None, Active, Restoring };
+    enum class StageClearReplayPhase { None, Ascending, ApexWhite, Vanished };
     enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, ReturnToTitle, WaitForStageLoad, WaitForTitleLoad, FadeIn };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
@@ -467,6 +469,9 @@ private:
     bool m_stageClearWasFirstClear = false;
     int m_stageClearFrame = 0;
     float m_stageClearVisualOffsetY = 0.0f;
+    StageClearReplayPhase m_stageClearReplayPhase = StageClearReplayPhase::None;
+    int m_stageClearReplayPhaseFrame = 0;
+    bool m_stageClearReplayPlayerHidden = false;
     D3DXVECTOR3 m_stageClearCameraStartPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageClearCameraStartTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageClearCameraEndPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

@@ -306,12 +306,14 @@ namespace
     const int kStageClearTitleFrame = 58;
     const int kStageClearFinalAutoFrame = 240;
     const int kStageClearLetterboxHeight = 90;
-    const int kStageClearReplayTitleFrame = 8;
-    const int kStageClearReplayFinalAutoFrame = 90;
-    const int kStageClearReplayLetterboxHeight = 40;
-    const int kStageClearReplayJumpDurationFrames = 30;
-    const float kStageClearReplayJumpHeight = 1.0f;
-    const float kStageClearReplayJumpAnimationSpeed = 1.2f;
+    const int kStageClearReplayAscentFrames = 40;
+    const int kStageClearReplayWhiteFrames = 6;
+    const int kStageClearReplayVanishedFrames = 18;
+    const int kStageClearReplayFinalAutoFrame = kStageClearReplayAscentFrames +
+                                                kStageClearReplayWhiteFrames +
+                                                kStageClearReplayVanishedFrames;
+    const float kStageClearReplayJumpHeight = 2.0f;
+    const float kStageClearReplayJumpAnimationSpeed = 1.0f;
     const float kStageClearTargetFovDegrees = 58.0f;
     const int kStageExitJumpDelayFrames = 30;
     const int kStageExitJumpDurationFrames = 30;
@@ -2142,10 +2144,20 @@ void GameApp::Run()
                 UpdatePortal();
             }
 
+            const bool stageAlreadyCleared =
+                m_saveDataManager.IsStageCleared(m_stageManager.GetCurrentStage().id);
             bool isStageClearReached = false;
             if (usesGoalPortal)
             {
-                isStageClearReached = IsStageClearReached();
+                if (m_portalFlagShown && stageAlreadyCleared)
+                {
+                    // 再クリア時は固定時間で演出へ移らず、入力を止めたまま自然な着地を待つ。
+                    isStageClearReached = m_playerMover.IsGrounded();
+                }
+                else
+                {
+                    isStageClearReached = IsStageClearReached();
+                }
             }
             else
             {
@@ -2158,7 +2170,7 @@ void GameApp::Run()
             {
                 ClearBusters();
                 if (isBossStage &&
-                    !m_saveDataManager.IsStageCleared(m_stageManager.GetCurrentStage().id))
+                    !stageAlreadyCleared)
                 {
                     D3DXVECTOR3 defeatedBossPosition = m_playerMover.GetPosition();
                     for (const auto& enemy : m_enemyManager.GetEnemies())
@@ -3763,6 +3775,12 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
     {
         bool playerVisible = !m_playerMover.IsDashBoosterCharging();
         if (!m_debugPlayerRenderEnabled)
+        {
+            playerVisible = false;
+        }
+        if (m_gameState == GameState::StageClear &&
+            !m_stageClearWasFirstClear &&
+            m_stageClearReplayPlayerHidden)
         {
             playerVisible = false;
         }
@@ -7076,9 +7094,17 @@ void GameApp::BeginStageClearVisual()
     {
         m_stageClearCameraEndPos = m_stageClearCameraStartPos;
         m_stageClearCameraEndTarget = m_stageClearCameraStartTarget;
+        m_stageClearReplayPhase = StageClearReplayPhase::Ascending;
+        m_stageClearReplayPhaseFrame = 0;
+        m_stageClearReplayPlayerHidden = false;
         RemoveGoalArrow();
+        HideStageClearReplayEquipment();
+        m_skullManager.ReleaseHeld(m_render, m_playerMover.GetPosition());
         if (m_playerMeshId >= 0)
         {
+            m_render.StopMeshMixSkinAnimBlink(m_playerMeshId);
+            m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, false);
+            m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
             m_playerAnimState = PlayerAnimState::Jump;
             m_playerAnimationSpeed = kStageClearReplayJumpAnimationSpeed;
             m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
@@ -7122,24 +7148,68 @@ void GameApp::UpdateStageClearVisual()
 {
     if (!m_stageClearWasFirstClear)
     {
-        float jumpT = static_cast<float>(m_stageClearFrame) /
-                      static_cast<float>(kStageClearReplayJumpDurationFrames);
-        if (jumpT > 1.0f)
+        if (m_stageClearReplayPhase == StageClearReplayPhase::Ascending)
         {
-            jumpT = 1.0f;
+            float jumpT = static_cast<float>(m_stageClearReplayPhaseFrame + 1) /
+                          static_cast<float>(kStageClearReplayAscentFrames);
+            if (jumpT > 1.0f)
+            {
+                jumpT = 1.0f;
+            }
+            m_stageClearVisualOffsetY =
+                kStageClearReplayJumpHeight * (2.0f * jumpT - jumpT * jumpT);
+            UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+
+            const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+            if (stage.playerPointLightEnabled)
+            {
+                D3DXVECTOR3 lightPosition = m_playerMover.GetPosition();
+                lightPosition.y += m_stageClearVisualOffsetY + kPlayerPointLightHeight;
+                m_render.SetPointLightPositionByOwnerTag(kPlayerPointLightOwnerTag, lightPosition);
+            }
+
+            ++m_stageClearReplayPhaseFrame;
+            if (m_stageClearReplayPhaseFrame >= kStageClearReplayAscentFrames)
+            {
+                m_stageClearVisualOffsetY = kStageClearReplayJumpHeight;
+                m_stageClearReplayPhase = StageClearReplayPhase::ApexWhite;
+                m_stageClearReplayPhaseFrame = 0;
+                if (m_playerMeshId >= 0)
+                {
+                    m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 0.0f);
+                    m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, true);
+                }
+                GameAudio::PlayStageSelectConfirm();
+            }
         }
-        m_stageClearVisualOffsetY = 4.0f * kStageClearReplayJumpHeight * jumpT * (1.0f - jumpT);
-        UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+        else if (m_stageClearReplayPhase == StageClearReplayPhase::ApexWhite)
+        {
+            ++m_stageClearReplayPhaseFrame;
+            if (m_stageClearReplayPhaseFrame >= kStageClearReplayWhiteFrames)
+            {
+                if (m_playerMeshId >= 0)
+                {
+                    m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, false);
+                    m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, false);
+                }
+                HideStageClearReplayEquipment();
+                m_render.RemovePointLightsByOwnerTag(kPlayerPointLightOwnerTag);
+                m_stageClearReplayPlayerHidden = true;
+                m_stageClearReplayPhase = StageClearReplayPhase::Vanished;
+                m_stageClearReplayPhaseFrame = 0;
+            }
+        }
+        else if (m_stageClearReplayPhase == StageClearReplayPhase::Vanished)
+        {
+            ++m_stageClearReplayPhaseFrame;
+        }
+        else
+        {
+            throw std::runtime_error("Invalid replay stage-clear phase.");
+        }
+
         m_render.SetCamera(m_stageClearCameraStartPos, m_stageClearCameraStartTarget);
         m_render.SetCameraHorizontalFovDegrees(m_stageClearStoredFovDegrees);
-        if (m_stageClearFrame == kStageClearReplayJumpDurationFrames && m_playerMeshId >= 0)
-        {
-            SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
-        }
-        if (m_stageClearFrame == kStageClearReplayTitleFrame)
-        {
-            GameAudio::PlayStageSelectConfirm();
-        }
         ++m_stageClearFrame;
         return;
     }
@@ -7189,17 +7259,36 @@ void GameApp::UpdateStageClearVisual()
 
 void GameApp::RestoreStageClearVisual()
 {
-    m_stageClearVisualOffsetY = 0.0f;
-    UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+    if (!m_stageClearReplayPlayerHidden)
+    {
+        m_stageClearVisualOffsetY = 0.0f;
+        UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+    }
     m_render.SetCameraHorizontalFovDegrees(m_stageClearStoredFovDegrees);
     m_render.SetCamera(m_stageClearCameraStartPos, m_stageClearCameraStartTarget);
     m_render.SetCameraShakeDuration(0.0f);
     m_render.SetCameraShakeIntensity(0.0f);
-    if (m_playerMeshId >= 0)
+    if (m_playerMeshId >= 0 && !m_stageClearReplayPlayerHidden)
     {
         SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
     }
     m_stageClearFrame = 0;
+}
+
+void GameApp::HideStageClearReplayEquipment()
+{
+    if (m_stickMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_stickMeshId, false);
+    }
+    if (m_saberMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_saberMeshId, false);
+    }
+    if (m_gunMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_gunMeshId, false);
+    }
 }
 
 std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId,
@@ -8110,6 +8199,17 @@ void GameApp::LoadCurrentStageObjects()
 {
     RestoreQteVisualEffectImmediate();
 
+    if (m_playerMeshId >= 0)
+    {
+        m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, false);
+        m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
+        m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.0f);
+    }
+    m_stageClearReplayPhase = StageClearReplayPhase::None;
+    m_stageClearReplayPhaseFrame = 0;
+    m_stageClearReplayPlayerHidden = false;
+    m_stageClearVisualOffsetY = 0.0f;
+
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
     const StageManager::StageData loadStage = GetStageDataForLoad(stage);
 
@@ -8569,70 +8669,6 @@ void GameApp::DrawStageClear()
 
     if (!m_stageClearWasFirstClear)
     {
-        m_render.DrawImageSized(kLetterboxBarImagePath,
-                                0,
-                                0,
-                                NSRender::Common::BASE_W,
-                                NSRender::Common::BASE_H,
-                                34);
-
-        if (m_stageClearFrame < 6)
-        {
-            const float flashT = static_cast<float>(m_stageClearFrame) / 6.0f;
-            const int flashAlpha = static_cast<int>((1.0f - flashT) * 105.0f);
-            m_render.DrawImageSized(kStageClearFlashImagePath,
-                                    0,
-                                    0,
-                                    NSRender::Common::BASE_W,
-                                    NSRender::Common::BASE_H,
-                                    flashAlpha);
-        }
-
-        if (m_stageClearFrame >= 2)
-        {
-            const float ringRawT = static_cast<float>(m_stageClearFrame - 2) / 12.0f;
-            const float ringT = SmoothStep01(ringRawT);
-            const int ringSize = static_cast<int>(330.0f + 150.0f * ringT);
-            const int ringAlpha = static_cast<int>(118.0f * ringT);
-            m_render.DrawImageSized(kStageClearRingImagePath,
-                                    (NSRender::Common::BASE_W - ringSize) / 2,
-                                    120 + (480 - ringSize) / 2,
-                                    ringSize,
-                                    ringSize,
-                                    ringAlpha);
-        }
-
-        if (m_stageClearFrame >= 4)
-        {
-            const float sparklesRawT = static_cast<float>(m_stageClearFrame - 4) / 14.0f;
-            const float sparklesT = SmoothStep01(sparklesRawT);
-            const int sparklesAlpha = static_cast<int>(86.0f * sparklesT);
-            m_render.DrawImageSized(kStageClearSparklesImagePath,
-                                    430,
-                                    105,
-                                    740,
-                                    520,
-                                    sparklesAlpha);
-        }
-
-        const float letterboxRawT = static_cast<float>(m_stageClearFrame) / 10.0f;
-        const float letterboxT = SmoothStep01(letterboxRawT);
-        const int letterboxHeight = static_cast<int>(static_cast<float>(kStageClearReplayLetterboxHeight) * letterboxT);
-        if (letterboxHeight > 0)
-        {
-            m_render.DrawImageSized(kLetterboxBarImagePath,
-                                    0,
-                                    0,
-                                    NSRender::Common::BASE_W,
-                                    letterboxHeight,
-                                    255);
-            m_render.DrawImageSized(kLetterboxBarImagePath,
-                                    0,
-                                    NSRender::Common::BASE_H - letterboxHeight,
-                                    NSRender::Common::BASE_W,
-                                    letterboxHeight,
-                                    255);
-        }
         return;
     }
 
