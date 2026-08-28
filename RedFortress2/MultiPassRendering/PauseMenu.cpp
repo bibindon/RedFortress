@@ -31,6 +31,8 @@ const std::wstring kSettingsLeftArrowImagePath = L"res\\2D_Image\\settings_arrow
 const std::wstring kSettingsRightArrowImagePath = L"res\\2D_Image\\settings_arrow_right.png";
 const std::wstring kSettingsApplyButtonImagePath = L"res\\2D_Image\\settings_button_apply.png";
 const std::wstring kSettingsCancelButtonImagePath = L"res\\2D_Image\\settings_button_cancel.png";
+const std::wstring kItemScrollUpImagePath = L"res\\2D_Image\\item_scroll_up.png";
+const std::wstring kItemScrollDownImagePath = L"res\\2D_Image\\item_scroll_down.png";
 const int kHeartImageSize = 36;
 const int kLivesDisplayX = 1320;
 const int kLivesDisplayY = 130;
@@ -121,12 +123,12 @@ const int kDisabledSettingsButtonTransparency = 32;
 const int kSettingsArrowIconTransparency = 245;
 const int kDisabledSettingsArrowIconTransparency = 90;
 const UINT kDisabledSettingsTextColor = D3DCOLOR_RGBA(120, 125, 135, 190);
-const std::size_t kVisibleItemCount = 8;
+const std::size_t kVisibleItemCount = 7;
 const std::size_t kVisibleWeaponCount = 8;
 const int kItemListX = 255;
 const int kItemListHeaderY = 338;
 const int kItemListY = 385;
-const int kItemPanelListY = 392;
+const int kItemPanelListY = 412;
 const int kItemListLineHeight = 40;
 const int kItemCountColumnX = 500;
 const int kItemCountColumnWidth = 100;
@@ -138,8 +140,18 @@ const int kItemListBackgroundY = kItemListHeaderY - 26;
 const int kItemListBackgroundWidth =
     kItemCountColumnX + kItemCountColumnWidth + 30 - (kItemListX - 50);
 const int kItemListBackgroundHeight =
-    kItemPanelListY + static_cast<int>(kVisibleItemCount) * kItemListLineHeight + 36 -
+    kItemPanelListY + static_cast<int>(kVisibleItemCount) * kItemListLineHeight + 62 -
     (kItemListHeaderY - 26);
+const int kItemScrollArrowWidth = 48;
+const int kItemScrollArrowHeight = 32;
+const int kItemScrollArrowX =
+    kItemListBackgroundX + (kItemListBackgroundWidth - kItemScrollArrowWidth) / 2;
+const int kItemScrollUpArrowY = 364;
+const int kItemScrollDownArrowY =
+    kItemPanelListY + static_cast<int>(kVisibleItemCount) * kItemListLineHeight + 12;
+const int kItemScrollButtonHeight = 52;
+const int kItemScrollUpButtonY = kItemScrollUpArrowY - 10;
+const int kItemScrollDownButtonY = kItemScrollDownArrowY - 10;
 const int kWeaponListIconX = kItemListX;
 const int kWeaponListIconSize = 28;
 const int kWeaponListTextX = kWeaponListIconX + kWeaponListIconSize + 12;
@@ -839,6 +851,42 @@ void PauseMenu::UpdateItemList()
 
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
+        if (m_itemScrollOffset > 0 &&
+            IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kItemListBackgroundX,
+                          kItemScrollUpButtonY,
+                          kItemListBackgroundWidth,
+                          kItemScrollButtonHeight))
+        {
+            --m_itemScrollOffset;
+            if (m_selectedItemIndex > 0)
+            {
+                --m_selectedItemIndex;
+            }
+            m_itemStatusMessage.clear();
+            GameAudio::PlayMenuMove();
+            return;
+        }
+
+        if (m_itemScrollOffset + kVisibleItemCount < ownedItems.size() &&
+            IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kItemListBackgroundX,
+                          kItemScrollDownButtonY,
+                          kItemListBackgroundWidth,
+                          kItemScrollButtonHeight))
+        {
+            ++m_itemScrollOffset;
+            if (m_selectedItemIndex + 1 < ownedItems.size())
+            {
+                ++m_selectedItemIndex;
+            }
+            m_itemStatusMessage.clear();
+            GameAudio::PlayMenuMove();
+            return;
+        }
+
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           kItemListX,
@@ -1663,16 +1711,15 @@ void PauseMenu::RenderItemPanel()
         itemEnd = ownedItems.size();
     }
 
-    // 上側にスクロールし戻せるアイテムがあれば、リストの上に▲を表示する。
+    // 上側にスクロールし戻せるアイテムがあれば、リストの上に画像ボタンを表示する。
     if (m_itemScrollOffset > 0)
     {
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"▲",
-                                   kItemListBackgroundX,
-                                   kItemListHeaderY + 24,
-                                   kItemListBackgroundWidth,
-                                   kMenuTextLineHeight,
-                                   kTextColor);
+        m_render->DrawImageSized(kItemScrollUpImagePath,
+                                 kItemScrollArrowX,
+                                 kItemScrollUpArrowY,
+                                 kItemScrollArrowWidth,
+                                 kItemScrollArrowHeight,
+                                 245);
     }
 
     for (std::size_t i = m_itemScrollOffset; i < itemEnd; ++i)
@@ -1701,19 +1748,15 @@ void PauseMenu::RenderItemPanel()
         }
     }
 
-    // スクロール下側にまだアイテムがあれば、最終行の下に▼を表示する。
+    // スクロール下側にまだアイテムがあれば、最終行の下に画像ボタンを表示する。
     if (m_itemScrollOffset + kVisibleItemCount < ownedItems.size())
     {
-        m_render->DrawTextExCenter(m_qualityFontId,
-                                   L"▼",
-                                   kItemListBackgroundX,
-                                   kItemPanelListY +
-                                       static_cast<int>(kVisibleItemCount) *
-                                           kItemListLineHeight +
-                                       2,
-                                   kItemListBackgroundWidth,
-                                   24,
-                                   kTextColor);
+        m_render->DrawImageSized(kItemScrollDownImagePath,
+                                 kItemScrollArrowX,
+                                 kItemScrollDownArrowY,
+                                 kItemScrollArrowWidth,
+                                 kItemScrollArrowHeight,
+                                 245);
     }
 
     const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
@@ -1728,7 +1771,7 @@ void PauseMenu::RenderItemPanel()
                                  245);
     }
 
-    const int detailX = 1120;
+    const int detailX = 1160;
     m_render->DrawTextEx(m_menuItemFontId,
                          selectedItem.name,
                          detailX,
