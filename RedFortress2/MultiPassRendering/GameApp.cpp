@@ -312,10 +312,12 @@ namespace
     const int kStageClearTitleFrame = 58;
     const int kStageClearFinalAutoFrame = 240;
     const int kStageClearLetterboxHeight = 90;
+    const int kStageClearReplayJumpDelayFrames = 60;
     const int kStageClearReplayAscentFrames = 40;
     const int kStageClearReplayWhiteFrames = 6;
-    const int kStageClearReplayVanishedFrames = 18;
-    const int kStageClearReplayFinalAutoFrame = kStageClearReplayAscentFrames +
+    const int kStageClearReplayVanishedFrames = 120;
+    const int kStageClearReplayFinalAutoFrame = kStageClearReplayJumpDelayFrames +
+                                                kStageClearReplayAscentFrames +
                                                 kStageClearReplayWhiteFrames +
                                                 kStageClearReplayVanishedFrames;
     const float kStageClearReplayJumpHeight = 2.0f;
@@ -2016,6 +2018,7 @@ void GameApp::Run()
             {
                 const float playerContactRadius = m_playerMover.GetSettings().radius;
                 const float playerContactHeight = m_playerMover.GetSettings().height;
+                const bool isStarActive = m_pickupManager.IsStarActive();
                 for (auto& enemy : m_enemyManager.GetEnemies())
                 {
                     if (enemy->IsDead())
@@ -2030,11 +2033,20 @@ void GameApp::Run()
                     const bool enemyCanDamagePlayerOnContact =
                         enemy->CanDamagePlayerOnContact(playerTouchingEnemy);
 
-                    if (enemy->IsStompedByPlayer(playerPositionBeforePhysicsUpdate,
-                                                m_playerMover.GetPosition(),
-                                                m_playerMover.IsJumping(),
-                                                m_playerMover.GetVelocity().y,
-                                                playerContactRadius))
+                    if (isStarActive && playerTouchingEnemy)
+                    {
+                        enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
+                        m_damagePopupManager.Add(10, enemy->GetPosition(), false);
+                        TryDropEnemyItem(*enemy);
+                        GameAudio::PlayAttackHit();
+                        break;
+                    }
+                    else if (!isStarActive &&
+                             enemy->IsStompedByPlayer(playerPositionBeforePhysicsUpdate,
+                                                      m_playerMover.GetPosition(),
+                                                      m_playerMover.IsJumping(),
+                                                      m_playerMover.GetVelocity().y,
+                                                      playerContactRadius))
                     {
                         enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
                         m_damagePopupManager.Add(10, enemy->GetPosition(), false);
@@ -2043,15 +2055,6 @@ void GameApp::Run()
                         enemy->SuppressContactDamageUntilPlayerSeparates();
                         const float jumpVelocity = m_playerMover.GetSettings().jumpVelocity;
                         m_playerMover.ApplyUpwardVelocity(jumpVelocity);
-                        break;
-                    }
-                    else if (m_pickupManager.IsStarActive() &&
-                             playerTouchingEnemy)
-                    {
-                        enemy->TakeDamage(m_render, 10, m_playerMover.GetPosition());
-                        m_damagePopupManager.Add(10, enemy->GetPosition(), false);
-                        TryDropEnemyItem(*enemy);
-                        GameAudio::PlayAttackHit();
                         break;
                     }
                     else if (m_playerInvincibleFrames <= 0 &&
@@ -7100,7 +7103,7 @@ void GameApp::BeginStageClearVisual()
     {
         m_stageClearCameraEndPos = m_stageClearCameraStartPos;
         m_stageClearCameraEndTarget = m_stageClearCameraStartTarget;
-        m_stageClearReplayPhase = StageClearReplayPhase::Ascending;
+        m_stageClearReplayPhase = StageClearReplayPhase::WaitingToJump;
         m_stageClearReplayPhaseFrame = 0;
         m_stageClearReplayPlayerHidden = false;
         RemoveGoalArrow();
@@ -7111,14 +7114,7 @@ void GameApp::BeginStageClearVisual()
             m_render.StopMeshMixSkinAnimBlink(m_playerMeshId);
             m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, false);
             m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
-            m_playerAnimState = PlayerAnimState::Jump;
-            m_playerAnimationSpeed = kStageClearReplayJumpAnimationSpeed;
-            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
-            m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerJumpAnimName);
         }
-        GameAudio::PlayJump();
-        m_render.SetCameraShakeDuration(0.08f);
-        m_render.SetCameraShakeIntensity(0.012f);
         return;
     }
 
@@ -7154,7 +7150,26 @@ void GameApp::UpdateStageClearVisual()
 {
     if (!m_stageClearWasFirstClear)
     {
-        if (m_stageClearReplayPhase == StageClearReplayPhase::Ascending)
+        if (m_stageClearReplayPhase == StageClearReplayPhase::WaitingToJump)
+        {
+            ++m_stageClearReplayPhaseFrame;
+            if (m_stageClearReplayPhaseFrame >= kStageClearReplayJumpDelayFrames)
+            {
+                m_stageClearReplayPhase = StageClearReplayPhase::Ascending;
+                m_stageClearReplayPhaseFrame = 0;
+                if (m_playerMeshId >= 0)
+                {
+                    m_playerAnimState = PlayerAnimState::Jump;
+                    m_playerAnimationSpeed = kStageClearReplayJumpAnimationSpeed;
+                    m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+                    m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerJumpAnimName);
+                }
+                GameAudio::PlayJump();
+                m_render.SetCameraShakeDuration(0.08f);
+                m_render.SetCameraShakeIntensity(0.012f);
+            }
+        }
+        else if (m_stageClearReplayPhase == StageClearReplayPhase::Ascending)
         {
             float jumpT = static_cast<float>(m_stageClearReplayPhaseFrame + 1) /
                           static_cast<float>(kStageClearReplayAscentFrames);
