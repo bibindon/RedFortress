@@ -18,6 +18,7 @@
 namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
+const std::wstring kMenuTopBackgroundPath = L"res\\2D_Image\\menu_top_bg.png";
 const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
 const std::wstring kHeartImagePath = L"res\\2D_Image\\heart.png";
 const std::wstring kWeaponClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
@@ -37,8 +38,8 @@ const int kLivesTextY = 133;
 // command_cursor.png の白い点は画像左上(0,0)〜(12,12)にあるため、点の中心は画像内 (6,6)。
 const int kCommandCursorDotCenterX = 6;
 const int kCommandCursorDotCenterY = 6;
-// 点の中心をずらす場合の縦位置。文字列(DT_VCENTERで箱の中央)の少し上に浮かせる。
-const int kCommandCursorVerticalOffset = 1;
+// 点の中心をずらす場合の縦位置。文字列(DT_VCENTERで箱の中央)より上に浮かせる。
+const int kCommandCursorVerticalOffset = -2;
 const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
@@ -1453,6 +1454,13 @@ void PauseMenu::RenderTopMenu()
     {
         const int menuIndex = static_cast<int>(i);
         const int x = kTopMenuX + menuIndex * kTopMenuItemInterval;
+        m_render->DrawImageSized(kMenuTopBackgroundPath,
+                                 x,
+                                 kTopMenuY,
+                                 kTopMenuItemWidth,
+                                 kTopMenuItemHeight,
+                                 255);
+
         UINT color = kTextColor;
         if (!IsTopMenuItemEnabled(menuIndex))
         {
@@ -1885,19 +1893,19 @@ void PauseMenu::RenderSettingsPanel()
 {
     const int leftX = kSettingsRowTextX;
     const int leftY = kSettingsFirstRowY + 9;
-    m_render->DrawTextEx(m_menuItemFontId,
+    m_render->DrawTextEx(m_qualityFontId,
                          L"解像度",
                          leftX,
                          leftY,
                          kTextColor);
 
-    m_render->DrawTextEx(m_menuItemFontId,
+    m_render->DrawTextEx(m_qualityFontId,
                          L"表示モード",
                          leftX,
                          leftY + kSettingsRowInterval,
                          kTextColor);
 
-    m_render->DrawTextEx(m_menuItemFontId,
+    m_render->DrawTextEx(m_qualityFontId,
                          L"描画品質",
                          leftX,
                          leftY + kSettingsRowInterval * 2,
@@ -1913,7 +1921,7 @@ void PauseMenu::RenderSettingsPanel()
         selectedRowY = leftY + kSettingsRowInterval * 2;
     }
     m_render->DrawImage(kCommandCursorPath,
-                        leftX - 10 - kCommandCursorDotCenterX,
+                        leftX - 13 - kCommandCursorDotCenterX,
                         selectedRowY + 13 - kCommandCursorDotCenterY,
                         255);
 
@@ -1932,21 +1940,21 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
 {
     const int optionCount = GetSettingsOptionCount(row);
     const int selectedIndex = GetSelectedSettingsOptionIndex(row);
-    m_render->DrawTextExCenter(m_menuItemFontId,
+    m_render->DrawTextExCenter(m_qualityFontId,
                                BuildResolutionComboText(),
                                kSettingsOptionListX,
                                kSettingsFirstRowY,
                                kSettingsOptionListWidth,
                                kSettingsValueHeight,
                                kTextColor);
-    m_render->DrawTextExCenter(m_menuItemFontId,
+    m_render->DrawTextExCenter(m_qualityFontId,
                                BuildWindowModeComboText(),
                                kSettingsOptionListX,
                                kSettingsFirstRowY + kSettingsRowInterval,
                                kSettingsOptionListWidth,
                                kSettingsValueHeight,
                                kTextColor);
-    m_render->DrawTextExCenter(m_menuItemFontId,
+    m_render->DrawTextExCenter(m_qualityFontId,
                                BuildQualityComboText(),
                                kSettingsOptionListX,
                                kSettingsFirstRowY + kSettingsRowInterval * 2,
