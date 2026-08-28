@@ -152,6 +152,10 @@ namespace
     const std::wstring kPortalFlagAnimCsvPath = L"res\\model\\portal\\black_flag.csv";
     const int kPortalClearDelayFrames = 150;
     const float kPortalPillarTouchRadius = 0.9f;
+    const float kPortalPillarLightHeight = 1.2f;
+    const float kPortalPillarLightBrightness = 0.8f;
+    const float kPortalPillarLightRange = 4.0f;
+    const std::wstring kPortalPillarLightOwnerTag = L"stage-goal-pillar";
     const float kTitleSunLightIntensity = 0.45f;
     const float kTitleAmbientLightIntensity = 0.14f;
     const float kStagePortalClickRadius = 48.0f;
@@ -7320,6 +7324,7 @@ std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId,
 
 void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
 {
+    m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
     m_portalBasePosition = D3DXVECTOR3(clearPosition.x, clearPosition.y - 1.0f, clearPosition.z);
 
     m_portalStepsMeshId = m_render.AddMeshMix(kPortalStepsModelPath,
@@ -7348,6 +7353,7 @@ void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
 
 void GameApp::RemovePortal()
 {
+    m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
     if (m_portalStepsMeshId >= 0)
     {
         m_render.RemoveMeshMix(m_portalStepsMeshId);
@@ -7401,6 +7407,20 @@ void GameApp::UpdatePortal()
                                                         false,
                                                         false,
                                                         false);
+            const D3DXVECTOR3 pillarLightPosition =
+                pillarPos + D3DXVECTOR3(0.0f, kPortalPillarLightHeight, 0.0f);
+            const D3DXCOLOR pillarLightColor(0.55f, 0.82f, 1.0f, 1.0f);
+            m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
+            m_render.AddPointLight(pillarLightPosition,
+                                   kPortalPillarLightBrightness,
+                                   pillarLightColor,
+                                   NSRender::PointLightShape::Point,
+                                   12.0f,
+                                   10.0f,
+                                   10.0f,
+                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                   kPortalPillarLightRange,
+                                   kPortalPillarLightOwnerTag);
             m_portalPillarShown = true;
         }
     }
@@ -7443,6 +7463,7 @@ void GameApp::UpdatePortal()
     if (m_portalFlagShown && m_portalPillarShown && m_portalPillarMeshId >= 0)
     {
         m_render.RemoveMeshMix(m_portalPillarMeshId);
+        m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
         m_portalPillarMeshId = -1;
         m_portalPillarShown = false;
     }
