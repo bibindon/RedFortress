@@ -115,7 +115,9 @@ private:
     void ApplySelectedWindowMode();
     void ApplySelectedQuality();
     void ApplySelectedSettings();
-    bool IsSelectedSettingsDirty() const;
+    void CancelSelectedSettings();
+    bool IsSettingsRowDirty(SettingsRow row) const;
+    bool IsSettingsDirty() const;
     int GetSettingsOptionCount(SettingsRow row) const;
     int GetSelectedSettingsOptionIndex(SettingsRow row) const;
     std::wstring GetSettingsOptionLabel(SettingsRow row, int index) const;

@@ -85,19 +85,23 @@ const int kExitPanelGameY = 600;
 const int kSettingsRowX = 200;
 const int kSettingsRowTextX = 220;
 const int kSettingsRowWidth = 260;
-const int kSettingsOptionListX = 370;
-const int kSettingsOptionListY = 342;
-const int kSettingsOptionListWidth = 430;
-const int kSettingsValueHeight = 56;
-const int kSettingsArrowY = 424;
-const int kSettingsArrowWidth = 170;
-const int kSettingsArrowHeight = 56;
+const int kSettingsFirstRowY = 342;
+const int kSettingsRowInterval = 74;
+const int kSettingsOptionListX = 480;
+const int kSettingsOptionListWidth = 300;
+const int kSettingsValueHeight = 62;
+const int kSettingsArrowWidth = 80;
+const int kSettingsArrowHeight = 62;
 const int kSettingsLeftArrowX = 390;
-const int kSettingsRightArrowX = 610;
-const int kSettingsApplyX = 500;
-const int kSettingsApplyY = 510;
-const int kSettingsApplyWidth = 190;
+const int kSettingsRightArrowX = 790;
+const int kSettingsApplyX = 460;
+const int kSettingsApplyY = 590;
+const int kSettingsApplyWidth = 160;
 const int kSettingsApplyHeight = 52;
+const int kSettingsCancelX = 650;
+const int kSettingsCancelY = kSettingsApplyY;
+const int kSettingsCancelWidth = 190;
+const int kSettingsCancelHeight = kSettingsApplyHeight;
 const UINT kDisabledSettingsTextColor = D3DCOLOR_RGBA(120, 125, 135, 190);
 const std::size_t kVisibleItemCount = 10;
 const std::size_t kVisibleWeaponCount = 11;
@@ -1023,14 +1027,7 @@ void PauseMenu::UpdateSettingsPanel()
     }
     if (IsMenuConfirmPressed())
     {
-        if (m_selectedSettingsRow == SettingsRow::WindowMode)
-        {
-            MoveSelectedSettingsOption(1);
-        }
-        else
-        {
-            ApplySelectedSettings();
-        }
+        ApplySelectedSettings();
     }
 
     const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
@@ -1055,8 +1052,51 @@ void PauseMenu::UpdateSettingsPanel()
         }
     }
 
+    int selectedRowY = kSettingsFirstRowY;
+    if (m_selectedSettingsRow == SettingsRow::WindowMode)
+    {
+        selectedRowY += kSettingsRowInterval;
+    }
+    else if (m_selectedSettingsRow == SettingsRow::Quality)
+    {
+        selectedRowY += kSettingsRowInterval * 2;
+    }
+
     if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
     {
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kSettingsLeftArrowX,
+                          selectedRowY,
+                          kSettingsArrowWidth,
+                          kSettingsArrowHeight))
+        {
+            MoveSelectedSettingsOption(-1);
+            return;
+        }
+
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kSettingsRightArrowX,
+                          selectedRowY,
+                          kSettingsArrowWidth,
+                          kSettingsArrowHeight))
+        {
+            MoveSelectedSettingsOption(1);
+            return;
+        }
+
+        if (IsPointInRect(baseMouseX,
+                          baseMouseY,
+                          kSettingsApplyX,
+                          kSettingsApplyY,
+                          kSettingsApplyWidth,
+                          kSettingsApplyHeight))
+        {
+            ApplySelectedSettings();
+            return;
+        }
+
         SettingsRow clickedRow;
         if (TryGetSettingsRowFromPoint(baseMouseX, baseMouseY, &clickedRow))
         {
@@ -1070,35 +1110,12 @@ void PauseMenu::UpdateSettingsPanel()
 
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
-                          kSettingsLeftArrowX,
-                          kSettingsArrowY,
-                          kSettingsArrowWidth,
-                          kSettingsArrowHeight))
+                          kSettingsCancelX,
+                          kSettingsCancelY,
+                          kSettingsCancelWidth,
+                          kSettingsCancelHeight))
         {
-            MoveSelectedSettingsOption(-1);
-            return;
-        }
-
-        if (IsPointInRect(baseMouseX,
-                          baseMouseY,
-                          kSettingsRightArrowX,
-                          kSettingsArrowY,
-                          kSettingsArrowWidth,
-                          kSettingsArrowHeight))
-        {
-            MoveSelectedSettingsOption(1);
-            return;
-        }
-
-        if (m_selectedSettingsRow != SettingsRow::WindowMode &&
-            IsPointInRect(baseMouseX,
-                          baseMouseY,
-                          kSettingsApplyX,
-                          kSettingsApplyY,
-                          kSettingsApplyWidth,
-                          kSettingsApplyHeight))
-        {
-            ApplySelectedSettings();
+            CancelSelectedSettings();
             return;
         }
     }
@@ -1855,8 +1872,7 @@ void PauseMenu::RenderExitConfirm()
 void PauseMenu::RenderSettingsPanel()
 {
     const int leftX = kSettingsRowTextX;
-    const int leftY = 345;
-    const int leftLineHeight = 74;
+    const int leftY = kSettingsFirstRowY + 9;
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"設定項目",
                                kSettingsRowX,
@@ -1877,32 +1893,27 @@ void PauseMenu::RenderSettingsPanel()
                          leftX,
                          leftY,
                          kTextColor);
-    m_render->DrawTextEx(m_qualityFontId,
-                         L"16:9限定",
-                         leftX + 30,
-                         leftY + 34,
-                         kSubTextColor);
 
     m_render->DrawTextEx(m_menuItemFontId,
                          L"表示モード",
                          leftX,
-                         leftY + leftLineHeight,
+                         leftY + kSettingsRowInterval,
                          kTextColor);
 
     m_render->DrawTextEx(m_menuItemFontId,
                          L"描画品質",
                          leftX,
-                         leftY + leftLineHeight * 2,
+                         leftY + kSettingsRowInterval * 2,
                          kTextColor);
 
     int selectedRowY = leftY;
     if (m_selectedSettingsRow == SettingsRow::WindowMode)
     {
-        selectedRowY = leftY + leftLineHeight;
+        selectedRowY = leftY + kSettingsRowInterval;
     }
     else if (m_selectedSettingsRow == SettingsRow::Quality)
     {
-        selectedRowY = leftY + leftLineHeight * 2;
+        selectedRowY = leftY + kSettingsRowInterval * 2;
     }
     m_render->DrawImage(kCommandCursorPath,
                         leftX - 10 - kCommandCursorDotCenterX,
@@ -1924,27 +1935,37 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
 {
     const int optionCount = GetSettingsOptionCount(row);
     const int selectedIndex = GetSelectedSettingsOptionIndex(row);
-    std::wstring valueText;
-    if (row == SettingsRow::Resolution)
-    {
-        valueText = BuildResolutionComboText();
-    }
-    else if (row == SettingsRow::WindowMode)
-    {
-        valueText = BuildWindowModeComboText();
-    }
-    else
-    {
-        valueText = BuildQualityComboText();
-    }
-
     m_render->DrawTextExCenter(m_menuItemFontId,
-                               valueText,
+                               BuildResolutionComboText(),
                                kSettingsOptionListX,
-                               kSettingsOptionListY,
+                               kSettingsFirstRowY,
                                kSettingsOptionListWidth,
                                kSettingsValueHeight,
                                kTextColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               BuildWindowModeComboText(),
+                               kSettingsOptionListX,
+                               kSettingsFirstRowY + kSettingsRowInterval,
+                               kSettingsOptionListWidth,
+                               kSettingsValueHeight,
+                               kTextColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               BuildQualityComboText(),
+                               kSettingsOptionListX,
+                               kSettingsFirstRowY + kSettingsRowInterval * 2,
+                               kSettingsOptionListWidth,
+                               kSettingsValueHeight,
+                               kTextColor);
+
+    int selectedRowY = kSettingsFirstRowY;
+    if (row == SettingsRow::WindowMode)
+    {
+        selectedRowY += kSettingsRowInterval;
+    }
+    else if (row == SettingsRow::Quality)
+    {
+        selectedRowY += kSettingsRowInterval * 2;
+    }
 
     UINT leftArrowColor = kTextColor;
     UINT rightArrowColor = kTextColor;
@@ -1960,33 +1981,37 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"［ ◀ ］",
                                kSettingsLeftArrowX,
-                               kSettingsArrowY,
+                               selectedRowY,
                                kSettingsArrowWidth,
                                kSettingsArrowHeight,
                                leftArrowColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
                                L"［ ▶ ］",
                                kSettingsRightArrowX,
-                               kSettingsArrowY,
+                               selectedRowY,
                                kSettingsArrowWidth,
                                kSettingsArrowHeight,
                                rightArrowColor);
 
-    if (row != SettingsRow::WindowMode)
+    UINT applyColor = kDisabledSettingsTextColor;
+    if (IsSettingsDirty())
     {
-        UINT applyColor = kDisabledSettingsTextColor;
-        if (IsSelectedSettingsDirty())
-        {
-            applyColor = kTextColor;
-        }
-        m_render->DrawTextExCenter(m_menuItemFontId,
-                                   L"［ 適用 ］",
-                                   kSettingsApplyX,
-                                   kSettingsApplyY,
-                                   kSettingsApplyWidth,
-                                   kSettingsApplyHeight,
-                                   applyColor);
+        applyColor = kTextColor;
     }
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"［ 適用 ］",
+                               kSettingsApplyX,
+                               kSettingsApplyY,
+                               kSettingsApplyWidth,
+                               kSettingsApplyHeight,
+                               applyColor);
+    m_render->DrawTextExCenter(m_menuItemFontId,
+                               L"［ キャンセル ］",
+                               kSettingsCancelX,
+                               kSettingsCancelY,
+                               kSettingsCancelWidth,
+                               kSettingsCancelHeight,
+                               kTextColor);
 
     const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
     const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
@@ -2001,26 +2026,25 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
         IsPointInRect(baseMouseX,
                       baseMouseY,
                       kSettingsLeftArrowX,
-                      kSettingsArrowY,
+                      selectedRowY,
                       kSettingsArrowWidth,
                       kSettingsArrowHeight))
     {
         cursorX = kSettingsLeftArrowX + 12;
-        cursorY = kSettingsArrowY + kSettingsArrowHeight / 2;
+        cursorY = selectedRowY + kSettingsArrowHeight / 2;
     }
     else if (selectedIndex < optionCount - 1 &&
              IsPointInRect(baseMouseX,
                            baseMouseY,
                            kSettingsRightArrowX,
-                           kSettingsArrowY,
+                           selectedRowY,
                            kSettingsArrowWidth,
                            kSettingsArrowHeight))
     {
         cursorX = kSettingsRightArrowX + 12;
-        cursorY = kSettingsArrowY + kSettingsArrowHeight / 2;
+        cursorY = selectedRowY + kSettingsArrowHeight / 2;
     }
-    else if (row != SettingsRow::WindowMode &&
-             IsSelectedSettingsDirty() &&
+    else if (IsSettingsDirty() &&
              IsPointInRect(baseMouseX,
                            baseMouseY,
                            kSettingsApplyX,
@@ -2030,6 +2054,16 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
     {
         cursorX = kSettingsApplyX + 12;
         cursorY = kSettingsApplyY + kSettingsApplyHeight / 2;
+    }
+    else if (IsPointInRect(baseMouseX,
+                           baseMouseY,
+                           kSettingsCancelX,
+                           kSettingsCancelY,
+                           kSettingsCancelWidth,
+                           kSettingsCancelHeight))
+    {
+        cursorX = kSettingsCancelX + 12;
+        cursorY = kSettingsCancelY + kSettingsCancelHeight / 2;
     }
 
     if (cursorX >= 0 && cursorY >= 0)
@@ -2191,30 +2225,40 @@ void PauseMenu::ApplySelectedQuality()
 
 void PauseMenu::ApplySelectedSettings()
 {
-    if (!IsSelectedSettingsDirty())
+    const bool resolutionDirty = IsSettingsRowDirty(SettingsRow::Resolution);
+    const bool windowModeDirty = IsSettingsRowDirty(SettingsRow::WindowMode);
+    const bool qualityDirty = IsSettingsRowDirty(SettingsRow::Quality);
+    if (!resolutionDirty && !windowModeDirty && !qualityDirty)
     {
         return;
     }
 
-    if (m_selectedSettingsRow == SettingsRow::Resolution)
-    {
-        ApplySelectedResolution();
-    }
-    else if (m_selectedSettingsRow == SettingsRow::Quality)
+    if (qualityDirty)
     {
         ApplySelectedQuality();
     }
-    else
+    if (windowModeDirty)
     {
-        return;
+        ApplySelectedWindowMode();
+    }
+    if (resolutionDirty)
+    {
+        ApplySelectedResolution();
     }
 
+    RefreshSettingsOptions();
     GameAudio::PlayMenuConfirm();
 }
 
-bool PauseMenu::IsSelectedSettingsDirty() const
+void PauseMenu::CancelSelectedSettings()
 {
-    if (m_selectedSettingsRow == SettingsRow::Resolution)
+    RefreshSettingsOptions();
+    GameAudio::PlayMenuCancel();
+}
+
+bool PauseMenu::IsSettingsRowDirty(const SettingsRow row) const
+{
+    if (row == SettingsRow::Resolution)
     {
         if (m_selectedResolutionIndex < 0 ||
             m_selectedResolutionIndex >= static_cast<int>(m_resolutionOptions.size()))
@@ -2227,7 +2271,22 @@ bool PauseMenu::IsSelectedSettingsDirty() const
                resolution.second != NSRender::Common::ScreenH();
     }
 
-    if (m_selectedSettingsRow == SettingsRow::Quality)
+    if (row == SettingsRow::WindowMode)
+    {
+        if (m_render == nullptr)
+        {
+            return false;
+        }
+
+        NSRender::eWindowMode selectedMode = NSRender::eWindowMode::WINDOW;
+        if (m_selectedWindowModeIndex == 1)
+        {
+            selectedMode = NSRender::eWindowMode::BORDERLESS;
+        }
+        return selectedMode != m_render->GetWindowMode();
+    }
+
+    if (row == SettingsRow::Quality)
     {
         if (m_render == nullptr)
         {
@@ -2243,6 +2302,13 @@ bool PauseMenu::IsSelectedSettingsDirty() const
     }
 
     return false;
+}
+
+bool PauseMenu::IsSettingsDirty() const
+{
+    return IsSettingsRowDirty(SettingsRow::Resolution) ||
+           IsSettingsRowDirty(SettingsRow::WindowMode) ||
+           IsSettingsRowDirty(SettingsRow::Quality);
 }
 
 int PauseMenu::GetSettingsOptionCount(const SettingsRow row) const
@@ -2321,7 +2387,6 @@ void PauseMenu::SetSelectedSettingsOptionIndex(const SettingsRow row, const int 
     else if (row == SettingsRow::WindowMode)
     {
         m_selectedWindowModeIndex = index;
-        ApplySelectedWindowMode();
     }
     else
     {
