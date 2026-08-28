@@ -21,6 +21,7 @@
 #include "EnemySmallSpider.h"
 #include "EnemyKanata.h"
 #include "EnemyHoshigirl.h"
+#include "GameAudio.h"
 
 #include "../../RedFortressRender/Render/Render.h"
 #include "../../RedFortressRender/Render/Camera.h"
@@ -171,7 +172,12 @@ void EnemyManager::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos
             }
         }
 
+        const bool wasDead = enemy->IsDead();
         enemy->Update(render, playerPos, playerInvincible);
+        if (!wasDead && enemy->IsDead())
+        {
+            GameAudio::PlayAttackHit();
+        }
     }
 
     for (auto it = m_enemies.begin(); it != m_enemies.end();)

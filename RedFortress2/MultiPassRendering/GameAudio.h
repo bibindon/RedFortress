@@ -35,6 +35,7 @@ void PlayPlayerAttack();
 void PlaySwordSwing();
 void PlaySlashHit();
 void PlayAttackHit();
+void PlaySwordDeflected();
 void PlayLeverToggle();
 void PlayRopeCut();
 void PlayMechanismStop();

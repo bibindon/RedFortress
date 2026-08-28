@@ -1935,7 +1935,7 @@ void GameApp::Run()
                             {
                                 BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
                             }
-                            else if (!IsSwordAttackType(attackType))
+                            else
                             {
                                 const DestructibleObject* destructible = m_destructibleManager.FindInAttackRange(
                                     m_playerMover.GetPosition(), m_playerYaw,
@@ -1945,7 +1945,12 @@ void GameApp::Run()
                                     attackDefinition.halfAngleRadians);
                                 if (destructible != nullptr)
                                 {
-                                    if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
+                                    if (IsSwordAttackType(attackType))
+                                    {
+                                        GameAudio::PlaySwordDeflected();
+                                        BeginHitStop(GetHitStopFrames(m_playerAttackController.GetCurrentAttackType()));
+                                    }
+                                    else if (m_destructibleManager.TryDamage(m_render, *destructible, attackDefinition.damage))
                                     {
                                         m_damagePopupManager.Add(attackDefinition.damage, destructible->position, false);
                                         GameAudio::PlayAttackHit();
@@ -7175,6 +7180,8 @@ void GameApp::BeginStageClearVisual()
 
 void GameApp::UpdateStageClearVisual()
 {
+    UpdatePortalPillarFade();
+
     if (!m_stageClearWasFirstClear)
     {
         if (m_stageClearReplayPhase == StageClearReplayPhase::WaitingToJump)
@@ -7515,55 +7522,63 @@ void GameApp::UpdatePortal()
     }
 
     // Step 3: Shrink and dim the light pillar after the flag appears.
-    if (m_portalFlagShown && m_portalPillarShown && m_portalPillarMeshId >= 0)
-    {
-        ++m_portalPillarFadeElapsedFrames;
-        if (m_portalPillarFadeElapsedFrames >= kPortalPillarFadeFrames)
-        {
-            m_render.RemoveMeshMix(m_portalPillarMeshId);
-            m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
-            m_portalPillarMeshId = -1;
-            m_portalPillarShown = false;
-        }
-        else
-        {
-            const float fadeProgress =
-                static_cast<float>(m_portalPillarFadeElapsedFrames) /
-                static_cast<float>(kPortalPillarFadeFrames);
-            const float smoothProgress =
-                fadeProgress * fadeProgress * (3.0f - 2.0f * fadeProgress);
-            const float remaining = 1.0f - smoothProgress;
+    UpdatePortalPillarFade();
 
-            D3DXMATRIX pillarScaleMatrix;
-            D3DXMATRIX pillarTranslationMatrix;
-            D3DXMatrixScaling(&pillarScaleMatrix, 1.0f, remaining, 1.0f);
-            D3DXMatrixTranslation(&pillarTranslationMatrix,
-                                  m_portalBasePosition.x,
-                                  m_portalBasePosition.y,
-                                  m_portalBasePosition.z);
-            m_render.SetMeshMixWorldMatrix(
-                m_portalPillarMeshId,
-                pillarScaleMatrix * pillarTranslationMatrix);
-
-            const float currentLightLength = kPortalPillarLightLength * remaining;
-            const D3DXVECTOR3 pillarLightPosition =
-                m_portalBasePosition + D3DXVECTOR3(0.0f,
-                                                   currentLightLength * 0.5f,
-                                                   0.0f);
-            m_render.SetPointLightPositionByOwnerTag(kPortalPillarLightOwnerTag,
-                                                      pillarLightPosition);
-            m_render.SetPointLightBrightnessByOwnerTag(
-                kPortalPillarLightOwnerTag,
-                kPortalPillarLightBrightness * remaining);
-            m_render.SetPointLightLineLengthByOwnerTag(kPortalPillarLightOwnerTag,
-                                                       currentLightLength);
-        }
-    }
     // Step 4: Count down after the flag has appeared.
     if (m_portalFlagShown && m_portalClearDelayFrames > 0)
     {
         --m_portalClearDelayFrames;
     }
+}
+
+
+void GameApp::UpdatePortalPillarFade()
+{
+    if (!m_portalFlagShown || !m_portalPillarShown || m_portalPillarMeshId < 0)
+    {
+        return;
+    }
+
+    ++m_portalPillarFadeElapsedFrames;
+    if (m_portalPillarFadeElapsedFrames >= kPortalPillarFadeFrames)
+    {
+        m_render.RemoveMeshMix(m_portalPillarMeshId);
+        m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
+        m_portalPillarMeshId = -1;
+        m_portalPillarShown = false;
+        return;
+    }
+
+    const float fadeProgress =
+        static_cast<float>(m_portalPillarFadeElapsedFrames) /
+        static_cast<float>(kPortalPillarFadeFrames);
+    const float smoothProgress =
+        fadeProgress * fadeProgress * (3.0f - 2.0f * fadeProgress);
+    const float remaining = 1.0f - smoothProgress;
+
+    D3DXMATRIX pillarScaleMatrix;
+    D3DXMATRIX pillarTranslationMatrix;
+    D3DXMatrixScaling(&pillarScaleMatrix, 1.0f, remaining, 1.0f);
+    D3DXMatrixTranslation(&pillarTranslationMatrix,
+                          m_portalBasePosition.x,
+                          m_portalBasePosition.y,
+                          m_portalBasePosition.z);
+    m_render.SetMeshMixWorldMatrix(
+        m_portalPillarMeshId,
+        pillarScaleMatrix * pillarTranslationMatrix);
+
+    const float currentLightLength = kPortalPillarLightLength * remaining;
+    const D3DXVECTOR3 pillarLightPosition =
+        m_portalBasePosition + D3DXVECTOR3(0.0f,
+                                           currentLightLength * 0.5f,
+                                           0.0f);
+    m_render.SetPointLightPositionByOwnerTag(kPortalPillarLightOwnerTag,
+                                              pillarLightPosition);
+    m_render.SetPointLightBrightnessByOwnerTag(
+        kPortalPillarLightOwnerTag,
+        kPortalPillarLightBrightness * remaining);
+    m_render.SetPointLightLineLengthByOwnerTag(kPortalPillarLightOwnerTag,
+                                               currentLightLength);
 }
 
 

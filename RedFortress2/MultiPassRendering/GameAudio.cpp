@@ -48,6 +48,7 @@ const std::wstring kMechanismStop = L"res\\sound\\stomp_impact.wav";
 const std::wstring kDoorMovement = L"res\\sound\\pullOar2.wav";
 const std::wstring kPushableBoxMovement = L"res\\sound\\pushable_box_scrape.wav";
 const std::wstring kAttackHit = L"res\\sound\\club_hit.wav";
+const std::wstring kSwordDeflected = L"res\\sound\\sword_deflected.wav";
 const std::wstring kBusterHit = L"res\\sound\\buster_hit.wav";
 const std::wstring kEnemyAttack = L"res\\sound\\enemyAttack.wav";
 const std::wstring kPlayerDamage = L"res\\sound\\damage01.wav";
@@ -354,7 +355,7 @@ void Initialize()
     ResetTrackingState();
     const std::wstring effects[] =
     {
-        kMenuMove, kMenuConfirm, kMenuCancel, kMenuOpen, kCraftOpen, kExplanationOpen, kSaveComplete, kPlayerAttack, kSwordSwing, kSlashHit, kAttackHit, kBusterHit,
+        kMenuMove, kMenuConfirm, kMenuCancel, kMenuOpen, kCraftOpen, kExplanationOpen, kSaveComplete, kPlayerAttack, kSwordSwing, kSlashHit, kAttackHit, kSwordDeflected, kBusterHit,
         kEnemyAttack, kPlayerDamage, kPlayerDeath, kItemGet, kAmmoGet, kAmmoMax, kJump, kPowerUp, kDash, kDashBooster,
         kExplosion, kBombPlace, kStomp, kLeverToggle, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
         kDrink, kQte, kQteBest, kArrow, kWarp
@@ -591,6 +592,7 @@ void PlayPlayerAttack() { PlayEffect(kPlayerAttack, 82); }
 void PlaySwordSwing() { PlayEffect(kSwordSwing, 80); }
 void PlaySlashHit() { PlayEffect(kSlashHit, 82); }
 void PlayAttackHit() { PlayEffect(kAttackHit, 82); }
+void PlaySwordDeflected() { PlayEffect(kSwordDeflected, 82); }
 void PlayLeverToggle() { PlayEffect(kLeverToggle, 80); }
 void PlayRopeCut() { PlayEffect(kRopeCut, 82); }
 void PlayMechanismStop() { PlayEffect(kMechanismStop, 80); }

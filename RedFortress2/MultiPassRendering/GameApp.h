@@ -227,6 +227,7 @@ private:
     void InitializePortal(const D3DXVECTOR3& clearPosition);
     void RemovePortal();
     void UpdatePortal();
+    void UpdatePortalPillarFade();
     void TryDropEnemyItem(const EnemyBase& enemy);
     void InitializeStageSelectCursor();
     void LoadStageSelectNavigation(const std::wstring& csvPath);
