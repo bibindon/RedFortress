@@ -187,5 +187,7 @@ private:
     std::vector<std::pair<int, int>> m_resolutionOptions;
     int m_stageNameFontId = -1;
     int m_menuItemFontId = -1;
+    int m_exitMenuFontId = -1;
+    int m_saveMenuFontId = -1;
     int m_qualityFontId = -1;
 };

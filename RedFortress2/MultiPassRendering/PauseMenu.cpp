@@ -35,7 +35,7 @@ const std::wstring kItemScrollUpImagePath = L"res\\2D_Image\\item_scroll_up.png"
 const std::wstring kItemScrollDownImagePath = L"res\\2D_Image\\item_scroll_down.png";
 const int kHeartImageSize = 36;
 const int kLivesDisplayX = 1320;
-const int kLivesDisplayY = 130;
+const int kLivesDisplayY = 120;
 const int kLivesTextX = kLivesDisplayX + kHeartImageSize + 10;
 const int kLivesTextY = 133;
 // command_cursor.png の白い点は画像左上(0,0)〜(12,12)にあるため、点の中心は画像内 (6,6)。
@@ -95,6 +95,7 @@ const int kExitPanelButtonWidth = 460;
 const int kExitPanelButtonHeight = 56;
 const int kExitPanelFirstY = 300;
 const int kExitPanelButtonInterval = 75;
+const int kExitPanelTextYOffset = 17;
 const int kSettingsRowX = 200;
 const int kSettingsRowTextX = 220;
 const int kSettingsRowWidth = 260;
@@ -1385,12 +1386,22 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
 
     if (m_stageNameFontId < 0)
     {
-        m_stageNameFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 30, kTextColor);
+        m_stageNameFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 26, kTextColor);
     }
 
     if (m_menuItemFontId < 0)
     {
         m_menuItemFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 26, kTextColor);
+    }
+
+    if (m_exitMenuFontId < 0)
+    {
+        m_exitMenuFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 22, kTextColor);
+    }
+
+    if (m_saveMenuFontId < 0)
+    {
+        m_saveMenuFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 22, kTextColor);
     }
 
     if (m_qualityFontId < 0)
@@ -1454,10 +1465,10 @@ void PauseMenu::RenderExitPanel()
     const int cursorCenterX = kExitPanelButtonX + 15;
     if (m_returnToStageSelectEnabled)
     {
-        m_render->DrawTextEx(m_menuItemFontId,
+        m_render->DrawTextEx(m_exitMenuFontId,
                              L"ステージセレクトに戻る",
                              textX,
-                             GetExitPanelButtonY(kExitPanelStageSelectIndex) + 15,
+                             GetExitPanelButtonY(kExitPanelStageSelectIndex) + kExitPanelTextYOffset,
                              kTextColor);
         if (m_selectedExitPanelIndex == kExitPanelStageSelectIndex)
         {
@@ -1472,10 +1483,10 @@ void PauseMenu::RenderExitPanel()
 
     if (m_returnToTitleEnabled)
     {
-        m_render->DrawTextEx(m_menuItemFontId,
+        m_render->DrawTextEx(m_exitMenuFontId,
                              L"タイトルに戻る",
                              textX,
-                             GetExitPanelButtonY(kExitPanelTitleIndex) + 15,
+                             GetExitPanelButtonY(kExitPanelTitleIndex) + kExitPanelTextYOffset,
                              kTextColor);
         if (m_selectedExitPanelIndex == kExitPanelTitleIndex)
         {
@@ -1488,10 +1499,10 @@ void PauseMenu::RenderExitPanel()
         }
     }
 
-    m_render->DrawTextEx(m_menuItemFontId,
+    m_render->DrawTextEx(m_exitMenuFontId,
                          L"ゲームを終了",
                          textX,
-                         GetExitPanelButtonY(kExitPanelGameIndex) + 15,
+                         GetExitPanelButtonY(kExitPanelGameIndex) + kExitPanelTextYOffset,
                          kTextColor);
     if (m_selectedExitPanelIndex == kExitPanelGameIndex)
     {
@@ -2821,19 +2832,19 @@ void PauseMenu::UpdateSaveConfirm()
 
 void PauseMenu::RenderSaveConfirm()
 {
-    m_render->DrawTextEx(m_menuItemFontId,
+    m_render->DrawTextEx(m_saveMenuFontId,
                          L"セーブする",
                          kSaveConfirmPromptX,
                          kSaveConfirmPromptY,
                          kTextColor);
-    m_render->DrawTextExCenter(m_menuItemFontId,
+    m_render->DrawTextExCenter(m_saveMenuFontId,
                                L"はい",
                                kSaveConfirmYesX,
                                kSaveConfirmY,
                                kExitConfirmButtonWidth,
                                kExitConfirmButtonHeight,
                                kTextColor);
-    m_render->DrawTextExCenter(m_menuItemFontId,
+    m_render->DrawTextExCenter(m_saveMenuFontId,
                                L"いいえ",
                                kSaveConfirmNoX,
                                kSaveConfirmY,
