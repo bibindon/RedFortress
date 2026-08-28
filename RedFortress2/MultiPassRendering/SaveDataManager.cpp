@@ -24,6 +24,7 @@ std::wstring MakeExplanationSaveId(const std::wstring& stageId,
 SaveDataManager::SaveDataManager()
     : m_stageManager(nullptr)
     , m_hasSaveFile(false)
+    , m_hasUnsavedChanges(false)
 {
 }
 
@@ -74,6 +75,7 @@ bool SaveDataManager::Load()
     m_stageSelectId.clear();
     m_stageSelectPortalId.clear();
     m_hasSaveFile = false;
+    m_hasUnsavedChanges = false;
 
     if (m_stageManager == nullptr)
     {
@@ -189,6 +191,7 @@ bool SaveDataManager::Load()
     }
 
     m_hasSaveFile = true;
+    m_hasUnsavedChanges = false;
     return true;
 }
 
@@ -279,10 +282,15 @@ void SaveDataManager::Save()
 
     csv::Write(m_filePath, csvData);
     m_hasSaveFile = true;
+    m_hasUnsavedChanges = false;
 }
 
 void SaveDataManager::SetStageSelectPosition(const std::wstring& stageSelectId, const std::wstring& portalId)
 {
+    if (m_stageSelectId != stageSelectId || m_stageSelectPortalId != portalId)
+    {
+        m_hasUnsavedChanges = true;
+    }
     m_stageSelectId = stageSelectId;
     m_stageSelectPortalId = portalId;
 }
@@ -306,7 +314,10 @@ void SaveDataManager::MarkStageCleared(const std::wstring& stageId)
 {
     if (!stageId.empty())
     {
-        m_clearedStageIds.insert(stageId);
+        if (m_clearedStageIds.insert(stageId).second)
+        {
+            m_hasUnsavedChanges = true;
+        }
     }
 }
 
@@ -374,11 +385,19 @@ bool SaveDataManager::HasSaveFile() const
     return true;
 }
 
+bool SaveDataManager::HasUnsavedChanges() const
+{
+    return m_hasUnsavedChanges;
+}
+
 void SaveDataManager::MarkStageUnlocked(const std::wstring& stageId)
 {
     if (!stageId.empty())
     {
-        m_unlockedStageIds.insert(stageId);
+        if (m_unlockedStageIds.insert(stageId).second)
+        {
+            m_hasUnsavedChanges = true;
+        }
     }
 }
 
@@ -399,7 +418,10 @@ void SaveDataManager::MarkExplanationShown(const std::wstring& stageId,
     {
         return;
     }
-    m_shownExplanationIds.insert(MakeExplanationSaveId(stageId, explanationId));
+    if (m_shownExplanationIds.insert(MakeExplanationSaveId(stageId, explanationId)).second)
+    {
+        m_hasUnsavedChanges = true;
+    }
 }
 
 bool SaveDataManager::IsExplanationShown(const std::wstring& stageId,
@@ -435,7 +457,7 @@ void SaveDataManager::InitializeDefaultUnlocks()
     m_unlockedStageIds.insert(L"1-1");
 }
 
-void SaveDataManager::ResetToDefaults()
+void SaveDataManager::ResetToDefaults(const bool markUnsaved)
 {
     m_clearedStageIds.clear();
     m_unlockedStageIds.clear();
@@ -444,10 +466,11 @@ void SaveDataManager::ResetToDefaults()
     m_stageSelectPortalId.clear();
     m_hasSaveFile = false;
     InitializeDefaultUnlocks();
+    m_hasUnsavedChanges = markUnsaved;
 }
 
 void SaveDataManager::DeleteSaveData()
 {
     DeleteFileW(m_filePath.c_str());
-    ResetToDefaults();
+    ResetToDefaults(false);
 }

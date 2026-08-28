@@ -369,7 +369,6 @@ void ExplanationManager::Open(const std::size_t explanationIndex)
     GameAudio::PlayExplanationOpen();
     const Explanation& explanation = m_explanations.at(explanationIndex);
     m_saveDataManager->MarkExplanationShown(m_stageId, explanation.id);
-    m_saveDataManager->Save();
     m_maskedGaussianAmount = 0.0f;
     m_transitionStartAmount = 0.0f;
     m_transitionStartTime = std::chrono::steady_clock::now();

@@ -35,9 +35,10 @@ public:
     void MarkStageClearedByIndex(std::size_t stageIndex);
 
     bool HasSaveFile() const;
+    bool HasUnsavedChanges() const;
 
     void InitializeDefaultUnlocks();
-    void ResetToDefaults();
+    void ResetToDefaults(bool markUnsaved);
     void DeleteSaveData();
 
 private:
@@ -55,4 +56,5 @@ private:
     std::wstring m_stageSelectId;
     std::wstring m_stageSelectPortalId;
     bool m_hasSaveFile;
+    bool m_hasUnsavedChanges;
 };

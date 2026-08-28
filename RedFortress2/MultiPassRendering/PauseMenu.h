@@ -22,7 +22,10 @@ public:
                     bool& mouseCursorVisible,
                     InventoryManager& inventory);
     void Toggle();
-    void Open(bool saveEnabled, bool returnToStageSelectEnabled, bool returnToTitleEnabled);
+    void Open(bool saveEnabled,
+              bool returnToStageSelectEnabled,
+              bool returnToTitleEnabled,
+              bool hasUnsavedChanges);
     void Close();
     void CloseImmediately();
     void Update();
@@ -159,6 +162,7 @@ private:
     bool m_returnToTitleRequested = false;
     bool m_returnToStageSelectEnabled = false;
     bool m_returnToTitleEnabled = false;
+    bool m_hasUnsavedChanges = false;
     int m_selectedSaveConfirmIndex = 0;
     FocusArea m_focusArea = FocusArea::TopMenu;
     SettingsRow m_selectedSettingsRow = SettingsRow::Resolution;

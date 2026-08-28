@@ -292,10 +292,16 @@ void PauseMenu::Toggle()
         return;
     }
 
-    Open(m_saveEnabled, m_returnToStageSelectEnabled, m_returnToTitleEnabled);
+    Open(m_saveEnabled,
+         m_returnToStageSelectEnabled,
+         m_returnToTitleEnabled,
+         m_hasUnsavedChanges);
 }
 
-void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabled, const bool returnToTitleEnabled)
+void PauseMenu::Open(const bool saveEnabled,
+                     const bool returnToStageSelectEnabled,
+                     const bool returnToTitleEnabled,
+                     const bool hasUnsavedChanges)
 {
     if (m_render == nullptr)
     {
@@ -313,6 +319,7 @@ void PauseMenu::Open(const bool saveEnabled, const bool returnToStageSelectEnabl
     m_returnToTitleRequested = false;
     m_returnToStageSelectEnabled = returnToStageSelectEnabled;
     m_returnToTitleEnabled = returnToTitleEnabled;
+    m_hasUnsavedChanges = hasUnsavedChanges;
     m_skipInputFrame = true;
     // メニューを開いたら最初からアイテム一覧を表示する。
     m_focusArea = FocusArea::ItemList;
@@ -1951,7 +1958,18 @@ void PauseMenu::RenderExitConfirm()
     const wchar_t* confirmMessage = L"ゲームを終了しますか？";
     if (m_exitConfirmAction == ExitConfirmAction::Title)
     {
-        confirmMessage = L"タイトルに戻りますか？";
+        if (m_hasUnsavedChanges)
+        {
+            confirmMessage = L"未保存のままタイトルに戻りますか？";
+        }
+        else
+        {
+            confirmMessage = L"タイトルに戻りますか？";
+        }
+    }
+    else if (m_hasUnsavedChanges)
+    {
+        confirmMessage = L"未保存のまま終了しますか？";
     }
 
     m_render->DrawTextExCenter(m_qualityFontId,

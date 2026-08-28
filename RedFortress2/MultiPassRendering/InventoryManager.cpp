@@ -51,6 +51,7 @@ bool InventoryManager::Load()
     m_weaponCounts.clear();
     m_collectedWeaponCollectibleIds.clear();
     m_unlockedAbilityIds.clear();
+    m_hasUnsavedChanges = false;
 
     const DWORD attributes = GetFileAttributesW(m_filePath.c_str());
     if (attributes == INVALID_FILE_ATTRIBUTES)
@@ -105,7 +106,7 @@ bool InventoryManager::Load()
     return true;
 }
 
-void InventoryManager::Save() const
+void InventoryManager::Save()
 {
     if (!EnsureDirectoryExists())
     {
@@ -152,6 +153,19 @@ void InventoryManager::Save() const
     }
 
     csv::Write(m_filePath, csvData);
+    m_hasUnsavedChanges = false;
+}
+
+bool InventoryManager::HasUnsavedChanges() const
+{
+    return m_hasUnsavedChanges;
+}
+
+void InventoryManager::DeleteSaveData()
+{
+    Reset();
+    DeleteFileW(m_filePath.c_str());
+    m_hasUnsavedChanges = false;
 }
 
 void InventoryManager::UnlockAbility(const std::wstring& abilityId)
@@ -160,7 +174,7 @@ void InventoryManager::UnlockAbility(const std::wstring& abilityId)
     {
         if (m_unlockedAbilityIds.insert(abilityId).second)
         {
-            Save();
+            m_hasUnsavedChanges = true;
         }
     }
 }
@@ -175,6 +189,7 @@ void InventoryManager::AddItem(const std::wstring& itemId, const int count)
     if (!itemId.empty() && count > 0)
     {
         m_itemCounts[itemId] += count;
+        m_hasUnsavedChanges = true;
     }
 }
 
@@ -182,7 +197,11 @@ void InventoryManager::AddWeapon(const std::wstring& weaponId, const int count)
 {
     if (!weaponId.empty() && count > 0)
     {
-        m_weaponCounts[weaponId] = 1;
+        if (m_weaponCounts.find(weaponId) == m_weaponCounts.end())
+        {
+            m_weaponCounts[weaponId] = 1;
+            m_hasUnsavedChanges = true;
+        }
     }
 }
 
@@ -205,7 +224,7 @@ bool InventoryManager::RemoveItem(const std::wstring& itemId, const int count)
         m_itemCounts.erase(found);
     }
 
-    Save();
+    m_hasUnsavedChanges = true;
     return true;
 }
 
@@ -282,6 +301,7 @@ bool InventoryManager::TryCraft(const std::vector<std::pair<std::wstring, int>>&
         }
 
         found->second -= required.second;
+        m_hasUnsavedChanges = true;
         if (found->second <= 0)
         {
             m_itemCounts.erase(found);
@@ -301,7 +321,6 @@ bool InventoryManager::TryCraft(const std::vector<std::pair<std::wstring, int>>&
         UnlockAbility(resultId);
     }
 
-    Save();
     return true;
 }
 
@@ -321,7 +340,10 @@ void InventoryManager::MarkWeaponCollectibleCollected(const std::wstring& collec
 {
     if (!collectibleId.empty())
     {
-        m_collectedWeaponCollectibleIds.insert(collectibleId);
+        if (m_collectedWeaponCollectibleIds.insert(collectibleId).second)
+        {
+            m_hasUnsavedChanges = true;
+        }
     }
 }
 
@@ -333,6 +355,13 @@ bool InventoryManager::IsWeaponCollectibleCollected(const std::wstring& collecti
 
 void InventoryManager::Reset()
 {
+    if (!m_itemCounts.empty() ||
+        !m_weaponCounts.empty() ||
+        !m_collectedWeaponCollectibleIds.empty() ||
+        !m_unlockedAbilityIds.empty())
+    {
+        m_hasUnsavedChanges = true;
+    }
     m_itemCounts.clear();
     m_weaponCounts.clear();
     m_collectedWeaponCollectibleIds.clear();
@@ -341,6 +370,9 @@ void InventoryManager::Reset()
 
 void InventoryManager::ResetAbilities()
 {
+    if (!m_unlockedAbilityIds.empty())
+    {
+        m_hasUnsavedChanges = true;
+    }
     m_unlockedAbilityIds.clear();
-    Save();
 }

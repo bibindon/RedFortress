@@ -291,18 +291,12 @@ void CollectibleManager::Collect(Collectible& collectible)
         if (!IsTemporaryPowerUpItem(collectible.dataId))
         {
             m_inventory->AddItem(collectible.dataId);
-            m_inventory->Save();
         }
 
         if (m_itemCollectedCallback)
         {
             m_itemCollectedCallback(collectible.dataId, 1);
         }
-    }
-
-    if (collectible.type == CollectibleType::Weapon)
-    {
-        m_inventory->Save();
     }
 
     GameAudio::PlayItemGet();

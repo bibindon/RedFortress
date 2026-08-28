@@ -11,7 +11,9 @@ class InventoryManager
 public:
     void Initialize();
     bool Load();
-    void Save() const;
+    void Save();
+    bool HasUnsavedChanges() const;
+    void DeleteSaveData();
 
     void AddItem(const std::wstring& itemId, int count = 1);
     void AddWeapon(const std::wstring& weaponId, int count = 1);
@@ -43,4 +45,5 @@ private:
     std::unordered_set<std::wstring> m_collectedWeaponCollectibleIds;
     std::unordered_set<std::wstring> m_unlockedAbilityIds;
     std::wstring m_filePath;
+    bool m_hasUnsavedChanges = false;
 };

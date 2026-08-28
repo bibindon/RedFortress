@@ -238,7 +238,6 @@ void PickupManager::UpdatePickups(const D3DXVECTOR3& playerPosition,
                 {
                     m_itemCollectedCallback(cubes[i].itemId, 1);
                 }
-                m_inventory->Save();
                 GameAudio::PlayItemGet();
             }
         }

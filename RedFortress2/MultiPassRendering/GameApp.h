@@ -194,6 +194,9 @@ private:
     void ExitTitleLanguageSelection();
     void ExecuteDeleteSaveData();
     void ExecuteTitleCommand(const std::wstring& commandId);
+    bool HasUnsavedChanges() const;
+    bool ConfirmGameExit() const;
+    void RequestGameExit();
     POINT ConvertMouseToBaseResolution(int clientX, int clientY);
     D3DXVECTOR3 GetCameraPlanarForward();
     D3DXVECTOR3 GetCameraPlanarRight(const D3DXVECTOR3& forward);

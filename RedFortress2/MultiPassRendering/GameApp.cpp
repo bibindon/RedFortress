@@ -155,9 +155,10 @@ namespace
     const float kPortalStepsPositionYOffset = -1.0f;
     const int kPortalClearDelayFrames = 150;
     const float kPortalPillarTouchRadius = 0.9f;
-    const float kPortalPillarLightHeight = 1.2f;
-    const float kPortalPillarLightBrightness = 0.8f;
+    const float kPortalPillarLightHeight = 10.0f;
+    const float kPortalPillarLightBrightness = 1.6f;
     const float kPortalPillarLightRange = 4.0f;
+    const float kPortalPillarLightLength = 20.0f;
     const std::wstring kPortalPillarLightOwnerTag = L"stage-goal-pillar";
     const float kTitleSunLightIntensity = 0.45f;
     const float kTitleAmbientLightIntensity = 0.14f;
@@ -843,7 +844,6 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     if (m_inventoryManager.GetWeaponCount(kInitialClubWeaponId) <= 0)
     {
         m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
-        m_inventoryManager.Save();
     }
     ApplyUnlockedAbilities();
     LoadItemNameCatalog();
@@ -899,7 +899,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_saveDataManager.Initialize(m_stageManager);
     m_explanationManager.Initialize(m_render, m_saveDataManager);
     m_explanationManager.LoadForStage(initialStage.id, initialStage.explanationCsvPath);
-    m_saveDataManager.ResetToDefaults();
+    m_saveDataManager.ResetToDefaults(false);
     InitializeStageSelectCursor();
     CreateStageSelectCubes();
     UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
@@ -1032,7 +1032,10 @@ void GameApp::Run()
             // ステージセレクト画面以外では、攻略済みかどうかにかかわらず
             // 「ステージセレクトに戻る」を常時有効にする。
             const bool returnToStageSelectEnabled = !IsCurrentStageSelect();
-            m_pauseMenu.Open(IsCurrentStageSelect(), returnToStageSelectEnabled, true);
+            m_pauseMenu.Open(IsCurrentStageSelect(),
+                             returnToStageSelectEnabled,
+                             true,
+                             HasUnsavedChanges());
         }
 
         if (m_gameState != GameState::EndingFin &&
@@ -1315,6 +1318,7 @@ void GameApp::Run()
                                 m_selectedStagePortalId);
                         }
                         m_saveDataManager.Save();
+                        m_inventoryManager.Save();
                         m_itemPickupMessage = L"セーブが完了しました";
                         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
                         GameAudio::PlaySaveComplete();
@@ -1673,7 +1677,6 @@ void GameApp::Run()
                         }
                         const std::wstring qteRewardItemId = GetRandomCraftMaterialItemId();
                         m_inventoryManager.AddItem(qteRewardItemId, qteRewardItemCount);
-                        m_inventoryManager.Save();
                         ShowItemPickupMessage(qteRewardItemId, qteRewardItemCount);
                     }
                     else
@@ -6139,7 +6142,6 @@ void GameApp::UnlockStagesUpToSelected(HWND hDlg)
 void GameApp::AllUnlockStages(HWND hDlg)
 {
     m_saveDataManager.MarkAllStagesClearedAndUnlocked();
-    m_saveDataManager.Save();
     PopulateUnlockStageCombo(hDlg);
     PopulateStageCombo(hDlg);
     RefreshTitleCommands();
@@ -6151,7 +6153,6 @@ void GameApp::UnlockAllWeapons()
     m_inventoryManager.AddWeapon(kSwordWeaponId, 1);
     m_inventoryManager.AddWeapon(kBusterWeaponId, 1);
     m_inventoryManager.AddWeapon(kBombWeaponId, 1);
-    m_inventoryManager.Save();
     RefillWeaponAmmo();
     UpdateHeldWeaponVisibility();
 }
@@ -6474,11 +6475,10 @@ bool GameApp::CompleteStageMove(const std::size_t stageIndex)
 
 void GameApp::StartNewGame()
 {
-    m_saveDataManager.ResetToDefaults();
+    m_saveDataManager.ResetToDefaults(true);
     m_preferredStageSelectPortalId.clear();
     m_inventoryManager.Reset();
     m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
-    m_inventoryManager.Save();
     ApplyUnlockedAbilities();
     m_baseBombCapacity = 1;
     m_baseBusterRapidLevel = 1;
@@ -6551,8 +6551,7 @@ void GameApp::ExitTitleLanguageSelection()
 void GameApp::ExecuteDeleteSaveData()
 {
     m_saveDataManager.DeleteSaveData();
-    m_inventoryManager.Reset();
-    DeleteFileW((NSRender::Util::GetExeDir() + L"res\\savedata\\inventory.csv").c_str());
+    m_inventoryManager.DeleteSaveData();
     ApplyUnlockedAbilities();
     ExitDeleteConfirmation();
 }
@@ -6600,6 +6599,34 @@ void GameApp::ExecuteTitleCommand(const std::wstring& commandId)
         ExitTitleLanguageSelection();
     }
     else if (commandId == L"exit")
+    {
+        RequestGameExit();
+    }
+}
+
+bool GameApp::HasUnsavedChanges() const
+{
+    return m_saveDataManager.HasUnsavedChanges() ||
+           m_inventoryManager.HasUnsavedChanges();
+}
+
+bool GameApp::ConfirmGameExit() const
+{
+    if (!HasUnsavedChanges())
+    {
+        return true;
+    }
+
+    const int result = MessageBoxW(m_hWnd,
+                                   L"セーブしていない変更があります。\n保存せずにゲームを終了しますか？",
+                                   L"未保存の変更",
+                                   MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
+    return result == IDYES;
+}
+
+void GameApp::RequestGameExit()
+{
+    if (ConfirmGameExit())
     {
         m_close = true;
     }
@@ -6812,8 +6839,11 @@ LRESULT WINAPI GameApp::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 
     case WM_CLOSE:
     {
-        Instance().m_close = true;
-        DestroyWindow(hWnd);
+        Instance().RequestGameExit();
+        if (Instance().m_close)
+        {
+            DestroyWindow(hWnd);
+        }
         return 0;
     }
 
@@ -7439,11 +7469,11 @@ void GameApp::UpdatePortal()
             m_render.AddPointLight(pillarLightPosition,
                                    kPortalPillarLightBrightness,
                                    pillarLightColor,
-                                   NSRender::PointLightShape::Point,
-                                   12.0f,
+                                   NSRender::PointLightShape::Line,
+                                   kPortalPillarLightLength,
                                    10.0f,
                                    10.0f,
-                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                   D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f),
                                    kPortalPillarLightRange,
                                    kPortalPillarLightOwnerTag);
             m_portalPillarShown = true;
