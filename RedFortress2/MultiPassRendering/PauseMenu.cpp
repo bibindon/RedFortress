@@ -19,6 +19,7 @@ namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
 const std::wstring kMenuTopBackgroundPath = L"res\\2D_Image\\menu_top_bg.png";
+const std::wstring kMenuItemListBackgroundPath = L"res\\2D_Image\\item_list_bg.png";
 const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
 const std::wstring kHeartImagePath = L"res\\2D_Image\\heart.png";
 const std::wstring kWeaponClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
@@ -120,15 +121,25 @@ const int kDisabledSettingsButtonTransparency = 32;
 const int kSettingsArrowIconTransparency = 245;
 const int kDisabledSettingsArrowIconTransparency = 90;
 const UINT kDisabledSettingsTextColor = D3DCOLOR_RGBA(120, 125, 135, 190);
-const std::size_t kVisibleItemCount = 10;
-const std::size_t kVisibleWeaponCount = 11;
-const int kItemListX = 205;
-const int kItemListHeaderY = 320;
-const int kItemPanelListY = 355;
+const std::size_t kVisibleItemCount = 8;
+const std::size_t kVisibleWeaponCount = 8;
+const int kItemListX = 255;
+const int kItemListHeaderY = 338;
 const int kItemListY = 385;
-const int kItemListLineHeight = 34;
-const int kItemCountColumnX = 610;
+const int kItemPanelListY = 392;
+const int kItemListLineHeight = 40;
+const int kItemCountColumnX = 500;
 const int kItemCountColumnWidth = 100;
+// フォント(20px)の行高。所持数の描画はこの高さで上揃えにして、行内で縦の位置を揃える。
+const int kMenuTextLineHeight = 26;
+// アイテム一覧(ヘッダー行+リスト)全体を覆う白い角丸矩形。PNG と 1:1 で描画する。
+const int kItemListBackgroundX = kItemListX - 50;
+const int kItemListBackgroundY = kItemListHeaderY - 26;
+const int kItemListBackgroundWidth =
+    kItemCountColumnX + kItemCountColumnWidth + 30 - (kItemListX - 50);
+const int kItemListBackgroundHeight =
+    kItemPanelListY + static_cast<int>(kVisibleItemCount) * kItemListLineHeight + 36 -
+    (kItemListHeaderY - 26);
 const int kWeaponListIconX = kItemListX;
 const int kWeaponListIconSize = 28;
 const int kWeaponListTextX = kWeaponListIconX + kWeaponListIconSize + 12;
@@ -1450,17 +1461,21 @@ void PauseMenu::RenderTopMenu()
         hoveredMenuIndex = pointedMenuIndex;
     }
 
+    const int topMenuBgHeight = kTopMenuItemHeight * 2 - 10;
+    const int topMenuBgOffsetY = 12;
+    const int topMenuBgWidth = (kTopMenuCount - 1) * kTopMenuItemInterval +
+                               kTopMenuItemWidth;
+    m_render->DrawImageSized(kMenuTopBackgroundPath,
+                             kTopMenuX,
+                             kTopMenuY - (topMenuBgHeight / 2) + topMenuBgOffsetY,
+                             topMenuBgWidth,
+                             topMenuBgHeight,
+                             255);
+
     for (std::size_t i = 0; i < kTopMenuItems.size(); ++i)
     {
         const int menuIndex = static_cast<int>(i);
         const int x = kTopMenuX + menuIndex * kTopMenuItemInterval;
-        m_render->DrawImageSized(kMenuTopBackgroundPath,
-                                 x,
-                                 kTopMenuY,
-                                 kTopMenuItemWidth,
-                                 kTopMenuItemHeight,
-                                 255);
-
         UINT color = kTextColor;
         if (!IsTopMenuItemEnabled(menuIndex))
         {
@@ -1609,6 +1624,13 @@ bool PauseMenu::TryActivateTopMenuFromMouseClick()
 
 void PauseMenu::RenderItemPanel()
 {
+    m_render->DrawImageSized(kMenuItemListBackgroundPath,
+                             kItemListBackgroundX,
+                             kItemListBackgroundY,
+                             kItemListBackgroundWidth,
+                             kItemListBackgroundHeight,
+                             255);
+
     m_render->DrawTextEx(m_qualityFontId,
                          L"アイテム名",
                          kItemListX,
@@ -1619,7 +1641,7 @@ void PauseMenu::RenderItemPanel()
                                kItemCountColumnX,
                                kItemListHeaderY,
                                kItemCountColumnWidth,
-                               kItemListLineHeight,
+                               kMenuTextLineHeight,
                                kItemListHeaderTextColor);
 
     const std::vector<std::size_t> ownedItems = GetOwnedItemIndices();
@@ -1640,6 +1662,18 @@ void PauseMenu::RenderItemPanel()
         itemEnd = ownedItems.size();
     }
 
+    // 上側にスクロールし戻せるアイテムがあれば、リストの上に▲を表示する。
+    if (m_itemScrollOffset > 0)
+    {
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   L"▲",
+                                   kItemListBackgroundX,
+                                   kItemListHeaderY + 24,
+                                   kItemListBackgroundWidth,
+                                   kMenuTextLineHeight,
+                                   kTextColor);
+    }
+
     for (std::size_t i = m_itemScrollOffset; i < itemEnd; ++i)
     {
         const int lineIndex = static_cast<int>(i - m_itemScrollOffset);
@@ -1655,15 +1689,30 @@ void PauseMenu::RenderItemPanel()
                                    kItemCountColumnX,
                                    rowY,
                                    kItemCountColumnWidth,
-                                   kItemListLineHeight,
+                                   kMenuTextLineHeight,
                                    kTextColor);
         if (i == m_selectedItemIndex)
         {
             m_render->DrawImage(kCommandCursorPath,
-                                kItemListX - 10 - kCommandCursorDotCenterX,
-                                rowY + (kItemListLineHeight / 2) - kCommandCursorDotCenterY,
+                                kItemListX - 17 - kCommandCursorDotCenterX,
+                                rowY + 10 - kCommandCursorDotCenterY,
                                 255);
         }
+    }
+
+    // スクロール下側にまだアイテムがあれば、最終行の下に▼を表示する。
+    if (m_itemScrollOffset + kVisibleItemCount < ownedItems.size())
+    {
+        m_render->DrawTextExCenter(m_qualityFontId,
+                                   L"▼",
+                                   kItemListBackgroundX,
+                                   kItemPanelListY +
+                                       static_cast<int>(kVisibleItemCount) *
+                                           kItemListLineHeight +
+                                       2,
+                                   kItemListBackgroundWidth,
+                                   24,
+                                   kTextColor);
     }
 
     const ItemData& selectedItem = m_items.at(ownedItems.at(m_selectedItemIndex));
@@ -1771,8 +1820,8 @@ void PauseMenu::RenderWeaponPanel()
         if (i == m_selectedWeaponIndex)
         {
             m_render->DrawImage(kCommandCursorPath,
-                                kItemListX - 10 - kCommandCursorDotCenterX,
-                                rowY + kWeaponListCursorCenterYOffset - kCommandCursorDotCenterY,
+                                kWeaponListTextX - 17 - kCommandCursorDotCenterX,
+                                rowY + 10 - kCommandCursorDotCenterY,
                                 255);
         }
     }
