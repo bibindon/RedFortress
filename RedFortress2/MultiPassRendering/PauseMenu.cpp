@@ -932,6 +932,7 @@ void PauseMenu::UpdateItemList()
 
         if (m_itemUseCallback(selectedItem.id))
         {
+            m_hasUnsavedChanges = true;
             GameAudio::PlayMenuConfirm();
             GameAudio::PlayDrink();
             m_itemStatusMessage = selectedItem.name + L"を使用しました";
@@ -2864,6 +2865,11 @@ bool PauseMenu::IsOpen() const
 bool PauseMenu::BlocksGameInput() const
 {
     return m_isOpen;
+}
+
+void PauseMenu::SetHasUnsavedChanges(const bool hasUnsavedChanges)
+{
+    m_hasUnsavedChanges = hasUnsavedChanges;
 }
 
 void PauseMenu::SetItemUseCallback(std::function<bool(const std::wstring&)> callback)

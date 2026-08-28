@@ -36,6 +36,7 @@ public:
     bool ConsumeReturnToTitleRequested();
     bool IsOpen() const;
     bool BlocksGameInput() const;
+    void SetHasUnsavedChanges(bool hasUnsavedChanges);
     void SetItemUseCallback(std::function<bool(const std::wstring&)> callback);
 
 private:

@@ -141,7 +141,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.durationFrames = 24;
         definition.hitDelayFrames = 12;
         definition.damage = 2;
-        definition.range = 3.0f;
+        definition.range = 2.1f;
         definition.verticalMinOffset = 0.2f;
         definition.verticalMaxOffset = 1.7f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);
@@ -155,7 +155,7 @@ PlayerAttackDefinition PlayerAttackController::GetDefinition(PlayerAttackType at
         definition.durationFrames = 57;
         definition.hitDelayFrames = 28;
         definition.damage = 5;
-        definition.range = 3.0f;
+        definition.range = 2.1f;
         definition.verticalMinOffset = 0.2f;
         definition.verticalMaxOffset = 1.7f;
         definition.halfAngleRadians = D3DXToRadian(90.0f);

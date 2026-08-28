@@ -159,6 +159,7 @@ namespace
     const float kPortalPillarLightBrightness = 1.6f;
     const float kPortalPillarLightRange = 4.0f;
     const float kPortalPillarLightLength = 20.0f;
+    const int kPortalPillarFadeFrames = 60;
     const std::wstring kPortalPillarLightOwnerTag = L"stage-goal-pillar";
     const float kTitleSunLightIntensity = 0.45f;
     const float kTitleAmbientLightIntensity = 0.14f;
@@ -1319,6 +1320,7 @@ void GameApp::Run()
                         }
                         m_saveDataManager.Save();
                         m_inventoryManager.Save();
+                        m_pauseMenu.SetHasUnsavedChanges(HasUnsavedChanges());
                         m_itemPickupMessage = L"セーブが完了しました";
                         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
                         GameAudio::PlaySaveComplete();
@@ -7401,6 +7403,7 @@ void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
 
     m_portalPillarShown = false;
     m_portalFlagShown = false;
+    m_portalPillarFadeElapsedFrames = 0;
     m_portalClearDelayFrames = 0;
     m_stageClearInputLocked = false;
 }
@@ -7427,6 +7430,7 @@ void GameApp::RemovePortal()
     m_portalCollisionId = -1;
     m_portalPillarShown = false;
     m_portalFlagShown = false;
+    m_portalPillarFadeElapsedFrames = 0;
     m_portalClearDelayFrames = 0;
     m_stageClearInputLocked = false;
 }
@@ -7477,6 +7481,7 @@ void GameApp::UpdatePortal()
                                    kPortalPillarLightRange,
                                    kPortalPillarLightOwnerTag);
             m_portalPillarShown = true;
+            m_portalPillarFadeElapsedFrames = 0;
         }
     }
 
@@ -7508,19 +7513,57 @@ void GameApp::UpdatePortal()
             m_render.PlayMeshMixSkinAnimAnimation(m_portalFlagMeshId, L"wave");
         }
         m_portalFlagShown = true;
+        m_portalPillarFadeElapsedFrames = 0;
         m_portalClearDelayFrames = kPortalClearDelayFrames;
         m_stageClearInputLocked = true;
         m_pendingMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
         m_pendingJump = false;
     }
 
-    // Step 3: Remove the light pillar automatically after the flag appears.
+    // Step 3: Shrink and dim the light pillar after the flag appears.
     if (m_portalFlagShown && m_portalPillarShown && m_portalPillarMeshId >= 0)
     {
-        m_render.RemoveMeshMix(m_portalPillarMeshId);
-        m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
-        m_portalPillarMeshId = -1;
-        m_portalPillarShown = false;
+        ++m_portalPillarFadeElapsedFrames;
+        if (m_portalPillarFadeElapsedFrames >= kPortalPillarFadeFrames)
+        {
+            m_render.RemoveMeshMix(m_portalPillarMeshId);
+            m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
+            m_portalPillarMeshId = -1;
+            m_portalPillarShown = false;
+        }
+        else
+        {
+            const float fadeProgress =
+                static_cast<float>(m_portalPillarFadeElapsedFrames) /
+                static_cast<float>(kPortalPillarFadeFrames);
+            const float smoothProgress =
+                fadeProgress * fadeProgress * (3.0f - 2.0f * fadeProgress);
+            const float remaining = 1.0f - smoothProgress;
+
+            D3DXMATRIX pillarScaleMatrix;
+            D3DXMATRIX pillarTranslationMatrix;
+            D3DXMatrixScaling(&pillarScaleMatrix, 1.0f, remaining, 1.0f);
+            D3DXMatrixTranslation(&pillarTranslationMatrix,
+                                  m_portalBasePosition.x,
+                                  m_portalBasePosition.y,
+                                  m_portalBasePosition.z);
+            m_render.SetMeshMixWorldMatrix(
+                m_portalPillarMeshId,
+                pillarScaleMatrix * pillarTranslationMatrix);
+
+            const float currentLightLength = kPortalPillarLightLength * remaining;
+            const D3DXVECTOR3 pillarLightPosition =
+                m_portalBasePosition + D3DXVECTOR3(0.0f,
+                                                   currentLightLength * 0.5f,
+                                                   0.0f);
+            m_render.SetPointLightPositionByOwnerTag(kPortalPillarLightOwnerTag,
+                                                      pillarLightPosition);
+            m_render.SetPointLightBrightnessByOwnerTag(
+                kPortalPillarLightOwnerTag,
+                kPortalPillarLightBrightness * remaining);
+            m_render.SetPointLightLineLengthByOwnerTag(kPortalPillarLightOwnerTag,
+                                                       currentLightLength);
+        }
     }
     // Step 4: Count down after the flag has appeared.
     if (m_portalFlagShown && m_portalClearDelayFrames > 0)
