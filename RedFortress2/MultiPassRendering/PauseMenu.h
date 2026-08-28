@@ -138,6 +138,7 @@ private:
     void ActivateTopMenu(int menuIndex);
     bool TryActivateTopMenuFromMouseClick();
     bool TryGetTopMenuIndexFromPoint(long x, long y, int* outMenuIndex) const;
+    int GetExitPanelButtonY(int index) const;
     static bool IsPointInRect(long x, long y, int left, int top, int width, int height);
 
     NSRender::Render* m_render = nullptr;

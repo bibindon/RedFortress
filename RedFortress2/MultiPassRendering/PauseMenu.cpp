@@ -20,6 +20,9 @@ namespace
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
 const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
 const std::wstring kHeartImagePath = L"res\\2D_Image\\heart.png";
+const std::wstring kSettingsArrowButtonImagePath = L"res\\2D_Image\\settings_button_arrow.png";
+const std::wstring kSettingsApplyButtonImagePath = L"res\\2D_Image\\settings_button_apply.png";
+const std::wstring kSettingsCancelButtonImagePath = L"res\\2D_Image\\settings_button_cancel.png";
 const int kHeartImageSize = 36;
 const int kLivesDisplayX = 1320;
 const int kLivesDisplayY = 130;
@@ -79,9 +82,8 @@ const int kExitPanelGameIndex = 2;
 const int kExitPanelButtonX = 220;
 const int kExitPanelButtonWidth = 460;
 const int kExitPanelButtonHeight = 56;
-const int kExitPanelStageSelectY = 450;
-const int kExitPanelTitleY = 525;
-const int kExitPanelGameY = 600;
+const int kExitPanelFirstY = 300;
+const int kExitPanelButtonInterval = 75;
 const int kSettingsRowX = 200;
 const int kSettingsRowTextX = 220;
 const int kSettingsRowWidth = 260;
@@ -102,6 +104,8 @@ const int kSettingsCancelX = 650;
 const int kSettingsCancelY = kSettingsApplyY;
 const int kSettingsCancelWidth = 190;
 const int kSettingsCancelHeight = kSettingsApplyHeight;
+const int kSettingsButtonTransparency = 64;
+const int kDisabledSettingsButtonTransparency = 32;
 const UINT kDisabledSettingsTextColor = D3DCOLOR_RGBA(120, 125, 135, 190);
 const std::size_t kVisibleItemCount = 10;
 const std::size_t kVisibleWeaponCount = 11;
@@ -579,7 +583,7 @@ void PauseMenu::UpdateExitPanel()
             IsPointInRect(baseMouseX,
                           baseMouseY,
                           kExitPanelButtonX,
-                          kExitPanelStageSelectY,
+                          GetExitPanelButtonY(kExitPanelStageSelectIndex),
                           kExitPanelButtonWidth,
                           kExitPanelButtonHeight))
         {
@@ -589,7 +593,7 @@ void PauseMenu::UpdateExitPanel()
                  IsPointInRect(baseMouseX,
                                baseMouseY,
                                kExitPanelButtonX,
-                               kExitPanelTitleY,
+                               GetExitPanelButtonY(kExitPanelTitleIndex),
                                kExitPanelButtonWidth,
                                kExitPanelButtonHeight))
         {
@@ -598,7 +602,7 @@ void PauseMenu::UpdateExitPanel()
         else if (IsPointInRect(baseMouseX,
                                baseMouseY,
                                kExitPanelButtonX,
-                               kExitPanelGameY,
+                               GetExitPanelButtonY(kExitPanelGameIndex),
                                kExitPanelButtonWidth,
                                kExitPanelButtonHeight))
         {
@@ -618,7 +622,7 @@ void PauseMenu::UpdateExitPanel()
             IsPointInRect(baseMouseX,
                           baseMouseY,
                           kExitPanelButtonX,
-                          kExitPanelStageSelectY,
+                          GetExitPanelButtonY(kExitPanelStageSelectIndex),
                           kExitPanelButtonWidth,
                           kExitPanelButtonHeight))
         {
@@ -632,7 +636,7 @@ void PauseMenu::UpdateExitPanel()
             IsPointInRect(baseMouseX,
                           baseMouseY,
                           kExitPanelButtonX,
-                          kExitPanelTitleY,
+                          GetExitPanelButtonY(kExitPanelTitleIndex),
                           kExitPanelButtonWidth,
                           kExitPanelButtonHeight))
         {
@@ -647,7 +651,7 @@ void PauseMenu::UpdateExitPanel()
         if (IsPointInRect(baseMouseX,
                           baseMouseY,
                           kExitPanelButtonX,
-                          kExitPanelGameY,
+                          GetExitPanelButtonY(kExitPanelGameIndex),
                           kExitPanelButtonWidth,
                           kExitPanelButtonHeight))
         {
@@ -1344,13 +1348,14 @@ void PauseMenu::RenderExitPanel()
         m_render->DrawTextEx(m_menuItemFontId,
                              L"ステージセレクトに戻る",
                              textX,
-                             kExitPanelStageSelectY + 15,
+                             GetExitPanelButtonY(kExitPanelStageSelectIndex) + 15,
                              kTextColor);
         if (m_selectedExitPanelIndex == kExitPanelStageSelectIndex)
         {
             m_render->DrawImage(kCommandCursorPath,
                                 cursorCenterX - kCommandCursorDotCenterX,
-                                kExitPanelStageSelectY + (kExitPanelButtonHeight / 2) -
+                                GetExitPanelButtonY(kExitPanelStageSelectIndex) +
+                                    (kExitPanelButtonHeight / 2) -
                                     kCommandCursorDotCenterY,
                                 255);
         }
@@ -1361,13 +1366,14 @@ void PauseMenu::RenderExitPanel()
         m_render->DrawTextEx(m_menuItemFontId,
                              L"タイトルに戻る",
                              textX,
-                             kExitPanelTitleY + 15,
+                             GetExitPanelButtonY(kExitPanelTitleIndex) + 15,
                              kTextColor);
         if (m_selectedExitPanelIndex == kExitPanelTitleIndex)
         {
             m_render->DrawImage(kCommandCursorPath,
                                 cursorCenterX - kCommandCursorDotCenterX,
-                                kExitPanelTitleY + (kExitPanelButtonHeight / 2) -
+                                GetExitPanelButtonY(kExitPanelTitleIndex) +
+                                    (kExitPanelButtonHeight / 2) -
                                     kCommandCursorDotCenterY,
                                 255);
         }
@@ -1376,13 +1382,14 @@ void PauseMenu::RenderExitPanel()
     m_render->DrawTextEx(m_menuItemFontId,
                          L"ゲームを終了",
                          textX,
-                         kExitPanelGameY + 15,
+                         GetExitPanelButtonY(kExitPanelGameIndex) + 15,
                          kTextColor);
     if (m_selectedExitPanelIndex == kExitPanelGameIndex)
     {
         m_render->DrawImage(kCommandCursorPath,
                             cursorCenterX - kCommandCursorDotCenterX,
-                            kExitPanelGameY + (kExitPanelButtonHeight / 2) -
+                            GetExitPanelButtonY(kExitPanelGameIndex) +
+                                (kExitPanelButtonHeight / 2) -
                                 kCommandCursorDotCenterY,
                             255);
     }
@@ -1978,15 +1985,38 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
         rightArrowColor = kDisabledSettingsTextColor;
     }
 
+    int leftArrowTransparency = kSettingsButtonTransparency;
+    if (selectedIndex <= 0)
+    {
+        leftArrowTransparency = kDisabledSettingsButtonTransparency;
+    }
+    int rightArrowTransparency = kSettingsButtonTransparency;
+    if (selectedIndex >= optionCount - 1)
+    {
+        rightArrowTransparency = kDisabledSettingsButtonTransparency;
+    }
+    m_render->DrawImageSized(kSettingsArrowButtonImagePath,
+                             kSettingsLeftArrowX,
+                             selectedRowY,
+                             kSettingsArrowWidth,
+                             kSettingsArrowHeight,
+                             leftArrowTransparency);
+    m_render->DrawImageSized(kSettingsArrowButtonImagePath,
+                             kSettingsRightArrowX,
+                             selectedRowY,
+                             kSettingsArrowWidth,
+                             kSettingsArrowHeight,
+                             rightArrowTransparency);
+
     m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"［ ◀ ］",
+                               L"◀",
                                kSettingsLeftArrowX,
                                selectedRowY,
                                kSettingsArrowWidth,
                                kSettingsArrowHeight,
                                leftArrowColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"［ ▶ ］",
+                               L"▶",
                                kSettingsRightArrowX,
                                selectedRowY,
                                kSettingsArrowWidth,
@@ -1998,15 +2028,33 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
     {
         applyColor = kTextColor;
     }
+
+    int applyTransparency = kDisabledSettingsButtonTransparency;
+    if (IsSettingsDirty())
+    {
+        applyTransparency = kSettingsButtonTransparency;
+    }
+    m_render->DrawImageSized(kSettingsApplyButtonImagePath,
+                             kSettingsApplyX,
+                             kSettingsApplyY,
+                             kSettingsApplyWidth,
+                             kSettingsApplyHeight,
+                             applyTransparency);
+    m_render->DrawImageSized(kSettingsCancelButtonImagePath,
+                             kSettingsCancelX,
+                             kSettingsCancelY,
+                             kSettingsCancelWidth,
+                             kSettingsCancelHeight,
+                             kSettingsButtonTransparency);
     m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"［ 適用 ］",
+                               L"適用",
                                kSettingsApplyX,
                                kSettingsApplyY,
                                kSettingsApplyWidth,
                                kSettingsApplyHeight,
                                applyColor);
     m_render->DrawTextExCenter(m_menuItemFontId,
-                               L"［ キャンセル ］",
+                               L"キャンセル",
                                kSettingsCancelX,
                                kSettingsCancelY,
                                kSettingsCancelWidth,
@@ -2743,6 +2791,30 @@ bool PauseMenu::TryGetTopMenuIndexFromPoint(const long x, const long y, int* out
     }
 
     return false;
+}
+
+int PauseMenu::GetExitPanelButtonY(const int index) const
+{
+    int buttonY = kExitPanelFirstY;
+    if (index == kExitPanelStageSelectIndex)
+    {
+        return buttonY;
+    }
+
+    if (m_returnToStageSelectEnabled)
+    {
+        buttonY += kExitPanelButtonInterval;
+    }
+    if (index == kExitPanelTitleIndex)
+    {
+        return buttonY;
+    }
+
+    if (m_returnToTitleEnabled)
+    {
+        buttonY += kExitPanelButtonInterval;
+    }
+    return buttonY;
 }
 
 bool PauseMenu::IsPointInRect(const long x,
