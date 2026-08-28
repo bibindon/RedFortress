@@ -403,6 +403,7 @@ private:
     GameState m_gameState = GameState::Loading;
     GameOverPhase m_gameOverPhase = GameOverPhase::None;
     int m_gameOverFadeFrames = 0;
+    int m_gameOverPulseFrame = 0;
     int m_itemUseCooldownFrames = 0;
     SlideShowManager m_slideShowManager;
     PauseMenu m_pauseMenu;

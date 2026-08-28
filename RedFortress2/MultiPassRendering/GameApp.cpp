@@ -141,6 +141,7 @@ namespace
     const std::wstring g_playerDeathAnimName = L"death";
     const std::wstring g_finImagePath = L"res\\2D_Image\\fin.png";
     const std::wstring g_gameOverImagePath = L"res\\2D_Image\\gameover.png";
+    const std::wstring g_gameOverOverlayImagePath = L"res\\2D_Image\\black2x2.bmp";
     const float kPlayerWalkAnimationSpeed = 1.3f;
     const float kTitleSaturationLevel = 0.85f;
     const float kTitleShadowDarkness = 0.75f;
@@ -276,6 +277,9 @@ namespace
     const int kStageTitleFrameMax = 180;
     const int kGameOverWaitFrames = 180;
     const int kGameOverFadeFrames = 18;
+    const int kGameOverOverlayBaseAlpha = 128;
+    const int kGameOverOverlayPulseAlpha = 14;
+    const int kGameOverOverlayPulseFrames = 120;
     const float kFallDeathY = -10.0f;
     const int kFallDeathFadeDelayFrames = 60;
     const float kEnemyAttackKnockbackDistance = 0.2f;
@@ -7736,6 +7740,7 @@ void GameApp::StartGameOverSequence()
     m_render.StartFadeOut(0.3f);
     m_gameOverPhase = GameOverPhase::FadeOutToScreen;
     m_gameOverFadeFrames = kGameOverFadeFrames;
+    m_gameOverPulseFrame = 0;
     m_gameState = GameState::GameOver;
 }
 
@@ -7789,8 +7794,22 @@ void GameApp::UpdateGameOver()
 
 void GameApp::DrawGameOverScreen()
 {
+    const float pulseRadians = static_cast<float>(m_gameOverPulseFrame) *
+                               D3DX_PI * 2.0f /
+                               static_cast<float>(kGameOverOverlayPulseFrames);
+    const int overlayAlpha = kGameOverOverlayBaseAlpha +
+                             static_cast<int>(sinf(pulseRadians) *
+                                              static_cast<float>(kGameOverOverlayPulseAlpha));
+
     m_render.DrawImageStretched(g_gameOverImagePath, 255);
+    m_render.DrawImageStretched(g_gameOverOverlayImagePath, overlayAlpha);
     m_render.Draw();
+
+    ++m_gameOverPulseFrame;
+    if (m_gameOverPulseFrame >= kGameOverOverlayPulseFrames)
+    {
+        m_gameOverPulseFrame = 0;
+    }
 }
 
 bool GameApp::IsGameOverActionTriggered() const
