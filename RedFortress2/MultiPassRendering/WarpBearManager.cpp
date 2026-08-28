@@ -10,7 +10,7 @@
 
 namespace
 {
-const float kTriggerRadius = 0.85f;
+const float kTriggerRadius = 0.4f;
 const float kTriggerHeight = 1.7f;
 const float kPlayerRadius = 0.3f;
 const float kTriggerVerticalTolerance = 0.25f;
