@@ -124,7 +124,7 @@ const int kSettingsArrowIconTransparency = 245;
 const int kDisabledSettingsArrowIconTransparency = 90;
 const UINT kDisabledSettingsTextColor = D3DCOLOR_RGBA(120, 125, 135, 190);
 const std::size_t kVisibleItemCount = 7;
-const std::size_t kVisibleWeaponCount = 8;
+const std::size_t kVisibleWeaponCount = 4;
 const int kItemListX = 255;
 const int kItemListHeaderY = 338;
 const int kItemListY = 385;
@@ -153,9 +153,11 @@ const int kItemScrollButtonHeight = 52;
 const int kItemScrollUpButtonY = kItemScrollUpArrowY - 10;
 const int kItemScrollDownButtonY = kItemScrollDownArrowY - 10;
 const int kWeaponListIconX = kItemListX;
-const int kWeaponListIconSize = 28;
-const int kWeaponListTextX = kWeaponListIconX + kWeaponListIconSize + 12;
-const int kWeaponListCursorCenterYOffset = 10;
+const int kWeaponListIconSize = 56;
+const int kWeaponListLineHeight = 72;
+const int kWeaponListTextX = kWeaponListIconX + kWeaponListIconSize + 18;
+const int kWeaponListTextYOffset = 10;
+const int kWeaponListCursorCenterYOffset = kWeaponListIconSize / 2;
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
 const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
@@ -1048,10 +1050,10 @@ void PauseMenu::UpdateWeaponList()
                       kItemListX,
                       kItemListY,
                       520,
-                      static_cast<int>(kVisibleWeaponCount) * kItemListLineHeight))
+                      static_cast<int>(kVisibleWeaponCount) * kWeaponListLineHeight))
     {
         const std::size_t hoveredIndex = m_weaponScrollOffset +
-            static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+            static_cast<std::size_t>((baseMouseY - kItemListY) / kWeaponListLineHeight);
         if (hoveredIndex < ownedWeapons.size() && hoveredIndex != m_selectedWeaponIndex)
         {
             m_selectedWeaponIndex = hoveredIndex;
@@ -1066,10 +1068,10 @@ void PauseMenu::UpdateWeaponList()
                           kItemListX,
                           kItemListY,
                           520,
-                          static_cast<int>(kVisibleWeaponCount) * kItemListLineHeight))
+                          static_cast<int>(kVisibleWeaponCount) * kWeaponListLineHeight))
         {
             const std::size_t clickedIndex = m_weaponScrollOffset +
-                static_cast<std::size_t>((baseMouseY - kItemListY) / kItemListLineHeight);
+                static_cast<std::size_t>((baseMouseY - kItemListY) / kWeaponListLineHeight);
             if (clickedIndex < ownedWeapons.size())
             {
                 if (clickedIndex != m_selectedWeaponIndex)
@@ -1823,6 +1825,13 @@ void PauseMenu::RenderItemPanel()
 
 void PauseMenu::RenderWeaponPanel()
 {
+    m_render->DrawImageSized(kMenuItemListBackgroundPath,
+                             kItemListBackgroundX,
+                             kItemListBackgroundY,
+                             kItemListBackgroundWidth,
+                             kItemListBackgroundHeight,
+                             255);
+
     const std::vector<std::size_t> ownedWeapons = GetOwnedWeaponIndices();
     if (ownedWeapons.empty())
     {
@@ -1845,27 +1854,28 @@ void PauseMenu::RenderWeaponPanel()
     {
         const int lineIndex = static_cast<int>(i - m_weaponScrollOffset);
         const WeaponData& weapon = m_weapons.at(ownedWeapons.at(i));
-        const int rowY = kItemListY + lineIndex * kItemListLineHeight;
+        const int rowY = kItemListY + lineIndex * kWeaponListLineHeight;
         const std::wstring iconPath = GetWeaponIconPath(weapon.id);
         if (!iconPath.empty())
         {
             m_render->DrawImageSized(iconPath,
                                      kWeaponListIconX,
-                                     rowY - 4,
+                                     rowY,
                                      kWeaponListIconSize,
                                      kWeaponListIconSize,
                                      255);
         }
-        m_render->DrawTextEx(m_qualityFontId,
+        m_render->DrawTextEx(m_stageNameFontId,
                              weapon.name,
                              kWeaponListTextX,
-                             rowY,
+                             rowY + kWeaponListTextYOffset,
                              kTextColor);
         if (i == m_selectedWeaponIndex)
         {
             m_render->DrawImage(kCommandCursorPath,
-                                kWeaponListTextX - 17 - kCommandCursorDotCenterX,
-                                rowY + 10 - kCommandCursorDotCenterY,
+                                kWeaponListIconX - 17 - kCommandCursorDotCenterX,
+                                rowY + kWeaponListCursorCenterYOffset -
+                                    kCommandCursorDotCenterY,
                                 255);
         }
     }

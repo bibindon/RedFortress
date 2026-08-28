@@ -143,6 +143,7 @@ namespace
     const std::wstring g_gameOverImagePath = L"res\\2D_Image\\gameover.png";
     const std::wstring g_gameOverOverlayImagePath = L"res\\2D_Image\\black2x2.bmp";
     const float kPlayerWalkAnimationSpeed = 1.3f;
+    const float kPlayerRunAnimationSpeed = 1.0f;
     const float kTitleSaturationLevel = 0.85f;
     const float kTitleShadowDarkness = 0.75f;
     const std::wstring kPortalStepsModelPath = L"res\\model\\portal\\stone_steps.x";
@@ -3474,7 +3475,7 @@ void GameApp::UpdatePlayerByInput()
     const float walkSpeed = 1.125f;
     const float runSpeed = 3.375f;
     const float runSpeedMultiplier = m_pickupManager.GetRunSpeedMultiplier();
-    const float runAnimationSpeed = 1.5f * runSpeedMultiplier;
+    const float runAnimationSpeed = kPlayerRunAnimationSpeed * runSpeedMultiplier;
     if (isWalking)
     {
         settings.moveSpeed = walkSpeed;
@@ -4978,7 +4979,7 @@ void GameApp::SyncStageSelectPlayerToPortal(const bool immediate)
     {
         m_playerYaw = kStageSelectPlayerRightYaw;
     }
-    SetPlayerAnimationState(PlayerAnimState::Run, 1.2f);
+    SetPlayerAnimationState(PlayerAnimState::Run, kPlayerRunAnimationSpeed);
 }
 
 void GameApp::MoveStageSelectCursorByDirection(const float directionX, const float directionY)
