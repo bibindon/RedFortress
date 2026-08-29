@@ -480,6 +480,18 @@ void PauseMenu::Update()
         return;
     }
 
+    if (m_showExitConfirm)
+    {
+        UpdateExitConfirm();
+        return;
+    }
+
+    if (m_showSaveConfirm)
+    {
+        UpdateSaveConfirm();
+        return;
+    }
+
     if (m_focusArea == FocusArea::ItemList)
     {
         UpdateItemList();
@@ -495,18 +507,6 @@ void PauseMenu::Update()
     if (m_focusArea == FocusArea::SettingsPanel)
     {
         UpdateSettingsPanel();
-        return;
-    }
-
-    if (m_showExitConfirm)
-    {
-        UpdateExitConfirm();
-        return;
-    }
-
-    if (m_showSaveConfirm)
-    {
-        UpdateSaveConfirm();
         return;
     }
 
@@ -1940,17 +1940,6 @@ void PauseMenu::RenderWeaponPanel()
                                 255);
         }
     }
-
-    const std::wstring positionText = std::to_wstring(m_selectedWeaponIndex + 1) +
-                                      L" / " +
-                                      std::to_wstring(ownedWeapons.size());
-    m_render->DrawTextExCenter(m_qualityFontId,
-                               positionText,
-                               170,
-                               730,
-                               560,
-                               36,
-                               kTextColor);
 
     const WeaponData& selectedWeapon = m_weapons.at(ownedWeapons.at(m_selectedWeaponIndex));
     const int detailX = 800;
