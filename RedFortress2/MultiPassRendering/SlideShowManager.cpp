@@ -11,6 +11,16 @@ static const std::wstring kFadeImagePath = L"res\\2D_Image\\black2x2.bmp";
 
 namespace
 {
+constexpr float kRenderedMarinePortraitOffsetX = 280.0f;
+constexpr float kRenderedMarinePortraitScale = 1.30f;
+constexpr float kRenderedMarinePortraitCenterY = 566.0f;
+
+bool IsRenderedMarinePortrait(const std::wstring& filepath)
+{
+    return filepath.find(L"novel_chr_marine_excited_transparent.png") != std::wstring::npos ||
+           filepath.find(L"novel_chr_marine_worried_transparent.png") != std::wstring::npos;
+}
+
 struct SlideShowCanvasRect
 {
     int x = 0;
@@ -169,12 +179,22 @@ void SlideShowManager::SpriteAdapter::DrawImageEx(const int x,
             return;
         }
 
-        const float drawWidth = static_cast<float>(imageSize.cx) * scale;
-        const float drawHeight = static_cast<float>(imageSize.cy) * scale;
+        float drawScale = scale;
+        float centerX = static_cast<float>(x);
+        float centerY = static_cast<float>(y);
+        if (IsRenderedMarinePortrait(m_filepath))
+        {
+            drawScale *= kRenderedMarinePortraitScale;
+            centerX += kRenderedMarinePortraitOffsetX;
+            centerY = kRenderedMarinePortraitCenterY;
+        }
+
+        const float drawWidth = static_cast<float>(imageSize.cx) * drawScale;
+        const float drawHeight = static_cast<float>(imageSize.cy) * drawScale;
         DrawSlideShowCanvasImage(m_render,
                                  m_filepath,
-                                 static_cast<float>(x) - drawWidth * 0.5f,
-                                 static_cast<float>(y) - drawHeight * 0.5f,
+                                 centerX - drawWidth * 0.5f,
+                                 centerY - drawHeight * 0.5f,
                                  drawWidth,
                                  drawHeight,
                                  transparency,
@@ -182,19 +202,6 @@ void SlideShowManager::SpriteAdapter::DrawImageEx(const int x,
     }
     else
     {
-        if (m_filepath == kTextBackPath)
-        {
-            DrawSlideShowCanvasImage(m_render,
-                                     m_filepath,
-                                     0.0f,
-                                     0.0f,
-                                     static_cast<float>(NSRender::Common::BASE_W),
-                                     static_cast<float>(NSRender::Common::BASE_H),
-                                     transparency,
-                                     false);
-            return;
-        }
-
         const SIZE imageSize = m_render.GetImageSize(m_filepath);
         if (imageSize.cx <= 0 || imageSize.cy <= 0)
         {
