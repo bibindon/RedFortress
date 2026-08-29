@@ -45,6 +45,10 @@ const int kCommandCursorDotCenterY = 6;
 const int kCommandCursorVerticalOffset = -2;
 const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
+const int kMaskedGaussianAreaX = 136;
+const int kMaskedGaussianAreaY = 114;
+const int kMaskedGaussianAreaWidth = 1352;
+const int kMaskedGaussianAreaHeight = 684;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSubTextColor = D3DCOLOR_RGBA(225, 235, 255, 230);
 const UINT kItemListHeaderTextColor = D3DCOLOR_RGBA(180, 180, 180, 230);
@@ -238,6 +242,10 @@ bool IsMenuConfirmPressed()
 bool IsMenuCancelPressed()
 {
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+    {
+        return true;
+    }
+    if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_RIGHT))
     {
         return true;
     }
@@ -459,6 +467,11 @@ void PauseMenu::Update()
     if (m_skipInputFrame)
     {
         m_skipInputFrame = false;
+        return;
+    }
+
+    if (TryCloseFromOutsideMouseClick())
+    {
         return;
     }
 
@@ -1689,6 +1702,35 @@ bool PauseMenu::TryActivateTopMenuFromMouseClick()
     }
 
     ActivateTopMenu(clickedMenuIndex);
+    return true;
+}
+
+bool PauseMenu::TryCloseFromOutsideMouseClick()
+{
+    if (!InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        return false;
+    }
+
+    const InputDevice::MousePosition mousePosition = InputDevice::Mouse::GetPosition();
+    const float scaleX = static_cast<float>(NSRender::Common::BASE_W) /
+                         static_cast<float>(NSRender::Common::ScreenW());
+    const float scaleY = static_cast<float>(NSRender::Common::BASE_H) /
+                         static_cast<float>(NSRender::Common::ScreenH());
+    const long baseMouseX = static_cast<long>(static_cast<float>(mousePosition.x) * scaleX);
+    const long baseMouseY = static_cast<long>(static_cast<float>(mousePosition.y) * scaleY);
+    if (IsPointInRect(baseMouseX,
+                      baseMouseY,
+                      kMaskedGaussianAreaX,
+                      kMaskedGaussianAreaY,
+                      kMaskedGaussianAreaWidth,
+                      kMaskedGaussianAreaHeight))
+    {
+        return false;
+    }
+
+    GameAudio::PlayMenuCancel();
+    Close();
     return true;
 }
 

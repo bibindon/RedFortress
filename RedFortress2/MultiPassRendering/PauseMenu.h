@@ -140,6 +140,7 @@ private:
     bool IsTopMenuItemEnabled(int menuIndex) const;
     void MoveTopMenuSelection(int direction);
     void ActivateTopMenu(int menuIndex);
+    bool TryCloseFromOutsideMouseClick();
     bool TryActivateTopMenuFromMouseClick();
     bool TryGetTopMenuIndexFromPoint(long x, long y, int* outMenuIndex) const;
     int GetExitPanelButtonY(int index) const;
