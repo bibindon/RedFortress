@@ -979,17 +979,6 @@ void EnemyBase::UpdateFlyingChaseBehavior(const D3DXVECTOR3& playerPos,
         speedMultiplier = 1.0f;
     }
 
-    const float minimumY = m_homePosition.y - 1.5f;
-    const float maximumY = m_homePosition.y + 2.0f;
-    if (moveTarget.y < minimumY)
-    {
-        moveTarget.y = minimumY;
-    }
-    if (moveTarget.y > maximumY)
-    {
-        moveTarget.y = maximumY;
-    }
-
     D3DXVECTOR3 direction = moveTarget - m_position;
     if (D3DXVec3LengthSq(&direction) <= 0.0001f)
     {
