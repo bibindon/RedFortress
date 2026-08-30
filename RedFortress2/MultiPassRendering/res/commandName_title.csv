@@ -2,9 +2,11 @@ ID,Name
 start,はじめから
 continue,つづきから
 delete,セーブデータを削除
+license,ライセンス
 exit,終了
 yes,はい
 no,いいえ
 language,Language
 english,English
 japanese,Japanese
+back,戻る

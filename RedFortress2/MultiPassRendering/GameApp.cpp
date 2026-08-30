@@ -146,6 +146,27 @@ namespace
     const float kPlayerRunAnimationSpeed = 1.0f;
     const float kTitleSaturationLevel = 0.85f;
     const float kTitleShadowDarkness = 0.75f;
+    const std::wstring kTitleLicenseMaskPath = L"res\\2D_Image\\menu_mask.png";
+    const std::wstring kTitleLicensePanelPath = L"res\\2D_Image\\item_list_bg.png";
+    const std::wstring kTitleLicenseScrollUpPath = L"res\\2D_Image\\item_scroll_up.png";
+    const std::wstring kTitleLicenseScrollDownPath = L"res\\2D_Image\\item_scroll_down.png";
+    const int kTitleLicenseGaussianSampleSize = 25;
+    const ULONGLONG kTitleLicenseGaussianDurationMilliseconds = 500;
+    const int kTitleLicensePanelX = 300;
+    const int kTitleLicensePanelY = 300;
+    const int kTitleLicensePanelWidth = 1000;
+    const int kTitleLicensePanelHeight = 420;
+    const int kTitleLicenseScrollArrowWidth = 48;
+    const int kTitleLicenseScrollArrowHeight = 32;
+    const int kTitleLicenseScrollArrowX =
+        kTitleLicensePanelX + (kTitleLicensePanelWidth - kTitleLicenseScrollArrowWidth) / 2;
+    const int kTitleLicenseScrollUpY = 385;
+    const int kTitleLicenseScrollDownY = 660;
+    const int kTitleLicenseScrollButtonHeight = 52;
+    const int kTitleLicenseScrollButtonOffsetY = 10;
+    const int kTitleLicenseEntryCount = 2;
+    const int kTitleLicenseEnabledArrowTransparency = 245;
+    const int kTitleLicenseDisabledArrowTransparency = 90;
     const std::wstring kPortalStepsModelPath = L"res\\model\\portal\\stone_steps.x";
     const std::wstring kPortalStepsCollisionPath = L"res\\model\\portal\\stone_steps_collision.x";
     const std::wstring kPortalPillarModelPath = L"res\\model\\portal\\light_pillar.x";
@@ -911,6 +932,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_command.UpsertCommand(L"start", true);
     m_command.UpsertCommand(L"continue", m_saveDataManager.HasSaveFile());
     m_command.UpsertCommand(L"delete", m_saveDataManager.HasSaveFile());
+    m_command.UpsertCommand(L"license", true);
     m_command.UpsertCommand(L"language", true);
     m_command.UpsertCommand(L"exit", true);
     m_render.SetLoadingScreenProgress(85);
@@ -1082,7 +1104,9 @@ void GameApp::Run()
         }
         else if (m_gameState == GameState::Title)
         {
-            if (!m_titleDeleteConfirmMode && !m_titleLanguageSelectionMode)
+            if (!m_titleDeleteConfirmMode &&
+                !m_titleLanguageSelectionMode &&
+                !m_titleLicenseMode)
             {
                 RefreshTitleCommands();
             }
@@ -1119,6 +1143,29 @@ void GameApp::Run()
                 if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
                 {
                     ExitTitleLanguageSelection();
+                }
+
+                const InputDevice::MousePosition mousePos = InputDevice::Mouse::GetPosition();
+                const POINT baseMousePos = ConvertMouseToBaseResolution(mousePos.x, mousePos.y);
+                m_command.MouseMove(baseMousePos.x, baseMousePos.y);
+
+                if (InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+                {
+                    ExecuteTitleCommand(m_command.Click(baseMousePos.x, baseMousePos.y));
+                }
+            }
+            else if (m_titleLicenseMode)
+            {
+                UpdateTitleLicense();
+
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+                {
+                    ExecuteTitleCommand(m_command.Into());
+                }
+
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+                {
+                    ExitTitleLicense();
                 }
 
                 const InputDevice::MousePosition mousePos = InputDevice::Mouse::GetPosition();
@@ -6512,6 +6559,7 @@ void GameApp::BuildTitleMainCommands()
     m_command.UpsertCommand(L"start", true);
     m_command.UpsertCommand(L"continue", canContinue);
     m_command.UpsertCommand(L"delete", canContinue);
+    m_command.UpsertCommand(L"license", true);
     m_command.UpsertCommand(L"language", true);
     m_command.UpsertCommand(L"exit", true);
 }
@@ -6530,6 +6578,100 @@ void GameApp::BuildTitleLanguageCommands()
     m_command.UpsertCommand(L"japanese", true);
 }
 
+void GameApp::BuildTitleLicenseCommands()
+{
+    m_command.RemoveAll();
+    m_command.UpsertCommand(L"back", true);
+}
+
+void GameApp::EnterTitleLicense()
+{
+    BuildTitleLicenseCommands();
+    m_titleLicenseMode = true;
+    m_titleLicensePageIndex = 0;
+    m_titleLicenseBlurStartTick = GetTickCount64();
+    m_render.SetPostEffectMaskedGaussianMaskPath(kTitleLicenseMaskPath);
+    m_render.SetPostEffectMaskedGaussianSampleSize(kTitleLicenseGaussianSampleSize);
+    m_render.SetPostEffectMaskedGaussianAmount(0.0f);
+    m_render.SetPostEffectMaskedGaussianFilter(true);
+}
+
+void GameApp::ChangeTitleLicensePage(const int direction)
+{
+    int nextPageIndex = m_titleLicensePageIndex + direction;
+    if (nextPageIndex < 0)
+    {
+        nextPageIndex = 0;
+    }
+    if (nextPageIndex >= kTitleLicenseEntryCount)
+    {
+        nextPageIndex = kTitleLicenseEntryCount - 1;
+    }
+    if (nextPageIndex == m_titleLicensePageIndex)
+    {
+        return;
+    }
+
+    m_titleLicensePageIndex = nextPageIndex;
+    GameAudio::PlayMenuMove();
+}
+
+void GameApp::UpdateTitleLicense()
+{
+    const ULONGLONG elapsedMilliseconds = GetTickCount64() - m_titleLicenseBlurStartTick;
+    float gaussianAmount = static_cast<float>(elapsedMilliseconds) /
+                           static_cast<float>(kTitleLicenseGaussianDurationMilliseconds);
+    if (gaussianAmount > 1.0f)
+    {
+        gaussianAmount = 1.0f;
+    }
+    m_render.SetPostEffectMaskedGaussianAmount(gaussianAmount);
+
+    const long wheelDelta = InputDevice::Mouse::GetWheelDelta();
+    if (wheelDelta > 0 ||
+        InputDevice::SKeyBoard::IsDownFirstFrame(DIK_UP) ||
+        InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_UP))
+    {
+        ChangeTitleLicensePage(-1);
+    }
+    else if (wheelDelta < 0 ||
+             InputDevice::SKeyBoard::IsDownFirstFrame(DIK_DOWN) ||
+             InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_POV_DOWN))
+    {
+        ChangeTitleLicensePage(1);
+    }
+
+    if (!InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+    {
+        return;
+    }
+
+    const InputDevice::MousePosition mousePos = InputDevice::Mouse::GetPosition();
+    const POINT baseMousePos = ConvertMouseToBaseResolution(mousePos.x, mousePos.y);
+    const bool inHorizontalRange =
+        baseMousePos.x >= kTitleLicensePanelX &&
+        baseMousePos.x < kTitleLicensePanelX + kTitleLicensePanelWidth;
+    if (!inHorizontalRange)
+    {
+        return;
+    }
+
+    const int upButtonY = kTitleLicenseScrollUpY - kTitleLicenseScrollButtonOffsetY;
+    if (baseMousePos.y >= upButtonY &&
+        baseMousePos.y < upButtonY + kTitleLicenseScrollButtonHeight)
+    {
+        ChangeTitleLicensePage(-1);
+        return;
+    }
+
+    const int downButtonY = kTitleLicenseScrollDownY - kTitleLicenseScrollButtonOffsetY;
+    if (baseMousePos.y >= downButtonY &&
+        baseMousePos.y < downButtonY + kTitleLicenseScrollButtonHeight)
+    {
+        ChangeTitleLicensePage(1);
+    }
+}
+
 void GameApp::EnterDeleteConfirmation()
 {
     BuildTitleConfirmCommands();
@@ -6546,6 +6688,14 @@ void GameApp::ExitTitleLanguageSelection()
 {
     BuildTitleMainCommands();
     m_titleLanguageSelectionMode = false;
+}
+
+void GameApp::ExitTitleLicense()
+{
+    m_render.SetPostEffectMaskedGaussianAmount(0.0f);
+    m_render.SetPostEffectMaskedGaussianFilter(false);
+    BuildTitleMainCommands();
+    m_titleLicenseMode = false;
 }
 
 void GameApp::ExecuteDeleteSaveData()
@@ -6587,6 +6737,14 @@ void GameApp::ExecuteTitleCommand(const std::wstring& commandId)
     {
         BuildTitleLanguageCommands();
         m_titleLanguageSelectionMode = true;
+    }
+    else if (commandId == L"license")
+    {
+        EnterTitleLicense();
+    }
+    else if (commandId == L"back")
+    {
+        ExitTitleLicense();
     }
     else if (commandId == L"english")
     {
@@ -8558,9 +8716,64 @@ void GameApp::DrawTitleScreen()
         m_render.DrawTextExCenter(m_titleFontId, L"Language", 0, 480, NSRender::Common::BASE_W, 80);
         m_render.DrawTextExCenter(m_titleFontId, L"Current: " + languageName, 0, 560, NSRender::Common::BASE_W, 80);
     }
+    else if (m_titleLicenseMode)
+    {
+        DrawTitleLicense();
+    }
 
     m_command.Draw();
     m_render.Draw();
+}
+
+void GameApp::DrawTitleLicense()
+{
+    m_render.DrawImageSized(kTitleLicensePanelPath,
+                            kTitleLicensePanelX,
+                            kTitleLicensePanelY,
+                            kTitleLicensePanelWidth,
+                            kTitleLicensePanelHeight,
+                            255);
+    m_render.DrawTextExCenter(m_titleFontId, L"ライセンス", 0, 315, NSRender::Common::BASE_W, 60);
+
+    int upArrowTransparency = kTitleLicenseEnabledArrowTransparency;
+    if (m_titleLicensePageIndex <= 0)
+    {
+        upArrowTransparency = kTitleLicenseDisabledArrowTransparency;
+    }
+    int downArrowTransparency = kTitleLicenseEnabledArrowTransparency;
+    if (m_titleLicensePageIndex + 1 >= kTitleLicenseEntryCount)
+    {
+        downArrowTransparency = kTitleLicenseDisabledArrowTransparency;
+    }
+    m_render.DrawImageSized(kTitleLicenseScrollUpPath,
+                            kTitleLicenseScrollArrowX,
+                            kTitleLicenseScrollUpY,
+                            kTitleLicenseScrollArrowWidth,
+                            kTitleLicenseScrollArrowHeight,
+                            upArrowTransparency);
+    m_render.DrawImageSized(kTitleLicenseScrollDownPath,
+                            kTitleLicenseScrollArrowX,
+                            kTitleLicenseScrollDownY,
+                            kTitleLicenseScrollArrowWidth,
+                            kTitleLicenseScrollArrowHeight,
+                            downArrowTransparency);
+
+    if (m_titleLicensePageIndex == 0)
+    {
+        m_render.DrawTextExCenter(m_commandFontId, L"宝鐘マリンV2 公式MMDモデル", 0, 455, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"© 2016 COVER Corp.", 0, 520, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"https://3d.nicovideo.jp/works/td78500", 0, 575, NSRender::Common::BASE_W, 40);
+    }
+    else
+    {
+        m_render.DrawTextExCenter(m_commandFontId, L"戌神ころね 公式MMDモデル Ver1.0", 0, 455, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"©2019 cover corp.", 0, 520, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"https://3d.nicovideo.jp/works/td63650", 0, 575, NSRender::Common::BASE_W, 40);
+    }
+
+    const std::wstring pageText = std::to_wstring(m_titleLicensePageIndex + 1) +
+                                  L" / " + std::to_wstring(kTitleLicenseEntryCount);
+    m_render.DrawTextExCenter(m_commandFontId, pageText, 0, 615, NSRender::Common::BASE_W, 40);
 }
 
 void GameApp::BeginStageIntro()
