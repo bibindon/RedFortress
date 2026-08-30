@@ -11,14 +11,13 @@ static const std::wstring kFadeImagePath = L"res\\2D_Image\\black2x2.bmp";
 
 namespace
 {
-constexpr float kRenderedMarinePortraitOffsetX = 280.0f;
-constexpr float kRenderedMarinePortraitScale = 1.30f;
-constexpr float kRenderedMarinePortraitCenterY = 566.0f;
+// マリンの立ち絵は1024px幅のうち右側約410pxが透明なので、
+// 画像全体ではなく人物部分が右側に配置されるよう余白を相殺する。
+constexpr float kMarinePortraitOffsetX = 300.0f;
 
-bool IsRenderedMarinePortrait(const std::wstring& filepath)
+bool IsMarinePortrait(const std::wstring& filepath)
 {
-    return filepath.find(L"novel_chr_marine_excited_transparent.png") != std::wstring::npos ||
-           filepath.find(L"novel_chr_marine_worried_transparent.png") != std::wstring::npos;
+    return filepath.find(L"novel_chr_marine_") != std::wstring::npos;
 }
 
 struct SlideShowCanvasRect
@@ -179,22 +178,18 @@ void SlideShowManager::SpriteAdapter::DrawImageEx(const int x,
             return;
         }
 
-        float drawScale = scale;
         float centerX = static_cast<float>(x);
-        float centerY = static_cast<float>(y);
-        if (IsRenderedMarinePortrait(m_filepath))
+        if (IsMarinePortrait(m_filepath))
         {
-            drawScale *= kRenderedMarinePortraitScale;
-            centerX += kRenderedMarinePortraitOffsetX;
-            centerY = kRenderedMarinePortraitCenterY;
+            centerX += kMarinePortraitOffsetX;
         }
 
-        const float drawWidth = static_cast<float>(imageSize.cx) * drawScale;
-        const float drawHeight = static_cast<float>(imageSize.cy) * drawScale;
+        const float drawWidth = static_cast<float>(imageSize.cx) * scale;
+        const float drawHeight = static_cast<float>(imageSize.cy) * scale;
         DrawSlideShowCanvasImage(m_render,
                                  m_filepath,
                                  centerX - drawWidth * 0.5f,
-                                 centerY - drawHeight * 0.5f,
+                                 static_cast<float>(y) - drawHeight * 0.5f,
                                  drawWidth,
                                  drawHeight,
                                  transparency,
