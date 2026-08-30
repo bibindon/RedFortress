@@ -146,6 +146,9 @@ namespace
     const float kPlayerRunAnimationSpeed = 1.0f;
     const float kTitleSaturationLevel = 0.85f;
     const float kTitleShadowDarkness = 0.75f;
+    const std::wstring kTitleBackgroundImagePath = L"res\\2D_Image\\Title3.png";
+    const int kTitleBackgroundSourceWidth = 1920;
+    const int kTitleBackgroundSourceHeight = 1080;
     const std::wstring kTitleLicenseMaskPath = L"res\\2D_Image\\menu_mask.png";
     const std::wstring kTitleLicensePanelPath = L"res\\2D_Image\\item_list_bg.png";
     const std::wstring kTitleLicenseScrollUpPath = L"res\\2D_Image\\item_scroll_up.png";
@@ -8695,6 +8698,17 @@ void GameApp::LoadCurrentStageObjects()
 
 void GameApp::DrawTitleScreen()
 {
+    m_render.DrawImageSizedRect(kTitleBackgroundImagePath,
+                                0,
+                                0,
+                                NSRender::Common::BASE_W,
+                                NSRender::Common::BASE_H,
+                                0,
+                                0,
+                                kTitleBackgroundSourceWidth,
+                                kTitleBackgroundSourceHeight,
+                                255);
+
     if (m_titleFontId < 0)
     {
         m_titleFontId = m_render.SetUpFontEx(L"BIZ UDMincho", 50, D3DCOLOR_RGBA(255, 255, 255, 255));
