@@ -1,127 +1,187 @@
-# TALK_IMAGE_GENERATION.md
+﻿# 会話パート用立ち絵の生成手順
 
-MMDモデル(宝鐘マリンV2)からゲーム用「立ち絵(腿から上)」画像を生成するための作業メモ。
-他のLLMがこのタスクを引き継ぐ場合、このメモで再現できるようにする。
+この文書は、会話パートで使用するキャラクター立ち絵を同じ品質・構図で再生成するための記録です。
 
-## アセット
+## 基本方針
 
-- **Blenderファイル**: `C:\Users\bibindon\Nextcloud\RedFortressAsset\marine\blender5.1.2\marine.blend`
-- **Blender実行ファイル**: `C:\Program Files\Blender Foundation\Blender 5.1\blender.exe` (Blender 5.1.2)
-- 撮影テスト済み、Aポーズの腿から上(正面/背面)をレンダリング可能。
+- Blenderは `C:\Program Files\Blender Foundation\Blender 5.1\blender.exe` を使用する。
+- 本番出力は1024×1024、PNG RGBA、背景透過、Cyclesで行う。
+- キャラクターは画面左側へ置ける余白を確保し、帽子や頭を上端からはみ出させない。
+- 下端はおおむね膝付近で切れる大きさにする。
+- 腕は横に伸ばさず、自然に下ろす。
+- 表情差分間ではカメラ、照明、ポーズを変更しない。表情モーフだけを切り替える。
+- ゲーム側の基準解像度は1600×900であり、立ち絵の配置と拡大縮小はスライドショー側で行う。画像側でゲーム画面の解像度を補正しない。
 
-## モデル構成(重要)
+## 出力先
 
-- アーマチュア: `宝鐘マリンV2_arm`(bones=549、MMD標準の骨名: センター/上半身/頭/首/肩.R/腕.R など。「上腕」という名前の骨は存在せず、肩→腕の構成)
-- メッシュは3つ(すべてこのアーマチュアでスキニング):
-  | オブジェクト名 | 頂点数 | hide_render |
-  |---|---|
-  | `宝鐘マリンV2_mesh` | 78511 | **True(描画されない)** |
-  | `宝鐘マリンV2_mesh_before_face_uniform_normals` | 78511 | **True(描画されない)** |
-  | `宝鐘マリンV2_mesh_decimate50` | 44980 | **False(これが画面に出る本体)** |
-- 形状キー: 2、コンストレイント: 22(脚IK・MMD用TRANSFORM/COPY_TRANSFORMS・目のダミー。腕のDAMPED_TRACKは影響0)
-- 体位: 身長1.69m、足元 z=0、**正面は -Y 方向**、キャラから見た右腕は -X 側(正面レンダーで画像左)。
-- スケルトンのボーン名は日本語。コンソールで文字化けする(後述)。
+```text
+C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\MultiPassRendering\res\2D_Image
+```
 
-## 重大な罠: アニメーション「slash」が割り当て済み
+既存画像を上書きする前に、必要に応じて `tmp` 以下へバックアップする。
 
-- この.blendにはアクションが3つ入っている: `slash`(5490本のfc)、`slash2`(5491)、`slash2_source`(543)。
-- **アーマチュアに `slash` がアクティブアクションとして割り当て済み**。このため、Blenderを開いてポーズリセット(matrix_basis=Identity)しても、毎フレームのdepsgraph評価でアニメーションがポーズを上書きする。
-- 初期表示の「右腕を上げて赤い筒を持ったポーズ」は slash アニメの再生結果(攻撃モーション)。bind poseの問題ではない。
-- **Aポーズに戻すには**: `arm_obj.animation_data_clear()` でアクションを外してからポーズリセット(さらに必要なら全コンストレイントを mute)。
-- ※ 背景CLI実行では変更はメモリ内のみ。Aポーズの状態を保存するなら `bpy.ops.wm.save_as_mainfile` で**別名保存**する(アセット原本を上書きしない)。
+## 宝鐘マリン
 
-## 罠2: 画像をopencodeのチャットに表示できない
+### 入力モデル
 
-- opencodeのTUIは画像をインライン表示できない。アシスタントには添付として渡るがユーザーには表示されない。
-- 大きいPNG(1MB超)どころか小さいJPEGでも表示されないので、**一律「保存先のパスを案内して、explorer等で開いてもらう」**方針。
+```text
+C:\Users\bibindon\Nextcloud\RedFortressAsset\marine\blender5.1.2\marine.blend
+```
 
-## 罠3: コンソール出力の文字化け
+### 生成スクリプト
 
-- Blenderの標準出力はShift-JIS等で乱れるため、日本語を含むデータを扱うときは必ず `json.dumps(...)`(ensure_asciiデフォルトTrue → \uXXXX エスケープ)で出力し、PowerShell側で `[regex]::Match($text, '(?s)RESULT_JSON_START\s*\r?\n(.*?)\r?\nRESULT_JSON_END')` を取り出して `ConvertFrom-Json` でパースする。
+```text
+C:\Users\bibindon\source\repos\bibindon\RedFortress\tools\RenderMarineColorCorrected.py
+```
 
-## 罠4: MCP経由ではタイムアウト
+このスクリプトには、次の確定済み調整が含まれている。
 
-- Blender MCP(ローカル/CLIツール)はモデル読み込みが重くてタイムアウトする。**PowerShellから直接**:
+- 肌テクスチャへ暖色補正を適用する。
+- 瞳の彩度と明度を抑える。
+- 保存されている `slash` アニメーションを解除し、腕を下ろす。
+- 表情モーフを持つ高品質メッシュ `宝鐘マリンV2_mesh` を表示し、軽量メッシュを非表示にする。
+- Standard、Medium Low Contrast、露出 +0.10を使用する。
+- キー190、フィル100、リム115、ワールド強度0.20の照明を使用する。
+- 正投影カメラのスケールは1.18、シフトはX=0.16、Y=0.07とする。
+
+### モデル固有の注意点
+
+- 元の `.blend` には `slash`、`slash2`、`slash2_source` のアクションがあり、`slash` がアーマチュアへ割り当てられている。単にポーズをリセットしただけでは、アニメーション評価によって腕上げポーズへ戻る。
+- そのため、必ず `animation_data_clear()` の後で全ポーズボーンをリセットする。生成スクリプトでは実施済み。
+- 表情モーフがあるのは高品質メッシュ `宝鐘マリンV2_mesh`。`宝鐘マリンV2_mesh_decimate50` には表情モーフがないため、表情差分の生成には使用しない。
+- 原本の `marine.blend` は上書きしない。調整済みBlenderファイルを保存する場合は必ず別名にする。
+
+### 本番生成コマンド
+
+リポジトリ直下でPowerShellから実行する。
 
 ```powershell
-& "C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" --background "<blend>" --python "<script>" 2>&1 | Out-File out.txt -Encoding utf8
+$blender = 'C:\Program Files\Blender Foundation\Blender 5.1\blender.exe'
+$model = 'C:\Users\bibindon\Nextcloud\RedFortressAsset\marine\blender5.1.2\marine.blend'
+$script = (Resolve-Path 'tools\RenderMarineColorCorrected.py').Path
+$output = (Resolve-Path 'RedFortress2\MultiPassRendering\res\2D_Image').Path
+& $blender --background $model --python $script -- --output-dir $output --resolution 1024 --samples 48 --engine CYCLES --render-game-expressions
 ```
 
-- タイムアウトは長めに(600000ms程度)。
-- Blender 5.1のエンジン名は `BLENDER_EEVEE`(NOT `BLENDER_EEVEE_NEXT`)。`show_render`ではなく`hide_render`。
+生成される表情は通常、笑顔、心配、決意、真剣、驚きの6種類。
 
-## 撮影設定(テスト済み・ベースライン)
+## 戌神ころね
 
-- エンジン: EEVEE。ワールド背景はファイル既定が暗いので `Background` ノードを (0.9,0.9,0.9)×強度1.0 に変更(明るいグレー)。
-- カメラ: 既存の `Camera`(50mmレンズ)を流用、`to_track_quat('-Z','Y')` で注視。
-  - 腿から上フレーミング: 位置 `(0, ±2.3, 1.25)`、注視点 `(0,0,1.25)` → 座標z約0.70〜1.80が縦範囲(大腿上〜帽子頭頂)。
-  - 正面 = -Y側から撮影(y=-2.3)、背面 = +Y側。
-- ライト: 既存の `Light`(ポイントライト)を camera側+3m高 に移動し `energy=3.0`。
-- 解像度: 1000×1200。
-- 透過PNGにしたい場合: `scene.render.film_transparent = True` + `color_mode='RGBA'`。
+### 入力モデル
 
-## 再現スクリプト(コピペで使える)
-
-```python
-import bpy, json
-from mathutils import Vector, Matrix
-
-scene = bpy.context.scene
-arm_obj = None
-for obj in bpy.data.objects:
-    if obj.type == 'ARMATURE':
-        arm_obj = obj
-        break
-
-# 1. slashアニメを外してAポーズへ
-if arm_obj.animation_data is not None:
-    arm_obj.animation_data_clear()
-for pb in arm_obj.pose.bones:
-    pb.matrix_basis = Matrix.Identity(4)
-    for c in pb.constraints:
-        c.mute = True          # 脚IKを切る(素直なAポーズになる)
-bpy.context.view_layer.update()
-
-# 2. 背景を明るいグレーに
-if scene.world is None:
-    scene.world = bpy.data.worlds.new("World")
-scene.world.use_nodes = True
-bg = scene.world.node_tree.nodes.get("Background")
-if bg is None:
-    bg = scene.world.node_tree.nodes.new("ShaderNodeBackground")
-    out = scene.world.node_tree.nodes.get("World Output")
-    scene.world.node_tree.links.new(bg.outputs[0], out.inputs[0])
-bg.inputs[0].default_value = (0.9, 0.9, 0.9, 1.0)
-bg.inputs[1].default_value = 1.0
-
-# 3. カメラ・ライト設定
-cam_obj = bpy.data.objects.get("Camera")
-light_obj = bpy.data.objects.get("Light")
-target = Vector((0.0, 0.0, 1.25))
-d = 2.3
-scene.render.resolution_x = 1000
-scene.render.resolution_y = 1200
-scene.render.resolution_percentage = 100
-
-for side in ["front", "back"]:
-    y = -d if side == "front" else d
-    cam_obj.location = Vector((0.0, y, 1.25))
-    cam_obj.rotation_euler = (target - cam_obj.location).to_track_quat('-Z', 'Y').to_euler()
-    light_obj.location = cam_obj.location + Vector((1.5, 0.0, 2.0))
-    light_obj.rotation_euler = (target - light_obj.location).to_track_quat('-Z', 'Y').to_euler()
-    scene.render.filepath = r"C:/Users/bibindon/AppData/Local/Temp/opencode/marine_rnd_%s.png" % side
-    bpy.ops.render.render(write_still=True)
+```text
+C:\Users\bibindon\Nextcloud\RedFortressAsset\Korone\InugamiKorone\InugamiKorone\Korone.blend
 ```
 
-## 実績
+### 生成スクリプト
 
-- 2026-08-29: Aポーズ正面/背面の腿から上レンダリングに成功。
-  - 出力例: `C:\Users\bibindon\AppData\Local\Temp\opencode\marine_clean_front.png`, `marine_clean_back.png`
-  - 正面の見た目は良好。背面は後頭部の髪メッシュがピンクの塊に見える(モデル自体の問題)。
-- 由来: 初回レンダーは「slash」アニメの腕上げポーズだった → 上記手順で解消。
+```text
+C:\Users\bibindon\source\repos\bibindon\RedFortress\tools\RenderKoroneColorCorrected.py
+```
 
-## 次の候補アクション
+このスクリプトには、次の確定済み調整が含まれている。
 
-- 保存先アセットフォルダへの透過PNG書き出し(例: `RedFortressAsset\marine\stand.png`)
-- `slash`/`slash2` のフレームから「立ち絵用のカッコいいポーズ」の選定
-- ゲーム側(Render::DrawImage)へ載せ替え
+- 顔、線なしの顔、肌へ暖色補正を適用する。
+- 赤すぎた瞳の彩度と明度を抑える。
+- 両腕と肘を調整して腕を下ろす。
+- Standard、Medium Low Contrast、露出 -0.25を使用する。
+- キー180、フィル75、リム100、ワールド強度0.18の照明を使用する。
+- 正投影カメラのスケールは1.35、Xシフトは0.18とする。
+
+### 本番生成コマンド
+
+```powershell
+$blender = 'C:\Program Files\Blender Foundation\Blender 5.1\blender.exe'
+$model = 'C:\Users\bibindon\Nextcloud\RedFortressAsset\Korone\InugamiKorone\InugamiKorone\Korone.blend'
+$script = (Resolve-Path 'tools\RenderKoroneColorCorrected.py').Path
+$output = (Resolve-Path 'RedFortress2\MultiPassRendering\res\2D_Image').Path
+& $blender --background $model --python $script -- --output-dir $output --resolution 1024 --samples 48 --engine CYCLES --render-game-expressions
+```
+
+生成される表情は通常、笑顔、謎めいた表情の3種類。
+
+## 天音かなた
+
+### 入力モデル
+
+立ち絵に使用したのは、ボス用の `kanata_boss.blend` ではなく、VRMを直接インポートした次のファイル。
+
+```text
+C:\Users\bibindon\Nextcloud\RedFortressAsset\KanataPrototype\kanata_imported.blend
+```
+
+### 生成スクリプト
+
+```text
+C:\Users\bibindon\source\repos\bibindon\RedFortress\tools\render_kanata_portrait_test.py
+```
+
+このスクリプトは次の処理を行う。
+
+- `Face` オブジェクトのVRM表情シェイプキーを使用する。
+- 元のダウンロード先を参照している外部テクスチャが消えていても、同じフォルダの `textures\kanata_00.png` から `kanata_28.png` をマテリアル順に再接続する。
+- 肌マテリアルをCycles向けに変換し、暖色補正を加える。
+- マテリアルの自己発光を無効化し、実ライトによる陰影を出す。
+- 存在しない法線マップの接続を解除し、顔や衣装に異常な模様が出るのを防ぐ。
+- 腕を下ろす。
+- `KanataRigidMesh` が存在する場合は非表示にする。
+- Standard、Medium Low Contrast、露出 -0.25を使用し、白い肌が灰色になるのを防ぐ。
+- 顔の肌へ `(1.0, 0.88, 0.84)`、身体の肌を含むマテリアルへ `(1.0, 0.86, 0.82)` の暖色乗算を適用する。
+- キー180、フィル75、リム100、ワールド強度0.18を使用する。
+- 正投影カメラのスケールは1.10、Yシフトは0.07とする。
+
+### 本番生成コマンド
+
+```powershell
+$blender = 'C:\Program Files\Blender Foundation\Blender 5.1\blender.exe'
+$model = 'C:\Users\bibindon\Nextcloud\RedFortressAsset\KanataPrototype\kanata_imported.blend'
+$script = (Resolve-Path 'tools\render_kanata_portrait_test.py').Path
+$output = (Resolve-Path 'RedFortress2\MultiPassRendering\res\2D_Image').Path
+$env:KANATA_TEST_OUTPUT = Join-Path $output 'novel_chr_kanata_{expression}_transparent.png'
+$env:KANATA_CYCLES_SAMPLES = '48'
+$env:KANATA_EXPRESSION = 'all'
+& $blender --background $model --python $script
+Remove-Item Env:KANATA_TEST_OUTPUT
+Remove-Item Env:KANATA_CYCLES_SAMPLES
+Remove-Item Env:KANATA_EXPRESSION
+```
+
+生成される表情は通常、笑顔、心配、決意の4種類。
+
+## 本番前の高速確認
+
+マリンところねは、Cycles本番の前に次のように512×512、Eevee、8サンプルで全表情を確認できる。出力先にはゲーム用フォルダではなく `tmp` を指定する。
+
+```powershell
+& $blender --background $model --python $script -- --output-dir $previewOutput --resolution 512 --samples 8 --engine BLENDER_EEVEE --render-game-expressions
+```
+
+Blender 5.1でEeveeを指定するときの名前は `BLENDER_EEVEE`。`BLENDER_EEVEE_NEXT` は使用できない。重いモデルは連携機能経由だとタイムアウトする場合があるため、上記のようにPowerShellからBlenderを直接起動する。
+
+確認する項目は次の通り。
+
+1. 背景が透明である。
+2. 画像が1024×1024である。
+3. 肌が灰色または青色になっていない。
+4. 瞳だけが不自然に高彩度になっていない。
+5. 帽子、頭、髪が上端から切れていない。
+6. 腕が横へ伸びていない。
+7. 表情ごとの位置と大きさが完全に揃っている。
+8. 表情の違いがゲーム画面上の大きさでも判別できる。
+
+## ゲームへの反映
+
+立ち絵を更新した後は、Debug x64でビルドする。ビルド後処理により `res` が実行用フォルダへコピーされる。
+
+```powershell
+$cmdLine = 'set RF_BUILD_PATH=%Path%& set PATH=& set Path=!RF_BUILD_PATH!& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" RedFortress2\MultiPassRendering.sln /p:Configuration=Debug /p:Platform=x64 /m:1 /v:minimal'
+& cmd.exe /d /v:on /c $cmdLine
+```
+
+実行用コピー先は次の通り。
+
+```text
+C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\x64\Debug\res\2D_Image
+```
+
+ソース側と実行用フォルダ側で、更新したPNGの内容が一致していることも確認する。
