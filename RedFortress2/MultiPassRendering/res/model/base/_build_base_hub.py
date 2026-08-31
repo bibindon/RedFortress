@@ -375,8 +375,46 @@ def add_cylinder(name, location, radius, depth, material, vertices=12):
     return obj
 
 
+def add_sphere(name, location, radius, material, scale=(1.0, 1.0, 1.0)):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        segments=12,
+        ring_count=8,
+        radius=radius,
+        location=location,
+    )
+    obj = bpy.context.object
+    obj.name = name
+    obj.scale = scale
+    obj.data.materials.append(material)
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    return obj
+
+
+def add_log(name, location, radius, length, material, rotation_degrees=0.0):
+    obj = add_cylinder(name, location, radius, length, material, 10)
+    obj.rotation_euler = (0.0, math.radians(90.0), math.radians(rotation_degrees))
+    return obj
+
+
 def add_workshop(prototypes, wood, dark_wood, cloth, metal):
     objects = []
+    paper = create_material("WorkshopPaper", (0.87, 0.83, 0.70, 1.0), 0.9)
+    pebble = create_material("WorkshopPebble", (0.30, 0.30, 0.32, 1.0), 0.95)
+    rug = create_material("WorkshopRug", (0.42, 0.11, 0.10, 1.0), 0.92)
+    rope = create_material("WorkshopRope", (0.45, 0.32, 0.16, 1.0), 0.90)
+    sack = create_material("WorkshopSack", (0.52, 0.42, 0.26, 1.0), 0.95)
+    log_bark = create_material("WorkshopLogBark", (0.28, 0.17, 0.08, 1.0), 0.95)
+    lamp_glass = create_material(
+        "WorkshopLanternGlass",
+        (1.0, 0.75, 0.35, 0.9),
+        0.30,
+        0.0,
+        (1.0, 0.62, 0.22),
+    )
+
+    deck_top = 0.37
+    bench_top = 1.22
+
     objects.append(add_cube("WorkshopDeck", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), wood))
     objects.append(add_cube("WorkshopBenchTop", (-7.0, -19.5, 1.12), (3.4, 1.1, 0.18), dark_wood))
     for x in (-8.35, -5.65):
@@ -388,15 +426,103 @@ def add_workshop(prototypes, wood, dark_wood, cloth, metal):
     roof = add_cube("WorkshopCanopy", (-7.0, -20.0, 2.72), (5.1, 3.4, 0.12), cloth)
     roof.rotation_euler[1] = math.radians(-6.0)
     objects.append(roof)
+
+    # --- 生活感: 広げられた設計図と抑えの石 ---
+    blueprint = add_cube("WorkshopBlueprint", (-7.55, -19.5, bench_top + 0.015), (0.52, 0.36, 0.02), paper)
+    blueprint.rotation_euler[2] = math.radians(12.0)
+    objects.append(blueprint)
+    objects.append(add_cube("WorkshopBlueprintWeightA", (-7.75, -19.62, bench_top + 0.04), (0.07, 0.06, 0.05), pebble))
+    objects.append(add_cube("WorkshopBlueprintWeightB", (-7.38, -19.4, bench_top + 0.04), (0.06, 0.06, 0.05), pebble))
+
+    # --- 生活感: 開いた工具箱と覗く工具 ---
+    toolbox = add_cube("WorkshopToolbox", (-6.25, -18.75, deck_top + 0.16), (0.55, 0.34, 0.30), dark_wood)
+    toolbox.rotation_euler[2] = math.radians(18.0)
+    objects.append(toolbox)
+    lid = add_cube("WorkshopToolboxLid", (-6.25, -18.95, deck_top + 0.40), (0.55, 0.34, 0.04), wood)
+    lid.rotation_euler = (math.radians(-62.0), 0.0, math.radians(18.0))
+    objects.append(lid)
+    tool_a = add_cylinder("WorkshopToolboxToolA", (-6.15, -18.78, deck_top + 0.34), 0.022, 0.34, metal, 8)
+    tool_a.rotation_euler = (math.radians(14.0), math.radians(-8.0), 0.0)
+    objects.append(tool_a)
+    tool_b = add_cylinder("WorkshopToolboxToolB", (-6.38, -18.7, deck_top + 0.32), 0.02, 0.3, metal, 8)
+    tool_b.rotation_euler = (math.radians(-10.0), math.radians(12.0), 0.0)
+    objects.append(tool_b)
+
+    # --- 生活感: 材料袋（1個は倒れて宝石が転がる） ---
+    sack_a_body = add_sphere("WorkshopSackA", (-8.6, -19.05, deck_top + 0.14), 0.17, sack, (1.0, 1.0, 0.85))
+    objects.append(sack_a_body)
+    objects.append(add_cylinder("WorkshopSackATie", (-8.6, -19.05, deck_top + 0.27), 0.06, 0.08, rope, 8))
+    sack_b = add_sphere("WorkshopSackB", (-9.4, -18.2, deck_top + 0.13), 0.17, sack, (1.0, 1.0, 0.85))
+    sack_b.rotation_euler = (math.radians(78.0), 0.0, math.radians(-24.0))
+    objects.append(sack_b)
+    for spill_index, spill_pos in enumerate(((-9.15, -17.95), (-9.0, -17.8), (-8.82, -17.92))):
+        objects.append(
+            add_cube(
+                "WorkshopSpilledGem" + str(spill_index),
+                (spill_pos[0], spill_pos[1], deck_top + 0.03),
+                (0.05, 0.05, 0.06),
+                lamp_glass,
+            )
+        )
+
+    # --- 生活感: ベンチ端のランタン（発光ガラス） ---
+    objects.append(add_cube("WorkshopLanternBase", (-5.6, -19.95, bench_top + 0.02), (0.13, 0.13, 0.035), metal))
+    objects.append(add_sphere("WorkshopLanternGlass", (-5.6, -19.95, bench_top + 0.12), 0.075, lamp_glass))
+    objects.append(add_cube("WorkshopLanternCap", (-5.6, -19.95, bench_top + 0.21), (0.1, 0.1, 0.03), metal))
+    objects.append(add_cylinder("WorkshopLanternHandle", (-5.6, -19.95, bench_top + 0.26), 0.015, 0.06, metal, 8))
+
+    # --- 生活感: 梁から吊るした盾（地面立てかけから変更） ---
+    shield_objects = add_asset(prototypes, "Shield.blend", "WorkshopShield", (-5.0, -20.6, 1.95), 0.32, 82.0)
+    for shield_object in shield_objects:
+        shield_object.rotation_euler[0] = math.radians(8.0)
+    objects.extend(shield_objects)
+    objects.append(add_cylinder("WorkshopShieldRope", (-5.0, -20.6, 2.35), 0.02, 0.6, rope, 8))
+
+    # --- 生活感: 足元の敷物 ---
+    rug_obj = add_cube("WorkshopRug", (-7.0, -18.45, deck_top + 0.02), (1.75, 1.15, 0.035), rug)
+    rug_obj.rotation_euler[2] = math.radians(-7.0)
+    objects.append(rug_obj)
+
+    # --- 生活感: 薪置き（デッキ西端に3+2+1の崩れ積み、1本は地面へ転落） ---
+    log_rows = (
+        ((-10.05, -20.42, deck_top + 0.07), (-10.05, -20.28, deck_top + 0.07), (-10.05, -20.56, deck_top + 0.07)),
+        ((-10.05, -20.33, deck_top + 0.2), (-10.05, -20.47, deck_top + 0.2)),
+        ((-10.05, -20.4, deck_top + 0.33),),
+    )
+    log_index = 0
+    for row in log_rows:
+        for lx, ly, lz in row:
+            log_index += 1
+            objects.append(add_log("WorkshopLog" + str(log_index), (lx, ly, lz), 0.065, 0.52, log_bark, random_jitter(log_index)))
+    objects.append(add_log("WorkshopLogRolled", (-11.3, -20.7, 0.28), 0.065, 0.5, log_bark, 36.0))
+
+    # --- 生活感: 床に散らした使用済み金槌とノミ ---
+    hammer_head = add_cube("WorkshopHammerHead", (-7.85, -19.05, deck_top + 0.06), (0.13, 0.055, 0.06), metal)
+    hammer_head.rotation_euler = (0.0, 0.0, math.radians(40.0))
+    objects.append(hammer_head)
+    hammer_handle = add_cylinder("WorkshopHammerHandle", (-7.78, -19.12, deck_top + 0.025), 0.018, 0.22, wood, 8)
+    hammer_handle.rotation_euler = (math.radians(90.0), 0.0, math.radians(-50.0))
+    objects.append(hammer_handle)
+    chisel = add_cylinder("WorkshopChisel", (-6.7, -19.2, deck_top + 0.02), 0.016, 0.18, metal, 8)
+    chisel.rotation_euler = (math.radians(90.0), 0.0, math.radians(15.0))
+    objects.append(chisel)
+
     objects.extend(add_asset(prototypes, "Barrel.blend", "WorkshopBarrelA", (-9.0, -18.9, 0.78), 0.34, 10.0))
-    objects.extend(add_asset(prototypes, "Barrel.blend", "WorkshopBarrelB", (-8.5, -18.7, 1.42), 0.26, -15.0))
-    objects.extend(add_asset(prototypes, "Book.blend", "WorkshopBook", (-7.4, -19.45, 1.27), 0.20, 18.0))
+    barrel_b_objects = add_asset(prototypes, "Barrel.blend", "WorkshopBarrelB", (-8.5, -18.7, 1.42), 0.26, -15.0)
+    for barrel_object in barrel_b_objects:
+        barrel_object.rotation_euler[0] = math.radians(5.0)
+    objects.extend(barrel_b_objects)
+    objects.extend(add_asset(prototypes, "Book.blend", "WorkshopBook", (-7.05, -19.75, 1.31), 0.20, 18.0))
     objects.extend(add_asset(prototypes, "Gems.blend", "WorkshopGems", (-6.65, -19.42, 1.25), 0.16, -12.0))
-    objects.extend(add_asset(prototypes, "Shield.blend", "WorkshopShield", (-5.0, -20.6, 1.05), 0.32, 82.0))
     objects.extend(add_asset(prototypes, "Sword.blend", "WorkshopSword", (-6.0, -19.45, 1.36), 0.25, -20.0))
     objects.extend(add_asset(prototypes, "WoodenStaff.blend", "WorkshopStaff", (-9.15, -20.6, 1.35), 0.34, 8.0))
     objects.append(add_cube("WorkshopToolRack", (-8.95, -20.65, 1.35), (0.14, 0.8, 1.8), metal))
     return objects
+
+
+def random_jitter(index):
+    table = (7.0, -5.0, 3.0, -8.0, 6.0, -4.0, 9.0)
+    return table[index % len(table)]
 
 
 def add_portal(stone, glow):
@@ -562,6 +688,7 @@ def use_collision_material(objects, material):
 
 
 def create_collision():
+    deck_top_collision = 0.37
     collision_material = create_material(
         "BaseHubCollision",
         (0.35, 0.35, 0.35, 1.0),
@@ -625,6 +752,9 @@ def create_collision():
         )
     objects.append(add_cube("WorkshopDeckCollision", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), collision_material))
     objects.append(add_cube("WorkshopBenchCollision", (-7.0, -19.5, 0.82), (3.4, 1.1, 1.35), collision_material))
+    # 2026-08 生活感改修: 薪置きと工具箱は踏み台になるので衝突を入れる。
+    objects.append(add_cube("WorkshopLogsCollision", (-10.05, -20.42, deck_top_collision + 0.14), (0.55, 0.5, 0.6), collision_material))
+    objects.append(add_cube("WorkshopToolboxCollision", (-6.25, -18.75, deck_top_collision + 0.24), (0.58, 0.38, 0.4), collision_material))
     objects.append(add_cube("PortalPillarLeftCollision", (-2.0, 26.0, 1.85), (0.75, 0.85, 3.2), collision_material))
     objects.append(add_cube("PortalPillarRightCollision", (2.0, 26.0, 1.85), (0.75, 0.85, 3.2), collision_material))
     return objects
