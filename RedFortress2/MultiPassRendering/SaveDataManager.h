@@ -23,8 +23,8 @@ public:
 
     void MarkStageCleared(const std::wstring& stageId);
     bool IsStageCleared(const std::wstring& stageId) const;
-    void MarkStageClearedWithoutDamage(const std::wstring& stageId);
-    bool IsStageClearedWithoutDamage(const std::wstring& stageId) const;
+    void MarkStageClearedWithFullHealth(const std::wstring& stageId);
+    bool IsStageClearedWithFullHealth(const std::wstring& stageId) const;
 
     void MarkStageUnlocked(const std::wstring& stageId);
     bool IsStageUnlocked(const std::wstring& stageId) const;
@@ -52,7 +52,7 @@ private:
 
     const StageManager* m_stageManager;
     std::unordered_set<std::wstring> m_clearedStageIds;
-    std::unordered_set<std::wstring> m_noDamageClearedStageIds;
+    std::unordered_set<std::wstring> m_fullHealthClearedStageIds;
     std::unordered_set<std::wstring> m_unlockedStageIds;
     std::unordered_set<std::wstring> m_shownExplanationIds;
     std::wstring m_filePath;

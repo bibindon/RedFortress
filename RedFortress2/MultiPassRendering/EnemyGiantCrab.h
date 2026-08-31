@@ -8,13 +8,18 @@ public:
     static float GetScale() { return 0.38f * 3.0f; }
 
 protected:
-    EnemyGiantCrab(const D3DXVECTOR3& pos, int meshId, float yaw, int maxHp);
+    EnemyGiantCrab(const D3DXVECTOR3& pos,
+                   int meshId,
+                   float yaw,
+                   int maxHp,
+                   float bodyScale = 1.0f);
 };
 
 class EnemyBossGiantCrab : public EnemyGiantCrab
 {
 public:
     EnemyBossGiantCrab(const D3DXVECTOR3& pos, int meshId, float yaw);
+    static float GetScale() { return EnemyGiantCrab::GetScale() * 2.0f; }
     bool UsesSpecialAttacks() const override;
 
 protected:

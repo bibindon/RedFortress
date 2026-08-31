@@ -6,6 +6,7 @@ namespace
 {
     const int kGiantCrabMaxHp = 12;
     const int kBossGiantCrabMaxHp = kGiantCrabMaxHp * 20;
+    const float kBossGiantCrabBodyScale = 2.0f;
 
     const int kNormalAttackCooldownFrames = 62;
     const int kEnragedAttackCooldownFrames = 36;
@@ -86,7 +87,8 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos, const int meshId, const f
 EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos,
                                const int meshId,
                                const float yaw,
-                               const int maxHp)
+                               const int maxHp,
+                               const float bodyScale)
     : EnemyBase(pos,
                 meshId,
                 L"giant_crab",
@@ -94,9 +96,9 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos,
                 maxHp,
                 1.7f,
                 10.0f,
-                0.54f * 3.0f,
-                0.36f * 3.0f,
-                -0.18f * 3.0f,
+                0.54f * 3.0f * bodyScale,
+                0.36f * 3.0f * bodyScale,
+                -0.18f * 3.0f * bodyScale,
                 MovementMode::Ground,
                 true,
                 HitReactionMode::SuperArmor)
@@ -106,7 +108,11 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos,
 EnemyBossGiantCrab::EnemyBossGiantCrab(const D3DXVECTOR3& pos,
                                        const int meshId,
                                        const float yaw)
-    : EnemyGiantCrab(pos, meshId, yaw, kBossGiantCrabMaxHp)
+    : EnemyGiantCrab(pos,
+                     meshId,
+                     yaw,
+                     kBossGiantCrabMaxHp,
+                     kBossGiantCrabBodyScale)
 {
     for (int i = 0; i < kBubbleProjectileCount; ++i)
     {

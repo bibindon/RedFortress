@@ -4114,7 +4114,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         };
         const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
         const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
-        const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
+        const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
         const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
         const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
         for (int i = 0; i < portalLightCount; ++i)
@@ -4125,9 +4125,9 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
             {
                 lightColor = travelColor;
             }
-            else if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+            else if (m_saveDataManager.IsStageClearedWithFullHealth(destinationId))
             {
-                lightColor = noDamageColor;
+                lightColor = fullHealthColor;
             }
             else if (m_saveDataManager.IsStageCleared(destinationId))
             {
@@ -4191,7 +4191,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         };
         const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
         const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
-        const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
+        const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
         const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
         const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
         for (int i = 0; i < portalLightCount; ++i)
@@ -4203,9 +4203,9 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
             {
                 lightColor = travelColor;
             }
-            else if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+            else if (m_saveDataManager.IsStageClearedWithFullHealth(destinationId))
             {
-                lightColor = noDamageColor;
+                lightColor = fullHealthColor;
             }
             else if (m_saveDataManager.IsStageCleared(destinationId))
             {
@@ -4272,7 +4272,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     };
     const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
     const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
-    const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
+    const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
     const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
     const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
     for (int i = 0; i < portalLightCount; ++i)
@@ -4284,9 +4284,9 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         {
             lightColor = travelColor;
         }
-        else if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+        else if (m_saveDataManager.IsStageClearedWithFullHealth(destinationId))
         {
-            lightColor = noDamageColor;
+            lightColor = fullHealthColor;
         }
         else if (m_saveDataManager.IsStageCleared(destinationId))
         {
@@ -6063,7 +6063,7 @@ void GameApp::CreateStageSelectCubes()
             }
             else
             {
-                if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+                if (m_saveDataManager.IsStageClearedWithFullHealth(destinationId))
                 {
                     cubePath = kStageSelectCubeYellowPath;
                 }
@@ -6086,8 +6086,8 @@ void GameApp::CreateStageSelectCubes()
             cubeScale = kStageSelectCubeYellowScale;
             if (m_stageManager.GetCurrentStage().id == L"select1")
             {
-                const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
-                m_render.AddPointLight(cubePosition, 1.8f, noDamageColor);
+                const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
+                m_render.AddPointLight(cubePosition, 1.8f, fullHealthColor);
             }
         }
         const int renderId = m_render.AddMeshMix(cubePath,
@@ -7314,9 +7314,9 @@ void GameApp::UpdateStageClear()
     {
         m_stageClearWasFirstClear = !m_saveDataManager.IsStageCleared(clearedStageId);
         m_saveDataManager.MarkStageCleared(clearedStageId);
-        if (!m_currentStageDamaged)
+        if (m_player.GetHp() == m_player.GetMaxHp())
         {
-            m_saveDataManager.MarkStageClearedWithoutDamage(clearedStageId);
+            m_saveDataManager.MarkStageClearedWithFullHealth(clearedStageId);
         }
         m_saveDataManager.MarkStageUnlocked(clearedStageId);
 
@@ -7953,7 +7953,6 @@ void GameApp::DamagePlayerHp(int amount)
     const int newHp = m_player.GetHp();
     if (newHp < oldHp)
     {
-        m_currentStageDamaged = true;
         GameAudio::PlayPlayerDamage();
         D3DXVECTOR3 damageEffectPosition = m_playerMover.GetPosition();
         damageEffectPosition.y += 1.0f;
@@ -8597,7 +8596,6 @@ void GameApp::LoadCurrentStageObjects()
     m_stageClearVisualOffsetY = 0.0f;
 
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
-    m_currentStageDamaged = false;
     const StageManager::StageData loadStage = GetStageDataForLoad(stage);
 
     std::wstring renderSettingsPath;

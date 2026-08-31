@@ -479,7 +479,6 @@ private:
     bool m_bossDefeatUsesFixedCamera = false;
     bool m_stageClearProcessed = false;
     bool m_stageClearWasFirstClear = false;
-    bool m_currentStageDamaged = false;
     int m_stageClearFrame = 0;
     float m_stageClearVisualOffsetY = 0.0f;
     StageClearReplayPhase m_stageClearReplayPhase = StageClearReplayPhase::None;

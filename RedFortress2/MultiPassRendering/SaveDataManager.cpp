@@ -70,7 +70,7 @@ bool SaveDataManager::EnsureDirectoryExists() const
 bool SaveDataManager::Load()
 {
     m_clearedStageIds.clear();
-    m_noDamageClearedStageIds.clear();
+    m_fullHealthClearedStageIds.clear();
     m_unlockedStageIds.clear();
     m_shownExplanationIds.clear();
     m_stageSelectId.clear();
@@ -172,7 +172,7 @@ bool SaveDataManager::Load()
 
         if (row.size() >= 6 && row.at(5) == L"1")
         {
-            m_noDamageClearedStageIds.insert(stageId);
+            m_fullHealthClearedStageIds.insert(stageId);
         }
     }
 
@@ -220,7 +220,7 @@ void SaveDataManager::Save()
     header.push_back(L"Unlocked");
     header.push_back(L"SelectedPortalId");
     header.push_back(L"ShownExplanationIds");
-    header.push_back(L"NoDamageCleared");
+    header.push_back(L"FullHealthCleared");
     csvData.push_back(header);
 
     const std::size_t stageCount = m_stageManager->GetStageCount();
@@ -284,7 +284,7 @@ void SaveDataManager::Save()
         }
         row.push_back(shownExplanationIds);
 
-        if (IsStageClearedWithoutDamage(stage.id))
+        if (IsStageClearedWithFullHealth(stage.id))
         {
             row.push_back(L"1");
         }
@@ -353,25 +353,25 @@ bool SaveDataManager::IsStageCleared(const std::wstring& stageId) const
     return false;
 }
 
-void SaveDataManager::MarkStageClearedWithoutDamage(const std::wstring& stageId)
+void SaveDataManager::MarkStageClearedWithFullHealth(const std::wstring& stageId)
 {
     if (!stageId.empty())
     {
-        if (m_noDamageClearedStageIds.insert(stageId).second)
+        if (m_fullHealthClearedStageIds.insert(stageId).second)
         {
             m_hasUnsavedChanges = true;
         }
     }
 }
 
-bool SaveDataManager::IsStageClearedWithoutDamage(const std::wstring& stageId) const
+bool SaveDataManager::IsStageClearedWithFullHealth(const std::wstring& stageId) const
 {
     if (stageId.empty())
     {
         return false;
     }
 
-    return m_noDamageClearedStageIds.find(stageId) != m_noDamageClearedStageIds.end();
+    return m_fullHealthClearedStageIds.find(stageId) != m_fullHealthClearedStageIds.end();
 }
 
 bool SaveDataManager::IsStageClearedByIndex(std::size_t stageIndex) const
@@ -497,7 +497,7 @@ void SaveDataManager::InitializeDefaultUnlocks()
 void SaveDataManager::ResetToDefaults(const bool markUnsaved)
 {
     m_clearedStageIds.clear();
-    m_noDamageClearedStageIds.clear();
+    m_fullHealthClearedStageIds.clear();
     m_unlockedStageIds.clear();
     m_shownExplanationIds.clear();
     m_stageSelectId.clear();
