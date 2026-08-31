@@ -5,7 +5,7 @@ void StageManager::Initialize()
     m_stages.clear();
     m_currentStageIndex = 0;
 
-    AddStage(L"1-1", 1, L"1-1 はじまりのとりで", L"stage_1_1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+    AddStage(L"1-1", 1, L"1 - 1 はじまりのとりで", L"stage_1_1", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.stage1-1-to-1-3.csv");
     AddStage(L"1-2", 2, L"1-2 木箱ごろごろとうげ", L"stage_1_2", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),

@@ -270,6 +270,7 @@ namespace
     const std::wstring kStarPowerUpItemId = L"star_power_up";
     const std::wstring kSpeedUpItemId = L"speed_up";
     const std::wstring kInitialClubWeaponId = L"W001";
+    const std::wstring kInitialBranchItemId = L"001";
     const std::wstring kSwordWeaponId = L"W002";
     const std::wstring kBusterWeaponId = L"W003";
     const std::wstring kBombWeaponId = L"W004";
@@ -6565,6 +6566,7 @@ void GameApp::StartNewGame()
     m_preferredStageSelectPortalId.clear();
     m_inventoryManager.Reset();
     m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
+    m_inventoryManager.AddItem(kInitialBranchItemId, 1);
     ApplyUnlockedAbilities();
     m_baseBombCapacity = 1;
     m_baseBusterRapidLevel = 1;

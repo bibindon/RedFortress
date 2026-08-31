@@ -1759,11 +1759,6 @@ void PauseMenu::RenderItemPanel()
     const std::vector<std::size_t> ownedItems = GetOwnedItemIndices();
     if (ownedItems.empty())
     {
-        m_render->DrawTextEx(m_qualityFontId,
-                             L"所持しているアイテムはありません。",
-                             kItemListX,
-                             kItemPanelListY,
-                             kTextColor);
         return;
     }
 
@@ -2198,14 +2193,14 @@ void PauseMenu::RenderSettingsOptionList(const SettingsRow row)
                              kSettingsCancelWidth,
                              kSettingsCancelHeight,
                              kSettingsButtonTransparency);
-    m_render->DrawTextExCenter(m_menuItemFontId,
+    m_render->DrawTextExCenter(m_qualityFontId,
                                L"適用",
                                kSettingsApplyX,
                                kSettingsApplyY,
                                kSettingsApplyWidth,
                                kSettingsApplyHeight,
                                applyColor);
-    m_render->DrawTextExCenter(m_menuItemFontId,
+    m_render->DrawTextExCenter(m_qualityFontId,
                                L"キャンセル",
                                kSettingsCancelX,
                                kSettingsCancelY,
@@ -2864,7 +2859,7 @@ void PauseMenu::UpdateSaveConfirm()
 void PauseMenu::RenderSaveConfirm()
 {
     m_render->DrawTextEx(m_saveMenuFontId,
-                         L"セーブする",
+                         L"セーブ",
                          kSaveConfirmPromptX,
                          kSaveConfirmPromptY,
                          kTextColor);
