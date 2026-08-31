@@ -108,6 +108,7 @@ const int kSettingsRowInterval = 74;
 const int kSettingsOptionListX = 480;
 const int kSettingsOptionListWidth = 300;
 const int kSettingsValueHeight = 62;
+const int kSettingsFontSize = 20;
 const int kSettingsArrowWidth = 80;
 const int kSettingsArrowHeight = 62;
 const int kSettingsArrowIconSize = 24;
@@ -1419,7 +1420,7 @@ void PauseMenu::Render(const std::wstring& stageName, const int lives)
 
     if (m_qualityFontId < 0)
     {
-        m_qualityFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 20, kSubTextColor);
+        m_qualityFontId = m_render->SetUpFontEx(L"BIZ UDGothic", kSettingsFontSize, kSubTextColor);
     }
 
     m_render->DrawImageSized(kHeartImagePath,
@@ -2051,7 +2052,7 @@ void PauseMenu::RenderExitConfirm()
 void PauseMenu::RenderSettingsPanel()
 {
     const int leftX = kSettingsRowTextX;
-    const int leftY = kSettingsFirstRowY + 9;
+    const int leftY = kSettingsFirstRowY + (kSettingsValueHeight - kSettingsFontSize) / 2;
     m_render->DrawTextEx(m_qualityFontId,
                          L"解像度",
                          leftX,
