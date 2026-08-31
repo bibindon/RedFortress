@@ -146,7 +146,8 @@ namespace
     const float kPlayerRunAnimationSpeed = 1.0f;
     const float kTitleSaturationLevel = 0.85f;
     const float kTitleShadowDarkness = 0.75f;
-    const std::wstring kTitleBackgroundImagePath = L"res\\2D_Image\\Title3.png";
+    const std::wstring kTitleBackgroundImagePath = L"res\\2D_Image\\title4.png";
+    const std::wstring kTitleTextGradientImagePath = L"res\\2D_Image\\title_text_gradient.png";
     const int kTitleBackgroundSourceWidth = 1920;
     const int kTitleBackgroundSourceHeight = 1080;
     const std::wstring kTitleLicenseMaskPath = L"res\\2D_Image\\menu_mask.png";
@@ -8746,6 +8747,12 @@ void GameApp::DrawTitleScreen()
                                 kTitleBackgroundSourceWidth,
                                 kTitleBackgroundSourceHeight,
                                 255);
+    m_render.DrawImageSized(kTitleTextGradientImagePath,
+                            0,
+                            0,
+                            NSRender::Common::BASE_W,
+                            NSRender::Common::BASE_H,
+                            255);
 
     if (m_titleFontId < 0)
     {
