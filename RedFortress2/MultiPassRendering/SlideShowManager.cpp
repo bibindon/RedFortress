@@ -395,12 +395,14 @@ void SlideShowManager::ProcessInput()
 
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
         InputDevice::SKeyBoard::IsDownFirstFrame(DIK_SPACE) ||
-        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT))
+        InputDevice::Mouse::IsDownFirstFrame(InputDevice::MOUSE_LEFT) ||
+        InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
     {
         m_slideShow->Next();
     }
 
-    if (InputDevice::SKeyBoard::IsHoldDuration(DIK_SPACE, kSkipHoldSeconds))
+    if (InputDevice::SKeyBoard::IsHoldDuration(DIK_SPACE, kSkipHoldSeconds) ||
+        InputDevice::GamePad::IsHoldDuration(InputDevice::GAMEPAD_A, kSkipHoldSeconds))
     {
         if (!m_skipRequested)
         {
@@ -429,7 +431,7 @@ void SlideShowManager::DrawSkipHint()
     const SlideShowCanvasRect hintRect =
         ConvertSlideShowCanvasRect(1190.0f, 820.0f, 360.0f, 40.0f);
     m_render.DrawTextCenter(m_skipHintFontId,
-                            L"Space長押しでスキップ",
+                            L"Space/A長押しでスキップ",
                             hintRect.x,
                             hintRect.y,
                             hintRect.width,

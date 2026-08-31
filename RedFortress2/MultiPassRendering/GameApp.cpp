@@ -286,6 +286,8 @@ namespace
     const float CAMERA_FAST_MOVE_SPEED = 0.25f;
     const float MOUSE_CAMERA_SENSITIVITY_NORMAL = 0.005f;
     const float MOUSE_CAMERA_SENSITIVITY_REMOTE = 0.00025f;
+    const float GAMEPAD_CAMERA_SENSITIVITY = 0.04f;
+    const float GAMEPAD_CAMERA_DEAD_ZONE = 0.20f;
     const int kRemoteDesktopScreenWidth = 1600;
     const int kRemoteDesktopScreenHeight = 900;
     const int kNormalScreenWidth = 1920;
@@ -1099,7 +1101,8 @@ void GameApp::Run()
             !m_playerDeathPending &&
             !m_stageClearInputLocked &&
             !IsHitStopActive() &&
-            InputDevice::SKeyBoard::IsDownFirstFrame(DIK_R))
+            (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_R) ||
+             InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_Y)))
         {
             TryUseRecoveryItemFromKey();
         }
@@ -1130,7 +1133,8 @@ void GameApp::Run()
 
             if (m_titleDeleteConfirmMode)
             {
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
                 {
                     const std::wstring selectedId = m_command.Into();
                     if (selectedId == L"yes")
@@ -1143,19 +1147,22 @@ void GameApp::Run()
                     }
                 }
 
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
                 {
                     ExitDeleteConfirmation();
                 }
             }
             else if (m_titleLanguageSelectionMode)
             {
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
                 {
                     ExecuteTitleCommand(m_command.Into());
                 }
 
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
                 {
                     ExitTitleLanguageSelection();
                 }
@@ -1173,12 +1180,14 @@ void GameApp::Run()
             {
                 UpdateTitleLicense();
 
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
                 {
                     ExecuteTitleCommand(m_command.Into());
                 }
 
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE))
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
                 {
                     ExitTitleLicense();
                 }
@@ -1194,7 +1203,8 @@ void GameApp::Run()
             }
             else
             {
-                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN))
+                if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
+                    InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
                 {
                     ExecuteTitleCommand(m_command.Into());
                 }
@@ -3289,11 +3299,23 @@ void GameApp::UpdateCameraByInput()
     const InputDevice::MousePosition mouseDelta = InputDevice::Mouse::GetDelta();
     if (mouseDelta.x != 0 || mouseDelta.y != 0)
     {
-        const float sensitivity = m_remoteDesktopMode ? MOUSE_CAMERA_SENSITIVITY_REMOTE : MOUSE_CAMERA_SENSITIVITY_NORMAL;
+        float sensitivity = MOUSE_CAMERA_SENSITIVITY_NORMAL;
+        if (m_remoteDesktopMode)
+        {
+            sensitivity = MOUSE_CAMERA_SENSITIVITY_REMOTE;
+        }
         m_cameraYaw   -= static_cast<float>(mouseDelta.x) * sensitivity;
         m_cameraPitch  += static_cast<float>(mouseDelta.y) * sensitivity;
-        m_cameraPitch  = ClampFloat(m_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
     }
+
+    const InputDevice::GamePadStick cameraStick = InputDevice::GamePad::GetStickR();
+    if (cameraStick.power >= GAMEPAD_CAMERA_DEAD_ZONE)
+    {
+        m_cameraYaw -= cameraStick.x * GAMEPAD_CAMERA_SENSITIVITY;
+        m_cameraPitch -= cameraStick.y * GAMEPAD_CAMERA_SENSITIVITY;
+    }
+
+    m_cameraPitch = ClampFloat(m_cameraPitch, D3DXToRadian(-20.0f), D3DXToRadian(70.0f));
 }
 
 void GameApp::UpdatePlayerByInput()
@@ -3367,7 +3389,8 @@ void GameApp::UpdatePlayerByInput()
     }
 
     const bool shiftPressed = InputDevice::SKeyBoard::IsDown(DIK_LSHIFT)
-        || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT);
+        || InputDevice::SKeyBoard::IsDown(DIK_RSHIFT)
+        || InputDevice::GamePad::IsDown(InputDevice::GAMEPAD_R1);
 
     if (!IsCurrentStageSelect())
     {
@@ -5297,7 +5320,8 @@ void GameApp::UpdateStageSelectCursorByInput()
     }
 
     if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_RETURN) ||
-        InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A))
+        InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A) ||
+        InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_B))
     {
         MoveToSelectedStagePortal();
     }
