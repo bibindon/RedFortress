@@ -6,4 +6,13 @@ class EnemyGiantCrab : public EnemyBase
 public:
     EnemyGiantCrab(const D3DXVECTOR3& pos, int meshId, float yaw);
     static float GetScale() { return 0.38f * 3.0f; }
+
+protected:
+    EnemyGiantCrab(const D3DXVECTOR3& pos, int meshId, float yaw, int maxHp);
+};
+
+class EnemyBossGiantCrab : public EnemyGiantCrab
+{
+public:
+    EnemyBossGiantCrab(const D3DXVECTOR3& pos, int meshId, float yaw);
 };

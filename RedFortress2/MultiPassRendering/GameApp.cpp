@@ -1288,9 +1288,9 @@ void GameApp::Run()
                 }
                 else
                 {
-                    m_render.Draw();
                     m_slideShowManager.Render();
                     m_slideShowManager.DrawSkipHint();
+                    m_render.Draw();
                 }
             }
         }
@@ -1323,8 +1323,8 @@ void GameApp::Run()
                 }
                 else
                 {
-                    m_render.Draw();
                     m_slideShowManager.Render();
+                    m_render.Draw();
                 }
             }
             else
@@ -6253,6 +6253,20 @@ void GameApp::UnlockAllSkills()
     ApplyUnlockedAbilities();
 }
 
+void GameApp::LockAllWeaponsExceptClub()
+{
+    m_inventoryManager.ResetWeapons();
+    m_inventoryManager.AddWeapon(kInitialClubWeaponId, 1);
+    m_playerAttackController.SelectClubCategory();
+    UpdateHeldWeaponVisibility();
+}
+
+void GameApp::LockAllSkills()
+{
+    m_inventoryManager.ResetAbilities();
+    ApplyUnlockedAbilities();
+}
+
 bool GameApp::StartStageByIndex(std::size_t stageIndex)
 {
     if (stageIndex >= m_stageManager.GetStageCount())
@@ -6453,9 +6467,9 @@ void GameApp::UpdateStageTransition()
 
         if (m_gameState == GameState::SlideShow && m_slideShowManager.IsActive())
         {
-            m_render.Draw();
             m_slideShowManager.Render();
             m_slideShowManager.DrawSkipHint();
+            m_render.Draw();
             return;
         }
 
@@ -6985,6 +6999,14 @@ INT_PTR GameApp::OnSettingsDialog(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPa
 
         case IDC_BUTTON_UNLOCK_ALL_SKILLS:
             UnlockAllSkills();
+            return TRUE;
+
+        case IDC_BUTTON_LOCK_ALL_WEAPONS_EXCEPT_CLUB:
+            LockAllWeaponsExceptClub();
+            return TRUE;
+
+        case IDC_BUTTON_LOCK_ALL_SKILLS:
+            LockAllSkills();
             return TRUE;
 
         case IDC_COMBO_SPEED_LEVEL:

@@ -5,5 +5,3 @@
 3502,res/model/base/base_rock2_collision.x,8,0,-8,0,120,0,0.7,Collision,n
 3503,res/model/base/base_rock1_collision.x,-8,0,8,0,200,0,0.8,Collision,n
 3504,res/model/base/base_rock2_collision.x,8,0,8,0,310,0,0.8,Collision,n
-3801,res/model/tree2Physics/tree_cylinder_collision.x,0,0,22,0,0,0,1,Collision,n
-3802,res/model/tree2Physics/tree_cylinder_collision.x,10,0,-18,0,0,0,1,Collision,n

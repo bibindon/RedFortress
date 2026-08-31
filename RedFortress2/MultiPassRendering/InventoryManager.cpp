@@ -368,6 +368,16 @@ void InventoryManager::Reset()
     m_unlockedAbilityIds.clear();
 }
 
+void InventoryManager::ResetWeapons()
+{
+    if (!m_weaponCounts.empty() || !m_collectedWeaponCollectibleIds.empty())
+    {
+        m_hasUnsavedChanges = true;
+    }
+    m_weaponCounts.clear();
+    m_collectedWeaponCollectibleIds.clear();
+}
+
 void InventoryManager::ResetAbilities()
 {
     if (!m_unlockedAbilityIds.empty())

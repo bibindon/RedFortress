@@ -32,6 +32,7 @@ public:
     bool IsWeaponCollectibleCollected(const std::wstring& collectibleId) const;
 
     void Reset();
+    void ResetWeapons();
     void ResetAbilities();
 
 private:

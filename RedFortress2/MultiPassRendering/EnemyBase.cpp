@@ -444,6 +444,11 @@ void EnemyBase::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTO
         return;
     }
 
+    if (m_hitReactionMode == HitReactionMode::SuperArmor)
+    {
+        return;
+    }
+
     BeginAlert(attackerPos, true);
 }
 
@@ -456,6 +461,11 @@ void EnemyBase::TakeDamageWithoutFacing(NSRender::Render& render, const int amou
 
     ApplyDamage(render, amount);
     if (m_state == State::Dead)
+    {
+        return;
+    }
+
+    if (m_hitReactionMode == HitReactionMode::SuperArmor)
     {
         return;
     }
