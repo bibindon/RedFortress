@@ -965,6 +965,18 @@ void GameApp::Run()
     {
         while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
+            const bool isF10Key =
+                ((msg.message == WM_KEYDOWN || msg.message == WM_SYSKEYDOWN) &&
+                 msg.wParam == VK_F10);
+            const bool isRepeatedKey = (msg.lParam & (1LL << 30)) != 0;
+            if (isF10Key && !isRepeatedKey)
+            {
+                InputDevice::GamePad::ToggleTestDialog(m_hWnd);
+                m_mouseCursorVisible = true;
+                InputDevice::Mouse::SetVisible(true);
+                continue;
+            }
+
             const bool isEscKey = (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE);
             if (m_settingsDialog == NULL || !IsWindowVisible(m_settingsDialog) ||
                 isEscKey ||
