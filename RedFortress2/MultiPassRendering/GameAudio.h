@@ -9,6 +9,9 @@ namespace GameAudio
 {
 void Initialize();
 void Finalize();
+// --silent 起動時はサウンドデバイス初期化と再生を一切行わない。
+void SetSilentMode(bool silent);
+bool IsSilentMode();
 void Update(HWND windowHandle,
             const SoundLib::Vector3& listenerPosition,
             const SoundLib::Vector3& listenerFront,

@@ -13,9 +13,24 @@
 #include <windows.h>
 
 #include "GameApp.h"
+#include "GameAudio.h"
 
 namespace
 {
+    bool HasSilentSwitch(const wchar_t* commandLine)
+    {
+        std::wistringstream commandStream(commandLine);
+        std::wstring argument;
+        while (commandStream >> argument)
+        {
+            if (argument == L"--silent")
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     std::wstring GetDebugStartupStageId(const wchar_t* commandLine)
     {
@@ -50,6 +65,8 @@ int WINAPI _tWinMain(_In_ HINSTANCE hInstance,
     (void)hPrevInstance;
 
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+    GameAudio::SetSilentMode(HasSilentSwitch(lpCmdLine));
 
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     const std::wstring debugStartupStageId = GetDebugStartupStageId(lpCmdLine);

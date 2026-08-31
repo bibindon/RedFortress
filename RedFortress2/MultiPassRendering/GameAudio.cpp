@@ -89,6 +89,7 @@ int g_pushableBoxMovementId = -1;
 int g_currentBgmVolume = 0;
 int g_effectiveBgmVolume = -1;
 bool g_initialized = false;
+bool g_silentMode = false;
 bool g_bgmFadeOutActive = false;
 int g_bgmFadeOutFramesRemaining = 0;
 int g_bgmFadeOutTotalFrames = 0;
@@ -349,8 +350,25 @@ void PlayEffect(const std::wstring& path, const int volume)
 
 namespace GameAudio
 {
+void SetSilentMode(const bool silent)
+{
+    g_silentMode = silent;
+}
+
+bool IsSilentMode()
+{
+    return g_silentMode;
+}
+
 void Initialize()
 {
+    if (g_silentMode)
+    {
+        g_initialized = false;
+        ResetTrackingState();
+        return;
+    }
+
     g_initialized = false;
     ResetTrackingState();
     const std::wstring effects[] =
@@ -395,6 +413,11 @@ void Update(HWND windowHandle,
             const SoundLib::Vector3& listenerFront,
             const SoundLib::Vector3& listenerTop)
 {
+    if (g_silentMode)
+    {
+        return;
+    }
+
     if (g_recoveryPending)
     {
         const ULONGLONG currentTick = GetTickCount64();

@@ -410,29 +410,34 @@ def add_portal(stone, glow):
 
 
 # 岩の配置は見た目(add_nature)と衝突判定(create_collision)で共通にする。
+# 2026-08 自然化改修: 各岩は地面または前の岩にめり込ませ、登頂ステップ差<=1.0m。
 CLIMB_ROCK_LAYOUT = (
-    ("Rock1.blend", "ClimbRockWestSouth", (-13.1, -2.0, 0.25), 1.45, 12.0),
-    ("Rock2.blend", "ClimbRockWestMid", (-12.0, 1.0, 0.35), 2.00, 42.0),
-    ("Rock1.blend", "ClimbRockWestNorth", (-13.0, 4.2, 0.42), 2.15, -18.0),
-    ("Rock1.blend", "ClimbRockHillEastA", (11.8, 10.0, 0.55), 1.55, 32.0),
-    ("Rock2.blend", "ClimbRockHillEastB", (9.6, 13.0, 0.68), 2.15, -12.0),
-    ("Rock1.blend", "ClimbRockHillEastC", (7.2, 16.2, 0.58), 2.10, 48.0),
+    ("Rock1.blend", "ClimbRockWestSouth", (-13.4, -1.5, 0.12), 0.68, 12.0),
+    ("Rock2.blend", "ClimbRockWestMid", (-12.6, -0.3, 0.75), 1.05, 42.0),
+    ("Rock1.blend", "ClimbRockWestNorth", (-13.0, 1.2, 1.18), 1.05, -18.0),
+    ("Rock2.blend", "ClimbRockWestRidge", (-12.2, 2.6, 2.29), 1.3, 30.0),
+    ("Rock1.blend", "ClimbRockWestTop", (-13.0, 4.2, 2.95), 1.05, -18.0),
+    ("Rock1.blend", "ClimbRockHillEastA", (12.4, 9.2, 0.3), 0.62, 32.0),
+    ("Rock2.blend", "ClimbRockHillEastB", (11.0, 10.6, 0.85), 1.0, -12.0),
+    ("Rock1.blend", "ClimbRockHillEastC", (9.8, 12.2, 1.28), 0.95, 48.0),
+    ("Rock2.blend", "ClimbRockHillEastD", (8.6, 13.8, 2.29), 1.1, 15.0),
+    ("Rock1.blend", "ClimbRockHillEastE", (7.6, 15.2, 2.76), 1.05, -35.0),
 )
 
 HERO_ROCK_LAYOUT = (
-    ("Rock1.blend", "HeroRockBase", (-10.0, 15.2, 0.55), 4.20, -12.0),
-    ("Rock2.blend", "HeroRockUpper", (-10.2, 15.4, 5.20), 3.40, 27.0),
-    ("Rock1.blend", "HeroRockCrown", (-9.9, 15.6, 8.10), 1.50, -38.0),
-    ("Rock2.blend", "HeroRockStep01", (-5.9, 7.8, 0.40), 1.65, 18.0),
-    ("Rock1.blend", "HeroRockStep02", (-6.3, 9.1, 1.15), 1.55, -22.0),
-    ("Rock2.blend", "HeroRockStep03", (-6.7, 10.3, 2.00), 1.75, 40.0),
-    ("Rock1.blend", "HeroRockStep04", (-7.1, 11.4, 2.85), 1.55, 10.0),
-    ("Rock2.blend", "HeroRockStep05", (-7.5, 12.4, 3.70), 1.80, -28.0),
-    ("Rock1.blend", "HeroRockStep06", (-7.9, 13.3, 4.55), 1.60, 32.0),
-    ("Rock2.blend", "HeroRockStep07", (-8.3, 14.0, 5.40), 1.75, -8.0),
-    ("Rock1.blend", "HeroRockStep08", (-8.7, 14.6, 6.25), 1.55, 45.0),
-    ("Rock2.blend", "HeroRockStep09", (-9.1, 15.0, 7.10), 1.70, 12.0),
-    ("Rock1.blend", "HeroRockStep10", (-9.5, 15.3, 7.95), 1.45, -25.0),
+    ("Rock1.blend", "HeroRockBase", (-10.0, 15.2, 0.73), 4.2, -12.0),
+    ("Rock2.blend", "HeroRockUpper", (-10.2, 15.4, 5.92), 3.4, 27.0),
+    ("Rock1.blend", "HeroRockCrown", (-9.9, 15.6, 8.36), 1.5, -38.0),
+    ("Rock2.blend", "HeroTalus01", (-6.6, 8.4, 0.15), 0.62, 18.0),
+    ("Rock1.blend", "HeroTalus02", (-6.4, 9.6, 0.34), 0.66, -22.0),
+    ("Rock2.blend", "HeroTalus03", (-6.6, 10.8, 0.99), 0.8, 40.0),
+    ("Rock1.blend", "HeroTalus04", (-7.0, 11.9, 1.29), 0.8, 10.0),
+    ("Rock2.blend", "HeroTalus05", (-7.5, 12.9, 2.11), 0.95, -28.0),
+    ("Rock1.blend", "HeroTalus06", (-8.1, 13.8, 2.49), 0.95, 32.0),
+    ("Rock2.blend", "HeroTalus07", (-8.8, 14.5, 3.51), 1.05, -8.0),
+    ("Rock1.blend", "HeroTalus08", (-9.4, 14.0, 4.0), 0.9, 45.0),
+    ("Rock2.blend", "HeroTalus09", (-10.0, 13.2, 4.98), 0.9, 12.0),
+    ("Rock1.blend", "HeroTalus10", (-10.6, 12.5, 5.36), 0.85, -25.0),
 )
 
 

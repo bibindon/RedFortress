@@ -801,7 +801,10 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.StartLoadingScreen();
     m_render.SetLoadingScreenProgress(0);
     m_render.Draw();
-    SoundLib::SoundLib::Initialize(m_hWnd);
+    if (!GameAudio::IsSilentMode())
+    {
+        SoundLib::SoundLib::Initialize(m_hWnd);
+    }
     GameAudio::Initialize();
     GameAudio::PlayLoadingEnvironment();
 
