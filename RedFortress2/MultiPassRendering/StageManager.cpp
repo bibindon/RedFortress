@@ -89,7 +89,9 @@ void StageManager::Initialize()
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.csv", StageWeather::None, true);
 
-    AddStage(L"base", 33, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f));
+    AddStage(L"base", 33, L"拠点", L"base", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
+             false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+             L"res\\RenderSettings.stage1-1-to-1-3.csv");
     AddStage(L"base2", 38, L"拠点2", L"base2", D3DXVECTOR3(0.0f, 0.2f, -28.0f), D3DXVECTOR3(0.0f, 1.0f, 28.0f),
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.fog.csv", StageWeather::None, true);
