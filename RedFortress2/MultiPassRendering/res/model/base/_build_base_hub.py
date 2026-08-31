@@ -6,6 +6,8 @@ import bpy
 
 BASE_DIR = Path(__file__).resolve().parent
 SOURCE_DIR = BASE_DIR / "source_quaternius"
+WORLD1_GROUND_TEXTURE_PATH = BASE_DIR.parent / "ground" / "tex" / "world1.png"
+WORLD1_GROUND_TEXTURE_FILENAME = "../ground/tex/world1.png"
 GROUND_BLEND_PATH = BASE_DIR / "base_ground.blend"
 GROUND_X_PATH = BASE_DIR / "base_ground.x"
 DECOR_BLEND_PATH = BASE_DIR / "base_decor.blend"
@@ -61,6 +63,28 @@ def create_material(name, color, roughness=0.7, metallic=0.0, emissive=None):
             1.0,
         )
         principled.inputs["Emission Strength"].default_value = 1.4
+    return material
+
+
+def create_textured_material(name, color, texture_path, texture_filename):
+    if not texture_path.exists():
+        raise FileNotFoundError(texture_path)
+    material = create_material(name, color, 1.0)
+    material["_x_power"] = 0.0
+    material["_x_specular"] = (0.0, 0.0, 0.0)
+    material["_x_texture_filename"] = texture_filename
+
+    principled = next(
+        node
+        for node in material.node_tree.nodes
+        if node.type == "BSDF_PRINCIPLED"
+    )
+    image = bpy.data.images.load(str(texture_path), check_existing=True)
+    texture = material.node_tree.nodes.new("ShaderNodeTexImage")
+    texture.name = name + "_Texture"
+    texture.image = image
+    texture.extension = "REPEAT"
+    material.node_tree.links.new(texture.outputs["Color"], principled.inputs["Base Color"])
     return material
 
 
@@ -124,7 +148,12 @@ def terrain_height(x, y):
 
 
 def create_ground():
-    grass = create_material("BaseGroundGrass", (0.19, 0.36, 0.12, 1.0), 0.9)
+    grass = create_textured_material(
+        "BaseGroundGrass",
+        (0.64, 0.64, 0.64, 1.0),
+        WORLD1_GROUND_TEXTURE_PATH,
+        WORLD1_GROUND_TEXTURE_FILENAME,
+    )
     dirt = create_material("BaseGroundDirt", (0.22, 0.12, 0.055, 1.0), 1.0)
 
     x_count = round((GROUND_HALF_WIDTH * 2.0) / GROUND_STEP) + 1
@@ -197,6 +226,13 @@ def create_ground():
     for polygon, material_index in zip(mesh.polygons, material_indices):
         polygon.material_index = material_index
 
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            vertex = mesh.vertices[vertex_index].co
+            uv_layer.data[loop_index].uv = (vertex.x / 8.0, vertex.y / 8.0)
+
     ground = bpy.data.objects.new("BaseGround", mesh)
     bpy.context.collection.objects.link(ground)
     return ground
@@ -223,13 +259,13 @@ def prepare_imported_materials(objects, file_name):
                 materials.add(material)
 
     rpg_colors = {
-        "Barrel.blend": (
-            (0.20, 0.07, 0.02, 1.0),
-            (0.12, 0.035, 0.01, 1.0),
-            (0.12, 0.15, 0.17, 1.0),
-            (0.38, 0.14, 0.035, 1.0),
-        ),
-        "Book.blend": ((0.42, 0.045, 0.025, 1.0),),
+        "Barrel.blend": {
+            "DarkWood": (0.12, 0.035, 0.01, 1.0),
+            "Metal": (0.12, 0.15, 0.17, 1.0),
+            "Wood": (0.30, 0.09, 0.018, 1.0),
+            "*": (0.42, 0.14, 0.03, 1.0),
+        },
+        "Book.blend": {"*": (0.42, 0.045, 0.025, 1.0)},
         "Gems.blend": (
             (0.70, 0.04, 0.05, 1.0),
             (0.05, 0.30, 0.80, 1.0),
@@ -239,29 +275,45 @@ def prepare_imported_materials(objects, file_name):
             (0.05, 0.68, 0.72, 1.0),
             (0.72, 0.78, 0.86, 1.0),
         ),
-        "Shield.blend": (
-            (0.48, 0.23, 0.06, 1.0),
-            (0.18, 0.21, 0.23, 1.0),
-            (0.23, 0.075, 0.018, 1.0),
-        ),
-        "Sword.blend": ((0.34, 0.39, 0.43, 1.0),),
-        "WoodenStaff.blend": ((0.29, 0.095, 0.025, 1.0),),
+        "Shield.blend": {
+            "LighterWood": (0.48, 0.23, 0.06, 1.0),
+            "Metal": (0.18, 0.21, 0.23, 1.0),
+            "Wood": (0.23, 0.075, 0.018, 1.0),
+            "*": (0.32, 0.12, 0.025, 1.0),
+        },
+        "Sword.blend": {"*": (0.34, 0.39, 0.43, 1.0)},
+        "WoodenStaff.blend": {"*": (0.29, 0.095, 0.025, 1.0)},
     }
     ordered_materials = sorted(materials, key=lambda item: item.name)
     color_overrides = rpg_colors.get(file_name)
+    replacement_materials = {}
     for material_index, material in enumerate(ordered_materials):
         base_color = get_principled_base_color(material)
         if color_overrides is not None:
-            base_color = color_overrides[material_index % len(color_overrides)]
-        if base_color is not None:
-            material.diffuse_color = base_color
-            if material.use_nodes and material.node_tree is not None:
-                for node in material.node_tree.nodes:
-                    if node.type == "BSDF_PRINCIPLED":
-                        node.inputs["Base Color"].default_value = base_color
-        material["_x_power"] = 20.0
-        material["_x_specular"] = (0.06, 0.06, 0.06)
-        material["_x_emissive"] = (0.0, 0.0, 0.0)
+            if isinstance(color_overrides, dict):
+                source_material_name = material.name.split(".")[0]
+                base_color = color_overrides.get(source_material_name)
+                if base_color is None:
+                    base_color = color_overrides["*"]
+            else:
+                base_color = color_overrides[material_index % len(color_overrides)]
+        if base_color is None:
+            base_color = (0.35, 0.35, 0.35, 1.0)
+        safe_material_name = material.name.replace(".", "_")
+        replacement_materials[material] = create_material(
+            "HubProp_" + Path(file_name).stem + "_" + safe_material_name,
+            base_color,
+            0.72,
+        )
+
+    for source_object in objects:
+        if source_object.data is None:
+            continue
+        if not hasattr(source_object.data, "materials"):
+            continue
+        for slot_index, material in enumerate(source_object.data.materials):
+            if material in replacement_materials:
+                source_object.data.materials[slot_index] = replacement_materials[material]
 
 
 def load_prototype(file_name):
@@ -573,7 +625,7 @@ def create_collision():
     return objects
 
 
-def export_x(path, objects):
+def export_x(path, objects, export_textures=False):
     bpy.ops.object.select_all(action="DESELECT")
     for obj in objects:
         obj.select_set(True)
@@ -588,7 +640,7 @@ def export_x(path, objects):
         export_normals=True,
         export_uvs=True,
         export_materials=True,
-        export_textures=False,
+        export_textures=export_textures,
         export_armature=False,
         export_weights=False,
         export_animation=False,
@@ -607,7 +659,7 @@ def main():
     clear_scene()
     ground = create_ground()
     bpy.ops.wm.save_as_mainfile(filepath=str(GROUND_BLEND_PATH))
-    export_x(GROUND_X_PATH, [ground])
+    export_x(GROUND_X_PATH, [ground], True)
 
     clear_scene()
     decor_objects = create_decor()

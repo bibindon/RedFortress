@@ -3,88 +3,88 @@ xof 0303txt 0032
 AnimTicksPerSecond {
 	30;
 }
-Material Leaves {
+Material HubProp_Tree1_Leaves {
 	 0.651406; 0.799103; 0.226966; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Tree {
+Material HubProp_Tree1_Tree {
 	 0.246200; 0.113794; 0.046037; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Leaves.001 {
+Material HubProp_Tree2_Leaves_001 {
 	 0.651406; 0.799103; 0.226966; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Tree.001 {
+Material HubProp_Tree2_Tree_001 {
 	 0.246200; 0.113794; 0.046037; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Tree.002 {
+Material HubProp_Tree4_Tree_002 {
 	 0.246200; 0.113794; 0.046037; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Leaves.002 {
+Material HubProp_Tree4_Leaves_002 {
 	 0.651406; 0.799103; 0.226966; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Rock {
+Material HubProp_Rock1_Rock {
 	 0.152926; 0.152926; 0.152926; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Rock.001 {
+Material HubProp_Rock2_Rock_001 {
 	 0.152926; 0.152926; 0.152926; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Leaves.003 {
+Material HubProp_Bush1_Leaves_003 {
 	 0.651406; 0.799103; 0.226966; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Tree.003 {
+Material HubProp_Bush1_Tree_003 {
 	 0.246201; 0.078187; 0.012286; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Leaves.004 {
+Material HubProp_Bush2_Leaves_004 {
 	 0.651406; 0.799103; 0.226966; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Tree.004 {
+Material HubProp_Bush2_Tree_004 {
 	 0.246201; 0.078187; 0.012286; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Leaves.005 {
+Material HubProp_Grass1_Leaves_005 {
 	 0.651406; 0.799103; 0.226966; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Leaves.006 {
+Material HubProp_Grass2_Leaves_006 {
 	 0.651406; 0.799103; 0.226966; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
 Material HubWood {
@@ -105,100 +105,100 @@ Material HubCanopyCloth {
 	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Wood {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Barrel_Wood {
+	 0.300000; 0.090000; 0.018000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material DarkWood {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Barrel_DarkWood {
+	 0.120000; 0.035000; 0.010000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Metal {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Barrel_Metal {
+	 0.120000; 0.150000; 0.170000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.001 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Book_Material_001 {
+	 0.420000; 0.045000; 0.025000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.012 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Gems_Material_012 {
+	 0.720000; 0.780000; 0.860000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.006 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Gems_Material_006 {
+	 0.700000; 0.040000; 0.050000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.007 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Gems_Material_007 {
+	 0.050000; 0.300000; 0.800000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.008 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Gems_Material_008 {
+	 0.040000; 0.620000; 0.240000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.009 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Gems_Material_009 {
+	 0.880000; 0.520000; 0.040000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.011 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Gems_Material_011 {
+	 0.050000; 0.680000; 0.720000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.010 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Gems_Material_010 {
+	 0.520000; 0.100000; 0.720000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Wood.001 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Shield_Wood_001 {
+	 0.230000; 0.075000; 0.018000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Metal.001 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Shield_Metal_001 {
+	 0.180000; 0.210000; 0.230000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material LighterWood {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Shield_LighterWood {
+	 0.480000; 0.230000; 0.060000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Material.003 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_Sword_Material_003 {
+	 0.340000; 0.390000; 0.430000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
-Material Wood.002 {
-	 0.800000; 0.800000; 0.800000; 1.000000;;
-	 20.000000;
-	 0.060000; 0.060000; 0.060000;;
+Material HubProp_WoodenStaff_Wood_002 {
+	 0.290000; 0.095000; 0.025000; 1.000000;;
+	 24.000000;
+	 0.080000; 0.080000; 0.080000;;
 	 0.000000; 0.000000; 0.000000;;
 }
 Material HubMetal {
@@ -2933,8 +2933,8 @@ Frame TreeSouthWest_0 {
 			0,
 			0,
 			0;
-			{Leaves}
-			{Tree}
+			{HubProp_Tree1_Leaves}
+			{HubProp_Tree1_Tree}
 		}
 	}
 }
@@ -6541,8 +6541,8 @@ Frame TreeSouthEast_0 {
 			0,
 			0,
 			0;
-			{Leaves.001}
-			{Tree.001}
+			{HubProp_Tree2_Leaves_001}
+			{HubProp_Tree2_Tree_001}
 		}
 	}
 }
@@ -11783,8 +11783,8 @@ Frame TreeWorkshop_0 {
 			1,
 			1,
 			1;
-			{Tree.002}
-			{Leaves.002}
+			{HubProp_Tree4_Tree_002}
+			{HubProp_Tree4_Leaves_002}
 		}
 	}
 }
@@ -14502,8 +14502,8 @@ Frame TreeMidEast_0 {
 			0,
 			0,
 			0;
-			{Leaves}
-			{Tree}
+			{HubProp_Tree1_Leaves}
+			{HubProp_Tree1_Tree}
 		}
 	}
 }
@@ -17221,8 +17221,8 @@ Frame TreeHillEastA_0 {
 			0,
 			0,
 			0;
-			{Leaves}
-			{Tree}
+			{HubProp_Tree1_Leaves}
+			{HubProp_Tree1_Tree}
 		}
 	}
 }
@@ -20829,8 +20829,8 @@ Frame TreeHillEastB_0 {
 			0,
 			0,
 			0;
-			{Leaves.001}
-			{Tree.001}
+			{HubProp_Tree2_Leaves_001}
+			{HubProp_Tree2_Tree_001}
 		}
 	}
 }
@@ -26071,8 +26071,8 @@ Frame TreePortalWest_0 {
 			1,
 			1,
 			1;
-			{Tree.002}
-			{Leaves.002}
+			{HubProp_Tree4_Tree_002}
+			{HubProp_Tree4_Leaves_002}
 		}
 	}
 }
@@ -28790,8 +28790,8 @@ Frame TreePortalEast_0 {
 			0,
 			0,
 			0;
-			{Leaves}
-			{Tree}
+			{HubProp_Tree1_Leaves}
+			{HubProp_Tree1_Tree}
 		}
 	}
 }
@@ -29051,7 +29051,7 @@ Frame PondRockW1_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -29311,7 +29311,7 @@ Frame PondRockW2_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -29571,7 +29571,7 @@ Frame PondRockE1_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -29831,7 +29831,7 @@ Frame PondRockE2_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -30091,7 +30091,7 @@ Frame PondRockNorth_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -30351,7 +30351,7 @@ Frame PondRockSouth_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -30611,7 +30611,7 @@ Frame HillRockWest_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -30871,7 +30871,7 @@ Frame HillRockEast_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -31131,7 +31131,7 @@ Frame ClimbRockWestSouth_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -31391,7 +31391,7 @@ Frame ClimbRockWestMid_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -31651,7 +31651,7 @@ Frame ClimbRockWestNorth_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -31911,7 +31911,7 @@ Frame ClimbRockHillEastA_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -32171,7 +32171,7 @@ Frame ClimbRockHillEastB_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -32431,7 +32431,7 @@ Frame ClimbRockHillEastC_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -32691,7 +32691,7 @@ Frame HeroRockBase_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -32951,7 +32951,7 @@ Frame HeroRockUpper_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -33211,7 +33211,7 @@ Frame HeroRockCrown_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -33471,7 +33471,7 @@ Frame HeroRockStep01_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -33731,7 +33731,7 @@ Frame HeroRockStep02_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -33991,7 +33991,7 @@ Frame HeroRockStep03_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -34251,7 +34251,7 @@ Frame HeroRockStep04_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -34511,7 +34511,7 @@ Frame HeroRockStep05_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -34771,7 +34771,7 @@ Frame HeroRockStep06_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -35031,7 +35031,7 @@ Frame HeroRockStep07_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -35291,7 +35291,7 @@ Frame HeroRockStep08_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -35551,7 +35551,7 @@ Frame HeroRockStep09_0 {
 			0,
 			0,
 			0;
-			{Rock.001}
+			{HubProp_Rock2_Rock_001}
 		}
 	}
 }
@@ -35811,7 +35811,7 @@ Frame HeroRockStep10_0 {
 			0,
 			0,
 			0;
-			{Rock}
+			{HubProp_Rock1_Rock}
 		}
 	}
 }
@@ -36401,8 +36401,8 @@ Frame BushSouthWest_0 {
 			1,
 			1,
 			1;
-			{Leaves.003}
-			{Tree.003}
+			{HubProp_Bush1_Leaves_003}
+			{HubProp_Bush1_Tree_003}
 		}
 	}
 }
@@ -37858,8 +37858,8 @@ Frame BushWorkshop_0 {
 			1,
 			1,
 			1;
-			{Leaves.004}
-			{Tree.004}
+			{HubProp_Bush2_Leaves_004}
+			{HubProp_Bush2_Tree_004}
 		}
 	}
 }
@@ -38449,8 +38449,8 @@ Frame BushPondWest_0 {
 			1,
 			1,
 			1;
-			{Leaves.003}
-			{Tree.003}
+			{HubProp_Bush1_Leaves_003}
+			{HubProp_Bush1_Tree_003}
 		}
 	}
 }
@@ -39906,8 +39906,8 @@ Frame BushPondEast_0 {
 			1,
 			1,
 			1;
-			{Leaves.004}
-			{Tree.004}
+			{HubProp_Bush2_Leaves_004}
+			{HubProp_Bush2_Tree_004}
 		}
 	}
 }
@@ -40497,8 +40497,8 @@ Frame BushPortalWest_0 {
 			1,
 			1,
 			1;
-			{Leaves.003}
-			{Tree.003}
+			{HubProp_Bush1_Leaves_003}
+			{HubProp_Bush1_Tree_003}
 		}
 	}
 }
@@ -41954,8 +41954,8 @@ Frame BushPortalEast_0 {
 			1,
 			1,
 			1;
-			{Leaves.004}
-			{Tree.004}
+			{HubProp_Bush2_Leaves_004}
+			{HubProp_Bush2_Tree_004}
 		}
 	}
 }
@@ -42497,7 +42497,7 @@ Frame GrassPatch0_0 {
 			0,
 			0,
 			0;
-			{Leaves.005}
+			{HubProp_Grass1_Leaves_005}
 		}
 	}
 }
@@ -43703,7 +43703,7 @@ Frame GrassPatch1_0 {
 			0,
 			0,
 			0;
-			{Leaves.006}
+			{HubProp_Grass2_Leaves_006}
 		}
 	}
 }
@@ -44245,7 +44245,7 @@ Frame GrassPatch2_0 {
 			0,
 			0,
 			0;
-			{Leaves.005}
+			{HubProp_Grass1_Leaves_005}
 		}
 	}
 }
@@ -45451,7 +45451,7 @@ Frame GrassPatch3_0 {
 			0,
 			0,
 			0;
-			{Leaves.006}
+			{HubProp_Grass2_Leaves_006}
 		}
 	}
 }
@@ -45993,7 +45993,7 @@ Frame GrassPatch4_0 {
 			0,
 			0,
 			0;
-			{Leaves.005}
+			{HubProp_Grass1_Leaves_005}
 		}
 	}
 }
@@ -47199,7 +47199,7 @@ Frame GrassPatch5_0 {
 			0,
 			0,
 			0;
-			{Leaves.006}
+			{HubProp_Grass2_Leaves_006}
 		}
 	}
 }
@@ -47741,7 +47741,7 @@ Frame GrassPatch6_0 {
 			0,
 			0,
 			0;
-			{Leaves.005}
+			{HubProp_Grass1_Leaves_005}
 		}
 	}
 }
@@ -48947,7 +48947,7 @@ Frame GrassPatch7_0 {
 			0,
 			0,
 			0;
-			{Leaves.006}
+			{HubProp_Grass2_Leaves_006}
 		}
 	}
 }
@@ -55563,9 +55563,9 @@ Frame WorkshopBarrelA_0 {
 			0,
 			0,
 			0;
-			{Wood}
-			{DarkWood}
-			{Metal}
+			{HubProp_Barrel_Wood}
+			{HubProp_Barrel_DarkWood}
+			{HubProp_Barrel_Metal}
 		}
 	}
 }
@@ -60905,9 +60905,9 @@ Frame WorkshopBarrelB_0 {
 			0,
 			0,
 			0;
-			{Wood}
-			{DarkWood}
-			{Metal}
+			{HubProp_Barrel_Wood}
+			{HubProp_Barrel_DarkWood}
+			{HubProp_Barrel_Metal}
 		}
 	}
 }
@@ -62429,7 +62429,7 @@ Frame WorkshopBook_0 {
 			0,
 			0,
 			0;
-			{Material.001}
+			{HubProp_Book_Material_001}
 		}
 	}
 }
@@ -63182,7 +63182,7 @@ Frame WorkshopGems_0 {
 			0,
 			0,
 			0;
-			{Material.012}
+			{HubProp_Gems_Material_012}
 		}
 	}
 }
@@ -64120,7 +64120,7 @@ Frame WorkshopGems_1 {
 			0,
 			0,
 			0;
-			{Material.006}
+			{HubProp_Gems_Material_006}
 		}
 	}
 }
@@ -64707,7 +64707,7 @@ Frame WorkshopGems_2 {
 			0,
 			0,
 			0;
-			{Material.007}
+			{HubProp_Gems_Material_007}
 		}
 	}
 }
@@ -64829,7 +64829,7 @@ Frame WorkshopGems_3 {
 			0,
 			0,
 			0;
-			{Material.008}
+			{HubProp_Gems_Material_008}
 		}
 	}
 }
@@ -64935,7 +64935,7 @@ Frame WorkshopGems_4 {
 			0,
 			0,
 			0;
-			{Material.009}
+			{HubProp_Gems_Material_009}
 		}
 	}
 }
@@ -65337,7 +65337,7 @@ Frame WorkshopGems_5 {
 			0,
 			0,
 			0;
-			{Material.011}
+			{HubProp_Gems_Material_011}
 		}
 	}
 }
@@ -65757,7 +65757,7 @@ Frame WorkshopGems_6 {
 			0,
 			0,
 			0;
-			{Material.010}
+			{HubProp_Gems_Material_010}
 		}
 	}
 }
@@ -68527,9 +68527,9 @@ Frame WorkshopShield_0 {
 			0,
 			0,
 			0;
-			{Wood.001}
-			{Metal.001}
-			{LighterWood}
+			{HubProp_Shield_Wood_001}
+			{HubProp_Shield_Metal_001}
+			{HubProp_Shield_LighterWood}
 		}
 	}
 }
@@ -71126,7 +71126,7 @@ Frame WorkshopSword_0 {
 			0,
 			0,
 			0;
-			{Material.003}
+			{HubProp_Sword_Material_003}
 		}
 	}
 }
@@ -72580,7 +72580,7 @@ Frame WorkshopStaff_0 {
 			0,
 			0,
 			0;
-			{Wood.002}
+			{HubProp_WoodenStaff_Wood_002}
 		}
 	}
 }
