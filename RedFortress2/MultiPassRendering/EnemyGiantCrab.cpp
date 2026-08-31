@@ -40,6 +40,20 @@ namespace
     const int kBubbleDamage = 8;
     const int kBubbleSlowFrames = 90;
 
+    const int kJumpSlamWindupFrames = 34;
+    const int kJumpSlamActiveFrames = 54;
+    const int kJumpSlamRecoveryFrames = 26;
+    const float kJumpSlamHeight = 4.0f;
+    const float kJumpSlamMaxTravelDistance = 8.0f;
+    const float kJumpSlamRange = 3.2f;
+    const float kJumpSlamMaxVerticalDistance = 1.2f;
+    const int kJumpSlamDamage = 22;
+
+    const int kRetreatDashWindupFrames = 10;
+    const int kRetreatDashActiveFrames = 28;
+    const int kRetreatDashRecoveryFrames = 10;
+    const float kRetreatDashSpeed = 9.0f;
+
     float HorizontalDistance(const D3DXVECTOR3& a, const D3DXVECTOR3& b)
     {
         const float x = a.x - b.x;
@@ -127,7 +141,14 @@ bool EnemyBossGiantCrab::UpdateSpecialAttack(NSRender::Render& render,
 
     if (m_attackPhase == AttackPhase::Windup)
     {
-        FaceSpecialAttackTarget(playerPos);
+        if (m_attackType == AttackType::RetreatDash)
+        {
+            FaceSpecialAttackTarget(GetPosition() + m_lockedDirection);
+        }
+        else
+        {
+            FaceSpecialAttackTarget(playerPos);
+        }
         if (m_attackType == AttackType::SideCharge)
         {
             m_lockedDirection = HorizontalDirection(GetPosition(), playerPos);
@@ -174,9 +195,15 @@ void EnemyBossGiantCrab::SelectAttack(NSRender::Render& render,
                                       const D3DXVECTOR3& playerPos)
 {
     const float distance = HorizontalDistance(GetPosition(), playerPos);
-    for (int offset = 0; offset < 4; ++offset)
+    if (m_attacksUntilRetreat <= 0 && distance <= 5.5f)
     {
-        const int attackIndex = (m_nextAttackIndex + offset) % 4;
+        BeginAttack(render, AttackType::RetreatDash, playerPos);
+        return;
+    }
+
+    for (int offset = 0; offset < 5; ++offset)
+    {
+        const int attackIndex = (m_nextAttackIndex + offset) % 5;
         AttackType candidate = AttackType::ClawSweep;
         if (attackIndex == 1)
         {
@@ -190,10 +217,14 @@ void EnemyBossGiantCrab::SelectAttack(NSRender::Render& render,
         {
             candidate = AttackType::BubbleShot;
         }
+        else if (attackIndex == 4)
+        {
+            candidate = AttackType::JumpSlam;
+        }
 
         if (IsAttackAllowed(candidate, distance))
         {
-            m_nextAttackIndex = (attackIndex + 1) % 4;
+            m_nextAttackIndex = (attackIndex + 1) % 5;
             BeginAttack(render, candidate, playerPos);
             return;
         }
@@ -215,7 +246,11 @@ bool EnemyBossGiantCrab::IsAttackAllowed(const AttackType attackType,
     {
         return distance <= 6.0f;
     }
-    return distance >= 3.0f && distance <= 11.0f;
+    if (attackType == AttackType::BubbleShot)
+    {
+        return distance >= 3.0f && distance <= 11.0f;
+    }
+    return distance >= 2.5f && distance <= kJumpSlamMaxTravelDistance;
 }
 
 void EnemyBossGiantCrab::BeginAttack(NSRender::Render& render,
@@ -231,6 +266,14 @@ void EnemyBossGiantCrab::BeginAttack(NSRender::Render& render,
     if (D3DXVec3LengthSq(&m_lockedDirection) <= 0.0001f)
     {
         m_lockedDirection = ForwardDirection(GetYaw());
+    }
+    if (attackType == AttackType::RetreatDash)
+    {
+        m_lockedDirection = HorizontalDirection(playerPos, GetPosition());
+        if (D3DXVec3LengthSq(&m_lockedDirection) <= 0.0001f)
+        {
+            m_lockedDirection = ForwardDirection(GetYaw()) * -1.0f;
+        }
     }
 
     D3DXVECTOR3 telegraphPosition = GetPosition();
@@ -250,11 +293,27 @@ void EnemyBossGiantCrab::BeginAttack(NSRender::Render& render,
     {
         m_phaseFrames = kGroundSlamWindupFrames;
     }
-    else
+    else if (attackType == AttackType::BubbleShot)
     {
         m_phaseFrames = kBubbleShotWindupFrames;
     }
-    PlaySpecialAttackAnimation(render, L"attack");
+    else if (attackType == AttackType::JumpSlam)
+    {
+        m_phaseFrames = kJumpSlamWindupFrames;
+    }
+    else
+    {
+        m_phaseFrames = kRetreatDashWindupFrames;
+    }
+
+    if (attackType == AttackType::RetreatDash)
+    {
+        PlaySpecialAttackAnimation(render, L"run");
+    }
+    else
+    {
+        PlaySpecialAttackAnimation(render, L"attack");
+    }
 }
 
 void EnemyBossGiantCrab::BeginActivePhase(NSRender::Render& render,
@@ -262,10 +321,13 @@ void EnemyBossGiantCrab::BeginActivePhase(NSRender::Render& render,
 {
     m_attackPhase = AttackPhase::Active;
     m_attackHitApplied = false;
-    m_lockedDirection = HorizontalDirection(GetPosition(), playerPos);
-    if (D3DXVec3LengthSq(&m_lockedDirection) <= 0.0001f)
+    if (m_attackType != AttackType::RetreatDash)
     {
-        m_lockedDirection = ForwardDirection(GetYaw());
+        m_lockedDirection = HorizontalDirection(GetPosition(), playerPos);
+        if (D3DXVec3LengthSq(&m_lockedDirection) <= 0.0001f)
+        {
+            m_lockedDirection = ForwardDirection(GetYaw());
+        }
     }
 
     if (m_attackType == AttackType::ClawSweep)
@@ -287,10 +349,31 @@ void EnemyBossGiantCrab::BeginActivePhase(NSRender::Render& render,
         render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion,
                                    GetPosition());
     }
-    else
+    else if (m_attackType == AttackType::BubbleShot)
     {
         m_phaseFrames = kBubbleShotActiveFrames;
         SpawnBubbleProjectiles(render, playerPos);
+    }
+    else if (m_attackType == AttackType::JumpSlam)
+    {
+        m_phaseFrames = kJumpSlamActiveFrames;
+        m_jumpFrame = 0;
+        m_jumpStartY = GetPosition().y;
+        float travelDistance = HorizontalDistance(GetPosition(), playerPos);
+        if (travelDistance > kJumpSlamMaxTravelDistance)
+        {
+            travelDistance = kJumpSlamMaxTravelDistance;
+        }
+        const float activeSeconds = static_cast<float>(kJumpSlamActiveFrames) / 60.0f;
+        m_jumpHorizontalSpeed = travelDistance / activeSeconds;
+        render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Dash,
+                                   GetPosition());
+    }
+    else
+    {
+        m_phaseFrames = kRetreatDashActiveFrames;
+        render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Dash,
+                                   GetPosition());
     }
 }
 
@@ -312,6 +395,51 @@ void EnemyBossGiantCrab::UpdateActivePhase(NSRender::Render& render,
             render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Dash,
                                        GetPosition());
         }
+    }
+
+    if (m_attackType == AttackType::RetreatDash)
+    {
+        if (MoveForSpecialAttack(m_lockedDirection * kRetreatDashSpeed))
+        {
+            m_phaseFrames = 1;
+        }
+        else if ((m_phaseFrames % 5) == 0)
+        {
+            render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Dash,
+                                       GetPosition());
+        }
+        return;
+    }
+
+    if (m_attackType == AttackType::JumpSlam)
+    {
+        ++m_jumpFrame;
+        MoveForSpecialAttack(m_lockedDirection * m_jumpHorizontalSpeed);
+        float jumpProgress = static_cast<float>(m_jumpFrame) /
+                             static_cast<float>(kJumpSlamActiveFrames);
+        if (jumpProgress > 1.0f)
+        {
+            jumpProgress = 1.0f;
+        }
+        D3DXVECTOR3 jumpPosition = GetPosition();
+        jumpPosition.y = m_jumpStartY + sinf(D3DX_PI * jumpProgress) * kJumpSlamHeight;
+        SetPosition(jumpPosition);
+
+        if (m_phaseFrames <= 1)
+        {
+            jumpPosition.y = m_jumpStartY;
+            SetPosition(jumpPosition);
+            render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion,
+                                       jumpPosition);
+            if (!playerInvincible &&
+                HorizontalDistance(jumpPosition, playerPos) <= kJumpSlamRange &&
+                fabsf(jumpPosition.y - playerPos.y) <= kJumpSlamMaxVerticalDistance)
+            {
+                EmitAttackHit(kJumpSlamDamage, jumpPosition, 58, 0);
+                m_attackHitApplied = true;
+            }
+        }
+        return;
     }
 
     if (m_attackHitApplied || playerInvincible)
@@ -439,9 +567,17 @@ void EnemyBossGiantCrab::BeginRecovery()
     {
         m_phaseFrames = kGroundSlamRecoveryFrames;
     }
-    else
+    else if (m_attackType == AttackType::BubbleShot)
     {
         m_phaseFrames = kBubbleShotRecoveryFrames;
+    }
+    else if (m_attackType == AttackType::JumpSlam)
+    {
+        m_phaseFrames = kJumpSlamRecoveryFrames;
+    }
+    else
+    {
+        m_phaseFrames = kRetreatDashRecoveryFrames;
     }
 }
 
@@ -452,6 +588,28 @@ void EnemyBossGiantCrab::EndAttack()
     m_attackPhase = AttackPhase::None;
     m_phaseFrames = 0;
     m_chargeCollided = false;
+    m_jumpFrame = 0;
+    m_jumpHorizontalSpeed = 0.0f;
+
+    if (finishedAttack == AttackType::RetreatDash)
+    {
+        if (IsEnraged())
+        {
+            m_attacksUntilRetreat = 1;
+        }
+        else
+        {
+            m_attacksUntilRetreat = 2;
+        }
+        m_attackCooldownFrames = 14;
+        FinishSpecialAttack();
+        return;
+    }
+
+    if (m_attacksUntilRetreat > 0)
+    {
+        --m_attacksUntilRetreat;
+    }
 
     if (IsEnraged())
     {

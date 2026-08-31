@@ -228,8 +228,10 @@ namespace
     const int kStageSelectMaskedGaussianSampleSize = 25;
     const std::wstring kStageSelectCubeRedPath = L"res\\model\\cube_red.x";
     const std::wstring kStageSelectCubeGreenPath = L"res\\model\\cubeGreen\\cube_green.x";
+    const std::wstring kStageSelectCubeYellowPath = L"res\\model\\cubeEmitYellow.x";
     const std::wstring kStageSelectCubeBluePath = L"res\\model\\cubeBlue\\cube_blue.x";
     const float kStageSelectCubeScale = 0.16666667f;
+    const float kStageSelectCubeYellowScale = 0.865f;
     const float kStageSelectCubeVisualOffsetY = 1.0f;
     const float kStageSelect2CubeVisualOffsetY = -1.3f;
     const std::wstring kAttackClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
@@ -4112,6 +4114,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         };
         const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
         const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
+        const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
         const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
         const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
         for (int i = 0; i < portalLightCount; ++i)
@@ -4121,6 +4124,10 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
             if (destinationId == L"select3" || IsBaseId(destinationId))
             {
                 lightColor = travelColor;
+            }
+            else if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+            {
+                lightColor = noDamageColor;
             }
             else if (m_saveDataManager.IsStageCleared(destinationId))
             {
@@ -4184,6 +4191,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         };
         const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
         const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
+        const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
         const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
         const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
         for (int i = 0; i < portalLightCount; ++i)
@@ -4194,6 +4202,10 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
                 IsBaseId(destinationId))
             {
                 lightColor = travelColor;
+            }
+            else if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+            {
+                lightColor = noDamageColor;
             }
             else if (m_saveDataManager.IsStageCleared(destinationId))
             {
@@ -4260,6 +4272,7 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     };
     const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
     const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
+    const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
     const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
     const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
     for (int i = 0; i < portalLightCount; ++i)
@@ -4270,6 +4283,10 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
             IsBaseId(destinationId))
         {
             lightColor = travelColor;
+        }
+        else if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+        {
+            lightColor = noDamageColor;
         }
         else if (m_saveDataManager.IsStageCleared(destinationId))
         {
@@ -6046,7 +6063,11 @@ void GameApp::CreateStageSelectCubes()
             }
             else
             {
-                if (m_saveDataManager.IsStageCleared(destinationId))
+                if (m_saveDataManager.IsStageClearedWithoutDamage(destinationId))
+                {
+                    cubePath = kStageSelectCubeYellowPath;
+                }
+                else if (m_saveDataManager.IsStageCleared(destinationId))
                 {
                     cubePath = kStageSelectCubeGreenPath;
                 }
@@ -6059,10 +6080,20 @@ void GameApp::CreateStageSelectCubes()
 
         D3DXVECTOR3 cubePosition = interactable.position;
         cubePosition.y += cubeVisualOffsetY;
+        float cubeScale = kStageSelectCubeScale;
+        if (cubePath == kStageSelectCubeYellowPath)
+        {
+            cubeScale = kStageSelectCubeYellowScale;
+            if (m_stageManager.GetCurrentStage().id == L"select1")
+            {
+                const D3DXCOLOR noDamageColor(1.0f, 0.82f, 0.02f, 1.0f);
+                m_render.AddPointLight(cubePosition, 1.8f, noDamageColor);
+            }
+        }
         const int renderId = m_render.AddMeshMix(cubePath,
                                                   cubePosition,
                                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                  kStageSelectCubeScale);
+                                                  cubeScale);
         if (renderId >= 0)
         {
             m_stageSelectCubeMeshIds.push_back(renderId);
@@ -7283,6 +7314,10 @@ void GameApp::UpdateStageClear()
     {
         m_stageClearWasFirstClear = !m_saveDataManager.IsStageCleared(clearedStageId);
         m_saveDataManager.MarkStageCleared(clearedStageId);
+        if (!m_currentStageDamaged)
+        {
+            m_saveDataManager.MarkStageClearedWithoutDamage(clearedStageId);
+        }
         m_saveDataManager.MarkStageUnlocked(clearedStageId);
 
         const int stageNumber = m_stageManager.GetCurrentStageNumber();
@@ -7918,6 +7953,7 @@ void GameApp::DamagePlayerHp(int amount)
     const int newHp = m_player.GetHp();
     if (newHp < oldHp)
     {
+        m_currentStageDamaged = true;
         GameAudio::PlayPlayerDamage();
         D3DXVECTOR3 damageEffectPosition = m_playerMover.GetPosition();
         damageEffectPosition.y += 1.0f;
@@ -8561,6 +8597,7 @@ void GameApp::LoadCurrentStageObjects()
     m_stageClearVisualOffsetY = 0.0f;
 
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
+    m_currentStageDamaged = false;
     const StageManager::StageData loadStage = GetStageDataForLoad(stage);
 
     std::wstring renderSettingsPath;

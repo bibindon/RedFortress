@@ -70,6 +70,7 @@ bool SaveDataManager::EnsureDirectoryExists() const
 bool SaveDataManager::Load()
 {
     m_clearedStageIds.clear();
+    m_noDamageClearedStageIds.clear();
     m_unlockedStageIds.clear();
     m_shownExplanationIds.clear();
     m_stageSelectId.clear();
@@ -168,6 +169,11 @@ bool SaveDataManager::Load()
                 begin = end + 1;
             }
         }
+
+        if (row.size() >= 6 && row.at(5) == L"1")
+        {
+            m_noDamageClearedStageIds.insert(stageId);
+        }
     }
 
     InitializeDefaultUnlocks();
@@ -214,6 +220,7 @@ void SaveDataManager::Save()
     header.push_back(L"Unlocked");
     header.push_back(L"SelectedPortalId");
     header.push_back(L"ShownExplanationIds");
+    header.push_back(L"NoDamageCleared");
     csvData.push_back(header);
 
     const std::size_t stageCount = m_stageManager->GetStageCount();
@@ -277,6 +284,15 @@ void SaveDataManager::Save()
         }
         row.push_back(shownExplanationIds);
 
+        if (IsStageClearedWithoutDamage(stage.id))
+        {
+            row.push_back(L"1");
+        }
+        else
+        {
+            row.push_back(L"0");
+        }
+
         csvData.push_back(row);
     }
 
@@ -335,6 +351,27 @@ bool SaveDataManager::IsStageCleared(const std::wstring& stageId) const
     }
 
     return false;
+}
+
+void SaveDataManager::MarkStageClearedWithoutDamage(const std::wstring& stageId)
+{
+    if (!stageId.empty())
+    {
+        if (m_noDamageClearedStageIds.insert(stageId).second)
+        {
+            m_hasUnsavedChanges = true;
+        }
+    }
+}
+
+bool SaveDataManager::IsStageClearedWithoutDamage(const std::wstring& stageId) const
+{
+    if (stageId.empty())
+    {
+        return false;
+    }
+
+    return m_noDamageClearedStageIds.find(stageId) != m_noDamageClearedStageIds.end();
 }
 
 bool SaveDataManager::IsStageClearedByIndex(std::size_t stageIndex) const
@@ -460,6 +497,7 @@ void SaveDataManager::InitializeDefaultUnlocks()
 void SaveDataManager::ResetToDefaults(const bool markUnsaved)
 {
     m_clearedStageIds.clear();
+    m_noDamageClearedStageIds.clear();
     m_unlockedStageIds.clear();
     m_shownExplanationIds.clear();
     m_stageSelectId.clear();

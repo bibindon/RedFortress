@@ -31,7 +31,9 @@ private:
         ClawSweep,
         SideCharge,
         GroundSlam,
-        BubbleShot
+        BubbleShot,
+        JumpSlam,
+        RetreatDash
     };
 
     enum class AttackPhase
@@ -67,6 +69,10 @@ private:
     int m_nextAttackIndex = 0;
     bool m_attackHitApplied = false;
     bool m_chargeCollided = false;
+    int m_attacksUntilRetreat = 2;
+    int m_jumpFrame = 0;
+    float m_jumpStartY = 0.0f;
+    float m_jumpHorizontalSpeed = 0.0f;
     D3DXVECTOR3 m_lockedDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     bool m_bubbleProjectileActive[kBubbleProjectileCount] = {};
     D3DXVECTOR3 m_bubbleProjectilePosition[kBubbleProjectileCount] = {};
