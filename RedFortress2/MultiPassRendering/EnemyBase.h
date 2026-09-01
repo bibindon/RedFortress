@@ -85,6 +85,7 @@ public:
                           float playerHeight) const;
     void SuppressContactDamageUntilPlayerSeparates();
     bool CanDamagePlayerOnContact(bool playerTouching);
+    virtual bool CanBeStomped() const { return true; }
     bool IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
                            const D3DXVECTOR3& playerPos,
                            bool playerIsJumping,
@@ -127,6 +128,10 @@ protected:
         return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     }
     virtual float GetMeshYawOffset() const { return 0.0f; }
+    virtual D3DXVECTOR3 GetMeshRotationOffset() const
+    {
+        return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
     bool IsSpecialAttackReady() const;
     void FaceSpecialAttackTarget(const D3DXVECTOR3& targetPos);
     bool MoveForSpecialAttack(const D3DXVECTOR3& velocity);

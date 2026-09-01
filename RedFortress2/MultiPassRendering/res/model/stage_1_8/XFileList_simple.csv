@@ -26,7 +26,7 @@
 223,../fence.x,15,0.5,22,0,90,0,1,normal
 224,../fence.x,15,0.5,30,0,90,0,1,normal
 9290,../SkySphere/SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
-3501,../base/base_rock1.x,-8,0,-8,0,30,0,0.7,normal
-3502,../base/base_rock2.x,8,0,-8,0,120,0,0.7,normal
-3503,../base/base_rock1.x,-8,0,8,0,200,0,0.8,normal
+3501,../base/base_rock1.x,-11.5,0,11,0,30,0,0.7,normal
+3502,../base/base_rock1.x,-10.5,0,8.5,0,120,0,1.35,normal
+3503,../base/base_rock1.x,-8.5,0,4.5,0,200,0,2.2,normal
 3504,../base/base_rock2.x,8,0,8,0,310,0,0.8,normal

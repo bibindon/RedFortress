@@ -50,6 +50,14 @@ namespace
     const float kJumpSlamMaxVerticalDistance = 1.2f;
     const int kJumpSlamDamage = 22;
 
+    const int kBurrowDiveFrames = 54;
+    const int kBurrowWaitFrames = 300;
+    const int kBurrowEmergeFrames = 42;
+    const float kBurrowDepth = 4.0f;
+    const float kBurrowPitch = -D3DX_PI * 0.5f;
+    const float kBurrowEmergeMaxVerticalDistance = 2.0f;
+    const int kBurrowEmergeDamage = 26;
+
     const int kRetreatDashWindupFrames = 10;
     const int kRetreatDashActiveFrames = 28;
     const int kRetreatDashRecoveryFrames = 10;
@@ -114,6 +122,7 @@ EnemyBossGiantCrab::EnemyBossGiantCrab(const D3DXVECTOR3& pos,
                      kBossGiantCrabMaxHp,
                      kBossGiantCrabBodyScale)
 {
+    m_arenaSurfaceY = GetPosition().y;
     for (int i = 0; i < kBubbleProjectileCount; ++i)
     {
         m_bubbleProjectilePosition[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -124,6 +133,21 @@ EnemyBossGiantCrab::EnemyBossGiantCrab(const D3DXVECTOR3& pos,
 bool EnemyBossGiantCrab::UsesSpecialAttacks() const
 {
     return true;
+}
+
+bool EnemyBossGiantCrab::CanBeStomped() const
+{
+    return m_attackType != AttackType::BurrowAmbush;
+}
+
+float EnemyBossGiantCrab::GetMeshVerticalOffset() const
+{
+    return EnemyBase::GetMeshVerticalOffset() + m_burrowMeshOffsetY;
+}
+
+D3DXVECTOR3 EnemyBossGiantCrab::GetMeshRotationOffset() const
+{
+    return D3DXVECTOR3(m_burrowPitch, 0.0f, 0.0f);
 }
 
 bool EnemyBossGiantCrab::UpdateSpecialAttack(NSRender::Render& render,
@@ -154,6 +178,13 @@ bool EnemyBossGiantCrab::UpdateSpecialAttack(NSRender::Render& render,
         else
         {
             FaceSpecialAttackTarget(playerPos);
+        }
+        if (m_attackType == AttackType::BurrowAmbush)
+        {
+            const float progress = 1.0f - static_cast<float>(m_phaseFrames) /
+                                              static_cast<float>(kBurrowDiveFrames);
+            m_burrowPitch = kBurrowPitch * progress;
+            m_burrowMeshOffsetY = -kBurrowDepth * progress;
         }
         if (m_attackType == AttackType::SideCharge)
         {
@@ -187,6 +218,13 @@ bool EnemyBossGiantCrab::UpdateSpecialAttack(NSRender::Render& render,
     }
     else if (m_attackPhase == AttackPhase::Recovery)
     {
+        if (m_attackType == AttackType::BurrowAmbush)
+        {
+            const float progress = 1.0f - static_cast<float>(m_phaseFrames) /
+                                              static_cast<float>(kBurrowEmergeFrames);
+            m_burrowPitch = kBurrowPitch * (1.0f - progress);
+            m_burrowMeshOffsetY = -kBurrowDepth * (1.0f - progress);
+        }
         --m_phaseFrames;
         if (m_phaseFrames <= 0)
         {
@@ -207,9 +245,9 @@ void EnemyBossGiantCrab::SelectAttack(NSRender::Render& render,
         return;
     }
 
-    for (int offset = 0; offset < 5; ++offset)
+    for (int offset = 0; offset < 6; ++offset)
     {
-        const int attackIndex = (m_nextAttackIndex + offset) % 5;
+        const int attackIndex = (m_nextAttackIndex + offset) % 6;
         AttackType candidate = AttackType::ClawSweep;
         if (attackIndex == 1)
         {
@@ -227,10 +265,14 @@ void EnemyBossGiantCrab::SelectAttack(NSRender::Render& render,
         {
             candidate = AttackType::JumpSlam;
         }
+        else if (attackIndex == 5)
+        {
+            candidate = AttackType::BurrowAmbush;
+        }
 
         if (IsAttackAllowed(candidate, distance))
         {
-            m_nextAttackIndex = (attackIndex + 1) % 5;
+            m_nextAttackIndex = (attackIndex + 1) % 6;
             BeginAttack(render, candidate, playerPos);
             return;
         }
@@ -256,6 +298,10 @@ bool EnemyBossGiantCrab::IsAttackAllowed(const AttackType attackType,
     {
         return distance >= 3.0f && distance <= 11.0f;
     }
+    if (attackType == AttackType::BurrowAmbush)
+    {
+        return true;
+    }
     return distance >= 2.5f && distance <= kJumpSlamMaxTravelDistance;
 }
 
@@ -267,6 +313,11 @@ void EnemyBossGiantCrab::BeginAttack(NSRender::Render& render,
     m_attackPhase = AttackPhase::Windup;
     m_attackHitApplied = false;
     m_chargeCollided = false;
+    if (attackType == AttackType::BurrowAmbush)
+    {
+        m_burrowMeshOffsetY = 0.0f;
+        m_burrowPitch = 0.0f;
+    }
     FaceSpecialAttackTarget(playerPos);
     m_lockedDirection = HorizontalDirection(GetPosition(), playerPos);
     if (D3DXVec3LengthSq(&m_lockedDirection) <= 0.0001f)
@@ -306,6 +357,10 @@ void EnemyBossGiantCrab::BeginAttack(NSRender::Render& render,
     else if (attackType == AttackType::JumpSlam)
     {
         m_phaseFrames = kJumpSlamWindupFrames;
+    }
+    else if (attackType == AttackType::BurrowAmbush)
+    {
+        m_phaseFrames = kBurrowDiveFrames;
     }
     else
     {
@@ -375,6 +430,12 @@ void EnemyBossGiantCrab::BeginActivePhase(NSRender::Render& render,
         render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Dash,
                                    GetPosition());
     }
+    else if (m_attackType == AttackType::BurrowAmbush)
+    {
+        m_phaseFrames = kBurrowWaitFrames;
+        m_burrowPitch = kBurrowPitch;
+        m_burrowMeshOffsetY = -kBurrowDepth;
+    }
     else
     {
         m_phaseFrames = kRetreatDashActiveFrames;
@@ -387,6 +448,30 @@ void EnemyBossGiantCrab::UpdateActivePhase(NSRender::Render& render,
                                            const D3DXVECTOR3& playerPos,
                                            const bool playerInvincible)
 {
+    if (m_attackType == AttackType::BurrowAmbush)
+    {
+        if (m_phaseFrames <= 1)
+        {
+            D3DXVECTOR3 emergePosition = GetPosition();
+            emergePosition.x = playerPos.x;
+            emergePosition.y = m_arenaSurfaceY;
+            emergePosition.z = playerPos.z;
+            SetPosition(emergePosition);
+
+            D3DXVECTOR3 effectPosition = emergePosition;
+            effectPosition.y -= GetHeight() * 0.5f;
+            render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion,
+                                       effectPosition);
+            if (!playerInvincible &&
+                fabsf(playerPos.y - emergePosition.y) <= kBurrowEmergeMaxVerticalDistance)
+            {
+                EmitAttackHit(kBurrowEmergeDamage, emergePosition, 64, 0);
+                m_attackHitApplied = true;
+            }
+        }
+        return;
+    }
+
     if (m_attackType == AttackType::SideCharge && !m_chargeCollided)
     {
         if (MoveForSpecialAttack(m_lockedDirection * kSideChargeSpeed))
@@ -581,6 +666,10 @@ void EnemyBossGiantCrab::BeginRecovery()
     {
         m_phaseFrames = kJumpSlamRecoveryFrames;
     }
+    else if (m_attackType == AttackType::BurrowAmbush)
+    {
+        m_phaseFrames = kBurrowEmergeFrames;
+    }
     else
     {
         m_phaseFrames = kRetreatDashRecoveryFrames;
@@ -596,6 +685,8 @@ void EnemyBossGiantCrab::EndAttack()
     m_chargeCollided = false;
     m_jumpFrame = 0;
     m_jumpHorizontalSpeed = 0.0f;
+    m_burrowMeshOffsetY = 0.0f;
+    m_burrowPitch = 0.0f;
 
     if (finishedAttack == AttackType::RetreatDash)
     {

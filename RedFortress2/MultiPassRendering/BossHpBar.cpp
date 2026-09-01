@@ -172,11 +172,15 @@ void BossHpBar::Draw()
     const float posX = (1.0f - normalizedFullWidth) * 0.5f;
     const float posY = kPosY;
 
-    // グロー（背景）は本体より一回り大きいので位置を少し上にずらす。
+    // グロー（背景）とバー本体の中心が一致するように左上座標を求める。
     const float gaussNormalizedFullWidth =
         static_cast<float>(kBackGaussSourceWidth) * scale / static_cast<float>(NSRender::Common::BASE_W);
     const float gaussPosX = (1.0f - gaussNormalizedFullWidth) * 0.5f;
-    const float gaussPosY = posY - 0.012f;
+    const int barDrawHeight = static_cast<int>(static_cast<float>(kSourceHeight) * scale);
+    const int gaussDrawHeight = static_cast<int>(static_cast<float>(kBackGaussSourceHeight) * scale);
+    const float gaussOffsetY =
+        static_cast<float>(gaussDrawHeight - barDrawHeight) * 0.5f / static_cast<float>(NSRender::Common::BASE_H);
+    const float gaussPosY = posY - gaussOffsetY;
 
     m_pRender->DrawImageAutoResizeSizedRect(kBackGaussImagePath,
                                             gaussPosX,

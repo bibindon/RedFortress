@@ -329,7 +329,9 @@ void EnemyBase::SyncMesh(NSRender::Render& render)
     D3DXVec3TransformNormal(&rotatedMeshOffset, &meshOffset, &rotationMatrix);
     meshPosition += rotatedMeshOffset;
     render.SetMeshMixSkinAnimPos(m_meshId, meshPosition);
-    render.SetMeshMixSkinAnimRotY(m_meshId, meshYaw);
+    D3DXVECTOR3 meshRotation = GetMeshRotationOffset();
+    meshRotation.y += meshYaw;
+    render.SetMeshMixSkinAnimRot(m_meshId, meshRotation);
 }
 
 bool EnemyBase::ConsumeAttackHit(AttackHit* outHit)
@@ -1139,6 +1141,11 @@ bool EnemyBase::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
                                   const float playerYVelocity,
                                   const float playerRadius) const
 {
+    if (!CanBeStomped())
+    {
+        return false;
+    }
+
     if (m_state == State::Dead)
     {
         return false;

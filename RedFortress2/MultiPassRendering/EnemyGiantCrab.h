@@ -21,11 +21,14 @@ public:
     EnemyBossGiantCrab(const D3DXVECTOR3& pos, int meshId, float yaw);
     static float GetScale() { return EnemyGiantCrab::GetScale() * 2.0f; }
     bool UsesSpecialAttacks() const override;
+    bool CanBeStomped() const override;
 
 protected:
     bool UpdateSpecialAttack(NSRender::Render& render,
                              const D3DXVECTOR3& playerPos,
                              bool playerInvincible) override;
+    float GetMeshVerticalOffset() const override;
+    D3DXVECTOR3 GetMeshRotationOffset() const override;
 
 private:
     static const int kBubbleProjectileCount = 3;
@@ -38,6 +41,7 @@ private:
         GroundSlam,
         BubbleShot,
         JumpSlam,
+        BurrowAmbush,
         RetreatDash
     };
 
@@ -78,6 +82,9 @@ private:
     int m_jumpFrame = 0;
     float m_jumpStartY = 0.0f;
     float m_jumpHorizontalSpeed = 0.0f;
+    float m_burrowMeshOffsetY = 0.0f;
+    float m_burrowPitch = 0.0f;
+    float m_arenaSurfaceY = 0.0f;
     D3DXVECTOR3 m_lockedDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     bool m_bubbleProjectileActive[kBubbleProjectileCount] = {};
     D3DXVECTOR3 m_bubbleProjectilePosition[kBubbleProjectileCount] = {};
