@@ -13,12 +13,18 @@
 namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
-const std::wstring kCraftPanelDarkPath = L"res\\2D_Image\\craft_panel_dark.png";
+const std::wstring kPanelBackgroundPath = L"res\\2D_Image\\item_list_bg.png";
 const std::wstring kRowHighlightPath = L"res\\2D_Image\\solid_white.png";
 const std::wstring kIconDir = L"res\\2D_Image\\";
 const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
-const int kRightColumnX = 885;
-const int kRightColumnWidth = 575;
+const int kRightColumnX = 830;
+const int kRightColumnWidth = 300;
+const int kPanelY = 195;
+const int kPanelHeight = 560;
+const int kListPanelX = 155;
+const int kListPanelWidth = 625;
+const int kDetailPanelX = 800;
+const int kDetailPanelWidth = 340;
 const int kHeadingY = 215;
 const int kResultImageSize = 150;
 const int kResultImageX = kRightColumnX + (kRightColumnWidth - kResultImageSize) / 2;
@@ -292,8 +298,25 @@ void CraftMenu::Render()
         m_textFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 22, kTextColor);
     }
 
-    m_render->DrawImageStretched(kCraftPanelDarkPath, 255);
-    m_render->DrawTextExCenter(m_titleFontId, L"クラフト", 0, 130, 1600, 54, kTextColor);
+    m_render->DrawImageSized(kPanelBackgroundPath,
+                             kListPanelX,
+                             kPanelY,
+                             kListPanelWidth,
+                             kPanelHeight,
+                             255);
+    m_render->DrawImageSized(kPanelBackgroundPath,
+                             kDetailPanelX,
+                             kPanelY,
+                             kDetailPanelWidth,
+                             kPanelHeight,
+                             255);
+    m_render->DrawTextExCenter(m_titleFontId,
+                               L"クラフト",
+                               kListPanelX,
+                               130,
+                               kDetailPanelX + kDetailPanelWidth - kListPanelX,
+                               54,
+                               kTextColor);
     m_render->DrawTextEx(m_headingFontId, L"生成物", kRecipeListX, kHeadingY, kTextColor);
     m_render->DrawTextEx(m_headingFontId, L"クラフト素材", kRightColumnX, kHeadingY, kTextColor);
 
