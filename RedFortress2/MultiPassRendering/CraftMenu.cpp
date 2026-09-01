@@ -13,11 +13,18 @@
 namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
+const std::wstring kCraftPanelDarkPath = L"res\\2D_Image\\craft_panel_dark.png";
+const std::wstring kRowHighlightPath = L"res\\2D_Image\\solid_white.png";
 const std::wstring kIconDir = L"res\\2D_Image\\";
 const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
-const int kResultImageX = 885;
-const int kResultImageY = 130;
+const int kRightColumnX = 885;
+const int kRightColumnWidth = 575;
+const int kHeadingY = 215;
 const int kResultImageSize = 150;
+const int kResultImageX = kRightColumnX + (kRightColumnWidth - kResultImageSize) / 2;
+const int kResultImageY = 265;
+const int kMaterialStartY = 455;
+const int kMaterialLineHeight = 40;
 const std::wstring kRecipeCsvPath = L"res\\script\\CraftRecipes.csv";
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
@@ -33,10 +40,11 @@ const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
 const UINT kDisabledTextColor = D3DCOLOR_RGBA(255, 120, 200, 255);
 const UINT kEnoughTextColor = D3DCOLOR_RGBA(160, 245, 175, 245);
 const UINT kMissingTextColor = D3DCOLOR_RGBA(245, 145, 145, 245);
-const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
-// command_cursor.png の白い点は画像左上(0,0)〜(12,12)にあるため、点の中心は画像内 (6,6)。
-const int kCommandCursorDotCenterX = 6;
-const int kCommandCursorDotCenterY = 6;
+const int kRowHighlightOffsetX = 18;
+const int kRowHighlightOffsetY = 4;
+const int kRowHighlightWidth = kRecipeListWidth + 26;
+const int kRowHighlightHeight = kRecipeLineHeight - 4;
+const int kRowHighlightTransparency = 45;
 }
 
 void CraftMenu::Initialize(NSRender::Render& render,
@@ -284,9 +292,10 @@ void CraftMenu::Render()
         m_textFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 22, kTextColor);
     }
 
+    m_render->DrawImageStretched(kCraftPanelDarkPath, 255);
     m_render->DrawTextExCenter(m_titleFontId, L"クラフト", 0, 130, 1600, 54, kTextColor);
-    m_render->DrawTextEx(m_headingFontId, L"生成物", kRecipeListX, 215, kTextColor);
-    m_render->DrawTextEx(m_headingFontId, L"クラフト素材", 885, 290, kTextColor);
+    m_render->DrawTextEx(m_headingFontId, L"生成物", kRecipeListX, kHeadingY, kTextColor);
+    m_render->DrawTextEx(m_headingFontId, L"クラフト素材", kRightColumnX, kHeadingY, kTextColor);
 
     const std::wstring resultImagePath = GetResultImagePath(m_recipes.at(m_selectedIndex));
     if (!resultImagePath.empty())
@@ -323,10 +332,12 @@ void CraftMenu::Render()
         const int rowY = kRecipeStartY + row * kRecipeLineHeight;
         if (i == m_selectedIndex)
         {
-            m_render->DrawImage(kCommandCursorPath,
-                                kRecipeListX - 17 - kCommandCursorDotCenterX,
-                                rowY + 10 - kCommandCursorDotCenterY,
-                                255);
+            m_render->DrawImageSized(kRowHighlightPath,
+                                     kRecipeListX - kRowHighlightOffsetX,
+                                     rowY - kRowHighlightOffsetY,
+                                     kRowHighlightWidth,
+                                     kRowHighlightHeight,
+                                     kRowHighlightTransparency);
         }
         m_render->DrawTextEx(m_textFontId, text, kRecipeListX, rowY, color);
     }
@@ -346,8 +357,8 @@ void CraftMenu::Render()
                                   std::to_wstring(material.second);
         m_render->DrawTextEx(m_textFontId,
                              text,
-                             885,
-                             360 + static_cast<int>(i) * 58,
+                             kRightColumnX,
+                             kMaterialStartY + static_cast<int>(i) * kMaterialLineHeight,
                              color);
     }
 
@@ -372,11 +383,11 @@ void CraftMenu::Render()
         {
             availabilityColor = kMissingTextColor;
         }
-        m_render->DrawTextEx(m_headingFontId, availability, 885, 540, availabilityColor);
+        m_render->DrawTextEx(m_headingFontId, availability, kRightColumnX, 600, availabilityColor);
     }
     if (!m_statusMessage.empty())
     {
-        m_render->DrawTextEx(m_textFontId, m_statusMessage, 885, 680, m_statusColor);
+        m_render->DrawTextEx(m_textFontId, m_statusMessage, kRightColumnX, 680, m_statusColor);
     }
 }
 
@@ -519,6 +530,18 @@ bool CraftMenu::IsRecipeUnlocked(const Recipe& recipe) const
 
 std::wstring CraftMenu::GetName(const std::wstring& id) const
 {
+    static const std::unordered_map<std::wstring, std::wstring> kAbilityNames =
+    {
+        { L"GroundDash", L"ダッシュ" },
+        { L"AirDash", L"空中ダッシュ" },
+        { L"DoubleJump", L"二段ジャンプ" }
+    };
+    const auto abilityFound = kAbilityNames.find(id);
+    if (abilityFound != kAbilityNames.end())
+    {
+        return abilityFound->second;
+    }
+
     const auto found = m_names.find(id);
     if (found == m_names.end())
     {

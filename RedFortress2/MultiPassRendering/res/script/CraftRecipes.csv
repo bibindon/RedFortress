@@ -1,10 +1,10 @@
 ﻿RecipeID,ResultType,ResultID,ResultCount,Material1ID,Material1Count,Material2ID,Material2Count,Material3ID,Material3Count
+R005,Item,008,1,011,5,012,5,,
+R009,Item,017,1,014,1,016,1,,
+R004,Item,007,1,009,10,010,10,,
 R001,Weapon,W002,1,001,10,002,10,003,10
 R002,Weapon,W003,1,001,20,002,20,003,20
 R003,Weapon,W004,1,004,10,005,10,006,10
-R004,Item,007,1,009,10,010,10,,
-R005,Item,008,1,011,5,012,5,,
 R006,Ability,GroundDash,1,014,10,016,10,,
 R007,Ability,AirDash,1,014,10,016,10,,
 R008,Ability,DoubleJump,1,014,10,016,10,,
-R009,Item,017,1,014,1,016,1,,
