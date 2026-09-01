@@ -658,38 +658,6 @@ def create_portal_mirror():
     return mirror
 
 
-# 岩の配置は見た目(add_nature)と衝突判定(create_collision)で共通にする。
-# 2026-08 自然化改修: 各岩は地面または前の岩にめり込ませ、登頂ステップ差<=1.0m。
-CLIMB_ROCK_LAYOUT = (
-    ("Rock1.blend", "ClimbRockWestSouth", (-13.4, -1.5, 0.12), 0.68, 12.0),
-    ("Rock2.blend", "ClimbRockWestMid", (-12.6, -0.3, 0.75), 1.05, 42.0),
-    ("Rock1.blend", "ClimbRockWestNorth", (-13.0, 1.2, 1.18), 1.05, -18.0),
-    ("Rock2.blend", "ClimbRockWestRidge", (-12.2, 2.6, 2.29), 1.3, 30.0),
-    ("Rock1.blend", "ClimbRockWestTop", (-13.0, 4.2, 2.95), 1.05, -18.0),
-    ("Rock1.blend", "ClimbRockHillEastA", (12.6, 9.2, 0.18), 0.50, 32.0),
-    ("Rock2.blend", "ClimbRockHillEastB", (11.7, 10.1, 0.67), 0.68, -12.0),
-    ("Rock1.blend", "ClimbRockHillEastC", (10.7, 11.15, 0.65), 0.86, 48.0),
-    ("Rock2.blend", "ClimbRockHillEastD", (9.55, 12.35, 1.51), 1.06, 15.0),
-    ("Rock1.blend", "ClimbRockHillEastE", (8.25, 13.7, 1.38), 1.26, -35.0),
-)
-
-HERO_ROCK_LAYOUT = (
-    ("Rock1.blend", "HeroRockBase", (-10.0, 15.2, 0.73), 4.2, -12.0),
-    ("Rock2.blend", "HeroRockUpper", (-10.2, 15.4, 5.92), 3.4, 27.0),
-    ("Rock1.blend", "HeroRockCrown", (-9.9, 15.6, 8.36), 1.5, -38.0),
-    ("Rock2.blend", "HeroTalus01", (-6.6, 8.4, 0.15), 0.62, 18.0),
-    ("Rock1.blend", "HeroTalus02", (-6.4, 9.6, 0.34), 0.66, -22.0),
-    ("Rock2.blend", "HeroTalus03", (-6.6, 10.8, 0.99), 0.8, 40.0),
-    ("Rock1.blend", "HeroTalus04", (-7.0, 11.9, 1.29), 0.8, 10.0),
-    ("Rock2.blend", "HeroTalus05", (-7.5, 12.9, 2.11), 0.95, -28.0),
-    ("Rock1.blend", "HeroTalus06", (-8.1, 13.8, 2.49), 0.95, 32.0),
-    ("Rock2.blend", "HeroTalus07", (-8.8, 14.5, 3.51), 1.05, -8.0),
-    ("Rock1.blend", "HeroTalus08", (-9.4, 14.0, 4.0), 0.9, 45.0),
-    ("Rock2.blend", "HeroTalus09", (-10.0, 13.2, 4.98), 0.9, 12.0),
-    ("Rock1.blend", "HeroTalus10", (-10.6, 12.5, 5.36), 0.85, -25.0),
-)
-
-
 def add_nature(prototypes):
     objects = []
     tree_layout = (
@@ -718,11 +686,6 @@ def add_nature(prototypes):
     for file_name, name, location, scale, rotation in rock_layout:
         objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
 
-    for file_name, name, location, scale, rotation in CLIMB_ROCK_LAYOUT:
-        objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
-
-    for file_name, name, location, scale, rotation in HERO_ROCK_LAYOUT:
-        objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
     bush_layout = (
         ("Bush1.blend", "BushSouthWest", (-11.5, -28.0, 0.1), 0.85, 0.0),
         ("Bush2.blend", "BushWorkshop", (-12.0, -19.5, 0.45), 0.75, 25.0),
@@ -830,40 +793,6 @@ def create_collision():
                 2.2 * scale,
                 collision_material,
                 10,
-            )
-        )
-    # 岩の衝突判定は見た目と同じ元モデル(Rock1/Rock2)を使う。
-    rock_prototypes = {}
-    for file_name in ("Rock1.blend", "Rock2.blend"):
-        rock_prototypes[file_name] = load_prototype(file_name)
-
-    for file_name, name, location, scale, rotation in CLIMB_ROCK_LAYOUT:
-        objects.extend(
-            use_collision_material(
-                add_asset(
-                    rock_prototypes,
-                    file_name,
-                    name + "Collision",
-                    location,
-                    scale,
-                    rotation,
-                ),
-                collision_material,
-            )
-        )
-
-    for file_name, name, location, scale, rotation in HERO_ROCK_LAYOUT:
-        objects.extend(
-            use_collision_material(
-                add_asset(
-                    rock_prototypes,
-                    file_name,
-                    name + "Collision",
-                    location,
-                    scale,
-                    rotation,
-                ),
-                collision_material,
             )
         )
     objects.append(add_cube("WorkshopDeckCollision", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), collision_material))
