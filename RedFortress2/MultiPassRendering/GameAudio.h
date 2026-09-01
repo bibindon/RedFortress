@@ -25,6 +25,7 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
 void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();
+void PlayItemUnavailable();
 void PlayMenuOpen();
 void PlayCraftOpen();
 void PlayExplanationOpen();

@@ -28,9 +28,14 @@ const int kDetailPanelWidth = 340;
 const int kHeadingY = 215;
 const int kResultImageSize = 150;
 const int kResultImageX = kRightColumnX + (kRightColumnWidth - kResultImageSize) / 2;
-const int kResultImageY = 265;
-const int kMaterialStartY = 455;
-const int kMaterialLineHeight = 40;
+const int kResultImageY = 250;
+const int kDescriptionHeadingY = 415;
+const int kDescriptionStartY = 450;
+const int kDescriptionLineHeight = 27;
+const std::size_t kDescriptionLineLength = 16;
+const int kMaterialHeadingY = 510;
+const int kMaterialStartY = 545;
+const int kMaterialLineHeight = 38;
 const std::wstring kRecipeCsvPath = L"res\\script\\CraftRecipes.csv";
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
@@ -296,6 +301,7 @@ void CraftMenu::Render()
         m_titleFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 32, kTextColor);
         m_headingFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 25, kTextColor);
         m_textFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 22, kTextColor);
+        m_descriptionFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 18, kTextColor);
     }
 
     m_render->DrawImageSized(kPanelBackgroundPath,
@@ -318,7 +324,7 @@ void CraftMenu::Render()
                                54,
                                kTextColor);
     m_render->DrawTextEx(m_headingFontId, L"生成物", kRecipeListX, kHeadingY, kTextColor);
-    m_render->DrawTextEx(m_headingFontId, L"クラフト素材", kRightColumnX, kHeadingY, kTextColor);
+    m_render->DrawTextEx(m_headingFontId, L"生成物の詳細", kRightColumnX, kHeadingY, kTextColor);
 
     const std::wstring resultImagePath = GetResultImagePath(m_recipes.at(m_selectedIndex));
     if (!resultImagePath.empty())
@@ -366,6 +372,29 @@ void CraftMenu::Render()
     }
 
     const Recipe& selectedRecipe = m_recipes.at(m_selectedIndex);
+    m_render->DrawTextEx(m_textFontId, L"効果", kRightColumnX, kDescriptionHeadingY, kTextColor);
+    std::wstring descriptionLine1 = GetDescription(selectedRecipe.resultId);
+    std::wstring descriptionLine2;
+    if (descriptionLine1.length() > kDescriptionLineLength)
+    {
+        descriptionLine2 = descriptionLine1.substr(kDescriptionLineLength);
+        descriptionLine1 = descriptionLine1.substr(0, kDescriptionLineLength);
+    }
+    m_render->DrawTextEx(m_descriptionFontId,
+                         descriptionLine1,
+                         kRightColumnX,
+                         kDescriptionStartY,
+                         kTextColor);
+    if (!descriptionLine2.empty())
+    {
+        m_render->DrawTextEx(m_descriptionFontId,
+                             descriptionLine2,
+                             kRightColumnX,
+                             kDescriptionStartY + kDescriptionLineHeight,
+                             kTextColor);
+    }
+
+    m_render->DrawTextEx(m_textFontId, L"必要素材", kRightColumnX, kMaterialHeadingY, kTextColor);
     for (std::size_t i = 0; i < selectedRecipe.materials.size(); ++i)
     {
         const auto& material = selectedRecipe.materials.at(i);
@@ -406,11 +435,11 @@ void CraftMenu::Render()
         {
             availabilityColor = kMissingTextColor;
         }
-        m_render->DrawTextEx(m_headingFontId, availability, kRightColumnX, 600, availabilityColor);
+        m_render->DrawTextEx(m_textFontId, availability, kRightColumnX, 665, availabilityColor);
     }
     if (!m_statusMessage.empty())
     {
-        m_render->DrawTextEx(m_textFontId, m_statusMessage, kRightColumnX, 680, m_statusColor);
+        m_render->DrawTextEx(m_descriptionFontId, m_statusMessage, kRightColumnX, 710, m_statusColor);
     }
 }
 
@@ -445,6 +474,10 @@ void CraftMenu::LoadCatalog(const std::wstring& csvPath)
         if (row.size() >= 2 && row.at(0) != L"ID")
         {
             m_names[row.at(0)] = row.at(1);
+            if (row.size() >= 6)
+            {
+                m_descriptions[row.at(0)] = row.at(5);
+            }
         }
     }
 }
@@ -569,6 +602,28 @@ std::wstring CraftMenu::GetName(const std::wstring& id) const
     if (found == m_names.end())
     {
         return id;
+    }
+    return found->second;
+}
+
+std::wstring CraftMenu::GetDescription(const std::wstring& id) const
+{
+    static const std::unordered_map<std::wstring, std::wstring> kAbilityDescriptions =
+    {
+        { L"GroundDash", L"地上で素早く前方へ移動できる" },
+        { L"AirDash", L"空中で素早く前方へ移動できる" },
+        { L"DoubleJump", L"空中でもう一度ジャンプできる" }
+    };
+    const auto abilityFound = kAbilityDescriptions.find(id);
+    if (abilityFound != kAbilityDescriptions.end())
+    {
+        return abilityFound->second;
+    }
+
+    const auto found = m_descriptions.find(id);
+    if (found == m_descriptions.end())
+    {
+        return L"説明はありません";
     }
     return found->second;
 }

@@ -54,6 +54,7 @@ private:
     bool IsRecipeAlreadyCrafted(const Recipe& recipe) const;
     bool CanCraft(const Recipe& recipe) const;
     std::wstring GetName(const std::wstring& id) const;
+    std::wstring GetDescription(const std::wstring& id) const;
     std::wstring GetResultImagePath(const Recipe& recipe) const;
     void MoveSelection(int direction);
     void MoveSelectionTo(std::size_t index);
@@ -79,9 +80,11 @@ private:
     int m_currentWorld = 1;
     std::vector<Recipe> m_recipes;
     std::unordered_map<std::wstring, std::wstring> m_names;
+    std::unordered_map<std::wstring, std::wstring> m_descriptions;
     std::wstring m_statusMessage;
     unsigned int m_statusColor = 0;
     int m_titleFontId = -1;
     int m_headingFontId = -1;
     int m_textFontId = -1;
+    int m_descriptionFontId = -1;
 };

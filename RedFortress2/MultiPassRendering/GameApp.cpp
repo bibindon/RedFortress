@@ -5748,6 +5748,7 @@ bool GameApp::TryUseRecoveryItemFromKey()
     {
         if (!HandleInventoryItemUse(kPotatoChipsItemId))
         {
+            GameAudio::PlayItemUnavailable();
             return false;
         }
 
@@ -5759,6 +5760,7 @@ bool GameApp::TryUseRecoveryItemFromKey()
     {
         if (!HandleInventoryItemUse(kChuageJuiceItemId))
         {
+            GameAudio::PlayItemUnavailable();
             return false;
         }
 

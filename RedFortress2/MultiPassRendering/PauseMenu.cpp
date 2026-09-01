@@ -961,7 +961,7 @@ void PauseMenu::UpdateItemList()
         }
         else
         {
-            GameAudio::PlayMenuCancel();
+            GameAudio::PlayItemUnavailable();
             m_itemStatusMessage = L"今は使用できません";
             m_itemStatusColor = kErrorTextColor;
         }
