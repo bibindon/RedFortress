@@ -3,6 +3,7 @@
 1721,..\SkySphere\SkySphere.blend.x,0,0.01,0,0,0,0,1,normal
 1801,base_water.x,0,0.04,2,0,0,0,1,meshmix2
 1802,base_decor.x,0,0,0,0,0,0,1,normal
+1803,base_portal_mirror.x,0,1.92,26.05,90,0,0,1,meshmix2
 1810,..\cubeWoodSmall\cube_wood_small.x,0,0,0,0,0,0,1,instancing,base_wood_boxes.csv
 1901,../fence.x,-12,0.5,-31,0,0,0,1,normal
 1902,../fence.x,-6,0.5,-31,0,0,0,1,normal

@@ -413,7 +413,7 @@ void EnemyManager::RegisterEnemyTypes()
     RegisterEnemyType<EnemyBird>(L"bird", L"Bird", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyCrab>(L"crab", L"Crab", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemyGiantCrab>(L"giant_crab", L"Crab", L"enemy.x", L"enemy.csv");
-    RegisterEnemyType<EnemyBossGiantCrab>(L"boss_giant_crab", L"Crab", L"enemy.x", L"enemy.csv", L"硬化狂い");
+    RegisterEnemyType<EnemyBossGiantCrab>(L"boss_giant_crab", L"Crab", L"enemy.x", L"enemy.csv", L"甲殻類の神　硬化狂い");
     RegisterEnemyType<EnemyFrog>(L"frog", L"Frog", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemySpider>(L"spider", L"Spider", L"enemy.x", L"enemy.csv");
     RegisterEnemyType<EnemySmallSpider>(L"small_spider", L"Spider", L"enemy.x", L"enemy.csv");

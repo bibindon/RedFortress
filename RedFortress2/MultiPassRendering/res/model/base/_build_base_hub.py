@@ -14,6 +14,8 @@ DECOR_BLEND_PATH = BASE_DIR / "base_decor.blend"
 DECOR_X_PATH = BASE_DIR / "base_decor.x"
 COLLISION_BLEND_PATH = BASE_DIR / "base_decor_collision.blend"
 COLLISION_X_PATH = BASE_DIR / "base_decor_collision.x"
+PORTAL_MIRROR_BLEND_PATH = BASE_DIR / "base_portal_mirror.blend"
+PORTAL_MIRROR_X_PATH = BASE_DIR / "base_portal_mirror.x"
 
 GROUND_HALF_WIDTH = 16.0
 GROUND_HALF_DEPTH = 32.0
@@ -525,14 +527,68 @@ def random_jitter(index):
     return table[index % len(table)]
 
 
-def add_portal(stone, glow):
+def add_portal(stone):
     objects = []
     objects.append(add_cube("PortalStep", (0.0, 26.0, 0.22), (6.0, 3.6, 0.32), stone))
     objects.append(add_cube("PortalPillarLeft", (-2.0, 26.0, 1.85), (0.75, 0.85, 3.2), stone))
     objects.append(add_cube("PortalPillarRight", (2.0, 26.0, 1.85), (0.75, 0.85, 3.2), stone))
     objects.append(add_cube("PortalLintel", (0.0, 26.0, 3.55), (4.75, 0.9, 0.75), stone))
-    objects.append(add_cube("PortalGlow", (0.0, 26.05, 1.92), (3.15, 0.08, 2.85), glow))
     return objects
+
+
+def create_portal_mirror():
+    width = 3.35
+    height = 3.05
+    horizontal_segments = 24
+    vertical_segments = 24
+    vertices = []
+    uvs = []
+    faces = []
+
+    for vertical_index in range(vertical_segments + 1):
+        vertical_ratio = vertical_index / vertical_segments
+        local_y = (vertical_ratio - 0.5) * height
+        for horizontal_index in range(horizontal_segments + 1):
+            horizontal_ratio = horizontal_index / horizontal_segments
+            local_x = (horizontal_ratio - 0.5) * width
+            vertices.append((local_x, local_y, 0.0))
+            uvs.append((horizontal_ratio, vertical_ratio))
+
+    row_width = horizontal_segments + 1
+    for vertical_index in range(vertical_segments):
+        for horizontal_index in range(horizontal_segments):
+            lower_left = (vertical_index * row_width) + horizontal_index
+            lower_right = lower_left + 1
+            upper_left = lower_left + row_width
+            upper_right = upper_left + 1
+            faces.append((lower_left, lower_right, upper_right, upper_left))
+
+    mesh = bpy.data.meshes.new("BasePortalMirrorGeo")
+    mesh.from_pydata(vertices, (), faces)
+    mesh.update(calc_edges=True)
+
+    material = create_material(
+        "BasePortalMirrorSilver",
+        (0.08, 0.12, 0.16, 1.0),
+        0.18,
+        0.7,
+    )
+    material["_x_power"] = 96.0
+    material["_x_specular"] = (0.45, 0.55, 0.65)
+    mesh.materials.append(material)
+
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for polygon in mesh.polygons:
+        polygon.use_smooth = True
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            uv_layer.data[loop_index].uv = uvs[vertex_index]
+
+    mirror = bpy.data.objects.new("BasePortalMirror", mesh)
+    bpy.context.collection.objects.link(mirror)
+    mirror["_x_frame_name"] = "BasePortalMirror"
+    mirror["_x_mesh_name"] = "BasePortalMirrorGeo"
+    return mirror
 
 
 # 岩の配置は見た目(add_nature)と衝突判定(create_collision)で共通にする。
@@ -644,13 +700,6 @@ def create_decor():
     cloth = create_material("HubCanopyCloth", (0.55, 0.18, 0.055, 1.0), 0.76)
     metal = create_material("HubMetal", (0.16, 0.18, 0.19, 1.0), 0.38, 0.45)
     stone = create_material("HubPortalStone", (0.25, 0.28, 0.28, 1.0), 0.92)
-    glow = create_material(
-        "HubPortalGlow",
-        (0.025, 0.22, 0.34, 0.78),
-        0.28,
-        0.0,
-        (0.04, 0.58, 0.82),
-    )
 
     source_files = (
         "Tree1.blend",
@@ -675,7 +724,7 @@ def create_decor():
 
     add_nature(prototypes)
     add_workshop(prototypes, wood, dark_wood, cloth, metal)
-    add_portal(stone, glow)
+    add_portal(stone)
     return list(bpy.context.scene.objects)
 
 
@@ -802,12 +851,18 @@ def main():
     export_x(DECOR_X_PATH, decor_objects)
 
     clear_scene()
+    portal_mirror = create_portal_mirror()
+    bpy.ops.wm.save_as_mainfile(filepath=str(PORTAL_MIRROR_BLEND_PATH))
+    export_x(PORTAL_MIRROR_X_PATH, [portal_mirror])
+
+    clear_scene()
     collision_objects = create_collision()
     bpy.ops.wm.save_as_mainfile(filepath=str(COLLISION_BLEND_PATH))
     export_x(COLLISION_X_PATH, collision_objects)
 
     print("BASE_GROUND_X", GROUND_X_PATH)
     print("BASE_DECOR_X", DECOR_X_PATH)
+    print("BASE_PORTAL_MIRROR_X", PORTAL_MIRROR_X_PATH)
     print("BASE_DECOR_COLLISION_X", COLLISION_X_PATH)
 
 
