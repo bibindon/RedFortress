@@ -591,18 +591,21 @@ def random_jitter(index):
     return table[index % len(table)]
 
 
-def add_portal(stone):
+def add_portal(stone, frame_material):
     objects = []
-    objects.append(add_cube("PortalStep", (0.0, 26.0, 0.22), (6.0, 3.6, 0.32), stone))
-    objects.append(add_cube("PortalPillarLeft", (-2.0, 26.0, 1.85), (0.75, 0.85, 3.2), stone))
-    objects.append(add_cube("PortalPillarRight", (2.0, 26.0, 1.85), (0.75, 0.85, 3.2), stone))
-    objects.append(add_cube("PortalLintel", (0.0, 26.0, 3.55), (4.75, 0.9, 0.75), stone))
+    objects.append(add_cube("PortalWall", (0.0, 26.0, 2.5), (3.0, 0.5, 5.0), stone))
+    frame_depth = 0.22
+    frame_center_y = 25.64
+    objects.append(add_cube("PortalFrameLeft", (-1.35, frame_center_y, 2.5), (0.2, frame_depth, 4.9), frame_material))
+    objects.append(add_cube("PortalFrameRight", (1.35, frame_center_y, 2.5), (0.2, frame_depth, 4.9), frame_material))
+    objects.append(add_cube("PortalFrameBottom", (0.0, frame_center_y, 0.15), (2.5, frame_depth, 0.2), frame_material))
+    objects.append(add_cube("PortalFrameTop", (0.0, frame_center_y, 4.85), (2.5, frame_depth, 0.2), frame_material))
     return objects
 
 
 def create_portal_mirror():
-    width = 3.35
-    height = 3.05
+    width = 2.5
+    height = 4.5
     horizontal_segments = 24
     vertical_segments = 24
     vertices = []
@@ -788,7 +791,7 @@ def create_decor():
 
     add_nature(prototypes)
     add_workshop(prototypes, wood, dark_wood, cloth, metal)
-    add_portal(stone)
+    add_portal(stone, metal)
     return list(bpy.context.scene.objects)
 
 
@@ -868,8 +871,7 @@ def create_collision():
     # 2026-08 生活感改修: 薪置きと工具箱は踏み台になるので衝突を入れる。
     objects.append(add_cube("WorkshopLogsCollision", (-10.05, -20.42, deck_top_collision + 0.14), (0.55, 0.5, 0.6), collision_material))
     objects.append(add_cube("WorkshopToolboxCollision", (-6.25, -18.75, deck_top_collision + 0.24), (0.58, 0.38, 0.4), collision_material))
-    objects.append(add_cube("PortalPillarLeftCollision", (-2.0, 26.0, 1.85), (0.75, 0.85, 3.2), collision_material))
-    objects.append(add_cube("PortalPillarRightCollision", (2.0, 26.0, 1.85), (0.75, 0.85, 3.2), collision_material))
+    objects.append(add_cube("PortalWallCollision", (0.0, 26.0, 2.5), (3.0, 0.5, 5.0), collision_material))
     return objects
 
 
