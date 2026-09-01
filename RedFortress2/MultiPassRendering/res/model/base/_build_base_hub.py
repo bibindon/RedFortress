@@ -658,6 +658,11 @@ def create_portal_mirror():
     return mirror
 
 
+GROUNDED_CLIMB_ROCK_LAYOUT = (
+    ("Rock1.blend", "GroundedClimbRock", (-10.0, 15.2, -2.31), 4.2, -12.0),
+)
+
+
 def add_nature(prototypes):
     objects = []
     tree_layout = (
@@ -684,6 +689,9 @@ def add_nature(prototypes):
         ("Rock2.blend", "HillRockEast", (13.0, 9.0, 0.55), 0.74, 45.0),
     )
     for file_name, name, location, scale, rotation in rock_layout:
+        objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
+
+    for file_name, name, location, scale, rotation in GROUNDED_CLIMB_ROCK_LAYOUT:
         objects.extend(add_asset(prototypes, file_name, name, location, scale, rotation))
 
     bush_layout = (
@@ -795,6 +803,25 @@ def create_collision():
                 10,
             )
         )
+    rock_prototypes = {}
+    for file_name in ("Rock1.blend", "Rock2.blend"):
+        rock_prototypes[file_name] = load_prototype(file_name)
+
+    for file_name, name, location, scale, rotation in GROUNDED_CLIMB_ROCK_LAYOUT:
+        objects.extend(
+            use_collision_material(
+                add_asset(
+                    rock_prototypes,
+                    file_name,
+                    name + "Collision",
+                    location,
+                    scale,
+                    rotation,
+                ),
+                collision_material,
+            )
+        )
+
     objects.append(add_cube("WorkshopDeckCollision", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), collision_material))
     objects.append(add_cube("WorkshopBenchCollision", (-7.0, -19.5, 0.82), (3.4, 1.1, 1.35), collision_material))
     # 2026-08 生活感改修: 薪置きと工具箱は踏み台になるので衝突を入れる。
