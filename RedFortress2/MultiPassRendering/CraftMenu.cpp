@@ -13,6 +13,11 @@
 namespace
 {
 const std::wstring kMenuMaskPath = L"res\\2D_Image\\menu_mask.png";
+const std::wstring kIconDir = L"res\\2D_Image\\";
+const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
+const int kResultImageX = 885;
+const int kResultImageY = 130;
+const int kResultImageSize = 150;
 const std::wstring kRecipeCsvPath = L"res\\script\\CraftRecipes.csv";
 const std::wstring kItemCsvPath = L"res\\script\\hoshigirl_item_ideas.csv";
 const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
@@ -21,7 +26,7 @@ const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const std::size_t kVisibleRecipeCount = 11;
 const int kRecipeStartY = 280;
 const int kRecipeLineHeight = 42;
-const int kRecipeListX = 155;
+const int kRecipeListX = 185;
 const int kRecipeListWidth = 575;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
@@ -281,7 +286,18 @@ void CraftMenu::Render()
 
     m_render->DrawTextExCenter(m_titleFontId, L"クラフト", 0, 130, 1600, 54, kTextColor);
     m_render->DrawTextEx(m_headingFontId, L"生成物", kRecipeListX, 215, kTextColor);
-    m_render->DrawTextEx(m_headingFontId, L"クラフト素材", 855, 215, kTextColor);
+    m_render->DrawTextEx(m_headingFontId, L"クラフト素材", 885, 290, kTextColor);
+
+    const std::wstring resultImagePath = GetResultImagePath(m_recipes.at(m_selectedIndex));
+    if (!resultImagePath.empty())
+    {
+        m_render->DrawImageSized(resultImagePath,
+                                 kResultImageX,
+                                 kResultImageY,
+                                 kResultImageSize,
+                                 kResultImageSize,
+                                 245);
+    }
 
     const std::size_t endIndex = (std::min)(m_recipes.size(), m_scrollOffset + kVisibleRecipeCount);
     for (std::size_t i = m_scrollOffset; i < endIndex; ++i)
@@ -330,12 +346,12 @@ void CraftMenu::Render()
                                   std::to_wstring(material.second);
         m_render->DrawTextEx(m_textFontId,
                              text,
-                             855,
-                             295 + static_cast<int>(i) * 58,
+                             885,
+                             360 + static_cast<int>(i) * 58,
                              color);
     }
 
-    std::wstring availability = L"素材不足";
+    std::wstring availability = L"";
     if (IsRecipeAlreadyCrafted(selectedRecipe))
     {
         availability = L"作成済み";
@@ -349,15 +365,18 @@ void CraftMenu::Render()
     {
         availability = L"作成できます";
     }
-    UINT availabilityColor = kEnoughTextColor;
-    if (IsRecipeAlreadyCrafted(selectedRecipe) || !IsRecipeUnlocked(selectedRecipe) || !CanCraft(selectedRecipe))
+    if (!availability.empty())
     {
-        availabilityColor = kMissingTextColor;
+        UINT availabilityColor = kEnoughTextColor;
+        if (IsRecipeAlreadyCrafted(selectedRecipe) || !IsRecipeUnlocked(selectedRecipe) || !CanCraft(selectedRecipe))
+        {
+            availabilityColor = kMissingTextColor;
+        }
+        m_render->DrawTextEx(m_headingFontId, availability, 885, 540, availabilityColor);
     }
-    m_render->DrawTextEx(m_headingFontId, availability, 855, 540, availabilityColor);
     if (!m_statusMessage.empty())
     {
-        m_render->DrawTextEx(m_textFontId, m_statusMessage, 855, 680, m_statusColor);
+        m_render->DrawTextEx(m_textFontId, m_statusMessage, 885, 680, m_statusColor);
     }
 }
 
@@ -506,6 +525,55 @@ std::wstring CraftMenu::GetName(const std::wstring& id) const
         return id;
     }
     return found->second;
+}
+
+std::wstring CraftMenu::GetResultImagePath(const Recipe& recipe) const
+{
+    static const std::unordered_map<std::wstring, std::wstring> kWeaponIconFiles =
+    {
+        { L"W001", L"attack_club_icon.png" },
+        { L"W002", L"attack_slash_icon.png" },
+        { L"W003", L"attack_buster_icon.png" },
+        { L"W004", L"attack_bomb_icon.png" }
+    };
+    static const std::unordered_map<std::wstring, std::wstring> kAbilityIconFiles =
+    {
+        { L"GroundDash", L"ability_dash_icon.png" },
+        { L"AirDash", L"ability_air_dash_icon.png" },
+        { L"DoubleJump", L"ability_double_jump_icon.png" }
+    };
+    static const std::unordered_map<std::wstring, std::wstring> kItemIllustrationFiles =
+    {
+        { L"007", L"item_007_red_spaghetti.png" },
+        { L"008", L"item_008_potato_chips.png" },
+        { L"017", L"item_017_launch_juice.png" }
+    };
+
+    if (recipe.resultType == L"Weapon")
+    {
+        const auto found = kWeaponIconFiles.find(recipe.resultId);
+        if (found != kWeaponIconFiles.end())
+        {
+            return kIconDir + found->second;
+        }
+    }
+    else if (recipe.resultType == L"Ability")
+    {
+        const auto found = kAbilityIconFiles.find(recipe.resultId);
+        if (found != kAbilityIconFiles.end())
+        {
+            return kIconDir + found->second;
+        }
+    }
+    else if (recipe.resultType == L"Item")
+    {
+        const auto found = kItemIllustrationFiles.find(recipe.resultId);
+        if (found != kItemIllustrationFiles.end())
+        {
+            return kItemIllustrationDir + found->second;
+        }
+    }
+    return L"";
 }
 
 void CraftMenu::MoveSelection(const int direction)

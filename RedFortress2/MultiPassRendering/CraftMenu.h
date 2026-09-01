@@ -54,6 +54,7 @@ private:
     bool IsRecipeAlreadyCrafted(const Recipe& recipe) const;
     bool CanCraft(const Recipe& recipe) const;
     std::wstring GetName(const std::wstring& id) const;
+    std::wstring GetResultImagePath(const Recipe& recipe) const;
     void MoveSelection(int direction);
     void MoveSelectionTo(std::size_t index);
     void EnsureSelectionVisible();
