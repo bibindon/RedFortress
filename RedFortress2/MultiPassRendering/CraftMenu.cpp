@@ -19,16 +19,19 @@ const std::wstring kWeaponCsvPath = L"res\\script\\hoshigirl_weapon_ideas.csv";
 const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const std::size_t kVisibleRecipeCount = 11;
-const int kRecipeStartY = 260;
+const int kRecipeStartY = 280;
 const int kRecipeLineHeight = 42;
 const int kRecipeListX = 155;
 const int kRecipeListWidth = 575;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
-const UINT kSubTextColor = D3DCOLOR_RGBA(220, 232, 245, 235);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
-const UINT kDisabledTextColor = D3DCOLOR_RGBA(115, 125, 140, 210);
+const UINT kDisabledTextColor = D3DCOLOR_RGBA(255, 120, 200, 255);
 const UINT kEnoughTextColor = D3DCOLOR_RGBA(160, 245, 175, 245);
 const UINT kMissingTextColor = D3DCOLOR_RGBA(245, 145, 145, 245);
+const std::wstring kCommandCursorPath = L"res\\2D_Image\\command_cursor.png";
+// command_cursor.png の白い点は画像左上(0,0)〜(12,12)にあるため、点の中心は画像内 (6,6)。
+const int kCommandCursorDotCenterX = 6;
+const int kCommandCursorDotCenterY = 6;
 }
 
 void CraftMenu::Initialize(NSRender::Render& render,
@@ -232,7 +235,7 @@ void CraftMenu::Update()
     {
         GameAudio::PlayMenuCancel();
         const int requiredWorld = GetRecipeRequiredWorld(recipe);
-        m_statusMessage = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
+        m_statusMessage = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフト可能";
         m_statusColor = kMissingTextColor;
         return;
     }
@@ -274,12 +277,11 @@ void CraftMenu::Render()
         m_titleFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 32, kTextColor);
         m_headingFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 25, kTextColor);
         m_textFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 22, kTextColor);
-        m_smallFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 19, kSubTextColor);
     }
 
-    m_render->DrawTextExCenter(m_titleFontId, L"クラフト", 0, 110, 1600, 54, kTextColor);
-    m_render->DrawTextExCenter(m_headingFontId, L"完成品", 160, 195, 560, 46, kTextColor);
-    m_render->DrawTextExCenter(m_headingFontId, L"必要素材", 855, 195, 560, 46, kTextColor);
+    m_render->DrawTextExCenter(m_titleFontId, L"クラフト", 0, 130, 1600, 54, kTextColor);
+    m_render->DrawTextEx(m_headingFontId, L"生成物", kRecipeListX, 215, kTextColor);
+    m_render->DrawTextEx(m_headingFontId, L"クラフト素材", 855, 215, kTextColor);
 
     const std::size_t endIndex = (std::min)(m_recipes.size(), m_scrollOffset + kVisibleRecipeCount);
     for (std::size_t i = m_scrollOffset; i < endIndex; ++i)
@@ -298,25 +300,19 @@ void CraftMenu::Render()
 
         const int row = static_cast<int>(i - m_scrollOffset);
         std::wstring text = GetName(recipe.resultId);
-        if (recipe.resultType != L"Weapon")
-        {
-            text += L"  x" + std::to_wstring(recipe.resultCount);
-        }
         if (alreadyCrafted)
         {
             text += L"  作成済み";
         }
+        const int rowY = kRecipeStartY + row * kRecipeLineHeight;
         if (i == m_selectedIndex)
         {
-            text = L"> " + text;
+            m_render->DrawImage(kCommandCursorPath,
+                                kRecipeListX - 17 - kCommandCursorDotCenterX,
+                                rowY + 10 - kCommandCursorDotCenterY,
+                                255);
         }
-        m_render->DrawTextExCenter(m_textFontId,
-                                   text,
-                                   kRecipeListX,
-                                   kRecipeStartY + row * kRecipeLineHeight,
-                                   kRecipeListWidth,
-                                   38,
-                                   color);
+        m_render->DrawTextEx(m_textFontId, text, kRecipeListX, rowY, color);
     }
 
     const Recipe& selectedRecipe = m_recipes.at(m_selectedIndex);
@@ -332,13 +328,11 @@ void CraftMenu::Render()
         const std::wstring text = GetName(material.first) + L"  " +
                                   std::to_wstring(ownedCount) + L" / " +
                                   std::to_wstring(material.second);
-        m_render->DrawTextExCenter(m_textFontId,
-                                   text,
-                                   855,
-                                   275 + static_cast<int>(i) * 58,
-                                   560,
-                                   42,
-                                   color);
+        m_render->DrawTextEx(m_textFontId,
+                             text,
+                             855,
+                             295 + static_cast<int>(i) * 58,
+                             color);
     }
 
     std::wstring availability = L"素材不足";
@@ -349,7 +343,7 @@ void CraftMenu::Render()
     else if (!IsRecipeUnlocked(selectedRecipe))
     {
         const int requiredWorld = GetRecipeRequiredWorld(selectedRecipe);
-        availability = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフトできます";
+        availability = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフト可能";
     }
     else if (CanCraft(selectedRecipe))
     {
@@ -360,17 +354,10 @@ void CraftMenu::Render()
     {
         availabilityColor = kMissingTextColor;
     }
-    m_render->DrawTextExCenter(m_headingFontId, availability, 855, 520, 560, 44, availabilityColor);
-    m_render->DrawTextExCenter(m_smallFontId,
-                               L"↑↓ 選択   Enter / ○ 作成   Esc / × 閉じる",
-                               0,
-                               800,
-                               1600,
-                               40,
-                               kSubTextColor);
+    m_render->DrawTextEx(m_headingFontId, availability, 855, 540, availabilityColor);
     if (!m_statusMessage.empty())
     {
-        m_render->DrawTextExCenter(m_textFontId, m_statusMessage, 760, 660, 760, 45, m_statusColor);
+        m_render->DrawTextEx(m_textFontId, m_statusMessage, 855, 680, m_statusColor);
     }
 }
 

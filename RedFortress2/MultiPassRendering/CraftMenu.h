@@ -83,5 +83,4 @@ private:
     int m_titleFontId = -1;
     int m_headingFontId = -1;
     int m_textFontId = -1;
-    int m_smallFontId = -1;
 };
