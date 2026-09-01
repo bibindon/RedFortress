@@ -543,11 +543,11 @@ CLIMB_ROCK_LAYOUT = (
     ("Rock1.blend", "ClimbRockWestNorth", (-13.0, 1.2, 1.18), 1.05, -18.0),
     ("Rock2.blend", "ClimbRockWestRidge", (-12.2, 2.6, 2.29), 1.3, 30.0),
     ("Rock1.blend", "ClimbRockWestTop", (-13.0, 4.2, 2.95), 1.05, -18.0),
-    ("Rock1.blend", "ClimbRockHillEastA", (12.4, 9.2, 0.3), 0.62, 32.0),
-    ("Rock2.blend", "ClimbRockHillEastB", (11.0, 10.6, 0.85), 1.0, -12.0),
-    ("Rock1.blend", "ClimbRockHillEastC", (9.8, 12.2, 1.28), 0.95, 48.0),
-    ("Rock2.blend", "ClimbRockHillEastD", (8.6, 13.8, 2.29), 1.1, 15.0),
-    ("Rock1.blend", "ClimbRockHillEastE", (7.6, 15.2, 2.76), 1.05, -35.0),
+    ("Rock1.blend", "ClimbRockHillEastA", (12.6, 9.2, 0.18), 0.50, 32.0),
+    ("Rock2.blend", "ClimbRockHillEastB", (11.7, 10.1, 0.67), 0.68, -12.0),
+    ("Rock1.blend", "ClimbRockHillEastC", (10.7, 11.15, 0.65), 0.86, 48.0),
+    ("Rock2.blend", "ClimbRockHillEastD", (9.55, 12.35, 1.51), 1.06, 15.0),
+    ("Rock1.blend", "ClimbRockHillEastE", (8.25, 13.7, 1.38), 1.26, -35.0),
 )
 
 HERO_ROCK_LAYOUT = (

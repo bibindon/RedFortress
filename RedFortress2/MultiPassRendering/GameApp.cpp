@@ -4059,9 +4059,9 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     if (stageId == L"base")
     {
         const D3DXCOLOR workshopLanternColor(1.0f, 0.62f, 0.22f, 1.0f);
-        m_render.AddPointLight(D3DXVECTOR3(-5.6f, 2.2f, -19.95f), 3.0f, workshopLanternColor);
+        m_render.AddPointLight(D3DXVECTOR3(-5.6f, 2.2f, -19.95f), 1.0f, workshopLanternColor);
         const D3DXCOLOR portalColor(0.18f, 0.65f, 0.9f, 1.0f);
-        m_render.AddPointLight(D3DXVECTOR3(0.0f, 2.6f, 26.0f), 2.6f, portalColor);
+        m_render.AddPointLight(D3DXVECTOR3(0.0f, 2.6f, 26.0f), 0.9f, portalColor);
         return;
     }
     if (stageId == L"base2")
