@@ -8,6 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent
 SOURCE_DIR = BASE_DIR / "source_quaternius"
 WORLD1_GROUND_TEXTURE_PATH = BASE_DIR.parent / "ground" / "tex" / "world1.png"
 WORLD1_GROUND_TEXTURE_FILENAME = "../ground/tex/world1.png"
+WOOD_TEXTURE_PATH = BASE_DIR.parent / "wood.png"
+WOOD_TEXTURE_FILENAME = "../wood.png"
 GROUND_BLEND_PATH = BASE_DIR / "base_ground.blend"
 GROUND_X_PATH = BASE_DIR / "base_ground.x"
 DECOR_BLEND_PATH = BASE_DIR / "base_decor.blend"
@@ -66,6 +68,30 @@ def create_material(name, color, roughness=0.7, metallic=0.0, emissive=None):
         )
         principled.inputs["Emission Strength"].default_value = 1.4
     return material
+
+
+def ensure_cube_uvs(obj, tile_size):
+    # キューブに平面射影UVを張る（上面/下面はXY、側面はZ高さと周回距離）。
+    # tile_size メートルでテクスチャ1枚を繰り返す。
+    mesh = obj.data
+    if len(mesh.uv_layers) == 0:
+        mesh.uv_layers.new(name="UVMap")
+    uv_layer = mesh.uv_layers.active
+    for polygon in mesh.polygons:
+        normal = polygon.normal
+        for loop_index in polygon.loop_indices:
+            vertex_index = mesh.loops[loop_index].vertex_index
+            vertex = mesh.vertices[vertex_index].co
+            if abs(normal.z) > 0.7:
+                u = vertex.x / tile_size
+                v = vertex.y / tile_size
+            elif abs(normal.x) > 0.7:
+                u = vertex.y / tile_size
+                v = vertex.z / tile_size
+            else:
+                u = vertex.x / tile_size
+                v = vertex.z / tile_size
+            uv_layer.data[loop_index].uv = (u, v)
 
 
 def create_textured_material(name, color, texture_path, texture_filename):
@@ -354,13 +380,15 @@ def add_asset(prototypes, file_name, name, location, scale, rotation_degrees=0.0
     return instances
 
 
-def add_cube(name, location, dimensions, material):
+def add_cube(name, location, dimensions, material, uv_tile=None):
     bpy.ops.mesh.primitive_cube_add(location=location)
     obj = bpy.context.object
     obj.name = name
     obj.dimensions = dimensions
     obj.data.materials.append(material)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    if uv_tile is not None:
+        ensure_cube_uvs(obj, uv_tile)
     return obj
 
 
@@ -417,15 +445,41 @@ def add_workshop(prototypes, wood, dark_wood, cloth, metal):
     deck_top = 0.37
     bench_top = 1.22
 
-    objects.append(add_cube("WorkshopDeck", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), wood))
-    objects.append(add_cube("WorkshopBenchTop", (-7.0, -19.5, 1.12), (3.4, 1.1, 0.18), dark_wood))
+    # wood.png を張る素材（柱・屋根・地面・テーブル）。ダークウッド枠に淡い色情を掛け、
+    # 木目が見えるよう specular を殺す。
+    wood_tex = create_textured_material(
+        "HubWorkshopWood",
+        (0.95, 0.85, 0.75, 1.0),
+        WOOD_TEXTURE_PATH,
+        WOOD_TEXTURE_FILENAME,
+    )
+    cloth_tex = create_textured_material(
+        "HubCanopyClothWood",
+        (0.92, 0.42, 0.22, 1.0),
+        WOOD_TEXTURE_PATH,
+        WOOD_TEXTURE_FILENAME,
+    )
+
+    objects.append(add_cube("WorkshopDeck", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), wood_tex, 2.0))
+    objects.append(add_cube("WorkshopBenchTop", (-7.0, -19.5, 1.12), (3.4, 1.1, 0.18), wood_tex, 1.0))
     for x in (-8.35, -5.65):
         for y in (-19.85, -19.15):
-            objects.append(add_cube("WorkshopBenchLeg", (x, y, 0.70), (0.16, 0.16, 0.85), dark_wood))
-    for x in (-9.25, -4.75):
-        for y in (-21.3, -18.7):
-            objects.append(add_cube("WorkshopCanopyPost", (x, y, 1.48), (0.16, 0.16, 2.4), dark_wood))
-    roof = add_cube("WorkshopCanopy", (-7.0, -20.0, 2.72), (5.1, 3.4, 0.12), cloth)
+            objects.append(add_cube("WorkshopBenchLeg", (x, y, 0.70), (0.16, 0.16, 0.85), wood_tex, 0.5))
+    # 屋根は rotY=-6度（傾きはX方向、西側x=-9.54が低い/東側x=-4.46が高い）。
+    # 屋根下面 z(lx) = 2.6603 + 0.10452*lx  (lx = 屋根中心x=-7からのオフセット)
+    #   西柱 x[-9.33,-9.17]: 下面 2.417〜2.434 / 屋根上面 2.536〜2.553 → top 2.45 で厚さ内に収まる
+    #   東柱 x[-4.83,-4.67]: 下面 2.887〜2.904 / 屋根上面 3.007〜3.024 → top 2.92 で厚さ内に収まる
+    # 柱はデッキ面(z=0.37)から立ち、屋根厚0.12未満のめり込みで天面は突き抜けない。
+    for x, y, top_z in (
+        (-9.25, -21.3, 2.45),
+        (-4.75, -21.3, 2.92),
+        (-9.25, -18.7, 2.45),
+        (-4.75, -18.7, 2.92),
+    ):
+        post_height = top_z - deck_top
+        post_center = (deck_top + top_z) / 2.0
+        objects.append(add_cube("WorkshopCanopyPost", (x, y, post_center), (0.16, 0.16, post_height), wood_tex, 0.5))
+    roof = add_cube("WorkshopCanopy", (-7.0, -20.0, 2.72), (5.1, 3.4, 0.12), cloth_tex, 1.2)
     roof.rotation_euler[1] = math.radians(-6.0)
     objects.append(roof)
 
@@ -509,14 +563,24 @@ def add_workshop(prototypes, wood, dark_wood, cloth, metal):
     chisel.rotation_euler = (math.radians(90.0), 0.0, math.radians(15.0))
     objects.append(chisel)
 
-    objects.extend(add_asset(prototypes, "Barrel.blend", "WorkshopBarrelA", (-9.0, -18.9, 0.78), 0.34, 10.0))
-    barrel_b_objects = add_asset(prototypes, "Barrel.blend", "WorkshopBarrelB", (-8.5, -18.7, 1.42), 0.26, -15.0)
+    # 樽Aはデッキ上に接地、樽Bは樽Aの上に積み直す（旧配置は樽A・樽Bとも宙に浮いていた）。
+    # Barrel.blend のローカルzは -0.0096〜2.8331（原点=底面）。
+    #   樽A: scale 0.34 → 高さ0.963。底=0.37(デッキ面) に置くと location z=0.373、頂=1.336
+    #   樽B: scale 0.26、rotX 5度で底面最低点がlocationより約0.031下 → location z=1.367
+    objects.extend(add_asset(prototypes, "Barrel.blend", "WorkshopBarrelA", (-9.0, -18.9, 0.373), 0.34, 10.0))
+    barrel_b_objects = add_asset(prototypes, "Barrel.blend", "WorkshopBarrelB", (-8.5, -18.7, 1.367), 0.26, -15.0)
     for barrel_object in barrel_b_objects:
         barrel_object.rotation_euler[0] = math.radians(5.0)
     objects.extend(barrel_b_objects)
     objects.extend(add_asset(prototypes, "Book.blend", "WorkshopBook", (-7.05, -19.75, 1.31), 0.20, 18.0))
     objects.extend(add_asset(prototypes, "Gems.blend", "WorkshopGems", (-6.65, -19.42, 1.25), 0.16, -12.0))
-    objects.extend(add_asset(prototypes, "Sword.blend", "WorkshopSword", (-6.0, -19.45, 1.36), 0.25, -20.0))
+    # 剣は寝かせてベンチ上に伏せる（rotX 90度で刃が水平方向へ伸びる）。
+    # Sword.blend ローカルz -0.3533〜2.7612, 厚みy ±0.086。scale 0.25で伏せると
+    # 高さ ±0.0215。ベンチ天面1.21 → center z = 1.235。
+    sword_objects = add_asset(prototypes, "Sword.blend", "WorkshopSword", (-6.0, -19.25, 1.235), 0.25, -30.0)
+    for sword_object in sword_objects:
+        sword_object.rotation_euler[0] = math.radians(90.0)
+    objects.extend(sword_objects)
     objects.extend(add_asset(prototypes, "WoodenStaff.blend", "WorkshopStaff", (-9.15, -20.6, 1.35), 0.34, 8.0))
     objects.append(add_cube("WorkshopToolRack", (-8.95, -20.65, 1.35), (0.14, 0.8, 1.8), metal))
     return objects
@@ -848,7 +912,7 @@ def main():
     clear_scene()
     decor_objects = create_decor()
     bpy.ops.wm.save_as_mainfile(filepath=str(DECOR_BLEND_PATH))
-    export_x(DECOR_X_PATH, decor_objects)
+    export_x(DECOR_X_PATH, decor_objects, True)
 
     clear_scene()
     portal_mirror = create_portal_mirror()
