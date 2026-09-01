@@ -6140,7 +6140,7 @@ std::wstring GameApp::BuildStageComboText(const StageManager::StageData& stage) 
 {
     if (stage.displayName == L"拠点")
     {
-        return L"Base";
+        return L"ワールド1の拠点";
     }
 
     const std::wstring prefix = L"Stage ";
