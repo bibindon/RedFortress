@@ -8167,6 +8167,24 @@ void GameApp::CompletePlayerDeath()
         m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kRespawnInvincibleFrames, 4);
     }
 
+    // ゴールの光の柱と旗は、敵を再配置する前の攻略状態なのでリセットする。
+    m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
+    if (m_portalPillarMeshId >= 0)
+    {
+        m_render.RemoveMeshMix(m_portalPillarMeshId);
+        m_portalPillarMeshId = -1;
+    }
+    if (m_portalFlagMeshId >= 0)
+    {
+        m_render.RemoveMeshMixSkinAnim(m_portalFlagMeshId);
+        m_portalFlagMeshId = -1;
+    }
+    m_portalPillarShown = false;
+    m_portalFlagShown = false;
+    m_portalPillarFadeElapsedFrames = 0;
+    m_portalClearDelayFrames = 0;
+    m_stageClearInputLocked = false;
+
     // 敵、破壊可能オブジェクト、取得済みスター、ドクロを再配置
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
     m_destructibleManager.ResetForRespawn(m_render);
