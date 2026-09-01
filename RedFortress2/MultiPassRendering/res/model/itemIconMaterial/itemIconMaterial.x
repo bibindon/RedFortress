@@ -1313,7 +1313,7 @@ Frame Root {
         0;
         Material BagOchre {
           0.780000; 0.650000; 0.380000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -1983,7 +1983,7 @@ Frame Root {
         0;
         Material BagOchre {
           0.820000; 0.700000; 0.450000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -3933,7 +3933,7 @@ Frame Root {
         0;
         Material CordRed {
           0.720000; 0.060000; 0.080000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -4095,7 +4095,7 @@ Frame Root {
         0;
         Material CordRed {
           0.720000; 0.060000; 0.080000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -4257,7 +4257,7 @@ Frame Root {
         0;
         Material CordRed {
           0.720000; 0.060000; 0.080000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -4887,7 +4887,7 @@ Frame Root {
         0;
         Material CordRed {
           0.720000; 0.060000; 0.080000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -5017,7 +5017,7 @@ Frame Root {
         0;
         Material FoldShadow {
           0.450000; 0.350000; 0.180000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -5147,7 +5147,7 @@ Frame Root {
         0;
         Material FoldShadow {
           0.450000; 0.350000; 0.180000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
@@ -5277,7 +5277,7 @@ Frame Root {
         0;
         Material FoldShadow {
           0.450000; 0.350000; 0.180000; 1.000000;;
-          16.000000;
+          500.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
           TextureFilename {"itemIconMaterial_burlap_plain.png";}
