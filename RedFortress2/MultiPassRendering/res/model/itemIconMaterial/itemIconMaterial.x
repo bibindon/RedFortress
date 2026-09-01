@@ -1316,7 +1316,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -1986,7 +1986,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -3936,7 +3936,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -4098,7 +4098,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -4260,7 +4260,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -4890,7 +4890,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -5020,7 +5020,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -5150,7 +5150,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
@@ -5280,7 +5280,7 @@ Frame Root {
           16.000000;
           0.080000; 0.070000; 0.050000;;
           0.000000; 0.000000; 0.000000;;
-          TextureFilename {"itemIconMaterial.png";}
+          TextureFilename {"itemIconMaterial_burlap_plain.png";}
         }
       }
     }
