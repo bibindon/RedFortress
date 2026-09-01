@@ -75,7 +75,7 @@ private:
     AttackPhase m_attackPhase = AttackPhase::None;
     int m_phaseFrames = 0;
     int m_attackCooldownFrames = 0;
-    int m_nextAttackIndex = 0;
+    int m_nextAttackIndex = 5;
     bool m_attackHitApplied = false;
     bool m_chargeCollided = false;
     int m_attacksUntilRetreat = 2;

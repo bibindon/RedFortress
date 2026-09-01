@@ -55,7 +55,7 @@ namespace
     const int kBurrowEmergeFrames = 42;
     const float kBurrowDepth = 4.0f;
     const float kBurrowPitch = -D3DX_PI * 0.5f;
-    const float kBurrowEmergeMaxVerticalDistance = 2.0f;
+    const float kBurrowEmergeMaxVerticalDistance = 1.4f;
     const int kBurrowEmergeDamage = 26;
 
     const int kRetreatDashWindupFrames = 10;

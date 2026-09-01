@@ -1,7 +1,7 @@
 ﻿MeshType,Mirror
 Wave,1
 WaveIntensity,0.02
-WaveSpeed,0.35
+WaveSpeed,0.12
 WaveDensity,3.0
 Fresnel,1
 FresnelIntensity,0.35
