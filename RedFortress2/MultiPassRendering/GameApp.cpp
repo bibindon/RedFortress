@@ -1079,7 +1079,9 @@ void GameApp::Run()
             // ステージセレクト画面以外では、攻略済みかどうかにかかわらず
             // 「ステージセレクトに戻る」を常時有効にする。
             const bool returnToStageSelectEnabled = !IsCurrentStageSelect();
-            m_pauseMenu.Open(IsCurrentStageSelect(),
+            const bool saveEnabled = IsCurrentStageSelect() ||
+                IsBaseId(m_stageManager.GetCurrentStage().id);
+            m_pauseMenu.Open(saveEnabled,
                              returnToStageSelectEnabled,
                              true,
                              HasUnsavedChanges());
@@ -1389,7 +1391,8 @@ void GameApp::Run()
                 }
                 if (m_pauseMenu.ConsumeSaveRequested())
                 {
-                    if (IsCurrentStageSelect())
+                    if (IsCurrentStageSelect() ||
+                        IsBaseId(m_stageManager.GetCurrentStage().id))
                     {
                         if (m_hasSelectedStagePortal)
                         {
