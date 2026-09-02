@@ -563,12 +563,12 @@ def add_workshop(prototypes, wood, dark_wood, cloth, metal):
     chisel.rotation_euler = (math.radians(90.0), 0.0, math.radians(15.0))
     objects.append(chisel)
 
-    # 樽Aはデッキ上に接地、樽Bは樽Aの上に積み直す（旧配置は樽A・樽Bとも宙に浮いていた）。
+    # 樽A・樽Bをデッキ上へ並べ、どちらも底面を接地させる。
     # Barrel.blend のローカルzは -0.0096〜2.8331（原点=底面）。
     #   樽A: scale 0.34 → 高さ0.963。底=0.37(デッキ面) に置くと location z=0.373、頂=1.336
-    #   樽B: scale 0.26、rotX 5度で底面最低点がlocationより約0.031下 → location z=1.367
+    #   樽B: scale 0.26、rotX 5度で底面最低点がlocationより約0.031下 → location z=0.401
     objects.extend(add_asset(prototypes, "Barrel.blend", "WorkshopBarrelA", (-9.0, -18.9, 0.373), 0.34, 10.0))
-    barrel_b_objects = add_asset(prototypes, "Barrel.blend", "WorkshopBarrelB", (-8.5, -18.7, 1.367), 0.26, -15.0)
+    barrel_b_objects = add_asset(prototypes, "Barrel.blend", "WorkshopBarrelB", (-8.5, -18.7, 0.401), 0.26, -15.0)
     for barrel_object in barrel_b_objects:
         barrel_object.rotation_euler[0] = math.radians(5.0)
     objects.extend(barrel_b_objects)
