@@ -9,31 +9,14 @@ MODEL_PATH = MODEL_DIRECTORY / "itemIconMaterial.x"
 BLEND_PATH = MODEL_DIRECTORY / "itemIconMaterial.blend"
 
 
-def import_model_if_needed():
-    mesh_objects = [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
-    if mesh_objects:
-        return
+def load_blend_source():
+    current_blend_path = Path(bpy.data.filepath).resolve()
+    if current_blend_path != BLEND_PATH.resolve():
+        bpy.ops.wm.open_mainfile(filepath=str(BLEND_PATH))
 
-    result = bpy.ops.import_scene.directx_x(
-        filepath=str(MODEL_PATH),
-        use_apply_transform=True,
-        global_scale=1.0,
-        axis_forward="Z",
-        axis_up="Y",
-        import_normals=False,
-        import_uvs=True,
-        import_materials=True,
-        import_textures=True,
-        split_submeshes=True,
-        triangulate_quads=False,
-        import_armature=False,
-        import_weights=False,
-        import_animation=False,
-        weld_duplicate_verts=False,
-        use_import_collection=False,
-    )
-    if "FINISHED" not in result:
-        raise RuntimeError("itemIconMaterial.x のインポートに失敗しました。")
+    mesh_objects = [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
+    if not mesh_objects:
+        raise RuntimeError("itemIconMaterial.blend にメッシュがありません。")
 
 
 def recalculate_normals_outside():
@@ -77,7 +60,8 @@ def export_model():
         raise RuntimeError("itemIconMaterial.x のエクスポートに失敗しました。")
 
 
-import_model_if_needed()
+load_blend_source()
 recalculate_normals_outside()
+bpy.context.preferences.filepaths.save_version = 0
 bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))
 export_model()

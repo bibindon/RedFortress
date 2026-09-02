@@ -121,6 +121,11 @@ protected:
     virtual bool UpdateSpecialAttack(NSRender::Render& render,
                                      const D3DXVECTOR3& playerPos,
                                      bool playerInvincible);
+    virtual void UpdateChaseLocomotion(const D3DXVECTOR3& targetPosition,
+                                       const D3DXVECTOR3& moveDirection,
+                                       const D3DXVECTOR3& sideDirection,
+                                       float speedMultiplier,
+                                       float distance);
     virtual float GetMeshVerticalOffset() const { return m_meshVerticalOffset; }
     // モデル原点から見た見た目の中心を、回転に追従させて補正する。
     virtual D3DXVECTOR3 GetMeshPositionOffset() const
@@ -144,6 +149,8 @@ protected:
                        const D3DXVECTOR3& sourcePosition,
                        int knockbackFrames,
                        int slowFrames);
+    float NextRandom01();
+    int NextRandomInt(int minValueInclusive, int maxValueInclusive);
 
 private:
     void StartIdleBehavior();
@@ -164,9 +171,6 @@ private:
     void UpdateFacing(const D3DXVECTOR3& targetPos);
     bool MoveWithCollision(const D3DXVECTOR3& velocity, D3DXVECTOR3* outHitNormal = nullptr);
     bool IsPlayerInView(const D3DXVECTOR3& playerPos) const;
-    float NextRandom01();
-    int NextRandomInt(int minValueInclusive, int maxValueInclusive);
-
     D3DXVECTOR3 m_position;
     D3DXVECTOR3 m_homePosition;
     D3DXVECTOR3 m_lastKnownPlayerPosition;

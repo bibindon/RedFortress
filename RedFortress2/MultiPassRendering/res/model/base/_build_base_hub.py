@@ -10,6 +10,8 @@ WORLD1_GROUND_TEXTURE_PATH = BASE_DIR.parent / "ground" / "tex" / "world1.png"
 WORLD1_GROUND_TEXTURE_FILENAME = "../ground/tex/world1.png"
 WOOD_TEXTURE_PATH = BASE_DIR.parent / "wood.png"
 WOOD_TEXTURE_FILENAME = "../wood.png"
+BARREL_WOOD_TEXTURE_PATH = BASE_DIR / "tex" / "fine_grained_wood_col_1k.jpg"
+BARREL_WOOD_TEXTURE_FILENAME = "tex/fine_grained_wood_col_1k.jpg"
 GROUND_BLEND_PATH = BASE_DIR / "base_ground.blend"
 GROUND_X_PATH = BASE_DIR / "base_ground.x"
 DECOR_BLEND_PATH = BASE_DIR / "base_decor.blend"
@@ -92,6 +94,41 @@ def ensure_cube_uvs(obj, tile_size):
                 u = vertex.x / tile_size
                 v = vertex.z / tile_size
             uv_layer.data[loop_index].uv = (u, v)
+
+
+def ensure_barrel_uvs(objects):
+    # 樽の側面は円柱投影、天面と底面は平面投影にする。
+    # 木目は高さ方向へ流し、周方向は2回繰り返して引き伸ばしを抑える。
+    for obj in objects:
+        mesh = obj.data
+        if len(mesh.uv_layers) == 0:
+            mesh.uv_layers.new(name="UVMap")
+        uv_layer = mesh.uv_layers.active
+        for polygon in mesh.polygons:
+            if abs(polygon.normal.z) > 0.65:
+                for loop_index in polygon.loop_indices:
+                    vertex_index = mesh.loops[loop_index].vertex_index
+                    vertex = mesh.vertices[vertex_index].co
+                    u = (vertex.x / 2.0) + 0.5
+                    v = (vertex.y / 2.0) + 0.5
+                    uv_layer.data[loop_index].uv = (u, v)
+                continue
+
+            side_coordinates = []
+            for loop_index in polygon.loop_indices:
+                vertex_index = mesh.loops[loop_index].vertex_index
+                vertex = mesh.vertices[vertex_index].co
+                u = (math.atan2(vertex.y, vertex.x) / (2.0 * math.pi)) + 0.5
+                v = vertex.z / 2.833135
+                side_coordinates.append((loop_index, u, v))
+
+            minimum_u = min(coordinate[1] for coordinate in side_coordinates)
+            maximum_u = max(coordinate[1] for coordinate in side_coordinates)
+            crosses_seam = maximum_u - minimum_u > 0.5
+            for loop_index, u, v in side_coordinates:
+                if crosses_seam and u < 0.5:
+                    u += 1.0
+                uv_layer.data[loop_index].uv = (u * 2.0, v)
 
 
 def create_textured_material(name, color, texture_path, texture_filename):
@@ -288,10 +325,10 @@ def prepare_imported_materials(objects, file_name):
 
     rpg_colors = {
         "Barrel.blend": {
-            "DarkWood": (0.12, 0.035, 0.01, 1.0),
+            "DarkWood": (0.55, 0.42, 0.32, 1.0),
             "Metal": (0.12, 0.15, 0.17, 1.0),
-            "Wood": (0.30, 0.09, 0.018, 1.0),
-            "*": (0.42, 0.14, 0.03, 1.0),
+            "Wood": (0.90, 0.74, 0.58, 1.0),
+            "*": (0.80, 0.64, 0.48, 1.0),
         },
         "Book.blend": {"*": (0.42, 0.045, 0.025, 1.0)},
         "Gems.blend": (
@@ -315,6 +352,8 @@ def prepare_imported_materials(objects, file_name):
     ordered_materials = sorted(materials, key=lambda item: item.name)
     color_overrides = rpg_colors.get(file_name)
     replacement_materials = {}
+    if file_name == "Barrel.blend":
+        ensure_barrel_uvs(objects)
     for material_index, material in enumerate(ordered_materials):
         base_color = get_principled_base_color(material)
         if color_overrides is not None:
@@ -328,11 +367,21 @@ def prepare_imported_materials(objects, file_name):
         if base_color is None:
             base_color = (0.35, 0.35, 0.35, 1.0)
         safe_material_name = material.name.replace(".", "_")
-        replacement_materials[material] = create_material(
-            "HubProp_" + Path(file_name).stem + "_" + safe_material_name,
-            base_color,
-            0.72,
-        )
+        replacement_name = "HubProp_" + Path(file_name).stem + "_" + safe_material_name
+        source_material_name = material.name.split(".")[0]
+        if file_name == "Barrel.blend" and source_material_name != "Metal":
+            replacement_materials[material] = create_textured_material(
+                replacement_name,
+                base_color,
+                BARREL_WOOD_TEXTURE_PATH,
+                BARREL_WOOD_TEXTURE_FILENAME,
+            )
+        else:
+            replacement_materials[material] = create_material(
+                replacement_name,
+                base_color,
+                0.72,
+            )
 
     for source_object in objects:
         if source_object.data is None:

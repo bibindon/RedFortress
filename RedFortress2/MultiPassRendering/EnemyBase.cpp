@@ -836,8 +836,6 @@ void EnemyBase::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool pla
         moveDir = forwardDir;
     }
 
-    UpdateFacing(m_position + moveDir);
-
     float speedMultiplier = 1.0f;
     if (distance > 3.0f)
     {
@@ -852,13 +850,27 @@ void EnemyBase::UpdateChaseBehavior(const D3DXVECTOR3& playerPos, const bool pla
         speedMultiplier = 0.32f;
     }
 
+    UpdateChaseLocomotion(moveTarget, moveDir, sideDir, speedMultiplier, distance);
+}
+
+void EnemyBase::UpdateChaseLocomotion(const D3DXVECTOR3& targetPosition,
+                                      const D3DXVECTOR3& moveDirection,
+                                      const D3DXVECTOR3& sideDirection,
+                                      const float speedMultiplier,
+                                      const float distance)
+{
+    (void)targetPosition;
+    (void)sideDirection;
+    (void)distance;
+
+    UpdateFacing(m_position + moveDirection);
     if (m_movementMode == MovementMode::Frog)
     {
-        UpdateFrogMovement(moveDir, speedMultiplier);
+        UpdateFrogMovement(moveDirection, speedMultiplier);
     }
     else
     {
-        MoveWithCollision(moveDir * (m_moveSpeed * speedMultiplier));
+        MoveWithCollision(moveDirection * (m_moveSpeed * speedMultiplier));
     }
 }
 
