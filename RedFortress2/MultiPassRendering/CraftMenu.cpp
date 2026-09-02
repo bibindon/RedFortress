@@ -17,14 +17,14 @@ const std::wstring kPanelBackgroundPath = L"res\\2D_Image\\item_list_bg.png";
 const std::wstring kRowHighlightPath = L"res\\2D_Image\\solid_white.png";
 const std::wstring kIconDir = L"res\\2D_Image\\";
 const std::wstring kItemIllustrationDir = L"res\\2D_Image\\item_illustrations\\";
-const int kRightColumnX = 830;
-const int kRightColumnWidth = 300;
+const int kRightColumnX = 950;
+const int kRightColumnWidth = 340;
 const int kPanelY = 195;
 const int kPanelHeight = 560;
-const int kListPanelX = 155;
+const int kListPanelX = 275;
 const int kListPanelWidth = 625;
-const int kDetailPanelX = 800;
-const int kDetailPanelWidth = 340;
+const int kDetailPanelX = 920;
+const int kDetailPanelWidth = 400;
 const int kHeadingY = 215;
 const int kResultImageSize = 150;
 const int kResultImageX = kRightColumnX + (kRightColumnWidth - kResultImageSize) / 2;
@@ -44,11 +44,12 @@ const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const std::size_t kVisibleRecipeCount = 11;
 const int kRecipeStartY = 280;
 const int kRecipeLineHeight = 42;
-const int kRecipeListX = 185;
+const int kRecipeListX = 305;
 const int kRecipeListWidth = 575;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
 const UINT kSelectedTextColor = D3DCOLOR_RGBA(255, 220, 110, 255);
-const UINT kDisabledTextColor = D3DCOLOR_RGBA(255, 120, 200, 255);
+const UINT kCraftedTextColor = D3DCOLOR_RGBA(195, 195, 205, 245);
+const UINT kLockedTextColor = D3DCOLOR_RGBA(180, 190, 255, 245);
 const UINT kEnoughTextColor = D3DCOLOR_RGBA(160, 245, 175, 245);
 const UINT kMissingTextColor = D3DCOLOR_RGBA(245, 145, 145, 245);
 const int kRowHighlightOffsetX = 18;
@@ -342,12 +343,22 @@ void CraftMenu::Render()
     {
         const Recipe& recipe = m_recipes.at(i);
         const bool alreadyCrafted = IsRecipeAlreadyCrafted(recipe);
+        const bool unlocked = IsRecipeUnlocked(recipe);
+        const bool canCraft = CanCraft(recipe);
         UINT color = kTextColor;
-        if (alreadyCrafted || !IsRecipeUnlocked(recipe) || !CanCraft(recipe))
+        if (alreadyCrafted)
         {
-            color = kDisabledTextColor;
+            color = kCraftedTextColor;
         }
-        if (i == m_selectedIndex && !alreadyCrafted && IsRecipeUnlocked(recipe) && CanCraft(recipe))
+        else if (!unlocked)
+        {
+            color = kLockedTextColor;
+        }
+        else if (!canCraft)
+        {
+            color = kMissingTextColor;
+        }
+        if (i == m_selectedIndex && canCraft)
         {
             color = kSelectedTextColor;
         }
@@ -357,6 +368,14 @@ void CraftMenu::Render()
         if (alreadyCrafted)
         {
             text += L"  作成済み";
+        }
+        else if (!unlocked)
+        {
+            text += L"  未解禁";
+        }
+        else if (!canCraft)
+        {
+            text += L"  素材不足";
         }
         const int rowY = kRecipeStartY + row * kRecipeLineHeight;
         if (i == m_selectedIndex)
@@ -407,36 +426,36 @@ void CraftMenu::Render()
         const std::wstring text = GetName(material.first) + L"  " +
                                   std::to_wstring(ownedCount) + L" / " +
                                   std::to_wstring(material.second);
-        m_render->DrawTextEx(m_textFontId,
+        m_render->DrawTextEx(m_descriptionFontId,
                              text,
                              kRightColumnX,
                              kMaterialStartY + static_cast<int>(i) * kMaterialLineHeight,
                              color);
     }
 
-    std::wstring availability = L"";
+    std::wstring availability;
+    UINT availabilityColor = kEnoughTextColor;
     if (IsRecipeAlreadyCrafted(selectedRecipe))
     {
         availability = L"作成済み";
+        availabilityColor = kCraftedTextColor;
     }
     else if (!IsRecipeUnlocked(selectedRecipe))
     {
         const int requiredWorld = GetRecipeRequiredWorld(selectedRecipe);
         availability = L"ワールド" + std::to_wstring(requiredWorld) + L"からクラフト可能";
+        availabilityColor = kLockedTextColor;
     }
     else if (CanCraft(selectedRecipe))
     {
         availability = L"作成できます";
     }
-    if (!availability.empty())
+    else
     {
-        UINT availabilityColor = kEnoughTextColor;
-        if (IsRecipeAlreadyCrafted(selectedRecipe) || !IsRecipeUnlocked(selectedRecipe) || !CanCraft(selectedRecipe))
-        {
-            availabilityColor = kMissingTextColor;
-        }
-        m_render->DrawTextEx(m_textFontId, availability, kRightColumnX, 665, availabilityColor);
+        availability = L"素材不足";
+        availabilityColor = kMissingTextColor;
     }
+    m_render->DrawTextEx(m_descriptionFontId, availability, kRightColumnX, 665, availabilityColor);
     if (!m_statusMessage.empty())
     {
         m_render->DrawTextEx(m_descriptionFontId, m_statusMessage, kRightColumnX, 710, m_statusColor);

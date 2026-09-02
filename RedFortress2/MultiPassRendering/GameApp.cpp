@@ -5050,6 +5050,26 @@ void GameApp::ValidateStageSelectNavigation() const
     }
 }
 
+bool GameApp::IsAdjacentStageSelectPortal(const std::wstring& portalId) const
+{
+    if (!m_hasSelectedStagePortal || portalId.empty())
+    {
+        return false;
+    }
+
+    const std::unordered_map<std::wstring, StageSelectNavigationEntry>::const_iterator navigation =
+        m_stageSelectNavigation.find(m_selectedStagePortalId);
+    if (navigation == m_stageSelectNavigation.end())
+    {
+        throw std::runtime_error("Selected stage portal is missing from the navigation map.");
+    }
+
+    return navigation->second.leftPortalId == portalId ||
+        navigation->second.rightPortalId == portalId ||
+        navigation->second.upPortalId == portalId ||
+        navigation->second.downPortalId == portalId;
+}
+
 void GameApp::SyncStageSelectPlayerToPortal(const bool immediate)
 {
     if (!IsCurrentStageSelect() || !m_hasSelectedStagePortal)
@@ -5271,7 +5291,8 @@ void GameApp::UpdateStageSelectCursorByInput()
         for (const InteractionManager::Interactable& interactable : interactables)
         {
             if (interactable.type != L"StagePortal" ||
-                !IsStagePortalSelectable(interactable.id))
+                !IsStagePortalSelectable(interactable.id) ||
+                !IsAdjacentStageSelectPortal(interactable.id))
             {
                 continue;
             }

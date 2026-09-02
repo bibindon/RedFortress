@@ -824,6 +824,10 @@ def create_collision():
 
     objects.append(add_cube("WorkshopDeckCollision", (-7.0, -20.0, 0.28), (8.0, 6.0, 0.18), collision_material))
     objects.append(add_cube("WorkshopBenchCollision", (-7.0, -19.5, 0.82), (3.4, 1.1, 1.35), collision_material))
+    # クラフト場所の屋根を歩行面として扱う。表示モデルと同じ寸法・傾きにする。
+    roof = add_cube("WorkshopCanopyCollision", (-7.0, -20.0, 2.72), (5.1, 3.4, 0.12), collision_material)
+    roof.rotation_euler[1] = math.radians(-6.0)
+    objects.append(roof)
     # 2026-08 生活感改修: 薪置きと工具箱は踏み台になるので衝突を入れる。
     objects.append(add_cube("WorkshopLogsCollision", (-10.05, -20.42, deck_top_collision + 0.14), (0.55, 0.5, 0.6), collision_material))
     objects.append(add_cube("WorkshopToolboxCollision", (-6.25, -18.75, deck_top_collision + 0.24), (0.58, 0.38, 0.4), collision_material))

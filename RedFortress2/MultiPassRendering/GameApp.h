@@ -240,6 +240,7 @@ private:
     void InitializeStageSelectCursor();
     void LoadStageSelectNavigation(const std::wstring& csvPath);
     void ValidateStageSelectNavigation() const;
+    bool IsAdjacentStageSelectPortal(const std::wstring& portalId) const;
     void SyncStageSelectPlayerToPortal(bool immediate);
     void MoveStageSelectCursorByDirection(float directionX, float directionY);
     void UpdateStageSelectCursorByInput();
