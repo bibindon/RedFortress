@@ -331,7 +331,7 @@ def write_hub_csvs(hub):
     write_csv(output_dir / "Collectibles.csv", ("CollectibleID", "Type", "DataID", "PosX", "PosY", "PosZ", "Scale"), ())
     write_csv(output_dir / "Interactables.csv", ("InteractionID", "Type", "PosX", "PosY", "PosZ", "PromptDistance"), (
         (folder + "-crafting-station-01", "CraftingStation", -8, 1, -18, 3.2),
-        (folder + "-return-portal", "ReturnPortal", 0, 1, 26, 1.8),
+        (folder + "-return-portal", "ReturnPortal", 0, 1, 26, 0.9),
     ))
     write_csv(output_dir / "Stars.csv", ("PosX", "PosY", "PosZ"), ())
     write_csv(output_dir / "SpeedUps.csv", ("PosX", "PosY", "PosZ"), ())
