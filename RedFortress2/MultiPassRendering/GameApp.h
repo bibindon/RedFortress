@@ -127,7 +127,6 @@ private:
     void BeginStageClearVisual();
     void UpdateStageClearVisual();
     void RestoreStageClearVisual();
-    void HideStageClearReplayEquipment();
     bool StartNextStage();
     std::wstring GetStageStoryScriptPath(const std::wstring& stageId,
                                          const std::wstring& timing) const;
@@ -185,7 +184,6 @@ private:
     void RefreshTitleCommands();
     void DrawTitleScreen();
     void DrawStageTitle();
-    void DrawStageClear();
     void DrawEndingFin();
     void BuildTitleMainCommands();
     void BuildTitleConfirmCommands();
@@ -295,7 +293,6 @@ private:
     enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
     enum class TitleLanguage { English, Japanese };
     enum class QteVisualPhase { None, Active, Restoring };
-    enum class StageClearReplayPhase { None, WaitingToJump, Ascending, ApexWhite, Vanished };
     enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, ReturnToTitle, WaitForStageLoad, WaitForTitleLoad, FadeIn };
 
     void SetPlayerAnimationState(PlayerAnimState nextState, float animationSpeed);
@@ -481,10 +478,6 @@ private:
     bool m_stageClearProcessed = false;
     bool m_stageClearWasFirstClear = false;
     int m_stageClearFrame = 0;
-    float m_stageClearVisualOffsetY = 0.0f;
-    StageClearReplayPhase m_stageClearReplayPhase = StageClearReplayPhase::None;
-    int m_stageClearReplayPhaseFrame = 0;
-    bool m_stageClearReplayPlayerHidden = false;
     D3DXVECTOR3 m_stageClearCameraStartPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageClearCameraStartTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageClearCameraEndPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -501,8 +494,6 @@ private:
     int m_commandFontId = -1;
     int m_titleFontId = -1;
     int m_stageTitleFontId = -1;
-    int m_stageClearFontId = -1;
-    int m_stageClearHintFontId = -1;
     int m_stageSelectFontId = -1;
     int m_stageSelectStartButtonFontId = -1;
     int m_stageSelectHintFontId = -1;
@@ -534,10 +525,9 @@ D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     // Portal (stage clear altar)
     int m_portalStepsMeshId = -1;
     int m_portalPillarMeshId = -1;
-    int m_portalFlagMeshId = -1;
     int m_portalCollisionId = -1;
     bool m_portalPillarShown = false;
-    bool m_portalFlagShown = false;
+    bool m_portalActivated = false;
     int m_portalPillarFadeElapsedFrames = 0;
     int m_portalClearDelayFrames = 0;
     bool m_stageClearInputLocked = false;

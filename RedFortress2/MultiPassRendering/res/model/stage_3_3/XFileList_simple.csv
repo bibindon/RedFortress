@@ -9,8 +9,8 @@
 11012,../attack_block/attack_floor.x,-31,0.6,-24,0,0,0,2,meshmix2
 11013,../attack_block/attack_floor.x,-35,0.6,-24,0,0,0,2,meshmix2
 11020,../collision_moving_platform/collision_moving_platform.x,-43,0.4,0,0,0,0,1,meshmix2
-11021,../collision_moving_platform/collision_moving_platform.x,-48,2.0,12,0,0,0,1,meshmix2
-11022,../collision_moving_platform/collision_moving_platform.x,-48,2.0,-24,0,0,0,1,meshmix2
+11021,../static_platform/static_platform_1x1.x,-48,2.0,12,0,0,0,1,meshmix2
+11022,../static_platform/static_platform_1x1.x,-48,2.0,-24,0,0,0,1,meshmix2
 11030,../collision_wall/collision_wall_tall.x,-32,1.5,52,0,90,0,1,meshmix2
 11031,../collision_wall/collision_wall_tall.x,-28,1.5,52,0,90,0,1,meshmix2
 11032,../collision_wall/collision_wall_tall.x,-32,1.5,-52,0,90,0,1,meshmix2
