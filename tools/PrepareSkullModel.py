@@ -13,6 +13,7 @@ MODEL_SCALE = 0.5
 JAW_EPSILON = 0.025
 COLLISION_RADIUS = 0.55
 COLLISION_HEIGHT = 0.76
+SKULL_X_POWER = 500.0
 
 
 def normalize_x_file(path):
@@ -154,6 +155,9 @@ def main():
 
     mesh_object.name = "Skull"
     mesh_object.data.name = "Skull"
+    for material in mesh_object.data.materials:
+        if material is not None:
+            material["_x_power"] = SKULL_X_POWER
     bake_scale_and_jaw_origin(mesh_object)
 
     bpy.ops.object.select_all(action="DESELECT")
