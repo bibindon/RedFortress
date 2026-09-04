@@ -263,8 +263,14 @@
 |---|---|---|---|---|---|
 | レバー2 | `lever_box.x` | 1枚 `lever_box_door.x` | レバー1つ | `lever_box_floor.x`（10x10x1.0） | レバーを攻撃するたびに扉が上昇⇔下降（トグル） |
 | レバー3 | `lever_box3.x` | 2枚 `lever_box3_door.x` | レバー3つ（各扉の前に1つずつ＋箱内に1つ。すべて中心線から横へ1.5m） | `lever_box3_floor.x`（5x10x1.0） | どのレバーでも両扉が同時に上昇⇔下降（共有トグル）。箱内から再開放可能。**門** |
-| 感圧板2 | `lever_box.x` | 1枚 `lever_box_door.x` | 感圧板2つ以上（扉の外側＋箱内） | `lever_box_floor14.x`（10x14x1.0） | どの感圧板でも同じ扉が上昇し、箱内から脱出可能（共有WallID・OR） |
-| 感圧板3 | `lever_box3.x` | 2枚 `lever_box3_door.x` | 感圧板3つ以上（各扉の外側に1つずつ＋箱内中央に1つ） | `lever_box3_floor14.x`（5x14x1.0） | どの感圧板でも両扉が同時に開き、箱内から脱出可能（共有WallID・OR）。**門** |
+| 感圧板2 | `lever_box.x` | 1枚 `lever_box_door_grate.x`（**描画のみ柵扉**。物理は`lever_box_door.x`の实心のまま） | 感圧板2つ以上（扉の外側＋箱内） | `lever_box_floor14.x`（10x14x1.0） | どの感圧板でも同じ扉が上昇し、箱内から脱出可能（共有WallID・OR）。柵越しに箱内が見える |
+| 感圧板3 | `lever_box3.x` | 2枚 `lever_box3_door_grate.x`（**描画のみ柵扉**。物理は`lever_box3_door.x`の实心のまま） | 感圧板3つ以上（各扉の外側に1つずつ＋箱内中央に1つ） | `lever_box3_floor14.x`（5x14x1.0） | どの感圧板でも両扉が同時に開き、箱内から脱出可能（共有WallID・OR）。**門**。柵越しに箱内が見える |
+
+#### 補足（2026-09 デザイン改訂）
+- レバー2/3・感圧板2/3の箱・扉・床・感圧板モデルは要塞風（石＋錬鉄＋木＋金飾り）に刷新した。生成スクリプト: `tools/CreateLeverBoxModels.py`・`tools/CreatePressurePlateModels.py`（`lever_box_set.blend`・`pressure_plate.blend`がソース）。
+- 感圧板モデル（黒/緑）は同一形状でコーナーランプの発光だけ差し替える。判定領域（PlatePos中心にXZ±1.0m）は不変で、周囲の縁石は装飾。
+- **レバー2/3の箱は内側が見えない密閉石箱、感圧板2/3の扉は縦柵のグレーティング扉（`*_grate.x`）とし、柵越しに内側が見える。** 柵扉は描画専用で、`XFileListPhysics.csv`は従来どおり实心扉を参照する（衝突は単純なまま不変）。
+- 衝突は`D3DXIntersect`が同じ`.x`メッシュを用いるため、全装飾は元のバウンディングボックス内に収める（リリーフは内壁面を数cm引っ込め、意匠を元表面まで盛り上げる方式）。生成時に`verify_envelope()`で原寸エンベロープ超過を検出する。
 
   * ボタン
     * `Type=Button`または`Type=TimedButton`を指定する。いずれかのボタンを攻撃するとステージ内の全ボタンがONになり、10秒後にOFFになる。

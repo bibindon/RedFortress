@@ -10,7 +10,7 @@ namespace
 {
 const float kPromptExitMargin = 0.3f;
 const UINT kPromptColor = D3DCOLOR_RGBA(255, 255, 255, 245);
-const std::wstring kPromptText = L"Fキー or ○ボタン";
+const std::wstring kPromptText = L"Fキー or Aボタン";
 }
 
 void InteractionManager::Initialize(NSRender::Render& render)

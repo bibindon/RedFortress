@@ -89,9 +89,10 @@ def main():
             errors.append("plate wall %s physics Move != y" % wid)
 
     # 感圧板3は各扉の外側2枚と箱内中央1枚を同じ扉へ接続する。
+    # 箱内プレートは内蔵床(箱PosY+0.5)上面+1cm = 箱PosY+0.51。
     expected_plate_positions = {
         (-10.0, 0.71, -14.0),
-        (-10.0, 0.71, -18.0),
+        (-10.0, 1.21, -18.0),
         (-10.0, 0.71, -22.0),
     }
     actual_plate_positions = {

@@ -29,7 +29,7 @@
 9104,../attack_trigger/lever_box3_door.x,10,0.7,6,0,0,0,0.98,normal,
 9112,../attack_trigger/lever_box3_floor14.x,-10,-0.3,-18,0,0,0,1,normal,
 9113,../attack_trigger/lever_box3.x,-10,0.7,-18,0,0,0,1,normal,
-9114,../attack_trigger/lever_box3_door.x,-10,0.7,-18,0,0,0,0.98,normal,
+9114,../attack_trigger/lever_box3_door_grate.x,-10,0.7,-18,0,0,0,0.98,normal,
 3801,../tree2/lemonTree.x,-10,0,8,0,0,0,1,normal,
 8001,../fence.x,-11,0.5,-30,0,0,0,1,normal,
 8002,../fence.x,-11,0.5,30,0,0,0,1,normal,
