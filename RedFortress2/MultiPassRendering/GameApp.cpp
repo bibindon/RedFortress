@@ -5705,7 +5705,7 @@ bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
         return m_player.AddLife();
     }
 
-    if (itemId == kPotatoChipsItemId || itemId == kChuageJuiceItemId)
+    if (itemId == kPotatoChipsItemId)
     {
         if (m_player.GetHp() >= m_player.GetMaxHp())
         {
@@ -5718,6 +5718,35 @@ bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
         }
 
         HealPlayerHp(m_player.GetMaxHp());
+        return true;
+    }
+
+    if (itemId == kChuageJuiceItemId)
+    {
+        const bool busterUnlocked = m_inventoryManager.GetWeaponCount(kBusterWeaponId) > 0;
+        const bool bombUnlocked = m_inventoryManager.GetWeaponCount(kBombWeaponId) > 0;
+        bool canRefill = false;
+        if (busterUnlocked && m_busterAmmo < kBusterAmmoMax)
+        {
+            canRefill = true;
+        }
+        if (bombUnlocked && m_bombAmmo < kBombAmmoMax)
+        {
+            canRefill = true;
+        }
+        if (!canRefill)
+        {
+            return false;
+        }
+
+        if (!m_inventoryManager.RemoveItem(itemId, 1))
+        {
+            return false;
+        }
+
+        RefillWeaponAmmo();
+        m_itemPickupMessage = L"全弾薬を補充した";
+        m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
         return true;
     }
 
@@ -5734,28 +5763,21 @@ bool GameApp::TryUseRecoveryItemFromKey()
     const int chipsCount = m_inventoryManager.GetItemCount(kPotatoChipsItemId);
     const int juiceCount = m_inventoryManager.GetItemCount(kChuageJuiceItemId);
 
-    if (chipsCount > 0)
+    if (chipsCount > 0 && HandleInventoryItemUse(kPotatoChipsItemId))
     {
-        if (!HandleInventoryItemUse(kPotatoChipsItemId))
-        {
-            GameAudio::PlayItemUnavailable();
-            return false;
-        }
-
         m_itemUseCooldownFrames = 60;
         return true;
     }
 
-    if (juiceCount > 0)
+    if (juiceCount > 0 && HandleInventoryItemUse(kChuageJuiceItemId))
     {
-        if (!HandleInventoryItemUse(kChuageJuiceItemId))
-        {
-            GameAudio::PlayItemUnavailable();
-            return false;
-        }
-
         m_itemUseCooldownFrames = 60;
         return true;
+    }
+
+    if (chipsCount > 0 || juiceCount > 0)
+    {
+        GameAudio::PlayItemUnavailable();
     }
 
     return false;
