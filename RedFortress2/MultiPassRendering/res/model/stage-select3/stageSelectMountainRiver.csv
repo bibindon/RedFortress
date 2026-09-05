@@ -1,0 +1,13 @@
+MeshType,Water
+LitByPointLight,0
+Wave,1
+WaveIntensity,0.035
+WaveSpeed,0.45
+WaveDensity,2.5
+Fresnel,0
+FresnelIntensity,0
+WaterReflectionStrength,0
+WaterReflectionTint,0
+Shadow,0
+SSAO,0
+LambertShadow,0
