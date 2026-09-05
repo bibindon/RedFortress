@@ -1,0 +1,36 @@
+2026/09/05 11:22:32 にビルドを開始しました。
+ログの詳細度は次のように設定されています: Normal。
+     1>ノード 1 上のプロジェクト "C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット)。
+     1>ValidateSolutionConfiguration:
+         ソリューション構成 "Debug|x64" をビルドしています。
+     1>プロジェクト "C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\MultiPassRendering.sln" (1) は、ノード 1 上に "C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) をビルドしています (既定のターゲット)。
+     2>プロジェクト "C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "C:\Users\bibindon\source\repos\bibindon\RedFortress\InputDevice\InputDevice\InputDevice.vcxproj" (3) をビルドしています (既定のターゲット)。
+     3>PrepareForBuild:
+         構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+       InitializeBuildStatus:
+         "x64\Debug\InputDevice.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+       ClCompile:
+         すべての出力が最新のものです。
+       Lib:
+         C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\x64\Debug\InputDevice.lib" /NOLOGO /MACHINE:X64 x64\Debug\InputDevice.obj
+         x64\Debug\InputDeviceGamePad.obj
+         x64\Debug\InputDeviceGamePadTestDialog.obj
+         x64\Debug\InputDeviceKeyboard.obj
+         x64\Debug\InputDeviceMouse.obj
+         x64\Debug\InputDeviceShared.obj
+         x64\Debug\InputDeviceUnifiedInput.obj
+         InputDevice.vcxproj -> C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\x64\Debug\InputDevice.lib
+       FinalizeBuildStatus:
+         ファイル "x64\Debug\InputDevice.tlog\unsuccessfulbuild" を削除しています。
+         "x64\Debug\InputDevice.tlog\InputDevice.lastbuildstate" のタッチ タスクを実行しています。
+     3>プロジェクト "C:\Users\bibindon\source\repos\bibindon\RedFortress\InputDevice\InputDevice\InputDevice.vcxproj" (既定のターゲット) のビルドが完了しました。
+     2>プロジェクト "C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (既定のターゲット) のビルドが終了しました -- 失敗。
+     1>プロジェクト "C:\Users\bibindon\source\repos\bibindon\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット) のビルドが終了しました -- 失敗。
+
+ビルドに失敗しました。
+    0 個の警告
+    0 エラー
+
+FileLogger を次の場所に書き込みました: C:\Users\bibindon\source\repos\bibindon\RedFortress\world1-build.log
+
+経過時間 00:00:04.25
