@@ -150,15 +150,15 @@ namespace
     const std::wstring kTitleTextGradientImagePath = L"res\\2D_Image\\title_text_gradient.png";
     const int kTitleBackgroundSourceWidth = 1920;
     const int kTitleBackgroundSourceHeight = 1080;
-    const std::wstring kTitleLicenseMaskPath = L"res\\2D_Image\\menu_mask.png";
-    const std::wstring kTitleLicensePanelPath = L"res\\2D_Image\\item_list_bg.png";
+    const std::wstring kTitleLicenseMaskPath = L"res\\2D_Image\\title_license_mask.png";
+    const std::wstring kTitleLicensePanelPath = L"res\\2D_Image\\title_license_panel.png";
     const std::wstring kTitleLicenseScrollUpPath = L"res\\2D_Image\\item_scroll_up.png";
     const std::wstring kTitleLicenseScrollDownPath = L"res\\2D_Image\\item_scroll_down.png";
     const int kTitleLicenseGaussianSampleSize = 25;
     const ULONGLONG kTitleLicenseGaussianDurationMilliseconds = 500;
-    const int kTitleLicensePanelX = 300;
+    const int kTitleLicensePanelX = 400;
     const int kTitleLicensePanelY = 300;
-    const int kTitleLicensePanelWidth = 1000;
+    const int kTitleLicensePanelWidth = 800;
     const int kTitleLicensePanelHeight = 420;
     const int kTitleLicenseScrollArrowWidth = 48;
     const int kTitleLicenseScrollArrowHeight = 32;
@@ -8672,16 +8672,34 @@ void GameApp::LoadCurrentStageObjects()
 
 void GameApp::DrawTitleScreen()
 {
-    m_render.DrawImageSizedRect(kTitleBackgroundImagePath,
-                                0,
-                                0,
-                                NSRender::Common::BASE_W,
-                                NSRender::Common::BASE_H,
-                                0,
-                                0,
-                                kTitleBackgroundSourceWidth,
-                                kTitleBackgroundSourceHeight,
-                                255);
+    if (m_titleLicenseMode)
+    {
+        // Masked Gauss ポストエフェクトで背景がぼけるように、
+        // 背景画像はポストエフェクトチェーンより前のシーンバッファへ描画する。
+        m_render.DrawImageSizedRectBeforePostEffects(kTitleBackgroundImagePath,
+                                                     0,
+                                                     0,
+                                                     NSRender::Common::BASE_W,
+                                                     NSRender::Common::BASE_H,
+                                                     0,
+                                                     0,
+                                                     kTitleBackgroundSourceWidth,
+                                                     kTitleBackgroundSourceHeight,
+                                                     255);
+    }
+    else
+    {
+        m_render.DrawImageSizedRect(kTitleBackgroundImagePath,
+                                    0,
+                                    0,
+                                    NSRender::Common::BASE_W,
+                                    NSRender::Common::BASE_H,
+                                    0,
+                                    0,
+                                    kTitleBackgroundSourceWidth,
+                                    kTitleBackgroundSourceHeight,
+                                    255);
+    }
     m_render.DrawImageSized(kTitleTextGradientImagePath,
                             0,
                             0,
@@ -8726,8 +8744,7 @@ void GameApp::DrawTitleLicense()
                             kTitleLicensePanelY,
                             kTitleLicensePanelWidth,
                             kTitleLicensePanelHeight,
-                            255);
-    m_render.DrawTextExCenter(m_titleFontId, L"ライセンス", 0, 315, NSRender::Common::BASE_W, 60);
+                                255);
 
     int upArrowTransparency = kTitleLicenseEnabledArrowTransparency;
     if (m_titleLicensePageIndex <= 0)
@@ -8754,20 +8771,16 @@ void GameApp::DrawTitleLicense()
 
     if (m_titleLicensePageIndex == 0)
     {
-        m_render.DrawTextExCenter(m_commandFontId, L"宝鐘マリンV2 公式MMDモデル", 0, 455, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"宝鐘マリンV2 公式MMDモデル", 0, 480, NSRender::Common::BASE_W, 40);
         m_render.DrawTextExCenter(m_commandFontId, L"© 2016 COVER Corp.", 0, 520, NSRender::Common::BASE_W, 40);
-        m_render.DrawTextExCenter(m_commandFontId, L"https://3d.nicovideo.jp/works/td78500", 0, 575, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"https://3d.nicovideo.jp/works/td78500", 0, 560, NSRender::Common::BASE_W, 40);
     }
     else
     {
-        m_render.DrawTextExCenter(m_commandFontId, L"戌神ころね 公式MMDモデル Ver1.0", 0, 455, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"戌神ころね 公式MMDモデル Ver1.0", 0, 480, NSRender::Common::BASE_W, 40);
         m_render.DrawTextExCenter(m_commandFontId, L"©2019 cover corp.", 0, 520, NSRender::Common::BASE_W, 40);
-        m_render.DrawTextExCenter(m_commandFontId, L"https://3d.nicovideo.jp/works/td63650", 0, 575, NSRender::Common::BASE_W, 40);
+        m_render.DrawTextExCenter(m_commandFontId, L"https://3d.nicovideo.jp/works/td63650", 0, 560, NSRender::Common::BASE_W, 40);
     }
-
-    const std::wstring pageText = std::to_wstring(m_titleLicensePageIndex + 1) +
-                                  L" / " + std::to_wstring(kTitleLicenseEntryCount);
-    m_render.DrawTextExCenter(m_commandFontId, pageText, 0, 615, NSRender::Common::BASE_W, 40);
 }
 
 void GameApp::BeginStageIntro()
