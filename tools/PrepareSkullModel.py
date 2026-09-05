@@ -15,9 +15,11 @@ JAW_EPSILON = 0.025
 COLLISION_RADIUS = 0.55
 COLLISION_HEIGHT = 0.76
 SKULL_X_POWER = 500.0
-TEXTURE_SIZE = 512
+TEXTURE_SIZE = 1024
 TEXTURE_FILENAME = "skull_diffuse.png"
 AO_MARGIN = 16
+# Washi paper base color (warm light paper, low contrast).
+WASHI_BASE = np.array([0.886, 0.839, 0.741], dtype=np.float32)
 
 
 def normalize_x_file(path):
@@ -195,18 +197,76 @@ def bake_ao(mesh_object):
 def compose_and_apply_diffuse(mesh_object, ao_pixels, output_directory):
     height, width = ao_pixels.shape[0], ao_pixels.shape[1]
     ao = ao_pixels[:, :, 0]
-    mottle = (
-        0.5 * low_frequency_noise(width, height, 4, 11)
-        + 0.3 * low_frequency_noise(width, height, 8, 23)
-        + 0.2 * low_frequency_noise(width, height, 16, 37)
+    rng = np.random.default_rng(1234)
+    # Full-cover washi: every pixel gets the pattern, including UV
+    # background. There is no pure-black area by design.
+    uneven = (
+        0.6 * low_frequency_noise(width, height, 3, 11)
+        + 0.4 * low_frequency_noise(width, height, 6, 23)
     )
-    light = np.array([0.70, 0.64, 0.50], dtype=np.float32)
-    dark = np.array([0.38, 0.31, 0.21], dtype=np.float32)
-    base = dark[np.newaxis, np.newaxis, :] + (
-        light - dark
-    )[np.newaxis, np.newaxis, :] * mottle[:, :, np.newaxis]
-    shade = 0.35 + 0.65 * ao
-    rgb = base * shade[:, :, np.newaxis]
+    base = WASHI_BASE[np.newaxis, np.newaxis, :] * (
+        0.90 + 0.20 * uneven[:, :, np.newaxis]
+    )
+    # Mid-scale blotches (8-32 px) survive mipmaps and stay visible
+    # at a distance, unlike per-pixel grain.
+    blotch = (
+        0.65 * low_frequency_noise(width, height, 9, 41)
+        + 0.35 * low_frequency_noise(width, height, 18, 57)
+    )
+    base = base + (blotch[:, :, np.newaxis] - 0.5) * 0.14
+    # Coarse grain clumps: low-resolution noise upscaled, plus fine grain.
+    coarse_seed = rng.standard_normal((max(height // 4, 1), max(width // 4, 1), 1))
+    coarse_seed = coarse_seed.astype(np.float32)
+    repeat_y = height // coarse_seed.shape[0] + 1
+    repeat_x = width // coarse_seed.shape[1] + 1
+    coarse_grain = np.tile(coarse_seed, (repeat_y, repeat_x, 1))[
+        0:height, 0:width, :
+    ]
+    base = base + coarse_grain * 0.045
+    fine_grain = rng.standard_normal((height, width, 1)).astype(np.float32)
+    base = base + fine_grain * 0.030
+    # Thick, long paper fibers (2 px wide) plus dark speckles.
+    fiber_layer = np.zeros((height, width, 1), dtype=np.float32)
+    fiber_count = int(width * height / 450)
+    for _ in range(fiber_count):
+        x = int(rng.integers(0, width))
+        y = int(rng.integers(0, height))
+        angle = float(rng.uniform(0.0, np.pi))
+        length = float(rng.uniform(12.0, 42.0) * width / 1024.0)
+        brightness = float(rng.uniform(0.20, 0.42))
+        if rng.random() < 0.5:
+            brightness = -brightness
+        steps = max(int(length), 3)
+        for step in range(steps):
+            px = int(x + np.cos(angle) * step)
+            py = int(y + np.sin(angle) * step)
+            if 0 <= px < width and 0 <= py < height:
+                fiber_layer[py, px, 0] += brightness
+                if px + 1 < width:
+                    fiber_layer[py, px + 1, 0] += brightness * 0.7
+                if py + 1 < height:
+                    fiber_layer[py + 1, px, 0] += brightness * 0.7
+    speckle_count = int(width * height / 420)
+    for _ in range(speckle_count):
+        x = int(rng.integers(0, width))
+        y = int(rng.integers(0, height))
+        radius = int(rng.integers(1, 4))
+        brightness = float(rng.uniform(0.15, 0.35))
+        if rng.random() < 0.6:
+            brightness = -brightness
+        for dy in range(-radius, radius + 1):
+            for dx in range(-radius, radius + 1):
+                if dx * dx + dy * dy <= radius * radius:
+                    px = x + dx
+                    py = y + dy
+                    if 0 <= px < width and 0 <= py < height:
+                        fiber_layer[py, px, 0] += brightness * 0.5
+    base = base + fiber_layer * np.array([0.9, 0.88, 0.82], dtype=np.float32)[
+        np.newaxis, np.newaxis, :
+    ]
+    # Keep AO shading soft so crevices stay readable without a dirty look.
+    shade = 0.60 + 0.40 * ao
+    rgb = np.clip(base * shade[:, :, np.newaxis], 0.0, 1.0)
 
     rgba = np.ones((height, width, 4), dtype=np.float32)
     rgba[:, :, :3] = rgb

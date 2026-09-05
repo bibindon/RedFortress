@@ -102,6 +102,87 @@ def material(name, color, image=None, specular=0.015):
     return mat
 
 
+def painted_image(filename):
+    path = os.path.join(OUTPUT, filename)
+    if not os.path.isfile(path):
+        raise RuntimeError("Missing authored texture: " + path)
+    image = bpy.data.images.load(path, check_existing=True)
+    image.filepath = "//" + filename
+    return image
+
+
+def bake_terrain_material(land):
+    """Bake a Blender terrain shader to the single albedo map used by DirectX 9."""
+    shader_material = bpy.data.materials.new("RF1_TerrainBakeShader")
+    shader_material.use_nodes = True
+    nodes = shader_material.node_tree.nodes
+    links = shader_material.node_tree.links
+    geometry = nodes.new("ShaderNodeNewGeometry")
+    coordinates = nodes.new("ShaderNodeVectorMath")
+    coordinates.operation = "SCALE"
+    coordinates.inputs[3].default_value = 0.22
+    links.new(geometry.outputs["Position"], coordinates.inputs[0])
+    grass = nodes.new("ShaderNodeTexImage")
+    grass.image = painted_image("rf1_grass_bright.png")
+    grass.projection = "BOX"
+    grass.projection_blend = 0.3
+    links.new(coordinates.outputs["Vector"], grass.inputs["Vector"])
+    stone = nodes.new("ShaderNodeTexImage")
+    stone.image = painted_image("rf1_rock_painted.png")
+    stone.projection = "BOX"
+    stone.projection_blend = 0.3
+    links.new(coordinates.outputs["Vector"], stone.inputs["Vector"])
+    sand = nodes.new("ShaderNodeTexImage")
+    sand.image = painted_image("rf1_sand.png")
+    links.new(coordinates.outputs["Vector"], sand.inputs["Vector"])
+    altitude = nodes.new("ShaderNodeSeparateXYZ")
+    links.new(geometry.outputs["Position"], altitude.inputs[0])
+    beach = nodes.new("ShaderNodeMapRange")
+    beach.interpolation_type = "SMOOTHERSTEP"
+    beach.inputs["From Min"].default_value = -0.20
+    beach.inputs["From Max"].default_value = 0.90
+    links.new(altitude.outputs["Z"], beach.inputs["Value"])
+    normal = nodes.new("ShaderNodeSeparateXYZ")
+    links.new(geometry.outputs["Normal"], normal.inputs[0])
+    slope = nodes.new("ShaderNodeMapRange")
+    slope.inputs["From Min"].default_value = 0.84
+    slope.inputs["From Max"].default_value = 0.53
+    slope.inputs["To Min"].default_value = 0.0
+    slope.inputs["To Max"].default_value = 0.50
+    links.new(normal.outputs["Z"], slope.inputs["Value"])
+    grassy_rock = nodes.new("ShaderNodeMixRGB")
+    links.new(slope.outputs["Result"], grassy_rock.inputs[0])
+    links.new(grass.outputs["Color"], grassy_rock.inputs[1])
+    links.new(stone.outputs["Color"], grassy_rock.inputs[2])
+    shoreline = nodes.new("ShaderNodeMixRGB")
+    links.new(beach.outputs["Result"], shoreline.inputs[0])
+    links.new(sand.outputs["Color"], shoreline.inputs[1])
+    links.new(grassy_rock.outputs["Color"], shoreline.inputs[2])
+    links.new(shoreline.outputs[0], nodes.get("Principled BSDF").inputs["Base Color"])
+    output_image = bpy.data.images.new("rf1_island_detail", width=2048, height=2048, alpha=False)
+    target = nodes.new("ShaderNodeTexImage")
+    target.image = output_image
+    nodes.active = target
+    land.data.materials.clear()
+    land.data.materials.append(shader_material)
+    bpy.ops.object.select_all(action="DESELECT")
+    land.select_set(True)
+    bpy.context.view_layer.objects.active = land
+    scene = bpy.context.scene
+    scene.render.engine = "CYCLES"
+    scene.cycles.samples = 1
+    scene.render.bake.use_clear = True
+    scene.render.bake.margin = 16
+    bpy.ops.object.bake(type="DIFFUSE", pass_filter={"COLOR"})
+    output_image.filepath_raw = os.path.join(OUTPUT, "rf1_island_detail.png")
+    output_image.file_format = "PNG"
+    output_image.save()
+    output_image.filepath = "//rf1_island_detail.png"
+    land.data.materials.clear()
+    land.data.materials.append(material("RF1_PaintedTerrain", (1, 1, 1), output_image))
+    bpy.data.materials.remove(shader_material)
+
+
 def coast(angle):
     irregular = 1 + 0.045 * math.sin(angle * 5 + 0.3) + 0.03 * math.cos(angle * 3 - 0.4)
     entry_angle = math.atan2(math.sin(angle + 2.418), math.cos(angle + 2.418))
@@ -315,6 +396,17 @@ def pebble(name, position, scale, mat):
     obj.data.materials.append(mat)
     for polygon in obj.data.polygons:
         polygon.use_smooth = True
+    if mat.name == "RF1_Limestone":
+        uv = obj.data.uv_layers.active
+        if uv is None:
+            uv = obj.data.uv_layers.new(name="UVMap")
+        for polygon in obj.data.polygons:
+            axis = max(range(3), key=lambda component: abs(polygon.normal[component]))
+            components = [component for component in range(3) if component != axis]
+            for loop_index in polygon.loop_indices:
+                point = obj.data.vertices[obj.data.loops[loop_index].vertex_index].co
+                uv.data[loop_index].uv = (point[components[0]] * 0.45 + 0.5,
+                                         point[components[1]] * 0.45 + 0.5)
     return obj
 
 
@@ -357,10 +449,13 @@ def palm(index, x, y, size, bark, leaf, tip):
         for step in range(12):
             a = offset + step * 3
             faces.extend([(a, a + 3, a + 4, a + 1), (a + 1, a + 4, a + 5, a + 2)])
-    obj = mesh_object(f"RF1_Palm_{index:02d}_Fronds", vertices, faces, [leaf, tip])
-    for polygon in obj.data.polygons:
-        if (polygon.index // 24) % 3 == 0:
-            polygon.material_index = 1
+    palm_material = bpy.data.materials["RF1_PaintedPalmFronds"]
+    obj = mesh_object(f"RF1_Palm_{index:02d}_Fronds", vertices, faces, [palm_material])
+    for loop in obj.data.loops:
+        local_vertex = loop.vertex_index % 39
+        u = (local_vertex % 3) * 0.5
+        v = (local_vertex // 3) / 12
+        obj.data.uv_layers.active.data[loop.index].uv = (u, v)
     # Give the leaves a back face for the game's culling renderer.
     modifier = obj.modifiers.new("LeafThickness", "SOLIDIFY")
     modifier.thickness = 0.012
@@ -395,11 +490,9 @@ class DetailMesh:
         delta = end - start
         side = Vector((-delta.y, delta.x, 0)).normalized() * width
         center = start.lerp(end, 0.48)
-        ridge = center + Vector((0, 0, width * 0.3))
-        self.face((start, center - side, ridge), material_index, True)
-        self.face((start, ridge, center + side), material_index, True)
-        self.face((center - side, end, ridge), material_index, True)
-        self.face((ridge, end, center + side), material_index, True)
+        # The small understory leaves keep their silhouette with two front triangles.
+        self.face((start, center - side, end), material_index, True)
+        self.face((start, end, center + side), material_index, True)
 
     def finish(self):
         if not self.faces:
@@ -591,14 +684,8 @@ def build_coastal_details(rock, bark, leaf):
             size = scale * RNG.uniform(0.65, 1.25)
             obj = pebble(f"RF1_Headland_{group}_{part}", (x, y, z + size * 0.20),
                          (size * 1.05, size * 0.78, size * 0.73), rock)
-            obj.data.materials.append(dark_rock)
-            obj.data.materials.append(moss)
             for polygon in obj.data.polygons:
                 polygon.use_smooth = False
-                if polygon.center.z > 0.35:
-                    polygon.material_index = 2
-                elif polygon.center.z < -0.25:
-                    polygon.material_index = 1
     # A timber landing reaches into the eastern inlet.
     pier_x, pier_y = 12.7, -11.5
     deck_z = -1.55
@@ -742,11 +829,15 @@ def main():
             bpy.data.images.remove(image)
     grass = material("RF1_JadeGrass", (1, 1, 1), texture("rf1_grass", (0.27, 0.46, 0.24), 0.10))
     sand = material("RF1_CoralSand", (1, 1, 1), texture("rf1_sand", (0.86, 0.77, 0.55), 0.045))
-    rock = material("RF1_Limestone", (1, 1, 1), texture("rf1_limestone", (0.48, 0.52, 0.43), 0.10))
+    # Retain the original procedural swatch and random sequence used to place scenery.
+    texture("rf1_limestone", (0.48, 0.52, 0.43), 0.10)
+    rock = material("RF1_Limestone", (1, 1, 1), painted_image("rf1_rock_painted.png"))
     bark = material("RF1_PalmBark", (1, 1, 1), texture("rf1_bark", (0.43, 0.31, 0.19), 0.16))
     leaf = material("RF1_PalmEmerald", (0.12, 0.34, 0.19))
     tip = material("RF1_PalmNewGrowth", (0.27, 0.46, 0.20))
-    build_land(grass, sand, rock)
+    material("RF1_PaintedPalmFronds", (1, 1, 1), painted_image("rf1_palm_painted.png"))
+    land = build_land(grass, sand, rock)
+    bake_terrain_material(land)
     build_path(sand)
     build_water()
     for index, (x, y, size) in enumerate([(-14, -3, 4.2), (-11, 1, 5.6), (-8, 5, 4.1), (8.8, 1, 5.1), (12, -2, 4.2), (13, 4, 3.7), (-16, -7, 3.2), (4, 7, 3.8)]):

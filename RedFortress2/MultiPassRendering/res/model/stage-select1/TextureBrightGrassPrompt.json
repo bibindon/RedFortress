@@ -1,0 +1,6 @@
+{
+  "mode": "Built-in image_gen",
+  "edit_target": "rf1_grass_painted.png",
+  "output": "rf1_grass_bright.png",
+  "prompt": "Edit this game terrain texture. Preserve its seamless square full-bleed top-down painterly fine grass/leaf detail and even unlit albedo appearance. Strongly change the palette to bright fresh spring meadow green, cheerful light jade and grassy emerald with soft mint-green highlights. Increase overall brightness substantially. Replace nearly all brown soil patches and dark olive areas with fresh green grass and tiny clover. At least 95 percent lush green vegetation coverage. No yellow-brown cast, no large brown patches, no flowers, no new objects, no shadows, no vignette, no perspective. Keep fine natural variation so it is not a flat solid color. This will cover an entire tropical island hill in a colorful game; the average color must read clearly as fresh medium-light GREEN from afar rather than brown or dark moss."
+}
