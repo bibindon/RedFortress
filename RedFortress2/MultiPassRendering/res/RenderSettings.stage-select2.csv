@@ -98,7 +98,7 @@ SunLightIntensity,0.035
 SunLightColorR,0.16
 SunLightColorG,0.20
 SunLightColorB,0.36
-AmbientLightIntensity,0.055
+AmbientLightIntensity,0.12
 AmbientLightColorR,0.10
 AmbientLightColorG,0.15
 AmbientLightColorB,0.28
