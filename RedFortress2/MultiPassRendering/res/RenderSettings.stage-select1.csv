@@ -10,7 +10,7 @@ GaussianStrength,1.0
 MaskedGaussianEnable,0
 MaskedGaussianMaskPath,
 ,
-FXAAEnable,0
+FXAAEnable,1
 FXAAQuality,4
 TAAEnable,0
 TAAHistoryWeight,0.85
@@ -67,9 +67,9 @@ SSGIBlurKernelSize,21
 SSGIIndirectLightStrength,1.0
 SSGIIndirectLightMaxContribution,1.0
 ,
-SpecularIntensity,0.1
-SpecularIntensityOverride,0
-FresnelIntensity,0.08
+SpecularIntensity,0.025
+SpecularIntensityOverride,1
+FresnelIntensity,0.01
 PhongTreatTextureAsWhite,0
 ,
 BloomEnable,0

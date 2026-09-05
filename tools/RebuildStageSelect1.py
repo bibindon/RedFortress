@@ -255,7 +255,13 @@ def build_water():
         u, v = loop.uv
         loop.uv = (u * 5 / 180 + 0.5, (v * 5 + 1.8) / 180 + 0.5)
     deep = material("RF1_DeepOcean", tuple(far), specular=0.025)
-    mesh_object("StageSelect_DeepSea.001", [(-5000, -5000, SEA_Z - 0.02), (5000, -5000, SEA_Z - 0.02), (5000, 5000, SEA_Z - 0.02), (-5000, 5000, SEA_Z - 0.02)], [(0, 1, 2, 3)], [deep])
+    # The ocean surrounds the lagoon without overlapping its depth surface.
+    ocean_vertices = [(-90, -91.8, SEA_Z), (90, -91.8, SEA_Z),
+                      (90, 88.2, SEA_Z), (-90, 88.2, SEA_Z),
+                      (-5000, -5001.8, SEA_Z), (5000, -5001.8, SEA_Z),
+                      (5000, 4998.2, SEA_Z), (-5000, 4998.2, SEA_Z)]
+    mesh_object("StageSelect_DeepSea.001", ocean_vertices,
+                [(0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)], [deep])
     foam = material("RF1_SoftShoreFoam", (0.76, 0.88, 0.78), specular=0)
     vertices = []
     faces = []
@@ -355,7 +361,7 @@ def export_models():
 
 def preview():
     scene = bpy.context.scene
-    bpy.ops.object.camera_add(location=(0, -26, 18))
+    bpy.ops.object.camera_add(location=(0, -32, 21))
     camera = bpy.context.object
     camera.name = "RF1_GameCameraPreview"
     camera.rotation_euler = (Vector((0, -2, 2)) - camera.location).to_track_quat("-Z", "Y").to_euler()
@@ -384,6 +390,10 @@ def preview():
     scene.view_settings.view_transform = "AgX"
     scene.render.filepath = os.path.join(OUTPUT, "world1_preview.png")
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUTPUT, "world1.blend"))
+    bpy.ops.render.render(write_still=True)
+    camera.location = (32, -38, 26)
+    camera.rotation_euler = (Vector((0, -2, 2)) - camera.location).to_track_quat("-Z", "Y").to_euler()
+    scene.render.filepath = os.path.join(OUTPUT, "world1_side_preview.png")
     bpy.ops.render.render(write_still=True)
 
 

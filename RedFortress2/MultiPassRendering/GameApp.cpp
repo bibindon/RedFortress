@@ -151,7 +151,6 @@ namespace
     const int kTitleBackgroundSourceWidth = 1920;
     const int kTitleBackgroundSourceHeight = 1080;
     const std::wstring kTitleLicenseMaskPath = L"res\\2D_Image\\title_license_mask.png";
-    const std::wstring kTitleLicensePanelPath = L"res\\2D_Image\\title_license_panel.png";
     const std::wstring kTitleLicenseScrollUpPath = L"res\\2D_Image\\item_scroll_up.png";
     const std::wstring kTitleLicenseScrollDownPath = L"res\\2D_Image\\item_scroll_down.png";
     const int kTitleLicenseGaussianSampleSize = 25;
@@ -8739,13 +8738,6 @@ void GameApp::DrawTitleScreen()
 
 void GameApp::DrawTitleLicense()
 {
-    m_render.DrawImageSized(kTitleLicensePanelPath,
-                            kTitleLicensePanelX,
-                            kTitleLicensePanelY,
-                            kTitleLicensePanelWidth,
-                            kTitleLicensePanelHeight,
-                                255);
-
     int upArrowTransparency = kTitleLicenseEnabledArrowTransparency;
     if (m_titleLicensePageIndex <= 0)
     {

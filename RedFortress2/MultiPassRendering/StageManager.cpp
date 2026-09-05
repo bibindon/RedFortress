@@ -102,7 +102,7 @@ void StageManager::Initialize()
              false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
              L"res\\RenderSettings.night.csv", StageWeather::None, true);
 
-    const D3DXVECTOR3 kSelect1CameraPos(0.0f, 18.0f, -26.0f);
+    const D3DXVECTOR3 kSelect1CameraPos(0.0f, 21.0f, -32.0f);
     const D3DXVECTOR3 kSelect1CameraLookAt(0.0f, 2.0f, -2.0f);
     const D3DXVECTOR3 kSelect2CameraPos(0.0f, 15.0f, -32.0f);
     const D3DXVECTOR3 kSelect2CameraLookAt(0.0f, 0.8f, 5.5f);
