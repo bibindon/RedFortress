@@ -1,4 +1,4 @@
-﻿.vs
+.vs
 /RedFortress.old/Bootstrapper1/bin
 /RedFortress.old/Bootstrapper1/obj
 /RedFortress.old/Bootstrapper1/starman.msi
@@ -49,3 +49,9 @@ RedFortress2/MultiPassRendering/res/model2/marine/untitled.blend1
 __pycache__
 /artifacts
 /tmp
+!/tools/PrepareDoorAudio.py
+!/tools/audio/
+/tools/audio/*
+!/tools/audio/door/
+!/tools/PreparePriorityAudio.py
+!/tools/audio/priority/

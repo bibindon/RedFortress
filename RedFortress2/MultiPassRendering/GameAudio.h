@@ -12,6 +12,8 @@ void Finalize();
 // --silent 起動時はサウンドデバイス初期化と再生を一切行わない。
 void SetSilentMode(bool silent);
 bool IsSilentMode();
+// ゲームが非アクティブな間だけ BGM をフェードして無音にする。
+void SetWindowFocused(bool focused);
 void Update(HWND windowHandle,
             const SoundLib::Vector3& listenerPosition,
             const SoundLib::Vector3& listenerFront,
@@ -57,6 +59,8 @@ void PlayAmmoGet();
 void PlayJump();
 void PlayPowerUp();
 void PlayDrink();
+void PlayItemHeal();
+void PlayItemLifeUp();
 void StartHyperMode();
 void StopHyperMode();
 void PlayDash();

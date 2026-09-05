@@ -5702,7 +5702,12 @@ bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
             return false;
         }
 
-        return m_player.AddLife();
+        const bool lifeAdded = m_player.AddLife();
+        if (lifeAdded)
+        {
+            GameAudio::PlayItemLifeUp();
+        }
+        return lifeAdded;
     }
 
     if (itemId == kPotatoChipsItemId)
@@ -5718,6 +5723,7 @@ bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
         }
 
         HealPlayerHp(m_player.GetMaxHp());
+        GameAudio::PlayItemHeal();
         return true;
     }
 
@@ -5745,6 +5751,7 @@ bool GameApp::HandleInventoryItemUse(const std::wstring& itemId)
         }
 
         RefillWeaponAmmo();
+        GameAudio::PlayDrink();
         m_itemPickupMessage = L"全弾薬を補充した";
         m_itemPickupMessageFrames = kItemPickupMessageTotalFrames;
         return true;
@@ -7094,6 +7101,12 @@ LRESULT WINAPI GameApp::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 {
     switch (msg)
     {
+    case WM_ACTIVATE:
+    {
+        GameAudio::SetWindowFocused(LOWORD(wParam) != WA_INACTIVE);
+        break;
+    }
+
     case WM_SETCURSOR:
     {
         if (LOWORD(lParam) == HTCLIENT)

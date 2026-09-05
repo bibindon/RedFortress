@@ -32,7 +32,7 @@ const std::wstring kSeaEnvironment = L"res\\sound\\ENV_sea.wav";
 const std::wstring kRainEnvironment = L"res\\sound\\ENV_rain.wav";
 const std::wstring kMenuMove = L"res\\sound\\menu_cursor_move.wav";
 const std::wstring kMenuConfirm = L"res\\sound\\menu_cursor_confirm.wav";
-const std::wstring kMenuCancel = L"res\\sound\\menu_cursor_cancel.wav";
+const std::wstring kMenuCancel = L"res\\sound\\ui_back.wav";
 const std::wstring kItemUnavailable = L"res\\sound\\item_unavailable.wav";
 const std::wstring kMenuOpen = L"res\\sound\\menu_open.wav";
 const std::wstring kCraftOpen = L"res\\sound\\craft_open.wav";
@@ -43,28 +43,32 @@ const std::wstring kStageSelectConfirm = L"res\\sound\\cursor_confirm.wav";
 const std::wstring kPlayerAttack = L"res\\sound\\attack01.wav";
 const std::wstring kSwordSwing = L"res\\sound\\sword_swing.wav";
 const std::wstring kSlashHit = L"res\\sound\\slashHit.wav";
-const std::wstring kLeverToggle = L"res\\sound\\pullOar.wav";
+const std::wstring kLeverToggle = L"res\\sound\\lever_latch.wav";
 const std::wstring kRopeCut = L"res\\sound\\slashHit.wav";
-const std::wstring kMechanismStop = L"res\\sound\\stomp_impact.wav";
-const std::wstring kDoorMovement = L"res\\sound\\pullOar2.wav";
+const std::wstring kMechanismStop = L"res\\sound\\door_stop.wav";
+const std::wstring kDoorMovement = L"res\\sound\\door_slide_loop.wav";
 const std::wstring kPushableBoxMovement = L"res\\sound\\pushable_box_scrape.wav";
 const std::wstring kAttackHit = L"res\\sound\\club_hit.wav";
 const std::wstring kSwordDeflected = L"res\\sound\\sword_deflected.wav";
 const std::wstring kBusterHit = L"res\\sound\\buster_hit.wav";
 const std::wstring kEnemyAttack = L"res\\sound\\enemyAttack.wav";
 const std::wstring kPlayerDamage = L"res\\sound\\damage01.wav";
-const std::wstring kPlayerDeath = L"res\\sound\\death.wav";
+const std::wstring kPlayerDeath = L"res\\sound\\player_defeat.wav";
+const std::wstring kBossDefeat = L"res\\sound\\boss_defeat.wav";
 const std::wstring kItemGet = L"res\\sound\\itemGet.wav";
 const std::wstring kAmmoMax = L"res\\sound\\ammoMax.wav";
 const std::wstring kAmmoGet = L"res\\sound\\ammoGet.wav";
 const std::wstring kJump = L"res\\sound\\jump_action.wav";
 const std::wstring kPowerUp = L"res\\sound\\powerup.wav";
 const std::wstring kDrink = L"res\\sound\\drink.wav";
+const std::wstring kItemHeal = L"res\\sound\\item_heal.wav";
+const std::wstring kItemLifeUp = L"res\\sound\\item_life_up.wav";
+const std::wstring kQteFailure = L"res\\sound\\qte_failure.wav";
 const std::wstring kHyperMode = L"res\\sound\\hyperMode.wav";
 const std::wstring kDash = L"res\\sound\\dash.wav";
 const std::wstring kDashBooster = L"res\\sound\\dashBooster2.wav";
 const std::wstring kExplosion = L"res\\sound\\explosion.wav";
-const std::wstring kBombPlace = L"res\\sound\\bombDrop.wav";
+const std::wstring kBombPlace = L"res\\sound\\bomb_place.wav";
 const std::wstring kStomp = L"res\\sound\\stomp_impact.wav";
 const std::wstring kBuster = L"res\\sound\\buster.wav";
 const std::wstring kSkullThrow = L"res\\sound\\arrow.wav";
@@ -91,6 +95,7 @@ int g_currentBgmVolume = 0;
 int g_effectiveBgmVolume = -1;
 bool g_initialized = false;
 bool g_silentMode = false;
+bool g_windowFocused = true;
 bool g_bgmFadeOutActive = false;
 int g_bgmFadeOutFramesRemaining = 0;
 int g_bgmFadeOutTotalFrames = 0;
@@ -125,7 +130,7 @@ void BeginAudioDeviceRecovery()
 
 int GetEffectiveBgmVolume(const int volume)
 {
-    if (g_hyperModeId >= 0)
+    if (!g_windowFocused || g_hyperModeId >= 0)
     {
         return 0;
     }
@@ -155,6 +160,31 @@ void ApplyCurrentBgmVolume()
     try
     {
         SoundLib::SoundLib::SetBgmVolume(effectiveVolume);
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+        return;
+    }
+    g_effectiveBgmVolume = effectiveVolume;
+}
+
+void FadeCurrentBgmVolume()
+{
+    if (!g_initialized || g_currentBgm.empty())
+    {
+        return;
+    }
+
+    const int effectiveVolume = GetEffectiveBgmVolume(g_currentBgmVolume);
+    if (g_effectiveBgmVolume == effectiveVolume)
+    {
+        return;
+    }
+
+    try
+    {
+        SoundLib::SoundLib::FadeBgmVolume(effectiveVolume);
     }
     catch (const SoundLib::AudioDeviceException&)
     {
@@ -312,18 +342,19 @@ void UpdateBgmFadeOutInternal()
         --g_bgmFadeOutFramesRemaining;
     }
 
-    const int volume = g_currentBgmVolume * g_bgmFadeOutFramesRemaining /
-                       g_bgmFadeOutTotalFrames;
+    const int requestedVolume = g_currentBgmVolume * g_bgmFadeOutFramesRemaining /
+                                g_bgmFadeOutTotalFrames;
+    const int effectiveVolume = GetEffectiveBgmVolume(requestedVolume);
     try
     {
-        SoundLib::SoundLib::SetBgmVolume(volume);
+        SoundLib::SoundLib::SetBgmVolume(effectiveVolume);
     }
     catch (const SoundLib::AudioDeviceException&)
     {
         BeginAudioDeviceRecovery();
         return;
     }
-    g_effectiveBgmVolume = volume;
+    g_effectiveBgmVolume = effectiveVolume;
 
     if (g_bgmFadeOutFramesRemaining <= 0)
     {
@@ -361,6 +392,17 @@ bool IsSilentMode()
     return g_silentMode;
 }
 
+void SetWindowFocused(const bool focused)
+{
+    if (g_windowFocused == focused)
+    {
+        return;
+    }
+
+    g_windowFocused = focused;
+    FadeCurrentBgmVolume();
+}
+
 void Initialize()
 {
     if (g_silentMode)
@@ -375,9 +417,9 @@ void Initialize()
     const std::wstring effects[] =
     {
         kMenuMove, kMenuConfirm, kMenuCancel, kItemUnavailable, kMenuOpen, kCraftOpen, kExplanationOpen, kSaveComplete, kPlayerAttack, kSwordSwing, kSlashHit, kAttackHit, kSwordDeflected, kBusterHit,
-        kEnemyAttack, kPlayerDamage, kPlayerDeath, kItemGet, kAmmoGet, kAmmoMax, kJump, kPowerUp, kDash, kDashBooster,
-        kExplosion, kBombPlace, kStomp, kLeverToggle, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
-        kDrink, kQte, kQteBest, kArrow, kWarp
+        kEnemyAttack, kPlayerDamage, kPlayerDeath, kBossDefeat, kItemGet, kAmmoGet, kAmmoMax, kJump, kPowerUp, kDash, kDashBooster,
+        kExplosion, kBombPlace, kSkullLand, kStomp, kLeverToggle, kMechanismStop, kBuster, kWeaponChange, kStageSelectMove, kStageSelectConfirm,
+        kDrink, kItemHeal, kItemLifeUp, kQteFailure, kQte, kQteBest, kArrow, kWarp
     };
     for (const std::wstring& effect : effects)
     {
@@ -602,7 +644,7 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
 
 void PlayMenuMove() { PlayEffect(kMenuMove, 70); }
 void PlayMenuConfirm() { PlayEffect(kMenuConfirm, 78); }
-void PlayMenuCancel() { PlayEffect(kMenuCancel, 72); }
+void PlayMenuCancel() { PlayEffect(kMenuCancel, 62); }
 void PlayItemUnavailable() { PlayEffect(kItemUnavailable, 78); }
 void PlayMenuOpen() { PlayEffect(kMenuOpen, 78); }
 void PlayCraftOpen() { PlayEffect(kCraftOpen, 78); }
@@ -610,7 +652,7 @@ void PlayExplanationOpen() { PlayEffect(kExplanationOpen, 76); }
 void PlaySaveComplete() { PlayEffect(kSaveComplete, 78); }
 void BeginBgmFadeOut(const int frames) { BeginBgmFadeOutInternal(frames); }
 void UpdateBgmFadeOut() { UpdateBgmFadeOutInternal(); }
-void PlayBossDefeat() { PlayEffect(kPlayerDeath, 92); }
+void PlayBossDefeat() { PlayEffect(kBossDefeat, 72); }
 void PlayStageSelectMove() { PlayEffect(kStageSelectMove, 72); }
 void PlayStageSelectConfirm() { PlayEffect(kStageSelectConfirm, 78); }
 void PlayPlayerAttack() { PlayEffect(kPlayerAttack, 82); }
@@ -618,9 +660,9 @@ void PlaySwordSwing() { PlayEffect(kSwordSwing, 80); }
 void PlaySlashHit() { PlayEffect(kSlashHit, 82); }
 void PlayAttackHit() { PlayEffect(kAttackHit, 82); }
 void PlaySwordDeflected() { PlayEffect(kSwordDeflected, 82); }
-void PlayLeverToggle() { PlayEffect(kLeverToggle, 80); }
+void PlayLeverToggle() { PlayEffect(kLeverToggle, 55); }
 void PlayRopeCut() { PlayEffect(kRopeCut, 82); }
-void PlayMechanismStop() { PlayEffect(kMechanismStop, 80); }
+void PlayMechanismStop() { PlayEffect(kMechanismStop, 58); }
 void SetDoorMovementActive(const bool active)
 {
     if (!active)
@@ -636,7 +678,7 @@ void SetDoorMovementActive(const bool active)
     try
     {
         g_doorMovementId =
-            SoundLib::SoundLib::PlayEnvironmentSound(kDoorMovement, 52);
+            SoundLib::SoundLib::PlayEnvironmentSound(kDoorMovement, 38);
     }
     catch (const SoundLib::AudioDeviceException&)
     {
@@ -712,13 +754,15 @@ void StopPushableBoxMovement()
 void PlayBusterHit() { PlayEffect(kBusterHit, 76); }
 void PlayEnemyAttack() { PlayEffect(kEnemyAttack, 72); }
 void PlayPlayerDamage() { PlayEffect(kPlayerDamage, 88); }
-void PlayPlayerDeath() { PlayEffect(kPlayerDeath, 88); }
+void PlayPlayerDeath() { PlayEffect(kPlayerDeath, 68); }
 void PlayItemGet() { PlayEffect(kItemGet, 82); }
 void PlayAmmoMax() { PlayEffect(kAmmoMax, 78); }
 void PlayAmmoGet() { PlayEffect(kAmmoGet, 80); }
 void PlayJump() { PlayEffect(kJump, 62); }
 void PlayPowerUp() { PlayEffect(kPowerUp, 82); }
-void PlayDrink() { PlayEffect(kDrink, 80); }
+void PlayDrink() { PlayEffect(kDrink, 65); }
+void PlayItemHeal() { PlayEffect(kItemHeal, 68); }
+void PlayItemLifeUp() { PlayEffect(kItemLifeUp, 68); }
 void StartHyperMode()
 {
     g_hyperModeRequested = true;
@@ -774,7 +818,7 @@ void StopHyperMode()
 void PlayDash() { PlayEffect(kDash, 72); }
 void PlayDashBooster() { PlayEffect(kDashBooster, 78); }
 void PlayExplosion() { PlayEffect(kExplosion, 75); }
-void PlayBombPlace() { PlayEffect(kBombPlace, 78); }
+void PlayBombPlace() { PlayEffect(kBombPlace, 62); }
 void PlayStomp() { PlayEffect(kStomp, 82); }
 void PlayBuster() { PlayEffect(kBuster, 55); }
 void PlaySkullGrab() { PlayEffect(kWeaponChange, 72); }
@@ -789,5 +833,5 @@ void PlayQteStart() { PlayEffect(kQte, 70); }
 void PlayQteStop() { PlayEffect(kStageSelectConfirm, 70); }
 void PlayQteSuccess() { PlayEffect(kQteBest, 82); }
 void PlayQteNormal() { PlayEffect(kMenuConfirm, 76); }
-void PlayQteFailure() { PlayEffect(kMenuCancel, 76); }
+void PlayQteFailure() { PlayEffect(kQteFailure, 62); }
 }

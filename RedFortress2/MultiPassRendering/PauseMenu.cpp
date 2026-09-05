@@ -948,8 +948,7 @@ void PauseMenu::UpdateItemList()
         if (m_itemUseCallback(selectedItem.id))
         {
             m_hasUnsavedChanges = true;
-            GameAudio::PlayMenuConfirm();
-            GameAudio::PlayDrink();
+            // 使用成功音はアイテム使用処理で鳴らす（ショートカットと共通）。
             m_itemStatusMessage = selectedItem.name + L"を使用しました";
             m_itemStatusColor = kSuccessTextColor;
             const std::vector<std::size_t> refreshedItems = GetOwnedItemIndices();
