@@ -43,6 +43,8 @@ def make_material(name, base_color, roughness, metallic, texture_path=None):
     material.diffuse_color = (*base_color, 1.0)
     material.roughness = roughness
     material.metallic = metallic
+    material["_x_power"] = 500.0
+    material["_x_specular"] = (0.5, 0.5, 0.5)
     principled = next(
         (node for node in material.node_tree.nodes if node.type == "BSDF_PRINCIPLED"),
         None,
