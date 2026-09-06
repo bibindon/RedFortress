@@ -91,7 +91,7 @@
 6001,../collision_moving_platform/collision_moving_platform.x,34,0.65,-22,0,0,0,1,meshmix2
 7001,../tree2/lemonTree.x,-54,0.85,-10,0,0,0,1,normal
 9001,../attack_trigger/lever_box_floor.x,-22,2.8,-54,0,0,0,1,normal
-9002,../attack_trigger/lever_box.x,-22,3.8,-54,0,0,0,1,normal
+9002,../attack_trigger/lever_box.x,-22,3.8,-54,0,180,0,1,normal
 9003,../attack_trigger/lever_box_door.x,-22,3.8,-57,0,0,0,0.98,normal
 9101,../attack_trigger/lever_box3_floor.x,27,-0.05,-27,0,90,0,1,normal
 9102,../attack_trigger/lever_box3.x,27,0.95,-27,0,90,0,1,normal
