@@ -112,17 +112,6 @@ def build_box(material):
     add_box("WallEast", gx(2.75, 3.0, 0.0), gd((0.5, 6.0, 6.0)), material)
     add_box("WallBack", gx(0.0, 3.0, 2.75), gd((6.0, 6.0, 0.5)), material)
     add_box("InnerFloor", gx(0.0, 0.45, 0.0), gd((5.0, 0.1, 5.0)), material)
-    rise = 0.55
-    run = 2.3
-    slope_len = math.sqrt(run * run + rise * rise)
-    angle = math.atan2(rise, run)
-    add_box(
-        "EntryRamp",
-        (0.0, -3.65, 0.175),
-        (5.0, slope_len, 0.1),
-        material,
-        rotation=(angle, 0.0, 0.0),
-    )
 
 
 def build_door(material):
