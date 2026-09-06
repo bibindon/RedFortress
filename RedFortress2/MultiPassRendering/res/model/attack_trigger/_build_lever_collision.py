@@ -118,6 +118,17 @@ def build_door(material):
     add_box("DoorSlab", gx(0.0, 3.0, -0.125), gd((6.0, 6.0, 0.75)), material)
 
 
+def build_box3(material):
+    add_box("WallWest", gx(-2.75, 3.0, 0.0), gd((0.5, 6.0, 6.0)), material)
+    add_box("WallEast", gx(2.75, 3.0, 0.0), gd((0.5, 6.0, 6.0)), material)
+    add_box("InnerFloor3", gx(0.0, 0.45, 0.0), gd((5.0, 0.1, 6.0)), material)
+
+
+def build_door3(material):
+    add_box("PanelNorth", gx(0.0, 3.0, 3.0), gd((6.0, 6.0, 0.5)), material)
+    add_box("PanelSouth", gx(0.0, 3.0, -3.0), gd((6.0, 6.0, 0.5)), material)
+
+
 def main():
     material = None
 
@@ -149,6 +160,26 @@ def main():
         "lever_box_door_collision.x",
         "LeverBoxDoorCollision",
         "LeverBoxDoorCollisionGeo",
+    )
+
+    clear_scene()
+    material = make_material("LeverCollision", (0.5, 0.5, 0.55))
+    build_box3(material)
+    export_proxy(
+        "lever_box3_collision.blend",
+        "lever_box3_collision.x",
+        "LeverBox3Collision",
+        "LeverBox3CollisionGeo",
+    )
+
+    clear_scene()
+    material = make_material("LeverCollision", (0.5, 0.5, 0.55))
+    build_door3(material)
+    export_proxy(
+        "lever_box3_door_collision.blend",
+        "lever_box3_door_collision.x",
+        "LeverBox3DoorCollision",
+        "LeverBox3DoorCollisionGeo",
     )
 
 

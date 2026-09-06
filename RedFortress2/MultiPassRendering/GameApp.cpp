@@ -4468,6 +4468,12 @@ void GameApp::LoadPointLightsFromCsv(const std::wstring& csvPath)
 
 void GameApp::ApplyStageEnvironmentLighting(const std::wstring& stageId)
 {
+    // The forest overview uses its own moonlight settings from the stage CSV.
+    if (stageId == L"select4")
+    {
+        return;
+    }
+
     const int world = GetWorldFromStageId(stageId);
     if (world <= 0)
     {

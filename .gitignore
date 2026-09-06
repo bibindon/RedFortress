@@ -58,3 +58,5 @@ __pycache__
 !/tools/audio/priority/
 !/tools/RebuildStageSelect2.py
 !/tools/RebuildStageSelect3.py
+!/tools/RebuildStageSelect4.py
+!/tools/ValidateStageSelect4.py

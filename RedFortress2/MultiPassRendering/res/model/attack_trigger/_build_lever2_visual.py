@@ -159,8 +159,26 @@ def remove_helpers():
     bpy.ops.object.delete(use_global=False)
 
 
-def export_current(blend_name, x_name, frame_name, mesh_name):
+def delete_bottom_faces():
+    import bmesh
+    for obj in [item for item in bpy.context.scene.objects if item.type == "MESH"]:
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+        doomed = [
+            f for f in bm.faces
+            if f.normal.z < -0.99
+            and sum(v.co.z for v in f.verts) / len(f.verts) < 0.05
+        ]
+        if doomed:
+            bmesh.ops.delete(bm, geom=doomed, context="FACES")
+            bm.to_mesh(obj.data)
+        bm.free()
+
+
+def export_current(blend_name, x_name, frame_name, mesh_name, delete_bottom=False):
     bake_transforms()
+    if delete_bottom:
+        delete_bottom_faces()
     join_named(frame_name, mesh_name)
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUTPUT_DIR, blend_name))
     result = bpy.ops.export_scene.directx_x(
@@ -246,6 +264,14 @@ def build_floor3_cobble(cobble):
     add_box("FloorSlab", B(0.0, 0.5, 0.0), D(5.0, 1.0, 10.0), cobble, 3.0)
 
 
+def build_floor14_cobble(cobble):
+    add_box("FloorSlab", B(0.0, 0.5, 0.0), D(10.0, 1.0, 14.0), cobble, 3.0)
+
+
+def build_floor3_14_cobble(cobble):
+    add_box("FloorSlab", B(0.0, 0.5, 0.0), D(5.0, 1.0, 14.0), cobble, 3.0)
+
+
 def build_floor_cobble(cobble):
     add_box("FloorSlab", B(0.0, 0.5, 0.0), D(10.0, 1.0, 10.0), cobble, 3.0)
 
@@ -286,7 +312,7 @@ def main():
     setup_preview((9.0, 10.0, 7.0), (0.0, 0.0, 3.0),
                   os.path.join(OUTPUT_DIR, "lever2_box_preview.png"))
     remove_helpers()
-    export_current("lever2_box.blend", "lever_box_new.x", "LeverBox", "LeverBoxGeo")
+    export_current("lever2_box.blend", "lever_box_new.x", "LeverBox", "LeverBoxGeo", True)
 
     clear_scene()
     stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
@@ -295,7 +321,7 @@ def main():
     setup_preview((7.0, -8.0, 5.0), (0.0, 0.0, 3.0),
                   os.path.join(OUTPUT_DIR, "lever2_door_preview.png"))
     remove_helpers()
-    export_current("lever2_door.blend", "lever_box_door_new.x", "LeverBoxDoor", "LeverBoxDoorGeo")
+    export_current("lever2_door.blend", "lever_box_door_new.x", "LeverBoxDoor", "LeverBoxDoorGeo", True)
 
     clear_scene()
     stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
@@ -305,7 +331,7 @@ def main():
                   os.path.join(OUTPUT_DIR, "lever2_lever_preview.png"))
     remove_helpers()
     delete_by_name(("Rod", "Knob"))
-    export_current("lever2_lever_base.blend", "lever_base_new.x", "LeverBase", "LeverBaseGeo")
+    export_current("lever2_lever_base.blend", "lever_base_new.x", "LeverBase", "LeverBaseGeo", True)
 
     clear_scene()
     stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
@@ -327,7 +353,7 @@ def main():
     setup_preview((9.0, 10.0, 7.0), (0.0, 0.0, 3.0),
                   os.path.join(OUTPUT_DIR, "lever3_box_preview.png"))
     remove_helpers()
-    export_current("lever3_box.blend", "lever_box3_new.x", "LeverBox3", "LeverBox3Geo")
+    export_current("lever3_box.blend", "lever_box3_new.x", "LeverBox3", "LeverBox3Geo", True)
 
     clear_scene()
     stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
@@ -336,7 +362,7 @@ def main():
     setup_preview((7.0, -8.0, 5.0), (0.0, 0.0, 3.0),
                   os.path.join(OUTPUT_DIR, "lever3_door_preview.png"))
     remove_helpers()
-    export_current("lever3_door.blend", "lever_box3_door_new.x", "LeverBox3Door", "LeverBox3DoorGeo")
+    export_current("lever3_door.blend", "lever_box3_door_new.x", "LeverBox3Door", "LeverBox3DoorGeo", True)
 
     clear_scene()
     stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
@@ -345,6 +371,22 @@ def main():
                   os.path.join(OUTPUT_DIR, "lever3_floor_preview.png"))
     remove_helpers()
     export_current("lever3_floor.blend", "lever_box3_floor_new.x", "LeverBox3Floor", "LeverBox3FloorGeo")
+
+    clear_scene()
+    stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
+    build_floor14_cobble(cobble)
+    setup_preview((11.0, -11.0, 7.0), (0.0, 0.0, 0.5),
+                  os.path.join(OUTPUT_DIR, "lever_floor14_preview.png"))
+    remove_helpers()
+    export_current("lever_floor14.blend", "lever_box_floor14_new.x", "LeverBoxFloor14", "LeverBoxFloor14Geo")
+
+    clear_scene()
+    stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
+    build_floor3_14_cobble(cobble)
+    setup_preview((9.0, -11.0, 7.0), (0.0, 0.0, 0.5),
+                  os.path.join(OUTPUT_DIR, "lever3_floor14_preview.png"))
+    remove_helpers()
+    export_current("lever3_floor14.blend", "lever_box3_floor14_new.x", "LeverBox3Floor14", "LeverBox3Floor14Geo")
 
 
 main()
