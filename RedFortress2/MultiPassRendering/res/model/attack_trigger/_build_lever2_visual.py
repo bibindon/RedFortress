@@ -201,21 +201,49 @@ def build_box(stone, stone_dark, iron, cobble):
     add_box("Medallion", B(0.0, 0.495, 0.0), D(2.4, 0.02, 2.4), cobble, 5.0)
 
 
-def build_door(woodtex, wood_dark, iron, gold):
-    add_box("DoorCore", B(0.0, 3.0, 0.125), D(6.0, 6.0, 0.51), wood_dark, 1.5)
-    for fz in (0.5, -0.25):
+def build_door(woodtex, wood_dark, iron, gold, zc=0.125):
+    add_box("DoorCore", B(0.0, 3.0, zc), D(6.0, 6.0, 0.51), wood_dark, 1.5)
+    for sgn in (1.0, -1.0):
+        face = zc + sgn * 0.375
         for i in range(5):
             px = -2.28 + i * 1.14
-            add_box("Plank", B(px, 3.0, fz - (0.06 if fz > 0.0 else -0.06)),
+            add_box("Plank", B(px, 3.0, face - sgn * 0.06),
                     D(1.04, 6.0, 0.12), woodtex, 1.5)
-    for fz in (0.5, -0.25):
-        cz = 0.50 if fz > 0.0 else -0.25
-        add_box("Rail", B(0.0, 1.2, cz), D(4.8, 0.35, 0.06), iron, 1.0)
-        add_box("Rail", B(0.0, 4.8, cz), D(4.8, 0.35, 0.06), iron, 1.0)
-    for fz in (0.53, -0.28):
+    for sgn in (1.0, -1.0):
+        rz = zc + sgn * 0.375
+        add_box("Rail", B(0.0, 1.2, rz), D(4.8, 0.35, 0.06), iron, 1.0)
+        add_box("Rail", B(0.0, 4.8, rz), D(4.8, 0.35, 0.06), iron, 1.0)
+    for sgn in (1.0, -1.0):
+        fz = zc + sgn * 0.405
         for px in (-2.0, -1.0, 0.0, 1.0, 2.0):
             for py in (1.2, 4.8):
                 add_rivet("RivetRail", (px, -fz, py), 0.055, gold)
+
+
+def build_box3(stone, stone_dark, iron, cobble):
+    for sx in (-1.0, 1.0):
+        for sz in (-1.0, 1.0):
+            add_box("Pillar", B(sx * 2.65, 3.0, sz * 2.65), D(0.7, 6.0, 0.7), cobble, 3.0)
+    for sx in (-1.0, 1.0):
+        add_box("WallSide", B(sx * 2.68, 3.0, 0.0), D(0.56, 6.0, 4.6), cobble, 3.0)
+    for y0 in (1.9, 4.0):
+        for sx in (-1.0, 1.0):
+            add_box("BandSide", B(sx * 2.96, y0 + 0.15, 0.0), D(0.12, 0.3, 4.6), iron, 1.0)
+    for sz in (-1.0, 1.0):
+        for sx in (-1.0, 1.0):
+            add_box("Jamb", B(sx * 2.62, 2.99, sz * 2.72), D(0.56, 5.98, 0.6), iron, 1.0)
+        add_box("Lintel", B(0.0, 5.63, sz * 2.70), D(5.9, 0.7, 0.56), iron, 1.0)
+    add_box("Slab", B(0.0, 0.25, 0.0), D(6.0, 0.5, 6.0), cobble, 3.0)
+    add_box("Medallion", B(0.0, 0.495, 0.0), D(2.4, 0.02, 2.4), cobble, 5.0)
+
+
+def build_door3(woodtex, wood_dark, iron, gold):
+    build_door(woodtex, wood_dark, iron, gold, zc=3.0)
+    build_door(woodtex, wood_dark, iron, gold, zc=-3.0)
+
+
+def build_floor3_cobble(cobble):
+    add_box("FloorSlab", B(0.0, 0.5, 0.0), D(5.0, 1.0, 10.0), cobble, 3.0)
 
 
 def build_floor_cobble(cobble):
@@ -292,6 +320,31 @@ def main():
                   os.path.join(OUTPUT_DIR, "lever2_floor_preview.png"))
     remove_helpers()
     export_current("lever2_floor.blend", "lever_box_floor_new.x", "LeverBoxFloor", "LeverBoxFloorGeo")
+
+    clear_scene()
+    stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
+    build_box3(stone, stone_dark, iron, cobble)
+    setup_preview((9.0, 10.0, 7.0), (0.0, 0.0, 3.0),
+                  os.path.join(OUTPUT_DIR, "lever3_box_preview.png"))
+    remove_helpers()
+    export_current("lever3_box.blend", "lever_box3_new.x", "LeverBox3", "LeverBox3Geo")
+
+    clear_scene()
+    stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
+    wood_dark = make_material("LeverWoodDark", (0.30, 0.20, 0.12), 0.85, 0.0)
+    build_door3(woodtex, wood_dark, iron, gold)
+    setup_preview((7.0, -8.0, 5.0), (0.0, 0.0, 3.0),
+                  os.path.join(OUTPUT_DIR, "lever3_door_preview.png"))
+    remove_helpers()
+    export_current("lever3_door.blend", "lever_box3_door_new.x", "LeverBox3Door", "LeverBox3DoorGeo")
+
+    clear_scene()
+    stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
+    build_floor3_cobble(cobble)
+    setup_preview((9.0, -9.0, 7.0), (0.0, 0.0, 0.5),
+                  os.path.join(OUTPUT_DIR, "lever3_floor_preview.png"))
+    remove_helpers()
+    export_current("lever3_floor.blend", "lever_box3_floor_new.x", "LeverBox3Floor", "LeverBox3FloorGeo")
 
 
 main()
