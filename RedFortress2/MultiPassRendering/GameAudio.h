@@ -12,7 +12,7 @@ void Finalize();
 // --silent 起動時はサウンドデバイス初期化と再生を一切行わない。
 void SetSilentMode(bool silent);
 bool IsSilentMode();
-// ゲームが非アクティブな間だけ BGM をフェードして無音にする。
+// ゲームが非アクティブな間だけ BGM・環境音・効果音を無音にする。
 void SetWindowFocused(bool focused);
 void Update(HWND windowHandle,
             const SoundLib::Vector3& listenerPosition,

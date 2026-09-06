@@ -93,6 +93,10 @@ int g_doorMovementId = -1;
 int g_pushableBoxMovementId = -1;
 int g_currentBgmVolume = 0;
 int g_effectiveBgmVolume = -1;
+int g_environmentVolume = 0;
+int g_doorMovementVolume = 38;
+int g_pushableBoxMovementVolume = 46;
+int g_hyperModeVolume = 78;
 bool g_initialized = false;
 bool g_silentMode = false;
 bool g_windowFocused = true;
@@ -114,6 +118,7 @@ void ResetTrackingState()
     g_pushableBoxMovementId = -1;
     g_currentBgmVolume = 0;
     g_effectiveBgmVolume = -1;
+    g_environmentVolume = 0;
     g_bgmFadeOutActive = false;
     g_bgmFadeOutFramesRemaining = 0;
     g_bgmFadeOutTotalFrames = 0;
@@ -194,6 +199,48 @@ void FadeCurrentBgmVolume()
     g_effectiveBgmVolume = effectiveVolume;
 }
 
+int GetEffectiveEnvironmentVolume(const int volume)
+{
+    if (!g_windowFocused)
+    {
+        return 0;
+    }
+
+    return volume;
+}
+
+void ApplyEnvironmentVolumesInternal()
+{
+    if (!g_initialized)
+    {
+        return;
+    }
+
+    try
+    {
+        if (g_environmentId >= 0)
+        {
+            SoundLib::SoundLib::SetEnvironmentSoundVolume(g_environmentId, GetEffectiveEnvironmentVolume(g_environmentVolume));
+        }
+        if (g_doorMovementId >= 0)
+        {
+            SoundLib::SoundLib::SetEnvironmentSoundVolume(g_doorMovementId, GetEffectiveEnvironmentVolume(g_doorMovementVolume));
+        }
+        if (g_pushableBoxMovementId >= 0)
+        {
+            SoundLib::SoundLib::SetEnvironmentSoundVolume(g_pushableBoxMovementId, GetEffectiveEnvironmentVolume(g_pushableBoxMovementVolume));
+        }
+        if (g_hyperModeId >= 0)
+        {
+            SoundLib::SoundLib::SetEnvironmentSoundVolume(g_hyperModeId, GetEffectiveEnvironmentVolume(g_hyperModeVolume));
+        }
+    }
+    catch (const SoundLib::AudioDeviceException&)
+    {
+        BeginAudioDeviceRecovery();
+    }
+}
+
 void PlayBgmIfChanged(const std::wstring& path, const int volume)
 {
     if (!g_initialized)
@@ -238,6 +285,11 @@ void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
 
     if (g_currentEnvironment == path)
     {
+        if (g_environmentVolume != volume)
+        {
+            g_environmentVolume = volume;
+            ApplyEnvironmentVolumesInternal();
+        }
         return;
     }
     try
@@ -246,7 +298,7 @@ void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
         {
             SoundLib::SoundLib::StopEnvironmentSound(g_environmentId);
         }
-        g_environmentId = SoundLib::SoundLib::PlayEnvironmentSound(path, volume);
+        g_environmentId = SoundLib::SoundLib::PlayEnvironmentSound(path, GetEffectiveEnvironmentVolume(volume));
     }
     catch (const SoundLib::AudioDeviceException&)
     {
@@ -254,6 +306,7 @@ void PlayEnvironmentIfChanged(const std::wstring& path, const int volume)
         return;
     }
     g_currentEnvironment = path;
+    g_environmentVolume = volume;
 }
 
 void StopBgmIfPlaying()
@@ -304,6 +357,7 @@ void StopEnvironment()
         g_environmentId = -1;
     }
     g_currentEnvironment.clear();
+    g_environmentVolume = 0;
 }
 
 void BeginBgmFadeOutInternal(const int frames)
@@ -369,6 +423,11 @@ void PlayEffect(const std::wstring& path, const int volume)
         return;
     }
 
+    if (!g_windowFocused)
+    {
+        return;
+    }
+
     try
     {
         SoundLib::SoundLib::PlaySoundEffect(path, volume);
@@ -401,6 +460,7 @@ void SetWindowFocused(const bool focused)
 
     g_windowFocused = focused;
     FadeCurrentBgmVolume();
+    ApplyEnvironmentVolumesInternal();
 }
 
 void Initialize()
@@ -678,7 +738,7 @@ void SetDoorMovementActive(const bool active)
     try
     {
         g_doorMovementId =
-            SoundLib::SoundLib::PlayEnvironmentSound(kDoorMovement, 38);
+            SoundLib::SoundLib::PlayEnvironmentSound(kDoorMovement, GetEffectiveEnvironmentVolume(g_doorMovementVolume));
     }
     catch (const SoundLib::AudioDeviceException&)
     {
@@ -720,7 +780,7 @@ void StartPushableBoxMovement()
     try
     {
         g_pushableBoxMovementId =
-            SoundLib::SoundLib::PlayEnvironmentSound(kPushableBoxMovement, 46);
+            SoundLib::SoundLib::PlayEnvironmentSound(kPushableBoxMovement, GetEffectiveEnvironmentVolume(g_pushableBoxMovementVolume));
     }
     catch (const SoundLib::AudioDeviceException&)
     {
@@ -778,7 +838,7 @@ void StartHyperMode()
 
     try
     {
-        g_hyperModeId = SoundLib::SoundLib::PlayEnvironmentSound(kHyperMode, 78);
+        g_hyperModeId = SoundLib::SoundLib::PlayEnvironmentSound(kHyperMode, GetEffectiveEnvironmentVolume(g_hyperModeVolume));
     }
     catch (const SoundLib::AudioDeviceException&)
     {
