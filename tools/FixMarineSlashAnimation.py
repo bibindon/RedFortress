@@ -1,0 +1,124 @@
+﻿"""Repair Marine's overhead slash in Blender and export with the official add-on."""
+import math
+from pathlib import Path
+
+import bpy
+from mathutils import Quaternion
+
+ROOT = Path(__file__).resolve().parents[1]
+ASSETS = ROOT / 'RedFortress2/MultiPassRendering/res/model2/marine_512_low'
+SOURCE_ACTION = 'slash_before_arm_fix'
+
+
+def limit_angle(angle, degrees):
+    bound = math.radians(degrees)
+    return max(-bound, min(bound, angle))
+
+
+def limit_swing(rotation, degrees):
+    rotation = rotation.normalized()
+    if rotation.w < 0.0:
+        rotation.negate()
+    if rotation.angle > math.radians(degrees):
+        return Quaternion(rotation.axis, math.radians(degrees))
+    return rotation
+
+
+def influence(frame):
+    amount = min(frame / 6.0, (55.0 - frame) / 10.0, 1.0)
+    amount = max(0.0, amount)
+    return amount * amount * (3.0 - 2.0 * amount)
+
+
+def main():
+    armature = next(obj for obj in bpy.data.objects if obj.type == 'ARMATURE')
+    if SOURCE_ACTION not in bpy.data.actions:
+        source = bpy.data.actions['slash'].copy()
+        source.name = SOURCE_ACTION
+        source.use_fake_user = True
+    source = bpy.data.actions[SOURCE_ACTION]
+    armature.animation_data.action = None
+    for bone in armature.pose.bones:
+        bone.location = (0.0, 0.0, 0.0)
+        bone.rotation_mode = 'QUATERNION'
+        bone.rotation_quaternion = Quaternion()
+        bone.scale = (1.0, 1.0, 1.0)
+    armature.animation_data.action = source
+    samples = []
+    for frame in range(56):
+        bpy.context.scene.frame_set(frame)
+        samples.append({bone.name: (bone.location.copy(), bone.rotation_quaternion.copy(),
+                                    bone.scale.copy()) for bone in armature.pose.bones})
+
+    old = bpy.data.actions.get('slash')
+    if old is not None:
+        bpy.data.actions.remove(old)
+    action = bpy.data.actions.new('slash')
+    action.use_fake_user = True
+    armature.animation_data.action = action
+    previous = {}
+    for frame, pose in enumerate(samples):
+        amount = influence(frame)
+        rotations = {name: values[1].normalized() for name, values in pose.items()}
+        upper_swing, upper_twist = rotations['Bone_239'].to_swing_twist('Y')
+        elbow_swing, elbow_twist = rotations['Bone_240'].to_swing_twist('Y')
+        forearm_swing, forearm_twist = rotations['Bone_241'].to_swing_twist('Y')
+        wrist_swing, wrist_twist = rotations['Bone_242'].to_swing_twist('Y')
+        limited_wrist_twist = limit_angle(wrist_twist, 15.0)
+        corrected = {
+            'Bone_239': Quaternion((0, 1, 0), limit_angle(upper_twist, 35.0)),
+            'Bone_240': elbow_swing,
+            'Bone_241': Quaternion((0, 1, 0), limit_angle(
+                forearm_twist + elbow_twist + wrist_twist - limited_wrist_twist, 60.0)),
+            'Bone_242': limit_swing(wrist_swing, 25.0)
+                        @ Quaternion((0, 1, 0), limited_wrist_twist),
+        }
+        for name, rotation in corrected.items():
+            rotations[name] = rotations[name].slerp(rotation, amount)
+        for bone in armature.pose.bones:
+            bone.rotation_mode = 'QUATERNION'
+            bone.location = pose[bone.name][0]
+            rotation = rotations[bone.name]
+            if bone.name in previous and previous[bone.name].dot(rotation) < 0.0:
+                rotation.negate()
+            previous[bone.name] = rotation.copy()
+            bone.rotation_quaternion = rotation
+            bone.scale = pose[bone.name][2]
+            for channel in ('location', 'rotation_quaternion', 'scale'):
+                bone.keyframe_insert(data_path=channel, frame=frame, group=bone.name)
+    for layer in action.layers:
+        for strip in layer.strips:
+            for bag in strip.channelbags:
+                for curve in bag.fcurves:
+                    for key in curve.keyframe_points:
+                        key.interpolation = 'LINEAR'
+
+    bpy.ops.object.select_all(action='DESELECT')
+    armature.select_set(True)
+    bpy.context.view_layer.objects.active = armature
+    bpy.context.scene.frame_start = 0
+    bpy.context.scene.frame_end = 55
+    bpy.context.scene.frame_set(0)
+    result = bpy.ops.export_scene.directx_x(
+        filepath=str(ASSETS / 'marine.slash.x'), check_existing=False,
+        use_selection=True, axis_forward='Z', axis_up='Y', global_scale=1.0,
+        use_mesh_modifiers=True, export_normals=True, export_uvs=True,
+        export_materials=True, export_textures=False, export_armature=True,
+        export_weights=True, export_animation=True, anim_key_format='TRS',
+        pz_compat=False, anim_fps=30.0, anim_frame_start=0, anim_frame_end=55,
+        unweld_on_export=False, use_original_material_data=False,
+        export_format='TEXT_X', triangulate=False)
+    if 'FINISHED' not in result:
+        raise RuntimeError('Official DirectX animation export failed')
+    path = ASSETS / 'marine.slash.x'
+    # Only normalize text encoding/newlines, never rewrite exported X structures.
+    text = path.read_text(encoding='utf-8-sig')
+    path.write_bytes(text.replace('\r\n', '\n').replace('\n', '\r\n').encode('utf-8'))
+    bpy.context.scene.frame_set(0)
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=str(ASSETS / 'marine.blend'))
+    print('MARINE_SLASH_FIXED: 56 frames; original action retained as ' + SOURCE_ACTION)
+
+
+if __name__ == '__main__':
+    main()

@@ -60,3 +60,4 @@ __pycache__
 !/tools/RebuildStageSelect3.py
 !/tools/RebuildStageSelect4.py
 !/tools/ValidateStageSelect4.py
+!/tools/FixMarineSlashAnimation.py
