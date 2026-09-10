@@ -62,3 +62,4 @@ __pycache__
 !/tools/ValidateStageSelect4.py
 !/tools/FixMarineSlashAnimation.py
 !/tools/RebuildDashBooster.py
+!/tools/RebuildGoalPortal.py
