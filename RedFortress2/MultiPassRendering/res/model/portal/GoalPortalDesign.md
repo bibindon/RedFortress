@@ -12,6 +12,16 @@
 - 静的検証: 四方向の各踏み面へレイを落とし、高さと上向き法線を確認。表示/衝突のXファイルが一致することを確認。
 - ゲーム実行画面での登坂・見た目は未確認。
 
+## ゴール演出（緑八面体群）
+
+- 光の柱（light_pillar.x）は廃止し、緑八面体群に完全置換した。
+- 生成スクリプト: tools/RebuildGoalOctahedron.py
+- 表示モデル: green_octahedron.x / 編集用: green_octahedron.blend
+- 正八面体、対頂点距離0.3m。8三角形。マテリアルは緑（0.15, 0.85, 0.35）。
+- green_octahedron.csv: meshtype,Emit / Intensity 0.8 / Color 150,255,170 / PointLight 0.0 / shadow,ssao=n（弱発光）。
+- ゲーム側で20体をAddMeshMixし、半径0.15-0.9mに配置。周期2.2-3.8秒で上昇1.6-2.4mしながら0.25倍まで縮小＋回転。出現位相・大きさにばらつきあり。
+- 起動後（接触後）は60Fで一括縮小・減光し消去。ポイントライトは緑のLine（長さ4m）に変更。
+
 ## テクスチャ生成
 
 内蔵image_genツールを使用。CLI/APIフォールバックは使用していない。

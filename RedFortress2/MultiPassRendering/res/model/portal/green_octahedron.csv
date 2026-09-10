@@ -1,0 +1,6 @@
+meshtype,Emit
+EmitIntensity,0.8
+EmitColor,150,255,170
+EmitPointLightIntensity,0.0
+shadow,n
+ssao,n

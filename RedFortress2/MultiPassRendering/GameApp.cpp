@@ -173,17 +173,27 @@ namespace
     const int kTitleLicenseDisabledArrowTransparency = 90;
     const std::wstring kPortalStepsModelPath = L"res\\model\\portal\\stone_steps.x";
     const std::wstring kPortalStepsCollisionPath = L"res\\model\\portal\\stone_steps_collision.x";
-    const std::wstring kPortalPillarModelPath = L"res\\model\\portal\\light_pillar.x";
+    const std::wstring kPortalShardModelPath = L"res\\model\\portal\\green_octahedron.x";
     const float kPortalStepsScale = 2.0f;
     const float kPortalStepsPositionYOffset = -1.0f;
     const int kPortalClearDelayFrames = 45;
     const float kPortalPillarTouchRadius = 0.9f;
-    const float kPortalPillarLightHeight = 10.0f;
-    const float kPortalPillarLightBrightness = 1.6f;
-    const float kPortalPillarLightRange = 4.0f;
-    const float kPortalPillarLightLength = 20.0f;
+    const float kPortalPillarLightHeight = 2.0f;
+    const float kPortalPillarLightBrightness = 1.2f;
+    const float kPortalPillarLightRange = 5.0f;
+    const float kPortalPillarLightLength = 4.0f;
     const int kPortalPillarFadeFrames = 60;
     const std::wstring kPortalPillarLightOwnerTag = L"stage-goal-pillar";
+    const int kPortalShardCount = 20;
+    const float kPortalShardMinScale = 0.6f;
+    const float kPortalShardMaxScale = 1.3f;
+    const float kPortalShardMinRadius = 0.15f;
+    const float kPortalShardMaxRadius = 0.9f;
+    const float kPortalShardBaseYOffset = 0.2f;
+    const float kPortalShardMinRise = 1.6f;
+    const float kPortalShardMaxRise = 2.4f;
+    const float kPortalShardMinCycleMs = 2200.0f;
+    const float kPortalShardMaxCycleMs = 3800.0f;
     const float kTitleSunLightIntensity = 0.45f;
     const float kTitleAmbientLightIntensity = 0.14f;
     const float kStagePortalClickRadius = 48.0f;
@@ -7529,7 +7539,26 @@ void GameApp::BeginStageClearVisual()
 
 void GameApp::UpdateStageClearVisual()
 {
-    UpdatePortalPillarFade();
+    if (m_portalPillarShown && !m_portalShards.empty())
+    {
+        ++m_portalPillarFadeElapsedFrames;
+        if (m_portalPillarFadeElapsedFrames >= kPortalPillarFadeFrames)
+        {
+            RemovePortalShards();
+            m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
+            m_portalPillarShown = false;
+        }
+        else
+        {
+            const float fadeProgress =
+                static_cast<float>(m_portalPillarFadeElapsedFrames) /
+                static_cast<float>(kPortalPillarFadeFrames);
+            const float smoothProgress =
+                fadeProgress * fadeProgress * (3.0f - 2.0f * fadeProgress);
+            const float remaining = 1.0f - smoothProgress;
+            UpdatePortalShards(remaining);
+        }
+    }
 
     const float rawCameraT = static_cast<float>(m_stageClearFrame + 1) /
                              static_cast<float>(kStageClearCameraMoveFrames);
@@ -7629,6 +7658,8 @@ void GameApp::InitializePortal(const D3DXVECTOR3& clearPosition)
     m_portalPillarFadeElapsedFrames = 0;
     m_portalClearDelayFrames = 0;
     m_stageClearInputLocked = false;
+    m_portalShards.clear();
+    m_portalShardStartTick = 0;
 }
 
 
@@ -7640,11 +7671,7 @@ void GameApp::RemovePortal()
         m_render.RemoveMeshMix(m_portalStepsMeshId);
         m_portalStepsMeshId = -1;
     }
-    if (m_portalPillarMeshId >= 0)
-    {
-        m_render.RemoveMeshMix(m_portalPillarMeshId);
-        m_portalPillarMeshId = -1;
-    }
+    RemovePortalShards();
     m_portalCollisionId = -1;
     m_portalPillarShown = false;
     m_portalActivated = false;
@@ -7661,7 +7688,7 @@ void GameApp::UpdatePortal()
         return;
     }
 
-    // Step 1: Show the light pillar when all enemies are dead.
+    // Step 1: Show green octahedron shards when all enemies are dead.
     if (!m_portalPillarShown && !m_portalActivated)
     {
         bool allDead = true;
@@ -7675,18 +7702,10 @@ void GameApp::UpdatePortal()
         }
         if (allDead)
         {
-            const D3DXVECTOR3 pillarPos = m_portalBasePosition;
-            m_portalPillarMeshId = m_render.AddMeshMix(kPortalPillarModelPath,
-                                                        pillarPos,
-                                                        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                        1.0f,
-                                                        -1.0f,
-                                                        false,
-                                                        false,
-                                                        false);
+            CreatePortalShards();
             const D3DXVECTOR3 pillarLightPosition =
-                pillarPos + D3DXVECTOR3(0.0f, kPortalPillarLightHeight, 0.0f);
-            const D3DXCOLOR pillarLightColor(0.55f, 0.82f, 1.0f, 1.0f);
+                m_portalBasePosition + D3DXVECTOR3(0.0f, kPortalPillarLightHeight, 0.0f);
+            const D3DXCOLOR pillarLightColor(0.45f, 1.0f, 0.55f, 1.0f);
             m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
             m_render.AddPointLight(pillarLightPosition,
                                    kPortalPillarLightBrightness,
@@ -7703,7 +7722,7 @@ void GameApp::UpdatePortal()
         }
     }
 
-    // Step 2: When the player touches the light pillar, surround the goal with dust.
+    // Step 2: When the player touches the portal, surround the goal with dust.
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const float dx = playerPos.x - m_portalBasePosition.x;
     const float dz = playerPos.z - m_portalBasePosition.z;
@@ -7726,10 +7745,45 @@ void GameApp::UpdatePortal()
         }
     }
 
-    // Step 3: Shrink and dim the light pillar after activation.
-    UpdatePortalPillarFade();
+    // Step 3: Rise the shards normally, shrink and dim them after activation.
+    if (m_portalPillarShown && m_portalActivated)
+    {
+        ++m_portalPillarFadeElapsedFrames;
+        if (m_portalPillarFadeElapsedFrames >= kPortalPillarFadeFrames)
+        {
+            RemovePortalShards();
+            m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
+            m_portalPillarShown = false;
+        }
+        else
+        {
+            const float fadeProgress =
+                static_cast<float>(m_portalPillarFadeElapsedFrames) /
+                static_cast<float>(kPortalPillarFadeFrames);
+            const float smoothProgress =
+                fadeProgress * fadeProgress * (3.0f - 2.0f * fadeProgress);
+            const float remaining = 1.0f - smoothProgress;
+            UpdatePortalShards(remaining);
+            const float currentLightLength = kPortalPillarLightLength * remaining;
+            const D3DXVECTOR3 currentLightPosition =
+                m_portalBasePosition + D3DXVECTOR3(0.0f,
+                                                   currentLightLength * 0.5f,
+                                                   0.0f);
+            m_render.SetPointLightPositionByOwnerTag(kPortalPillarLightOwnerTag,
+                                                      currentLightPosition);
+            m_render.SetPointLightBrightnessByOwnerTag(
+                kPortalPillarLightOwnerTag,
+                kPortalPillarLightBrightness * remaining);
+            m_render.SetPointLightLineLengthByOwnerTag(kPortalPillarLightOwnerTag,
+                                                        currentLightLength);
+        }
+    }
+    else if (m_portalPillarShown && !m_portalActivated)
+    {
+        UpdatePortalShards(1.0f);
+    }
 
-    // Step 4: Let the dust and pillar transition read before stage clear.
+    // Step 4: Let the dust and shard transition read before stage clear.
     if (m_portalActivated && m_portalClearDelayFrames > 0)
     {
         --m_portalClearDelayFrames;
@@ -7737,53 +7791,148 @@ void GameApp::UpdatePortal()
 }
 
 
-void GameApp::UpdatePortalPillarFade()
+void GameApp::CreatePortalShards()
 {
-    if (!m_portalActivated || !m_portalPillarShown || m_portalPillarMeshId < 0)
+    RemovePortalShards();
+    for (int index = 0; index < kPortalShardCount; ++index)
+    {
+        const float indexFraction =
+            static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        const float jitterFraction =
+            static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        const float sizeFraction =
+            static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        const float phaseFraction =
+            static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        const float cycleFraction =
+            static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        const float spinFraction =
+            static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        const float angle =
+            2.0f * D3DX_PI * static_cast<float>(index) /
+            static_cast<float>(kPortalShardCount) +
+            (jitterFraction - 0.5f) * 0.9f;
+        const float radius = kPortalShardMinRadius +
+            (kPortalShardMaxRadius - kPortalShardMinRadius) * indexFraction;
+        PortalShard shard;
+        shard.basePosition = m_portalBasePosition + D3DXVECTOR3(cosf(angle) * radius,
+                                                                kPortalShardBaseYOffset,
+                                                                sinf(angle) * radius);
+        shard.baseScale = kPortalShardMinScale +
+            (kPortalShardMaxScale - kPortalShardMinScale) * sizeFraction;
+        shard.phaseOffset = phaseFraction;
+        shard.cycleDurationMs = kPortalShardMinCycleMs +
+            (kPortalShardMaxCycleMs - kPortalShardMinCycleMs) * cycleFraction;
+        shard.riseHeight = kPortalShardMinRise +
+            (kPortalShardMaxRise - kPortalShardMinRise) * jitterFraction;
+        if (spinFraction < 0.5f)
+        {
+            shard.spinSpeed = -1.6f + spinFraction * 1.2f;
+        }
+        else
+        {
+            shard.spinSpeed = 0.8f + spinFraction * 1.6f;
+        }
+        shard.spinPhase = indexFraction * 2.0f * D3DX_PI;
+        shard.meshId = m_render.AddMeshMix(kPortalShardModelPath,
+                                           shard.basePosition,
+                                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                           shard.baseScale,
+                                           -1.0f,
+                                           false,
+                                           false,
+                                           false);
+        if (shard.meshId >= 0)
+        {
+            m_portalShards.push_back(shard);
+        }
+    }
+    m_portalShardStartTick = GetTickCount64();
+    UpdatePortalShards(1.0f);
+}
+
+
+void GameApp::RemovePortalShards()
+{
+    for (size_t index = 0; index < m_portalShards.size(); ++index)
+    {
+        if (m_portalShards[index].meshId >= 0)
+        {
+            m_render.RemoveMeshMix(m_portalShards[index].meshId);
+        }
+    }
+    m_portalShards.clear();
+    m_portalShardStartTick = 0;
+}
+
+
+void GameApp::UpdatePortalShards(float globalScale)
+{
+    if (m_portalShards.empty())
     {
         return;
     }
-
-    ++m_portalPillarFadeElapsedFrames;
-    if (m_portalPillarFadeElapsedFrames >= kPortalPillarFadeFrames)
+    if (globalScale <= 0.001f)
     {
-        m_render.RemoveMeshMix(m_portalPillarMeshId);
-        m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
-        m_portalPillarMeshId = -1;
-        m_portalPillarShown = false;
+        for (size_t index = 0; index < m_portalShards.size(); ++index)
+        {
+            m_render.SetMeshMixEnabled(m_portalShards[index].meshId, false);
+        }
         return;
     }
-
-    const float fadeProgress =
-        static_cast<float>(m_portalPillarFadeElapsedFrames) /
-        static_cast<float>(kPortalPillarFadeFrames);
-    const float smoothProgress =
-        fadeProgress * fadeProgress * (3.0f - 2.0f * fadeProgress);
-    const float remaining = 1.0f - smoothProgress;
-
-    D3DXMATRIX pillarScaleMatrix;
-    D3DXMATRIX pillarTranslationMatrix;
-    D3DXMatrixScaling(&pillarScaleMatrix, 1.0f, remaining, 1.0f);
-    D3DXMatrixTranslation(&pillarTranslationMatrix,
-                          m_portalBasePosition.x,
-                          m_portalBasePosition.y,
-                          m_portalBasePosition.z);
-    m_render.SetMeshMixWorldMatrix(
-        m_portalPillarMeshId,
-        pillarScaleMatrix * pillarTranslationMatrix);
-
-    const float currentLightLength = kPortalPillarLightLength * remaining;
-    const D3DXVECTOR3 pillarLightPosition =
-        m_portalBasePosition + D3DXVECTOR3(0.0f,
-                                           currentLightLength * 0.5f,
-                                           0.0f);
-    m_render.SetPointLightPositionByOwnerTag(kPortalPillarLightOwnerTag,
-                                              pillarLightPosition);
-    m_render.SetPointLightBrightnessByOwnerTag(
-        kPortalPillarLightOwnerTag,
-        kPortalPillarLightBrightness * remaining);
-    m_render.SetPointLightLineLengthByOwnerTag(kPortalPillarLightOwnerTag,
-                                               currentLightLength);
+    const ULONGLONG elapsed = GetTickCount64() - m_portalShardStartTick;
+    const float elapsedMs = static_cast<float>(elapsed);
+    for (size_t index = 0; index < m_portalShards.size(); ++index)
+    {
+        const PortalShard& shard = m_portalShards[index];
+        const float cycle = std::fmod(elapsedMs / shard.cycleDurationMs + shard.phaseOffset, 1.0f);
+        bool visible = false;
+        if (cycle >= 0.05f)
+        {
+            visible = true;
+        }
+        m_render.SetMeshMixEnabled(shard.meshId, visible);
+        if (!visible)
+        {
+            continue;
+        }
+        const float progress = (cycle - 0.05f) / 0.95f;
+        float appearance = 1.0f;
+        if (progress < 0.12f)
+        {
+            appearance = progress / 0.12f;
+        }
+        else
+        {
+            if (progress > 0.70f)
+            {
+                appearance = (1.0f - progress) / 0.30f;
+            }
+        }
+        if (appearance <= 0.001f)
+        {
+            m_render.SetMeshMixEnabled(shard.meshId, false);
+            continue;
+        }
+        appearance = appearance * appearance * (3.0f - 2.0f * appearance);
+        const float shrink = 1.0f - 0.75f * progress;
+        const float scale = shard.baseScale * shrink * appearance * globalScale;
+        if (scale <= 0.001f)
+        {
+            m_render.SetMeshMixEnabled(shard.meshId, false);
+            continue;
+        }
+        D3DXVECTOR3 position = shard.basePosition;
+        position.y += progress * shard.riseHeight;
+        const float yaw = shard.spinPhase + elapsedMs * 0.001f * shard.spinSpeed;
+        D3DXMATRIX scaling;
+        D3DXMATRIX rotation;
+        D3DXMATRIX translation;
+        D3DXMatrixScaling(&scaling, scale, scale, scale);
+        D3DXMatrixRotationYawPitchRoll(&rotation, yaw, yaw * 0.6f, 0.0f);
+        D3DXMatrixTranslation(&translation, position.x, position.y, position.z);
+        m_render.SetMeshMixWorldMatrix(shard.meshId, scaling * rotation * translation);
+    }
 }
 
 
@@ -8102,13 +8251,9 @@ void GameApp::CompletePlayerDeath()
         m_render.StartMeshMixSkinAnimBlink(m_playerMeshId, kRespawnInvincibleFrames, 4);
     }
 
-    // ゴールの光の柱は、敵を再配置する前の攻略状態なのでリセットする。
+    // ゴールの八面体は、敵を再配置する前の攻略状態なのでリセットする。
     m_render.RemovePointLightsByOwnerTag(kPortalPillarLightOwnerTag);
-    if (m_portalPillarMeshId >= 0)
-    {
-        m_render.RemoveMeshMix(m_portalPillarMeshId);
-        m_portalPillarMeshId = -1;
-    }
+    RemovePortalShards();
     m_portalPillarShown = false;
     m_portalActivated = false;
     m_portalPillarFadeElapsedFrames = 0;

@@ -90,6 +90,18 @@ private:
         std::wstring downPortalId;
     };
 
+    struct PortalShard
+    {
+        int meshId = -1;
+        D3DXVECTOR3 basePosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        float baseScale = 1.0f;
+        float phaseOffset = 0.0f;
+        float cycleDurationMs = 3000.0f;
+        float riseHeight = 2.0f;
+        float spinSpeed = 1.0f;
+        float spinPhase = 0.0f;
+    };
+
     GameApp();
     ~GameApp();
     GameApp(const GameApp&) = delete;
@@ -241,7 +253,9 @@ private:
     void InitializePortal(const D3DXVECTOR3& clearPosition);
     void RemovePortal();
     void UpdatePortal();
-    void UpdatePortalPillarFade();
+    void CreatePortalShards();
+    void RemovePortalShards();
+    void UpdatePortalShards(float globalScale);
     void TryDropEnemyItem(const EnemyBase& enemy);
     void InitializeStageSelectCursor();
     void LoadStageSelectNavigation(const std::wstring& csvPath);
@@ -533,7 +547,6 @@ D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
     // Portal (stage clear altar)
     int m_portalStepsMeshId = -1;
-    int m_portalPillarMeshId = -1;
     int m_portalCollisionId = -1;
     bool m_portalPillarShown = false;
     bool m_portalActivated = false;
@@ -541,6 +554,8 @@ D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     int m_portalClearDelayFrames = 0;
     bool m_stageClearInputLocked = false;
     D3DXVECTOR3 m_portalBasePosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    std::vector<PortalShard> m_portalShards;
+    ULONGLONG m_portalShardStartTick = 0;
 
     D3DXVECTOR3 m_stageSelectPlayerMoveStartPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR3 m_stageSelectPlayerMoveTargetPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

@@ -63,3 +63,4 @@ __pycache__
 !/tools/FixMarineSlashAnimation.py
 !/tools/RebuildDashBooster.py
 !/tools/RebuildGoalPortal.py
+!/tools/RebuildGoalOctahedron.py
