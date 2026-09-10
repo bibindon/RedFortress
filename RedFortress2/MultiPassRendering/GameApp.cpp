@@ -4,6 +4,7 @@
 #include "GameAudio.h"
 #include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <cstdlib>
 #include <iomanip>
 #include <random>
@@ -231,6 +232,10 @@ namespace
     const float kStageSelectCubeYellowScale = 0.865f;
     const float kStageSelectCubeVisualOffsetY = 1.0f;
     const float kStageSelect2CubeVisualOffsetY = -1.3f;
+    const float kStageSelectCubeRiseHeight = 1.5f;
+    const ULONGLONG kStageSelectCubeCycleMilliseconds = 3000;
+    const float kStageSelectCubeSizeRatios[] = { 1.15f, 0.72f, 0.36f };
+    const float kStageSelectCubeHorizontalOffsets[] = { -0.18f, 0.18f, -0.06f };
     const std::wstring kAttackClubIconPath = L"res\\2D_Image\\attack_club_icon.png";
     const std::wstring kAttackSlashIconPath = L"res\\2D_Image\\attack_slash_icon.png";
     const std::wstring kAttackBombIconPath = L"res\\2D_Image\\attack_bomb_icon.png";
@@ -1034,6 +1039,7 @@ void GameApp::Run()
         }
 
         UpdateStageSelectMaskedGaussian();
+        UpdateStageSelectCubes();
 
         if (m_stageTransitionAction != StageTransitionAction::None)
         {
@@ -6045,11 +6051,12 @@ void GameApp::DrawItemPickupMessage()
 
 void GameApp::RemoveStageSelectCubes()
 {
-    for (auto it = m_stageSelectCubeMeshIds.rbegin(); it != m_stageSelectCubeMeshIds.rend(); ++it)
+    for (auto it = m_stageSelectCubes.rbegin(); it != m_stageSelectCubes.rend(); ++it)
     {
-        m_render.RemoveMeshMix(*it);
+        m_render.RemoveMeshMix(it->renderId);
     }
-    m_stageSelectCubeMeshIds.clear();
+    m_stageSelectCubes.clear();
+    m_stageSelectCubeStartTick = 0;
 }
 
 void GameApp::CreateStageSelectCubes()
@@ -6127,14 +6134,80 @@ void GameApp::CreateStageSelectCubes()
                 m_render.AddPointLight(cubePosition, 1.8f, fullHealthColor);
             }
         }
-        const int renderId = m_render.AddMeshMix(cubePath,
-                                                  cubePosition,
-                                                  D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                                                  cubeScale);
-        if (renderId >= 0)
+        // Preserve each stage's ground correction; the old cube was one meter above it.
+        D3DXVECTOR3 basePosition = cubePosition;
+        basePosition.y -= kStageSelectCubeVisualOffsetY;
+        for (int index = 0; index < 3; ++index)
         {
-            m_stageSelectCubeMeshIds.push_back(renderId);
+            StageSelectCube cube;
+            cube.basePosition = basePosition;
+            cube.baseScale = cubeScale * kStageSelectCubeSizeRatios[index];
+            cube.index = index;
+            cube.renderId = m_render.AddMeshMix(cubePath,
+                                               basePosition,
+                                               D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                               cube.baseScale);
+            if (cube.renderId >= 0)
+            {
+                m_stageSelectCubes.push_back(cube);
+            }
         }
+    }
+    m_stageSelectCubeStartTick = GetTickCount64();
+    UpdateStageSelectCubes();
+}
+
+void GameApp::UpdateStageSelectCubes()
+{
+    if (!IsCurrentStageSelect() || m_stageSelectCubes.empty())
+    {
+        return;
+    }
+
+    // Use elapsed time, not rendered frames, so low FPS does not slow the effect.
+    const ULONGLONG elapsed = GetTickCount64() - m_stageSelectCubeStartTick;
+    const float cycle = static_cast<float>(elapsed % kStageSelectCubeCycleMilliseconds) /
+                        static_cast<float>(kStageSelectCubeCycleMilliseconds);
+    for (const StageSelectCube& cube : m_stageSelectCubes)
+    {
+        const float phase = std::fmod(cycle + 0.10f + static_cast<float>(cube.index) / 3.0f, 1.0f);
+        // A short hidden interval separates disappearance at the top from rebirth below.
+        const bool visible = phase >= 0.05f;
+        m_render.SetMeshMixEnabled(cube.renderId, visible);
+        if (!visible)
+        {
+            continue;
+        }
+
+        const float progress = (phase - 0.05f) / 0.95f;
+        float appearance = 1.0f;
+        if (progress < 0.10f)
+        {
+            appearance = progress / 0.10f;
+        }
+        else if (progress > 0.85f)
+        {
+            appearance = (1.0f - progress) / 0.15f;
+        }
+        // Avoid a singular world matrix at the exact birth time.
+        if (appearance <= 0.001f)
+        {
+            m_render.SetMeshMixEnabled(cube.renderId, false);
+            continue;
+        }
+        appearance = appearance * appearance * (3.0f - 2.0f * appearance);
+
+        D3DXVECTOR3 position = cube.basePosition;
+        position.x += kStageSelectCubeHorizontalOffsets[cube.index];
+        position.y += progress * kStageSelectCubeRiseHeight;
+        const float scale = cube.baseScale * appearance;
+        D3DXMATRIX scaling;
+        D3DXMATRIX rotation;
+        D3DXMATRIX translation;
+        D3DXMatrixScaling(&scaling, scale, scale, scale);
+        D3DXMatrixRotationYawPitchRoll(&rotation, D3DX_PI * 0.15f, D3DX_PI * 0.10f, D3DX_PI * 0.25f);
+        D3DXMatrixTranslation(&translation, position.x, position.y, position.z);
+        m_render.SetMeshMixWorldMatrix(cube.renderId, scaling * rotation * translation);
     }
 }
 

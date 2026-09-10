@@ -74,6 +74,14 @@ public:
 #endif
 
 private:
+    struct StageSelectCube
+    {
+        int renderId = -1;
+        D3DXVECTOR3 basePosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        float baseScale = 1.0f;
+        int index = 0;
+    };
+
     struct StageSelectNavigationEntry
     {
         std::wstring leftPortalId;
@@ -249,6 +257,7 @@ private:
     void DrawStageSelectCursor();
     void CreateStageSelectCubes();
     void RemoveStageSelectCubes();
+    void UpdateStageSelectCubes();
     bool PlaceBomb(const D3DXVECTOR3& position);
     void UpdateBombPhysics(ActiveBomb& bomb);
     void UpdateBombs();
@@ -539,7 +548,8 @@ D3DXVECTOR3 m_selectedStagePortalPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     bool m_stageSelectPlayerMoveActive = false;
     bool m_stageSelectStickDirectionActive = false;
     std::unordered_map<std::wstring, StageSelectNavigationEntry> m_stageSelectNavigation;
-    std::vector<int> m_stageSelectCubeMeshIds;
+    std::vector<StageSelectCube> m_stageSelectCubes;
+    ULONGLONG m_stageSelectCubeStartTick = 0;
     bool m_titleDeleteConfirmMode = false;
     bool m_titleLanguageSelectionMode = false;
     bool m_titleLicenseMode = false;
