@@ -7512,7 +7512,7 @@ void GameApp::BeginStageClearVisual()
     m_stageClearStoredFovDegrees = m_render.GetCameraHorizontalFovDegrees();
 
     const D3DXVECTOR3 playerPosition = m_playerMover.GetPosition();
-    m_stageClearCameraEndTarget = playerPosition + D3DXVECTOR3(0.0f, 1.05f, 0.0f);
+    m_stageClearCameraEndTarget = playerPosition + D3DXVECTOR3(0.0f, 1.30f, 0.0f);
     D3DXVECTOR3 playerForward(-sinf(m_playerYaw), 0.0f, -cosf(m_playerYaw));
     if (D3DXVec3LengthSq(&playerForward) <= 0.0001f)
     {
@@ -7520,8 +7520,8 @@ void GameApp::BeginStageClearVisual()
     }
     D3DXVec3Normalize(&playerForward, &playerForward);
     const D3DXVECTOR3 desiredCameraPosition = m_stageClearCameraEndTarget +
-                                               playerForward * 5.0f +
-                                               D3DXVECTOR3(0.0f, 1.2f, 0.0f);
+                                               playerForward * 5.5f +
+                                               D3DXVECTOR3(0.0f, 0.7f, 0.0f);
     m_stageClearCameraEndPos = m_cameraMover.ResolvePosition(m_stageClearCameraEndTarget,
                                                              desiredCameraPosition);
 
