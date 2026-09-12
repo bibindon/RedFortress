@@ -154,6 +154,8 @@ namespace
     const std::wstring kTitleLicenseMaskPath = L"res\\2D_Image\\title_license_mask.png";
     const std::wstring kTitleLicenseScrollUpPath = L"res\\2D_Image\\item_scroll_up.png";
     const std::wstring kTitleLicenseScrollDownPath = L"res\\2D_Image\\item_scroll_down.png";
+    const ULONGLONG kPlayerDamageGaussianDurationMilliseconds = 200;
+    const float kPlayerDamageGaussianStrength = 0.25f;
     const int kTitleLicenseGaussianSampleSize = 25;
     const ULONGLONG kTitleLicenseGaussianDurationMilliseconds = 500;
     const int kTitleLicensePanelX = 400;
@@ -179,7 +181,7 @@ namespace
     const int kPortalClearDelayFrames = 45;
     const float kPortalPillarTouchRadius = 0.9f;
     const float kPortalPillarLightHeight = 2.5f;
-    const float kPortalPillarLightBrightness = 2.4f;
+    const float kPortalPillarLightBrightness = 1.2f;
     const float kPortalPillarLightRange = 5.0f;
     const int kPortalPillarFadeFrames = 60;
     const std::wstring kPortalPillarLightOwnerTag = L"stage-goal-pillar";
@@ -1049,6 +1051,7 @@ void GameApp::Run()
             GameAudio::PlayStoryMusic();
         }
 
+        UpdatePlayerDamageGaussian();
         UpdateStageSelectMaskedGaussian();
         UpdateStageSelectCubes();
 
@@ -8060,6 +8063,56 @@ void GameApp::ProcessEnemyAttackHits()
     }
 }
 
+void GameApp::StartPlayerDamageGaussian()
+{
+    if (m_render.IsPostEffectMaskedGaussianFilterEnabled())
+    {
+        return;
+    }
+
+    if (!m_playerDamageGaussianActive)
+    {
+        m_playerDamageGaussianPreviousEnabled = m_render.IsPostEffectGaussianFilterEnabled();
+        m_playerDamageGaussianPreviousStrength = m_render.GetPostEffectGaussianStrength();
+    }
+    m_playerDamageGaussianActive = true;
+    m_playerDamageGaussianStartTick = GetTickCount64();
+    m_render.SetPostEffectGaussianStrength(kPlayerDamageGaussianStrength);
+    if (!m_render.IsPostEffectGaussianFilterEnabled())
+    {
+        m_render.SetPostEffectGaussianFilter(true);
+    }
+}
+
+void GameApp::UpdatePlayerDamageGaussian()
+{
+    if (!m_playerDamageGaussianActive)
+    {
+        return;
+    }
+
+    const ULONGLONG elapsed = GetTickCount64() - m_playerDamageGaussianStartTick;
+    if (elapsed >= kPlayerDamageGaussianDurationMilliseconds ||
+        m_gameState != GameState::Playing ||
+        m_render.IsPostEffectMaskedGaussianFilterEnabled())
+    {
+        m_render.SetPostEffectGaussianStrength(m_playerDamageGaussianPreviousStrength);
+        m_render.SetPostEffectGaussianFilter(m_playerDamageGaussianPreviousEnabled);
+        m_playerDamageGaussianActive = false;
+        return;
+    }
+
+    const float progress = static_cast<float>(elapsed) /
+        static_cast<float>(kPlayerDamageGaussianDurationMilliseconds);
+    float endStrength = 0.0f;
+    if (m_playerDamageGaussianPreviousEnabled)
+    {
+        endStrength = m_playerDamageGaussianPreviousStrength;
+    }
+    m_render.SetPostEffectGaussianStrength(
+        kPlayerDamageGaussianStrength + (endStrength - kPlayerDamageGaussianStrength) * progress);
+}
+
 void GameApp::DamagePlayerHp(int amount)
 {
     const int oldHp = m_player.GetHp();
@@ -8068,6 +8121,7 @@ void GameApp::DamagePlayerHp(int amount)
     if (newHp < oldHp)
     {
         GameAudio::PlayPlayerDamage();
+        StartPlayerDamageGaussian();
         D3DXVECTOR3 damageEffectPosition = m_playerMover.GetPosition();
         damageEffectPosition.y += 1.0f;
         m_render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Damage, damageEffectPosition);

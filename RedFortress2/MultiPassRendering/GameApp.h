@@ -165,6 +165,8 @@ private:
     void UpdateStageIntro();
     void UpdateWarp();
     void BeginWarp(const D3DXVECTOR3& targetPosition, float targetRotationY);
+    void StartPlayerDamageGaussian();
+    void UpdatePlayerDamageGaussian();
     void DamagePlayerHp(int amount);
     void ProcessEnemyAttackHits();
     void ApplyLavaDamageToEnemies();
@@ -462,6 +464,10 @@ private:
     HpBar m_hpBar;
     BossHpBar m_bossHpBar;
     DamagePopupManager m_damagePopupManager;
+    bool m_playerDamageGaussianActive = false;
+    bool m_playerDamageGaussianPreviousEnabled = false;
+    float m_playerDamageGaussianPreviousStrength = 1.0f;
+    ULONGLONG m_playerDamageGaussianStartTick = 0;
     EnemyManager m_enemyManager;
     DestructibleManager m_destructibleManager;
     PickupManager m_pickupManager;

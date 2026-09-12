@@ -6,8 +6,6 @@
 namespace
 {
     const float kTargetFrameSeconds = 1.0f / 60.0f;
-    // 死亡時に地面へ崩れ落ちる際、何フレームかけて沈むか。
-    const int kDeathFallTotalFrames = 20;
 
     float ClampFloat(float v, float lo, float hi)
     {
@@ -166,15 +164,6 @@ void EnemyBase::Update(NSRender::Render& render, const D3DXVECTOR3& playerPos, b
 
     if (m_state == State::Dead)
     {
-        // 地面に崩れ落ちる: 数フレームかけて m_position.y を目標まで沈める。
-        if (m_deathFallFrames > 0)
-        {
-            --m_deathFallFrames;
-            const float t = 1.0f - static_cast<float>(m_deathFallFrames) /
-                                      static_cast<float>(kDeathFallTotalFrames);
-            m_position.y = m_deathFallStartY +
-                           (m_deathFallTargetY - m_deathFallStartY) * t;
-        }
         if (m_removalFrames > 0)
         {
             --m_removalFrames;
@@ -530,10 +519,6 @@ void EnemyBase::StartDeath(NSRender::Render& render)
             m_removalFrames = 45;
             render.SetMeshMixSkinAnimSpeed(m_meshId, 1.0f);
             render.PlayMeshMixSkinAnimAnimation(m_meshId, L"death");
-            // 地面に崩れ落ちる演出: メッシュを身長分だけ沈めて地面の下へ消す。
-            m_deathFallStartY = m_position.y;
-            m_deathFallTargetY = m_position.y - m_height;
-            m_deathFallFrames = kDeathFallTotalFrames;
         }
         else
         {
