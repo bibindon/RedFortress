@@ -178,10 +178,9 @@ namespace
     const float kPortalStepsPositionYOffset = -1.0f;
     const int kPortalClearDelayFrames = 45;
     const float kPortalPillarTouchRadius = 0.9f;
-    const float kPortalPillarLightHeight = 2.0f;
+    const float kPortalPillarLightHeight = 2.5f;
     const float kPortalPillarLightBrightness = 2.4f;
     const float kPortalPillarLightRange = 5.0f;
-    const float kPortalPillarLightLength = 4.0f;
     const int kPortalPillarFadeFrames = 60;
     const std::wstring kPortalPillarLightOwnerTag = L"stage-goal-pillar";
     const int kPortalShardCount = 20;
@@ -7734,11 +7733,11 @@ void GameApp::UpdatePortal()
             m_render.AddPointLight(pillarLightPosition,
                                    kPortalPillarLightBrightness,
                                    pillarLightColor,
-                                   NSRender::PointLightShape::Line,
-                                   kPortalPillarLightLength,
+                                   NSRender::PointLightShape::Point,
+                                   0.0f,
                                    10.0f,
                                    10.0f,
-                                   D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f),
+                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
                                    kPortalPillarLightRange,
                                    kPortalPillarLightOwnerTag);
             m_portalPillarShown = true;
@@ -7788,18 +7787,9 @@ void GameApp::UpdatePortal()
                 fadeProgress * fadeProgress * (3.0f - 2.0f * fadeProgress);
             const float remaining = 1.0f - smoothProgress;
             UpdatePortalShards(remaining);
-            const float currentLightLength = kPortalPillarLightLength * remaining;
-            const D3DXVECTOR3 currentLightPosition =
-                m_portalBasePosition + D3DXVECTOR3(0.0f,
-                                                   currentLightLength * 0.5f,
-                                                   0.0f);
-            m_render.SetPointLightPositionByOwnerTag(kPortalPillarLightOwnerTag,
-                                                      currentLightPosition);
             m_render.SetPointLightBrightnessByOwnerTag(
                 kPortalPillarLightOwnerTag,
                 kPortalPillarLightBrightness * remaining);
-            m_render.SetPointLightLineLengthByOwnerTag(kPortalPillarLightOwnerTag,
-                                                        currentLightLength);
         }
     }
     else if (m_portalPillarShown && !m_portalActivated)

@@ -218,7 +218,6 @@ def build_box(stone, stone_dark, iron, cobble):
         add_box("Jamb", B(sx * 2.62, 3.24, -2.72), D(0.56, 5.48, 0.6), iron, 1.0)
     add_box("Lintel", B(0.0, 5.63, -2.70), D(5.9, 0.7, 0.56), iron, 1.0)
     add_box("Slab", B(0.0, 0.25, 0.0), D(6.0, 0.5, 6.0), cobble, 3.0)
-    add_box("Medallion", B(0.0, 0.495, 0.0), D(2.4, 0.02, 2.4), cobble, 5.0)
 
 
 def build_door(woodtex, wood_dark, iron, gold, zc=0.125):
@@ -255,7 +254,6 @@ def build_box3(stone, stone_dark, iron, cobble):
             add_box("Jamb", B(sx * 2.62, 3.24, sz * 2.72), D(0.56, 5.48, 0.6), iron, 1.0)
         add_box("Lintel", B(0.0, 5.63, sz * 2.70), D(5.9, 0.7, 0.56), iron, 1.0)
     add_box("Slab", B(0.0, 0.25, 0.0), D(6.0, 0.5, 6.0), cobble, 3.0)
-    add_box("Medallion", B(0.0, 0.495, 0.0), D(2.4, 0.02, 2.4), cobble, 5.0)
 
 
 def build_door3(woodtex, wood_dark, iron, gold):

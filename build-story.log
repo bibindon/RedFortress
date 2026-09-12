@@ -1,0 +1,534 @@
+2026/09/12 16:36:30 にビルドを開始しました。
+ログの詳細度は次のように設定されています: Normal。
+ノード 1 上のプロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット)。
+ValidateSolutionConfiguration:
+  ソリューション構成 "Debug|x64" をビルドしています。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (1) は、ノード 1 上に "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) をビルドしています (既定のターゲット)。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\InputDevice\InputDevice\InputDevice.vcxproj" (3) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\InputDevice.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\InputDevice.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  InputDevice.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\InputDevice.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\InputDevice.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\InputDevice.tlog\InputDevice.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\InputDevice\InputDevice\InputDevice.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj" (4) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\PhysicsLib.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\PhysicsLib.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ComputeStdModulesCompileInputs:
+  ライブラリ 'microsoft/STL' のデータを提供するライブラリ マニフェスト ファイル 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' を読み取っています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' を追加しています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' を追加しています。
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ID:\repos\RedFortress\PhysicsLib\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\include /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /MP /Od /D HAS_DXSDK_D3DX /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"x64\Debug\\" /Fd"D:\repos\RedFortress\RedFortress2\x64\Debug\PhysicsLib.pdb" /external:W3 /Gd /TP /FC /errorReport:queue DashBooster.cpp CameraMover.cpp CharacterMover.cpp PhysicsLib.cpp PhysicsLibSettingsDialog.cpp
+  DashBooster.cpp
+  CameraMover.cpp
+  CharacterMover.cpp
+  PhysicsLib.cpp
+  PhysicsLibSettingsDialog.cpp
+Lib:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"D:\repos\RedFortress\RedFortress2\x64\Debug\PhysicsLib.lib" /NOLOGO /MACHINE:X64 x64\Debug\DashBooster.obj
+  x64\Debug\CameraMover.obj
+  x64\Debug\CharacterMover.obj
+  x64\Debug\PhysicsLib.obj
+  x64\Debug\PhysicsLibSettingsDialog.obj
+  PhysicsLib.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\PhysicsLib.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\PhysicsLib.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\PhysicsLib.tlog\PhysicsLib.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\QTE_Module\QTE_Module\QTE_Module.vcxproj" (5) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\QTE_Module.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\QTE_Module.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Debug\\" /Fd"D:\repos\RedFortress\RedFortress2\x64\Debug\QTE_Module.pdb" /external:W3 /Gd /TP /FC /errorReport:queue QTE_Module.cpp
+  QTE_Module.cpp
+Lib:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"D:\repos\RedFortress\RedFortress2\x64\Debug\QTE_Module.lib" /NOLOGO /MACHINE:X64 x64\Debug\QTE_Module.obj
+  QTE_Module.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\QTE_Module.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\QTE_Module.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\QTE_Module.tlog\QTE_Module.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\QTE_Module\QTE_Module\QTE_Module.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\RedFortressCommand\Command\Command.vcxproj" (6) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\Command.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\Command.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Debug\\" /Fd"D:\repos\RedFortress\RedFortress2\x64\Debug\Command.pdb" /external:W3 /Gd /TP /FC /errorReport:queue Command.cpp
+  Command.cpp
+Lib:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"D:\repos\RedFortress\RedFortress2\x64\Debug\Command.lib" /NOLOGO /MACHINE:X64 x64\Debug\Command.obj
+  Command.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\Command.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\Command.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\Command.tlog\Command.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\RedFortressCommand\Command\Command.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj" (7) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\Render.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\Render.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+FxCompile:
+  すべての出力が最新のものです。
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshMix2.cso" shader\MeshMix2.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\AnimMeshShader.cso" shader\AnimMeshShader.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshPBR.cso" shader\MeshPBR.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshNoLighting.cso" shader\MeshNoLighting.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\GBuffer.cso" shader\GBuffer.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshMixSkinAnim.cso" shader\MeshMixSkinAnim.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshNormalMapping.cso" shader\MeshNormalMapping.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshPOM.cso" shader\MeshPOM.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\AnimMeshShader.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshSSS.cso" shader\MeshSSS.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshPOM.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshNormalMapping.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshNoLighting.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshSSSLike.cso" shader\MeshSSSLike.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectBloom.cso" shader\PostEffectBloom.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectAA.cso" shader\PostEffectAA.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshSSS.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectGodRay.cso" shader\PostEffectGodRay.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\GBuffer.cso
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshSSSLike.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectAA.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectHalo.cso" shader\PostEffectHalo.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectDepthOfField.cso" shader\PostEffectDepthOfField.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectFog.cso" shader\PostEffectFog.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectGodRay.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectFont.cso" shader\PostEffectFont.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectBloom.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectFXAA.cso" shader\PostEffectFXAA.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectFog.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectTAA.cso" shader\PostEffectTAA.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectDepthOfField.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectHeightFog.cso" shader\PostEffectHeightFog.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectHalo.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectMotionBlurCamera.cso" shader\PostEffectMotionBlurCamera.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshPBR.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectTAA.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectSSAO.cso" shader\PostEffectSSAO.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectSSGI.cso" shader\PostEffectSSGI.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectFont.cso
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectHeightFog.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectZShadow.cso" shader\PostEffectZShadow.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectEnd.cso" shader\PostEffectEnd.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectMotionBlurCamera.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectGaussian.cso" shader\PostEffectGaussian.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshMixSkinAnim.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectMaskedGaussian.cso" shader\PostEffectMaskedGaussian.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectFXAA.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectSaturate.cso" shader\PostEffectSaturate.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshMix2.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectEnd.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshInstancing.cso" shader\MeshInstancing.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshPointLight.cso" shader\MeshPointLight.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectSSGI.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshOld.cso" shader\MeshOld.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectGaussian.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshOld.cso
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectSaturate.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshInstancing.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshPointLight.cso
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\MeshSmooth.cso" shader\MeshSmooth.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectStarBurst.cso" shader\PostEffectStarBurst.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\Particle.cso" shader\Particle.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\simple.cso" shader\simple.fx 
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe /nologo /E"main" /T fx_2_0 /Fo "D:\repos\RedFortress\RedFortress2\x64\Debug\SkinAnimMeshShader.cso" shader\SkinAnimMeshShader.fx 
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectMaskedGaussian.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\MeshSmooth.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectStarBurst.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\simple.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\Particle.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\SkinAnimMeshShader.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectSSAO.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  
+  compilation object save succeeded; see D:\repos\RedFortress\RedFortress2\x64\Debug\PostEffectZShadow.cso
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ID:\repos\RedFortress\RedFortressRender\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\include /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /MP /Od /D HAS_DXSDK_D3DX /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Debug\\" /Fd"D:\repos\RedFortress\RedFortress2\x64\Debug\Render.pdb" /external:W3 /Gd /TP /FC /errorReport:queue AnimController.cpp AnimMesh.cpp AnimMeshAlloc.cpp Camera.cpp Common.cpp CustomXLoader.cpp CustomXLoader2.cpp GBuffer.cpp Light.cpp LoadingScreen.cpp MeshOld.cpp MeshInstancing2.cpp MeshParam.cpp MeshPBR.cpp MeshMixSkinAnim2.cpp MeshMixAnimNoBone2.cpp MeshMix2.cpp MeshMix2Hierarchy.cpp MeshPBRManager.cpp MeshNormalMapping.cpp MeshPointLight.cpp MeshPOM.cpp ParticleSystem.cpp MeshSmooth.cpp MeshSSS.cpp MeshSSSLike.cpp PostEffectBloom.cpp PostEffectAA.cpp PostEffectDepthOfField.cpp PostEffectFog.cpp PostEffectFont.cpp PostEffectFXAA.cpp PostEffectTAA.cpp PostEffectHeightFog.cpp PostEffectHalo.cpp PostEffectGodRay.cpp PostEffectMotionBlurCamera.cpp PostEffectZShadow.cpp PostEffectEnd.cpp PostEffectGauss.cpp PostEffectMaskedGauss.cpp PostEffectSaturate.cpp PostEffectSSAO.cpp PostEffectSSGI.cpp PostEffectStarBurst.cpp PtrManager.cpp Render.cpp RenderSettingsDialog.cpp RenderSettingsDialogControls.cpp RenderSettingsDialogHandlers.cpp RenderSettingsDialogModels.cpp RenderSettingsDialogSync.cpp RenderSettingsDialogUtils.cpp SkinAnimMesh.cpp SkinAnimMeshAlloc.cpp Sprite.cpp Font.cpp FontEx.cpp FontExAnim.cpp Util.cpp WindowManager.cpp
+  AnimController.cpp
+  AnimMesh.cpp
+  AnimMeshAlloc.cpp
+  Camera.cpp
+  Common.cpp
+  CustomXLoader.cpp
+  CustomXLoader2.cpp
+  GBuffer.cpp
+  Light.cpp
+  LoadingScreen.cpp
+  MeshOld.cpp
+  MeshInstancing2.cpp
+  MeshParam.cpp
+  MeshPBR.cpp
+  MeshMixSkinAnim2.cpp
+  MeshMixAnimNoBone2.cpp
+  MeshMix2.cpp
+  MeshMix2Hierarchy.cpp
+  MeshPBRManager.cpp
+  MeshNormalMapping.cpp
+  MeshPointLight.cpp
+  MeshPOM.cpp
+  ParticleSystem.cpp
+  MeshSmooth.cpp
+  MeshSSS.cpp
+  MeshSSSLike.cpp
+  PostEffectBloom.cpp
+  PostEffectAA.cpp
+  PostEffectDepthOfField.cpp
+  PostEffectFog.cpp
+  PostEffectFont.cpp
+  PostEffectFXAA.cpp
+  PostEffectTAA.cpp
+  PostEffectHeightFog.cpp
+  PostEffectHalo.cpp
+  PostEffectGodRay.cpp
+  PostEffectMotionBlurCamera.cpp
+  PostEffectZShadow.cpp
+  PostEffectEnd.cpp
+  PostEffectGauss.cpp
+  PostEffectMaskedGauss.cpp
+  PostEffectSaturate.cpp
+  PostEffectSSAO.cpp
+  PostEffectSSGI.cpp
+  PostEffectStarBurst.cpp
+  PtrManager.cpp
+  Render.cpp
+  RenderSettingsDialog.cpp
+  RenderSettingsDialogControls.cpp
+  RenderSettingsDialogHandlers.cpp
+  RenderSettingsDialogModels.cpp
+  RenderSettingsDialogSync.cpp
+  RenderSettingsDialogUtils.cpp
+  SkinAnimMesh.cpp
+  SkinAnimMeshAlloc.cpp
+  Sprite.cpp
+  Font.cpp
+  FontEx.cpp
+  FontExAnim.cpp
+  Util.cpp
+  WindowManager.cpp
+Lib:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"D:\repos\RedFortress\RedFortress2\x64\Debug\Render.lib" /NOLOGO /MACHINE:X64 x64\Debug\AnimController.obj
+  x64\Debug\AnimMesh.obj
+  x64\Debug\AnimMeshAlloc.obj
+  x64\Debug\Camera.obj
+  x64\Debug\Common.obj
+  x64\Debug\CustomXLoader.obj
+  x64\Debug\CustomXLoader2.obj
+  x64\Debug\GBuffer.obj
+  x64\Debug\Light.obj
+  x64\Debug\LoadingScreen.obj
+  x64\Debug\MeshOld.obj
+  x64\Debug\MeshInstancing2.obj
+  x64\Debug\MeshParam.obj
+  x64\Debug\MeshPBR.obj
+  x64\Debug\MeshMixSkinAnim2.obj
+  x64\Debug\MeshMixAnimNoBone2.obj
+  x64\Debug\MeshMix2.obj
+  x64\Debug\MeshMix2Hierarchy.obj
+  x64\Debug\MeshPBRManager.obj
+  x64\Debug\MeshNormalMapping.obj
+  x64\Debug\MeshPointLight.obj
+  x64\Debug\MeshPOM.obj
+  x64\Debug\ParticleSystem.obj
+  x64\Debug\MeshSmooth.obj
+  x64\Debug\MeshSSS.obj
+  x64\Debug\MeshSSSLike.obj
+  x64\Debug\PostEffectBloom.obj
+  x64\Debug\PostEffectAA.obj
+  x64\Debug\PostEffectDepthOfField.obj
+  x64\Debug\PostEffectFog.obj
+  x64\Debug\PostEffectFont.obj
+  x64\Debug\PostEffectFXAA.obj
+  x64\Debug\PostEffectTAA.obj
+  x64\Debug\PostEffectHeightFog.obj
+  x64\Debug\PostEffectHalo.obj
+  x64\Debug\PostEffectGodRay.obj
+  x64\Debug\PostEffectMotionBlurCamera.obj
+  x64\Debug\PostEffectZShadow.obj
+  x64\Debug\PostEffectEnd.obj
+  x64\Debug\PostEffectGauss.obj
+  x64\Debug\PostEffectMaskedGauss.obj
+  x64\Debug\PostEffectSaturate.obj
+  x64\Debug\PostEffectSSAO.obj
+  x64\Debug\PostEffectSSGI.obj
+  x64\Debug\PostEffectStarBurst.obj
+  x64\Debug\PtrManager.obj
+  x64\Debug\Render.obj
+  x64\Debug\RenderSettingsDialog.obj
+  x64\Debug\RenderSettingsDialogControls.obj
+  x64\Debug\RenderSettingsDialogHandlers.obj
+  x64\Debug\RenderSettingsDialogModels.obj
+  x64\Debug\RenderSettingsDialogSync.obj
+  x64\Debug\RenderSettingsDialogUtils.obj
+  x64\Debug\SkinAnimMesh.obj
+  x64\Debug\SkinAnimMeshAlloc.obj
+  x64\Debug\Sprite.obj
+  x64\Debug\Font.obj
+  x64\Debug\FontEx.obj
+  x64\Debug\FontExAnim.obj
+  x64\Debug\Util.obj
+  x64\Debug\WindowManager.obj
+  Render.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\Render.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\Render.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\Render.tlog\Render.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\RedFortressSlideShow\SlideShow\SlideShow.vcxproj" (8) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\SlideShow.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\SlideShow.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Debug\\" /Fd"D:\repos\RedFortress\RedFortress2\x64\Debug\SlideShow.pdb" /external:W3 /Gd /TP /FC /errorReport:queue SlideShow.cpp
+  SlideShow.cpp
+Lib:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"D:\repos\RedFortress\RedFortress2\x64\Debug\SlideShow.lib" /NOLOGO /MACHINE:X64 x64\Debug\SlideShow.obj
+  SlideShow.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\SlideShow.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\SlideShow.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\SlideShow.tlog\SlideShow.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\RedFortressSlideShow\SlideShow\SlideShow.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\SoundLib\SoundLib\SoundLib.vcxproj" (9) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\SoundLib.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\SoundLib.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ComputeStdModulesCompileInputs:
+  ライブラリ 'microsoft/STL' のデータを提供するライブラリ マニフェスト ファイル 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' を読み取っています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' を追加しています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' を追加しています。
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"x64\Debug\\" /Fd"D:\repos\RedFortress\RedFortress2\x64\Debug\SoundLib.pdb" /external:W3 /Gd /TP /FC /errorReport:queue SoundLib.cpp
+  SoundLib.cpp
+Lib:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"D:\repos\RedFortress\RedFortress2\x64\Debug\SoundLib.lib" /NOLOGO /MACHINE:X64 x64\Debug\SoundLib.obj
+  SoundLib.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\SoundLib.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\SoundLib.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\SoundLib.tlog\SoundLib.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\SoundLib\SoundLib\SoundLib.vcxproj" (既定のターゲット) のビルドが完了しました。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\simple-directx9.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\simple-directx9.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ID:\repos\RedFortress\RedFortress2\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\include /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /MP /Od /D HAS_DXSDK_D3DX /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Debug\\" /Fd"x64\Debug\vc145.pdb" /external:W3 /Gd /TP /FC /errorReport:queue GameApp.cpp SlideShowManager.cpp main.cpp
+  GameApp.cpp
+  SlideShowManager.cpp
+  main.cpp
+ResourceCompile:
+  すべての出力が最新のものです。
+Link:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\repos\RedFortress\RedFortress2\x64\Debug\simple-directx9.exe" /INCREMENTAL /ILK:"x64\Debug\simple-directx9.ilk" /NOLOGO /LIBPATH:D:\repos\RedFortress\RedFortress2\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\debug\lib\x64\ d3dx9d.lib d3dx10d.lib d3dx11d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\repos\RedFortress\RedFortress2\x64\Debug\simple-directx9.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\repos\RedFortress\RedFortress2\x64\Debug\simple-directx9.lib" /MACHINE:X64 "x64\Debug\simple-directx9.res"
+  x64\Debug\DebugRpc.obj
+  x64\Debug\main.obj
+  x64\Debug\Player.obj
+  x64\Debug\PlayerAttackController.obj
+  x64\Debug\StageManager.obj
+  x64\Debug\SaveDataManager.obj
+  x64\Debug\InventoryManager.obj
+  x64\Debug\CollectibleManager.obj
+  x64\Debug\CraftMenu.obj
+  x64\Debug\ExplanationManager.obj
+  x64\Debug\InteractionManager.obj
+  x64\Debug\LavaZoneManager.obj
+  x64\Debug\LavaFloodManager.obj
+  x64\Debug\LavaRiseManager.obj
+  x64\Debug\StageEditor.obj
+  x64\Debug\SlideShowManager.obj
+  x64\Debug\Enemy.obj
+  x64\Debug\Enemy3.obj
+  x64\Debug\Enemy4.obj
+  x64\Debug\Enemy5.obj
+  x64\Debug\Enemy6.obj
+  x64\Debug\EnemyBase.obj
+  x64\Debug\EnemyBird.obj
+  x64\Debug\EnemyBigWolf.obj
+  x64\Debug\EnemyCrab.obj
+  x64\Debug\EnemyFrog.obj
+  x64\Debug\EnemyGhost.obj
+  x64\Debug\EnemySpider.obj
+  x64\Debug\EnemySkeleton.obj
+  x64\Debug\EnemyMushroom.obj
+  x64\Debug\EnemyGolem.obj
+  x64\Debug\EnemyKanata.obj
+  x64\Debug\EnemyHoshigirl.obj
+  x64\Debug\EnemyGiantCrab.obj
+  x64\Debug\EnemySmallGolem.obj
+  x64\Debug\EnemySmallMushroom.obj
+  x64\Debug\EnemySmallSkeleton.obj
+  x64\Debug\EnemySmallSpider.obj
+  x64\Debug\EnemyManager.obj
+  x64\Debug\EnemyWolf.obj
+  x64\Debug\PauseMenu.obj
+  x64\Debug\HpBar.obj
+  x64\Debug\BossHpBar.obj
+  x64\Debug\DamagePopupManager.obj
+  x64\Debug\DestructibleManager.obj
+  x64\Debug\PickupManager.obj
+  x64\Debug\DashBooster.obj
+  x64\Debug\DashBoosterManager.obj
+  x64\Debug\SkullManager.obj
+  x64\Debug\PressurePlateManager.obj
+  x64\Debug\PushableBoxManager.obj
+  x64\Debug\AttackTriggerManager.obj
+  x64\Debug\WarpBearManager.obj
+  x64\Debug\GameApp.obj
+  x64\Debug\GameAudio.obj
+  D:\repos\RedFortress\RedFortress2\x64\Debug\InputDevice.lib
+  D:\repos\RedFortress\RedFortress2\x64\Debug\PhysicsLib.lib
+  D:\repos\RedFortress\RedFortress2\x64\Debug\QTE_Module.lib
+  D:\repos\RedFortress\RedFortress2\x64\Debug\Command.lib
+  D:\repos\RedFortress\RedFortress2\x64\Debug\Render.lib
+  D:\repos\RedFortress\RedFortress2\x64\Debug\SlideShow.lib
+  D:\repos\RedFortress\RedFortress2\x64\Debug\SoundLib.lib
+LINK : fatal error LNK1168: ファイル D:\repos\RedFortress\RedFortress2\x64\Debug\simple-directx9.exe を開いて書き込むことができません。 [D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj]
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (既定のターゲット) のビルドが終了しました -- 失敗。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット) のビルドが終了しました -- 失敗。
+
+ビルドに失敗しました。
+
+"D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット) (1) ->
+"D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (既定のターゲット) (2) ->
+"D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj" (既定のターゲット) (7) ->
+(FxCompile ターゲット) -> 
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+  FXC : warning X4717: Effects deprecated for D3DCompiler_47 [D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj]
+
+
+"D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット) (1) ->
+"D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (既定のターゲット) (2) ->
+(Link ターゲット) -> 
+  LINK : fatal error LNK1168: ファイル D:\repos\RedFortress\RedFortress2\x64\Debug\simple-directx9.exe を開いて書き込むことができません。 [D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj]
+
+    36 個の警告
+    1 エラー
+
+FileLogger を次の場所に書き込みました: D:\repos\RedFortress\build-story.log
+
+経過時間 00:01:46.22
