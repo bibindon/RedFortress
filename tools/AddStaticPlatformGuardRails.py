@@ -191,6 +191,21 @@ def create_guard_rails(name, minimum, maximum, material, bevel_width):
     return rails
 
 
+def join_guard_rails(name, rails):
+    """4本のガードレールを1メッシュに統合する（サブメッシュ数を削減するため）。"""
+    bpy.ops.object.select_all(action="DESELECT")
+    for rail in rails:
+        rail.select_set(True)
+    bpy.context.view_layer.objects.active = rails[0]
+    bpy.ops.object.join()
+    joined = bpy.context.object
+    # 再実行時に get_platform_object() の掃除対象 (_GuardRail_ を含む名前) にしておく。
+    joined.name = f"{name}_GuardRail_Joined"
+    joined.data.name = f"{name}_GuardRail_JoinedMesh"
+    joined.select_set(False)
+    return joined
+
+
 def export_objects(objects, path):
     bpy.ops.object.select_all(action="DESELECT")
     for obj in objects:
@@ -305,7 +320,8 @@ def build_variant(name, source_blend_name, scale_multiplier):
     bpy.ops.wm.save_as_mainfile(filepath=str(blend_path))
     configure_relative_textures()
     bpy.ops.wm.save_as_mainfile(filepath=str(blend_path))
-    export_objects([platform] + guard_rails, x_path)
+    joined_guard_rails = join_guard_rails(name, guard_rails)
+    export_objects([platform, joined_guard_rails], x_path)
     save_preview(preview_path, scale_multiplier)
     collision = create_collision_mesh(name, minimum, maximum)
     export_objects([collision], collision_path)

@@ -23,6 +23,12 @@ BASE_WIDTH = 3.0
 BASE_DEPTH = 3.0
 BASE_HEIGHT = 0.406
 
+# 元メッシュ (1720 頂点 / 3340 三角形) を Collapse デシメートで間引き、
+# 頂点数を約 1/6 にする。ステージ側で多数配置されるため (1-3 は 21 個)、
+# 描画コストに直結する。
+PLATFORM_DECIMATE_RATIO = 0.15
+PLATFORM_DIMENSION_TOLERANCE = 0.05
+
 VARIANTS = (
     ("static_platform_1x1", 1.0, 1.0),
     ("static_platform_1x2", 1.0, 2.0),
@@ -75,6 +81,23 @@ def configure_preview_camera(width_multiplier, depth_multiplier):
     bpy.context.scene.camera = camera
 
 
+def decimate_platform(platform, ratio):
+    """プラットフォーム本体を Collapse デシメートで軽量化する。"""
+    vertex_count_before = len(platform.data.vertices)
+    bpy.ops.object.select_all(action="DESELECT")
+    platform.select_set(True)
+    bpy.context.view_layer.objects.active = platform
+    modifier = platform.modifiers.new(name="PlatformDecimate", type="DECIMATE")
+    modifier.decimate_type = "COLLAPSE"
+    modifier.ratio = ratio
+    bpy.ops.object.modifier_apply(modifier=modifier.name)
+    vertex_count_after = len(platform.data.vertices)
+    triangle_count_after = sum(len(poly.vertices) - 2 for poly in platform.data.polygons)
+    print(f"Decimated {platform.name}: {vertex_count_before} -> {vertex_count_after} verts, "
+          f"{triangle_count_after} triangles (ratio {ratio})")
+    platform.select_set(False)
+
+
 def configure_variant(name, width_multiplier, depth_multiplier):
     platform = get_platform_object()
     platform.name = name
@@ -99,12 +122,24 @@ def configure_variant(name, width_multiplier, depth_multiplier):
                 f"{actual_dimensions}; expected {expected_dimensions}"
             )
 
+    decimate_platform(platform, PLATFORM_DECIMATE_RATIO)
+
+    # デシメート後に外形が大きく崩れていないことを確認する。
+    decimated_dimensions = tuple(platform.dimensions)
+    for index in range(3):
+        if abs(decimated_dimensions[index] - expected_dimensions[index]) > PLATFORM_DIMENSION_TOLERANCE:
+            raise RuntimeError(
+                f"Decimation changed the silhouette of {name}: "
+                f"{decimated_dimensions}; expected {expected_dimensions}"
+            )
+
     platform["asset_role"] = "static_platform"
     platform["footprint_width_m"] = expected_dimensions[0]
     platform["footprint_depth_m"] = expected_dimensions[1]
     platform["height_m"] = expected_dimensions[2]
     platform["width_multiplier"] = width_multiplier
     platform["depth_multiplier"] = depth_multiplier
+    platform.select_set(False)
     configure_preview_camera(width_multiplier, depth_multiplier)
 
 
