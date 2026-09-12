@@ -353,6 +353,18 @@ namespace
     const int kStageClearSlashEndFrame = 82;
     const int kStageClearFinalAutoFrame = 150;
     const float kStageClearTargetFovDegrees = 58.0f;
+    // 再クリア (クリア済みステージ) 時の演出:
+    // 1秒待機 -> ジャンプ + 2.0m 上昇 -> 白フラッシュ -> 消える
+    const int kStageClearReplayJumpDelayFrames = 60;
+    const int kStageClearReplayAscentFrames = 40;
+    const int kStageClearReplayWhiteFrames = 6;
+    const int kStageClearReplayVanishedFrames = 120;
+    const int kStageClearReplayFinalAutoFrame = kStageClearReplayJumpDelayFrames +
+                                                kStageClearReplayAscentFrames +
+                                                kStageClearReplayWhiteFrames +
+                                                kStageClearReplayVanishedFrames;
+    const float kStageClearReplayJumpHeight = 2.0f;
+    const float kStageClearReplayJumpAnimationSpeed = 1.0f;
     const int kStageExitJumpDelayFrames = 30;
     const int kStageExitJumpDurationFrames = 30;
     const int kStageExitFadeStartFrame = kStageExitJumpDelayFrames + 8;
@@ -3881,6 +3893,12 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         {
             playerVisible = false;
         }
+        if (m_gameState == GameState::StageClear &&
+            !m_stageClearWasFirstClear &&
+            m_stageClearReplayPlayerHidden)
+        {
+            playerVisible = false;
+        }
         D3DXVECTOR3 displayPosition = currentRenderPosition;
         float displayScale = 1.0f;
         if (IsCurrentStageSelect())
@@ -3895,6 +3913,10 @@ void GameApp::UpdatePlayerMeshAndCamera(const D3DXVECTOR3& previousRenderPositio
         else if (m_gameState == GameState::StageExit)
         {
             displayPosition.y += m_stageExitVisualOffsetY;
+        }
+        else if (m_gameState == GameState::StageClear && !m_stageClearWasFirstClear)
+        {
+            displayPosition.y += m_stageClearVisualOffsetY;
         }
 
         if (m_playerIsSkinAnim)
@@ -7469,7 +7491,12 @@ void GameApp::UpdateStageClear()
     const bool isFinalStage = m_stageManager.GetCurrentStage().id == L"4-8";
 
     bool proceedToNextScene = false;
-    if (m_stageClearFrame >= kStageClearFinalAutoFrame)
+    int autoFrame = kStageClearFinalAutoFrame;
+    if (!m_stageClearWasFirstClear)
+    {
+        autoFrame = kStageClearReplayFinalAutoFrame;
+    }
+    if (m_stageClearFrame >= autoFrame)
     {
         proceedToNextScene = true;
     }
@@ -7509,9 +7536,31 @@ void GameApp::UpdateStageClear()
 void GameApp::BeginStageClearVisual()
 {
     m_stageClearFrame = 0;
+    m_stageClearVisualOffsetY = 0.0f;
     m_stageClearCameraStartPos = m_render.GetCameraPos();
     m_stageClearCameraStartTarget = m_render.GetLookAtPos();
     m_stageClearStoredFovDegrees = m_render.GetCameraHorizontalFovDegrees();
+
+    if (!m_stageClearWasFirstClear)
+    {
+        // 再クリア時はカメラを動かさず、その場でジャンプ演出を行う。
+        m_stageClearCameraEndPos = m_stageClearCameraStartPos;
+        m_stageClearCameraEndTarget = m_stageClearCameraStartTarget;
+        m_stageClearReplayPhase = StageClearReplayPhase::WaitingToJump;
+        m_stageClearReplayPhaseFrame = 0;
+        m_stageClearReplayPlayerHidden = false;
+        RemoveGoalArrow();
+        HideStageClearReplayEquipment();
+        m_skullManager.ReleaseHeld(m_render, m_playerMover.GetPosition());
+        if (m_playerMeshId >= 0)
+        {
+            m_render.StopMeshMixSkinAnimBlink(m_playerMeshId);
+            m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, false);
+            m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
+            SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+        }
+        return;
+    }
 
     const D3DXVECTOR3 playerPosition = m_playerMover.GetPosition();
     m_stageClearCameraEndTarget = playerPosition + D3DXVECTOR3(0.0f, 1.30f, 0.0f);
@@ -7571,6 +7620,93 @@ void GameApp::UpdateStageClearVisual()
         }
     }
 
+    if (!m_stageClearWasFirstClear)
+    {
+        if (m_stageClearReplayPhase == StageClearReplayPhase::WaitingToJump)
+        {
+            ++m_stageClearReplayPhaseFrame;
+            if (m_stageClearReplayPhaseFrame >= kStageClearReplayJumpDelayFrames)
+            {
+                m_stageClearReplayPhase = StageClearReplayPhase::Ascending;
+                m_stageClearReplayPhaseFrame = 0;
+                if (m_playerMeshId >= 0)
+                {
+                    m_playerAnimState = PlayerAnimState::Jump;
+                    m_playerAnimationSpeed = kStageClearReplayJumpAnimationSpeed;
+                    m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+                    m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, g_playerJumpAnimName);
+                }
+                GameAudio::PlayJump();
+                m_render.SetCameraShakeDuration(0.08f);
+                m_render.SetCameraShakeIntensity(0.012f);
+            }
+        }
+        else if (m_stageClearReplayPhase == StageClearReplayPhase::Ascending)
+        {
+            float jumpT = static_cast<float>(m_stageClearReplayPhaseFrame + 1) /
+                          static_cast<float>(kStageClearReplayAscentFrames);
+            if (jumpT > 1.0f)
+            {
+                jumpT = 1.0f;
+            }
+            m_stageClearVisualOffsetY =
+                kStageClearReplayJumpHeight * (2.0f * jumpT - jumpT * jumpT);
+            UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+
+            const StageManager::StageData& replayStage = m_stageManager.GetCurrentStage();
+            if (replayStage.playerPointLightEnabled)
+            {
+                D3DXVECTOR3 lightPosition = m_playerMover.GetPosition();
+                lightPosition.y += m_stageClearVisualOffsetY + kPlayerPointLightHeight;
+                m_render.SetPointLightPositionByOwnerTag(kPlayerPointLightOwnerTag, lightPosition);
+            }
+
+            ++m_stageClearReplayPhaseFrame;
+            if (m_stageClearReplayPhaseFrame >= kStageClearReplayAscentFrames)
+            {
+                m_stageClearVisualOffsetY = kStageClearReplayJumpHeight;
+                m_stageClearReplayPhase = StageClearReplayPhase::ApexWhite;
+                m_stageClearReplayPhaseFrame = 0;
+                if (m_playerMeshId >= 0)
+                {
+                    m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 0.0f);
+                    m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, true);
+                }
+                GameAudio::PlayStageSelectConfirm();
+            }
+        }
+        else if (m_stageClearReplayPhase == StageClearReplayPhase::ApexWhite)
+        {
+            ++m_stageClearReplayPhaseFrame;
+            if (m_stageClearReplayPhaseFrame >= kStageClearReplayWhiteFrames)
+            {
+                if (m_playerMeshId >= 0)
+                {
+                    m_render.SetMeshMixSkinAnimWhiteFlash(m_playerMeshId, false);
+                    m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, false);
+                }
+                HideStageClearReplayEquipment();
+                m_render.RemovePointLightsByOwnerTag(kPlayerPointLightOwnerTag);
+                m_stageClearReplayPlayerHidden = true;
+                m_stageClearReplayPhase = StageClearReplayPhase::Vanished;
+                m_stageClearReplayPhaseFrame = 0;
+            }
+        }
+        else if (m_stageClearReplayPhase == StageClearReplayPhase::Vanished)
+        {
+            ++m_stageClearReplayPhaseFrame;
+        }
+        else
+        {
+            throw std::runtime_error("Invalid replay stage-clear phase.");
+        }
+
+        m_render.SetCamera(m_stageClearCameraStartPos, m_stageClearCameraStartTarget);
+        m_render.SetCameraHorizontalFovDegrees(m_stageClearStoredFovDegrees);
+        ++m_stageClearFrame;
+        return;
+    }
+
     const float rawCameraT = static_cast<float>(m_stageClearFrame + 1) /
                              static_cast<float>(kStageClearCameraMoveFrames);
     const float cameraT = SmoothStep01(rawCameraT);
@@ -7611,16 +7747,37 @@ void GameApp::UpdateStageClearVisual()
 
 void GameApp::RestoreStageClearVisual()
 {
-    UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+    if (!m_stageClearReplayPlayerHidden)
+    {
+        m_stageClearVisualOffsetY = 0.0f;
+        UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
+    }
     m_render.SetCameraHorizontalFovDegrees(m_stageClearStoredFovDegrees);
     m_render.SetCamera(m_stageClearCameraStartPos, m_stageClearCameraStartTarget);
     m_render.SetCameraShakeDuration(0.0f);
     m_render.SetCameraShakeIntensity(0.0f);
-    if (m_playerMeshId >= 0)
+    if (m_playerMeshId >= 0 && !m_stageClearReplayPlayerHidden)
     {
         SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
     }
     m_stageClearFrame = 0;
+}
+
+void GameApp::HideStageClearReplayEquipment()
+{
+    // 再クリア演出で消えるときは武器も一緒に隠す。
+    if (m_stickMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_stickMeshId, false);
+    }
+    if (m_saberMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_saberMeshId, false);
+    }
+    if (m_gunMeshId >= 0)
+    {
+        m_render.SetMeshMixEnabled(m_gunMeshId, false);
+    }
 }
 
 std::wstring GameApp::GetStageStoryScriptPath(const std::wstring& stageId,
@@ -8560,6 +8717,7 @@ void GameApp::BeginReturnToTitle()
     m_stageExitVisualOffsetY = 0.0f;
     m_stageClearProcessed = false;
     m_stageClearFrame = 0;
+    m_stageClearVisualOffsetY = 0.0f;
     m_playerDeathPending = false;
     m_warpPhase = WarpPhase::None;
     m_warpFadeFrames = 0;
@@ -8766,6 +8924,10 @@ void GameApp::LoadCurrentStageObjects()
         m_render.SetMeshMixSkinAnimEnabled(m_playerMeshId, true);
         m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, 1.0f);
     }
+    m_stageClearReplayPhase = StageClearReplayPhase::None;
+    m_stageClearReplayPhaseFrame = 0;
+    m_stageClearReplayPlayerHidden = false;
+    m_stageClearVisualOffsetY = 0.0f;
 
     const StageManager::StageData& stage = m_stageManager.GetCurrentStage();
     const StageManager::StageData loadStage = GetStageDataForLoad(stage);
