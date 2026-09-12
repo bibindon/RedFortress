@@ -30,6 +30,8 @@ VARIANTS = (
 GUARD_RAIL_HEIGHT = 0.1
 GUARD_RAIL_THICKNESS = 0.3
 GUARD_RAIL_BEVEL = 0.015
+# MeshMix2 はスペキュラ強度を Power / 500 で評価するため 500 が実質的な最大値。
+GUARD_RAIL_SPECULAR_POWER = 500.0
 FLOOR_HEIGHT = 0.8
 COLLISION_TOP_HEIGHT = 0.203
 
@@ -131,19 +133,24 @@ def create_box(name, dimensions, location, material, bevel_width=0.0):
 
 def get_guard_rail_material():
     material = bpy.data.materials.get("GuardRail_Metal")
-    if material is not None:
-        return material
-    material = bpy.data.materials.new(name="GuardRail_Metal")
-    material.diffuse_color = (0.025, 0.035, 0.045, 1.0)
-    material.metallic = 0.85
-    material.roughness = 0.24
-    material.use_nodes = True
-    shader = material.node_tree.nodes.get("Principled BSDF")
-    if shader is None:
-        raise RuntimeError("Principled BSDF was not found for the guard rail.")
-    shader.inputs["Base Color"].default_value = (0.025, 0.035, 0.045, 1.0)
-    shader.inputs["Metallic"].default_value = 0.85
-    shader.inputs["Roughness"].default_value = 0.24
+    if material is None:
+        material = bpy.data.materials.new(name="GuardRail_Metal")
+        material.diffuse_color = (0.025, 0.035, 0.045, 1.0)
+        material.metallic = 0.85
+        material.roughness = 0.24
+        material.use_nodes = True
+        shader = material.node_tree.nodes.get("Principled BSDF")
+        if shader is None:
+            raise RuntimeError("Principled BSDF was not found for the guard rail.")
+        shader.inputs["Base Color"].default_value = (0.025, 0.035, 0.045, 1.0)
+        shader.inputs["Metallic"].default_value = 0.85
+        shader.inputs["Roughness"].default_value = 0.24
+    # MeshMix2 は .x の Power を「スペキュラ強度 = Power / 500 (0..1 にクランプ)」として読む
+    # (MeshMix2.cpp の GetMaterialSpecularIntensity)。未設定だとエクスポータが Roughness から
+    # 39.9 を書き出し、強度が 8% に落ちて黒いガードレールのスペキュラがほとんど消える。
+    # 500 で強度が最大 (1.0) になるため、常に明示する。
+    material["_x_power"] = GUARD_RAIL_SPECULAR_POWER
+    material["_x_specular"] = (1.0, 1.0, 1.0)
     return material
 
 
