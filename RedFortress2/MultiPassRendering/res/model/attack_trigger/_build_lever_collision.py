@@ -111,7 +111,7 @@ def build_box(material):
     add_box("WallWest", gx(-2.75, 3.0, 0.0), gd((0.5, 6.0, 6.0)), material)
     add_box("WallEast", gx(2.75, 3.0, 0.0), gd((0.5, 6.0, 6.0)), material)
     add_box("WallBack", gx(0.0, 3.0, 2.75), gd((6.0, 6.0, 0.5)), material)
-    add_box("InnerFloor", gx(0.0, 0.45, 0.0), gd((5.0, 0.1, 5.0)), material)
+    add_box("InnerFloor", gx(0.0, 0.10, 0.0), gd((5.0, 0.8, 5.0)), material)
 
 
 def build_door(material):
@@ -121,7 +121,7 @@ def build_door(material):
 def build_box3(material):
     add_box("WallWest", gx(-2.75, 3.0, 0.0), gd((0.5, 6.0, 6.0)), material)
     add_box("WallEast", gx(2.75, 3.0, 0.0), gd((0.5, 6.0, 6.0)), material)
-    add_box("InnerFloor3", gx(0.0, 0.45, 0.0), gd((5.0, 0.1, 6.0)), material)
+    add_box("InnerFloor3", gx(0.0, 0.10, 0.0), gd((5.0, 0.8, 6.0)), material)
 
 
 def build_door3(material):
