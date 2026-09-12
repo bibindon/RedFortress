@@ -1,0 +1,144 @@
+2026/09/12 9:56:16 にビルドを開始しました。
+ログの詳細度は次のように設定されています: Normal。
+ノード 1 上のプロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット)。
+ValidateSolutionConfiguration:
+  ソリューション構成 "Debug|x64" をビルドしています。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (1) は、ノード 1 上に "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) をビルドしています (既定のターゲット)。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\InputDevice\InputDevice\InputDevice.vcxproj" (3) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\InputDevice.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\InputDevice.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  InputDevice.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\InputDevice.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\InputDevice.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\InputDevice.tlog\InputDevice.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\InputDevice\InputDevice\InputDevice.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj" (4) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\PhysicsLib.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\PhysicsLib.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ComputeStdModulesCompileInputs:
+  ライブラリ 'microsoft/STL' のデータを提供するライブラリ マニフェスト ファイル 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' を読み取っています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' を追加しています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' を追加しています。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  PhysicsLib.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\PhysicsLib.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\PhysicsLib.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\PhysicsLib.tlog\PhysicsLib.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\PhysicsLib\PhysicsLib\PhysicsLib.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\QTE_Module\QTE_Module\QTE_Module.vcxproj" (5) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\QTE_Module.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\QTE_Module.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  QTE_Module.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\QTE_Module.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\QTE_Module.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\QTE_Module.tlog\QTE_Module.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\QTE_Module\QTE_Module\QTE_Module.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\RedFortressCommand\Command\Command.vcxproj" (6) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\Command.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\Command.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  Command.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\Command.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\Command.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\Command.tlog\Command.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\RedFortressCommand\Command\Command.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj" (7) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\Render.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\Render.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+FxCompile:
+  すべての出力が最新のものです。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  Render.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\Render.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\Render.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\Render.tlog\Render.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\RedFortressRender\Render\Render.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\RedFortressSlideShow\SlideShow\SlideShow.vcxproj" (8) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\SlideShow.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\SlideShow.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  SlideShow.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\SlideShow.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\SlideShow.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\SlideShow.tlog\SlideShow.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\RedFortressSlideShow\SlideShow\SlideShow.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (2) は、ノード 1 上に "D:\repos\RedFortress\SoundLib\SoundLib\SoundLib.vcxproj" (9) をビルドしています (既定のターゲット)。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "AlwaysCreate" が指定されたため "x64\Debug\SoundLib.tlog\unsuccessfulbuild" を作成しています。
+  "x64\Debug\SoundLib.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ComputeStdModulesCompileInputs:
+  ライブラリ 'microsoft/STL' のデータを提供するライブラリ マニフェスト ファイル 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' を読み取っています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' を追加しています。
+  このプロジェクトでビルドするライブラリ 'microsoft/STL' からモジュール ソース 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' を追加しています。
+ClCompile:
+  すべての出力が最新のものです。
+Lib:
+  すべての出力が最新のものです。
+  SoundLib.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\SoundLib.lib
+FinalizeBuildStatus:
+  ファイル "x64\Debug\SoundLib.tlog\unsuccessfulbuild" を削除しています。
+  "x64\Debug\SoundLib.tlog\SoundLib.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\SoundLib\SoundLib\SoundLib.vcxproj" (既定のターゲット) のビルドが完了しました。
+PrepareForBuild:
+  構造化出力が有効になっています。コンパイラ診断の書式設定にはエラー階層が反映されます。詳細については、https://aka.ms/cpp/structured-output を参照してください。
+InitializeBuildStatus:
+  "x64\Debug\simple-directx9.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+ClCompile:
+  すべての出力が最新のものです。
+ResourceCompile:
+  すべての出力が最新のものです。
+Link:
+  すべての出力が最新のものです。
+  simple-directx9.vcxproj -> D:\repos\RedFortress\RedFortress2\x64\Debug\simple-directx9.exe
+FinalizeBuildStatus:
+  "x64\Debug\simple-directx9.tlog\simple-directx9.lastbuildstate" のタッチ タスクを実行しています。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering\simple-directx9.vcxproj" (既定のターゲット) のビルドが完了しました。
+プロジェクト "D:\repos\RedFortress\RedFortress2\MultiPassRendering.sln" (既定のターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+    0 個の警告
+    0 エラー
+
+FileLogger を次の場所に書き込みました: D:\repos\RedFortress\stage-clear-build.log
+
+経過時間 00:00:01.34

@@ -21,7 +21,6 @@ const std::wstring kMaskPath = L"res\\2D_Image\\menu_mask.png";
 const int kMaskedGaussianSampleSize = 25;
 const float kMaskedGaussianAnimationDurationSeconds = 0.5f;
 const UINT kTextColor = D3DCOLOR_RGBA(255, 255, 255, 245);
-const UINT kHintColor = D3DCOLOR_RGBA(220, 232, 245, 235);
 const int kLineHeight = 58;
 
 float ParseFloat(const std::wstring& text)
@@ -186,7 +185,6 @@ void ExplanationManager::Render()
     if (m_textFontId < 0)
     {
         m_textFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 34, kTextColor);
-        m_hintFontId = m_render->SetUpFontEx(L"BIZ UDGothic", 20, kHintColor);
     }
 
     const std::vector<std::wstring>& lines = m_explanations.at(m_activeIndex).lines;
@@ -202,14 +200,6 @@ void ExplanationManager::Render()
                                    kLineHeight,
                                    kTextColor);
     }
-
-    m_render->DrawTextExCenter(m_hintFontId,
-                               L"何かキー・ボタンを押すとゲームに戻ります",
-                               0,
-                               745,
-                               NSRender::Common::BASE_W,
-                               44,
-                               kHintColor);
 }
 
 void ExplanationManager::Close()

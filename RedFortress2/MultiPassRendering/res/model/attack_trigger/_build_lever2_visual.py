@@ -1,5 +1,6 @@
-import math
+﻿import math
 import os
+import sys
 
 import bpy
 from mathutils import Vector
@@ -202,18 +203,19 @@ def D(dx, dy, dz):
 
 
 def build_box(stone, stone_dark, iron, cobble):
+    # Uprights start at the slab top (0.5 m), avoiding coplanar outer faces.
     for sx in (-1.0, 1.0):
         for sz in (-1.0, 1.0):
-            add_box("Pillar", B(sx * 2.65, 3.0, sz * 2.65), D(0.7, 6.0, 0.7), cobble, 3.0)
+            add_box("Pillar", B(sx * 2.65, 3.25, sz * 2.65), D(0.7, 5.5, 0.7), cobble, 3.0)
     for sx in (-1.0, 1.0):
-        add_box("WallSide", B(sx * 2.68, 3.0, 0.0), D(0.56, 6.0, 4.6), cobble, 3.0)
-    add_box("WallBack", B(0.0, 3.0, 2.68), D(4.6, 6.0, 0.56), cobble, 3.0)
+        add_box("WallSide", B(sx * 2.68, 3.25, 0.0), D(0.56, 5.5, 4.6), cobble, 3.0)
+    add_box("WallBack", B(0.0, 3.25, 2.68), D(4.6, 5.5, 0.56), cobble, 3.0)
     for y0 in (1.9, 4.0):
         for sx in (-1.0, 1.0):
             add_box("BandSide", B(sx * 2.96, y0 + 0.15, 0.0), D(0.12, 0.3, 4.6), iron, 1.0)
         add_box("BandBack", B(0.0, y0 + 0.15, 2.96), D(4.6, 0.3, 0.12), iron, 1.0)
     for sx in (-1.0, 1.0):
-        add_box("Jamb", B(sx * 2.62, 2.99, -2.72), D(0.56, 5.98, 0.6), iron, 1.0)
+        add_box("Jamb", B(sx * 2.62, 3.24, -2.72), D(0.56, 5.48, 0.6), iron, 1.0)
     add_box("Lintel", B(0.0, 5.63, -2.70), D(5.9, 0.7, 0.56), iron, 1.0)
     add_box("Slab", B(0.0, 0.25, 0.0), D(6.0, 0.5, 6.0), cobble, 3.0)
     add_box("Medallion", B(0.0, 0.495, 0.0), D(2.4, 0.02, 2.4), cobble, 5.0)
@@ -239,17 +241,18 @@ def build_door(woodtex, wood_dark, iron, gold, zc=0.125):
 
 
 def build_box3(stone, stone_dark, iron, cobble):
+    # Keep the same slab clearance as lever 2.
     for sx in (-1.0, 1.0):
         for sz in (-1.0, 1.0):
-            add_box("Pillar", B(sx * 2.65, 3.0, sz * 2.65), D(0.7, 6.0, 0.7), cobble, 3.0)
+            add_box("Pillar", B(sx * 2.65, 3.25, sz * 2.65), D(0.7, 5.5, 0.7), cobble, 3.0)
     for sx in (-1.0, 1.0):
-        add_box("WallSide", B(sx * 2.68, 3.0, 0.0), D(0.56, 6.0, 4.6), cobble, 3.0)
+        add_box("WallSide", B(sx * 2.68, 3.25, 0.0), D(0.56, 5.5, 4.6), cobble, 3.0)
     for y0 in (1.9, 4.0):
         for sx in (-1.0, 1.0):
             add_box("BandSide", B(sx * 2.96, y0 + 0.15, 0.0), D(0.12, 0.3, 4.6), iron, 1.0)
     for sz in (-1.0, 1.0):
         for sx in (-1.0, 1.0):
-            add_box("Jamb", B(sx * 2.62, 2.99, sz * 2.72), D(0.56, 5.98, 0.6), iron, 1.0)
+            add_box("Jamb", B(sx * 2.62, 3.24, sz * 2.72), D(0.56, 5.48, 0.6), iron, 1.0)
         add_box("Lintel", B(0.0, 5.63, sz * 2.70), D(5.9, 0.7, 0.56), iron, 1.0)
     add_box("Slab", B(0.0, 0.25, 0.0), D(6.0, 0.5, 6.0), cobble, 3.0)
     add_box("Medallion", B(0.0, 0.495, 0.0), D(2.4, 0.02, 2.4), cobble, 5.0)
@@ -305,7 +308,36 @@ def delete_by_name(names):
             bpy.data.objects.remove(obj, do_unlink=True)
 
 
+def rebuild_boxes():
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.preferences.addon_enable(module="bl_ext.blender_org.io_directx_x")
+    for number, builder, filename, frame in (
+        (2, build_box, "lever_box.x", "LeverBox"),
+        (3, build_box3, "lever_box3.x", "LeverBox3"),
+    ):
+        clear_scene()
+        stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
+        builder(stone, stone_dark, iron, cobble)
+        # Validate in world coordinates before objects are joined for export.
+        for obj in bpy.context.scene.objects:
+            if obj.name.startswith(("Pillar", "Wall", "Jamb")):
+                bottom = min((obj.matrix_world @ Vector(corner)).z for corner in obj.bound_box)
+                assert abs(bottom - 0.5) < 0.00001, (obj.name, bottom)
+        export_current("lever" + str(number) + "_box.blend", filename,
+                       frame, frame + "Geo", True)
+        # Preserve the repository text convention without changing exporter geometry.
+        path = os.path.join(OUTPUT_DIR, filename)
+        with open(path, "r", encoding="utf-8-sig") as source:
+            text = source.read()
+        with open(path, "w", encoding="utf-8", newline="\r\n") as target:
+            target.write(text)
+        print("VALIDATED: lever", number, "uprights start at slab top (0.5 m)")
+
+
 def main():
+    if "--boxes-only" in sys.argv:
+        rebuild_boxes()
+        return
     clear_scene()
     stone, stone_dark, iron, iron_dark, gold, cobble, woodtex = fresh_materials()
     build_box(stone, stone_dark, iron, cobble)

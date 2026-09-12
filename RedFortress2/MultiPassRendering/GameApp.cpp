@@ -179,7 +179,7 @@ namespace
     const int kPortalClearDelayFrames = 45;
     const float kPortalPillarTouchRadius = 0.9f;
     const float kPortalPillarLightHeight = 2.0f;
-    const float kPortalPillarLightBrightness = 1.2f;
+    const float kPortalPillarLightBrightness = 2.4f;
     const float kPortalPillarLightRange = 5.0f;
     const float kPortalPillarLightLength = 4.0f;
     const int kPortalPillarFadeFrames = 60;
@@ -348,6 +348,8 @@ namespace
     const std::wstring kLetterboxBarImagePath = L"res\\2D_Image\\black2x2.bmp";
     const int kStageClearCameraMoveFrames = 45;
     const int kStageClearSoundFrame = 20;
+    const int kStageClearSlashFrame = 28;
+    const int kStageClearSlashEndFrame = 82;
     const int kStageClearFinalAutoFrame = 150;
     const float kStageClearTargetFovDegrees = 58.0f;
     const int kStageExitJumpDelayFrames = 30;
@@ -7258,6 +7260,13 @@ void GameApp::ApplyMouseCursor()
 
 void GameApp::UpdateTitleByInput()
 {
+    if (InputDevice::SKeyBoard::IsDownFirstFrame(DIK_ESCAPE) ||
+        ((m_titleDeleteConfirmMode || m_titleLanguageSelectionMode || m_titleLicenseMode) &&
+         InputDevice::GamePad::IsDownFirstFrame(InputDevice::GAMEPAD_A)))
+    {
+        GameAudio::PlayMenuCancel();
+    }
+
     if (InputDevice::UnifiedInput::IsDownFirstFrame(InputDevice::GAMEPAD_POV_LEFT))
     {
         m_command.Previous();
@@ -7574,6 +7583,21 @@ void GameApp::UpdateStageClearVisual()
                                        cameraT);
     m_render.SetCamera(cameraPosition, cameraTarget);
     m_render.SetCameraHorizontalFovDegrees(fovDegrees);
+
+    if (m_stageClearWasFirstClear && m_playerMeshId >= 0)
+    {
+        if (m_stageClearFrame == kStageClearSlashFrame)
+        {
+            m_playerAnimState = PlayerAnimState::Attack;
+            m_playerAnimationSpeed = 0.85f;
+            m_render.SetMeshMixSkinAnimSpeed(m_playerMeshId, m_playerAnimationSpeed);
+            m_render.PlayMeshMixSkinAnimAnimation(m_playerMeshId, L"slash2");
+        }
+        else if (m_stageClearFrame == kStageClearSlashEndFrame)
+        {
+            SetPlayerAnimationState(PlayerAnimState::Idle, 1.0f);
+        }
+    }
 
     if (m_stageClearFrame == kStageClearSoundFrame)
     {
@@ -7932,6 +7956,9 @@ void GameApp::UpdatePortalShards(float globalScale)
         D3DXMatrixRotationYawPitchRoll(&rotation, yaw, yaw * 0.6f, 0.0f);
         D3DXMatrixTranslation(&translation, position.x, position.y, position.z);
         m_render.SetMeshMixWorldMatrix(shard.meshId, scaling * rotation * translation);
+        // A pale core and a wider green glow remain visible even with bloom disabled.
+        m_render.DrawWorldGlow(position, scale * 0.85f, D3DCOLOR_ARGB(155, 45, 255, 90));
+        m_render.DrawWorldGlow(position, scale * 0.55f, D3DCOLOR_ARGB(230, 190, 255, 205));
     }
 }
 
@@ -8940,16 +8967,6 @@ void GameApp::DrawTitleScreen()
     if (m_titleDeleteConfirmMode)
     {
         m_render.DrawTextExCenter(m_titleFontId, L"セーブデータを削除しますか？", 0, 500, NSRender::Common::BASE_W, 100);
-    }
-    else if (m_titleLanguageSelectionMode)
-    {
-        std::wstring languageName = L"Japanese";
-        if (m_titleLanguage == TitleLanguage::English)
-        {
-            languageName = L"English";
-        }
-        m_render.DrawTextExCenter(m_titleFontId, L"Language", 0, 480, NSRender::Common::BASE_W, 80);
-        m_render.DrawTextExCenter(m_titleFontId, L"Current: " + languageName, 0, 560, NSRender::Common::BASE_W, 80);
     }
     else if (m_titleLicenseMode)
     {

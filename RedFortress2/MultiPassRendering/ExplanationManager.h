@@ -58,5 +58,4 @@ private:
     float m_maskedGaussianAmount = 0.0f;
     bool m_skipInputFrame = false;
     int m_textFontId = -1;
-    int m_hintFontId = -1;
 };

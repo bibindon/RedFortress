@@ -119,26 +119,68 @@ def build():
           sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in OBJECTS),'triangles',flush=True)
 
 
-def export():
+def export(collision_only=False):
+    # Three stacked boxes approximate the dais without following each visual step.
+    boxes = []
+    for index, (half, bottom, top) in enumerate([
+            (1.0, 0.0, 0.625),
+            (0.85, 0.625, 0.875),
+            (0.55, 0.875, 1.008)]):
+        bpy.ops.mesh.primitive_cube_add(size=1.0, location=(0, 0, (bottom + top) / 2))
+        box = bpy.context.object
+        box.name = 'GoalCollisionBox' + str(index + 1)
+        box.dimensions = (half * 2, half * 2, top - bottom)
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        bm = bmesh.new()
+        bm.from_mesh(box.data)
+        assert len(bm.verts) == 8 and len(bm.faces) == 6
+        assert all(e.is_manifold for e in bm.edges)
+        assert bm.calc_volume(signed=True) > 0
+        bm.free()
+        boxes.append(box)
     bpy.ops.object.select_all(action='DESELECT')
-    for obj in OBJECTS:
-        obj.select_set(True)
-    bpy.context.view_layer.objects.active=OBJECTS[0]
-    # Export the same geometry for collision so every tread/cap matches exactly.
-    for filename in ('stone_steps.x','stone_steps_collision.x'):
+    for box in boxes:
+        box.select_set(True)
+    bpy.context.view_layer.objects.active = boxes[0]
+    bpy.ops.object.join()
+    collision = bpy.context.object
+    collision.name = 'GoalStepsCollision'
+    triangles = sum(len(p.vertices) - 2 for p in collision.data.polygons)
+    assert len(collision.data.vertices) == 24 and triangles == 36
+    from mathutils.bvhtree import BVHTree
+    tree = BVHTree.FromPolygons(
+        [v.co for v in collision.data.vertices],
+        [tuple(p.vertices) for p in collision.data.polygons])
+    for x, height in [(0.925, 0.625), (0.70, 0.875), (0.0, 1.008)]:
+        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            hit, normal, _, _ = tree.ray_cast(Vector((dx*x, dy*x, 2)), Vector((0, 0, -1)))
+            assert hit is not None and abs(hit.z-height) < 1e-5
+            assert normal.z > 0.99
+    filenames = ['stone_steps_collision.x']
+    if not collision_only:
+        filenames.insert(0, 'stone_steps.x')
+    for filename in filenames:
+        is_collision = filename == 'stone_steps_collision.x'
+        bpy.ops.object.select_all(action='DESELECT')
+        selected = OBJECTS
+        if is_collision:
+            selected = [collision]
+        for obj in selected:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = selected[0]
         result=bpy.ops.export_scene.directx_x(filepath=str(OUT/filename),check_existing=False,
             use_selection=True,axis_forward='Z',axis_up='Y',global_scale=1.0,
-            export_normals=True,export_uvs=True,export_materials=True,export_textures=True,
+            export_normals=True,export_uvs=not is_collision,
+            export_materials=not is_collision,export_textures=not is_collision,
             export_animation=False,export_armature=False,export_weights=False,
             triangulate=True,unweld_on_export=True)
         assert 'FINISHED' in result,filename
         path=OUT/filename
         data=path.read_bytes().replace(b'\r\n',b'\n').replace(b'\n',b'\r\n')
         assert data.startswith(b'xof ')
-        assert b'stone_bricks.png' in data
         path.write_bytes(data)
-    assert (OUT/'stone_steps.x').read_bytes()==(OUT/'stone_steps_collision.x').read_bytes()
-    print('EXPORT: visual and collision geometry identical; official axes Z/Y; CRLF.',flush=True)
+    bpy.data.objects.remove(collision, do_unlink=True)
+    print('EXPORT: collision is three boxes, 36 triangles; top surfaces validated.', flush=True)
 
 
 def preview(directory):
@@ -185,12 +227,15 @@ def preview(directory):
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--preview-dir',type=Path)
+    parser.add_argument('--collision-only', action='store_true')
     args=[]
     if '--' in sys.argv:
         args=sys.argv[sys.argv.index('--')+1:]
     options=parser.parse_args(args)
     build()
-    export()
+    export(options.collision_only)
+    if options.collision_only:
+        sys.exit(0)
     if options.preview_dir:
         preview(options.preview_dir)
     else:
