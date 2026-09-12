@@ -164,6 +164,7 @@ private:
     static bool IsBossStageNumber(int stageNumber);
     void BeginStageIntro();
     void UpdateStageIntro();
+    void EndStageIntro();
     void UpdateWarp();
     void BeginWarp(const D3DXVECTOR3& targetPosition, float targetRotationY);
     void StartPlayerDamageGaussian();
@@ -317,7 +318,7 @@ private:
     enum class RespawnPhase { None, DeathMotion, GameOverWait, FadeOut, HoldBlack, FadeIn };
     enum class StageClearReplayPhase { None, WaitingToJump, Ascending, ApexWhite, Vanished };
     enum class WarpPhase { None, FadeOut, HoldBlack, FadeIn };
-    enum class StageIntroPhase { LetterboxIn, Hold, LetterboxOut };
+    enum class StageIntroPhase { FadeIn, Sweep, Settle };
     enum class TitleLanguage { English, Japanese };
     enum class QteVisualPhase { None, Active, Restoring };
     enum class StageTransitionAction { None, MoveToIndex, StartStory, MoveAfterClear, ReturnToTitle, WaitForStageLoad, WaitForTitleLoad, FadeIn };
@@ -538,11 +539,15 @@ private:
     int m_itemPickupMessageFrames = 0;
     bool m_isMouseOverStartButton = false;
     int m_stageTitleFrame = 0;
-    int m_stageIntroFontId = -1;
-    StageIntroPhase m_stageIntroPhase = StageIntroPhase::LetterboxIn;
+    StageIntroPhase m_stageIntroPhase = StageIntroPhase::FadeIn;
     int m_stageIntroFrame = 0;
-    int m_stageIntroZoomElapsed = 0;
+    int m_stageIntroElapsedFrames = 0;
     float m_stageIntroStartFadeAlpha = 0.0f;
+    NSRender::DepthOfFieldMode m_stageIntroPreviousDepthOfFieldMode = NSRender::DepthOfFieldMode::Disabled;
+    float m_stageIntroPreviousFocalDistance = 8.0f;
+    float m_stageIntroPreviousStartNear = 0.0f;
+    float m_stageIntroPreviousMaxBlurDistance = 16.0f;
+    float m_stageIntroPreviousBlurRadiusPixels = 1.0f;
     int m_goalMarkerMeshId = -1;
     int m_goalArrowMeshId = -1;
     int m_stagePortalCooldownFrames = 0;

@@ -339,14 +339,19 @@ namespace
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
     const float kGoalArrowHeadOffsetY = 2.3f;
     const float kGoalArrowScale = 0.42f;
-    const int kStageIntroLetterboxFrames = 25;
-    const int kStageIntroHoldFrames = 80;
-    const int kStageIntroOutFrames = 25;
-    const int kStageIntroZoomTotalFrames =
-        kStageIntroLetterboxFrames + kStageIntroHoldFrames + kStageIntroOutFrames;
-    const float kStageIntroZoomStartScale = 2.5f;
-    const int kLetterboxBarHeight = 130;
-    const std::wstring kLetterboxBarImagePath = L"res\\2D_Image\\black2x2.bmp";
+    // ステージ開始演出: 手前だけくっきり見せ、くっきり見える範囲を奥へ広げていく。
+    const int kStageIntroFadeInFrames = 25;
+    const int kStageIntroSweepFrames = 80;
+    const int kStageIntroSettleFrames = 25;
+    const int kStageIntroTotalFrames =
+        kStageIntroFadeInFrames + kStageIntroSweepFrames + kStageIntroSettleFrames;
+    // 開始時はプレイヤー(カメラから約10m)と足元までをくっきりさせ、奥を強くぼかす。
+    const float kStageIntroFocusNearMeters = 10.0f;
+    const float kStageIntroFocusFarMeters = 90.0f;
+    const float kStageIntroBlurNearMeters = 26.0f;
+    const float kStageIntroBlurFarMeters = 150.0f;
+    const float kStageIntroBlurRadiusStart = 8.0f;
+    const float kStageIntroBlurRadiusEnd = 1.0f;
     const int kStageClearCameraMoveFrames = 45;
     const int kStageClearSoundFrame = 20;
     const int kStageClearSlashFrame = 28;
@@ -959,7 +964,6 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_render.SetLoadingScreenProgress(85);
     m_render.Draw();
 
-    m_render.PreloadImage(kLetterboxBarImagePath);
     m_render.SetLoadingScreenProgress(95);
     m_render.Draw();
 
@@ -9224,32 +9228,40 @@ void GameApp::DrawTitleLicense()
 
 void GameApp::BeginStageIntro()
 {
-    m_stageIntroPhase = StageIntroPhase::LetterboxIn;
+    m_stageIntroPhase = StageIntroPhase::FadeIn;
     m_stageIntroFrame = 0;
-    m_stageIntroZoomElapsed = 0;
+    m_stageIntroElapsedFrames = 0;
     m_stageIntroStartFadeAlpha = m_render.GetFadeAlpha();
     if (!m_useFixedCamera)
     {
         // プレイヤーの進行方向と反対側にカメラを置き、演出後も背後視点を維持する。
         m_cameraYaw = D3DX_PI - m_playerYaw;
     }
-    if (m_stageIntroFontId < 0)
-    {
-        m_stageIntroFontId = m_render.SetUpFontEx(L"BIZ UDGothic", 56, D3DCOLOR_RGBA(255, 255, 255, 255));
-    }
+
+    // 演出用に被写界深度の現在値を保存し、距離依存の強いぼけを有効にする。
+    m_stageIntroPreviousDepthOfFieldMode = m_render.GetPostEffectDepthOfFieldMode();
+    m_stageIntroPreviousFocalDistance = m_render.GetPostEffectDepthOfFieldFocalDistance();
+    m_stageIntroPreviousStartNear = m_render.GetPostEffectDepthOfFieldStartNear();
+    m_stageIntroPreviousMaxBlurDistance = m_render.GetPostEffectDepthOfFieldMaxBlurDistance();
+    m_stageIntroPreviousBlurRadiusPixels = m_render.GetPostEffectDepthOfFieldBlurRadiusPixels();
+    m_render.SetPostEffectDepthOfFieldMode(NSRender::DepthOfFieldMode::Enabled);
+    m_render.SetPostEffectDepthOfFieldStartNear(0.0f);
+    m_render.SetPostEffectDepthOfFieldFocalDistance(kStageIntroFocusNearMeters);
+    m_render.SetPostEffectDepthOfFieldMaxBlurDistance(kStageIntroBlurNearMeters);
+    m_render.SetPostEffectDepthOfFieldBlurRadiusPixels(kStageIntroBlurRadiusStart);
 }
 
 void GameApp::UpdateStageIntro()
 {
     // 現在フェーズのフレーム数
-    int phaseFrames = kStageIntroLetterboxFrames;
-    if (m_stageIntroPhase == StageIntroPhase::Hold)
+    int phaseFrames = kStageIntroFadeInFrames;
+    if (m_stageIntroPhase == StageIntroPhase::Sweep)
     {
-        phaseFrames = kStageIntroHoldFrames;
+        phaseFrames = kStageIntroSweepFrames;
     }
-    else if (m_stageIntroPhase == StageIntroPhase::LetterboxOut)
+    else if (m_stageIntroPhase == StageIntroPhase::Settle)
     {
-        phaseFrames = kStageIntroOutFrames;
+        phaseFrames = kStageIntroSettleFrames;
     }
 
     float t = 1.0f;
@@ -9262,104 +9274,77 @@ void GameApp::UpdateStageIntro()
         }
     }
 
-    // フェーズごとのアニメ値
-    float barHeight = static_cast<float>(kLetterboxBarHeight);
-    float titleAlpha = 1.0f;
-    float titleOffsetY = 0.0f;
+    // ローディング画面が消えるまでは演出を進めない (暗転のまま強いぼけを保持)。
+    const bool introRunning = !m_render.IsLoadingScreenVisible();
+
     float fadeAlpha = 0.0f;
-    if (m_stageIntroPhase == StageIntroPhase::LetterboxIn)
+    if (!introRunning)
     {
-        barHeight = static_cast<float>(kLetterboxBarHeight) * t;
-        titleAlpha = t;
-        titleOffsetY = (1.0f - t) * 20.0f;
+        // ローディング画面が消えるまでは暗転を維持する。
+        fadeAlpha = m_stageIntroStartFadeAlpha;
+    }
+    else if (m_stageIntroPhase == StageIntroPhase::FadeIn)
+    {
         fadeAlpha = m_stageIntroStartFadeAlpha + (0.0f - m_stageIntroStartFadeAlpha) * t;
-    }
-    else if (m_stageIntroPhase == StageIntroPhase::Hold)
-    {
-        barHeight = static_cast<float>(kLetterboxBarHeight);
-        titleAlpha = 1.0f;
-        titleOffsetY = 0.0f;
-        fadeAlpha = 0.0f;
-    }
-    else
-    {
-        barHeight = static_cast<float>(kLetterboxBarHeight) * (1.0f - t);
-        titleAlpha = 1.0f - t;
-        titleOffsetY = 0.0f;
-        fadeAlpha = 0.0f;
     }
 
     m_render.SetFadeAlpha(fadeAlpha);
 
-    // シーン描画用のカメラとプレイヤーメッシュを更新
+    // くっきり見える範囲を手前から奥へ広げる。
+    // startNear = 0 なので手前は常にくっきり、焦点より奥が距離に応じてぼける。
+    const float sweepRawT = static_cast<float>(m_stageIntroElapsedFrames) /
+                            static_cast<float>(kStageIntroTotalFrames);
+    const float sweepT = SmoothStep01(sweepRawT);
+    m_render.SetPostEffectDepthOfFieldFocalDistance(
+        LerpFloat(kStageIntroFocusNearMeters, kStageIntroFocusFarMeters, sweepT));
+    m_render.SetPostEffectDepthOfFieldMaxBlurDistance(
+        LerpFloat(kStageIntroBlurNearMeters, kStageIntroBlurFarMeters, sweepT));
+    m_render.SetPostEffectDepthOfFieldBlurRadiusPixels(
+        LerpFloat(kStageIntroBlurRadiusStart, kStageIntroBlurRadiusEnd, sweepT));
+
+    // シーン描画用のカメラとプレイヤーメッシュを更新 (カメラは通常位置のまま)
     UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
-
-    if (!m_useFixedCamera)
-    {
-        const D3DXVECTOR3 zoomCameraTarget = m_playerMover.GetPosition() + D3DXVECTOR3(0.0f, 1.2f, 0.0f);
-        const float zoomHorizontalDistance = m_cameraDistance * cosf(m_cameraPitch);
-        const D3DXVECTOR3 zoomOffset(sinf(m_cameraYaw) * zoomHorizontalDistance,
-                                      sinf(m_cameraPitch) * m_cameraDistance,
-                                      -cosf(m_cameraYaw) * zoomHorizontalDistance);
-        const D3DXVECTOR3 zoomEndPos = m_cameraMover.ResolvePosition(zoomCameraTarget,
-                                                                      zoomCameraTarget + zoomOffset);
-        const D3DXVECTOR3 zoomStartPos = m_cameraMover.ResolvePosition(
-            zoomCameraTarget,
-            zoomCameraTarget + zoomOffset * kStageIntroZoomStartScale);
-        const float zoomRawT = static_cast<float>(m_stageIntroZoomElapsed) /
-                                static_cast<float>(kStageIntroZoomTotalFrames);
-        const float zoomT = SmoothStep01(zoomRawT);
-        const D3DXVECTOR3 zoomCameraPosition = LerpVector3(zoomStartPos, zoomEndPos, zoomT);
-        m_render.SetCamera(zoomCameraPosition, zoomCameraTarget);
-    }
-
-    // シネマティック黒帯
-    const int barH = static_cast<int>(barHeight + 0.5f);
-    if (barH > 0)
-    {
-        m_render.DrawImageSized(kLetterboxBarImagePath,
-                                0, 0,
-                                NSRender::Common::BASE_W, barH, 255);
-        m_render.DrawImageSized(kLetterboxBarImagePath,
-                                0, NSRender::Common::BASE_H - barH,
-                                NSRender::Common::BASE_W, barH, 255);
-    }
-
-    // ステージ名
-    const int alpha = static_cast<int>(255.0f * titleAlpha + 0.5f);
-    if (alpha > 0)
-    {
-        const int titleY = static_cast<int>(260.0f + titleOffsetY);
-        m_render.DrawTextExCenter(m_stageIntroFontId,
-                                  m_stageManager.GetCurrentStageDisplayName(),
-                                  0, titleY,
-                                  NSRender::Common::BASE_W, 90,
-                                  D3DCOLOR_RGBA(255, 255, 255, alpha));
-    }
 
     m_render.Draw();
 
+    if (!introRunning)
+    {
+        return;
+    }
+
     // フレーム進行とフェーズ遷移
     ++m_stageIntroFrame;
-    ++m_stageIntroZoomElapsed;
+    ++m_stageIntroElapsedFrames;
+
     if (m_stageIntroFrame >= phaseFrames)
     {
         m_stageIntroFrame = 0;
-        if (m_stageIntroPhase == StageIntroPhase::LetterboxIn)
+        if (m_stageIntroPhase == StageIntroPhase::FadeIn)
         {
-            m_stageIntroPhase = StageIntroPhase::Hold;
+            m_stageIntroPhase = StageIntroPhase::Sweep;
         }
-        else if (m_stageIntroPhase == StageIntroPhase::Hold)
+        else if (m_stageIntroPhase == StageIntroPhase::Sweep)
         {
-            m_stageIntroPhase = StageIntroPhase::LetterboxOut;
+            m_stageIntroPhase = StageIntroPhase::Settle;
         }
         else
         {
-            m_render.SetFadeAlpha(0.0f);
-            m_gameState = GameState::Playing;
-            m_prevMovingPlatformPositions.clear();
+            EndStageIntro();
         }
     }
+}
+
+void GameApp::EndStageIntro()
+{
+    // 演出で変更した被写界深度の設定を元に戻し、ステージ本編を開始する。
+    m_render.SetPostEffectDepthOfFieldFocalDistance(m_stageIntroPreviousFocalDistance);
+    m_render.SetPostEffectDepthOfFieldStartNear(m_stageIntroPreviousStartNear);
+    m_render.SetPostEffectDepthOfFieldMaxBlurDistance(m_stageIntroPreviousMaxBlurDistance);
+    m_render.SetPostEffectDepthOfFieldBlurRadiusPixels(m_stageIntroPreviousBlurRadiusPixels);
+    m_render.SetPostEffectDepthOfFieldMode(m_stageIntroPreviousDepthOfFieldMode);
+    m_render.SetFadeAlpha(0.0f);
+    m_gameState = GameState::Playing;
+    m_prevMovingPlatformPositions.clear();
 }
 
 void GameApp::BeginWarp(const D3DXVECTOR3& targetPosition, const float targetRotationY)
