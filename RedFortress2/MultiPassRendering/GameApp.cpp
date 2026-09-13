@@ -180,6 +180,10 @@ namespace
     const float kPortalStepsPositionYOffset = -1.0f;
     const int kPortalClearDelayFrames = 45;
     const float kPortalPillarTouchRadius = 0.55f;
+    // 接触判定の上下帯（ポータル基準Yからの相対）。台座天面は基準+1.016mなので、
+    // 天面に乗った時（および天面への着地中）だけ接触が成立する。
+    const float kPortalPillarTouchHeightMin = 0.7f;
+    const float kPortalPillarTouchHeightMax = 1.6f;
     const float kPortalPillarLightHeight = 2.5f;
     const float kPortalPillarLightBrightness = 1.2f;
     const float kPortalPillarLightRange = 5.0f;
@@ -7753,8 +7757,11 @@ void GameApp::UpdatePortal()
     const D3DXVECTOR3 playerPos = m_playerMover.GetPosition();
     const float dx = playerPos.x - m_portalBasePosition.x;
     const float dz = playerPos.z - m_portalBasePosition.z;
+    const float dy = playerPos.y - m_portalBasePosition.y;
     const bool playerTouchingPillar =
-        dx * dx + dz * dz <= kPortalPillarTouchRadius * kPortalPillarTouchRadius;
+        dx * dx + dz * dz <= kPortalPillarTouchRadius * kPortalPillarTouchRadius &&
+        dy >= kPortalPillarTouchHeightMin &&
+        dy <= kPortalPillarTouchHeightMax;
 
     if (m_portalPillarShown && !m_portalActivated && playerTouchingPillar)
     {
