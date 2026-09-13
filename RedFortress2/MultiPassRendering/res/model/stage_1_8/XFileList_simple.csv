@@ -30,3 +30,6 @@
 3502,../static_platform/static_platform_1x1.x,-10.5,1.866,8.8,0,0,0,0.67,normal
 3503,../static_platform/static_platform_1x1.x,-9.5,2.866,6.6,0,0,0,0.67,normal
 3504,../base/base_rock2.x,8,0,8,0,310,0,0.8,normal
+3601,../static_platform/static_platform_1x1.x,-0.5,0.866,11,0,0,0,0.67,normal
+3602,../static_platform/static_platform_1x1.x,0.5,1.866,8.8,0,0,0,0.67,normal
+3603,../static_platform/static_platform_1x1.x,1.5,2.866,6.6,0,0,0,0.67,normal

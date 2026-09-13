@@ -3830,6 +3830,12 @@ void GameApp::TryDropEnemyItem(const EnemyBase& enemy)
         return;
     }
 
+    // ボスはアイテムをドロップしない（クリア報酬等の別経路のみ）。
+    if (enemy.IsBoss())
+    {
+        return;
+    }
+
     const bool busterUnlocked = m_inventoryManager.GetWeaponCount(kBusterWeaponId) > 0;
     const bool bombUnlocked = m_inventoryManager.GetWeaponCount(kBombWeaponId) > 0;
     if ((busterUnlocked || bombUnlocked) &&
