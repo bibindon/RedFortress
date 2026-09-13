@@ -1061,7 +1061,13 @@ void GameApp::Run()
             const StageManager::StageData& audioStage = m_stageManager.GetCurrentStage();
             const bool useRainEnvironment = audioStage.weather == StageManager::StageWeather::Rain;
             const bool stageCleared = m_saveDataManager.IsStageCleared(audioStage.id);
-            GameAudio::UpdateStageMusic(audioStage.id, audioStage.number, useRainEnvironment, GetCurrentWorld(), stageCleared);
+            const bool playStageBgm = m_gameState == GameState::Playing;
+            GameAudio::UpdateStageMusic(audioStage.id,
+                                        audioStage.number,
+                                        useRainEnvironment,
+                                        GetCurrentWorld(),
+                                        stageCleared,
+                                        playStageBgm);
         }
         else if (m_gameState == GameState::Ending || m_gameState == GameState::EndingFin)
         {

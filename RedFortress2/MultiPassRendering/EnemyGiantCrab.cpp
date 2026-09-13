@@ -1,12 +1,17 @@
 ﻿#include "EnemyGiantCrab.h"
 
 #include "../../RedFortressRender/Render/Render.h"
+#include "../../PhysicsLib/PhysicsLib/PhysicsLib.h"
 
 namespace
 {
     const int kGiantCrabMaxHp = 12;
     const int kBossGiantCrabMaxHp = kGiantCrabMaxHp * 20;
     const float kBossGiantCrabBodyScale = 2.0f;
+    const float kBossGiantCrabCollisionHeightScale = 0.5f;
+    // 踏みつけ可能範囲は、ボス倍率適用後の胴体メッシュ寸法に合わせる。
+    const float kBossGiantCrabStompHalfWidth = 1.71f;
+    const float kBossGiantCrabStompHalfDepth = 1.14f;
 
     const int kNormalAttackCooldownFrames = 62;
     const int kEnragedAttackCooldownFrames = 36;
@@ -18,7 +23,7 @@ namespace
     const int kClawSweepDamage = 16;
 
     const int kSideChargeWindupFrames = 38;
-    const int kSideChargeActiveFrames = 34;
+    const int kSideChargeActiveFrames = 75;
     const int kSideChargeRecoveryFrames = 30;
     const float kSideChargeSpeed = 8.0f;
     const float kSideChargeHitRange = 2.1f;
@@ -108,7 +113,8 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos,
                                const int meshId,
                                const float yaw,
                                const int maxHp,
-                               const float bodyScale)
+                               const float bodyScale,
+                               const float collisionHeightScale)
     : EnemyBase(pos,
                 meshId,
                 L"giant_crab",
@@ -117,8 +123,8 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos,
                 1.7f,
                 10.0f,
                 0.54f * 3.0f * bodyScale,
-                0.36f * 3.0f * bodyScale,
-                -0.18f * 3.0f * bodyScale,
+                0.36f * 3.0f * bodyScale * collisionHeightScale,
+                -0.18f * 3.0f * bodyScale * collisionHeightScale,
                 MovementMode::Ground,
                 true,
                 HitReactionMode::SuperArmor)
@@ -132,7 +138,8 @@ EnemyBossGiantCrab::EnemyBossGiantCrab(const D3DXVECTOR3& pos,
                      meshId,
                      yaw,
                      kBossGiantCrabMaxHp,
-                     kBossGiantCrabBodyScale)
+                     kBossGiantCrabBodyScale,
+                     kBossGiantCrabCollisionHeightScale)
 {
     m_arenaSurfaceY = GetPosition().y;
     for (int i = 0; i < kBubbleProjectileCount; ++i)
@@ -150,6 +157,24 @@ bool EnemyBossGiantCrab::UsesSpecialAttacks() const
 bool EnemyBossGiantCrab::CanBeStomped() const
 {
     return m_attackType != AttackType::BurrowAmbush;
+}
+
+bool EnemyBossGiantCrab::IsWithinStompHorizontalRange(const D3DXVECTOR3& playerPos,
+                                                       const float playerRadius) const
+{
+    D3DXVECTOR3 worldOffset = playerPos - GetPosition();
+    worldOffset.y = 0.0f;
+
+    D3DXMATRIX inverseRotation;
+    D3DXMatrixRotationY(&inverseRotation, -GetYaw());
+    D3DXVECTOR3 localOffset;
+    D3DXVec3TransformNormal(&localOffset, &worldOffset, &inverseRotation);
+
+    const float halfWidth = kBossGiantCrabStompHalfWidth + playerRadius;
+    const float halfDepth = kBossGiantCrabStompHalfDepth + playerRadius;
+    const float normalizedX = localOffset.x / halfWidth;
+    const float normalizedZ = localOffset.z / halfDepth;
+    return normalizedX * normalizedX + normalizedZ * normalizedZ <= 1.0f;
 }
 
 float EnemyBossGiantCrab::GetMeshVerticalOffset() const
@@ -326,6 +351,16 @@ bool EnemyBossGiantCrab::IsAttackAllowed(const AttackType attackType,
         return m_attacksUntilBurrowAllowed <= 0;
     }
     return distance >= 2.5f && distance <= kJumpSlamMaxTravelDistance;
+}
+
+bool EnemyBossGiantCrab::IsPlayerVerticallyOverlapping(const D3DXVECTOR3& playerPos) const
+{
+    const float enemyHalfHeight = GetHeight() * 0.5f;
+    const float enemyBottomY = GetPosition().y - enemyHalfHeight;
+    const float enemyTopY = GetPosition().y + enemyHalfHeight;
+    const float playerBottomY = playerPos.y;
+    const float playerTopY = playerBottomY + PhysicsLib::PhysicsLib::GetCylinderHeight();
+    return playerBottomY <= enemyTopY && playerTopY >= enemyBottomY;
 }
 
 bool EnemyBossGiantCrab::IsPlayerOnTop(const D3DXVECTOR3& playerPos,
@@ -577,6 +612,7 @@ void EnemyBossGiantCrab::UpdateActivePhase(NSRender::Render& render,
 
     const float distance = HorizontalDistance(GetPosition(), playerPos);
     const float verticalDistance = fabsf(GetPosition().y - playerPos.y);
+    const bool playerVerticallyOverlaps = IsPlayerVerticallyOverlapping(playerPos);
     if (m_attackType == AttackType::ClawSweep && distance <= kClawSweepRange &&
         verticalDistance <= 1.8f)
     {
@@ -587,8 +623,9 @@ void EnemyBossGiantCrab::UpdateActivePhase(NSRender::Render& render,
             m_attackHitApplied = true;
         }
     }
-    else if (m_attackType == AttackType::SideCharge && distance <= kSideChargeHitRange &&
-             verticalDistance <= 1.8f)
+    else if (m_attackType == AttackType::SideCharge &&
+             distance <= kSideChargeHitRange &&
+             playerVerticallyOverlaps)
     {
         EmitAttackHit(kSideChargeDamage, GetPosition(), 54, 0);
         m_attackHitApplied = true;

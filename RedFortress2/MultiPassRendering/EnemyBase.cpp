@@ -1131,6 +1131,15 @@ bool EnemyBase::CanDamagePlayerOnContact(const bool playerTouching)
     return playerTouching;
 }
 
+bool EnemyBase::IsWithinStompHorizontalRange(const D3DXVECTOR3& playerPos,
+                                             const float playerRadius) const
+{
+    const D3DXVECTOR3 diff = playerPos - m_position;
+    const float horizontalDist = sqrtf(diff.x * diff.x + diff.z * diff.z);
+    const float combinedContactRadius = m_contactRadius + playerRadius;
+    return horizontalDist <= combinedContactRadius;
+}
+
 bool EnemyBase::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
                                   const D3DXVECTOR3& playerPos,
                                   const bool playerIsJumping,
@@ -1152,10 +1161,8 @@ bool EnemyBase::IsStompedByPlayer(const D3DXVECTOR3& previousPlayerPos,
         return false;
     }
 
-    const D3DXVECTOR3 diff = playerPos - m_position;
-    const float horizontalDist = sqrtf(diff.x * diff.x + diff.z * diff.z);
-    const float combinedContactRadius = m_contactRadius + playerRadius;
-    if (horizontalDist > combinedContactRadius || playerYVelocity > 0.0f)
+    if (!IsWithinStompHorizontalRange(playerPos, playerRadius) ||
+        playerYVelocity > 0.0f)
     {
         return false;
     }

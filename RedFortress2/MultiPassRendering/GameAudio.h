@@ -23,7 +23,12 @@ void PlayTitleMusic();
 void PlayGameOverMusic();
 void PlayEndingMusic();
 void PlayStoryMusic();
-void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world, const bool isCleared);
+void UpdateStageMusic(const std::wstring& stageId,
+                      int stageNumber,
+                      bool useRainEnvironment,
+                      int world,
+                      bool isCleared,
+                      bool playBgm);
 void PlayMenuMove();
 void PlayMenuConfirm();
 void PlayMenuCancel();

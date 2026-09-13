@@ -121,6 +121,8 @@ protected:
     virtual bool UpdateSpecialAttack(NSRender::Render& render,
                                      const D3DXVECTOR3& playerPos,
                                      bool playerInvincible);
+    virtual bool IsWithinStompHorizontalRange(const D3DXVECTOR3& playerPos,
+                                              float playerRadius) const;
     virtual void UpdateChaseLocomotion(const D3DXVECTOR3& targetPosition,
                                        const D3DXVECTOR3& moveDirection,
                                        const D3DXVECTOR3& sideDirection,

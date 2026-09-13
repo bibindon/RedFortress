@@ -587,7 +587,12 @@ void PlayStoryMusic()
     PlayBgmIfChanged(kStoryBgm, kStoryBgmVolume);
 }
 
-void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const bool useRainEnvironment, const int world, const bool isCleared)
+void UpdateStageMusic(const std::wstring& stageId,
+                      const int stageNumber,
+                      const bool useRainEnvironment,
+                      const int world,
+                      const bool isCleared,
+                      const bool playBgm)
 {
     std::wstring fieldBgm = kW1FieldBgm;
     std::wstring environment = kForestEnvironment;
@@ -699,7 +704,14 @@ void UpdateStageMusic(const std::wstring& stageId, const int stageNumber, const 
         environmentVolume = 16;
     }
     PlayEnvironmentIfChanged(environment, environmentVolume);
-    PlayBgmIfChanged(fieldBgm, kFieldBgmVolume);
+    if (playBgm)
+    {
+        PlayBgmIfChanged(fieldBgm, kFieldBgmVolume);
+    }
+    else
+    {
+        StopBgmIfPlaying();
+    }
 }
 
 void PlayMenuMove() { PlayEffect(kMenuMove, 70); }

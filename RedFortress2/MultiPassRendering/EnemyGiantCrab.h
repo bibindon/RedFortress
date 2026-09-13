@@ -12,7 +12,8 @@ protected:
                    int meshId,
                    float yaw,
                    int maxHp,
-                   float bodyScale = 1.0f);
+                   float bodyScale = 1.0f,
+                   float collisionHeightScale = 1.0f);
 };
 
 class EnemyBossGiantCrab : public EnemyGiantCrab
@@ -27,6 +28,8 @@ protected:
     bool UpdateSpecialAttack(NSRender::Render& render,
                              const D3DXVECTOR3& playerPos,
                              bool playerInvincible) override;
+    bool IsWithinStompHorizontalRange(const D3DXVECTOR3& playerPos,
+                                      float playerRadius) const override;
     float GetMeshVerticalOffset() const override;
     D3DXVECTOR3 GetMeshRotationOffset() const override;
 
@@ -55,6 +58,7 @@ private:
 
     void SelectAttack(NSRender::Render& render, const D3DXVECTOR3& playerPos);
     bool IsAttackAllowed(AttackType attackType, float distance) const;
+    bool IsPlayerVerticallyOverlapping(const D3DXVECTOR3& playerPos) const;
     // プレイヤーが自分の体の上（踏みつけ）にいるかどうか。
     bool IsPlayerOnTop(const D3DXVECTOR3& playerPos, float distance) const;
     void BeginAttack(NSRender::Render& render,
