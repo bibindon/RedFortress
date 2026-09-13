@@ -44,7 +44,8 @@ namespace
     const int kBubbleProjectileLifetimeFrames = 120;
     const float kBubbleProjectileSpeed = 5.5f;
     const float kBubbleProjectileRadius = 0.3f;
-    const float kBubbleHitRange = 0.85f;
+    const float kBubbleHitRange = 0.5f;
+    const float kBubbleHitVerticalRange = 0.5f;
     const int kBubbleDamage = 8;
     const int kBubbleSlowFrames = 90;
 
@@ -649,7 +650,7 @@ void EnemyBossGiantCrab::UpdateBubbleProjectiles(NSRender::Render& render,
 
         if (!playerInvincible &&
             HorizontalDistance(m_bubbleProjectilePosition[i], playerPos) <= kBubbleHitRange &&
-            fabsf(m_bubbleProjectilePosition[i].y - playerPos.y) <= 1.5f)
+            fabsf(m_bubbleProjectilePosition[i].y - playerPos.y) <= kBubbleHitVerticalRange)
         {
             EmitAttackHit(kBubbleDamage, m_bubbleProjectilePosition[i], 12, kBubbleSlowFrames);
             m_bubbleProjectileActive[i] = false;
