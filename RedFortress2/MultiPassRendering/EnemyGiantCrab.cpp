@@ -61,10 +61,10 @@ namespace
     // 攻撃は6種巡回なので、10回はさむと実測で約2.7倍の間隔になる。
     const int kBurrowAttacksBetweenUses = 10;
 
-    // プレイヤーに上へ乗られて（踏まれて）いるときにジャンプ攻撃を選ぶ確率。
-    // 6種巡回では「上に乗られている」状況でジャンプ攻撃の距離条件を満たしにくく
-    // ほぼ選ばれないため、この状況だけは巡回とは別に抽選する。
-    const float kJumpSlamWhileStompedChance = 0.8f;
+    // プレイヤーに上へ乗られて（踏まれて）いるときにサイドチャージを選ぶ確率。
+    // 巡回では「上に乗られている」状況で距離条件を満たしにくいため、この状況だけ
+    // 巡回とは別に抽選する（体ごと突っ込む突進攻撃）。
+    const float kChargeWhileStompedChance = 0.8f;
     // 「上に乗られている」判定: 頭上（円柱上面）からこの距離だけ下までを許容する。
     const float kJumpSlamOnTopVerticalTolerance = 0.6f;
     // 同判定の水平距離の余裕（物理半径に加算）。
@@ -252,12 +252,12 @@ void EnemyBossGiantCrab::SelectAttack(NSRender::Render& render,
 {
     const float distance = HorizontalDistance(GetPosition(), playerPos);
 
-    // 上に乗られて（踏まれて）いるときは、振り落とせるジャンプ攻撃を高い確率で選ぶ。
-    // 退避ダッシュや6種巡回より先に抽選し、乗られている間はジャンプ攻撃が最優先になる。
+    // 上に乗られて（踏まれて）いるときは、体ごと突っ込んで振り落とす
+    // サイドチャージを高い確率で選ぶ。退避ダッシュや6種巡回より先に抽選する。
     if (IsPlayerOnTop(playerPos, distance) &&
-        NextRandom01() < kJumpSlamWhileStompedChance)
+        NextRandom01() < kChargeWhileStompedChance)
     {
-        BeginAttack(render, AttackType::JumpSlam, playerPos);
+        BeginAttack(render, AttackType::SideCharge, playerPos);
         return;
     }
 

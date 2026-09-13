@@ -2160,8 +2160,8 @@ void GameApp::Run()
                         break;
                     }
                     else if (m_playerInvincibleFrames <= 0 &&
-                             !enemy->UsesSpecialAttacks() &&
-                             enemyCanDamagePlayerOnContact)
+                             enemyCanDamagePlayerOnContact &&
+                             (!enemy->UsesSpecialAttacks() || enemy->IsBoss()))
                     {
                         GameAudio::PlayEnemyAttack();
                         DamagePlayerHp(10);
