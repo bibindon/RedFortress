@@ -34,11 +34,13 @@ void BossHpBar::SetBoss(EnemyBase* pBoss)
     if (m_pBoss == nullptr)
     {
         m_lastObservedHp = -1;
+        m_lastObservedMaxHp = -1;
         return;
     }
 
     ResetDisplay(m_pBoss->GetHp(), m_pBoss->GetMaxHp());
     m_lastObservedHp = m_pBoss->GetHp();
+    m_lastObservedMaxHp = m_pBoss->GetMaxHp();
 }
 
 void BossHpBar::ResetDisplay(int hp, int maxHp)
@@ -92,12 +94,23 @@ void BossHpBar::Update()
 
     // 毎フレーム HP を監視し、減少を検出したらダメージアニメーションを駆動。
     // これにより被弾処理側の修正なしでバーが反応する。
+    // 増加（リスポーン時の全快・回復）や最大HPの変化（別個体への入れ替わり。
+    // 同じアドレスが再利用されると SetBoss のポインタ比較をすり抜ける）を
+    // 検出したら、表示をその場で作り直す。
     const int currentHp = m_pBoss->GetHp();
+    const int currentMaxHp = m_pBoss->GetMaxHp();
     if (m_lastObservedHp >= 0 && currentHp < m_lastObservedHp)
     {
         OnDamage(m_lastObservedHp, currentHp);
     }
+    else if (m_lastObservedHp >= 0 &&
+             (currentHp > m_lastObservedHp ||
+              (m_lastObservedMaxHp > 0 && currentMaxHp != m_lastObservedMaxHp)))
+    {
+        ResetDisplay(currentHp, currentMaxHp);
+    }
     m_lastObservedHp = currentHp;
+    m_lastObservedMaxHp = currentMaxHp;
 
     if (m_frontAnimating)
     {

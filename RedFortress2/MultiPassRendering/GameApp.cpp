@@ -8384,6 +8384,10 @@ void GameApp::CompletePlayerDeath()
     m_stageClearInputLocked = false;
 
     // 敵、破壊可能オブジェクト、取得済みスター、ドクロを再配置
+    // 敵は作り直される（ボスは全快で別オブジェクトになる）ため、HPバーの表示対象を
+    // 一旦無効化し、次の UpdateBossHpBar() で新しいボスを掴ませて表示を作り直す。
+    // アドレスが再利用されるとポインタ比較ですり抜けるので、ここでの明示的な解除が要る。
+    m_bossHpBar.SetBoss(nullptr);
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(m_stageManager.GetCurrentStage()));
     m_destructibleManager.ResetForRespawn(m_render);
     m_collectibleManager.RefreshVisibility(m_destructibleManager);

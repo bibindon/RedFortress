@@ -36,6 +36,7 @@ private:
 
     int m_fontId = -1;
     int m_lastObservedHp = -1;
+    int m_lastObservedMaxHp = -1;
 
     float m_frontDisplay = 100.0f;
     float m_damageDisplay = 100.0f;
