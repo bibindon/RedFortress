@@ -105,6 +105,12 @@ def main():
     sources = [None] + [str(i) for i in range(3601, 3610)] + ["3606", "3608"]
     assert len(boosters) == len(targets)
     for booster, target_id, source_id in zip(boosters, targets, sources):
+        assert booster["ChargeEnabled"].lower() in {"y", "yes", "true", "1", "on"}, (
+            "Booster must keep its 0.5 second pre-launch charge", booster["DashBoosterID"])
+        assert float(booster["Duration"]) <= 0.15, (
+            "Booster control lock is too long", booster["DashBoosterID"])
+        assert float(booster["Speed"]) >= 10.0, (
+            "Booster launch is not cannon-fast", booster["DashBoosterID"])
         if source_id is not None:
             source = position(physics[source_id])
             start = position(booster)
@@ -127,7 +133,7 @@ def main():
             if abs(result[1] - wy) < 1.7:
                 assert math.hypot(result[0] - wx, result[2] - wz) > 0.9, "Landing on warp"
         print(booster["DashBoosterID"], "landing", tuple(round(v, 3) for v in result))
-    print("PASS: placement consistency, pickup spacing, boundaries, and 12 estimated landings")
+    print("PASS: placement, boundaries, <=0.15s control locks, and 12 impulse landings")
 
 
 if __name__ == "__main__":
