@@ -219,6 +219,7 @@ namespace
     // 各ポータルを弱く照らすライト。高さは接地基準から1m（ステータスキューブと同じ基準）。
     const float kStageSelectPortalLightHeight = 1.0f;
     const float kStageSelectPortalLightBrightness = 0.5f;
+    const float kStageSelectPortalNavLightBrightness = 1.2f;
     const float kStageSelectPortalLightRange = 4.0f;
     const wchar_t* kStageSelectPortalLightOwnerTag = L"stage-select-portal";
     // ポイントライトはシェーダ配列が16本まで。上限を超えると古いライトから捨てられるため、
@@ -4168,26 +4169,9 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
         return;
     }
 
+    // クリスタルライトは2本だけ（西の拠点・ワールド1ポータル側と、北東のワールド3側）。
     const D3DXCOLOR crystalLightColor(0.08f, 0.55f, 1.0f, 1.0f);
     m_render.AddPointLight(D3DXVECTOR3(-11.5f, 2.4f, 6.5f),
-                           2.4f,
-                           crystalLightColor,
-                           NSRender::PointLightShape::Point,
-                           12.0f,
-                           10.0f,
-                           10.0f,
-                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                           8.0f);
-    m_render.AddPointLight(D3DXVECTOR3(1.5f, 2.4f, 7.5f),
-                           2.4f,
-                           crystalLightColor,
-                           NSRender::PointLightShape::Point,
-                           12.0f,
-                           10.0f,
-                           10.0f,
-                           D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-                           8.0f);
-    m_render.AddPointLight(D3DXVECTOR3(7.0f, 2.4f, 16.5f),
                            2.4f,
                            crystalLightColor,
                            NSRender::PointLightShape::Point,
@@ -6036,12 +6020,24 @@ void GameApp::CreateStageSelectCubes()
             portalLightColor = kStageSelectPortalLightYellowColor;
         }
 
+        // select2 は洞窟が暗いので、拠点行き・ワールド移動ポータルだけ強めに照らす。
+        float portalLightBrightness = kStageSelectPortalLightBrightness;
+        if (m_stageManager.GetCurrentStage().id == L"select2")
+        {
+            const bool isNavigationPortal = IsBaseId(destinationId) ||
+                (destinationId.length() >= 6 && destinationId.substr(0, 6) == L"select");
+            if (isNavigationPortal)
+            {
+                portalLightBrightness = kStageSelectPortalNavLightBrightness;
+            }
+        }
+
         if (NSRender::Light::GetPointLightList().size() < kStageSelectPortalLightBudget)
         {
             D3DXVECTOR3 portalLightPosition = interactable.position;
             portalLightPosition.y += portalGroundOffsetY + kStageSelectPortalLightHeight;
             m_render.AddPointLight(portalLightPosition,
-                                   kStageSelectPortalLightBrightness,
+                                   portalLightBrightness,
                                    portalLightColor,
                                    NSRender::PointLightShape::Point,
                                    12.0f,
