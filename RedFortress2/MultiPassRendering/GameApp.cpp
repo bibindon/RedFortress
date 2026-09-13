@@ -3799,7 +3799,9 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
         D3DXVECTOR3 dir = enemyPos - playerPos;
         dir.y = 0.0f;
         const float dist = D3DXVec3Length(&dir);
-        if (dist > attackDefinition.range)
+        // 攻撃の先端が敵の衝突円柱へ届いた時点で命中とする。
+        const float hitDistance = attackDefinition.range + enemy->GetPhysicsRadius();
+        if (dist > hitDistance)
         {
             continue;
         }
@@ -5794,6 +5796,22 @@ void GameApp::UpdateBossHpBar()
 
 void GameApp::DrawBossHpBar()
 {
+    EnemyBase* boss = m_enemyManager.GetAliveBoss();
+    if (m_render.IsBossCollisionDebugEnabled() &&
+        boss != nullptr &&
+        boss->GetType() == L"boss_giant_crab")
+    {
+        m_render.QueueDebugCollisionCylinder(boss->GetPosition(),
+                                             boss->GetPhysicsRadius(),
+                                             boss->GetHeight(),
+                                             D3DCOLOR_ARGB(224, 64, 255, 96));
+    }
+
+    if (m_pauseMenu.IsOpen() || m_craftMenu.IsOpen())
+    {
+        return;
+    }
+
     m_bossHpBar.Draw();
 }
 

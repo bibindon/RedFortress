@@ -62,19 +62,6 @@ namespace
     const float kBurrowPitch = -D3DX_PI * 0.5f;
     const float kBurrowEmergeMaxVerticalDistance = 1.4f;
     const int kBurrowEmergeDamage = 26;
-    // 潜りの連発を防ぐ: 潜った後、次に潜るまでに他攻撃を最低この回数はさむ。
-    // 攻撃は6種巡回なので、10回はさむと実測で約2.7倍の間隔になる。
-    const int kBurrowAttacksBetweenUses = 10;
-
-    // プレイヤーに上へ乗られて（踏まれて）いるときにサイドチャージを選ぶ確率。
-    // 巡回では「上に乗られている」状況で距離条件を満たしにくいため、この状況だけ
-    // 巡回とは別に抽選する（体ごと突っ込む突進攻撃）。
-    const float kChargeWhileStompedChance = 0.8f;
-    // 「上に乗られている」判定: 頭上（円柱上面）からこの距離だけ下までを許容する。
-    const float kJumpSlamOnTopVerticalTolerance = 0.6f;
-    // 同判定の水平距離の余裕（物理半径に加算）。
-    const float kJumpSlamOnTopHorizontalMargin = 0.75f;
-
     const int kRetreatDashWindupFrames = 10;
     const int kRetreatDashActiveFrames = 28;
     const int kRetreatDashRecoveryFrames = 10;
@@ -275,82 +262,34 @@ bool EnemyBossGiantCrab::UpdateSpecialAttack(NSRender::Render& render,
 void EnemyBossGiantCrab::SelectAttack(NSRender::Render& render,
                                       const D3DXVECTOR3& playerPos)
 {
-    const float distance = HorizontalDistance(GetPosition(), playerPos);
-
-    // 上に乗られて（踏まれて）いるときは、体ごと突っ込んで振り落とす
-    // サイドチャージを高い確率で選ぶ。退避ダッシュや6種巡回より先に抽選する。
-    if (IsPlayerOnTop(playerPos, distance) &&
-        NextRandom01() < kChargeWhileStompedChance)
+    const int attackIndex = NextRandomInt(0, 6);
+    AttackType attackType = AttackType::ClawSweep;
+    if (attackIndex == 1)
     {
-        BeginAttack(render, AttackType::SideCharge, playerPos);
-        return;
+        attackType = AttackType::SideCharge;
+    }
+    else if (attackIndex == 2)
+    {
+        attackType = AttackType::GroundSlam;
+    }
+    else if (attackIndex == 3)
+    {
+        attackType = AttackType::BubbleShot;
+    }
+    else if (attackIndex == 4)
+    {
+        attackType = AttackType::JumpSlam;
+    }
+    else if (attackIndex == 5)
+    {
+        attackType = AttackType::BurrowAmbush;
+    }
+    else if (attackIndex == 6)
+    {
+        attackType = AttackType::RetreatDash;
     }
 
-    if (m_attacksUntilRetreat <= 0 && distance <= 5.5f)
-    {
-        BeginAttack(render, AttackType::RetreatDash, playerPos);
-        return;
-    }
-
-    for (int offset = 0; offset < 6; ++offset)
-    {
-        const int attackIndex = (m_nextAttackIndex + offset) % 6;
-        AttackType candidate = AttackType::ClawSweep;
-        if (attackIndex == 1)
-        {
-            candidate = AttackType::SideCharge;
-        }
-        else if (attackIndex == 2)
-        {
-            candidate = AttackType::GroundSlam;
-        }
-        else if (attackIndex == 3)
-        {
-            candidate = AttackType::BubbleShot;
-        }
-        else if (attackIndex == 4)
-        {
-            candidate = AttackType::JumpSlam;
-        }
-        else if (attackIndex == 5)
-        {
-            candidate = AttackType::BurrowAmbush;
-        }
-
-        if (IsAttackAllowed(candidate, distance))
-        {
-            m_nextAttackIndex = (attackIndex + 1) % 6;
-            BeginAttack(render, candidate, playerPos);
-            return;
-        }
-    }
-}
-
-bool EnemyBossGiantCrab::IsAttackAllowed(const AttackType attackType,
-                                         const float distance) const
-{
-    if (attackType == AttackType::ClawSweep)
-    {
-        return distance <= 3.8f;
-    }
-    if (attackType == AttackType::SideCharge)
-    {
-        return distance >= 2.4f && distance <= 10.0f;
-    }
-    if (attackType == AttackType::GroundSlam)
-    {
-        return distance <= 6.0f;
-    }
-    if (attackType == AttackType::BubbleShot)
-    {
-        return distance >= 3.0f && distance <= 11.0f;
-    }
-    if (attackType == AttackType::BurrowAmbush)
-    {
-        // 潜りは前回から他攻撃を kBurrowAttacksBetweenUses 回はさむまで選ばれない。
-        return m_attacksUntilBurrowAllowed <= 0;
-    }
-    return distance >= 2.5f && distance <= kJumpSlamMaxTravelDistance;
+    BeginAttack(render, attackType, playerPos);
 }
 
 bool EnemyBossGiantCrab::IsPlayerVerticallyOverlapping(const D3DXVECTOR3& playerPos) const
@@ -361,20 +300,6 @@ bool EnemyBossGiantCrab::IsPlayerVerticallyOverlapping(const D3DXVECTOR3& player
     const float playerBottomY = playerPos.y;
     const float playerTopY = playerBottomY + PhysicsLib::PhysicsLib::GetCylinderHeight();
     return playerBottomY <= enemyTopY && playerTopY >= enemyBottomY;
-}
-
-bool EnemyBossGiantCrab::IsPlayerOnTop(const D3DXVECTOR3& playerPos,
-                                       const float distance) const
-{
-    // プレイヤーが体の真上（踏みつけ）にいるかどうかの判定。
-    // 円柱上面の高さ付近より上にいて、かつ水平距離が接触範囲内であること。
-    if (distance > GetPhysicsRadius() + kJumpSlamOnTopHorizontalMargin)
-    {
-        return false;
-    }
-
-    const float enemyTopY = GetPosition().y + GetHeight() * 0.5f;
-    return playerPos.y >= enemyTopY - kJumpSlamOnTopVerticalTolerance;
 }
 
 void EnemyBossGiantCrab::BeginAttack(NSRender::Render& render,
@@ -752,7 +677,6 @@ void EnemyBossGiantCrab::BeginRecovery()
 
 void EnemyBossGiantCrab::EndAttack()
 {
-    const AttackType finishedAttack = m_attackType;
     m_attackType = AttackType::None;
     m_attackPhase = AttackPhase::None;
     m_phaseFrames = 0;
@@ -762,45 +686,9 @@ void EnemyBossGiantCrab::EndAttack()
     m_burrowMeshOffsetY = 0.0f;
     m_burrowPitch = 0.0f;
 
-    if (finishedAttack == AttackType::RetreatDash)
-    {
-        if (IsEnraged())
-        {
-            m_attacksUntilRetreat = 1;
-        }
-        else
-        {
-            m_attacksUntilRetreat = 2;
-        }
-        m_attackCooldownFrames = 14;
-        FinishSpecialAttack();
-        return;
-    }
-
-    if (m_attacksUntilRetreat > 0)
-    {
-        --m_attacksUntilRetreat;
-    }
-
-    // 潜りのクールダウン: 潜りを使ったら他攻撃 kBurrowAttacksBetweenUses 回ぶん待つ。
-    //  RetreatDash はここに来る前に return するので「他攻撃」には数えない。
-    if (finishedAttack == AttackType::BurrowAmbush)
-    {
-        m_attacksUntilBurrowAllowed = kBurrowAttacksBetweenUses;
-    }
-    else if (m_attacksUntilBurrowAllowed > 0)
-    {
-        --m_attacksUntilBurrowAllowed;
-    }
-
     if (IsEnraged())
     {
         m_attackCooldownFrames = kEnragedAttackCooldownFrames;
-        if (finishedAttack == AttackType::SideCharge)
-        {
-            m_nextAttackIndex = 0;
-            m_attackCooldownFrames = 8;
-        }
     }
     else
     {
