@@ -45,6 +45,34 @@ def landing(booster, top):
     raise AssertionError("No descending crossing: " + booster["DashBoosterID"])
 
 
+def assert_coasts_away_from_next_booster(booster, landing_point, next_booster):
+    direction = [float(booster["Dir" + axis]) for axis in "XYZ"]
+    magnitude = math.sqrt(sum(value * value for value in direction))
+    speed = float(booster["Speed"])
+    velocity = [value / magnitude * speed for value in direction]
+    next_position = position(next_booster)
+    point = landing_point[:]
+    minimum_distance = math.dist(point, next_position)
+    dt = 1 / 60
+    # With no input, Legacy inertia removes 18 m/s each second after landing.
+    # The residual motion must carry the player away from the next trigger.
+    for _ in range(60):
+        horizontal = math.hypot(velocity[0], velocity[2])
+        if horizontal <= 0:
+            break
+        ratio = max(0, horizontal - 18 * dt) / horizontal
+        velocity[0] *= ratio
+        velocity[2] *= ratio
+        point[0] += velocity[0] * dt
+        point[2] += velocity[2] * dt
+        distance = math.dist(point, next_position)
+        assert distance > float(next_booster["Radius"]) + 0.3, (
+            "Coasting enters next booster", booster["DashBoosterID"], next_booster["DashBoosterID"])
+        assert distance >= minimum_distance - 0.01, (
+            "Coasting approaches next booster", booster["DashBoosterID"], next_booster["DashBoosterID"])
+        minimum_distance = distance
+
+
 def main():
     render = {row["ID"]: row for row in read("XFileList_simple.csv")}
     physics = {row["ID"]: row for row in read("XFileListPhysics.csv")}
@@ -91,6 +119,9 @@ def main():
         for other in boosters:
             assert math.dist(result, position(other)) > float(other["Radius"]) + 0.2, (
                 "Landing immediately triggers booster", booster["DashBoosterID"], other["DashBoosterID"])
+        main_index = targets.index(target_id)
+        if main_index + 1 < 10:
+            assert_coasts_away_from_next_booster(booster, result, boosters[main_index + 1])
         for warp in read("WarpBears.csv"):
             wx, wy, wz = position(warp)
             if abs(result[1] - wy) < 1.7:

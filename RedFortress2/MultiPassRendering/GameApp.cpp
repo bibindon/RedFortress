@@ -179,7 +179,7 @@ namespace
     const float kPortalStepsScale = 2.0f;
     const float kPortalStepsPositionYOffset = -1.0f;
     const int kPortalClearDelayFrames = 45;
-    const float kPortalPillarTouchRadius = 0.9f;
+    const float kPortalPillarTouchRadius = 0.55f;
     const float kPortalPillarLightHeight = 2.5f;
     const float kPortalPillarLightBrightness = 1.2f;
     const float kPortalPillarLightRange = 5.0f;
@@ -813,8 +813,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     UpdateWindow(m_hWnd);
     m_render.SetLoadingScreenTitleFontPath(L"res\\font\\BIZUDMincho-Regular.ttf");
     m_render.StartLoadingScreen();
-    m_render.SetLoadingScreenProgress(0);
-    m_render.Draw();
+    DrawStageLoadingFrame(0);
     if (!GameAudio::IsSilentMode())
     {
         SoundLib::SoundLib::Initialize(m_hWnd);
@@ -832,18 +831,14 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_stageManager.MoveToStage(m_stageManager.FindStageIndexById(L"select1"));
     const StageManager::StageData& initialStage = m_stageManager.GetCurrentStage();
     m_render.LoadXFileListFromCsv(initialStage.renderCsvPath);
-    m_render.SetLoadingScreenProgress(15);
-    m_render.Draw();
+    DrawStageLoadingFrame(15);
     m_render.LoadXFileListMoveFromCsv(initialStage.moveCsvPath);
-    m_render.SetLoadingScreenProgress(25);
-    m_render.Draw();
+    DrawStageLoadingFrame(25);
     LoadPlayerMeshForStage(IsStageSelectId(initialStage.id), initialStage.playerStartPosition);
-    m_render.SetLoadingScreenProgress(40);
-    m_render.Draw();
+    DrawStageLoadingFrame(40);
 
     InitializePlayerPhysics();
-    m_render.SetLoadingScreenProgress(55);
-    m_render.Draw();
+    DrawStageLoadingFrame(55);
     PhysicsLib::SettingsState::SetCameraAutoMoveEnabled(true);
     PhysicsLib::SettingsState::SetFocusModeEnabled(false);
     PhysicsLib::SettingsState::SetInfiniteJumpEnabled(false);
@@ -855,6 +850,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     UpdatePlayerMeshVisibility();
     m_enemyManager.Initialize();
     m_enemyManager.LoadForStage(m_render, GetEnemyCsvPathForStage(initialStage));
+    DrawStageLoadingFrame(60);
 
     m_skullManager.Initialize(m_render);
     m_skullManager.LoadForStage(m_render, initialStage.skullCsvPath);
@@ -865,6 +861,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_attackTriggerManager.Initialize();
     m_attackTriggerManager.LoadForStage(m_render, initialStage.attackTriggerCsvPath);
     m_warpBearManager.LoadForStage(initialStage.warpBearCsvPath);
+    DrawStageLoadingFrame(65);
 
     m_destructibleManager.Initialize(m_render);
     m_destructibleManager.SetStarDropCallback([this]() {
@@ -915,8 +912,7 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     });
     m_craftMenu.Initialize(m_render, m_mouseCursorVisible, m_inventoryManager);
     InputDevice::Mouse::SetVisible(m_mouseCursorVisible);
-    m_render.SetLoadingScreenProgress(70);
-    m_render.Draw();
+    DrawStageLoadingFrame(70);
     m_pickupManager.Initialize(m_render, m_inventoryManager);
     m_pickupManager.SetItemCollectedCallback([this](const std::wstring& itemId, const int count) {
         HandleItemCollected(itemId, count);
@@ -961,11 +957,9 @@ bool GameApp::Initialize(HINSTANCE hInstance, int nCmdShow)
     m_command.UpsertCommand(L"license", true);
     m_command.UpsertCommand(L"language", true);
     m_command.UpsertCommand(L"exit", true);
-    m_render.SetLoadingScreenProgress(85);
-    m_render.Draw();
+    DrawStageLoadingFrame(85);
 
-    m_render.SetLoadingScreenProgress(95);
-    m_render.Draw();
+    DrawStageLoadingFrame(95);
 
 #if defined(_DEBUG) || defined(REDFORTRESS_ENABLE_RPC)
     m_debugFpsSampleTick = GetTickCount64();
@@ -4111,56 +4105,6 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     }
     if (stageId == L"select4")
     {
-        const wchar_t* portalDestinationIds[] =
-        {
-            L"select3",
-            L"4-1",
-            L"4-2",
-            L"4-3",
-            L"4-4",
-            L"4-5",
-            L"4-6",
-            L"4-7",
-            L"4-8",
-            L"base4"
-        };
-        const D3DXVECTOR3 portalLightPositions[] =
-        {
-            D3DXVECTOR3(-18.0f, 2.35f, -12.0f),
-            D3DXVECTOR3(-12.0f, 2.40f, -10.0f),
-            D3DXVECTOR3(-5.0f, 2.48f, -7.0f),
-            D3DXVECTOR3(3.0f, 2.44f, -9.0f),
-            D3DXVECTOR3(10.0f, 2.70f, -5.0f),
-            D3DXVECTOR3(7.0f, 3.25f, 2.0f),
-            D3DXVECTOR3(0.0f, 3.80f, 5.0f),
-            D3DXVECTOR3(-7.0f, 4.50f, 10.0f),
-            D3DXVECTOR3(0.0f, 5.25f, 15.5f),
-            D3DXVECTOR3(18.0f, 2.42f, -10.0f)
-        };
-        const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
-        const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
-        const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
-        const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
-        const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
-        for (int i = 0; i < portalLightCount; ++i)
-        {
-            const std::wstring destinationId = portalDestinationIds[i];
-            D3DXCOLOR lightColor = unclearedColor;
-            if (destinationId == L"select3" || IsBaseId(destinationId))
-            {
-                lightColor = travelColor;
-            }
-            else if (m_saveDataManager.IsStageClearedWithFullHealth(destinationId))
-            {
-                lightColor = fullHealthColor;
-            }
-            else if (m_saveDataManager.IsStageCleared(destinationId))
-            {
-                lightColor = clearedColor;
-            }
-            m_render.AddPointLight(portalLightPositions[i], 1.8f, lightColor);
-        }
-
         const D3DXCOLOR fireColor(1.0f, 0.14f, 0.02f, 1.0f);
         const D3DXCOLOR spiritColor(0.35f, 0.65f, 1.0f, 1.0f);
         const D3DXCOLOR dawnColor(1.0f, 0.38f, 0.12f, 1.0f);
@@ -4186,59 +4130,6 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
 
     if (stageId == L"select3")
     {
-        const wchar_t* portalDestinationIds[] =
-        {
-            L"select2",
-            L"3-1",
-            L"3-2",
-            L"3-3",
-            L"3-4",
-            L"3-5",
-            L"3-6",
-            L"3-7",
-            L"3-8",
-            L"select4",
-            L"base3"
-        };
-        const D3DXVECTOR3 portalLightPositions[] =
-        {
-            D3DXVECTOR3(-16.0f, 2.4f, -10.0f),
-            D3DXVECTOR3(-11.0f, 2.6f, -8.0f),
-            D3DXVECTOR3(-5.0f, 3.4f, -3.0f),
-            D3DXVECTOR3(4.0f, 4.2f, -1.0f),
-            D3DXVECTOR3(11.0f, 5.0f, 3.0f),
-            D3DXVECTOR3(7.0f, 6.0f, 8.0f),
-            D3DXVECTOR3(0.0f, 6.8f, 10.5f),
-            D3DXVECTOR3(-7.0f, 7.8f, 14.0f),
-            D3DXVECTOR3(0.0f, 9.1f, 17.5f),
-            D3DXVECTOR3(15.0f, 2.8f, -8.0f),
-            D3DXVECTOR3(-19.0f, 2.8f, -4.0f)
-        };
-        const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
-        const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
-        const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
-        const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
-        const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
-        for (int i = 0; i < portalLightCount; ++i)
-        {
-            const std::wstring destinationId = portalDestinationIds[i];
-            D3DXCOLOR lightColor = unclearedColor;
-            if (destinationId == L"select2" || destinationId == L"select4" ||
-                IsBaseId(destinationId))
-            {
-                lightColor = travelColor;
-            }
-            else if (m_saveDataManager.IsStageClearedWithFullHealth(destinationId))
-            {
-                lightColor = fullHealthColor;
-            }
-            else if (m_saveDataManager.IsStageCleared(destinationId))
-            {
-                lightColor = clearedColor;
-            }
-            m_render.AddPointLight(portalLightPositions[i], 5.0f, lightColor);
-        }
-
         const D3DXCOLOR coldLight(0.10f, 0.30f, 1.0f, 1.0f);
         const D3DXCOLOR spiritLight(0.55f, 0.82f, 1.0f, 1.0f);
         const D3DXCOLOR sealLight(1.0f, 0.34f, 0.04f, 1.0f);
@@ -4265,59 +4156,6 @@ void GameApp::ConfigureStagePointLights(const std::wstring& stageId)
     if (stageId != L"select2")
     {
         return;
-    }
-
-    const wchar_t* portalDestinationIds[] =
-    {
-        L"select1",
-        L"2-1",
-        L"2-2",
-        L"2-3",
-        L"2-4",
-        L"2-5",
-        L"2-6",
-        L"2-7",
-        L"2-8",
-        L"select3",
-        L"base2"
-    };
-    const D3DXVECTOR3 portalLightPositions[] =
-    {
-        D3DXVECTOR3(-14.0f, 2.3f, 14.0f),
-        D3DXVECTOR3(-3.0f, 2.3f, 15.0f),
-        D3DXVECTOR3(8.0f, 2.3f, 12.0f),
-        D3DXVECTOR3(13.0f, 2.3f, 7.0f),
-        D3DXVECTOR3(8.0f, 2.3f, 3.0f),
-        D3DXVECTOR3(-3.0f, 2.3f, 2.0f),
-        D3DXVECTOR3(-10.0f, 2.3f, 0.0f),
-        D3DXVECTOR3(-9.0f, 2.3f, -5.0f),
-        D3DXVECTOR3(-3.0f, 2.3f, -8.0f),
-        D3DXVECTOR3(9.0f, 2.3f, -7.0f),
-        D3DXVECTOR3(-17.0f, 2.3f, 2.0f)
-    };
-    const D3DXCOLOR unclearedColor(1.0f, 0.04f, 0.02f, 1.0f);
-    const D3DXCOLOR clearedColor(0.04f, 1.0f, 0.08f, 1.0f);
-    const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
-    const D3DXCOLOR travelColor(0.04f, 0.25f, 1.0f, 1.0f);
-    const int portalLightCount = static_cast<int>(sizeof(portalDestinationIds) / sizeof(portalDestinationIds[0]));
-    for (int i = 0; i < portalLightCount; ++i)
-    {
-        const std::wstring destinationId = portalDestinationIds[i];
-        D3DXCOLOR lightColor = unclearedColor;
-        if (destinationId == L"select1" || destinationId == L"select3" ||
-            IsBaseId(destinationId))
-        {
-            lightColor = travelColor;
-        }
-        else if (m_saveDataManager.IsStageClearedWithFullHealth(destinationId))
-        {
-            lightColor = fullHealthColor;
-        }
-        else if (m_saveDataManager.IsStageCleared(destinationId))
-        {
-            lightColor = clearedColor;
-        }
-        m_render.AddPointLight(portalLightPositions[i], 2.0f, lightColor);
     }
 
     const D3DXCOLOR crystalLightColor(0.08f, 0.55f, 1.0f, 1.0f);
@@ -6168,11 +6006,6 @@ void GameApp::CreateStageSelectCubes()
         if (cubePath == kStageSelectCubeYellowPath)
         {
             cubeScale = kStageSelectCubeYellowScale;
-            if (m_stageManager.GetCurrentStage().id == L"select1")
-            {
-                const D3DXCOLOR fullHealthColor(1.0f, 0.82f, 0.02f, 1.0f);
-                m_render.AddPointLight(cubePosition, 1.8f, fullHealthColor);
-            }
         }
         // Preserve each stage's ground correction; the old cube was one meter above it.
         D3DXVECTOR3 basePosition = cubePosition;
@@ -6563,6 +6396,17 @@ void GameApp::EndStageLoadingScreen()
     m_stageLoadingScreenActive = false;
 }
 
+void GameApp::DrawStageLoadingFrame(const int progress)
+{
+    if (!m_render.IsLoadingScreenVisible())
+    {
+        return;
+    }
+
+    m_render.SetLoadingScreenProgress(progress);
+    m_render.Draw();
+}
+
 void GameApp::UpdateStageTransition()
 {
     if (m_stageTransitionAction == StageTransitionAction::ReturnToTitle)
@@ -6769,8 +6613,11 @@ void GameApp::StartNewGame()
     const std::size_t select1Index = m_stageManager.FindStageIndexById(L"select1");
     if (select1Index < m_stageManager.GetStageCount())
     {
+        BeginStageLoadingScreen();
+        DrawStageLoadingFrame(0);
         m_stageManager.MoveToStage(select1Index);
         LoadCurrentStageObjects();
+        EndStageLoadingScreen();
     }
 
     m_slideShowManager.Start(L"res\\script\\hoshigirl_trial_novel.csv");
@@ -8956,6 +8803,7 @@ void GameApp::LoadCurrentStageObjects()
     ApplyStageEnvironmentLighting(stage.id);
     ConfigureStagePointLights(stage.id);
     LoadPointLightsFromCsv(loadStage.pointLightCsvPath);
+    DrawStageLoadingFrame(10);
 
     m_useFixedCamera = stage.useFixedCamera;
     m_fixedCameraPos = stage.fixedCameraPos;
@@ -8997,6 +8845,7 @@ void GameApp::LoadCurrentStageObjects()
         m_render.RemoveMeshMix(m_gunMeshId);
         m_gunMeshId = -1;
     }
+    DrawStageLoadingFrame(20);
 
     LoadPlayerMeshForStage(IsStageSelectId(stage.id), stage.playerStartPosition);
 
@@ -9004,16 +8853,21 @@ void GameApp::LoadCurrentStageObjects()
 
     RemoveStageSelectCubes();
     m_render.ClearCsvLoadedMeshes();
+    DrawStageLoadingFrame(35);
     m_render.LoadXFileListFromCsv(loadStage.renderCsvPath);
     m_render.LoadXFileListMoveFromCsv(loadStage.moveCsvPath);
+    DrawStageLoadingFrame(50);
 
     m_collectibleManager.LoadForStage(loadStage.collectibleCsvPath);
+    DrawStageLoadingFrame(52);
     m_interactionManager.LoadForStage(loadStage.interactableCsvPath);
     LoadStageSelectNavigation(stage.stageSelectNavigationCsvPath);
     m_lavaZoneManager.LoadForStage(loadStage.lavaCsvPath);
+    DrawStageLoadingFrame(56);
 
     m_pickupManager.LoadForStage(loadStage.starCsvPath, loadStage.speedUpCsvPath);
     m_dashBoosterManager.LoadForStage(loadStage.dashBoosterCsvPath);
+    DrawStageLoadingFrame(60);
 
     CreateStageSelectCubes();
     m_playerMover.Reset(stage.playerStartPosition);
@@ -9026,14 +8880,17 @@ void GameApp::LoadCurrentStageObjects()
     m_lavaRiseManager.Clear();
     PhysicsWorld::ClearObjects();
     LoadPhysicsObjectsFromCsv(loadStage.physicsCsvPath);
+    DrawStageLoadingFrame(65);
     m_lavaFloodManager.LoadForStage(m_render, loadStage.lavaFloodCsvPath);
     m_lavaRiseManager.LoadForStage(m_render, loadStage.lavaRiseCsvPath);
     m_skullManager.LoadForStage(m_render, loadStage.skullCsvPath);
+    DrawStageLoadingFrame(70);
     m_pressurePlateManager.LoadForStage(m_render, loadStage.pressurePlateCsvPath);
     m_pushableBoxManager.LoadForStage(m_render, loadStage.pushableBoxCsvPath);
     m_attackTriggerManager.LoadForStage(m_render, loadStage.attackTriggerCsvPath);
     m_explanationManager.LoadForStage(stage.id, loadStage.explanationCsvPath);
     m_warpBearManager.LoadForStage(loadStage.warpBearCsvPath);
+    DrawStageLoadingFrame(75);
 
     if (!IsStageSelectId(stage.id) &&
         !IsBaseId(stage.id) &&
@@ -9076,6 +8933,7 @@ void GameApp::LoadCurrentStageObjects()
 
     m_destructibleManager.LoadForStage(m_render, loadStage.destructibleCsvPath);
     m_collectibleManager.RefreshVisibility(m_destructibleManager);
+    DrawStageLoadingFrame(85);
 
     if (m_playerMeshId >= 0)
     {
@@ -9128,6 +8986,7 @@ void GameApp::LoadCurrentStageObjects()
     }
     UpdatePlayerMeshAndCamera(stage.playerStartPosition);
     PlaceStageWeather(m_render, stage.weather, stage.playerStartPosition);
+    DrawStageLoadingFrame(90);
 }
 
 void GameApp::DrawTitleScreen()

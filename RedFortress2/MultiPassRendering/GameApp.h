@@ -200,6 +200,7 @@ private:
     bool BeginStageTransitionAfterClear();
     void BeginStageLoadingScreen();
     void EndStageLoadingScreen();
+    void DrawStageLoadingFrame(int progress);
     void UpdateStageTransition();
     bool CompleteStageMove(std::size_t stageIndex);
     void StartNewGame();
