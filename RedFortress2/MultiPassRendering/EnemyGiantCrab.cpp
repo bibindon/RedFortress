@@ -57,6 +57,9 @@ namespace
     const float kBurrowPitch = -D3DX_PI * 0.5f;
     const float kBurrowEmergeMaxVerticalDistance = 1.4f;
     const int kBurrowEmergeDamage = 26;
+    // 潜りの連発を防ぐ: 潜った後、次に潜るまでに他攻撃を最低この回数はさむ。
+    // 攻撃は6種巡回なので、10回はさむと実測で約2.7倍の間隔になる。
+    const int kBurrowAttacksBetweenUses = 10;
 
     const int kRetreatDashWindupFrames = 10;
     const int kRetreatDashActiveFrames = 28;
@@ -300,7 +303,8 @@ bool EnemyBossGiantCrab::IsAttackAllowed(const AttackType attackType,
     }
     if (attackType == AttackType::BurrowAmbush)
     {
-        return true;
+        // 潜りは前回から他攻撃を kBurrowAttacksBetweenUses 回はさむまで選ばれない。
+        return m_attacksUntilBurrowAllowed <= 0;
     }
     return distance >= 2.5f && distance <= kJumpSlamMaxTravelDistance;
 }
@@ -706,6 +710,17 @@ void EnemyBossGiantCrab::EndAttack()
     if (m_attacksUntilRetreat > 0)
     {
         --m_attacksUntilRetreat;
+    }
+
+    // 潜りのクールダウン: 潜りを使ったら他攻撃 kBurrowAttacksBetweenUses 回ぶん待つ。
+    //  RetreatDash はここに来る前に return するので「他攻撃」には数えない。
+    if (finishedAttack == AttackType::BurrowAmbush)
+    {
+        m_attacksUntilBurrowAllowed = kBurrowAttacksBetweenUses;
+    }
+    else if (m_attacksUntilBurrowAllowed > 0)
+    {
+        --m_attacksUntilBurrowAllowed;
     }
 
     if (IsEnraged())

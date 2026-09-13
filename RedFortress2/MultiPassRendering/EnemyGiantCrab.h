@@ -76,6 +76,8 @@ private:
     int m_phaseFrames = 0;
     int m_attackCooldownFrames = 0;
     int m_nextAttackIndex = 5;
+    // 潜り(BurrowAmbush)を使った後、次に潜るまでに必要な他攻撃の回数。
+    int m_attacksUntilBurrowAllowed = 0;
     bool m_attackHitApplied = false;
     bool m_chargeCollided = false;
     int m_attacksUntilRetreat = 2;
