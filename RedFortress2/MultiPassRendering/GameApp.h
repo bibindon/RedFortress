@@ -545,10 +545,9 @@ private:
     int m_stageIntroElapsedFrames = 0;
     float m_stageIntroStartFadeAlpha = 0.0f;
     NSRender::DepthOfFieldMode m_stageIntroPreviousDepthOfFieldMode = NSRender::DepthOfFieldMode::Disabled;
-    float m_stageIntroPreviousFocalDistance = 8.0f;
-    float m_stageIntroPreviousStartNear = 0.0f;
-    float m_stageIntroPreviousMaxBlurDistance = 16.0f;
-    float m_stageIntroPreviousBlurRadiusPixels = 1.0f;
+    bool m_stageIntroPreviousGaussianEnabled = false;
+    int m_stageIntroPreviousGaussianSampleSize = 101;
+    float m_stageIntroPreviousGaussianStrength = 1.0f;
     int m_goalMarkerMeshId = -1;
     int m_goalArrowMeshId = -1;
     int m_stagePortalCooldownFrames = 0;

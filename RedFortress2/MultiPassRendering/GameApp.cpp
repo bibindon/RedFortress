@@ -339,19 +339,12 @@ namespace
     const std::wstring kGoalArrowModelPath = L"res\\model\\arrow\\arrow.x";
     const float kGoalArrowHeadOffsetY = 2.3f;
     const float kGoalArrowScale = 0.42f;
-    // ステージ開始演出: 手前だけくっきり見せ、くっきり見える範囲を奥へ広げていく。
+    // ステージ開始演出: 全画面を強くぼかし、画面表示後に徐々に解除する。
     const int kStageIntroFadeInFrames = 25;
     const int kStageIntroSweepFrames = 80;
     const int kStageIntroSettleFrames = 25;
-    const int kStageIntroTotalFrames =
-        kStageIntroFadeInFrames + kStageIntroSweepFrames + kStageIntroSettleFrames;
-    // 開始時はプレイヤー(カメラから約10m)と足元までをくっきりさせ、奥を強くぼかす。
-    const float kStageIntroFocusNearMeters = 10.0f;
-    const float kStageIntroFocusFarMeters = 90.0f;
-    const float kStageIntroBlurNearMeters = 26.0f;
-    const float kStageIntroBlurFarMeters = 150.0f;
-    const float kStageIntroBlurRadiusStart = 8.0f;
-    const float kStageIntroBlurRadiusEnd = 1.0f;
+    const int kStageIntroGaussianSampleSize = 101;
+    const float kStageIntroGaussianStrength = 1.0f;
     const int kStageClearCameraMoveFrames = 45;
     const int kStageClearSoundFrame = 20;
     const int kStageClearSlashFrame = 28;
@@ -9097,17 +9090,15 @@ void GameApp::BeginStageIntro()
         m_cameraYaw = D3DX_PI - m_playerYaw;
     }
 
-    // 演出用に被写界深度の現在値を保存し、距離依存の強いぼけを有効にする。
+    // 距離依存のぼけは使わず、画面全体に最大強度のガウスぼかしを適用する。
     m_stageIntroPreviousDepthOfFieldMode = m_render.GetPostEffectDepthOfFieldMode();
-    m_stageIntroPreviousFocalDistance = m_render.GetPostEffectDepthOfFieldFocalDistance();
-    m_stageIntroPreviousStartNear = m_render.GetPostEffectDepthOfFieldStartNear();
-    m_stageIntroPreviousMaxBlurDistance = m_render.GetPostEffectDepthOfFieldMaxBlurDistance();
-    m_stageIntroPreviousBlurRadiusPixels = m_render.GetPostEffectDepthOfFieldBlurRadiusPixels();
-    m_render.SetPostEffectDepthOfFieldMode(NSRender::DepthOfFieldMode::Enabled);
-    m_render.SetPostEffectDepthOfFieldStartNear(0.0f);
-    m_render.SetPostEffectDepthOfFieldFocalDistance(kStageIntroFocusNearMeters);
-    m_render.SetPostEffectDepthOfFieldMaxBlurDistance(kStageIntroBlurNearMeters);
-    m_render.SetPostEffectDepthOfFieldBlurRadiusPixels(kStageIntroBlurRadiusStart);
+    m_stageIntroPreviousGaussianEnabled = m_render.IsPostEffectGaussianFilterEnabled();
+    m_stageIntroPreviousGaussianSampleSize = m_render.GetPostEffectGaussianSampleSize();
+    m_stageIntroPreviousGaussianStrength = m_render.GetPostEffectGaussianStrength();
+    m_render.SetPostEffectDepthOfFieldMode(NSRender::DepthOfFieldMode::Disabled);
+    m_render.SetPostEffectGaussianSampleSize(kStageIntroGaussianSampleSize);
+    m_render.SetPostEffectGaussianStrength(kStageIntroGaussianStrength);
+    m_render.SetPostEffectGaussianFilter(true);
 }
 
 void GameApp::UpdateStageIntro()
@@ -9133,7 +9124,7 @@ void GameApp::UpdateStageIntro()
         }
     }
 
-    // ローディング画面が消えるまでは演出を進めない (暗転のまま強いぼけを保持)。
+    // ローディング画面が消えるまでは演出を進めない（暗転のまま最大ぼけを保持）。
     const bool introRunning = !m_render.IsLoadingScreenVisible();
 
     float fadeAlpha = 0.0f;
@@ -9149,17 +9140,23 @@ void GameApp::UpdateStageIntro()
 
     m_render.SetFadeAlpha(fadeAlpha);
 
-    // くっきり見える範囲を手前から奥へ広げる。
-    // startNear = 0 なので手前は常にくっきり、焦点より奥が距離に応じてぼける。
-    const float sweepRawT = static_cast<float>(m_stageIntroElapsedFrames) /
-                            static_cast<float>(kStageIntroTotalFrames);
-    const float sweepT = SmoothStep01(sweepRawT);
-    m_render.SetPostEffectDepthOfFieldFocalDistance(
-        LerpFloat(kStageIntroFocusNearMeters, kStageIntroFocusFarMeters, sweepT));
-    m_render.SetPostEffectDepthOfFieldMaxBlurDistance(
-        LerpFloat(kStageIntroBlurNearMeters, kStageIntroBlurFarMeters, sweepT));
-    m_render.SetPostEffectDepthOfFieldBlurRadiusPixels(
-        LerpFloat(kStageIntroBlurRadiusStart, kStageIntroBlurRadiusEnd, sweepT));
+    // フェードイン中は最大ぼけを維持し、ステージが見えてから全画面のぼけを解除する。
+    const int gaussianClearFrames = kStageIntroSweepFrames + kStageIntroSettleFrames;
+    int gaussianElapsedFrames = m_stageIntroElapsedFrames - kStageIntroFadeInFrames;
+    if (gaussianElapsedFrames < 0)
+    {
+        gaussianElapsedFrames = 0;
+    }
+    float gaussianRawT = 1.0f;
+    if (gaussianClearFrames > 0)
+    {
+        gaussianRawT = static_cast<float>(gaussianElapsedFrames) /
+                       static_cast<float>(gaussianClearFrames);
+    }
+    const float gaussianT = SmoothStep01(ClampFloat(gaussianRawT, 0.0f, 1.0f));
+    const float gaussianStrength =
+        kStageIntroGaussianStrength * (1.0f - gaussianT);
+    m_render.SetPostEffectGaussianStrength(gaussianStrength);
 
     // シーン描画用のカメラとプレイヤーメッシュを更新 (カメラは通常位置のまま)
     UpdatePlayerMeshAndCamera(m_playerMover.GetPosition());
@@ -9195,11 +9192,10 @@ void GameApp::UpdateStageIntro()
 
 void GameApp::EndStageIntro()
 {
-    // 演出で変更した被写界深度の設定を元に戻し、ステージ本編を開始する。
-    m_render.SetPostEffectDepthOfFieldFocalDistance(m_stageIntroPreviousFocalDistance);
-    m_render.SetPostEffectDepthOfFieldStartNear(m_stageIntroPreviousStartNear);
-    m_render.SetPostEffectDepthOfFieldMaxBlurDistance(m_stageIntroPreviousMaxBlurDistance);
-    m_render.SetPostEffectDepthOfFieldBlurRadiusPixels(m_stageIntroPreviousBlurRadiusPixels);
+    // 演出前のポストエフェクト設定を元に戻し、ステージ本編を開始する。
+    m_render.SetPostEffectGaussianSampleSize(m_stageIntroPreviousGaussianSampleSize);
+    m_render.SetPostEffectGaussianStrength(m_stageIntroPreviousGaussianStrength);
+    m_render.SetPostEffectGaussianFilter(m_stageIntroPreviousGaussianEnabled);
     m_render.SetPostEffectDepthOfFieldMode(m_stageIntroPreviousDepthOfFieldMode);
     m_render.SetFadeAlpha(0.0f);
     m_gameState = GameState::Playing;

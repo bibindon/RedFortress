@@ -81,7 +81,7 @@ void DashBoosterManager::LoadForStage(const std::wstring& csvPath)
         D3DXVECTOR3 position(0.0f, 0.0f, 0.0f);
         D3DXVECTOR3 direction(0.0f, 1.0f, 0.0f);
         float speed = 16.0f;
-        float duration = 0.35f;
+        float duration = 0.12f;
         float radius = 1.0f;
         float scale = 0.5f;
         bool chargeEnabled = true;

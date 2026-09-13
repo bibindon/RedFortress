@@ -42,7 +42,7 @@ private:
     D3DXVECTOR3 m_direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
     D3DXVECTOR3 m_visualRotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     float m_speed = 16.0f;
-    float m_duration = 0.35f;
+    float m_duration = 0.12f;
     float m_radius = 1.0f;
     float m_scale = 0.5f;
     bool m_chargeEnabled = true;
