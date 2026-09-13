@@ -216,6 +216,14 @@ namespace
     const float kStageSelectCursorLightBrightness = 0.6f;
     const float kStageSelectCursorLightRange = 2.0f;
     const wchar_t* kStageSelectCursorLightOwnerTag = L"stage-select-cursor";
+    // 各ポータルを弱く照らすライト。高さは接地基準から1m（ステータスキューブと同じ基準）。
+    const float kStageSelectPortalLightHeight = 1.0f;
+    const float kStageSelectPortalLightBrightness = 0.5f;
+    const float kStageSelectPortalLightRange = 4.0f;
+    const wchar_t* kStageSelectPortalLightOwnerTag = L"stage-select-portal";
+    // ポイントライトはシェーダ配列が16本まで。上限を超えると古いライトから捨てられるため、
+    // カーソルライト(1本)ぶんを残してこの本数までしか追加しない。
+    const std::size_t kStageSelectPortalLightBudget = 15;
     const float kPlayerPointLightHeight = 2.2f;
     const float kPlayerPointLightBrightness = 2.5f;
     const float kPlayerPointLightRange = 12.0f;
@@ -247,6 +255,11 @@ namespace
     const float kStageSelectCubeYellowScale = 0.865f;
     const float kStageSelectCubeVisualOffsetY = 1.0f;
     const float kStageSelect2CubeVisualOffsetY = -1.3f;
+    // ポータル上のステータスキューブと同じ4色（ライト用トーン）
+    const D3DXCOLOR kStageSelectPortalLightBlueColor(0.22f, 0.50f, 1.00f, 1.0f);
+    const D3DXCOLOR kStageSelectPortalLightGreenColor(0.30f, 0.80f, 0.35f, 1.0f);
+    const D3DXCOLOR kStageSelectPortalLightRedColor(0.95f, 0.28f, 0.30f, 1.0f);
+    const D3DXCOLOR kStageSelectPortalLightYellowColor(1.00f, 0.85f, 0.30f, 1.0f);
     const float kStageSelectCubeRiseHeight = 1.5f;
     const ULONGLONG kStageSelectCubeCycleMilliseconds = 3000;
     const float kStageSelectCubeSizeRatios[] = { 1.15f, 0.72f, 0.36f };
@@ -5942,6 +5955,7 @@ void GameApp::CreateStageSelectCubes()
     }
 
     RemoveStageSelectCubes();
+    m_render.RemovePointLightsByOwnerTag(kStageSelectPortalLightOwnerTag);
 
     const std::wstring portalPrefix = L"portal-to-";
     float cubeVisualOffsetY = kStageSelectCubeVisualOffsetY;
@@ -5949,6 +5963,8 @@ void GameApp::CreateStageSelectCubes()
     {
         cubeVisualOffsetY += kStageSelect2CubeVisualOffsetY;
     }
+    // キューブもポータルライトも同じ接地基準（select2 は既存の地上補正ぶん下がる）を使う。
+    const float portalGroundOffsetY = cubeVisualOffsetY - kStageSelectCubeVisualOffsetY;
     const std::vector<InteractionManager::Interactable>& interactables = m_interactionManager.GetInteractables();
     for (const InteractionManager::Interactable& interactable : interactables)
     {
@@ -6004,6 +6020,38 @@ void GameApp::CreateStageSelectCubes()
         {
             cubeScale = kStageSelectCubeYellowScale;
         }
+
+        // ステータスキューブと同じ色で、ポータルの接地基準から1mの高さを弱く照らす。
+        D3DXCOLOR portalLightColor = kStageSelectPortalLightBlueColor;
+        if (cubePath == kStageSelectCubeRedPath)
+        {
+            portalLightColor = kStageSelectPortalLightRedColor;
+        }
+        else if (cubePath == kStageSelectCubeGreenPath)
+        {
+            portalLightColor = kStageSelectPortalLightGreenColor;
+        }
+        else if (cubePath == kStageSelectCubeYellowPath)
+        {
+            portalLightColor = kStageSelectPortalLightYellowColor;
+        }
+
+        if (NSRender::Light::GetPointLightList().size() < kStageSelectPortalLightBudget)
+        {
+            D3DXVECTOR3 portalLightPosition = interactable.position;
+            portalLightPosition.y += portalGroundOffsetY + kStageSelectPortalLightHeight;
+            m_render.AddPointLight(portalLightPosition,
+                                   kStageSelectPortalLightBrightness,
+                                   portalLightColor,
+                                   NSRender::PointLightShape::Point,
+                                   12.0f,
+                                   10.0f,
+                                   10.0f,
+                                   D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+                                   kStageSelectPortalLightRange,
+                                   kStageSelectPortalLightOwnerTag);
+        }
+
         // Preserve each stage's ground correction; the old cube was one meter above it.
         D3DXVECTOR3 basePosition = cubePosition;
         basePosition.y -= kStageSelectCubeVisualOffsetY;
