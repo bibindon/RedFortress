@@ -13,7 +13,8 @@ protected:
                    float yaw,
                    int maxHp,
                    float bodyScale = 1.0f,
-                   float collisionHeightScale = 1.0f);
+                   float collisionHeightScale = 1.0f,
+                   float collisionRadiusScale = 1.0f);
 };
 
 class EnemyBossGiantCrab : public EnemyGiantCrab
@@ -23,6 +24,7 @@ public:
     static float GetScale() { return EnemyGiantCrab::GetScale() * 2.0f; }
     bool UsesSpecialAttacks() const override;
     bool CanBeStomped() const override;
+    bool IsCollisionActive() const override;
 
 protected:
     bool UpdateSpecialAttack(NSRender::Render& render,

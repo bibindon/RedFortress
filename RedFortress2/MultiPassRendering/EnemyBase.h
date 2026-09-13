@@ -79,6 +79,7 @@ public:
     const std::wstring& GetType() const;
     void SetType(const std::wstring& type);
     void SetBossName(const std::wstring& bossName);
+    virtual bool IsCollisionActive() const { return true; }
 
     bool IsTouchingPlayer(const D3DXVECTOR3& playerPos,
                           float playerRadius,

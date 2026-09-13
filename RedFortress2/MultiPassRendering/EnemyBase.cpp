@@ -1094,7 +1094,7 @@ bool EnemyBase::IsTouchingPlayer(const D3DXVECTOR3& playerPos,
                                  const float playerRadius,
                                  const float playerHeight) const
 {
-    if (m_state == State::Dead)
+    if (m_state == State::Dead || !IsCollisionActive())
     {
         return false;
     }

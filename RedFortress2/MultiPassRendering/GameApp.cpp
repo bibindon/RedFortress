@@ -3782,7 +3782,7 @@ int GameApp::DamageEnemiesInAttackRange(const PlayerAttackDefinition& attackDefi
 
     for (auto& enemy : m_enemyManager.GetEnemies())
     {
-        if (enemy->IsDead())
+        if (enemy->IsDead() || !enemy->IsCollisionActive())
         {
             continue;
         }
@@ -5799,6 +5799,7 @@ void GameApp::DrawBossHpBar()
     EnemyBase* boss = m_enemyManager.GetAliveBoss();
     if (m_render.IsBossCollisionDebugEnabled() &&
         boss != nullptr &&
+        boss->IsCollisionActive() &&
         boss->GetType() == L"boss_giant_crab")
     {
         m_render.QueueDebugCollisionCylinder(boss->GetPosition(),
@@ -9480,7 +9481,7 @@ void GameApp::UpdateBombs()
 
             for (auto& enemy : m_enemyManager.GetEnemies())
             {
-                if (enemy->IsDead())
+                if (enemy->IsDead() || !enemy->IsCollisionActive())
                 {
                     continue;
                 }
@@ -9638,7 +9639,7 @@ void GameApp::UpdateBusters()
         {
             for (auto& enemy : m_enemyManager.GetEnemies())
             {
-                if (enemy->IsDead())
+                if (enemy->IsDead() || !enemy->IsCollisionActive())
                 {
                     continue;
                 }

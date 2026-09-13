@@ -9,6 +9,8 @@ namespace
     const int kBossGiantCrabMaxHp = kGiantCrabMaxHp * 20;
     const float kBossGiantCrabBodyScale = 2.0f;
     const float kBossGiantCrabCollisionHeightScale = 0.5f;
+    const float kBossGiantCrabCollisionRadiusScale = 0.5f;
+    const float kBossGiantCrabExplosionScaleMultiplier = 3.0f;
     // 踏みつけ可能範囲は、ボス倍率適用後の胴体メッシュ寸法に合わせる。
     const float kBossGiantCrabStompHalfWidth = 1.71f;
     const float kBossGiantCrabStompHalfDepth = 1.14f;
@@ -101,7 +103,8 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos,
                                const float yaw,
                                const int maxHp,
                                const float bodyScale,
-                               const float collisionHeightScale)
+                               const float collisionHeightScale,
+                               const float collisionRadiusScale)
     : EnemyBase(pos,
                 meshId,
                 L"giant_crab",
@@ -109,7 +112,7 @@ EnemyGiantCrab::EnemyGiantCrab(const D3DXVECTOR3& pos,
                 maxHp,
                 1.7f,
                 10.0f,
-                0.54f * 3.0f * bodyScale,
+                0.54f * 3.0f * bodyScale * collisionRadiusScale,
                 0.36f * 3.0f * bodyScale * collisionHeightScale,
                 -0.18f * 3.0f * bodyScale * collisionHeightScale,
                 MovementMode::Ground,
@@ -126,7 +129,8 @@ EnemyBossGiantCrab::EnemyBossGiantCrab(const D3DXVECTOR3& pos,
                      yaw,
                      kBossGiantCrabMaxHp,
                      kBossGiantCrabBodyScale,
-                     kBossGiantCrabCollisionHeightScale)
+                     kBossGiantCrabCollisionHeightScale,
+                     kBossGiantCrabCollisionRadiusScale)
 {
     m_arenaSurfaceY = GetPosition().y;
     for (int i = 0; i < kBubbleProjectileCount; ++i)
@@ -144,6 +148,17 @@ bool EnemyBossGiantCrab::UsesSpecialAttacks() const
 bool EnemyBossGiantCrab::CanBeStomped() const
 {
     return m_attackType != AttackType::BurrowAmbush;
+}
+
+bool EnemyBossGiantCrab::IsCollisionActive() const
+{
+    if (m_attackType != AttackType::BurrowAmbush)
+    {
+        return true;
+    }
+
+    return m_attackPhase == AttackPhase::None ||
+           m_attackPhase == AttackPhase::Windup;
 }
 
 bool EnemyBossGiantCrab::IsWithinStompHorizontalRange(const D3DXVECTOR3& playerPos,
@@ -405,7 +420,8 @@ void EnemyBossGiantCrab::BeginActivePhase(NSRender::Render& render,
     {
         m_phaseFrames = kGroundSlamActiveFrames;
         render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion,
-                                   GetPosition());
+                                   GetPosition(),
+                                   kBossGiantCrabExplosionScaleMultiplier);
     }
     else if (m_attackType == AttackType::BubbleShot)
     {
@@ -458,7 +474,8 @@ void EnemyBossGiantCrab::UpdateActivePhase(NSRender::Render& render,
             D3DXVECTOR3 effectPosition = emergePosition;
             effectPosition.y -= GetHeight() * 0.5f;
             render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion,
-                                       effectPosition);
+                                       effectPosition,
+                                       kBossGiantCrabExplosionScaleMultiplier);
             if (!playerInvincible &&
                 fabsf(playerPos.y - emergePosition.y) <= kBurrowEmergeMaxVerticalDistance)
             {
@@ -476,7 +493,8 @@ void EnemyBossGiantCrab::UpdateActivePhase(NSRender::Render& render,
             m_chargeCollided = true;
             m_phaseFrames = 1;
             render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion,
-                                       GetPosition());
+                                       GetPosition(),
+                                       kBossGiantCrabExplosionScaleMultiplier);
         }
         else if ((m_phaseFrames % 5) == 0)
         {
@@ -518,7 +536,8 @@ void EnemyBossGiantCrab::UpdateActivePhase(NSRender::Render& render,
             jumpPosition.y = m_jumpStartY;
             SetPosition(jumpPosition);
             render.PlaceParticleEffect(NSRender::ParticleEffectPreset::Explosion,
-                                       jumpPosition);
+                                       jumpPosition,
+                                       kBossGiantCrabExplosionScaleMultiplier);
             if (!playerInvincible &&
                 HorizontalDistance(jumpPosition, playerPos) <= kJumpSlamRange &&
                 fabsf(jumpPosition.y - playerPos.y) <= kJumpSlamMaxVerticalDistance)
