@@ -44,8 +44,8 @@ namespace
     const int kBubbleProjectileLifetimeFrames = 120;
     const float kBubbleProjectileSpeed = 5.5f;
     const float kBubbleProjectileRadius = 0.3f;
-    const float kBubbleHitRange = 0.5f;
-    const float kBubbleHitVerticalRange = 0.5f;
+    const float kBubbleHitRange = 1.0f;
+    const float kBubbleHitVerticalRange = 1.0f;
     const int kBubbleDamage = 8;
     const int kBubbleSlowFrames = 90;
 
@@ -153,13 +153,12 @@ bool EnemyBossGiantCrab::CanBeStomped() const
 
 bool EnemyBossGiantCrab::IsCollisionActive() const
 {
-    if (m_attackType != AttackType::BurrowAmbush)
+    if (m_attackType == AttackType::BurrowAmbush)
     {
-        return true;
+        return false;
     }
 
-    return m_attackPhase == AttackPhase::None ||
-           m_attackPhase == AttackPhase::Windup;
+    return true;
 }
 
 bool EnemyBossGiantCrab::IsWithinStompHorizontalRange(const D3DXVECTOR3& playerPos,
