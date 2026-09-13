@@ -435,11 +435,10 @@ void EnemyBase::TakeDamage(NSRender::Render& render, int amount, const D3DXVECTO
         return;
     }
 
-    if (m_hitReactionMode == HitReactionMode::SuperArmor)
-    {
-        return;
-    }
-
+    // スーパーアーマーは「ひるまない」であって「気づかない」ではない。
+    // ひるみ（ヒットストップ/仰け反り）の有無は ApplyDamage が m_hitReactionMode で
+    // 判定するため、ここでは敵の種類にかかわらず攻撃されたことを認識して反撃態勢に入る。
+    // これが無いと背後からの攻撃に気づかれないまま倒せてしまう。
     BeginAlert(attackerPos, true);
 }
 

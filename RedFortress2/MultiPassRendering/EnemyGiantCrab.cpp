@@ -61,6 +61,15 @@ namespace
     // 攻撃は6種巡回なので、10回はさむと実測で約2.7倍の間隔になる。
     const int kBurrowAttacksBetweenUses = 10;
 
+    // プレイヤーに上へ乗られて（踏まれて）いるときにジャンプ攻撃を選ぶ確率。
+    // 6種巡回では「上に乗られている」状況でジャンプ攻撃の距離条件を満たしにくく
+    // ほぼ選ばれないため、この状況だけは巡回とは別に抽選する。
+    const float kJumpSlamWhileStompedChance = 0.8f;
+    // 「上に乗られている」判定: 頭上（円柱上面）からこの距離だけ下までを許容する。
+    const float kJumpSlamOnTopVerticalTolerance = 0.6f;
+    // 同判定の水平距離の余裕（物理半径に加算）。
+    const float kJumpSlamOnTopHorizontalMargin = 0.75f;
+
     const int kRetreatDashWindupFrames = 10;
     const int kRetreatDashActiveFrames = 28;
     const int kRetreatDashRecoveryFrames = 10;
@@ -242,6 +251,16 @@ void EnemyBossGiantCrab::SelectAttack(NSRender::Render& render,
                                       const D3DXVECTOR3& playerPos)
 {
     const float distance = HorizontalDistance(GetPosition(), playerPos);
+
+    // 上に乗られて（踏まれて）いるときは、振り落とせるジャンプ攻撃を高い確率で選ぶ。
+    // 退避ダッシュや6種巡回より先に抽選し、乗られている間はジャンプ攻撃が最優先になる。
+    if (IsPlayerOnTop(playerPos, distance) &&
+        NextRandom01() < kJumpSlamWhileStompedChance)
+    {
+        BeginAttack(render, AttackType::JumpSlam, playerPos);
+        return;
+    }
+
     if (m_attacksUntilRetreat <= 0 && distance <= 5.5f)
     {
         BeginAttack(render, AttackType::RetreatDash, playerPos);
@@ -307,6 +326,20 @@ bool EnemyBossGiantCrab::IsAttackAllowed(const AttackType attackType,
         return m_attacksUntilBurrowAllowed <= 0;
     }
     return distance >= 2.5f && distance <= kJumpSlamMaxTravelDistance;
+}
+
+bool EnemyBossGiantCrab::IsPlayerOnTop(const D3DXVECTOR3& playerPos,
+                                       const float distance) const
+{
+    // プレイヤーが体の真上（踏みつけ）にいるかどうかの判定。
+    // 円柱上面の高さ付近より上にいて、かつ水平距離が接触範囲内であること。
+    if (distance > GetPhysicsRadius() + kJumpSlamOnTopHorizontalMargin)
+    {
+        return false;
+    }
+
+    const float enemyTopY = GetPosition().y + GetHeight() * 0.5f;
+    return playerPos.y >= enemyTopY - kJumpSlamOnTopVerticalTolerance;
 }
 
 void EnemyBossGiantCrab::BeginAttack(NSRender::Render& render,

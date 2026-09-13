@@ -55,6 +55,8 @@ private:
 
     void SelectAttack(NSRender::Render& render, const D3DXVECTOR3& playerPos);
     bool IsAttackAllowed(AttackType attackType, float distance) const;
+    // プレイヤーが自分の体の上（踏みつけ）にいるかどうか。
+    bool IsPlayerOnTop(const D3DXVECTOR3& playerPos, float distance) const;
     void BeginAttack(NSRender::Render& render,
                      AttackType attackType,
                      const D3DXVECTOR3& playerPos);
